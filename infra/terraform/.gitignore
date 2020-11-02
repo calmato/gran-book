@@ -1,0 +1,8 @@
+.terraform
+terraform.tfstate*
+
+*.tfvars
+
+env/**/backend.tf
+!env/**/backend.tf.ci
+!env/**/backend.tf.sample
