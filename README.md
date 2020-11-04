@@ -1,7 +1,7 @@
-# Calmato Project Template
+# Gran Book
 
 <!-- CI/CDのバッチを貼り付け -->
-プロジェクトテンプレート
+読書管理アプリ
 
 ## 各種設定
 
