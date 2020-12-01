@@ -8,21 +8,32 @@
 
 ## アーキテクチャ
 
-## Frontend
+### Frontend
 
 * ネイティブアプリ
 * 管理用Webアプリ
 
-## Backend
+### Backend
 
 * 認証用API
 * 書籍管理用API
 * ECサイト用API
 
-## Database
+### Database
 
 * 認証用DB (Firebase Authentication)
 * ユーザー管理用DB (MySQL)
 * 書籍管理用DB (MySQL)
 * ECサイト用DB (MySQL)
-* メッセージ管理用DB (Firestore)
+* メッセージ管理用DB (NoSQL)
+
+### Infrastructure
+
+* リバースプロキシ
+  * 検証: Nginx
+  * 本番: Application Loadbalancer
+* サムネイル用ストレージ (Object Storage)
+
+### Other
+
+* 書籍検索API (Google Books API)
