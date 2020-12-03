@@ -6,6 +6,24 @@
 
 # 各種ドキュメント
 
+## 開発環境
+
+### 利用リソース
+
+* Cloud Storage
+* Docker
+* Docker Compose
+* Firebase Authentication
+* Firebase Functions
+* Firebase Hosting
+* Firestore
+* Google Books API
+* Stripe
+
+### 構成概要図
+
+---
+
 ## 検証環境
 
 ### 利用リソース
@@ -31,4 +49,4 @@
 
 ### 構成概要図
 
-* WIP
+![検証環境 - 構成図](./gran-book-stg.jpg)
