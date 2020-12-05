@@ -6,6 +6,10 @@
 
 # 各種ドキュメント
 
+## インフラ構成
+
+* [GCP - インフラ構成](./../11_gcp/README.md)
+
 ## アーキテクチャ
 
 ### Frontend
@@ -15,7 +19,8 @@
 
 ### Backend
 
-* 認証用API
+* 認証用API (Firebase Authentication)
+* ユーザ管理用API
 * 書籍管理用API
 * ECサイト用API
 
@@ -29,9 +34,7 @@
 
 ### Infrastructure
 
-* リバースプロキシ
-  * 検証: Nginx
-  * 本番: Application Loadbalancer
+* L7 ロードバランサー
 * サムネイル用ストレージ (Object Storage)
 
 ### Other

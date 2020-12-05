@@ -9,6 +9,5 @@
 * [11_gcp](./11_gcp/README.md)
 * [12_firebase](./12_firebase/README.md)
 * [21_docker](./21_docker/README.md)
-* [22_kubernetes](./22_kubernetes/README.md)
 * [31_github-actions](./31_github-actions/README.md)
 * [32_terraform](./32_terraform/README.md)
