@@ -6,4 +6,4 @@
 
 ## 各種ドキュメント
 
-* [01_design](./01_design/README.md)
+* [ディレクトリ構造](./directories.md)

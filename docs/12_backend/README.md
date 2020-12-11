@@ -13,4 +13,5 @@
   * [22_book_api](./22_book_api/README.md)
   * [23_store_api](./23_store_api/README.md)
 * tools
-  * [31_stripe](./31_stripe/README.md)
+  * [31_Google_Books_API](./31_google_books_api/README.md)
+  * [32_stripe](./32_stripe/README.md)
