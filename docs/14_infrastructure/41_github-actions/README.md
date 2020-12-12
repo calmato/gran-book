@@ -1,7 +1,7 @@
-# インフラストラクチャ - Terraform
+# インフラストラクチャ - Github Actions
 
 [root](./../../../README.md) 
 / [14_infrastructure](./../README.md) 
-/ [32_terraform](./README.md)
+/ [41_github-actions](./README.md)
 
 # 各種ドキュメント

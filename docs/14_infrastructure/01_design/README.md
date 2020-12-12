@@ -14,15 +14,15 @@
 
 ### Frontend
 
-* ネイティブアプリ
-* 管理用Webアプリ
+* ネイティブアプリ (Google Play / App Store)
+* 管理コンソール用Webアプリ (Hosting)
 
 ### Backend
 
 * 認証用API (Firebase Authentication)
-* ユーザ管理用API
-* 書籍管理用API
-* ECサイト用API
+* ユーザ管理用API (Container)
+* 書籍管理用API (Container)
+* ECサイト用API (Container)
 
 ### Database
 
@@ -34,9 +34,10 @@
 
 ### Infrastructure
 
-* L7 ロードバランサー
+* L7 ロードバランサー (Load Balancing)
 * サムネイル用ストレージ (Object Storage)
 
 ### Other
 
 * 書籍検索API (Google Books API)
+* 支払い用API (Stripe)
