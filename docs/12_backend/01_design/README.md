@@ -20,6 +20,7 @@
   * Firebase Authentication
 
 * 対応させる認証方法
+  * Email
   * Apple
   * Facebook
   * Google
