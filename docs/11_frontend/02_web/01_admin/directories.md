@@ -1,8 +1,9 @@
 # Nuxt.js - ディレクトリ構成
 
-[root](./../../../../README.md)
+[root](./../../../README.md)
 / [11_frontend](./../../README.md)
 / [02_web](./../README.md)
+/ [01_admin](./README.md) 
 / [ディレクトリ構成](./directories.md)
 
 ## ディレクトリ構成

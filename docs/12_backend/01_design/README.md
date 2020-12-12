@@ -1,6 +1,6 @@
 # バックエンド - 設計
 
-[root](./../../../README.md) 
+[root](./../../README.md) 
 / [12_backend](./../README.md) 
 / [01_design](./README.md)
 
@@ -9,34 +9,10 @@
 ## 内部API
 
 * 以下4つに分割
-  * 認証用API (Firebase Authentication)
-  * [ユーザ管理用API](./../21_user_api/README.md)
-  * [書籍管理用API](./../22_book_api/README.md)
-  * [ECサイト用API](./../23_store_api/README.md)
-
-### 認証用API
-
-* 使用するSaaS
-  * Firebase Authentication
-
-* 対応させる認証方法
-  * Email
-  * Apple
-  * Facebook
-  * Google
-  * Twitter
-
-### ユーザ管理用API
-
-* 使用言語: Golang
-
-### 書籍管理用API
-
-* 使用言語: Golang
-
-### ECサイト用API
-
-* 使用言語: Golang
+  * [認証用API](./../21_auth_api/README.md)
+  * [ユーザ管理用API](./../22_user_api/README.md)
+  * [書籍管理用API](./../23_book_api/README.md)
+  * [ECサイト用API](./../24_store_api/README.md)
 
 ---
 
