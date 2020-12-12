@@ -1,7 +1,7 @@
-# 監視ツール -  Prometheues
+# 監視ツール -  Grafana
 
 [root](./../../../README.md) 
 / [14_infrastructure](./../README.md) 
-/ [31_prometheus](./README.md)
+/ [42_grafana](./README.md)
 
 # 各種ドキュメント

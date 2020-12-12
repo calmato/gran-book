@@ -10,12 +10,14 @@
 * GCP設計
   * [11_gcp](./11_gcp/README.md)
   * [12_firebase](./12_firebase/README.md)
+* NW機器設計
+  * [21_envoy](./21_envoy/README.md)
 * コンテナ設計
-  * [21_docker](./21_docker/README.md)
+  * [31_docker](./31_docker/README.md)
 * 監視/モニタリング設計
-  * [31_prometheus](./31_prometheus/README.md)
-  * [32_grafana](./32_grafana/README.md)
-  * [33_fluentd](./33_fluentd/README.md)
+  * [41_prometheus](./41_prometheus/README.md)
+  * [42_grafana](./42_grafana/README.md)
+  * [43_fluentd](./43_fluentd/README.md)
 * CI/CD
-  * [41_github-actions](./41_github-actions/README.md)
-  * [42_terraform](./42_terraform/README.md)
+  * [51_github-actions](./51_github-actions/README.md)
+  * [52_terraform](./52_terraform/README.md)
