@@ -1,19 +1,11 @@
-# React Native - ディレクトリ構造
+# React Native - ディレクトリ構成
 
 [root](./../../../../README.md)
 / [11_frontend](./../../README.md)
 / [01_native](./../README.md)
-/ [ディレクトリ構造](./directories.md)
+/ [ディレクトリ構成](./directories.md)
 
-# React Native - ディレクトリ構造
-
-[root](./../../../../README.md)
-/ [11_frontend](./../../README.md)
-/ [01_native](./../README.md)
-/ [13_react_native](./README.md)
-/ [ディレクトリ構造](./directories.md)
-
-## ディレクトリ構造
+## ディレクトリ構成
 
 <pre>
 .
@@ -34,7 +26,6 @@
     │   ├── Account
     │   ├── Auth
     │   ├── Boarding
-    │   ├── Book
     │   ├── Home
     │   ├── Message
     │   ├── Search
@@ -48,8 +39,8 @@
     └── types
         ├── forms
         ├── models
-        ├── request
-        ├── response
+        ├── requests
+        ├── responses
         └── selectors
 </pre>
 

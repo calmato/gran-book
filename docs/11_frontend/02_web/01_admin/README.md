@@ -7,4 +7,6 @@
 
 ## 各種ドキュメント
 
-* [01_design](./01_design/README.md)
+* 使用言語: TypeScript
+* フレームワーク: Nuxt.js (Vue)
+* [ディレクトリ構成](./directories.md)

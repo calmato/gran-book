@@ -6,4 +6,6 @@
 
 ## 各種ドキュメント
 
-* [ディレクトリ構造](./directories.md)
+* 使用言語: TypeScript
+* フレームワーク: React Native
+* [ディレクトリ構成](./directories.md)
