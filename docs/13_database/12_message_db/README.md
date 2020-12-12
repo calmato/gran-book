@@ -1,6 +1,6 @@
 # データベース - メッセージ管理用DB
 
-[root](./../../README.md) 
+[root](./../../../README.md) 
 / [13_database](./../README.md) 
 / [12_message_db](./README.md)
 

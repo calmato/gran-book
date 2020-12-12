@@ -1,6 +1,6 @@
 # データベース - ECサイト用DB
 
-[root](./../../README.md) 
+[root](./../../../README.md) 
 / [13_database](./../README.md) 
 / [03_store_db](./README.md)
 
