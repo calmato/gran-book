@@ -1,6 +1,10 @@
 ## DB設計
 
-### User
+[root](./../../README.md) 
+/ [13_database](./db_design.md)
+
+
+### user
 |        Field         |      Explanation      |     DataType      |    Validation                          |
 | :------------------- | :----------------- | :---------------- |:-------------------------------------- |
 | user_id               | ユーザーUID          | INT        | ・Required  (FK)                                               |
@@ -23,10 +27,13 @@
 | other_address        | マンション・ビル名・郵便番号   | VARCHAR(256)      | Length: 0 <= n <= 256           |
 | instance_id           | 端末ID             | BLOB     |・Required                                                   |
 
-### Book   
-|        Field         |      Japanese      |                          Validation                          |
-| :------------------- | :----------------- | :----------------------------------------------------------- |
-| Book_id               | ユーザーUID          | INT        |・Required  (FK)                                               |
+### book   
+|        Field         |      Explanation      |     DataType      |    Validation                          |
+| :------------------- | :----------------- | :---------------- |:-------------------------------------- |
+| book_id               | 本UID          | INT        |・Required  (FK)              | 
+| user_id            | ユーザーUID        | INT        | FK   |
+| book_status         | 本の状態(読んだ / 読んでいる /積読 /　手放したい / 欲しい            | VARCHAR(10)            |  NN     |
+
 
 
 ### Sale    
