@@ -37,9 +37,6 @@
 |   Field    |  DataType  | PK/FK | NotNull | Unsigned |     Other     | Default | Explanation |                   Validation                    |
 | :--------- | :--------- | :---: | :-----: | :------: | :-----------: | :------ | :---------- | :---------------------------------------------- |
 | id         | BIGINT(20) |  PK   |  true   |   true   |      AI       |         | ID          |                                                 |
-| book_id    | BIGINT(20) |  FK   |  true   |   true   | UQ(Composite) |         | 書籍ID      |                                                 |
-| user_id    | BIGINT(20) |  FK   |  true   |   true   | UQ(Composite) |         | ユーザーID  |                                                 |
-| status     | INT(2)     |  FK   |  true   |   true   |               | 0       | 本の状態    | (読んだ / 読んでいる /積読 /手放したい /欲しい) |
 | created_at | DATETIME   |       |  true   |          |               |         | 登録日時    |                                                 |
 | updated_at | DATETIME   |       |  true   |          |               |         | 更新日時    |                                                 |
 
