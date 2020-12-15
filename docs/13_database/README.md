@@ -5,6 +5,8 @@
 
 # 各種ドキュメント
 
+* [RDB - 全体構成](./db_design.md)
+
 * RDB
   * [ユーザー管理用DB](./01_user_db/README.md)
   * [書籍管理用DB](./02_book_db/README.md)
