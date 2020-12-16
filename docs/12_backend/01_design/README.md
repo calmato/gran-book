@@ -27,5 +27,6 @@
 * その他検討対象のサービス
   * 書籍検索関連のAPI
     * Amazon Advertising API
+    * 楽天Book API
   * 支払い関連のAPI
     * PayPal
