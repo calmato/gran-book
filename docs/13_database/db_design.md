@@ -34,31 +34,37 @@
 
 ### books
 
-|   Field    |  DataType  | PK/FK | NotNull | Unsigned |     Other     | Default | Explanation |                   Validation                    |
-| :--------- | :--------- | :---: | :-----: | :------: | :-----------: | :------ | :---------- | :---------------------------------------------- |
-| id         | BIGINT(20) |  PK   |  true   |   true   |      AI       |         | ID          |                                                 |
-| created_at | DATETIME   |       |  true   |          |               |         | 登録日時    |                                                 |
-| updated_at | DATETIME   |       |  true   |          |               |         | 更新日時    |                                                 |
+|   Field       |  DataType   | PK/FK | NotNull | Unsigned |     Other     | Default | Explanation  |                   Validation                    |
+| :---------    | :---------  | :---: | :-----: | :------: | :-----------: | :------ | :----------  | :---------------------------------------------- |
+| id            | BIGINT(20)  |  PK   |  true   |   true   |      AI       |         | ID           |                                                 |
+| publisher_id  | BIGINT(20)  |  FK   |  true   |   true   |               |         | 出版社ID      |                                                 |
+| title         | VARCHER(32) |       |  true   |          |               |         | タイトル      |                                                 |
+| description   | TEXT        |       |  true   |          |               |         | 説明          |                                                 |
+| isbn          | VARCHAR(16) |       |  true   |          |               |         | ID            |                                                 |
+| thumbnail_url | BLOB        |       |  false  |          |               |         | サムネイル     |                                                 |
+| published_at  | DATETIME    |       |  true   |          |               |         | 発売日         |                                                 |
+| created_at    | DATETIME    |       |  true   |          |               |         | 登録日時       |                                                 |
+| updated_at    | DATETIME    |       |  true   |          |               |         | 更新日時       |                                                 |
 
 ### follows
 
-|    Field    |  DataType  | PK/FK | NotNull | Unsigned | Other |         Default          | Explanation | Validation |
-| :---------- | :--------- | :---: | :-----: | :------: | :---: | :----------------------- | :---------- | ---------- |
-| id          | BIGINT(20) |  PK   |  true   |   true   |  AI   | フォロー管理ID           |             |            |
-| follower_id | BIGINT(20) |  FK   |  true   |   true   |       | フォローするユーザーID   |             |            |
-| followed_id | BIGINT(20) |  FK   |  true   |   true   |       | フォローされるユーザーID |             |            |
-| created_at  | DATETIME   |       |  true   |          |       | 登録日時                 |             |            |
-| updated_at  | DATETIME   |       |  true   |          |       | 更新日時                 |             |            |
+|    Field    |  DataType  | PK/FK | NotNull | Unsigned | Other |         Default          |        Explanation       | Validation |
+| :---------- | :--------- | :---: | :-----: | :------: | :---: | :----------------------- | :----------------------  | ---------- |
+| id          | BIGINT(20) |  PK   |  true   |   true   |  AI   |                          | ID                       |　          |
+| follower_id | BIGINT(20) |  FK   |  true   |   true   |       |                          | フォローするユーザーID     |            |
+| followed_id | BIGINT(20) |  FK   |  true   |   true   |       |                          | フォローされるユーザーID   |            |
+| created_at  | DATETIME   |       |  true   |          |       |                          | 登録日時                  |            |
+| updated_at  | DATETIME   |       |  true   |          |       |                          | 更新日時                  |            |
 
 ### followers
 
 |    Field    |  DataType  | PK/FK | NotNull | Unsigned | Other |         Default          | Explanation | Validation |
 | :---------- | :--------- | :---: | :-----: | :------: | :---: | :----------------------- | :---------- | ---------- |
-| id          | BIGINT(20) |  PK   |  true   |   true   |  AI   | フォロワー管理ID         |             |            |
-| follower_id | BIGINT(20) |  FK   |  true   |   true   |       | フォローするユーザーID   |             |            |
-| followed_id | BIGINT(20) |  FK   |  true   |   true   |       | フォローされるユーザーID |             |            |
-| created_at  | DATETIME   |       |  true   |          |       | 登録日時                 |             |            |
-| updated_at  | DATETIME   |       |  true   |          |       | 更新日時                 |             |            |
+| id          | BIGINT(20) |  PK   |  true   |   true   |  AI   |                          | ID                       |　          |
+| follower_id | BIGINT(20) |  FK   |  true   |   true   |       |                          | フォローするユーザーID     |            |
+| followed_id | BIGINT(20) |  FK   |  true   |   true   |       |                          | フォローされるユーザーID   |            |
+| created_at  | DATETIME   |       |  true   |          |       |                          | 登録日時                  |            |
+| updated_at  | DATETIME   |       |  true   |          |       |                          | 更新日時                  |            |
 
 ### Sale
 
