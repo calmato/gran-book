@@ -46,6 +46,58 @@
 | created_at    | DATETIME    |       |  true   |          |               |         | 登録日時       |                                                 |
 | updated_at    | DATETIME    |       |  true   |          |               |         | 更新日時       |                                                 |
 
+### authors
+
+|   Field       |  DataType   | PK/FK | NotNull | Unsigned |     Other     | Default | Explanation  |                   Validation                    |
+| :---------    | :---------  | :---: | :-----: | :------: | :-----------: | :------ | :----------  | :---------------------------------------------- |
+| id            | BIGINT(20)  |  PK   |  true   |   true   |      AI       |         | ID           |                                                 |
+| author        | VARCHAR(32) |       |  true   |          |               |         | 著書　        |                                                 |
+| created_at    | DATETIME    |       |  true   |          |               |         | 登録日時       |                                                 |
+| updated_at    | DATETIME    |       |  true   |          |               |         | 更新日時       |                                                 |
+
+### categories
+|   Field       |  DataType   | PK/FK | NotNull | Unsigned |     Other     | Default | Explanation  |                   Validation                    |
+| :---------    | :---------  | :---: | :-----: | :------: | :-----------: | :------ | :----------  | :---------------------------------------------- |
+| id            | BIGINT(20)  |  PK   |  true   |   true   |      AI       |         | ID           |                                                 |
+| category      | VARCHAR(32) |       |  true   |          |               |         | カテゴリー    |                                                 |
+| created_at    | DATETIME    |       |  true   |          |               |         | 登録日時       |                                                 |
+| updated_at    | DATETIME    |       |  true   |          |               |         | 更新日時       |                                                 |
+
+### publishers
+|   Field       |  DataType   | PK/FK | NotNull | Unsigned |     Other     | Default | Explanation  |                   Validation                    |
+| :---------    | :---------  | :---: | :-----: | :------: | :-----------: | :------ | :----------  | :---------------------------------------------- |
+| id            | BIGINT(20)  |  PK   |  true   |   true   |      AI       |         | ID           |                                                 |
+| publisher     | VARCHAR(32) |       |  true   |          |               |         | 出版社　　    |                                                 |
+| created_at    | DATETIME    |       |  true   |          |               |         | 登録日時       |                                                 |
+| updated_at    | DATETIME    |       |  true   |          |               |         | 更新日時       |                                                 |
+
+### authors_books
+|   Field       |  DataType   | PK/FK | NotNull | Unsigned |     Other     | Default | Explanation  |                   Validation                    |
+| :---------    | :---------  | :---: | :-----: | :------: | :-----------: | :------ | :----------  | :---------------------------------------------- |
+| id            | BIGINT(20)  |  PK   |  true   |   true   |      AI       |         | ID           |                                                 |
+| book_id       | BIGINT(20)  |  FK   |  true   |   true   |               |         | 本ID         |                                                　 |
+| author_id     | BIGINT(20)  |  FK   |  true   |   true   |               |         | 著書ID  　    |                                                　 |
+| created_at    | DATETIME    |       |  true   |          |               |         | 登録日時       |                                                 |
+| updated_at    | DATETIME    |       |  true   |          |               |         | 更新日時       |                                                 |
+
+### users_books
+|   Field       |  DataType   | PK/FK | NotNull | Unsigned |     Other     | Default | Explanation  |                   Validation                    |
+| :---------    | :---------  | :---: | :-----: | :------: | :-----------: | :------ | :----------  | :---------------------------------------------- |
+| id            | BIGINT(20)  |  PK   |  true   |   true   |      AI       |         | ID           |                                                 |
+| user_id       | BIGINT(20)  |  FK   |  true   |   true   |               |         | ユーザーID  　 |                                                |
+| book_id       | BIGINT(20)  |  FK   |  true   |   true   |               |         | 本ID       　 |                                                |
+| created_at    | DATETIME    |       |  true   |          |               |         | 登録日時       |                                                 |
+| updated_at    | DATETIME    |       |  true   |          |               |         | 更新日時       |                                                 |
+
+### categories_books
+|   Field       |  DataType   | PK/FK | NotNull | Unsigned |     Other     | Default | Explanation  |                   Validation                    |
+| :---------    | :---------  | :---: | :-----: | :------: | :-----------: | :------ | :----------  | :---------------------------------------------- |
+| id            | BIGINT(20)  |  PK   |  true   |   true   |      AI       |         | ID           |                                                 |
+| category_id   | BIGINT(20)  |  FK   |  true   |   true   |               |         | カテゴリーID  |                                                |
+| book_id       | BIGINT(20)  |  FK   |  true   |   true   |               |         | 本ID       　 |                                                |
+| created_at    | DATETIME    |       |  true   |          |               |         | 登録日時       |                                                 |
+| updated_at    | DATETIME    |       |  true   |          |               |         | 更新日時       |                                                 |
+
 ### follows
 
 |    Field    |  DataType  | PK/FK | NotNull | Unsigned | Other |         Default          |        Explanation       | Validation |
