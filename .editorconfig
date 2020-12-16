@@ -22,4 +22,5 @@ max_line_length = 120
 
 # --- backend ---
 [*.go]
+max_line_length = 120
 indent_style = tab
