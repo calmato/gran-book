@@ -6,6 +6,7 @@
 
 # 各種ドキュメント
 
+* [API設計 - ドメイン・URL設計](./domain-url.md)
 * [API設計 - リクエスト・レスポンス設計](./request-response.md)
 * [Golang - ディレクトリ構成](./directories-for-golang.md)
 
