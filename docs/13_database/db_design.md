@@ -1,50 +1,124 @@
-## DB設計
+## DB設計 - 全体構成
 
 [root](./../../README.md) 
 / [13_database](./db_design.md)
 
+### 共通設計
+
+* エンジン: InnoDB
+* 文字コード: utf-8mb4
 
 ### users
-|        Field         |      Explanation      |     DataType      |    Validation                          |
-| :------------------- | :----------------- | :---------------- |:-------------------------------------- |
-| id               | ユーザーID          | INT        | ・Required  (FK)                                               |
-| username             | ニックネーム           | VARCHAR(32)      | ・Required(NN)<br/>・Length: n <= 32                             |
-| sex                  | 性別                | Boolean       | ・Required(NN)                                                   |
-| email                | メールアドレス         | VARCHAR(256)     | ・Required(NN)<br/>・Length: n <= 256<br/>・Format: Email        |
-| thumbnail            | サムネイル            | BLOB     | ・Format: base64                                             |
-| password             | パスワード            | VARCHAR(32)    | ・Required(NN)<br/>・Length: 6 <= n <= 32<br/>・Format: Password |
-| self_introduction               | 自己紹介          | VARCHAR(1000)    | Length: 0 <= n <= 1000                      |
-| last_name       | 名字（漢字)      | VARCHAR(16)      | Length: 0 <= n <= 16            |
-| first_name       | 名前（漢字)      | VARCHAR(16)      | Length: 0 <= n <= 16            |
-| last_name_kana       | 配送の際の名前（かな)      | VARCHAR(16)      | Length: 0 <= n <= 16            |
-| first_name_kana      | 配送の際の名前（かな)      | VARCHAR(16)      | Length: 0 <= n <= 16            |
-| phone                | 電話番号                | VARCHAR(20)        | Length: 0 <= n <= 20            |
-| postal_code          | 郵便番号                | VARCHAR(32)        | Length: 0 <= n <= 32           |
-| prefectures          | 都道府県                | VARCHAR(16)        | Length: 0 <= n <= 16           |
-| cities               | 市町村                 |  VARCHAR(256)      | Length: 0 <= n <= 256          |
-| other_address        | マンション・ビル名・郵便番号   | VARCHAR(256)      | Length: 0 <= n <= 256           |
-| instance_id           | 端末ID             | BLOB     |・Required                                                   |
 
-### books   
-|        Field         |      Explanation      |     DataType      |    Validation                          |
-| :------------------- | :----------------- | :---------------- |:-------------------------------------- |
-| book_id               | 本ID          | INT        |・Required  (FK)              | 
-| user_id            | ユーザーID        | INT        | FK   |
-| book_status         | 本の状態(読んだ / 読んでいる /積読 /手放したい /欲しい)            | VARCHAR(10)            |  NN     |
+|       Field       |   DataType   | PK/FK | NotNull | Unsigned | Other | Default |         Explanation          |               Validation               |
+| :---------------- | :----------- | :---: | :-----: | :------: | :---: | :------ | :--------------------------- | :------------------------------------- |
+| id                | BIGINT(20)   |  PK   |  true   |   true   |  AI   |         | ユーザーID                   |                                        |
+| username          | VARCHAR(32)  |       |  true   |          |       |         | ニックネーム                 |                                        |
+| gender            | INT(2)       |       |  true   |   true   |       | 0       | 性別                         |                                        |
+| email             | VARCHAR(256) |       |  false  |          |  UQ   |         | メールアドレス               | Format: Email                          |
+| thumbnail_url     | BLOB         |       |  false  |          |       |         | サムネイル                   | Format: base64                         |
+| password_digest   | VARCHAR(256) |       |  true   |          |       |         | パスワード                   | Length: 6 <= n <= 32, Format: Password |
+| self_introduction | VARCHAR(256) |       |  false  |          |       |         | 自己紹介                     |                                        |
+| last_name         | VARCHAR(16)  |       |  false  |          |       |         | 名字（漢字)                  |                                        |
+| first_name        | VARCHAR(16)  |       |  false  |          |       |         | 名前（漢字)                  |                                        |
+| lastname_kana     | VARCHAR(32)  |       |  false  |          |       |         | 名前（かな)                  |                                        |
+| firstname_kana    | VARCHAR(32)  |       |  false  |          |       |         | 名前（かな)                  |                                        |
+| postal_code       | CHAR(8)      |       |  false  |          |       |         | 郵便番号                     | xxx-xxxx　ハイフン付き                 |
+| prefectures       | VARCHAR(32)  |       |  false  |          |       |         | 都道府県                     |                                        |
+| cities            | VARCHAR(32)  |       |  false  |          |       |         | 市町村                       |                                        |
+| address_chrome    | VARCHAR(64)  |       |  false  |          |       |         | 番地・丁目                   |                                        |
+| other_address     | VARCHAR(64)  |       |  false  |          |       |         | マンション・ビル名・部屋番号 |                                        |
+| instance_id       | BLOB         |       |  false  |          |       |         | 端末ID                       | NNにするか検討中                       |
+| created_at        | DATETIME     |       |  true   |          |       |         | 登録日時                     |                                        |
+| updated_at        | DATETIME     |       |  true   |          |       |         | 更新日時                     |                                        |
 
-### follws
-|        Field         |      Explanation      |     DataType      |    Validation                          |
-| :------------------- | :----------------- | :---------------- |:-------------------------------------- |
-| follow_id            | フォローID        | INT        | FK   |
-| follow_user_id            | フォローするユーザーID        | INT        | FK   |
-| followed_user_id            | フォローされるユーザーID        | INT        | FK   |
+### books
+
+|   Field       |  DataType   | PK/FK | NotNull | Unsigned |     Other     | Default | Explanation  |                   Validation                    |
+| :---------    | :---------  | :---: | :-----: | :------: | :-----------: | :------ | :----------  | :---------------------------------------------- |
+| id            | BIGINT(20)  |  PK   |  true   |   true   |      AI       |         | ID           |                                                 |
+| publisher_id  | BIGINT(20)  |  FK   |  true   |   true   |               |         | 出版社ID      |                                                 |
+| title         | VARCHER(32) |       |  true   |          |               |         | タイトル      |                                                 |
+| description   | TEXT        |       |  true   |          |               |         | 説明          |                                                 |
+| isbn          | VARCHAR(16) |       |  true   |          |               |         | ID            |                                                 |
+| thumbnail_url | BLOB        |       |  false  |          |               |         | サムネイル     |                                                 |
+| published_at  | DATETIME    |       |  true   |          |               |         | 発売日         |                                                 |
+| created_at    | DATETIME    |       |  true   |          |               |         | 登録日時       |                                                 |
+| updated_at    | DATETIME    |       |  true   |          |               |         | 更新日時       |                                                 |
+
+### authors
+
+|   Field       |  DataType   | PK/FK | NotNull | Unsigned |     Other     | Default | Explanation  |                   Validation                    |
+| :---------    | :---------  | :---: | :-----: | :------: | :-----------: | :------ | :----------  | :---------------------------------------------- |
+| id            | BIGINT(20)  |  PK   |  true   |   true   |      AI       |         | ID           |                                                 |
+| author        | VARCHAR(32) |       |  true   |          |               |         | 著書　        |                                                 |
+| created_at    | DATETIME    |       |  true   |          |               |         | 登録日時       |                                                 |
+| updated_at    | DATETIME    |       |  true   |          |               |         | 更新日時       |                                                 |
+
+### categories
+|   Field       |  DataType   | PK/FK | NotNull | Unsigned |     Other     | Default | Explanation  |                   Validation                    |
+| :---------    | :---------  | :---: | :-----: | :------: | :-----------: | :------ | :----------  | :---------------------------------------------- |
+| id            | BIGINT(20)  |  PK   |  true   |   true   |      AI       |         | ID           |                                                 |
+| category      | VARCHAR(32) |       |  true   |          |               |         | カテゴリー    |                                                 |
+| created_at    | DATETIME    |       |  true   |          |               |         | 登録日時       |                                                 |
+| updated_at    | DATETIME    |       |  true   |          |               |         | 更新日時       |                                                 |
+
+### publishers
+|   Field       |  DataType   | PK/FK | NotNull | Unsigned |     Other     | Default | Explanation  |                   Validation                    |
+| :---------    | :---------  | :---: | :-----: | :------: | :-----------: | :------ | :----------  | :---------------------------------------------- |
+| id            | BIGINT(20)  |  PK   |  true   |   true   |      AI       |         | ID           |                                                 |
+| publisher     | VARCHAR(32) |       |  true   |          |               |         | 出版社　　    |                                                 |
+| created_at    | DATETIME    |       |  true   |          |               |         | 登録日時       |                                                 |
+| updated_at    | DATETIME    |       |  true   |          |               |         | 更新日時       |                                                 |
+
+### authors_books
+|   Field       |  DataType   | PK/FK | NotNull | Unsigned |     Other     | Default | Explanation  |                   Validation                    |
+| :---------    | :---------  | :---: | :-----: | :------: | :-----------: | :------ | :----------  | :---------------------------------------------- |
+| id            | BIGINT(20)  |  PK   |  true   |   true   |      AI       |         | ID           |                                                 |
+| book_id       | BIGINT(20)  |  FK   |  true   |   true   |               |         | 本ID         |                                                　 |
+| author_id     | BIGINT(20)  |  FK   |  true   |   true   |               |         | 著書ID  　    |                                                　 |
+| created_at    | DATETIME    |       |  true   |          |               |         | 登録日時       |                                                 |
+| updated_at    | DATETIME    |       |  true   |          |               |         | 更新日時       |                                                 |
+
+### users_books
+|   Field       |  DataType   | PK/FK | NotNull | Unsigned |     Other     | Default | Explanation  |                   Validation                    |
+| :---------    | :---------  | :---: | :-----: | :------: | :-----------: | :------ | :----------  | :---------------------------------------------- |
+| id            | BIGINT(20)  |  PK   |  true   |   true   |      AI       |         | ID           |                                                 |
+| user_id       | BIGINT(20)  |  FK   |  true   |   true   |               |         | ユーザーID  　 |                                                |
+| book_id       | BIGINT(20)  |  FK   |  true   |   true   |               |         | 本ID       　 |                                                |
+| created_at    | DATETIME    |       |  true   |          |               |         | 登録日時       |                                                 |
+| updated_at    | DATETIME    |       |  true   |          |               |         | 更新日時       |                                                 |
+
+### categories_books
+|   Field       |  DataType   | PK/FK | NotNull | Unsigned |     Other     | Default | Explanation  |                   Validation                    |
+| :---------    | :---------  | :---: | :-----: | :------: | :-----------: | :------ | :----------  | :---------------------------------------------- |
+| id            | BIGINT(20)  |  PK   |  true   |   true   |      AI       |         | ID           |                                                 |
+| category_id   | BIGINT(20)  |  FK   |  true   |   true   |               |         | カテゴリーID  |                                                |
+| book_id       | BIGINT(20)  |  FK   |  true   |   true   |               |         | 本ID       　 |                                                |
+| created_at    | DATETIME    |       |  true   |          |               |         | 登録日時       |                                                 |
+| updated_at    | DATETIME    |       |  true   |          |               |         | 更新日時       |                                                 |
+
+### follows
+
+|    Field    |  DataType  | PK/FK | NotNull | Unsigned | Other |         Default          |        Explanation       | Validation |
+| :---------- | :--------- | :---: | :-----: | :------: | :---: | :----------------------- | :----------------------  | ---------- |
+| id          | BIGINT(20) |  PK   |  true   |   true   |  AI   |                          | ID                       |　          |
+| follower_id | BIGINT(20) |  FK   |  true   |   true   |       |                          | フォローするユーザーID     |            |
+| followed_id | BIGINT(20) |  FK   |  true   |   true   |       |                          | フォローされるユーザーID   |            |
+| created_at  | DATETIME   |       |  true   |          |       |                          | 登録日時                  |            |
+| updated_at  | DATETIME   |       |  true   |          |       |                          | 更新日時                  |            |
 
 ### followers
-|        Field         |      Explanation      |     DataType      |    Validation                          |
-| :------------------- | :----------------- | :---------------- |:-------------------------------------- |
-| follow_user_id            | フォローするユーザーID        | Length(Array): 0 <= n <= 9999         | FK   |
-| followed_user_id            | フォローされるユーザーID        | Length(Array): 0 <= n <= 9999         | FK   |
 
-### Sale    
-|        Field         |      Japanese      |                          Validation                          |
-| :------------------- | :----------------- | :----------------------------------------------------------- |
+|    Field    |  DataType  | PK/FK | NotNull | Unsigned | Other |         Default          | Explanation | Validation |
+| :---------- | :--------- | :---: | :-----: | :------: | :---: | :----------------------- | :---------- | ---------- |
+| id          | BIGINT(20) |  PK   |  true   |   true   |  AI   |                          | ID                       |　          |
+| follower_id | BIGINT(20) |  FK   |  true   |   true   |       |                          | フォローするユーザーID     |            |
+| followed_id | BIGINT(20) |  FK   |  true   |   true   |       |                          | フォローされるユーザーID   |            |
+| created_at  | DATETIME   |       |  true   |          |       |                          | 登録日時                  |            |
+| updated_at  | DATETIME   |       |  true   |          |       |                          | 更新日時                  |            |
+
+### Sale
+
+| Field | DataType | PK/FK | NotNull | Unsigned | Other | Default | Explanation | Validation |
+| :---- | :------- | :---: | :-----: | :------: | :---: | :------ | :---------- | ---------- |
