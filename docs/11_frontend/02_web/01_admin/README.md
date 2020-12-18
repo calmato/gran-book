@@ -11,6 +11,15 @@
 * フレームワーク: Nuxt.js (Vue)
 * [ディレクトリ構成](./directories.md)
 
+## Versions
+
+|  S/W, M/W  | Version |
+| :--------- | :------ |
+| Node.js    | 15.4.0  |
+| TypeScript | WIP     |
+| Vue.js     | WIP     |
+| NuxtJS     | WIP     |
+
 ## Libraries
 
 ### Application
