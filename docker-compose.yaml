@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  # Frontend
+  admin:
+    container_name: gran_book_admin
+    build:
+      context: ./infra/docker/web/admin
+      dockerfile: Dockerfile_development
+    working_dir: /var/web/admin
+    volumes:
+      - ./web/admin:/var/web/admin:cached
+    ports:
+      - 3000:3000
