@@ -9,14 +9,49 @@
 <details open>
 <summary>依存関係</summary>
 
-* WIP
+* Frontend
+  * Node: 15.4.0
+
 </details>
 
 <!-- 環境構築手順を記載 -->
 <details open>
 <summary>環境構築</summary>
 
-* WIP
+### リポジトリのダウンロード
+
+> $ git clone https://github.com/calmato/gran-book.git
+
+> $ cd ./presto-pay
+
+### コンテナの初期設定
+
+* コンテナの作成
+
+> $ make setup
+
+* Firebase Admin SDKを `secretディレクトリ` にコピペ
+
+* .envファイルの編集
+
+```.env
+FIREBASE_API_KEY=xxxxxx
+FIREBASE_PROJECT_ID=xxxxxx
+FIREBASE_MESSAGING_SENDER_ID=xxxxxx
+```
+
+* secretディレクトリのファイルを.envへ書き込み
+
+> $ var=$(< ./secrets/[ファイル名])
+
+> $ sed -i -e "/^GCP_SERVICE_KEY_JSON=.*/d" .env
+
+> $ echo -E "GCP_SERVICE_KEY_JSON=${var}" >> .env
+
+### コンテナの起動
+
+> $ make start
+
 </details>
 
 ## その他
@@ -25,7 +60,15 @@
 <details>
 <summary>コマンド一覧</summary>
 
-* WIP
+|   Commands   |                                      Description                                       |
+| :----------- | :------------------------------------------------------------------------------------- |
+| make setup   | * 初回のみ実行                                                                         |
+| make install | * コンテナ内にライブラリをインストール<br>* ライブラリを更新する際はこのコマンドを使用 |
+| make start   | * コンテナの起動                                                                       |
+| make stop    | * コンテナの停止                                                                       |
+| make remove  | * コンテナの削除                                                                       |
+| make logs    | * コンテナのログを取得                                                                 |
+
 </details>
 
 <!-- docs配下のドキュメントをツリー型で記載 -->
