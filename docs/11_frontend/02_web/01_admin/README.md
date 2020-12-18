@@ -16,9 +16,9 @@
 |  S/W, M/W  | Version |
 | :--------- | :------ |
 | Node.js    | 15.4.0  |
-| TypeScript | WIP     |
-| Vue.js     | WIP     |
-| NuxtJS     | WIP     |
+| TypeScript | ~4.0    |
+| Vue.js     | ^2.6.12 |
+| NuxtJS     | ^2.14.6 |
 
 ## Libraries
 

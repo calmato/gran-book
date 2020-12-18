@@ -8,6 +8,7 @@
 ## GCPのプロジェクト作成
 
 1. GCPのプロジェクト作成
+2. Compute Engine APIの有効化
 
 ## Firebaseのプロジェクト作成
 
