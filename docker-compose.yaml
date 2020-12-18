@@ -12,3 +12,8 @@ services:
       - ./web/admin:/var/web/admin:cached
     ports:
       - 3000:3000
+    environment:
+      - FIREBASE_API_KEY=${FIREBASE_API_KEY}
+      - FIREBASE_PROJECT_ID=${FIREBASE_PROJECT_ID}
+      - FIREBASE_MESSAGING_SENDER_ID=${FIREBASE_MESSAGING_SENDER_ID}
+    command: yarn dev -H 0.0.0.0 -p 3000

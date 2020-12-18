@@ -73,6 +73,13 @@ export default {
     },
   },
 
+  // Environments
+  env: {
+    firebaseApiKey: process.env.FIREBASE_API_KEY,
+    firebaseProjectId: process.env.FIREBASE_PROJECT_ID,
+    firebaseMessagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+  },
+
   // Build Configuration (https://go.nuxtjs.dev/config-build)
   build: {},
 }
