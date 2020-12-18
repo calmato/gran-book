@@ -14,14 +14,12 @@
     "strict": true,
     "noEmit": true,
     "experimentalDecorators": true,
-    "baseUrl": ".",
+    "baseUrl": "./app",
     "paths": {
-      "~/*": [
-        "./*"
-      ],
-      "@/*": [
-        "./*"
-      ]
+      "~/*": ["./*"],
+      "@/*": ["./*"],
+      "~~/*": ["./../*"],
+      "@@/*": ["./../*"]
     },
     "types": [
       "@types/node",
