@@ -64,6 +64,15 @@ export default {
     },
   },
 
+  // TypeScript runtime configuration
+  typescript: {
+    typeCheck: {
+      eslint: {
+        files: './app/**/*.{ts,js,vue}',
+      },
+    },
+  },
+
   // Build Configuration (https://go.nuxtjs.dev/config-build)
   build: {},
 }
