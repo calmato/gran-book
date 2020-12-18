@@ -1,7 +1,9 @@
 module.exports = {
   moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/$1',
-    '^~/(.*)$': '<rootDir>/$1',
+    '^@/(.*)$': '<rootDir>/app/$1',
+    '^@@/(.*)$': '<rootDir>/$1',
+    '^~/(.*)$': '<rootDir>/app/$1',
+    '^~~/(.*)$': '<rootDir>/$1',
     '^vue$': 'vue/dist/vue.common.js',
   },
   moduleFileExtensions: ['ts', 'js', 'vue', 'json'],
@@ -12,7 +14,8 @@ module.exports = {
   },
   collectCoverage: true,
   collectCoverageFrom: [
-    '<rootDir>/components/**/*.vue',
-    '<rootDir>/pages/**/*.vue',
+    '<rootDir>/app/components/**/*.vue',
+    '<rootDir>/app/pages/**/*.vue',
+    '<rootDir>/app/store/**/*.vue',
   ],
 }
