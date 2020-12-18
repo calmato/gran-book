@@ -14,14 +14,17 @@
 
 | Branch Name |   Description    |
 | :---------- | :--------------- |
-| master      | メイン (Default) |
-| develop     | 開発用           |
-| release     | 本番用           |
-| feature     | 機能の追加・編集 |
-| bugfix      | 機能の修正       |
-| refactor    | リファクタ       |
-| test        | テストの作成     |
-| docs        | 仕様書の更新     |
+| master      | Default |
+| develop     | For development |
+| release     | For production |
+| feat/~     | new feature for the user, not a new feature for build script |
+| fix/~      | bug fix for the user, not a fix to a build script |
+| refactor/~    | efactoring production code, eg. renaming a variable |
+| test/~        | adding missing tests, refactoring tests; no production code change |
+| docs/~        | changes to the documentation |
+| style/~        | formatting, missing semi colons, etc; no production code change |
+
+
 
 ## プルリクルール
 

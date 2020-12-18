@@ -86,6 +86,8 @@
 | id            | BIGINT(20)  |  PK   |  true   |   true   |      AI       |         | ID           |                                                 |
 | user_id       | BIGINT(20)  |  FK   |  true   |   true   |               |         | ユーザーID  　 |                                                |
 | book_id       | BIGINT(20)  |  FK   |  true   |   true   |               |         | 本ID       　 |                                                |
+| status        | TYNYINT     |       |  true   |          |               |         | 本のステータス(0: 未読/1: 読んだ/2: 読んでる/3: 積読/4: 手放したい/5: 欲しい)|     |             
+| impression    | TEXT        |       |  true   |          |               |         | 感想          |                                                 |
 | created_at    | DATETIME    |       |  true   |          |               |         | 登録日時       |                                                 |
 | updated_at    | DATETIME    |       |  true   |          |               |         | 更新日時       |                                                 |
 
