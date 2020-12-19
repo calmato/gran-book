@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  # Frontend
+  admin:
+    container_name: gran_book_admin
+    build:
+      context: ./infra/docker/web/admin
+      dockerfile: Dockerfile_development
+    working_dir: /var/web/admin
+    volumes:
+      - ./web/admin:/var/web/admin:cached
+    ports:
+      - 3000:3000
+    environment:
+      - FIREBASE_API_KEY=${FIREBASE_API_KEY}
+      - FIREBASE_PROJECT_ID=${FIREBASE_PROJECT_ID}
+      - FIREBASE_MESSAGING_SENDER_ID=${FIREBASE_MESSAGING_SENDER_ID}
+    command: yarn dev -H 0.0.0.0 -p 3000
