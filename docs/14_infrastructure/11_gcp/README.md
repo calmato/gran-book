@@ -14,7 +14,6 @@
 * Docker
 * Docker Compose
 * Firebase Authentication
-* Firebase Functions
 * Firebase Hosting
 * Firestore
 * Google Books API
@@ -35,8 +34,8 @@
 * Cloud Run
 * Cloud Storage
 * Cloud SQL for MySQL
+* Compute Engine
 * Firebase Authentication
-* Firebase Functions
 * Firebase Hosting
 * Firestore
 * Google AdSense

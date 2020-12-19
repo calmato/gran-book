@@ -11,7 +11,7 @@
   * [11_gcp](./11_gcp/README.md)
   * [12_firebase](./12_firebase/README.md)
 * NW機器設計
-  * [21_envoy](./21_envoy/README.md)
+  * [21_reverse-proxy](21_reverse-proxy/README.md)
 * コンテナ設計
   * [31_docker](./31_docker/README.md)
 * 監視/モニタリング設計
