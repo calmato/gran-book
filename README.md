@@ -84,6 +84,7 @@ FIREBASE_MESSAGING_SENDER_ID=xxxxxx
 * [12_backend](./docs/12_backend/README.md)
   * [01_design](./docs/12_backend/01_design/README.md)
   * [11_swagger](./docs/12_backend/11_swagger/README.md)
+  * [12_protobuf](./docs/12_backend/12_protobuf/README.md)
   * [21_auth_api](./docs/12_backend/21_auth_api/README.md)
   * [22_user_api](./docs/12_backend/22_user_api/README.md)
   * [23_book_api](./docs/12_backend/23_book_api/README.md)
