@@ -13,7 +13,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-latest] # exclude: macos-latest, windows-late
+        os: [ubuntu-latest] # exclude: macos-latest, windows-latest
         node: [15.4]
 
     steps:
