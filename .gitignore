@@ -20,5 +20,8 @@ pids
 # secret directory
 secrets/
 
+# temporary directory
+tmp/
+
 # parcel-bundler cache (https://parceljs.org/)
 .cache

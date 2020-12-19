@@ -1,0 +1,84 @@
+admin:
+  access_log_path: /var/log/envoy_admin.log
+  address:
+    socket_address:
+      address: 0.0.0.0
+      port_value: 8081
+
+static_resources:
+  listeners:
+    - name: listeners_0
+      address:
+        socket_address:
+          address: 0.0.0.0
+          port_value: 8080
+
+      per_connection_buffer_limit_bytes: 5242880 # 5MB
+
+      filter_chains:
+        - filters:
+            - name: envoy.http_connection_manager
+              typed_config:
+                "@type": type.googleapis.com/envoy.config.filter.network.http_connection_manager.v2.HttpConnectionManager
+                stat_prefix: ingress_http
+                codec_type: auto
+                request_timeout: 300s # 5 mins
+                access_log:
+                  - name: envoy.file_access_log
+                    typed_config:
+                      "@type": type.googleapis.com/envoy.config.accesslog.v2.FileAccessLog
+                      path: "/var/log/access.log"
+
+                route_config:
+                  name: local_route
+                  virtual_hosts:
+                    - name: local_service
+                      domains:
+                        - "*"
+
+                      cors:
+                        allow_origin_string_match:
+                          - prefix: "*"
+                        allow_methods: GET, POST, PATCH, PUT, DELETE, OPTIONS
+                        allow_headers: "*"
+                        filter_enabled:
+                          default_value:
+                            numerator: 100
+                            denominator: HUNDRED
+                          runtime_key: cors.www.enabled
+                        shadow_enabled:
+                          default_value:
+                            numerator: 0
+                            denominator: HUNDRED
+                          runtime_key: cors.www.shadow_enabled
+
+                      routes:
+                        # User Service
+                        - match:
+                            prefix: "/v1/"
+                          route:
+                            cluster: user_service
+
+                http_filters:
+                  - name: envoy.cors
+                  - name: envoy.router
+
+  clusters:
+    - name: user_service
+      type: logical_dns
+      dns_lookup_family: v4_only
+      lb_policy: round_robin
+      connect_timeout: 15s
+      per_connection_buffer_limit_bytes: 32768 # 32KiB
+      hosts:
+        - socket_address:
+            address: user_api
+            port_value: 8080
+      health_checks:
+        - timeout: 1s
+          interval: 300s
+          interval_jitter: 1s
+          unhealthy_threshold: 3
+          healthy_threshold: 3
+          http_health_check:
+            path: "/health"
