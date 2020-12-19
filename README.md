@@ -100,7 +100,7 @@ FIREBASE_MESSAGING_SENDER_ID=xxxxxx
   * [01_design](./docs/14_infrastructure/01_design/README.md)
   * [11_gcp](./docs/14_infrastructure/11_gcp/README.md)
   * [12_firebase](./docs/14_infrastructure/12_firebase/README.md)
-  * [21_envoy](./docs/14_infrastructure/21_envoy/README.md)
+  * [21_reverse-proxy](./docs/14_infrastructure/21_reverse-proxy/README.md)
   * [31_docker](./docs/14_infrastructure/31_docker/README.md)
   * [41_prometheus](./docs/14_infrastructure/41_prometheus/README.md)
   * [42_grafana](./docs/14_infrastructure/42_grafana/README.md)
