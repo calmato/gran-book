@@ -1,0 +1,60 @@
+name: Frontend(Admin) Deploy
+
+on:
+  push:
+    paths:
+      - '.github/workflows/cd-admin-for-release.yaml'
+      - 'web/admin/**'
+    branches:
+      - 'releases/**'
+
+env:
+  FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+
+jobs:
+  deploy_for_production:
+    name: Deploy for Production
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node: [15.4]
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Use Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
+
+      - uses: actions/cache@v2
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install
+        working-directory: ./web/admin
+        run: yarn --check-files --frozen-lockfile --non-interactive
+
+      - name: Build
+        working-directory: ./web/admin
+        run: yarn build
+
+      - name: Install firebase-tools
+        working-directory: ./web/admin
+        run: yarn global add firebase-tools
+
+      - name: Deploy to Firebase Hosting
+        working-directory: ./web/admin
+        run: |
+          firebase use production
+          firebase deploy --only hosting:production --token ${FIREBASE_TOKEN}
