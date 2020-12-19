@@ -28,6 +28,17 @@ services:
     command: yarn dev -H 0.0.0.0 -p 3000
 
   # Backend
+  gateway:
+    container_name: gran_book_gateway
+    build:
+      context: ./infra/docker/infra/gateway
+      dockerfile: Dockerfile_development
+    volumes:
+      - ./infra/gateway:/go/src/github.com/calmato/gran-book/infra/gateway:cached
+    ports:
+      - 8080:8080
+    networks:
+      - api
 
   # Monitoring
 
