@@ -1,0 +1,23 @@
+{
+  "projects": {
+    "default": "gran-book-stg",
+    "production": "gran-book",
+    "staging": "gran-book-stg"
+  },
+  "targets": {
+    "gran-book-stg": {
+      "hosting": {
+        "staging": [
+          "gran-book-stg"
+        ]
+      }
+    },
+    "gran-book": {
+      "hosting": {
+        "production": [
+          "gran-book"
+        ]
+      }
+    }
+  }
+}
