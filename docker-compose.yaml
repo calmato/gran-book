@@ -2,6 +2,15 @@ version: '3.8'
 
 services:
   # Frontend
+  native:
+    container_name: gran_book_native
+    build:
+      context: ./infra/docker/native
+      dockerfile: Dockerfile_development
+    working_dir: /var/native
+    volumes:
+      - ./native:/var/native:cached
+
   admin:
     container_name: gran_book_admin
     build:
