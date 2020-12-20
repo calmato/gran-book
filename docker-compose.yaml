@@ -33,6 +33,7 @@ services:
     build:
       context: ./infra/docker/infra/gateway
       dockerfile: Dockerfile_development
+    working_dir: /go/src/github.com/calmato/gran-book/infra/gateway
     volumes:
       - ./infra/gateway:/go/src/github.com/calmato/gran-book/infra/gateway:cached
     ports:
@@ -41,6 +42,18 @@ services:
       - api
 
   # Monitoring
+
+  # Other
+  proto:
+    container_name: gran_book_proto
+    build:
+      context: ./infra/docker/proto
+      dockerfile: Dockerfile_development
+    working_dir: /go/src/github.com/calmato/gran-book/proto
+    volumes:
+      - ./proto:/go/src/github.com/calmato/gran-book/proto:cached
+      - ./api:/go/src/github.com/calmato/gran-book/api:cached
+      - ./infra/gateway:/go/src/github.com/calmato/gran-book/infra/gateway:cached
 
 networks:
   api: {}
