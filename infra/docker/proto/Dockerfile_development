@@ -1,1 +1,23 @@
 FROM golang:1.15.6-alpine
+
+ENV LANG C.UTF-8
+ENV TZ Asia/Tokyo
+
+ENV PROTOBUF_VERSION 3.14.0
+
+RUN apk add --update \
+  autoconf \
+  automake \
+  build-base \
+  curl \
+  git \
+  libtool \
+  tar
+
+WORKDIR /tmp
+RUN PB_REL="https://github.com/protocolbuffers/protobuf/releases/download"
+RUN curl -L -o /tmp/protobuf.tar.gz ${PB_REL}/v${PROTOBUF_VERSION}/protobuf-cpp-${PROTOBUF_VERSION}.tar.gz
+RUN tar xvzf protobuf.tar.gz
+
+WORKDIR /tmp/protobuf-${PROTOBUF_VERSION}
+RUN ./autogen.sh && ./configure && make && make install
