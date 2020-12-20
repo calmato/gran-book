@@ -49,7 +49,7 @@ jobs:
 
       - name: Build
         working-directory: ./web/admin
-        run: yarn build
+        run: yarn generate
 
       - name: Install firebase-tools
         working-directory: ./web/admin
