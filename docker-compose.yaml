@@ -38,8 +38,10 @@ services:
       - ./infra/gateway:/go/src/github.com/calmato/gran-book/infra/gateway:cached
     ports:
       - 8080:8080
+      - 8090:8090
     networks:
       - api
+    command: go run main.go
 
   # Monitoring
 
@@ -52,8 +54,8 @@ services:
     working_dir: /go/src/github.com/calmato/gran-book/proto
     volumes:
       - ./proto:/go/src/github.com/calmato/gran-book/proto:cached
-      - ./api:/go/src/github.com/calmato/gran-book/api:cached
-      - ./infra/gateway:/go/src/github.com/calmato/gran-book/infra/gateway:cached
+      - ./api:/go/src/github.com/calmato/gran-book/api:delegated
+      - ./infra/gateway:/go/src/github.com/calmato/gran-book/infra/gateway:delegated
 
 networks:
   api: {}
