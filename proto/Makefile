@@ -13,15 +13,34 @@ install:
 ##################################################
 # For Protocol Buffer
 ##################################################
-.PHONY: generate generate-gateway
+.PHONY: generate
 
 generate:
 	$(MAKE) generate-gateway
+	$(MAKE) generate-swagger
+	$(MAKE) generate-helloworld
 
 generate-gateway:
 	protoc -I . \
 		-I ${GOPATH}/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
-		--go_out ./../infra/gateway/proto \
-		--go-grpc_out ./../infra/gateway/proto \
-		--grpc-gateway_out ./../infra/gateway/proto \
-		./api/hello_world.proto
+		--grpc-gateway_out ./../infra/gateway \
+		--grpc-gateway_opt logtostderr=true \
+    --grpc-gateway_opt paths=source_relative \
+    --grpc-gateway_opt generate_unbound_methods=true \
+		./proto/hello_world.proto
+
+generate-swagger:
+	protoc -I . \
+		-I ${GOPATH}/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
+		--openapiv2_out ./../docs/12_backend/11_swagger \
+		--openapiv2_opt logtostderr=true \
+		./proto/hello_world.proto
+
+generate-helloworld:
+	protoc -I . \
+		-I ${GOPATH}/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
+		--go_out ./../api/hello \
+		--go_opt paths=source_relative \
+		--go-grpc_out ./../api/hello \
+		--go-grpc_opt paths=source_relative \
+		./proto/hello_world.proto

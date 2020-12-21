@@ -55,6 +55,7 @@ services:
     volumes:
       - ./proto:/go/src/github.com/calmato/gran-book/proto:cached
       - ./api:/go/src/github.com/calmato/gran-book/api:delegated
+      - ./docs/12_backend/11_swagger:/go/src/github.com/calmato/gran-book/docs/12_backend/11_swagger:delegated
       - ./infra/gateway:/go/src/github.com/calmato/gran-book/infra/gateway:delegated
 
 networks:
