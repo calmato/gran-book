@@ -1,7 +1,7 @@
 ##################################################
 # Container Commands - Run all containers
 ##################################################
-.PHONY: setup build install start stop remove log
+.PHONY: setup build install start stop remove log proto
 
 setup:
 	cp $(PWD)/.env.temp $(PWD)/.env
@@ -25,3 +25,6 @@ remove:
 
 logs:
 	docker-compose logs
+
+proto:
+	docker-compose run --rm proto bash -c "make install && make generate"
