@@ -2,10 +2,19 @@ settings:
   legacy:
     force: true
     interval: 0s
-  resources:
-    outputs: '/var/log/gateway/outputs.log'
-    logs: '/var/log/gateway/stdout.log'
-    errors: '/var/log/gateway/errors.log'
+  files:
+    outputs:
+      status: true
+      path: /var/log/gateway
+      name: outputs.log
+    logs:
+      status: true
+      path: /var/log/gateway
+      name: stdout.log
+    errors:
+      status: true
+      path: /var/log/gateway
+      name: errors.log
 
 schema:
   - name: gateway
