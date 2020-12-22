@@ -36,11 +36,12 @@ services:
     working_dir: /go/src/github.com/calmato/gran-book/infra/gateway
     volumes:
       - ./infra/gateway:/go/src/github.com/calmato/gran-book/infra/gateway:cached
+      - ./tmp/logs/gateway:/var/log/gateway:delegated
     ports:
       - 8080:8080
-    command: go run main.go
     networks:
       - api
+    command: realize start
 
   hello_api:
     container_name: gran_book_hello_api
@@ -50,9 +51,9 @@ services:
     working_dir: /go/src/github.com/calmato/gran-book/api/hello
     volumes:
       - ./api/hello:/go/src/github.com/calmato/gran-book/api/hello:cached
-    command: go run main.go
     networks:
       - api
+    command: go run main.go
 
   # Monitoring
 
@@ -66,7 +67,7 @@ services:
     volumes:
       - ./proto:/go/src/github.com/calmato/gran-book/proto:cached
       - ./api/hello:/go/src/github.com/calmato/gran-book/api/hello:cached
-      - ./docs/12_backend/11_swagger:/go/src/github.com/calmato/gran-book/docs/12_backend/11_swagger:delegated
+      - ./docs/12_backend/11_swagger:/go/src/github.com/calmato/gran-book/docs/12_backend/11_swagger:cached
       - ./infra/gateway:/go/src/github.com/calmato/gran-book/infra/gateway:cached
 
 networks:
