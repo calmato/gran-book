@@ -23,6 +23,10 @@ generate:
 generate-gateway:
 	protoc -I . \
 		-I ${GOPATH}/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
+		--go_out ./../infra/gateway \
+		--go_opt paths=source_relative \
+		--go-grpc_out ./../infra/gateway \
+		--go-grpc_opt paths=source_relative \
 		--grpc-gateway_out ./../infra/gateway \
 		--grpc-gateway_opt logtostderr=true \
     --grpc-gateway_opt paths=source_relative \

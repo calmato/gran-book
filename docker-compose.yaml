@@ -38,10 +38,21 @@ services:
       - ./infra/gateway:/go/src/github.com/calmato/gran-book/infra/gateway:cached
     ports:
       - 8080:8080
-      - 8090:8090
+    command: go run main.go
     networks:
       - api
+
+  hello_api:
+    container_name: gran_book_hello_api
+    build:
+      context: ./infra/docker/api/hello
+      dockerfile: Dockerfile_development
+    working_dir: /go/src/github.com/calmato/gran-book/api/hello
+    volumes:
+      - ./api/hello:/go/src/github.com/calmato/gran-book/api/hello:cached
     command: go run main.go
+    networks:
+      - api
 
   # Monitoring
 
@@ -59,5 +70,7 @@ services:
       - ./infra/gateway:/go/src/github.com/calmato/gran-book/infra/gateway:delegated
 
 networks:
-  api: {}
-  monitoring: {}
+  api:
+    driver: bridge
+  monitoring:
+    driver: bridge
