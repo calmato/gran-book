@@ -37,29 +37,29 @@ jobs:
 
       - name: Download modules
         if: steps.cache.outputs.cache-hit != 'true'
-        working-directory: ./api/calc
+        working-directory: ./infra/gateway
         run: go mod download
 
       - name: Setup
-        working-directory: ./api/calc
+        working-directory: ./infra/gateway
         run: make setup
 
       - name: Fmt
-        working-directory: ./api/calc
+        working-directory: ./infra/gateway
         run: make fmt
 
       - name: Vet
-        working-directory: ./api/calc
+        working-directory: ./infra/gateway
         run: make vet
 
       - name: Lint
-        working-directory: ./api/calc
+        working-directory: ./infra/gateway
         run: make lint
 
       # - name: Test
-      #   working-directory: ./api/calc
+      #   working-directory: ./infra/gateway
       #   run: make test
 
       - name: Build
-        working-directory: ./api/calc
+        working-directory: ./infra/gateway
         run: make build
