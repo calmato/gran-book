@@ -28,23 +28,50 @@ services:
     command: yarn dev -H 0.0.0.0 -p 3000
 
   # Backend
-  envoy:
-    container_name: gran_book_envoy
+  gateway:
+    container_name: gran_book_gateway
     build:
-      context: ./infra/docker/infra/envoy
+      context: ./infra/docker/infra/gateway
       dockerfile: Dockerfile_development
+    working_dir: /go/src/github.com/calmato/gran-book/infra/gateway
     volumes:
-      - ./infra/envoy/development.yaml:/etc/envoy/envoy.yaml:cached
-      - ./tmp/logs/envoy:/var/log:delegated
+      - ./infra/gateway:/go/src/github.com/calmato/gran-book/infra/gateway:cached
+      - ./tmp/logs/gateway:/var/log/gateway:delegated
     ports:
       - 8080:8080
-      - 8081:8081
     networks:
       - api
-    command: envoy -c /etc/envoy/envoy.yaml
+    command: realize start
+
+  hello_api:
+    container_name: gran_book_hello_api
+    build:
+      context: ./infra/docker/api/hello
+      dockerfile: Dockerfile_development
+    working_dir: /go/src/github.com/calmato/gran-book/api/hello
+    volumes:
+      - ./api/hello:/go/src/github.com/calmato/gran-book/api/hello:cached
+    networks:
+      - api
+    command: go run main.go
 
   # Monitoring
 
+  # Other
+  proto:
+    container_name: gran_book_proto
+    build:
+      context: ./infra/docker/proto
+      dockerfile: Dockerfile_development
+    working_dir: /go/src/github.com/calmato/gran-book/proto
+    volumes:
+      - ./proto:/go/src/github.com/calmato/gran-book/proto:cached
+      - ./api/hello:/go/src/github.com/calmato/gran-book/api/hello:cached
+      - ./docs/12_backend/11_swagger:/go/src/github.com/calmato/gran-book/docs/12_backend/11_swagger:cached
+      - ./infra/gateway:/go/src/github.com/calmato/gran-book/infra/gateway:cached
+
 networks:
-  api: {}
-  monitoring: {}
+  api:
+    driver: bridge
+  monitoring:
+    driver: bridge

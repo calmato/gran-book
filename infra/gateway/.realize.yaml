@@ -1,0 +1,39 @@
+settings:
+  legacy:
+    force: true
+    interval: 0s
+  files:
+    outputs:
+      status: true
+      path: /var/log/gateway
+      name: outputs.log
+    logs:
+      status: true
+      path: /var/log/gateway
+      name: stdout.log
+    errors:
+      status: true
+      path: /var/log/gateway
+      name: errors.log
+
+schema:
+  - name: gateway
+    path: .
+    commands:
+      install:
+        status: true
+        method: go build -o app ./cmd/main.go
+      run:
+        status: true
+        method: ./app
+    watcher:
+      paths:
+        - .
+      ignore_paths:
+        - .gitignore
+        - .golangci.yaml
+        - go.mod
+        - go.sum
+        - Makefile
+      extensions:
+        - go
