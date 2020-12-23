@@ -11,6 +11,8 @@
 
 * Frontend
   * Node: 15.4.0
+* Backend
+  * Golang: 1.15.6
 
 </details>
 
