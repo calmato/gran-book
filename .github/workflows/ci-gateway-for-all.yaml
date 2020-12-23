@@ -1,0 +1,65 @@
+name: Gateway(gRPC-Gateway) Build and Test
+on:
+  push:
+    paths:
+      - '.github/workflows/ci-gateway-for-all.yaml'
+      - 'infra/gateway/**'
+
+jobs:
+  build_and_test:
+    name: Build and Test
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest] # exclude: macos-latest, windows-latest
+        golang: ['^1.15.6']
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Use Golang ${{ matrix.golang }}
+        uses: actions/setup-go@v2
+        with:
+          go-version: ${{ matrix.golang }
+
+      - name: Check golang version
+        run: go version
+
+      - name: Restore cache
+        uses: actions/cache@v2
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+      - name: Download modules
+        if: steps.cache.outputs.cache-hit != 'true'
+        working-directory: ./api/calc
+        run: go mod download
+
+      - name: Setup
+        working-directory: ./api/calc
+        run: make setup
+
+      - name: Fmt
+        working-directory: ./api/calc
+        run: make fmt
+
+      - name: Vet
+        working-directory: ./api/calc
+        run: make vet
+
+      - name: Lint
+        working-directory: ./api/calc
+        run: make lint
+
+      # - name: Test
+      #   working-directory: ./api/calc
+      #   run: make test
+
+      - name: Build
+        working-directory: ./api/calc
+        run: make build
