@@ -28,20 +28,6 @@ services:
     command: yarn dev -H 0.0.0.0 -p 3000
 
   # Backend
-  envoy:
-    container_name: gran_book_envoy
-    build:
-      context: ./infra/docker/infra/envoy
-      dockerfile: Dockerfile_development
-    volumes:
-      - ./infra/envoy/development.yaml:/etc/envoy/envoy.yaml:cached
-      - ./tmp/logs/envoy:/var/log:delegated
-    ports:
-      - 8080:8080
-      - 8081:8081
-    networks:
-      - api
-    command: envoy -c /etc/envoy/envoy.yaml
 
   # Monitoring
 
