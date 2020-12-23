@@ -22,7 +22,7 @@ jobs:
       - name: Use Golang ${{ matrix.golang }}
         uses: actions/setup-go@v2
         with:
-          go-version: ${{ matrix.golang }
+          go-version: ${{ matrix.golang }}
 
       - name: Check golang version
         run: go version
