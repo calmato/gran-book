@@ -1,0 +1,66 @@
+name: Frontend(Native) Build and Test
+
+on:
+  push:
+    paths:
+      - '.github/workflows/ci-native-for-all.yaml'
+      - 'native/**'
+
+jobs:
+  build_and_test:
+    name: Build and Test
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest] # exclude: macos-latest, windows-latest
+        node: ['15.4']
+        expo: ['3.x']
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Use Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
+
+      - uses: actions/cache@v2
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install
+        working-directory: ./native
+        run: yarn --check-files --frozen-lockfile --non-interactive
+
+      # - name: Lint
+      #   working-directory: ./native
+      #   run: yarn lint
+
+      # - name: Test
+      #   working-directory: ./native
+      #   run: yarn test
+
+      # - name: Use Expo ${{ matrix.expo }}
+      #   uses: expo/expo-github-action@v5
+      #   with:
+      #     expo-version: ${{ matrix.expo }}
+      #     expo-username: ${{ secrets.STG_EXPO_CLI_USERNAME }}
+      #     expo-password: ${{ secrets.STG_EXPO_CLI_PASSWORD }}
+
+      # - name: Build iOS
+      #   working-directory: ./native/react
+      #   run: expo build:ios -t simulator
+
+      # - name: Build Android
+      #   working-directory: ./native/react
+      #   run: expo build:android -t app-bundle
