@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 package proto;
+option go_package = "github.com/calmato/gran-book/proto";
 
 import "google/api/annotations.proto";
 

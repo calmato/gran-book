@@ -29,16 +29,18 @@ generate-gateway:
 		--go-grpc_opt paths=source_relative \
 		--grpc-gateway_out ./../infra/gateway \
 		--grpc-gateway_opt logtostderr=true \
-    --grpc-gateway_opt paths=source_relative \
-    --grpc-gateway_opt generate_unbound_methods=true \
-		./proto/hello_world.proto
+		--grpc-gateway_opt paths=source_relative \
+		--grpc-gateway_opt generate_unbound_methods=true \
+		./proto/*.proto
 
 generate-swagger:
 	protoc -I . \
 		-I ${GOPATH}/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
 		--openapiv2_out ./../docs/12_backend/11_swagger \
+		--openapiv2_opt allow_merge=true \
+		--openapiv2_opt merge_file_name=apiv1 \
 		--openapiv2_opt logtostderr=true \
-		./proto/hello_world.proto
+		./proto/*.proto
 
 generate-helloworld:
 	protoc -I . \
