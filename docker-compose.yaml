@@ -70,6 +70,18 @@ services:
       - ./docs/12_backend/11_swagger:/go/src/github.com/calmato/gran-book/docs/12_backend/11_swagger:cached
       - ./infra/gateway:/go/src/github.com/calmato/gran-book/infra/gateway:cached
 
+  swagger:
+    container_name: gran_book_swagger
+    build:
+      context: ./infra/docker/infra/swagger
+      dockerfile: Dockerfile
+    volumes:
+      - ./docs/12_backend/11_swagger/apiv1.swagger.json:/var/swagger/apiv1.json:cached
+    ports:
+      - 8000:8080
+    environment:
+      SWAGGER_JSON: /var/swagger/apiv1.json
+
 networks:
   api:
     driver: bridge
