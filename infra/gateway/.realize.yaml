@@ -4,17 +4,11 @@ settings:
     interval: 0s
   files:
     outputs:
-      status: true
-      path: /var/log/gateway
-      name: outputs.log
+      status: false
     logs:
-      status: true
-      path: /var/log/gateway
-      name: stdout.log
+      status: false
     errors:
-      status: true
-      path: /var/log/gateway
-      name: errors.log
+      status: false
 
 schema:
   - name: gateway

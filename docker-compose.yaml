@@ -52,6 +52,10 @@ services:
     volumes:
       - ./api/hello:/go/src/github.com/calmato/gran-book/api/hello:cached
       - ./tmp/logs/hello_api:/var/log/api:delegated
+    environment:
+      - PORT=8080
+      - LOG_PATH=/var/log/api
+      - LOG_LEVEL=DEBUG
     networks:
       - api
     command: realize start
