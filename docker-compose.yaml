@@ -51,9 +51,10 @@ services:
     working_dir: /go/src/github.com/calmato/gran-book/api/hello
     volumes:
       - ./api/hello:/go/src/github.com/calmato/gran-book/api/hello:cached
+      - ./tmp/logs/hello_api:/var/log/api:delegated
     networks:
       - api
-    command: go run main.go
+    command: realize start
 
   # Monitoring
 

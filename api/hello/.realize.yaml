@@ -1,0 +1,39 @@
+settings:
+  legacy:
+    force: true
+    interval: 0s
+  files:
+    outputs:
+      status: true
+      path: /var/log/hello_api
+      name: outputs.log
+    logs:
+      status: true
+      path: /var/log/hello_api
+      name: stdout.log
+    errors:
+      status: true
+      path: /var/log/hello_api
+      name: errors.log
+
+schema:
+  - name: hello_api
+    path: .
+    commands:
+      install:
+        status: true
+        method: go build -o app ./cmd/main.go
+      run:
+        status: true
+        method: ./app
+    watcher:
+      paths:
+        - .
+      ignore_paths:
+        - .gitignore
+        - .golangci.yaml
+        - go.mod
+        - go.sum
+        - Makefile
+      extensions:
+        - go
