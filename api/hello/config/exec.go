@@ -1,9 +1,9 @@
 package config
 
 import (
-	"os"
-	"os/signal"
-	"syscall"
+	"net/http"
+
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 // Execute - gRPC Serverの起動
@@ -13,25 +13,25 @@ func Execute() error {
 		return err
 	}
 
+	// gRPC Serverの起動
 	gs, err := newGRPCServer(env.Port, env.LogPath, env.LogLevel)
 	if err != nil {
 		return err
 	}
 
+	if err := gs.Serve(); err != nil {
+		panic(err)
+	}
+
+	// メトリクス用のHTTP Serverの起動
+	mux := http.NewServeMux()
+	mux.Handle("/metrics", promhttp.Handler())
+
 	go func() {
-		if err := gs.Serve(); err != nil {
+		if http.ListenAndServe(env.MetricsPort, mux); err != nil {
 			panic(err)
 		}
 	}()
-
-	sigChan := make(chan os.Signal, 1)
-	signal.Notify(sigChan, syscall.SIGTERM, syscall.SIGINT)
-
-	sig := <-sigChan
-	switch sig {
-	case syscall.SIGINT, syscall.SIGTERM:
-		gs.Stop()
-	}
 
 	return nil
 }
