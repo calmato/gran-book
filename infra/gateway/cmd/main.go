@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 
-	"github.com/calmato/gran-gook/infra/gateway/config"
+	"github.com/calmato/gran-book/infra/gateway/config"
 	"github.com/golang/glog"
 )
 
