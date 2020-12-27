@@ -1,11 +1,11 @@
 import React, { ReactElement } from 'react';
 import { StyleSheet, View } from 'react-native';
-import AppleButton from '../atoms/AppleButton';
-import FacebookButton from '../atoms/FacebookButton';
-import GoogleButton from '../atoms/GoogleButton';
-import MailSignInButton from '../atoms/MailSignInButton';
-import RegisterMailButton from '../atoms/RegisterMailButton';
-import TwitterButton from '../atoms/TwitterButton';
+import AppleButton from '~/components/atoms/AppleButton';
+import FacebookButton from '~/components/atoms/FacebookButton';
+import GoogleButton from '~/components/atoms/GoogleButton';
+import MailSignInButton from '~/components/atoms/MailSignInButton';
+import RegisterMailButton from '~/components/atoms/RegisterMailButton';
+import TwitterButton from '~/components/atoms/TwitterButton';
 
 const styles = StyleSheet.create({
   buttonLayout: {
@@ -14,9 +14,9 @@ const styles = StyleSheet.create({
   }
 });
 
-interface Props {}
+// interface Props {}
 
-const SignInButtonGroup = function SignInButtonGroup(props: Props): ReactElement {
+const SignInButtonGroup = function SignInButtonGroup(): ReactElement {
   return (
     <View>
       <AppleButton style={styles.buttonLayout} />
