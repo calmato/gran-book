@@ -25,8 +25,17 @@ func Execute() error {
 		return err
 	}
 
-	mux := runtime.NewServeMux()
+	// メトリクス用のHTTP Serverの起動
+	hs := newHTTPServer(env.MetricsPort)
 
+	go func() {
+		if err := hs.Serve(); err != nil {
+			panic(err)
+		}
+	}()
+
+	// Client側のHTTP Serverの起動
+	mux := runtime.NewServeMux()
 	if err := registerServiceHandlers(ctx, mux, env.LogPath, env.LogLevel); err != nil {
 		return err
 	}

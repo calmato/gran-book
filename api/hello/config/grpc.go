@@ -35,6 +35,7 @@ func newGRPCServer(port, logPath, logLevel string) (*grpcServer, error) {
 	pb.RegisterGreeterServer(s, &v1.HelloServer{})
 
 	grpc_prometheus.Register(s)
+	grpc_prometheus.EnableHandlingTimeHistogram()
 
 	lis, err := net.Listen("tcp", ":"+port)
 	if err != nil {
