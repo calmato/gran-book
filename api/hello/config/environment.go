@@ -8,7 +8,7 @@ import (
 // Environment - システム内で利用する環境変数の構造体
 type Environment struct {
 	Port        string `envconfig:"PORT" default:"8080"`
-	MetricsPort string `envconfig:"PORT" default:"9090"`
+	MetricsPort string `envconfig:"METRICS_PORT" default:"9090"`
 	LogPath     string `envconfig:"LOG_PATH" default:""`
 	LogLevel    string `envconfig:"LOG_LEVEL" default:"info"`
 }
