@@ -9,7 +9,7 @@ import (
 type Environment struct {
 	Port     string `envconfig:"PORT" default:"8080"`
 	LogPath  string `envconfig:"LOG_PATH" default:""`
-	LogLevel string `envconfig:"LOG_LEVEL" default:"INFO"`
+	LogLevel string `envconfig:"LOG_LEVEL" default:"info"`
 }
 
 // LoadEnvironment - 環境変数の取得

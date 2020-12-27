@@ -25,19 +25,9 @@ type grpcServer struct {
 }
 
 func newGRPCServer(port, logPath, logLevel string) (*grpcServer, error) {
-	streamInterceptors, err := grpcStreamServerInterceptors()
+	opts, err := grpcServerOptions(logPath, logLevel)
 	if err != nil {
 		return nil, err
-	}
-
-	unaryInterceptors, err := grpcUnaryServerInterceptors(logPath, logLevel)
-	if err != nil {
-		return nil, err
-	}
-
-	opts := []grpc.ServerOption{
-		grpc.StreamInterceptor(grpc_middleware.ChainStreamServer(streamInterceptors...)),
-		grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(unaryInterceptors...)),
 	}
 
 	s := grpc.NewServer(opts...)
@@ -67,12 +57,40 @@ func (s *grpcServer) Stop() {
 	s.s.GracefulStop()
 }
 
+/*
+ * ServerOptions
+ */
+func grpcServerOptions(logPath, logLevel string) ([]grpc.ServerOption, error) {
+	streamInterceptors, err := grpcStreamServerInterceptors()
+	if err != nil {
+		return nil, err
+	}
+
+	unaryInterceptors, err := grpcUnaryServerInterceptors(logPath, logLevel)
+	if err != nil {
+		return nil, err
+	}
+
+	opts := []grpc.ServerOption{
+		grpc.StreamInterceptor(grpc_middleware.ChainStreamServer(streamInterceptors...)),
+		grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(unaryInterceptors...)),
+	}
+
+	return opts, nil
+}
+
+/*
+ * ServerOptions - StremServerInterceptor
+ */
 func grpcStreamServerInterceptors() ([]grpc.StreamServerInterceptor, error) {
 	interceptors := []grpc.StreamServerInterceptor{}
 
 	return interceptors, nil
 }
 
+/*
+ * ServerOptions - UnaryServerInterceptor
+ */
 func grpcUnaryServerInterceptors(logPath, logLevel string) ([]grpc.UnaryServerInterceptor, error) {
 	logger, err := newLogger(logPath, logLevel)
 	if err != nil {

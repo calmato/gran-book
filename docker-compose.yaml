@@ -37,6 +37,10 @@ services:
     volumes:
       - ./infra/gateway:/go/src/github.com/calmato/gran-book/infra/gateway:cached
       - ./tmp/logs/gateway:/var/log/gateway:delegated
+    environment:
+      - PORT=8080
+      - LOG_PATH=/var/log/gateway
+      - LOG_LEVEL=debug
     ports:
       - 8080:8080
     networks:
@@ -55,7 +59,7 @@ services:
     environment:
       - PORT=8080
       - LOG_PATH=/var/log/api
-      - LOG_LEVEL=DEBUG
+      - LOG_LEVEL=debug
     networks:
       - api
     command: realize start
