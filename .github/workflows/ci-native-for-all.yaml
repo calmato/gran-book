@@ -42,9 +42,9 @@ jobs:
         working-directory: ./native
         run: yarn --check-files --frozen-lockfile --non-interactive
 
-      # - name: Lint
-      #   working-directory: ./native
-      #   run: yarn lint
+      - name: Lint
+        working-directory: ./native
+        run: yarn lint
 
       # - name: Test
       #   working-directory: ./native

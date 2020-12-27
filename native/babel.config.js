@@ -1,22 +1,22 @@
 module.exports = {
-  presets: ["module:metro-react-native-babel-preset"],
+  presets: ['module:metro-react-native-babel-preset'],
   plugins: [
     [
-      "inline-dotenv",
+      'inline-dotenv',
       {
-        path: ".env",
+        path: '.env',
       },
     ],
     [
-      "module-resolver",
+      'module-resolver',
       {
-        root: ["./"],
-        extensions: [".ios.js", ".android.js", ".js", ".ts", ".tsx", ".json"],
+        root: ['./'],
+        extensions: ['.ios.js', '.android.js', '.js', '.ts', '.tsx', '.json'],
         alias: {
-          "~": ["./app/"],
-          "~~": ["./"],
-          "@": ["./app/"],
-          "@@": ["./"]
+          '~': ['./app/'],
+          '~~': ['./'],
+          '@': ['./app/'],
+          '@@': ['./']
         },
       },
     ],
