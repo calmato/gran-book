@@ -12,7 +12,7 @@ type httpServer struct {
 	port string
 }
 
-func newHTTPServer(port string) (*httpServer, error) {
+func newHTTPServer(port string) *httpServer {
 	mux := http.NewServeMux()
 	mux.Handle("/metrics", promhttp.Handler())
 
@@ -21,7 +21,7 @@ func newHTTPServer(port string) (*httpServer, error) {
 		port: fmt.Sprintf(":%s", port),
 	}
 
-	return hs, nil
+	return hs
 }
 
 func (s *httpServer) Serve() error {

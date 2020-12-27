@@ -14,10 +14,7 @@ func Execute() error {
 	}
 
 	// メトリクス用のHTTP Serverの起動
-	hs, err := newHTTPServer(env.MetricsPort)
-	if err != nil {
-		return err
-	}
+	hs := newHTTPServer(env.MetricsPort)
 
 	go func() {
 		if err := hs.Serve(); err != nil {
