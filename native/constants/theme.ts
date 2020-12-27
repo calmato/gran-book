@@ -12,6 +12,7 @@ export const COLOR = {
   GOOGLE: '#FFFFFF',
 };
 
+// react-native-elementsの共通の設定
 export const THEME: Theme = {
   colors: {
     primary: COLOR.MAIN,
@@ -22,6 +23,10 @@ export const THEME: Theme = {
     titleStyle: {
       fontWeight: 'bold',
     },
+    buttonStyle: {
+      width: 310,
+      height: 42,
+    }
   },
   Text: {
     h1Style: {
