@@ -31,9 +31,9 @@ func Execute() error {
 		return err
 	}
 
-	handler := setCors(mux)
+	c := setCors()
 
-	if err := http.ListenAndServe(":"+env.Port, handler); err != nil {
+	if err := http.ListenAndServe(":"+env.Port, c.Handler(mux)); err != nil {
 		return err
 	}
 

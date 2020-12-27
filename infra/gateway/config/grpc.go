@@ -1,7 +1,6 @@
 package config
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -10,8 +9,6 @@ import (
 	"time"
 
 	gw "github.com/calmato/gran-book/infra/gateway/proto"
-	"github.com/golang/protobuf/jsonpb"
-	"github.com/golang/protobuf/proto"
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -19,10 +16,8 @@ import (
 	"go.uber.org/zap/zapcore"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
-)
-
-var (
-	jsonPbMarshaller = &jsonpb.Marshaler{}
+	"google.golang.org/protobuf/encoding/protojson"
+	"google.golang.org/protobuf/proto"
 )
 
 func registerServiceHandlers(ctx context.Context, mux *runtime.ServeMux, logPath, logLevel string) error {
@@ -70,12 +65,15 @@ func grpcUnaryClientInterceptors(logPath, logLevel string) ([]grpc.UnaryClientIn
 }
 
 func accessLogUnaryClientInterceptor(logger *zap.Logger) grpc.UnaryClientInterceptor {
-	return func(ctx context.Context, method string, req, reply interface{}, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
+	return func(
+		ctx context.Context, method string, req, reply interface{},
+		cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption,
+	) error {
 		startTime := time.Now()
 
 		err := invoker(ctx, method, req, reply, cc, opts...)
 
-		duration := time.Now().Sub(startTime)
+		duration := time.Since(startTime)
 		fields := newClientLoggerFields(ctx, method, req, reply, duration, err)
 		logger.Check(zap.InfoLevel, "client request/response payload logged").Write(fields...)
 
@@ -86,7 +84,9 @@ func accessLogUnaryClientInterceptor(logger *zap.Logger) grpc.UnaryClientInterce
 /*
  * ログの整形用
  */
-func newClientLoggerFields(ctx context.Context, fullMethodString string, reqPbMsg, resPbMsg interface{}, duration time.Duration, err error) []zapcore.Field {
+func newClientLoggerFields(
+	ctx context.Context, fullMethodString string, reqPbMsg, resPbMsg interface{}, duration time.Duration, err error,
+) []zapcore.Field {
 	service := path.Dir(fullMethodString)[1:]
 	method := path.Base(fullMethodString)
 
@@ -123,14 +123,13 @@ func newClientLoggerFields(ctx context.Context, fullMethodString string, reqPbMs
 }
 
 func filterParams(pb proto.Message) (map[string]interface{}, error) {
-	b := &bytes.Buffer{}
-	if err := jsonPbMarshaller.Marshal(b, pb); err != nil {
+	bs, err := protojson.Marshal(pb)
+	if err != nil {
 		return nil, fmt.Errorf("jsonpb serializer failed: %v", err)
 	}
 
-	bs := b.Bytes()
 	bj := make(map[string]interface{})
-	json.Unmarshal(bs, &bj) // ignore error here.
+	_ = json.Unmarshal(bs, &bj) // ignore error here.
 
 	var toFilter []string
 	for k := range bj {
