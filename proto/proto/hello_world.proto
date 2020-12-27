@@ -13,7 +13,39 @@ service Greeter {
       post: "/v1/example/echo"
       body: "*"
     };
-  }
+  };
+
+  rpc GetUsers (EmptyRequest) returns (UsersResponse) {
+    option (google.api.http) = {
+      get: "/v1/example/users"
+    };
+  };
+
+  rpc GetUser (GetUserRequest) returns (UserResponse) {
+    option (google.api.http) = {
+      get: "/v1/example/users/{id}"
+    };
+  };
+
+  rpc CreateUser (CreateUserRequest) returns (UserResponse) {
+    option (google.api.http) = {
+      post: "/v1/example/users"
+      body: "*"
+    };
+  };
+
+  rpc UpdateUser (UpdateUserRequest) returns (UserResponse) {
+    option (google.api.http) = {
+      patch: "/v1/example/users/{id}"
+      body: "*"
+    };
+  };
+
+  rpc DeleteUser (DeleteUserRequest) returns (EmptyResponse) {
+    option (google.api.http) = {
+      delete: "/v1/example/users/{id}"
+    };
+  };
 }
 
 // The request message containing the user's name
@@ -24,4 +56,39 @@ message HelloRequest {
 // The response message containing the greetings
 message HelloReply {
   string message = 1;
+}
+
+message EmptyRequest {}
+
+message GetUserRequest {
+  string id = 1;
+}
+
+message CreateUserRequest {
+  string name = 1;
+}
+
+message UpdateUserRequest {
+  string id = 1;
+  string name = 2;
+}
+
+message DeleteUserRequest {
+  string id = 1;
+}
+
+message EmptyResponse {}
+
+message User {
+  string id = 1;
+  string name = 2;
+}
+
+message UsersResponse {
+  repeated User users = 1;
+}
+
+message UserResponse {
+  string id = 1;
+  string name = 2;
 }
