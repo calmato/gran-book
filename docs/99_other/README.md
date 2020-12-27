@@ -32,7 +32,7 @@
 feat: add hat wobble
 ^--^  ^------------^
 |                               |
-| +-> Summary in present tense. |
+| +-> Summary in past tense. |
 |                               |
 +-------> Type: feat, fix, refactor, test, docs, or style.
 ```
