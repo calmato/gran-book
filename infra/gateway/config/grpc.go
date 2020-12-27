@@ -3,23 +3,26 @@ package config
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"path"
+	"strings"
+	"time"
 
 	gw "github.com/calmato/gran-book/infra/gateway/proto"
 	"github.com/golang/protobuf/jsonpb"
 	"github.com/golang/protobuf/proto"
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
-	grpc_logging "github.com/grpc-ecosystem/go-grpc-middleware/logging"
 	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/metadata"
 )
 
 var (
-	JsonPbMarshaller grpc_logging.JsonPbMarshaler = &jsonpb.Marshaler{}
+	jsonPbMarshaller = &jsonpb.Marshaler{}
 )
 
 func registerServiceHandlers(ctx context.Context, mux *runtime.ServeMux, logPath, logLevel string) error {
@@ -33,6 +36,9 @@ func registerServiceHandlers(ctx context.Context, mux *runtime.ServeMux, logPath
 	return nil
 }
 
+/*
+ * DialOptions
+ */
 func grpcDialOptions(logPath, logLevel string) []grpc.DialOption {
 	unaryInterceptors, _ := grpcUnaryClientInterceptors(logPath, logLevel)
 
@@ -44,6 +50,9 @@ func grpcDialOptions(logPath, logLevel string) []grpc.DialOption {
 	return opts
 }
 
+/*
+ * DialOptions - UnaryClientInterceptor
+ */
 func grpcUnaryClientInterceptors(logPath, logLevel string) ([]grpc.UnaryClientInterceptor, error) {
 	logger, err := newLogger(logPath, logLevel)
 	if err != nil {
@@ -62,46 +71,77 @@ func grpcUnaryClientInterceptors(logPath, logLevel string) ([]grpc.UnaryClientIn
 
 func accessLogUnaryClientInterceptor(logger *zap.Logger) grpc.UnaryClientInterceptor {
 	return func(ctx context.Context, method string, req, reply interface{}, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
-		logEntry := logger.With(newClientLoggerFields(ctx, method, req)...)
+		startTime := time.Now()
 
 		err := invoker(ctx, method, req, reply, cc, opts...)
-		if err == nil {
-			logProtoMessageAsJSON(logEntry, reply, "grpc.response.content", "client access log")
-		}
+
+		duration := time.Now().Sub(startTime)
+		fields := newClientLoggerFields(ctx, method, req, reply, duration, err)
+		logger.Check(zap.InfoLevel, "client request/response payload logged").Write(fields...)
 
 		return err
 	}
 }
 
-func newClientLoggerFields(ctx context.Context, fullMethodString string, req interface{}) []zapcore.Field {
+/*
+ * ログの整形用
+ */
+func newClientLoggerFields(ctx context.Context, fullMethodString string, reqPbMsg, resPbMsg interface{}, duration time.Duration, err error) []zapcore.Field {
 	service := path.Dir(fullMethodString)[1:]
 	method := path.Base(fullMethodString)
 
-	return []zapcore.Field{
+	fields := []zapcore.Field{
 		zap.String("grpc.service", service),
 		zap.String("grpc.method", method),
-		zap.Reflect("grpc.request.content", req),
+		zap.Duration("grpc.duration", duration),
 	}
-}
 
-func logProtoMessageAsJSON(logger *zap.Logger, pbMsg interface{}, key string, msg string) {
-	if p, ok := pbMsg.(proto.Message); ok {
-		logger.Check(zapcore.InfoLevel, msg).Write(zap.Object(key, &jsonpbObjectMarshaler{pb: p}))
+	if md, ok := metadata.FromOutgoingContext(ctx); ok {
+		if values := md.Get("grpcgateway-user-agent"); len(values) > 0 {
+			fields = append(fields, zap.String("grpc.user_agent", values[0]))
+		}
+		if values := md.Get("x-forwarded-for"); len(values) > 0 {
+			fields = append(fields, zap.String("gprc.remote_ip", values[0]))
+		}
 	}
+
+	if p, ok := reqPbMsg.(proto.Message); ok {
+		req, _ := filterParams(p)
+		fields = append(fields, zap.Reflect("grpc.request.content", req))
+	}
+
+	if p, ok := resPbMsg.(proto.Message); ok {
+		res, _ := filterParams(p)
+		fields = append(fields, zap.Reflect("grpc.request.content", res))
+	}
+
+	if err != nil {
+		fields = append(fields, zap.String("grpc.err", err.Error()))
+	}
+
+	return fields
 }
 
-type jsonpbObjectMarshaler struct {
-	pb proto.Message
-}
-
-func (j *jsonpbObjectMarshaler) MarshalLogObject(e zapcore.ObjectEncoder) error {
-	return e.AddReflected("msg", j)
-}
-
-func (j *jsonpbObjectMarshaler) MarshalJSON() ([]byte, error) {
+func filterParams(pb proto.Message) (map[string]interface{}, error) {
 	b := &bytes.Buffer{}
-	if err := JsonPbMarshaller.Marshal(b, j.pb); err != nil {
+	if err := jsonPbMarshaller.Marshal(b, pb); err != nil {
 		return nil, fmt.Errorf("jsonpb serializer failed: %v", err)
 	}
-	return b.Bytes(), nil
+
+	bs := b.Bytes()
+	bj := make(map[string]interface{})
+	json.Unmarshal(bs, &bj) // ignore error here.
+
+	var toFilter []string
+	for k := range bj {
+		if strings.Contains(strings.ToLower(k), "password") {
+			toFilter = append(toFilter, k)
+		}
+	}
+
+	for _, k := range toFilter {
+		bj[k] = "<FILTERED>"
+	}
+
+	return bj, nil
 }

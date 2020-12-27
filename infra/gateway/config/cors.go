@@ -11,7 +11,7 @@ func setCors(mux *runtime.ServeMux) http.Handler {
 	handler := handlers.CORS(
 		handlers.AllowedOrigins([]string{"*"}),
 		handlers.AllowedMethods([]string{http.MethodPost, http.MethodGet, http.MethodPut, http.MethodDelete}),
-		handlers.AllowedHeaders([]string{"Authorization", "Content-Type", "Accept-Encoding", "Accept"}),
+		handlers.AllowedHeaders([]string{"Authorization", "Content-Type", "Accept"}),
 	)(mux)
 
 	return handler
