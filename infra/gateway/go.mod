@@ -6,8 +6,10 @@ require (
 	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
 	github.com/golang/protobuf v1.4.3
 	github.com/grpc-ecosystem/go-grpc-middleware v1.2.2
+	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.0.1
 	github.com/kelseyhightower/envconfig v1.4.0
+	github.com/prometheus/client_golang v1.9.0
 	github.com/rs/cors v1.7.0
 	go.uber.org/zap v1.16.0
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1
