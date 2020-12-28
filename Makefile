@@ -13,6 +13,7 @@ build:
 
 install:
 	docker-compose run --rm admin yarn
+	docker-compose run --rm native yarn
 
 start:
 	docker-compose up
@@ -21,7 +22,7 @@ stop:
 	docker-compose stop
 
 remove:
-	docker-compose down
+	docker-compose down --rmi all --volumes --remove-orphans
 
 logs:
 	docker-compose logs
