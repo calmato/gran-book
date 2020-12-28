@@ -9,7 +9,7 @@ setup:
 	$(MAKE) install
 
 build:
-	docker-compose build
+	docker-compose build --parallel
 
 install:
 	docker-compose run --rm admin yarn
@@ -20,6 +20,9 @@ start:
 
 stop:
 	docker-compose stop
+
+down:
+	docker-compose down
 
 remove:
 	docker-compose down --rmi all --volumes --remove-orphans
