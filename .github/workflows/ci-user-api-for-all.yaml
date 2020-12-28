@@ -9,6 +9,10 @@ jobs:
   build_and_test:
     name: Build and Test
     runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./api/user
 
     strategy:
       matrix:
@@ -37,29 +41,22 @@ jobs:
 
       - name: Download modules
         if: steps.cache.outputs.cache-hit != 'true'
-        working-directory: ./api/user
         run: go mod download
 
       - name: Setup
-        working-directory: ./api/user
         run: make setup
 
       - name: Fmt
-        working-directory: ./api/user
         run: make fmt
 
       - name: Vet
-        working-directory: ./api/user
         run: make vet
 
       - name: Lint
-        working-directory: ./api/user
         run: make lint
 
       # - name: Test
-      #   working-directory: ./api/user
       #   run: make test
 
       - name: Build
-        working-directory: ./api/user
         run: make build
