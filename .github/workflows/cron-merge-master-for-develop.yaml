@@ -1,0 +1,41 @@
+name: Scheduled Merge master branch
+
+on:
+  schedule:
+    - cron: '0 * * * *'
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  merge_master_to_develop:
+    name: Merge master into develp
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest] # exclude: macos-latest, windows-latest
+
+    steps:
+      - name: Checkout out code
+        uses: actions/checkout@v2
+        with:
+          ref: master
+
+      - name: git fetch
+        run: git fetch origin
+
+      - name: develop/admin
+        run: |
+          git checkout -b develop/admin origin/develop/admin
+          git push origin develop/admin
+
+      - name: develop/native
+        run: |
+          git checkout -b develop/native origin/develop/native
+          git push origin develop/native
+
+      - name: develop/infra
+        run: |
+          git checkout -b develop/infra origin/develop/infra
+          git push origin develop/infra
