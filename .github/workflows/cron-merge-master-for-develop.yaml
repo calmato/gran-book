@@ -2,7 +2,7 @@ name: Scheduled Merge master branch
 
 on:
   schedule:
-    - cron: '0 * * * *'
+    - cron: '0 */2 * * *'
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -28,14 +28,17 @@ jobs:
       - name: develop/admin
         run: |
           git checkout -b develop/admin origin/develop/admin
+          git merge master
           git push origin develop/admin
 
       - name: develop/native
         run: |
           git checkout -b develop/native origin/develop/native
+          git merge master
           git push origin develop/native
 
       - name: develop/infra
         run: |
           git checkout -b develop/infra origin/develop/infra
+          git merge master
           git push origin develop/infra
