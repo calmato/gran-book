@@ -66,6 +66,24 @@ services:
       - monitoring
     command: realize start
 
+  user_api:
+    container_name: gran_book_user_api
+    build:
+      context: ./infra/docker/api/user
+      dockerfile: Dockerfile_development
+    working_dir: /go/src/github.com/calmato/gran-book/api/user
+    volumes:
+      - ./api/user:/go/src/github.com/calmato/gran-book/api/user:cached
+      - ./tmp/logs/user_api:/var/log/api:delegated
+    environment:
+      - PORT=8080
+      - LOG_PATH=/var/log/api
+      - LOG_LEVEL=debug
+    networks:
+      - api
+      - monitoring
+    command: realize start
+
   # Monitoring
   grafana:
     container_name: gran_book_grafana
