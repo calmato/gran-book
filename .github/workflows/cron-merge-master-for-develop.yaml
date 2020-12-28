@@ -8,7 +8,7 @@ env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
-  merge_master_to_develop:
+  merge_master_into_develop:
     name: Merge master into develp
     runs-on: ${{ matrix.os }}
 
