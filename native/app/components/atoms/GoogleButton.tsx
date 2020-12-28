@@ -1,10 +1,10 @@
-import { Ionicons } from '@expo/vector-icons';
 import React, { ReactElement } from 'react';
-import { StyleSheet, ViewStyle } from 'react-native';
+import { StyleSheet, ViewStyle, Image } from 'react-native';
 import { Button } from 'react-native-elements';
 import { COLOR, SOCIAL_BUTTON } from '~~/constants/theme';
+import google from '~~/assets/g-logo.png';
 
-const color = '#939393';
+const color = 'rgba(0,0,0,0.54)';
 
 const styles = StyleSheet.create({
   buttonStyle: {
@@ -13,6 +13,8 @@ const styles = StyleSheet.create({
   },
   iconStyle: {
     marginRight: 10,
+    width:24,
+    height:24,
   },
   fontStyle: {
     color: color,
@@ -27,10 +29,8 @@ const GoogleButton = function GoogleButton(props: Props): ReactElement {
   return (
     <Button
       icon={
-        <Ionicons
-          name="logo-google"
-          size={24}
-          color={color}
+        <Image
+          source={google}
           style={styles.iconStyle}
         />
       }
