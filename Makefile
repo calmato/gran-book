@@ -9,10 +9,11 @@ setup:
 	$(MAKE) install
 
 build:
-	docker-compose build
+	docker-compose build --parallel
 
 install:
 	docker-compose run --rm admin yarn
+	docker-compose run --rm native yarn
 
 start:
 	docker-compose up
@@ -20,8 +21,11 @@ start:
 stop:
 	docker-compose stop
 
-remove:
+down:
 	docker-compose down
+
+remove:
+	docker-compose down --rmi all --volumes --remove-orphans
 
 logs:
 	docker-compose logs
