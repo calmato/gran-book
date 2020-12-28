@@ -28,23 +28,23 @@ jobs:
       - name: develop/admin
         run: |
           git checkout -b develop/admin origin/develop/admin
-          git merge master
+          git merge --allow-unrelated-histories origin/master
           git push origin develop/admin
 
       - name: develop/native
         run: |
           git checkout -b develop/native origin/develop/native
-          git merge master
+          git merge --allow-unrelated-histories origin/master
           git push origin develop/native
 
       - name: develop/user_api
         run: |
           git checkout -b develop/user_api origin/develop/user_api
-          git merge master
+          git merge --allow-unrelated-histories origin/master
           git push origin develop/user_api
 
       - name: develop/infra
         run: |
           git checkout -b develop/infra origin/develop/infra
-          git merge master
+          git merge --allow-unrelated-histories origin/master
           git push origin develop/infra
