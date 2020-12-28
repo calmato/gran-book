@@ -67,6 +67,16 @@ services:
     command: realize start
 
   # Monitoring
+  grafana:
+    container_name: gran_book_grafana
+    build:
+      context: ./infra/docker/infra/grafana
+      dockerfile: Dockerfile
+    ports:
+      - 9000:3000
+    networks:
+      - monitoring
+
   prometheus:
     container_name: gran_book_prometheus
     build:
