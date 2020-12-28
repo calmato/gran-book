@@ -39,7 +39,7 @@ const RegisterMailButton = function RegisterMailButton(props: Props): ReactEleme
       buttonStyle={styles.buttonStyle}
       titleStyle={styles.fontStyle}
       type="outline"
-      title="メールアドレスでサインイン"
+      title="メールアドレスで新規登録"
     />
   );
 };
