@@ -37,6 +37,12 @@ jobs:
           git merge master
           git push origin develop/native
 
+      - name: develop/user_api
+        run: |
+          git checkout -b develop/user_api origin/develop/user_api
+          git merge master
+          git push origin develop/user_api
+
       - name: develop/infra
         run: |
           git checkout -b develop/infra origin/develop/infra
