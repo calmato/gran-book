@@ -1,11 +1,11 @@
 import React, { ReactElement } from 'react';
 import { StyleSheet, View } from 'react-native';
-import AppleButton from '~/components/atoms/AppleButton';
-import FacebookButton from '~/components/atoms/FacebookButton';
-import GoogleButton from '~/components/atoms/GoogleButton';
-import MailSignInButton from '~/components/atoms/MailSignInButton';
-import RegisterMailButton from '~/components/atoms/RegisterMailButton';
-import TwitterButton from '~/components/atoms/TwitterButton';
+import AppleButton from '~/components/molecules/AppleButton';
+import FacebookButton from '~/components/molecules/FacebookButton';
+import GoogleButton from '~/components/molecules/GoogleButton';
+import MailSignInButton from '~/components/molecules/MailSignInButton';
+import RegisterMailButton from '~/components/molecules/RegisterMailButton';
+import TwitterButton from '~/components/molecules/TwitterButton';
 
 const styles = StyleSheet.create({
   buttonLayout: {
