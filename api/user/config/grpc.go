@@ -113,7 +113,9 @@ func grpcUnaryServerInterceptors(logPath, logLevel string) ([]grpc.UnaryServerIn
 }
 
 func accessLogUnaryServerInterceptor() grpc.UnaryServerInterceptor {
-	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
+	return func(
+		ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler,
+	) (interface{}, error) {
 		clientIP := "unknown"
 		if p, ok := peer.FromContext(ctx); ok {
 			clientIP = p.Addr.String()
