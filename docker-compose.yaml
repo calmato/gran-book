@@ -84,6 +84,24 @@ services:
       - monitoring
     command: realize start
 
+  # Database
+  mysql:
+    container_name: gran_book_mysql
+    build:
+      context: ./infra/docker/infra/mysql
+      dockerfile: Dockerfile
+    volumes:
+      - ./infra/mysql/development.cnf:/etc/mysql/conf.d/mycnf:cached
+      - ./tmp/logs/mysql:/var/log/mysql:delegated
+      - ./tmp/data/mysql:/var/lib/mysql:delegated
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    ports:
+      - 3306:3306
+    networks:
+      - api
+      - monitoring
+
   # Monitoring
   grafana:
     container_name: gran_book_grafana

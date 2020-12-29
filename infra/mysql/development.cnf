@@ -1,0 +1,25 @@
+[mysqld]
+#
+# * Basic Settings
+#
+port = 3306
+
+#
+# * Logging and Replication
+#
+general_log         = 1
+general_log_file    = /var/log/mysql/mysql.log
+log_error           = /var/log/mysql/error.log
+slow_query_log      = 1
+slow_query_log_file = /var/log/mysql/mysql-slow.log
+
+#
+# * Other Settings
+#
+character-set-server = utf8mb4
+
+[mysql]
+character-set-server = utf8mb4
+
+[client]
+character-set-server = utf8mb4
