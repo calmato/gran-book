@@ -1,7 +1,12 @@
 package main
 
-import "fmt"
+import (
+	"github.com/calmato/gran-book/api/user/config"
+)
 
 func main() {
-	fmt.Println("Hello World!!")
+	err := config.Execute()
+	if err != nil {
+		panic(err)
+	}
 }
