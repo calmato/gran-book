@@ -38,6 +38,7 @@ message UserResponse {
   string address_line1 = 14;
   string address_line2 = 15;
   string phone_number = 16;
-  string created_at = 17;
-  string updated_at = 18;
+  int32 role = 17;
+  string created_at = 18;
+  string updated_at = 19;
 }

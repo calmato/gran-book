@@ -166,6 +166,10 @@
         "phoneNumber": {
           "type": "string"
         },
+        "role": {
+          "type": "integer",
+          "format": "int32"
+        },
         "createdAt": {
           "type": "string"
         },
