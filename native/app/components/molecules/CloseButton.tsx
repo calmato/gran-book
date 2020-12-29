@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import CloseIcon from '../atoms/CloseIcon';
+import CloseIcon from '~/components/atoms/CloseIcon';
 
 interface Props {
   size?: number,

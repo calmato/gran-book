@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react';
 import { Header } from 'react-native-elements';
-import HeaderText from '../atoms/HeaderText';
-import CloseButton from '../molecules/CloseButton';
+import HeaderText from '~/components/atoms/HeaderText';
+import CloseButton from '~/components/molecules/CloseButton';
 
 
 interface Props {
