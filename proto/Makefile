@@ -19,6 +19,7 @@ generate:
 	$(MAKE) generate-gateway
 	$(MAKE) generate-swagger
 	$(MAKE) generate-helloworld
+	$(MAKE) generate-user-api
 
 generate-gateway:
 	protoc -I . \
@@ -50,3 +51,12 @@ generate-helloworld:
 		--go-grpc_out ./../api/hello \
 		--go-grpc_opt paths=source_relative \
 		./proto/hello_world.proto
+
+generate-user-api:
+	protoc -I . \
+		-I ${GOPATH}/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
+		--go_out ./../api/user \
+		--go_opt paths=source_relative \
+		--go-grpc_out ./../api/user \
+		--go-grpc_opt paths=source_relative \
+		./proto/user_apiv1.proto
