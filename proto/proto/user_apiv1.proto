@@ -22,7 +22,7 @@ message CreateUserRequest {
 }
 
 message UserResponse {
-  int64 id = 1;
+  string id = 1;
   string username = 2;
   int32 gender = 3;
   string email = 4;

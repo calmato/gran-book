@@ -4,11 +4,11 @@ import "time"
 
 // User - Userエンティティ
 type User struct {
-	ID               int64  `gorm:"primaryKey;not null"`
+	ID               string `gorm:"primaryKey;not null"`
 	Username         string `gorm:"size:32;not null"`
 	Gender           int32  `gorm:"not null;default:0"`
 	Email            string `gorm:"size:256;not null;unique"`
-	PasswordDigest   string `gorm:"size:256"`
+	Password         string `gorm:"-"`
 	ThumbnailURL     string
 	SelfIntroduction string `gorm:"size:256"`
 	Lastname         string `gorm:"size:16"`
