@@ -2,7 +2,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import React, { ReactElement } from 'react';
 import { ThemeProvider } from 'react-native-elements';
-import SignIn from '~/screens/SignIn';
+import SignInSelect from '~/screens/SignInSelect';
 import Onboarding from '~/screens/Onboarding';
 import { StackParamList } from '~/types/navigation';
 import { THEME } from '~~/constants/theme';
@@ -20,7 +20,7 @@ const App = function App(): ReactElement {
           }}
         >
           <Stack.Screen name="Onboarding" component={Onboarding} />
-          <Stack.Screen name="SignIn" component={SignIn} />
+          <Stack.Screen name="SignIn" component={SignInSelect} />
         </Stack.Navigator>
       </NavigationContainer>
     </ThemeProvider>
