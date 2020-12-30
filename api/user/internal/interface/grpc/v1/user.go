@@ -2,10 +2,10 @@ package v1
 
 import (
 	"context"
-	"log"
 
 	"github.com/calmato/gran-book/api/user/internal/application"
 	"github.com/calmato/gran-book/api/user/internal/application/input"
+	"github.com/calmato/gran-book/api/user/lib/datetime"
 	pb "github.com/calmato/gran-book/api/user/proto"
 )
 
@@ -25,9 +25,31 @@ func (s *UserServer) CreateUser(ctx context.Context, req *pb.CreateUserRequest) 
 	}
 
 	u, err := s.UserApplication.Create(ctx, in)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
 
-	log.Println("user", u)
-	log.Println("err", err)
+	res := &pb.UserResponse{
+		Id:               u.ID,
+		Username:         u.Username,
+		Gender:           u.Gender,
+		Email:            u.Email,
+		ThumbnailUrl:     u.ThumbnailURL,
+		SelfIntroduction: u.SelfIntroduction,
+		Lastname:         u.Lastname,
+		Firstname:        u.Firstname,
+		LastnameKana:     u.LastnameKana,
+		FirstnameKana:    u.FirstnameKana,
+		PostalCode:       u.PostalCode,
+		Prefecture:       u.Prefecture,
+		City:             u.City,
+		AddressLine1:     u.AddressLine1,
+		AddressLine2:     u.AddressLine2,
+		PhoneNumber:      u.PhoneNumber,
+		Role:             u.Role,
+		CreatedAt:        datetime.TimeToString(u.CreatedAt),
+		UpdatedAt:        datetime.TimeToString(u.UpdatedAt),
+	}
 
-	return &pb.UserResponse{}, nil
+	return res, nil
 }
