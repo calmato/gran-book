@@ -22,13 +22,13 @@
 | first_name        | VARCHAR(16)  |       |  false  |          |       |         | 名前（漢字)                  |                                        |
 | lastname_kana     | VARCHAR(32)  |       |  false  |          |       |         | 名前（かな)                  |                                        |
 | firstname_kana    | VARCHAR(32)  |       |  false  |          |       |         | 名前（かな)                  |                                        |
-| postal_code       | CHAR(8)      |       |  false  |          |       |         | 郵便番号                     | xxx-xxxx　ハイフン付き                 |
+| postal_code       | VARCHAR(16)  |       |  false  |          |       |         | 郵便番号                     | xxx-xxxx　ハイフン無し                 |
 | prefectures       | VARCHAR(32)  |       |  false  |          |       |         | 都道府県                     |                                        |
 | cities            | VARCHAR(32)  |       |  false  |          |       |         | 市町村                       |                                        |
 | addressLine1      | VARCHAR(64)  |       |  false  |          |       |         | 番地・丁目                   |                                        |
 | addressLine2      | VARCHAR(64)  |       |  false  |          |       |         | マンション・ビル名・部屋番号        |                                        |
 | phoneNumber       | VARCHAR(16)  |       |  false  |          |       |         | 電話番号                     |                       |
-| instance_id       | BLOB         |       |  false  |          |       |         | 端末ID                       | NNにするか検討中                       |
+| instance_id       | VARCHAR(256) |       |  false  |          |       |         | 端末ID                       | NNにするか検討中                       |
 | created_at        | DATETIME     |       |  true   |          |       |         | 登録日時                     |                                        |
 | updated_at        | DATETIME     |       |  true   |          |       |         | 更新日時                     |                                        |
 
@@ -36,8 +36,8 @@
 
 |   Field       |  DataType   | PK/FK | NotNull | Unsigned |     Other     | Default | Explanation  |                   Validation                    |
 | :---------    | :---------  | :---: | :-----: | :------: | :-----------: | :------ | :----------  | :---------------------------------------------- |
-| id            | VARCHAR(32)  |  PK   |  true   |   true   |      AI       |         | ID           |                                                 |
-| publisher_id  | BIGINT(20)  |  FK   |  true   |   true   |               |         | 出版社ID      |                                                 |
+| id            | VARCHAR(32) |  PK   |  true   |   true   |      AI       |         | ID           |                                                 |
+| publisher_id  | VARCHAR(32) |  FK   |  true   |   true   |               |         | 出版社ID      |                                                 |
 | title         | VARCHER(32) |       |  true   |          |               |         | タイトル      |                                                 |
 | description   | TEXT        |       |  true   |          |               |         | 説明          |                                                 |
 | isbn          | VARCHAR(16) |       |  true   |          |               |         | ID            |                                                 |
