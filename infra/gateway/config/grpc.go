@@ -11,6 +11,7 @@ import (
 	gw "github.com/calmato/gran-book/infra/gateway/proto"
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
+	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -27,6 +28,8 @@ func registerServiceHandlers(ctx context.Context, mux *runtime.ServeMux, logPath
 	if err != nil {
 		return err
 	}
+
+	grpc_prometheus.EnableClientHandlingTimeHistogram()
 
 	return nil
 }
@@ -58,6 +61,7 @@ func grpcUnaryClientInterceptors(logPath, logLevel string) ([]grpc.UnaryClientIn
 
 	interceptors := []grpc.UnaryClientInterceptor{
 		grpc_zap.UnaryClientInterceptor(logger, opts...),
+		grpc_prometheus.UnaryClientInterceptor,
 		accessLogUnaryClientInterceptor(logger),
 	}
 

@@ -10,6 +10,10 @@ jobs:
   build_and_test:
     name: Build and Test
     runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./native
 
     strategy:
       matrix:
@@ -39,15 +43,12 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Install
-        working-directory: ./native
         run: yarn --check-files --frozen-lockfile --non-interactive
 
       - name: Lint
-        working-directory: ./native
         run: yarn lint
 
       # - name: Test
-      #   working-directory: ./native
       #   run: yarn test
 
       # - name: Use Expo ${{ matrix.expo }}
@@ -58,9 +59,7 @@ jobs:
       #     expo-password: ${{ secrets.STG_EXPO_CLI_PASSWORD }}
 
       # - name: Build iOS
-      #   working-directory: ./native/react
       #   run: expo build:ios -t simulator
 
       # - name: Build Android
-      #   working-directory: ./native/react
       #   run: expo build:android -t app-bundle

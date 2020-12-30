@@ -1,11 +1,5 @@
 package config
 
-import (
-	"os"
-	"os/signal"
-	"syscall"
-)
-
 // Execute - gRPC Serverの起動
 func Execute() error {
 	env, err := loadEnvironment()
@@ -13,24 +7,24 @@ func Execute() error {
 		return err
 	}
 
+	// gRPC Serverの設定取得
 	gs, err := newGRPCServer(env.Port, env.LogPath, env.LogLevel)
 	if err != nil {
 		return err
 	}
 
+	// メトリクス用のHTTP Serverの起動
+	hs := newHTTPServer(env.MetricsPort)
+
 	go func() {
-		if err := gs.Serve(); err != nil {
+		if err := hs.Serve(); err != nil {
 			panic(err)
 		}
 	}()
 
-	sigChan := make(chan os.Signal, 1)
-	signal.Notify(sigChan, syscall.SIGTERM, syscall.SIGINT)
-
-	sig := <-sigChan
-	switch sig {
-	case syscall.SIGINT, syscall.SIGTERM:
-		gs.Stop()
+	// gRPC Serverの起動
+	if err := gs.Serve(); err != nil {
+		panic(err)
 	}
 
 	return nil

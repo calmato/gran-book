@@ -10,6 +10,10 @@ jobs:
   build_and_test:
     name: Build and Test
     runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./web/admin
 
     strategy:
       matrix:
@@ -38,17 +42,13 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Install
-        working-directory: ./web/admin
         run: yarn --check-files --frozen-lockfile --non-interactive
 
       - name: Lint
-        working-directory: ./web/admin
         run: yarn lint
 
       - name: Test
-        working-directory: ./web/admin
         run: yarn test
 
       - name: Build
-        working-directory: ./web/admin
         run: yarn build
