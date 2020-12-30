@@ -16,7 +16,7 @@
 | username          | VARCHAR(32)  |       |  true   |          |       |         | ニックネーム                 |                                        |
 | gender            | INT(2)       |       |  true   |   true   |       | 0       | 性別                         |                                        |
 | email             | VARCHAR(256) |       |  false  |          |  UQ   |         | メールアドレス               | Format: Email                          |
-| thumbnail_url     | BLOB         |       |  false  |          |       |         | サムネイル                   | Format: base64                         |
+| thumbnail_url     | VARCHAR(256) |       |  false  |          |       |         | サムネイル                   | Format: base64                         |
 | password_digest   | VARCHAR(256) |       |  true   |          |       |         | パスワード                   | Length: 6 <= n <= 32, Format: Password |
 | self_introduction | VARCHAR(256) |       |  false  |          |       |         | 自己紹介                     |                                        |
 | last_name         | VARCHAR(16)  |       |  false  |          |       |         | 名字（漢字)                  |                                        |
@@ -41,7 +41,7 @@
 | title         | VARCHER(32) |       |  true   |          |               |         | タイトル      |                                                 |
 | description   | TEXT        |       |  true   |          |               |         | 説明          |                                                 |
 | isbn          | VARCHAR(16) |       |  true   |          |               |         | ID            |                                                 |
-| thumbnail_url | BLOB        |       |  false  |          |               |         | サムネイル     |                                                 |
+| thumbnail_url | VARCHAR(256)|       |  false  |          |               |         | サムネイル     |                                                 |
 | published_at  | DATETIME    |       |  true   |          |               |         | 発売日         |                                                 |
 | created_at    | DATETIME    |       |  true   |          |               |         | 登録日時       |                                                 |
 | updated_at    | DATETIME    |       |  true   |          |               |         | 更新日時       |                                                 |
