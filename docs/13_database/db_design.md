@@ -12,7 +12,7 @@
 
 |       Field       |   DataType   | PK/FK | NotNull | Unsigned | Other | Default |         Explanation          |               Validation               |
 | :---------------- | :----------- | :---: | :-----: | :------: | :---: | :------ | :--------------------------- | :------------------------------------- |
-| id                | VARCHAR(32)  |  PK   |  true   |   true   |  AI   |         | ユーザーID                   |                                        |
+| id                | VARCHAR(32)  |  PK   |  true   |   true   |       |         | ユーザーID                   |                                        |
 | username          | VARCHAR(32)  |       |  true   |          |       |         | ニックネーム                 |                                        |
 | gender            | INT(2)       |       |  true   |   true   |       | 0       | 性別                         |                                        |
 | email             | VARCHAR(256) |       |  false  |          |  UQ   |         | メールアドレス               | Format: Email                          |
