@@ -6,7 +6,7 @@ import "time"
 type User struct {
 	ID               string `gorm:"primaryKey;not null;<-:create"`
 	Username         string `gorm:"size:32;not null"`
-	Email            string `gorm:"size:256;not null;unique"`
+	Email            string `gorm:"size:256"`
 	Password         string `gorm:"-"`
 	Gender           int32  `gorm:"not null;default:0"`
 	Role             int32  `gorm:"not null;default:0"`
@@ -16,7 +16,7 @@ type User struct {
 	Firstname        string    `gorm:"size:16"`
 	LastnameKana     string    `gorm:"size:32"`
 	FirstnameKana    string    `gorm:"size:32"`
-	PostalCode       string    `gorm:"size:8"`
+	PostalCode       string    `gorm:"size:16"`
 	Prefecture       string    `gorm:"size:32"`
 	City             string    `gorm:"size:32"`
 	AddressLine1     string    `gorm:"size:64"`
