@@ -7,6 +7,7 @@ import (
 
 	v1 "github.com/calmato/gran-book/api/user/internal/interface/grpc/v1"
 	pb "github.com/calmato/gran-book/api/user/proto"
+	"github.com/calmato/gran-book/api/user/registry"
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
 	grpc_ctxzap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap/ctxzap"
@@ -25,14 +26,14 @@ type grpcServer struct {
 	lis net.Listener
 }
 
-func newGRPCServer(port, logPath, logLevel string) (*grpcServer, error) {
+func newGRPCServer(port, logPath, logLevel string, reg *registry.Registry) (*grpcServer, error) {
 	opts, err := grpcServerOptions(logPath, logLevel)
 	if err != nil {
 		return nil, err
 	}
 
 	s := grpc.NewServer(opts...)
-	pb.RegisterUserServiceServer(s, &v1.UserServer{})
+	pb.RegisterUserServiceServer(s, &v1.UserServer{UserApplication: reg.UserApplication})
 
 	grpc_prometheus.Register(s)
 	grpc_prometheus.EnableHandlingTimeHistogram()

@@ -79,10 +79,18 @@ services:
       - PORT=8080
       - LOG_PATH=/var/log/api
       - LOG_LEVEL=debug
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_USERNAME=root
+      - DB_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - DB_DATABASE=user_db
+      - GCP_SERVICE_KEY_JSON=${GCP_SERVICE_KEY_JSON}
     networks:
       - api
       - monitoring
     command: realize start
+    depends_on:
+      - mysql
 
   # Database
   mysql:
@@ -97,7 +105,7 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     ports:
-      - 3306:3306
+      - 3316:3306
     networks:
       - api
       - monitoring

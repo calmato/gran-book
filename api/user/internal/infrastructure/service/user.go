@@ -29,8 +29,6 @@ func (s *userService) Create(ctx context.Context, u *user.User) error {
 
 	u.ID = uuid.New().String()
 	u.Email = strings.ToLower(u.Email)
-	u.Gender = 0
-	u.Role = 0
 	u.CreatedAt = current
 	u.UpdatedAt = current
 

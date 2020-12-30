@@ -29,6 +29,11 @@ func registerServiceHandlers(ctx context.Context, mux *runtime.ServeMux, logPath
 		return err
 	}
 
+	err = gw.RegisterUserServiceHandlerFromEndpoint(ctx, mux, *userAPIEndpoint, opts)
+	if err != nil {
+		return err
+	}
+
 	grpc_prometheus.EnableClientHandlingTimeHistogram()
 
 	return nil

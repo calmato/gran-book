@@ -12,6 +12,7 @@ var (
 	// command-line options:
 	// gRPC server endpoint
 	helloAPIEndpoint = flag.String("HELLO_API", "hello_api:8080", "gRPC server endpoint")
+	userAPIEndpoint  = flag.String("USER_API", "user_api:8080", "gRPC server endpoint")
 )
 
 // Execute - gRPC Gatewayの起動

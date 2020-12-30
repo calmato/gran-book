@@ -30,6 +30,8 @@ func (a *userApplication) Create(ctx context.Context, in *input.CreateUser) (*us
 		Username: in.Username,
 		Email:    in.Email,
 		Password: in.Password,
+		Gender:   0,
+		Role:     0,
 	}
 
 	err := a.userService.Create(ctx, u)
