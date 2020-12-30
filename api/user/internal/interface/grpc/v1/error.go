@@ -46,7 +46,7 @@ func toGRPCError(e error) error {
 
 		ds, err := st.WithDetails(br)
 		if err != nil {
-			st = status.New(codes.Unknown, fmt.Sprintf("Unexpected error attaching metadata: %v", err))
+			ds = status.New(codes.Unknown, fmt.Sprintf("Unexpected error attaching metadata: %v", err))
 		}
 
 		return ds.Err()
@@ -58,7 +58,7 @@ func toGRPCError(e error) error {
 
 		ds, err := st.WithDetails(br)
 		if err != nil {
-			st = status.New(codes.Unknown, fmt.Sprintf("Unexpected error attaching metadata: %v", err))
+			ds = status.New(codes.Unknown, fmt.Sprintf("Unexpected error attaching metadata: %v", err))
 		}
 
 		return ds.Err()
