@@ -130,9 +130,6 @@ func accessLogUnaryServerInterceptor() grpc.UnaryServerInterceptor {
 		}
 
 		res, err := handler(ctx, req)
-		if err != nil {
-			return nil, err
-		}
 
 		grpc_ctxzap.AddFields(
 			ctx,
@@ -140,8 +137,9 @@ func accessLogUnaryServerInterceptor() grpc.UnaryServerInterceptor {
 			zap.String("request.user_agent", userAgent),
 			zap.Reflect("request.body", req),
 			zap.Reflect("response.body", res),
+			zap.Reflect("response.err", err),
 		)
 
-		return res, nil
+		return res, err
 	}
 }
