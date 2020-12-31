@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/calmato/gran-book/api/user/internal/application/input"
+	"github.com/calmato/gran-book/api/user/internal/application/validation"
 	"github.com/calmato/gran-book/api/user/internal/domain/user"
 )
 
@@ -13,18 +14,23 @@ type UserApplication interface {
 }
 
 type userApplication struct {
-	userService user.Service
+	userRequestValidation validation.UserRequestValidation
+	userService           user.Service
 }
 
 // NewUserApplication - UserApplicationの生成
-func NewUserApplication(us user.Service) UserApplication {
+func NewUserApplication(urv validation.UserRequestValidation, us user.Service) UserApplication {
 	return &userApplication{
-		userService: us,
+		userRequestValidation: urv,
+		userService:           us,
 	}
 }
 
 func (a *userApplication) Create(ctx context.Context, in *input.CreateUser) (*user.User, error) {
-	// TODO: validation
+	err := a.userRequestValidation.CreateUser(in)
+	if err != nil {
+		return nil, err
+	}
 
 	u := &user.User{
 		Username: in.Username,
@@ -34,7 +40,7 @@ func (a *userApplication) Create(ctx context.Context, in *input.CreateUser) (*us
 		Role:     0,
 	}
 
-	err := a.userService.Create(ctx, u)
+	err = a.userService.Create(ctx, u)
 	if err != nil {
 		return nil, err
 	}

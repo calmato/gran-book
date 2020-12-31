@@ -121,7 +121,7 @@ func newClientLoggerFields(
 
 	if p, ok := resPbMsg.(proto.Message); ok {
 		res, _ := filterParams(p)
-		fields = append(fields, zap.Reflect("grpc.request.content", res))
+		fields = append(fields, zap.Reflect("grpc.response.content", res))
 	}
 
 	if err != nil {

@@ -2,6 +2,7 @@ package registry
 
 import (
 	"github.com/calmato/gran-book/api/user/internal/application"
+	rv "github.com/calmato/gran-book/api/user/internal/application/validation"
 	"github.com/calmato/gran-book/api/user/internal/infrastructure/repository"
 	"github.com/calmato/gran-book/api/user/internal/infrastructure/service"
 	"github.com/calmato/gran-book/api/user/lib/firebase/authentication"
@@ -24,7 +25,8 @@ func NewRegistry(db *repository.Client, auth *authentication.Auth) *Registry {
 func userInjection(db *repository.Client, auth *authentication.Auth) application.UserApplication {
 	ur := repository.NewUserRepository(db, auth)
 	us := service.NewUserService(ur)
-	ua := application.NewUserApplication(us)
+	urv := rv.NewUserRequestValidation()
+	ua := application.NewUserApplication(urv, us)
 
 	return ua
 }
