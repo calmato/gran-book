@@ -16,25 +16,7 @@ func errorHandling(e error) error {
 }
 
 func toGRPCError(e error) error {
-	var c codes.Code
-
-	switch getErrorCode(e) {
-	case exception.InvalidRequestValidation, exception.UnableConvertBase64:
-		c = codes.InvalidArgument
-	case exception.NotFound:
-		c = codes.NotFound
-	case exception.Conflict:
-		c = codes.AlreadyExists
-	case exception.Forbidden:
-		c = codes.PermissionDenied
-	case exception.ErrorInDatastore, exception.ErrorInStorage,
-		exception.ErrorInOtherAPI, exception.InvalidDomainValidation:
-		c = codes.Internal
-	case exception.Unauthorized, exception.Expired:
-		c = codes.Unauthenticated
-	default:
-		c = codes.Unknown
-	}
+	c := getGRPCErrorCode(e)
 
 	st := status.New(c, c.String())
 
@@ -44,24 +26,24 @@ func toGRPCError(e error) error {
 			FieldViolations: getValidationErrors(e),
 		}
 
-		ds, err := st.WithDetails(br)
+		dt, err := st.WithDetails(br)
 		if err != nil {
-			ds = status.New(codes.Unknown, fmt.Sprintf("Unexpected error attaching metadata: %v", err))
+			dt = status.New(codes.Unknown, fmt.Sprintf("Unexpected error attaching metadata: %v", err))
 		}
 
-		return ds.Err()
+		return dt.Err()
 	case codes.Internal: // Internal Server Errorのとき、詳細の追加
 		br := &errdetails.LocalizedMessage{
 			Locale:  "ja-JP",
 			Message: getError(e),
 		}
 
-		ds, err := st.WithDetails(br)
+		dt, err := st.WithDetails(br)
 		if err != nil {
-			ds = status.New(codes.Unknown, fmt.Sprintf("Unexpected error attaching metadata: %v", err))
+			dt = status.New(codes.Unknown, fmt.Sprintf("Unexpected error attaching metadata: %v", err))
 		}
 
-		return ds.Err()
+		return dt.Err()
 	default:
 		return st.Err()
 	}
@@ -81,6 +63,26 @@ func getErrorCode(e error) exception.ErrorCode {
 	}
 
 	return exception.Unknown
+}
+
+func getGRPCErrorCode(e error) codes.Code {
+	switch getErrorCode(e) {
+	case exception.InvalidRequestValidation, exception.UnableConvertBase64:
+		return codes.InvalidArgument
+	case exception.NotFound:
+		return codes.NotFound
+	case exception.Conflict:
+		return codes.AlreadyExists
+	case exception.Forbidden:
+		return codes.PermissionDenied
+	case exception.ErrorInDatastore, exception.ErrorInStorage,
+		exception.ErrorInOtherAPI, exception.InvalidDomainValidation:
+		return codes.Internal
+	case exception.Unauthorized, exception.Expired:
+		return codes.Unauthenticated
+	default:
+		return codes.Unknown
+	}
 }
 
 func getValidationErrors(e error) []*errdetails.BadRequest_FieldViolation {
