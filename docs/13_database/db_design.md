@@ -12,9 +12,10 @@
 
 |       Field       |   DataType   | PK/FK | NotNull | Unsigned | Other | Default |         Explanation          |               Validation               |
 | :---------------- | :----------- | :---: | :-----: | :------: | :---: | :------ | :--------------------------- | :------------------------------------- |
-| id                | VARCHAR(32)  |  PK   |  true   |   true   |       |         | ユーザーID                   |                                        |
+| id                | VARCHAR(32)  |  PK   |  true   |         |  UQ   |         | ユーザーID                   |                                        |
+| role              | TYNYINT(2)   |       |  true   |  true     |       |         | 0: 利用者 / 1: 開発者 / 2: 管理者　|                                        |
 | username          | VARCHAR(32)  |       |  true   |          |       |         | ニックネーム                 |                                        |
-| gender            | INT(2)       |       |  true   |   true   |       | 0       | 性別                         |                                        |
+| gender            | TYNYINT(2)       |       |  true   |   true   |       | 0       | 性別                         |                                        |
 | email             | VARCHAR(256) |       |  false  |          |  UQ   |         | メールアドレス               | Format: Email                          |
 | thumbnail_url     | VARCHAR(256) |       |  false  |          |       |         | サムネイル                   | Format: base64                         |
 | self_introduction | VARCHAR(256) |       |  false  |          |       |         | 自己紹介                     |                                        |
@@ -36,8 +37,8 @@
 
 |   Field       |  DataType   | PK/FK | NotNull | Unsigned |     Other     | Default | Explanation  |                   Validation                    |
 | :---------    | :---------  | :---: | :-----: | :------: | :-----------: | :------ | :----------  | :---------------------------------------------- |
-| id            | VARCHAR(32) |  PK   |  true   |   true   |      AI       |         | ID           |                                                 |
-| publisher_id  | VARCHAR(32) |  FK   |  true   |   true   |               |         | 出版社ID      |                                                 |
+| id            | VARCHAR(32) |  PK   |  true   |          |      UQ       |         | ID           |                                                 |
+| publisher_id  | VARCHAR(32) |  FK   |  true   |          |      UQ       |         | 出版社ID      |                                                 |
 | title         | VARCHER(32) |       |  true   |          |               |         | タイトル      |                                                 |
 | description   | TEXT        |       |  true   |          |               |         | 説明          |                                                 |
 | isbn          | VARCHAR(16) |       |  true   |          |               |         | ID            |                                                 |
@@ -50,7 +51,7 @@
 
 |   Field       |  DataType   | PK/FK | NotNull | Unsigned |     Other     | Default | Explanation  |                   Validation                    |
 | :---------    | :---------  | :---: | :-----: | :------: | :-----------: | :------ | :----------  | :---------------------------------------------- |
-| id            | VARCHAR(32)  |  PK   |  true   |   true   |      AI       |         | ID           |                                                 |
+| id            | VARCHAR(32)  |  PK   |  true   |         |      UQ       |         | ID           |                                                 |
 | author        | VARCHAR(32) |       |  true   |          |               |         | 著書　        |                                                 |
 | created_at    | DATETIME    |       |  true   |          |               |         | 登録日時       |                                                 |
 | updated_at    | DATETIME    |       |  true   |          |               |         | 更新日時       |                                                 |
@@ -58,7 +59,7 @@
 ### categories
 |   Field       |  DataType   | PK/FK | NotNull | Unsigned |     Other     | Default | Explanation  |                   Validation                    |
 | :---------    | :---------  | :---: | :-----: | :------: | :-----------: | :------ | :----------  | :---------------------------------------------- |
-| id            | VARCHAR(32)  |  PK   |  true   |   true   |      AI       |         | ID           |                                                 |
+| id            | VARCHAR(32)  |  PK   |  true   |         |      UQ       |         | ID           |                                                 |
 | category      | VARCHAR(32) |       |  true   |          |               |         | カテゴリー    |                                                 |
 | created_at    | DATETIME    |       |  true   |          |               |         | 登録日時       |                                                 |
 | updated_at    | DATETIME    |       |  true   |          |               |         | 更新日時       |                                                 |
@@ -66,7 +67,7 @@
 ### publishers
 |   Field       |  DataType   | PK/FK | NotNull | Unsigned |     Other     | Default | Explanation  |                   Validation                    |
 | :---------    | :---------  | :---: | :-----: | :------: | :-----------: | :------ | :----------  | :---------------------------------------------- |
-| id            | VARCHAR(32)  |  PK   |  true   |   true   |      AI       |         | ID           |                                                 |
+| id            | VARCHAR(32)  |  PK   |  true   |         |      UQ       |         | ID           |                                                 |
 | publisher     | VARCHAR(32) |       |  true   |          |               |         | 出版社　　    |                                                 |
 | created_at    | DATETIME    |       |  true   |          |               |         | 登録日時       |                                                 |
 | updated_at    | DATETIME    |       |  true   |          |               |         | 更新日時       |                                                 |
@@ -74,29 +75,29 @@
 ### authors_books
 |   Field       |  DataType   | PK/FK | NotNull | Unsigned |     Other     | Default | Explanation  |                   Validation                    |
 | :---------    | :---------  | :---: | :-----: | :------: | :-----------: | :------ | :----------  | :---------------------------------------------- |
-| id            | VARCHAR(32)  |  PK   |  true   |   true   |      AI       |         | ID           |                                                 |
-| book_id       | BIGINT(20)  |  FK   |  true   |   true   |               |         | 本ID         |                                                　 |
-| author_id     | BIGINT(20)  |  FK   |  true   |   true   |               |         | 著書ID  　    |                                                　 |
+| id            | VARCHAR(32) |  PK   |  true   |         |      UQ       |         | ID           |                                                 |
+| book_id       | VARCHAR(32) |  FK   |  true   |          |     UQ        |         | 本ID         |                                                　 |
+| author_id     | VARCHAR(32) |  FK   |  true   |          |     UQ        |         | 著書ID  　    |                                                　 |
 | created_at    | DATETIME    |       |  true   |          |               |         | 登録日時       |                                                 |
 | updated_at    | DATETIME    |       |  true   |          |               |         | 更新日時       |                                                 |
 
 ### users_books
 |   Field       |  DataType   | PK/FK | NotNull | Unsigned |     Other     | Default | Explanation  |                   Validation                    |
 | :---------    | :---------  | :---: | :-----: | :------: | :-----------: | :------ | :----------  | :---------------------------------------------- |
-| id            | VARCHAR(32)  |  PK   |  true   |   true   |      AI       |         | ID           |                                                 |
-| user_id       | BIGINT(20)  |  FK   |  true   |   true   |               |         | ユーザーID  　 |                                                |
-| book_id       | BIGINT(20)  |  FK   |  true   |   true   |               |         | 本ID       　 |                                                |
-| status        | TYNYINT     |       |  true   |          |               |         | 本のステータス(0: 未読/1: 読んだ/2: 読んでる/3: 積読/4: 手放したい/5: 欲しい)|     |             
-| impression    | TEXT        |       |  true   |          |               |         | 感想          |                                                 |
+| id            | VARCHAR(32)  |  PK   |  true   |         |      UQ       |         | ID           |                                                 |
+| user_id       | VARCHAR(32)  |  FK   |  true   |         |      UQ       |         | ユーザーID  　 |                                                |
+| book_id       | VARCHAR(32)  |  FK   |  true   |         |      UQ       |         | 本ID       　 |                                                |
+| status        | TYNYINT(5)   |       |  true   |          |               |         | 本のステータス(0: 未読 / 1: 読んだ/2: 読んでる/3: 積読/4: 手放したい/5: 欲しい)| |   
+| impression    | TEXT        |       |  false   |          |               |         | 感想          |                                                 |
 | created_at    | DATETIME    |       |  true   |          |               |         | 登録日時       |                                                 |
 | updated_at    | DATETIME    |       |  true   |          |               |         | 更新日時       |                                                 |
 
 ### categories_books
 |   Field       |  DataType   | PK/FK | NotNull | Unsigned |     Other     | Default | Explanation  |                   Validation                    |
 | :---------    | :---------  | :---: | :-----: | :------: | :-----------: | :------ | :----------  | :---------------------------------------------- |
-| id            | VARCHAR(32) |  PK   |  true   |   true   |      AI       |         | ID           |                                                 |
-| category_id   | BIGINT(20)  |  FK   |  true   |   true   |               |         | カテゴリーID  |                                                |
-| book_id       | BIGINT(20)  |  FK   |  true   |   true   |               |         | 本ID       　 |                                                |
+| id            | VARCHAR(32) |  PK   |  true   |          |      UQ       |         | ID           |                                                 |
+| category_id   | VARCHAR(32)  |  FK   |  true   |         |      UQ       |         | カテゴリーID  |                                                |
+| book_id       | VARCHAR(32)  |  FK   |  true   |         |     UQ          |         | 本ID       　 |                                                |
 | created_at    | DATETIME    |       |  true   |          |               |         | 登録日時       |                                                 |
 | updated_at    | DATETIME    |       |  true   |          |               |         | 更新日時       |                                                 |
 
@@ -104,9 +105,9 @@
 
 |    Field    |  DataType  | PK/FK | NotNull | Unsigned | Other |         Default          |        Explanation       | Validation |
 | :---------- | :--------- | :---: | :-----: | :------: | :---: | :----------------------- | :----------------------  | ---------- |
-| id          | VARCHAR(32)|  PK   |  true   |   true   |  AI   |                          | ID                       |　          |
-| follower_id | BIGINT(20) |  FK   |  true   |   true   |       |                          | フォローするユーザーID     |            |
-| followed_id | BIGINT(20) |  FK   |  true   |   true   |       |                          | フォローされるユーザーID   |            |
+| id          | VARCHAR(32)|  PK   |  true   |           |  UQ   |                          | ID                       |　          |
+| follow_id | VARCHAR(32) |  FK   |  true   |          |  UQ   |                          | フォローするユーザーID     |            |
+| follower_id | VARCHAR(32) |  FK   |  true   |          |  UQ   |                          | フォローされるユーザーID   |            |
 | created_at  | DATETIME   |       |  true   |          |       |                          | 登録日時                  |            |
 | updated_at  | DATETIME   |       |  true   |          |       |                          | 更新日時                  |            |
 
@@ -114,9 +115,9 @@
 
 |    Field    |  DataType  | PK/FK | NotNull | Unsigned | Other |         Default          | Explanation | Validation |
 | :---------- | :--------- | :---: | :-----: | :------: | :---: | :----------------------- | :---------- | ---------- |
-| id          | VARCHAR(32)|  PK   |  true   |   true   |  AI   |                          | ID                       |　          |
-| follower_id | BIGINT(20) |  FK   |  true   |   true   |       |                          | フォローするユーザーID     |            |
-| followed_id | BIGINT(20) |  FK   |  true   |   true   |       |                          | フォローされるユーザーID   |            |
+| id          | VARCHAR(32)|  PK   |  true   |          |  UQ   |                          | ID                       |　          |
+| follow_id | VARCHAR(32) |  FK   |  true   |         |  UQ  |                          | フォローするユーザーID     |            |
+| follower_id | VARCHAR(32) |  FK   |  true   |         |  UQ  |                          | フォローされるユーザーID   |            |
 | created_at  | DATETIME   |       |  true   |          |       |                          | 登録日時                  |            |
 | updated_at  | DATETIME   |       |  true   |          |       |                          | 更新日時                  |            |
 
