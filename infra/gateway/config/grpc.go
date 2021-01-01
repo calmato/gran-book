@@ -15,8 +15,11 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
+	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
+	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 )
@@ -105,6 +108,7 @@ func newClientLoggerFields(
 		zap.Duration("grpc.duration", duration),
 	}
 
+	// Request Headers
 	if md, ok := metadata.FromOutgoingContext(ctx); ok {
 		if values := md.Get("grpcgateway-user-agent"); len(values) > 0 {
 			fields = append(fields, zap.String("grpc.user_agent", values[0]))
@@ -114,6 +118,7 @@ func newClientLoggerFields(
 		}
 	}
 
+	// Request / Response Messages
 	if p, ok := reqPbMsg.(proto.Message); ok {
 		req, _ := filterParams(p)
 		fields = append(fields, zap.Reflect("grpc.request.content", req))
@@ -124,8 +129,23 @@ func newClientLoggerFields(
 		fields = append(fields, zap.Reflect("grpc.response.content", res))
 	}
 
+	// Error Messages
 	if err != nil {
-		fields = append(fields, zap.String("grpc.err", err.Error()))
+		s, ok := status.FromError(err)
+		if !ok {
+			s = status.New(codes.Unknown, err.Error())
+		}
+
+		fields = append(fields, zap.Reflect("grpc.err.code", status.Code(err)))
+
+		for _, detail := range s.Details() {
+			switch v := detail.(type) {
+			case *errdetails.LocalizedMessage:
+				fields = append(fields, zap.Reflect("grpc.err.details", v.Message))
+			case *errdetails.BadRequest:
+				fields = append(fields, zap.Reflect("grpc.err.details", v.FieldViolations))
+			}
+		}
 	}
 
 	return fields

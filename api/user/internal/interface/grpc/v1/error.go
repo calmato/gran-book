@@ -34,7 +34,7 @@ func toGRPCError(e error) error {
 		return dt.Err()
 	case codes.Internal: // Internal Server Errorのとき、詳細の追加
 		br := &errdetails.LocalizedMessage{
-			Locale:  "ja-JP",
+			Locale:  "en-US",
 			Message: getError(e),
 		}
 

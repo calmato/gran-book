@@ -137,7 +137,7 @@ func accessLogUnaryServerInterceptor() grpc.UnaryServerInterceptor {
 			zap.String("request.user_agent", userAgent),
 			zap.Reflect("request.body", req),
 			zap.Reflect("response.body", res),
-			zap.Reflect("response.err", err),
+			zap.Reflect("grpc.err", err),
 		)
 
 		return res, err
