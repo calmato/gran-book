@@ -2,6 +2,8 @@ package config
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 	"net"
 	"strings"
 
@@ -16,9 +18,13 @@ import (
 	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
 	"go.uber.org/zap"
 	"golang.org/x/xerrors"
+	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/peer"
+	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/encoding/protojson"
+	"google.golang.org/protobuf/proto"
 )
 
 type grpcServer struct {
@@ -131,15 +137,74 @@ func accessLogUnaryServerInterceptor() grpc.UnaryServerInterceptor {
 
 		res, err := handler(ctx, req)
 
+		// Request / Response Messages
+		reqParams := map[string]interface{}{}
+		if p, ok := req.(proto.Message); ok {
+			reqParams, _ = filterParams(p)
+		}
+
+		resParams := map[string]interface{}{}
+		if p, ok := res.(proto.Message); ok {
+			resParams, _ = filterParams(p)
+		}
+
+		ds := getErrorDetails(err)
+
 		grpc_ctxzap.AddFields(
 			ctx,
 			zap.String("request.client_ip", clientIP),
 			zap.String("request.user_agent", userAgent),
-			zap.Reflect("request.body", req),
-			zap.Reflect("response.body", res),
-			zap.Reflect("grpc.err", err),
+			zap.Reflect("request.content", reqParams),
+			zap.Reflect("response.content", resParams),
+			zap.Reflect("error.details", ds),
 		)
 
 		return res, err
 	}
+}
+
+func filterParams(pb proto.Message) (map[string]interface{}, error) {
+	bs, err := protojson.Marshal(pb)
+	if err != nil {
+		return nil, fmt.Errorf("jsonpb serializer failed: %v", err)
+	}
+
+	bj := make(map[string]interface{})
+	_ = json.Unmarshal(bs, &bj) // ignore error here.
+
+	var toFilter []string
+	for k := range bj {
+		if strings.Contains(strings.ToLower(k), "password") {
+			toFilter = append(toFilter, k)
+		}
+	}
+
+	for _, k := range toFilter {
+		bj[k] = "<FILTERED>"
+	}
+
+	return bj, nil
+}
+
+func getErrorDetails(err error) interface{} {
+	if err == nil {
+		return ""
+	}
+
+	s, ok := status.FromError(err)
+	if !ok {
+		return ""
+	}
+
+	// TODO: 配列に1つしか値入れないようにしてるからいったんこれで
+	for _, detail := range s.Details() {
+		switch v := detail.(type) {
+		case *errdetails.LocalizedMessage:
+			return v.Message
+		case *errdetails.BadRequest:
+			return v.FieldViolations
+		}
+	}
+
+	return ""
 }
