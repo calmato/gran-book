@@ -64,7 +64,7 @@ func CustomHTTPError(
 	// Convert to custom error response
 	buf, err := marshaler.Marshal(res)
 	if err != nil {
-		log.Printf("Failed to marshal error message %q: %v", res, err)
+		log.Printf("Failed to marshal error message %+v: %v", res, err)
 
 		w.WriteHeader(http.StatusInternalServerError)
 		if _, err := io.WriteString(w, fallback); err != nil {
