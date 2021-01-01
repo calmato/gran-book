@@ -2,29 +2,26 @@ package handler
 
 import (
 	"context"
-	"net/http"
-	// "strings"
-	// "encoding/json"
-	"log"
-	"io"
 	"fmt"
+	"io"
+	"log"
+	"net/http"
 
-	// "google.golang.org/grpc"
-	"google.golang.org/grpc/status"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"google.golang.org/genproto/googleapis/rpc/errdetails"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type errorResponse struct {
-	Code codes.Code `json:"code"`
-	Message string `json:"message"`
-	Errors []*errorResponseDetail `json:"errors"`
+	Code    codes.Code             `json:"code"`
+	Message string                 `json:"message"`
+	Errors  []*errorResponseDetail `json:"errors"`
 }
 
 type errorResponseDetail struct {
-	Field string `json:"field"`
-	Reason string `json:"reason"`
+	Field   string `json:"field"`
+	Reason  string `json:"reason"`
 	Message string `json:"message"`
 }
 
@@ -48,9 +45,9 @@ func CustomHTTPError(
 
 	// Create response body
 	res := &errorResponse{
-		Code: s.Code(),
+		Code:    s.Code(),
 		Message: s.Message(),
-		Errors: []*errorResponseDetail{},
+		Errors:  []*errorResponseDetail{},
 	}
 
 	for _, detail := range s.Details() {
@@ -88,9 +85,9 @@ func getErrorResponseDetails(fvs []*errdetails.BadRequest_FieldViolation) []*err
 	ds := make([]*errorResponseDetail, len(fvs))
 	for i, fv := range fvs {
 		ds[i] = &errorResponseDetail{
-				Field: fv.Field,
-				Reason: fv.Description,
-				Message: fmt.Sprintf("%s %s", fv.Field, fv.Description),
+			Field:   fv.Field,
+			Reason:  fv.Description,
+			Message: fmt.Sprintf("%s %s", fv.Field, fv.Description),
 		}
 	}
 
