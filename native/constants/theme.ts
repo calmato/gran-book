@@ -37,6 +37,20 @@ export const THEME: Theme = {
       fontFamily: FONT_FAMILY,
       color: colors.grey2
     }
+  },
+  Input: {
+    containerStyle: {
+      paddingLeft: 0,
+      paddingRight: 0,
+    },
+    inputContainerStyle: {
+      backgroundColor: colors.white,
+      borderColor: colors.white,
+    },
+    leftIconContainerStyle: {
+      marginLeft: 6
+    },
+    leftIcon: {}
   }
 };
 
