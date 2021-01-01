@@ -5,6 +5,7 @@ import (
 	"flag"
 	"net/http"
 
+	"github.com/calmato/gran-book/infra/gateway/internal/handler"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 )
 
@@ -36,7 +37,9 @@ func Execute() error {
 	}()
 
 	// Client側のHTTP Serverの起動
-	mux := runtime.NewServeMux()
+	mux := runtime.NewServeMux(
+		runtime.WithErrorHandler(handler.CustomHTTPError),
+	)
 	if err := registerServiceHandlers(ctx, mux, env.LogPath, env.LogLevel); err != nil {
 		return err
 	}
