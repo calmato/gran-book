@@ -66,6 +66,51 @@ services:
       - monitoring
     command: realize start
 
+  user_api:
+    container_name: gran_book_user_api
+    build:
+      context: ./infra/docker/api/user
+      dockerfile: Dockerfile_development
+    working_dir: /go/src/github.com/calmato/gran-book/api/user
+    volumes:
+      - ./api/user:/go/src/github.com/calmato/gran-book/api/user:cached
+      - ./tmp/logs/user_api:/var/log/api:delegated
+    environment:
+      - PORT=8080
+      - LOG_PATH=/var/log/api
+      - LOG_LEVEL=debug
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_USERNAME=root
+      - DB_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - DB_DATABASE=user_db
+      - GCP_SERVICE_KEY_JSON=${GCP_SERVICE_KEY_JSON}
+    networks:
+      - api
+      - monitoring
+    command: realize start
+    depends_on:
+      - mysql
+
+  # Database
+  mysql:
+    container_name: gran_book_mysql
+    build:
+      context: ./infra/docker/infra/mysql
+      dockerfile: Dockerfile
+    volumes:
+      - ./infra/mysql/development.cnf:/etc/mysql/conf.d/my.cnf:cached
+      - ./infra/mysql/dev:/docker-entrypoint-initdb.d
+      - ./tmp/logs/mysql:/var/log/mysql:delegated
+      - ./tmp/data/mysql:/var/lib/mysql:delegated
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    ports:
+      - 3316:3306
+    networks:
+      - api
+      - monitoring
+
   # Monitoring
   grafana:
     container_name: gran_book_grafana
@@ -100,6 +145,7 @@ services:
     volumes:
       - ./proto:/go/src/github.com/calmato/gran-book/proto:cached
       - ./api/hello:/go/src/github.com/calmato/gran-book/api/hello:cached
+      - ./api/user:/go/src/github.com/calmato/gran-book/api/user:cached
       - ./docs/12_backend/11_swagger:/go/src/github.com/calmato/gran-book/docs/12_backend/11_swagger:cached
       - ./infra/gateway:/go/src/github.com/calmato/gran-book/infra/gateway:cached
 

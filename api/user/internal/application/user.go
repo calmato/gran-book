@@ -1,0 +1,49 @@
+package application
+
+import (
+	"context"
+
+	"github.com/calmato/gran-book/api/user/internal/application/input"
+	"github.com/calmato/gran-book/api/user/internal/application/validation"
+	"github.com/calmato/gran-book/api/user/internal/domain/user"
+)
+
+// UserApplication - Userアプリケーションのインターフェース
+type UserApplication interface {
+	Create(ctx context.Context, in *input.CreateUser) (*user.User, error)
+}
+
+type userApplication struct {
+	userRequestValidation validation.UserRequestValidation
+	userService           user.Service
+}
+
+// NewUserApplication - UserApplicationの生成
+func NewUserApplication(urv validation.UserRequestValidation, us user.Service) UserApplication {
+	return &userApplication{
+		userRequestValidation: urv,
+		userService:           us,
+	}
+}
+
+func (a *userApplication) Create(ctx context.Context, in *input.CreateUser) (*user.User, error) {
+	err := a.userRequestValidation.CreateUser(in)
+	if err != nil {
+		return nil, err
+	}
+
+	u := &user.User{
+		Username: in.Username,
+		Email:    in.Email,
+		Password: in.Password,
+		Gender:   0,
+		Role:     0,
+	}
+
+	err = a.userService.Create(ctx, u)
+	if err != nil {
+		return nil, err
+	}
+
+	return u, nil
+}
