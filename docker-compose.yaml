@@ -100,6 +100,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./infra/mysql/development.cnf:/etc/mysql/conf.d/my.cnf:cached
+      - ./infra/mysql/dev:/docker-entrypoint-initdb.d
       - ./tmp/logs/mysql:/var/log/mysql:delegated
       - ./tmp/data/mysql:/var/lib/mysql:delegated
     environment:
