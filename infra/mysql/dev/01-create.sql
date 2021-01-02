@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS `users`.`users` (
   `email` VARCHAR(256) NULL DEFAULT NULL,
   `role` TINYINT(2) UNSIGNED NOT NULL DEFAULT '0',
   `thumbnail_url` TEXT(8192) NULL,
-  `self_intraduction` VARCHAR(256) NULL DEFAULT NULL,
+  `self_introduction` VARCHAR(256) NULL DEFAULT NULL,
   `last_name` VARCHAR(16) NULL DEFAULT NULL,
   `first_name` VARCHAR(16) NULL DEFAULT NULL,
   `last_name_kana` VARCHAR(32) NULL DEFAULT NULL,
