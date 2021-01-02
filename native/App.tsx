@@ -3,11 +3,11 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React, { ReactElement } from 'react';
 import { ThemeProvider } from 'react-native-elements';
 import Onboarding from '~/screens/Onboarding';
-import { StackParamList } from '~/types/navigation';
+import { RootStackParamList } from '~/types/navigation';
 import { THEME } from '~~/constants/theme';
 import AuthRoute from '~/routes/AuthRoute';
 
-const Stack = createStackNavigator<StackParamList>();
+const Stack = createStackNavigator<RootStackParamList>();
 
 const App = function App(): ReactElement {
   return (
@@ -20,7 +20,7 @@ const App = function App(): ReactElement {
           }}
         >
           <Stack.Screen name="Onboarding" component={Onboarding} />
-          <Stack.Screen name="SignIn" component={AuthRoute} />
+          <Stack.Screen name="SignInSelect" component={AuthRoute} />
         </Stack.Navigator>
       </NavigationContainer>
     </ThemeProvider>

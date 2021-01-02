@@ -1,33 +1,41 @@
-import { Ionicons, MaterialIcons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
-import React, { ReactElement } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
-import { Button, CheckBox, colors, Input } from 'react-native-elements';
+import { Ionicons } from '@expo/vector-icons';
+import { StackNavigationProp } from '@react-navigation/stack';
+import React, { ReactElement, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { Button, CheckBox, colors, Input, Text } from 'react-native-elements';
 import MailInput from '~/components/molecules/MailInput';
 import PasswordInput from '~/components/molecules/PasswordInput';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
+import { AuthStackParamList } from '~/types/navigation';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // flexDirection:'row',
-    // justifyContent: 'center',
     alignItems: 'center',
   },
 });
 
-// interface Props {}
+type SignUpProp = StackNavigationProp<AuthStackParamList, 'SignUp'>
 
-const SignUp = function SignUp(): ReactElement {
-  const navigatiopn = useNavigation();
+interface Props {
+  navigation: SignUpProp,
+}
+
+const SignUp = function SignUp(props: Props): ReactElement {
+  const navigation = props.navigation;
+
+  const [email, setEmail] = useState<string>();
 
   return (
     <View style={styles.container} >
       <HeaderWithBackButton
         title="ユーザー登録"
-        onPress={() => navigatiopn.goBack() }
+        onPress={() => navigation.goBack() }
       />
-      <MailInput />
+      <MailInput
+        onChangeText={(text) => setEmail(text)}
+        value={email}
+      />
       <PasswordInput
         placeholder="パスワード"
       />
@@ -41,12 +49,10 @@ const SignUp = function SignUp(): ReactElement {
         placeholder="ニックネーム"
       />
       {/* <CheckBox checked={false} title="利用規約に同意しました"/> */}
-      <Button title="登録する"/>
+      <Button onPress={() => navigation.navigate('SignUpCheckEmail', {email: email})} title="登録する"/>
       <Text>利用規約</Text>
     </View>
   );
 };
-
-// SignUp.defaultProps={}
 
 export default SignUp;

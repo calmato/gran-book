@@ -1,14 +1,13 @@
-import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { ReactElement } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-elements';
-import { StackParamList } from '~/types/navigation';
+import { AuthStackParamList } from '~/types/navigation';
 import HeaderWithCloseButton from '~/components/organisms/HeaderWithCloseButton';
 import SignInButtonGroup from '~/components/organisms/SingInButtonGroup';
 import TitleLogoText from '~/components/atoms/TitleLogoText';
 
-type SignInNavigationProp = StackNavigationProp<StackParamList, 'Onboarding'>
+type AuthSignInNavigationProp = StackNavigationProp<AuthStackParamList, 'SignUp'>
 
 const styles = StyleSheet.create({
   container: {
@@ -25,11 +24,11 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  navigation: SignInNavigationProp
+  navigation: AuthSignInNavigationProp
 }
 
 const SignInSelect = function SignInSelect(props: Props): ReactElement {
-  const navigation = useNavigation();
+  const navigation = props.navigation;
   
   return (
     <View style={styles.container}>
