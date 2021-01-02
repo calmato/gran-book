@@ -24,15 +24,10 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func registerServiceHandlers(ctx context.Context, mux *runtime.ServeMux, logPath, logLevel string) error {
+func registerServiceHandlers(ctx context.Context, mux *runtime.ServeMux, logPath, logLevel, userAPIURL string) error {
 	opts := grpcDialOptions(logPath, logLevel)
 
-	err := gw.RegisterGreeterHandlerFromEndpoint(ctx, mux, *helloAPIEndpoint, opts)
-	if err != nil {
-		return err
-	}
-
-	err = gw.RegisterUserServiceHandlerFromEndpoint(ctx, mux, *userAPIEndpoint, opts)
+	err := gw.RegisterUserServiceHandlerFromEndpoint(ctx, mux, userAPIURL, opts)
 	if err != nil {
 		return err
 	}

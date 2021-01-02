@@ -11,6 +11,7 @@ type Environment struct {
 	MetricsPort string `envconfig:"METRICS_PORT" default:"9090"`
 	LogPath     string `envconfig:"LOG_PATH" default:""`
 	LogLevel    string `envconfig:"LOG_LEVEL" default:"info"`
+	UserAPIURL  string `envconfig:"USER_API_URL" default:""`
 }
 
 // LoadEnvironment - 環境変数の取得
