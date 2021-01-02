@@ -16,10 +16,9 @@ const styles = StyleSheet.create({
   },
 });
 
-interface Props {
-}
+// interface Props {}
 
-const SignUp = function SignUp(props: Props): ReactElement {
+const SignUp = function SignUp(): ReactElement {
   const navigatiopn = useNavigation();
 
   return (
