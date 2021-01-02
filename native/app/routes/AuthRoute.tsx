@@ -1,14 +1,11 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React, { ReactElement } from 'react';
-import { StyleSheet } from 'react-native';
 import SignInSelect from '~/screens/SignInSelect';
 import SignUp from '~/screens/SignUp';
+import SignUpCheckEmail from '~/screens/SignUpCheckEmail';
+import { AuthStackParamList } from '~/types/navigation';
 
-const styles = StyleSheet.create({});
-
-// interface Props {}
-
-const AuthStack = createStackNavigator();
+const AuthStack = createStackNavigator<AuthStackParamList>();
 
 const AuthRoute = function AuthRoute(): ReactElement {
   return (
@@ -16,13 +13,13 @@ const AuthRoute = function AuthRoute(): ReactElement {
       screenOptions={{
         headerShown: false
       }}
+      initialRouteName="SignInSelect"
     >
       <AuthStack.Screen name="SignInSelect" component={SignInSelect}/>
       <AuthStack.Screen name="SignUp" component={SignUp} />
+      <AuthStack.Screen name="SignUpCheckEmail" component={SignUpCheckEmail} />
     </AuthStack.Navigator>
   );
 };
-
-// AuthRoute.defaultProps={}
 
 export default AuthRoute;

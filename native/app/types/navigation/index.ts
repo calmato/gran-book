@@ -1,4 +1,10 @@
-export type StackParamList = {
+export type RootStackParamList = {
   Onboarding: undefined,
-  SignIn: undefined,
+  SignInSelect: undefined,
+}
+
+export type AuthStackParamList = {
+  SignInSelect: undefined,
+  SignUp: undefined,
+  SignUpCheckEmail: { email: string | undefined },
 }
