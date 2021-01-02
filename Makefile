@@ -4,9 +4,10 @@
 .PHONY: setup build install start stop remove log proto
 
 setup:
-	cp $(PWD)/.env.temp $(PWD)/.env
 	$(MAKE) build
 	$(MAKE) install
+	cp $(PWD)/.env.temp $(PWD)/.env
+	yarn global add expo-cli
 
 build:
 	docker-compose build --parallel
@@ -17,6 +18,12 @@ install:
 
 start:
 	docker-compose up
+
+start-native:
+	cd $(PWD)/native && yarn start
+
+start-api:
+	echo "WIP"
 
 stop:
 	docker-compose stop
@@ -32,3 +39,6 @@ logs:
 
 proto:
 	docker-compose run --rm proto bash -c "make install && make generate"
+
+migrate:
+	docker-compose run --rm mysql bash -c "mysql -u root -p < /docker-entrypoint-initdb.d/01-create.sql"
