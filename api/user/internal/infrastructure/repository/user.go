@@ -28,3 +28,12 @@ func (r *userRepository) Create(ctx context.Context, u *user.User) error {
 
 	return r.client.db.Create(&u).Error
 }
+
+func (r *userRepository) GetUIDByEmail(ctx context.Context, email string) (string, error) {
+	uid, err := r.auth.GetUIDByEmail(ctx, email)
+	if err != nil {
+		return "", err
+	}
+
+	return uid, nil
+}

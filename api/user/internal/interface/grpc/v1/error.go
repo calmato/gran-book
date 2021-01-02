@@ -21,7 +21,7 @@ func toGRPCError(e error) error {
 	st := status.New(c, c.String())
 
 	switch c {
-	case codes.InvalidArgument: // Bad Requestのとき、追加のエラーメッセージ
+	case codes.InvalidArgument, codes.AlreadyExists:
 		br := &errdetails.BadRequest{
 			FieldViolations: getValidationErrors(e),
 		}
@@ -32,7 +32,7 @@ func toGRPCError(e error) error {
 		}
 
 		return dt.Err()
-	case codes.Internal: // Internal Server Errorのとき、詳細の追加
+	case codes.Internal:
 		br := &errdetails.LocalizedMessage{
 			Locale:  "en-US",
 			Message: getError(e),
