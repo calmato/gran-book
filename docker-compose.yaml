@@ -83,7 +83,7 @@ services:
       - DB_PORT=3306
       - DB_USERNAME=root
       - DB_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - DB_DATABASE=users_db
+      - DB_DATABASE=users
       - GCP_SERVICE_KEY_JSON=${GCP_SERVICE_KEY_JSON}
     networks:
       - api
