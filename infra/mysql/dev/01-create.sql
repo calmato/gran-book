@@ -32,7 +32,7 @@ USE `users` ;
 -- Table `users`.`users`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `users`.`users` (
-  `id` VARCHAR(32) NOT NULL,
+  `id` VARCHAR(36) NOT NULL,
   `username` VARCHAR(32) NOT NULL DEFAULT '',
   `gender` TINYINT(2) UNSIGNED NOT NULL DEFAULT '0',
   `email` VARCHAR(256) NULL DEFAULT NULL,
