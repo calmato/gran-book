@@ -22,14 +22,14 @@ func NewUserDomainValidation(ur user.Repository) user.Validation {
 func (v *userDomainValidation) User(ctx context.Context, u *user.User) error {
 	err := v.uniqueCheckEmail(ctx, u.ID, u.Email)
 	if err != nil {
-		ve := []*exception.ValidationError{
-			&exception.ValidationError{
+		ves := []*exception.ValidationError{
+			{
 				Field:   "email",
 				Message: exception.CustomUniqueMessage,
 			},
 		}
 
-		return exception.Conflict.New(err, ve...)
+		return exception.Conflict.New(err, ves...)
 	}
 
 	return nil
