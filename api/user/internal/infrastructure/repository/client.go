@@ -13,8 +13,8 @@ type Client struct {
 }
 
 // NewDBClient - DBクライアントの生成
-func NewDBClient(host, port, database, username, password string) (*Client, error) {
-	db, err := gorm.Open("mysql", getDBConfig(host, port, database, username, password))
+func NewDBClient(socket, host, port, database, username, password string) (*Client, error) {
+	db, err := gorm.Open("mysql", getDBConfig(socket, host, port, database, username, password))
 	if err != nil {
 		return &Client{}, err
 	}
@@ -24,13 +24,26 @@ func NewDBClient(host, port, database, username, password string) (*Client, erro
 	return &Client{db}, nil
 }
 
-func getDBConfig(host, port, database, username, password string) string {
-	return fmt.Sprintf(
-		"%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
-		username,
-		password,
-		host,
-		port,
-		database,
-	)
+func getDBConfig(socket, host, port, database, username, password string) string {
+	switch socket {
+	case "tcp":
+		return fmt.Sprintf(
+			"%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+			username,
+			password,
+			host,
+			port,
+			database,
+		)
+	case "unix":
+		return fmt.Sprintf(
+			"%s:%s@unix(%s)/%s?charset=utf8mb4&parseTime=true",
+			username,
+			password,
+			host,
+			database,
+		)
+	default:
+		return ""
+	}
 }
