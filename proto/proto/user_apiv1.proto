@@ -18,7 +18,7 @@ message CreateUserRequest {
   string username = 1;
   string email = 2;
   string password = 3;
-  string passwordConfirmation = 4;
+  string password_confirmation = 4;
 }
 
 message UserResponse {
@@ -26,19 +26,19 @@ message UserResponse {
   string username = 2;
   int32 gender = 3;
   string email = 4;
-  string thumbnail_url = 5;
-  string self_introduction = 6;
-  string lastname = 7;
-  string firstname = 8;
-  string lastname_kana = 9;
-  string firstname_kana = 10;
-  string postal_code = 11;
-  string prefecture = 12;
-  string city = 13;
-  string address_line1 = 14;
-  string address_line2 = 15;
-  string phone_number = 16;
-  int32 role = 17;
+  string phone_number = 5;
+  int32 role = 6;
+  string thumbnail_url = 7;
+  string self_introduction = 8;
+  string last_name = 9;
+  string first_name = 10;
+  string last_name_kana = 11;
+  string first_name_kana = 12;
+  string postal_code = 13;
+  string prefecture = 14;
+  string city = 15;
+  string address_line1 = 16;
+  string address_line2 = 17;
   string created_at = 18;
   string updated_at = 19;
 }

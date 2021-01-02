@@ -129,22 +129,29 @@
         "email": {
           "type": "string"
         },
+        "phoneNumber": {
+          "type": "string"
+        },
+        "role": {
+          "type": "integer",
+          "format": "int32"
+        },
         "thumbnailUrl": {
           "type": "string"
         },
         "selfIntroduction": {
           "type": "string"
         },
-        "lastname": {
+        "lastName": {
           "type": "string"
         },
-        "firstname": {
+        "firstName": {
           "type": "string"
         },
-        "lastnameKana": {
+        "lastNameKana": {
           "type": "string"
         },
-        "firstnameKana": {
+        "firstNameKana": {
           "type": "string"
         },
         "postalCode": {
@@ -161,13 +168,6 @@
         },
         "addressLine2": {
           "type": "string"
-        },
-        "phoneNumber": {
-          "type": "string"
-        },
-        "role": {
-          "type": "integer",
-          "format": "int32"
         },
         "createdAt": {
           "type": "string"
