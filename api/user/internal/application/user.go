@@ -2,6 +2,7 @@ package application
 
 import (
 	"context"
+	"strings"
 
 	"github.com/calmato/gran-book/api/user/internal/application/input"
 	"github.com/calmato/gran-book/api/user/internal/application/validation"
@@ -34,7 +35,7 @@ func (a *userApplication) Create(ctx context.Context, in *input.CreateUser) (*us
 
 	u := &user.User{
 		Username: in.Username,
-		Email:    in.Email,
+		Email:    strings.ToLower(in.Email),
 		Password: in.Password,
 		Gender:   0,
 		Role:     0,
