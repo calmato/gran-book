@@ -31,7 +31,12 @@ export const THEME: Theme = {
   Text: {
     h1Style: {
       fontWeight: '800',
-      color: colors.black
+      color: colors.black,
+    },
+    h2Style: {
+      fontWeight: 'bold',
+      fontSize: 18,
+      color: colors.black,
     },
     style: {
       fontFamily: FONT_FAMILY,
