@@ -63,41 +63,41 @@ jobs:
         run: |
           docker push ${GCR_HOSTNAME}/${GCP_PROJECT_ID}/${GCR_IMAGE_NAME}
 
-  # deploy_cloud_run_for_stg:
-  #   name: Deploy Cloud Run for Staging
-  #   needs: deploy_image_for_stg
-  #   runs-on: ${{ matrix.os }}
-  #   defaults:
-  #     run:
-  #       shell: bash
+  deploy_cloud_run_for_stg:
+    name: Deploy Cloud Run for Staging
+    needs: deploy_image_for_stg
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
 
-  #   strategy:
-  #     matrix:
-  #       os: [ubuntu-latest] # exclude: macos-latest, windows-latest
-  #       gcloud-cli: [281.0.0]
+    strategy:
+      matrix:
+        os: [ubuntu-latest] # exclude: macos-latest, windows-latest
+        gcloud-cli: [281.0.0]
 
-  #   steps:
-  #     - name: Check out code
-  #       uses: actions/checkout@v2
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
 
-  #     - name: Setup gcloud CLI
-  #       uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
-  #       with:
-  #         version: ${{ matrix.gcloud-cli }}
-  #         service_account_email: ${{ secrets.STG_GCP_SA_EMAIL }}
-  #         service_account_key: ${{ secrets.STG_GCP_SA_KEY }}
-  #         export_default_credentials: true
+      - name: Setup gcloud CLI
+        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          version: ${{ matrix.gcloud-cli }}
+          service_account_email: ${{ secrets.STG_GCP_SA_EMAIL }}
+          service_account_key: ${{ secrets.STG_GCP_SA_KEY }}
+          export_default_credentials: true
 
-  #     - name: Configure gcloud
-  #       run: |
-  #         gcloud config set project ${GCP_PROJECT_ID}
-  #         gcloud config set run/platform managed
-  #         gcloud config set run/region ${GCP_REGION}
-  #         gcloud auth configure-docker
+      - name: Configure gcloud
+        run: |
+          gcloud config set project ${GCP_PROJECT_ID}
+          gcloud config set run/platform managed
+          gcloud config set run/region ${GCP_REGION}
+          gcloud auth configure-docker
 
-  #     - name: Deploy container image to Cloud Run
-  #       run: |
-  #         gcloud run deploy ${CLOUD_RUN_NAME} --image ${GCR_HOSTNAME}/${GCP_PROJECT_ID}/${GCR_IMAGE_NAME}:latest --region ${GCP_REGION} --platform managed
+      - name: Deploy container image to Cloud Run
+        run: |
+          gcloud run deploy ${CLOUD_RUN_NAME} --image ${GCR_HOSTNAME}/${GCP_PROJECT_ID}/${GCR_IMAGE_NAME}:latest --region ${GCP_REGION} --platform managed
 
   # update_gke_pod_for_stg:
   #   name: Update GKE pod image for staging
