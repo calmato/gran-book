@@ -60,6 +60,9 @@ export const THEME: Theme = {
       marginLeft: 8,
       marginRight: 8,
     },
+    errorStyle: {
+      marginLeft: 12,
+    },
     leftIcon: {}
   }
 };
