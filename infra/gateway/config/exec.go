@@ -33,7 +33,9 @@ func Execute() error {
 		runtime.WithErrorHandler(handler.CustomHTTPError),
 	)
 
-	err = registerServiceHandlers(ctx, mux, env.LogPath, env.LogLevel, env.UserAPIURL)
+	err = registerServiceHandlers(
+		ctx, mux, env.LogPath, env.LogLevel, env.UserAPIURL, env.SSLValidation, env.SSLVerify,
+	)
 	if err != nil {
 		return err
 	}

@@ -4,7 +4,6 @@ import (
 	"context"
 	"crypto/tls"
 	"encoding/json"
-	"flag"
 	"fmt"
 	"path"
 	"strings"
@@ -27,13 +26,10 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-var (
-	insecure   = flag.Bool("insecure", false, "Skip SSL validation? [false]")
-	skipVerify = flag.Bool("skip-verify", false, "Skip server hostname verification in SSL validation [false]")
-)
-
-func registerServiceHandlers(ctx context.Context, mux *runtime.ServeMux, logPath, logLevel, userAPIURL string) error {
-	opts := grpcDialOptions(logPath, logLevel)
+func registerServiceHandlers(
+	ctx context.Context, mux *runtime.ServeMux, logPath, logLevel, userAPIURL string, insecure, skipVerify bool,
+) error {
+	opts := grpcDialOptions(logPath, logLevel, insecure, skipVerify)
 
 	err := gw.RegisterUserServiceHandlerFromEndpoint(ctx, mux, userAPIURL, opts)
 	if err != nil {
@@ -48,7 +44,7 @@ func registerServiceHandlers(ctx context.Context, mux *runtime.ServeMux, logPath
 /*
  * DialOptions
  */
-func grpcDialOptions(logPath, logLevel string) []grpc.DialOption {
+func grpcDialOptions(logPath, logLevel string, insecure, skipVerify bool) []grpc.DialOption {
 	unaryInterceptors, _ := grpcUnaryClientInterceptors(logPath, logLevel)
 
 	opts := []grpc.DialOption{
@@ -56,11 +52,11 @@ func grpcDialOptions(logPath, logLevel string) []grpc.DialOption {
 		grpc.WithUnaryInterceptor(grpc_middleware.ChainUnaryClient(unaryInterceptors...)),
 	}
 
-	if *insecure {
+	if insecure {
 		opts = append(opts, grpc.WithInsecure())
 	} else {
 		cred := credentials.NewTLS(&tls.Config{
-			InsecureSkipVerify: *skipVerify,
+			InsecureSkipVerify: skipVerify,
 		})
 		opts = append(opts, grpc.WithTransportCredentials(cred))
 	}
