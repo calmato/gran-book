@@ -36,6 +36,7 @@ services:
     working_dir: /go/src/github.com/calmato/gran-book/infra/gateway
     volumes:
       - ./infra/gateway:/go/src/github.com/calmato/gran-book/infra/gateway:cached
+      - ./tmp/data/go/pkg/mod:/go/pkg/mod:delegated
       - ./tmp/logs/gateway:/var/log/gateway:delegated
     environment:
       - PORT=8080
@@ -57,6 +58,7 @@ services:
     working_dir: /go/src/github.com/calmato/gran-book/api/user
     volumes:
       - ./api/user:/go/src/github.com/calmato/gran-book/api/user:cached
+      - ./tmp/data/go/pkg/mod:/go/pkg/mod:delegated
       - ./tmp/logs/user_api:/var/log/api:delegated
     environment:
       - PORT=8080
@@ -131,6 +133,7 @@ services:
       - ./api/user:/go/src/github.com/calmato/gran-book/api/user:cached
       - ./docs/12_backend/11_swagger:/go/src/github.com/calmato/gran-book/docs/12_backend/11_swagger:cached
       - ./infra/gateway:/go/src/github.com/calmato/gran-book/infra/gateway:cached
+      - ./tmp/data/go/pkg/mod:/go/pkg/mod:delegated
 
   swagger:
     container_name: gran_book_swagger
