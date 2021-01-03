@@ -7,7 +7,7 @@ const config = {
   databaseURL: `https://${process.env.firebaseProjectId}.firebaseio.com`,
   projectId: process.env.firebaseProjectId,
   storageBucket: `${process.env.firebaseProjectId}.appspot.com`,
-  messagingSenderId: process.env.firebaseMessagingSenderId
+  messagingSenderId: process.env.firebaseMessagingSenderId,
 }
 
 if (!firebase.apps.length) {
