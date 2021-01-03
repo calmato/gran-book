@@ -49,24 +49,6 @@ services:
       - monitoring
     command: realize start
 
-  hello_api:
-    container_name: gran_book_hello_api
-    build:
-      context: ./infra/docker/api/hello
-      dockerfile: Dockerfile_development
-    working_dir: /go/src/github.com/calmato/gran-book/api/hello
-    volumes:
-      - ./api/hello:/go/src/github.com/calmato/gran-book/api/hello:cached
-      - ./tmp/logs/hello_api:/var/log/api:delegated
-    environment:
-      - PORT=8080
-      - LOG_PATH=/var/log/api
-      - LOG_LEVEL=debug
-    networks:
-      - api
-      - monitoring
-    command: realize start
-
   user_api:
     container_name: gran_book_user_api
     build:
