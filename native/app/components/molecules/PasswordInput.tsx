@@ -5,6 +5,10 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 
 interface Props{
   placeholder: string,
+  value: string | undefined,
+  onChangeText: (value: string) => void | undefined,
+  hasError?: boolean,
+  errorMessage?: string,
 }
 
 const color = colors.grey0;
@@ -20,11 +24,14 @@ const PasswordInput = function PasswordInput(props: Props): ReactElement {
       }
       secureTextEntry={hidden}
       placeholder={props.placeholder}
+      onChangeText={(text) => props.onChangeText(text)}
+      value={props.value}
       rightIcon={
         <TouchableOpacity onPress={() => setValue(!hidden)}>
           <Ionicons name={ hidden ? 'md-eye' : 'md-eye-off'} size={24} color={color} />
         </TouchableOpacity>
       }
+      errorMessage={ props.hasError? props.errorMessage : '' }
     />
   );
 };
