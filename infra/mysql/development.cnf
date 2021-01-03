@@ -1,0 +1,24 @@
+[mysqld]
+#
+# * Basic Settings
+#
+port = 3306
+
+character-set-server = utf8mb4
+
+default_authentication_plugin = mysql_native_password
+
+#
+# * Logging and Replication
+#
+general_log         = 1
+general_log_file    = /var/log/mysql/mysql.log
+log_error           = /var/log/mysql/error.log
+slow_query_log      = 1
+slow_query_log_file = /var/log/mysql/mysql-slow.log
+
+[mysql]
+default-character-set = utf8mb4
+
+[client]
+default-character-set = utf8mb4

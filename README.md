@@ -44,7 +44,7 @@ FIREBASE_MESSAGING_SENDER_ID=xxxxxx
 
 * secretディレクトリのファイルを.envへ書き込み
 
-> $ var=$(< ./secrets/[ファイル名])
+> $ var=$(jq -c < ./secrets/[ファイル名])
 
 > $ sed -i -e "/^GCP_SERVICE_KEY_JSON=.*/d" .env
 

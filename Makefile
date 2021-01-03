@@ -1,12 +1,13 @@
 ##################################################
-# Container Commands - Run all containers
+# Container Commands - Run containers
 ##################################################
-.PHONY: setup build install start stop remove log proto
+.PHONY: setup build install start start-native start-admin start-api stop down remove logs proto migrate
 
 setup:
-	cp $(PWD)/.env.temp $(PWD)/.env
 	$(MAKE) build
 	$(MAKE) install
+	cp $(PWD)/.env.temp $(PWD)/.env
+	yarn global add expo-cli
 
 build:
 	docker-compose build --parallel
@@ -16,7 +17,16 @@ install:
 	docker-compose run --rm native yarn
 
 start:
-	docker-compose up
+	docker-compose up --remove-orphans
+
+start-native:
+	cd $(PWD)/native && yarn start
+
+start-admin:
+	docker-compose up admin
+
+start-api:
+	docker-compose up gateway user_api mysql
 
 stop:
 	docker-compose stop
@@ -32,3 +42,8 @@ logs:
 
 proto:
 	docker-compose run --rm proto bash -c "make install && make generate"
+
+migrate:
+	docker-compose start mysql
+	docker-compose exec mysql bash -c "mysql -u root -p${DB_PASSWORD} < /docker-entrypoint-initdb.d/*.sql"
+	docker-compose stop mysql

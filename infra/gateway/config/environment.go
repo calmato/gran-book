@@ -7,10 +7,13 @@ import (
 
 // Environment - システム内で利用する環境変数の構造体
 type Environment struct {
-	Port        string `envconfig:"PORT" default:"8080"`
-	MetricsPort string `envconfig:"METRICS_PORT" default:"9090"`
-	LogPath     string `envconfig:"LOG_PATH" default:""`
-	LogLevel    string `envconfig:"LOG_LEVEL" default:"info"`
+	Port          string `envconfig:"PORT" default:"8080"`
+	MetricsPort   string `envconfig:"METRICS_PORT" default:"9090"`
+	LogPath       string `envconfig:"LOG_PATH" default:""`
+	LogLevel      string `envconfig:"LOG_LEVEL" default:"info"`
+	SSLValidation bool   `envconfig:"SSL_VALIDATION" default:"false"`
+	SSLVerify     bool   `envconfig:"SSL_VERIFY" default:"false"`
+	UserAPIURL    string `envconfig:"USER_API_URL" default:""`
 }
 
 // LoadEnvironment - 環境変数の取得

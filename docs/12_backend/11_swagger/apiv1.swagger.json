@@ -44,29 +44,9 @@
         ]
       }
     },
-    "/v1/example/users": {
-      "get": {
-        "operationId": "Greeter_GetUsers",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/protoUsersResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "tags": [
-          "Greeter"
-        ]
-      },
+    "/v1/users": {
       "post": {
-        "operationId": "Greeter_CreateUser",
+        "operationId": "UserService_CreateUser",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -92,101 +72,7 @@
           }
         ],
         "tags": [
-          "Greeter"
-        ]
-      }
-    },
-    "/v1/example/users/{id}": {
-      "get": {
-        "operationId": "Greeter_GetUser",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/protoUserResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "Greeter"
-        ]
-      },
-      "delete": {
-        "operationId": "Greeter_DeleteUser",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/protoEmptyResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "Greeter"
-        ]
-      },
-      "patch": {
-        "operationId": "Greeter_UpdateUser",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/protoUserResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/protoUpdateUserRequest"
-            }
-          }
-        ],
-        "tags": [
-          "Greeter"
+          "UserService"
         ]
       }
     }
@@ -195,13 +81,19 @@
     "protoCreateUserRequest": {
       "type": "object",
       "properties": {
-        "name": {
+        "username": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "passwordConfirmation": {
           "type": "string"
         }
       }
-    },
-    "protoEmptyResponse": {
-      "type": "object"
     },
     "protoHelloReply": {
       "type": "object",
@@ -221,47 +113,67 @@
       },
       "title": "The request message containing the user's name"
     },
-    "protoUpdateUserRequest": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        }
-      }
-    },
-    "protoUser": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        }
-      }
-    },
     "protoUserResponse": {
       "type": "object",
       "properties": {
         "id": {
           "type": "string"
         },
-        "name": {
+        "username": {
           "type": "string"
-        }
-      }
-    },
-    "protoUsersResponse": {
-      "type": "object",
-      "properties": {
-        "users": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/protoUser"
-          }
+        },
+        "gender": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "email": {
+          "type": "string"
+        },
+        "phoneNumber": {
+          "type": "string"
+        },
+        "role": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "thumbnailUrl": {
+          "type": "string"
+        },
+        "selfIntroduction": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "lastNameKana": {
+          "type": "string"
+        },
+        "firstNameKana": {
+          "type": "string"
+        },
+        "postalCode": {
+          "type": "string"
+        },
+        "prefecture": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "addressLine1": {
+          "type": "string"
+        },
+        "addressLine2": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string"
         }
       }
     },
