@@ -2,7 +2,9 @@ package config
 
 import (
 	"context"
+	"crypto/tls"
 	"encoding/json"
+	"flag"
 	"fmt"
 	"path"
 	"strings"
@@ -18,10 +20,16 @@ import (
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
+)
+
+var (
+	insecure   = flag.Bool("insecure", false, "Skip SSL validation? [false]")
+	skipVerify = flag.Bool("skip-verify", false, "Skip server hostname verification in SSL validation [false]")
 )
 
 func registerServiceHandlers(ctx context.Context, mux *runtime.ServeMux, logPath, logLevel, userAPIURL string) error {
@@ -44,8 +52,17 @@ func grpcDialOptions(logPath, logLevel string) []grpc.DialOption {
 	unaryInterceptors, _ := grpcUnaryClientInterceptors(logPath, logLevel)
 
 	opts := []grpc.DialOption{
-		grpc.WithInsecure(),
+		// grpc.WithInsecure(),
 		grpc.WithUnaryInterceptor(grpc_middleware.ChainUnaryClient(unaryInterceptors...)),
+	}
+
+	if *insecure {
+		opts = append(opts, grpc.WithInsecure())
+	} else {
+		cred := credentials.NewTLS(&tls.Config{
+			InsecureSkipVerify: *skipVerify,
+		})
+		opts = append(opts, grpc.WithTransportCredentials(cred))
 	}
 
 	return opts
