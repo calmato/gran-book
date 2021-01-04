@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package proto;
+option go_package = "github.com/calmato/gran-book/proto";
+
+import "google/api/annotations.proto";
+
+service UserService {
+  rpc CreateUser (CreateUserRequest) returns (UserResponse) {
+    option (google.api.http) = {
+      post: "/v1/users"
+      body: "*"
+    };
+  };
+}
+
+message CreateUserRequest {
+  string username = 1;
+  string email = 2;
+  string password = 3;
+  string password_confirmation = 4;
+}
+
+message UserResponse {
+  string id = 1;
+  string username = 2;
+  int32 gender = 3;
+  string email = 4;
+  string phone_number = 5;
+  int32 role = 6;
+  string thumbnail_url = 7;
+  string self_introduction = 8;
+  string last_name = 9;
+  string first_name = 10;
+  string last_name_kana = 11;
+  string first_name_kana = 12;
+  string postal_code = 13;
+  string prefecture = 14;
+  string city = 15;
+  string address_line1 = 16;
+  string address_line2 = 17;
+  string created_at = 18;
+  string updated_at = 19;
+}

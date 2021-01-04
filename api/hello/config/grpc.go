@@ -10,6 +10,7 @@ import (
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
 	grpc_ctxzap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap/ctxzap"
+	grpc_recovery "github.com/grpc-ecosystem/go-grpc-middleware/recovery"
 	grpc_ctxtags "github.com/grpc-ecosystem/go-grpc-middleware/tags"
 	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
 	"go.uber.org/zap"
@@ -34,6 +35,7 @@ func newGRPCServer(port, logPath, logLevel string) (*grpcServer, error) {
 	pb.RegisterGreeterServer(s, &v1.HelloServer{})
 
 	grpc_prometheus.Register(s)
+	grpc_prometheus.EnableHandlingTimeHistogram()
 
 	lis, err := net.Listen("tcp", ":"+port)
 	if err != nil {
@@ -104,6 +106,7 @@ func grpcUnaryServerInterceptors(logPath, logLevel string) ([]grpc.UnaryServerIn
 		grpc_prometheus.UnaryServerInterceptor,
 		grpc_zap.UnaryServerInterceptor(logger, opts...),
 		accessLogUnaryServerInterceptor(),
+		grpc_recovery.UnaryServerInterceptor(),
 	}
 
 	return interceptors, nil

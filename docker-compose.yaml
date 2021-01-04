@@ -36,35 +36,89 @@ services:
     working_dir: /go/src/github.com/calmato/gran-book/infra/gateway
     volumes:
       - ./infra/gateway:/go/src/github.com/calmato/gran-book/infra/gateway:cached
+      - ./tmp/data/go/pkg/mod:/go/pkg/mod:delegated
       - ./tmp/logs/gateway:/var/log/gateway:delegated
     environment:
       - PORT=8080
       - LOG_PATH=/var/log/gateway
       - LOG_LEVEL=debug
+      - USER_API_URL=user_api:8080
     ports:
       - 8080:8080
     networks:
       - api
+      - monitoring
     command: realize start
 
-  hello_api:
-    container_name: gran_book_hello_api
+  user_api:
+    container_name: gran_book_user_api
     build:
-      context: ./infra/docker/api/hello
+      context: ./infra/docker/api/user
       dockerfile: Dockerfile_development
-    working_dir: /go/src/github.com/calmato/gran-book/api/hello
+    working_dir: /go/src/github.com/calmato/gran-book/api/user
     volumes:
-      - ./api/hello:/go/src/github.com/calmato/gran-book/api/hello:cached
-      - ./tmp/logs/hello_api:/var/log/api:delegated
+      - ./api/user:/go/src/github.com/calmato/gran-book/api/user:cached
+      - ./tmp/data/go/pkg/mod:/go/pkg/mod:delegated
+      - ./tmp/logs/user_api:/var/log/api:delegated
     environment:
       - PORT=8080
       - LOG_PATH=/var/log/api
       - LOG_LEVEL=debug
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_USERNAME=root
+      - DB_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - DB_DATABASE=users
+      - GCP_SERVICE_KEY_JSON=${GCP_SERVICE_KEY_JSON}
     networks:
       - api
+      - monitoring
     command: realize start
+    depends_on:
+      - mysql
+
+  # Database
+  mysql:
+    container_name: gran_book_mysql
+    build:
+      context: ./infra/docker/infra/mysql
+      dockerfile: Dockerfile
+    volumes:
+      - ./infra/mysql/development.cnf:/etc/mysql/conf.d/my.cnf
+      - ./infra/mysql/sql:/docker-entrypoint-initdb.d
+      - ./tmp/logs/mysql:/var/log/mysql:delegated
+      - ./tmp/data/mysql:/var/lib/mysql:delegated
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    ports:
+      - 3316:3306
+    networks:
+      - api
+      - monitoring
 
   # Monitoring
+  grafana:
+    container_name: gran_book_grafana
+    build:
+      context: ./infra/docker/infra/grafana
+      dockerfile: Dockerfile
+    ports:
+      - 9000:3000
+    networks:
+      - monitoring
+
+  prometheus:
+    container_name: gran_book_prometheus
+    build:
+      context: ./infra/docker/infra/prometheus
+      dockerfile: Dockerfile
+    volumes:
+      - ./infra/prometheus/development.yaml:/etc/prometheus/prometheus.yaml:cached
+    ports:
+      - 9090:9090
+    networks:
+      - monitoring
+    command: --config.file=/etc/prometheus/prometheus.yaml
 
   # Other
   proto:
@@ -76,8 +130,10 @@ services:
     volumes:
       - ./proto:/go/src/github.com/calmato/gran-book/proto:cached
       - ./api/hello:/go/src/github.com/calmato/gran-book/api/hello:cached
+      - ./api/user:/go/src/github.com/calmato/gran-book/api/user:cached
       - ./docs/12_backend/11_swagger:/go/src/github.com/calmato/gran-book/docs/12_backend/11_swagger:cached
       - ./infra/gateway:/go/src/github.com/calmato/gran-book/infra/gateway:cached
+      - ./tmp/data/go/pkg/mod:/go/pkg/mod:delegated
 
   swagger:
     container_name: gran_book_swagger

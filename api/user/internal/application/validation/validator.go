@@ -1,0 +1,99 @@
+package validation
+
+import (
+	"fmt"
+	"reflect"
+	"regexp"
+
+	"github.com/calmato/gran-book/api/user/internal/domain/exception"
+	"github.com/go-playground/validator/v10"
+)
+
+// RequestValidator - リクエストバリデーションインターフェース
+type RequestValidator interface {
+	Run(i interface{}) []*exception.ValidationError
+}
+
+type requestValidator struct {
+	validate validator.Validate
+}
+
+// NewRequestValidator - Validatorの生成
+func NewRequestValidator() RequestValidator {
+	validate := validator.New()
+
+	if err := validate.RegisterValidation("password", passwordCheck); err != nil {
+		return nil
+	}
+
+	return &requestValidator{
+		validate: *validate,
+	}
+}
+
+const (
+	passwordString = "^[a-zA-Z0-9_!@#$_%^&*.?()-=+]*$"
+)
+
+var (
+	passwordRegex = regexp.MustCompile(passwordString)
+)
+
+// Run - バリデーションの実行
+func (rv *requestValidator) Run(i interface{}) []*exception.ValidationError {
+	err := rv.validate.Struct(i)
+	if err == nil {
+		return []*exception.ValidationError{}
+	}
+
+	errors := err.(validator.ValidationErrors)
+	validationErrors := make([]*exception.ValidationError, len(errors))
+
+	rt := reflect.ValueOf(i).Elem().Type()
+
+	for i, v := range errors {
+		errorField, _ := rt.FieldByName(v.Field())
+		errorFieldName := errorField.Tag.Get("json")
+		errorMessage := ""
+
+		switch v.Tag() {
+		case exception.EqFieldTag:
+			eqField, _ := rt.FieldByName(v.Param())
+			errorMessage = validationMessage(v.Tag(), eqField.Tag.Get("label"))
+		default:
+			errorMessage = validationMessage(v.Tag(), v.Param())
+		}
+
+		validationErrors[i] = &exception.ValidationError{
+			Field:   errorFieldName,
+			Message: errorMessage,
+		}
+	}
+
+	return validationErrors
+}
+
+func passwordCheck(fl validator.FieldLevel) bool {
+	return passwordRegex.MatchString(fl.Field().String())
+}
+
+func validationMessage(tag string, options ...string) string {
+	switch tag {
+	case exception.RequiredTag:
+		return exception.RequiredMessage
+	case exception.EqFieldTag:
+		return fmt.Sprintf(exception.EqFieldMessage, options[0])
+	case exception.MinTag:
+		return fmt.Sprintf(exception.MinMessage, options[0])
+	case exception.MaxTag:
+		return fmt.Sprintf(exception.MaxMessage, options[0])
+	case exception.EmailTag:
+		return exception.EmailMessage
+	case exception.PasswordTag:
+		return exception.PasswordMessage
+	case exception.UniqueTag:
+		return exception.UniqueMessage
+	default:
+		return "Unknown"
+	}
+}

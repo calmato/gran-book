@@ -2,6 +2,7 @@ package config
 
 import (
 	"context"
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"path"
@@ -11,22 +12,31 @@ import (
 	gw "github.com/calmato/gran-book/infra/gateway/proto"
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
+	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
+	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/metadata"
+	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 )
 
-func registerServiceHandlers(ctx context.Context, mux *runtime.ServeMux, logPath, logLevel string) error {
-	opts := grpcDialOptions(logPath, logLevel)
+func registerServiceHandlers(
+	ctx context.Context, mux *runtime.ServeMux, logPath, logLevel, userAPIURL string, insecure, skipVerify bool,
+) error {
+	opts := grpcDialOptions(logPath, logLevel, insecure, skipVerify)
 
-	err := gw.RegisterGreeterHandlerFromEndpoint(ctx, mux, *helloAPIEndpoint, opts)
+	err := gw.RegisterUserServiceHandlerFromEndpoint(ctx, mux, userAPIURL, opts)
 	if err != nil {
 		return err
 	}
+
+	grpc_prometheus.EnableClientHandlingTimeHistogram()
 
 	return nil
 }
@@ -34,12 +44,21 @@ func registerServiceHandlers(ctx context.Context, mux *runtime.ServeMux, logPath
 /*
  * DialOptions
  */
-func grpcDialOptions(logPath, logLevel string) []grpc.DialOption {
+func grpcDialOptions(logPath, logLevel string, insecure, skipVerify bool) []grpc.DialOption {
 	unaryInterceptors, _ := grpcUnaryClientInterceptors(logPath, logLevel)
 
 	opts := []grpc.DialOption{
-		grpc.WithInsecure(),
+		// grpc.WithInsecure(),
 		grpc.WithUnaryInterceptor(grpc_middleware.ChainUnaryClient(unaryInterceptors...)),
+	}
+
+	if insecure {
+		opts = append(opts, grpc.WithInsecure())
+	} else {
+		cred := credentials.NewTLS(&tls.Config{
+			InsecureSkipVerify: skipVerify,
+		})
+		opts = append(opts, grpc.WithTransportCredentials(cred))
 	}
 
 	return opts
@@ -58,6 +77,7 @@ func grpcUnaryClientInterceptors(logPath, logLevel string) ([]grpc.UnaryClientIn
 
 	interceptors := []grpc.UnaryClientInterceptor{
 		grpc_zap.UnaryClientInterceptor(logger, opts...),
+		grpc_prometheus.UnaryClientInterceptor,
 		accessLogUnaryClientInterceptor(logger),
 	}
 
@@ -96,6 +116,7 @@ func newClientLoggerFields(
 		zap.Duration("grpc.duration", duration),
 	}
 
+	// Request Headers
 	if md, ok := metadata.FromOutgoingContext(ctx); ok {
 		if values := md.Get("grpcgateway-user-agent"); len(values) > 0 {
 			fields = append(fields, zap.String("grpc.user_agent", values[0]))
@@ -105,6 +126,7 @@ func newClientLoggerFields(
 		}
 	}
 
+	// Request / Response Messages
 	if p, ok := reqPbMsg.(proto.Message); ok {
 		req, _ := filterParams(p)
 		fields = append(fields, zap.Reflect("grpc.request.content", req))
@@ -112,11 +134,26 @@ func newClientLoggerFields(
 
 	if p, ok := resPbMsg.(proto.Message); ok {
 		res, _ := filterParams(p)
-		fields = append(fields, zap.Reflect("grpc.request.content", res))
+		fields = append(fields, zap.Reflect("grpc.response.content", res))
 	}
 
+	// Error Messages
 	if err != nil {
-		fields = append(fields, zap.String("grpc.err", err.Error()))
+		s, ok := status.FromError(err)
+		if !ok {
+			s = status.New(codes.Unknown, err.Error())
+		}
+
+		fields = append(fields, zap.Reflect("grpc.err.code", status.Code(err)))
+
+		for _, detail := range s.Details() {
+			switch v := detail.(type) {
+			case *errdetails.LocalizedMessage:
+				fields = append(fields, zap.Reflect("grpc.err.details", v.Message))
+			case *errdetails.BadRequest:
+				fields = append(fields, zap.Reflect("grpc.err.details", v.FieldViolations))
+			}
+		}
 	}
 
 	return fields

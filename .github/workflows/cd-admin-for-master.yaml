@@ -14,10 +14,15 @@ env:
 jobs:
   deploy_for_staging:
     name: Deploy for Staging
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./web/admin
 
     strategy:
       matrix:
+        os: [ubuntu-latest] # exclude: macos-latest, windows-latest
         node: [15.4]
 
     steps:
@@ -44,19 +49,15 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Install
-        working-directory: ./web/admin
         run: yarn --check-files --frozen-lockfile --non-interactive
 
       - name: Build
-        working-directory: ./web/admin
         run: yarn generate
 
       - name: Install firebase-tools
-        working-directory: ./web/admin
         run: yarn global add firebase-tools
 
       - name: Deploy to Firebase Hosting
-        working-directory: ./web/admin
         run: |
           firebase use staging
           firebase deploy --only hosting:staging --token ${FIREBASE_TOKEN}
