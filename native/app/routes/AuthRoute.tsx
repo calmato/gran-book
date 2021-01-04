@@ -3,6 +3,7 @@ import React, { ReactElement } from 'react';
 import SignInSelect from '~/screens/SignInSelect';
 import SignUp from '~/screens/SignUp';
 import SignUpCheckEmail from '~/screens/SignUpCheckEmail';
+import SingIn from '~/screens/SignIn'
 import { AuthStackParamList } from '~/types/navigation';
 
 const AuthStack = createStackNavigator<AuthStackParamList>();
@@ -18,6 +19,7 @@ const AuthRoute = function AuthRoute(): ReactElement {
       <AuthStack.Screen name="SignInSelect" component={SignInSelect}/>
       <AuthStack.Screen name="SignUp" component={SignUp} />
       <AuthStack.Screen name="SignUpCheckEmail" component={SignUpCheckEmail} />
+      <AuthStack.Screen name="SignIn" component={SingIn} />
     </AuthStack.Navigator>
   );
 };

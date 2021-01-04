@@ -45,6 +45,7 @@ const SignInSelect = function SignInSelect(props: Props): ReactElement {
       </View>
       <SignInButtonGroup
         handleRegisterMailButton={() => navigation.navigate('SignUp')}
+        handleSignInEmailButton={() => navigation.navigate('SignIn')}
       />
     </View>
   );
