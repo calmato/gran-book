@@ -1,10 +1,9 @@
-import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { ReactElement } from 'react';
 import { StyleSheet, View, Image } from 'react-native';
 import { Button, colors, Text } from 'react-native-elements';
 import TitleLogoText from '~/components/atoms/TitleLogoText';
-import { StackParamList } from '~/types/navigation';
+import { RootStackParamList } from '~/types/navigation';
 import logo from '~~/assets/logo.png';
 
 const styles = StyleSheet.create({
@@ -39,14 +38,14 @@ const styles = StyleSheet.create({
   }
 });
 
-type OnboardingNavigationProp = StackNavigationProp<StackParamList, 'SignIn'>;
+type OnboardingNavigationProp = StackNavigationProp<RootStackParamList, 'SignInSelect'>;
 
 interface Props {
   navigation: OnboardingNavigationProp
 }
 
 const Onboarding = function Onboarding(props: Props): ReactElement {
-  const navigation = useNavigation();
+  const navigation = props.navigation;
 
   return (
     <View style={styles.container}>
@@ -54,7 +53,7 @@ const Onboarding = function Onboarding(props: Props): ReactElement {
       <Text style={styles.subTitleStyle}>読書管理・本専用のフリマアプリ</Text>
       <Image style={styles.logo} source={logo}/>
       <Button
-        onPress={()=> navigation.navigate('SignIn')}
+        onPress={()=> navigation.navigate('SignInSelect')}
         title="新規登録する"
         buttonStyle={styles.registerButton}
       />

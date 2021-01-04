@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react';
 import { Header } from 'react-native-elements';
 import HeaderText from '~/components/atoms/HeaderText';
-import CloseButton from '~/components/molecules/CloseButton';
+import BackButton from '~/components/molecules/BackButton';
 
 
 interface Props {
@@ -9,11 +9,11 @@ interface Props {
   onPress: () => void | undefined
 }
 
-const HeaderWithCloseButton = function HeaderWithCloseButton(props: Props): ReactElement {
+const HeaderWithBackButton = function HeaderWithBackButton(props: Props): ReactElement {
   return (
     <Header
       leftComponent={
-        <CloseButton
+        <BackButton
           size={24}
           color="white"
           onPress={() => props.onPress()}
@@ -24,4 +24,4 @@ const HeaderWithCloseButton = function HeaderWithCloseButton(props: Props): Reac
   );
 };
 
-export default HeaderWithCloseButton;
+export default HeaderWithBackButton;

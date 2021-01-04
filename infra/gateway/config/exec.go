@@ -2,18 +2,10 @@ package config
 
 import (
 	"context"
-	"flag"
 	"net/http"
 
 	"github.com/calmato/gran-book/infra/gateway/internal/handler"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
-)
-
-var (
-	// command-line options:
-	// gRPC server endpoint
-	helloAPIEndpoint = flag.String("HELLO_API", "hello_api:8080", "gRPC server endpoint")
-	userAPIEndpoint  = flag.String("USER_API", "user_api:8080", "gRPC server endpoint")
 )
 
 // Execute - gRPC Gatewayの起動
@@ -40,13 +32,17 @@ func Execute() error {
 	mux := runtime.NewServeMux(
 		runtime.WithErrorHandler(handler.CustomHTTPError),
 	)
-	if err := registerServiceHandlers(ctx, mux, env.LogPath, env.LogLevel); err != nil {
+
+	err = registerServiceHandlers(
+		ctx, mux, env.LogPath, env.LogLevel, env.UserAPIURL, env.SSLValidation, env.SSLVerify,
+	)
+	if err != nil {
 		return err
 	}
 
 	c := setCors()
 
-	if err := http.ListenAndServe(":"+env.Port, c.Handler(mux)); err != nil {
+	if err = http.ListenAndServe(":"+env.Port, c.Handler(mux)); err != nil {
 		return err
 	}
 

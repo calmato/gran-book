@@ -21,7 +21,9 @@ func Execute() error {
 	}
 
 	// MySQL Clientの設定
-	db, err := repository.NewDBClient(env.DBHost, env.DBPort, env.DBDatabase, env.DBUsername, env.DBPassword)
+	db, err := repository.NewDBClient(
+		env.DBSocket, env.DBHost, env.DBPort, env.DBDatabase, env.DBUsername, env.DBPassword,
+	)
 	if err != nil {
 		return err
 	}

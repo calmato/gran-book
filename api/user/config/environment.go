@@ -11,6 +11,7 @@ type Environment struct {
 	MetricsPort       string `envconfig:"METRICS_PORT" default:"9090"`
 	LogPath           string `envconfig:"LOG_PATH" default:""`
 	LogLevel          string `envconfig:"LOG_LEVEL" default:"info"`
+	DBSocket          string `envconfig:"DB_SOCKET" default:"tcp"`
 	DBHost            string `envconfig:"DB_HOST" default:""`
 	DBPort            string `envconfig:"DB_PORT" default:"3306"`
 	DBUsername        string `envconfig:"DB_USERNAME" default:"root"`

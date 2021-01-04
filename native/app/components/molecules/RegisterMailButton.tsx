@@ -21,7 +21,8 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  style?: ViewStyle
+  style?: ViewStyle,
+  onPress: () => void,
 }
 
 const RegisterMailButton = function RegisterMailButton(props: Props): ReactElement {
@@ -38,12 +39,11 @@ const RegisterMailButton = function RegisterMailButton(props: Props): ReactEleme
       containerStyle={props.style}
       buttonStyle={styles.buttonStyle}
       titleStyle={styles.fontStyle}
+      onPress={props.onPress}
       type="outline"
       title="メールアドレスで新規登録"
     />
   );
 };
-
-// RegisterMailButton.defaultProps={}
 
 export default RegisterMailButton;

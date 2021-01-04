@@ -5,6 +5,7 @@ import (
 	rv "github.com/calmato/gran-book/api/user/internal/application/validation"
 	"github.com/calmato/gran-book/api/user/internal/infrastructure/repository"
 	"github.com/calmato/gran-book/api/user/internal/infrastructure/service"
+	"github.com/calmato/gran-book/api/user/internal/infrastructure/validation"
 	"github.com/calmato/gran-book/api/user/lib/firebase/authentication"
 )
 
@@ -24,7 +25,8 @@ func NewRegistry(db *repository.Client, auth *authentication.Auth) *Registry {
 
 func userInjection(db *repository.Client, auth *authentication.Auth) application.UserApplication {
 	ur := repository.NewUserRepository(db, auth)
-	us := service.NewUserService(ur)
+	udv := validation.NewUserDomainValidation(ur)
+	us := service.NewUserService(udv, ur)
 	urv := rv.NewUserRequestValidation()
 	ua := application.NewUserApplication(urv, us)
 

@@ -36,31 +36,15 @@ services:
     working_dir: /go/src/github.com/calmato/gran-book/infra/gateway
     volumes:
       - ./infra/gateway:/go/src/github.com/calmato/gran-book/infra/gateway:cached
+      - ./tmp/data/go/pkg/mod:/go/pkg/mod:delegated
       - ./tmp/logs/gateway:/var/log/gateway:delegated
     environment:
       - PORT=8080
       - LOG_PATH=/var/log/gateway
       - LOG_LEVEL=debug
+      - USER_API_URL=user_api:8080
     ports:
       - 8080:8080
-    networks:
-      - api
-      - monitoring
-    command: realize start
-
-  hello_api:
-    container_name: gran_book_hello_api
-    build:
-      context: ./infra/docker/api/hello
-      dockerfile: Dockerfile_development
-    working_dir: /go/src/github.com/calmato/gran-book/api/hello
-    volumes:
-      - ./api/hello:/go/src/github.com/calmato/gran-book/api/hello:cached
-      - ./tmp/logs/hello_api:/var/log/api:delegated
-    environment:
-      - PORT=8080
-      - LOG_PATH=/var/log/api
-      - LOG_LEVEL=debug
     networks:
       - api
       - monitoring
@@ -74,6 +58,7 @@ services:
     working_dir: /go/src/github.com/calmato/gran-book/api/user
     volumes:
       - ./api/user:/go/src/github.com/calmato/gran-book/api/user:cached
+      - ./tmp/data/go/pkg/mod:/go/pkg/mod:delegated
       - ./tmp/logs/user_api:/var/log/api:delegated
     environment:
       - PORT=8080
@@ -99,8 +84,8 @@ services:
       context: ./infra/docker/infra/mysql
       dockerfile: Dockerfile
     volumes:
-      - ./infra/mysql/development.cnf:/etc/mysql/conf.d/my.cnf:cached
-      - ./infra/mysql/dev:/docker-entrypoint-initdb.d
+      - ./infra/mysql/development.cnf:/etc/mysql/conf.d/my.cnf
+      - ./infra/mysql/sql:/docker-entrypoint-initdb.d
       - ./tmp/logs/mysql:/var/log/mysql:delegated
       - ./tmp/data/mysql:/var/lib/mysql:delegated
     environment:
@@ -148,6 +133,7 @@ services:
       - ./api/user:/go/src/github.com/calmato/gran-book/api/user:cached
       - ./docs/12_backend/11_swagger:/go/src/github.com/calmato/gran-book/docs/12_backend/11_swagger:cached
       - ./infra/gateway:/go/src/github.com/calmato/gran-book/infra/gateway:cached
+      - ./tmp/data/go/pkg/mod:/go/pkg/mod:delegated
 
   swagger:
     container_name: gran_book_swagger
