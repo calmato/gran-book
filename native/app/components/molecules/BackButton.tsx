@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import CloseIcon from '~/components/atoms/CloseIcon';
+import { TouchableOpacity } from 'react-native';
+import BackIcon from '~/components/atoms/BackIcon';
 
 interface Props {
   size?: number,
@@ -8,15 +8,16 @@ interface Props {
   onPress?: () => void | undefined,
 }
 
-const CloseButton = function CloseButton(props: Props): ReactElement {
+const BackButton = function BackButton(props: Props): ReactElement {
   return (
     <TouchableOpacity onPress={props.onPress}>
-      <CloseIcon
+      <BackIcon
         size={props.size}
         color={props.color}
       />
     </TouchableOpacity>
+  
   );
 };
 
-export default CloseButton;
+export default BackButton;

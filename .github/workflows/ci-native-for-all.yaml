@@ -48,8 +48,8 @@ jobs:
       - name: Lint
         run: yarn lint
 
-      # - name: Test
-      #   run: yarn test
+      - name: Test
+        run: yarn test
 
       # - name: Use Expo ${{ matrix.expo }}
       #   uses: expo/expo-github-action@v5

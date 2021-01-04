@@ -5,7 +5,7 @@ const FONT_FAMILY = Platform.OS === 'ios' ? 'Arial' : 'Roboto';
 
 export const COLOR = {
   MAIN: '#4ABBF3',
-  GRAY: '#3A3A3A',
+  GREY: '#3A3A3A',
   APPLE: '#333333',
   TWITTER: '#55ACEE',
   FACEBOOK: '#3B5998',
@@ -16,7 +16,7 @@ export const COLOR = {
 export const THEME: Theme = {
   colors: {
     primary: COLOR.MAIN,
-    greyOutline: COLOR.GRAY,
+    grey0: COLOR.GREY,
   },
   Button: {
     raised: true,
@@ -31,12 +31,39 @@ export const THEME: Theme = {
   Text: {
     h1Style: {
       fontWeight: '800',
-      color: colors.black
+      color: colors.black,
+    },
+    h2Style: {
+      fontWeight: 'bold',
+      fontSize: 18,
+      color: colors.black,
     },
     style: {
       fontFamily: FONT_FAMILY,
       color: colors.grey2
     }
+  },
+  Input: {
+    containerStyle: {
+      paddingLeft: 0,
+      paddingRight: 0,
+    },
+    inputContainerStyle: {
+      backgroundColor: colors.white,
+      borderColor: colors.white,
+    },
+    leftIconContainerStyle: {
+      marginLeft: 8,
+      marginRight: 8,
+    },
+    rightIconContainerStyle: {
+      marginLeft: 8,
+      marginRight: 8,
+    },
+    errorStyle: {
+      marginLeft: 12,
+    },
+    leftIcon: {}
   }
 };
 
