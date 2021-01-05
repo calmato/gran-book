@@ -10,6 +10,7 @@
 * 使用言語: TypeScript
 * フレームワーク: Nuxt.js (Vue)
 * [ディレクトリ構成](./directories.md)
+* [コンポーネント設計](./components.md)
 
 ## Versions
 
