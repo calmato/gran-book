@@ -2,7 +2,7 @@
   <v-col cols="12" sm="8">
     <v-img src="/logo.png" max-height="96px" contain class="mb-8" />
 
-    <v-card :rounded="32">
+    <v-card rounded="32">
       <v-card-title class="justify-center">
         <h3>管理者向けログイン</h3>
       </v-card-title>

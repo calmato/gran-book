@@ -10,28 +10,36 @@
   </v-app>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { defineComponent, SetupContext } from '@vue/composition-api'
+
+export default defineComponent({
   layout: 'empty',
+
   props: {
     error: {
       type: Object,
       default: null,
     },
   },
-  data() {
-    return {
-      pageNotFound: '404 Not Found',
-      otherError: 'An error occurred',
-    }
-  },
+
   head() {
     const title = this.error.statusCode === 404 ? this.pageNotFound : this.otherError
     return {
       title,
     }
   },
-}
+
+  setup(props, ctx: SetupContext) {
+    const pageNotFound: string = '404 Not Found'
+    const otherError: string = 'An error occurred'
+
+    return {
+      pageNotFound,
+      otherError
+    }
+  }
+})
 </script>
 
 <style scoped>

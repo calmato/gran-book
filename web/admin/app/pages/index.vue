@@ -3,13 +3,19 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import { defineComponent, SetupContext } from '@vue/composition-api'
 
-export default Vue.extend({
-  methods: {
-    handleClick() {
-      this.$router.push('/signin')
-    },
+export default defineComponent({
+  setup(_props, ctx: SetupContext) {
+    const router = ctx.root.$router
+
+    const handleClick = (): void => {
+      router.push('/signin')
+    }
+
+    return {
+      handleClick,
+    }
   },
 })
 </script>

@@ -2493,6 +2493,13 @@
   optionalDependencies:
     prettier "^1.18.2"
 
+"@vue/composition-api@^1.0.0-beta.23":
+  version "1.0.0-beta.23"
+  resolved "https://registry.yarnpkg.com/@vue/composition-api/-/composition-api-1.0.0-beta.23.tgz#9e4418a765f0bd2d8791e5f33ee538da8d3d8c23"
+  integrity sha512-I4BTTcgbSc33vL5i84c0FQHZ9ICNKQQuOJcamr1q1qfIZs7vnhWEdsbgOunkloE2MNsnNKZuUoRszGC14jbALA==
+  dependencies:
+    tslib "^2.0.3"
+
 "@vue/test-utils@^1.1.0":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@vue/test-utils/-/test-utils-1.1.2.tgz#fdb487448dceefeaf3d01d465f7c836a3d666dbc"
