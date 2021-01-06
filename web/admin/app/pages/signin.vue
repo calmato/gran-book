@@ -9,11 +9,36 @@
       <v-divider />
       <v-card-text class="px-12">
         <v-form class="py-8">
-          <v-text-field label="email" autofocus outlined />
-          <v-text-field label="password" outlined />
-          <v-btn :block="true" color="primary" class="mt-4">ログイン</v-btn>
+          <v-text-field v-model="form.email" label="email" autofocus outlined />
+          <v-text-field v-model="form.password" label="password" type="password" outlined />
+          <v-btn :block="true" color="primary" class="mt-4" @click="handleClick">ログイン</v-btn>
         </v-form>
       </v-card-text>
     </v-card>
   </v-col>
 </template>
+
+<script lang="ts">
+import { defineComponent } from '@nuxtjs/composition-api'
+import { AuthStore } from '~/store'
+import { SignInForm } from '~/types/forms'
+
+export default defineComponent({
+  setup() {
+    const form: SignInForm = {
+      email: '',
+      password: '',
+    }
+
+    const handleClick = async () => {
+      // TODO: エラー処理
+      await AuthStore.loginWithEmailAndPassword(form)
+    }
+
+    return {
+      form,
+      handleClick,
+    }
+  },
+})
+</script>

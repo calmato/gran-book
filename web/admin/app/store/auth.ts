@@ -1,17 +1,17 @@
 import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
 import firebase from '~/plugins/firebase'
-import { AuthState } from '~/types/store'
+import { SignInForm } from '~/types/forms'
 
 @Module({
   name: 'auth',
   stateFactory: true,
   namespaced: true,
 })
-export default class AuthModule extends VuexModule implements AuthState {
-  private id = ''
-  private email = ''
-  private emailVerified = false
-  private token = ''
+export default class AuthModule extends VuexModule {
+  private id: string = ''
+  private email: string = ''
+  private emailVerified: boolean = false
+  private token: string = ''
 
   public get getId() {
     return this.id
@@ -54,9 +54,9 @@ export default class AuthModule extends VuexModule implements AuthState {
     return new Promise((resolve: () => void, reject: (reason: Error) => void) => {
       firebase.auth().onAuthStateChanged((res: any) => {
         if (res) {
-          this.context.commit('setId', res.uid)
-          this.context.commit('setEmail', res.email)
-          this.context.commit('setEmailVerified', res.emailVerified)
+          this.setId(res.uid)
+          this.setEmail(res.email)
+          this.setEmailVerified(res.emailVerified)
 
           resolve()
         } else {
@@ -73,7 +73,7 @@ export default class AuthModule extends VuexModule implements AuthState {
         .auth()
         .currentUser?.getIdToken(true)
         .then((token: string) => {
-          this.context.commit('setToken', token)
+          this.setToken(token)
           resolve()
         })
         .catch((err: any) => {
@@ -83,13 +83,13 @@ export default class AuthModule extends VuexModule implements AuthState {
   }
 
   @Action({ rawError: true })
-  public loginWithEmailAndPassword(payload): Promise<void> {
+  public loginWithEmailAndPassword(payload: SignInForm): Promise<void> {
     return new Promise((resolve: () => void, reject: (reason: Error) => void) => {
       firebase
         .auth()
         .signInWithEmailAndPassword(payload.email, payload.password)
         .then(() => {
-          this.context.dispatch('authentication')
+          this.authentication()
           resolve()
         })
         .catch((error: any) => {
