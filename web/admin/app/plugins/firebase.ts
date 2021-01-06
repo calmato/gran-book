@@ -14,6 +14,4 @@ if (!firebase.apps.length) {
   firebase.initializeApp(config)
 }
 
-export default ({ _ }, inject) => {
-  inject('firebase', firebase)
-}
+export default firebase
