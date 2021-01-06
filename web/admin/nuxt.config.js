@@ -2,7 +2,6 @@ import colors from 'vuetify/es5/util/colors'
 
 export default {
   srcDir: 'app',
-  // Global page headers (https://go.nuxtjs.dev/config-head)
   head: {
     titleTemplate: '%s - gran-book',
     title: 'gran-book',
@@ -14,37 +13,16 @@ export default {
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
 
-  // Global CSS (https://go.nuxtjs.dev/config-css)
   css: [],
 
-  // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
-  plugins: ['~/plugins/composition-api', '~/plugins/firebase'],
-
-  // Auto import components (https://go.nuxtjs.dev/config-components)
   components: true,
+  plugins: ['~/plugins/firebase'],
+  buildModules: ['@nuxt/typescript-build', '@nuxtjs/composition-api', '@nuxtjs/vuetify'],
+  modules: ['@nuxtjs/axios', '@nuxt/content'],
 
-  // Modules for dev and build (recommended) (https://go.nuxtjs.dev/config-modules)
-  buildModules: [
-    '@nuxt/typescript-build',
-    '@nuxtjs/composition-api',
-    '@nuxtjs/vuetify',
-  ],
-
-  // Modules (https://go.nuxtjs.dev/config-modules)
-  modules: [
-    // https://go.nuxtjs.dev/axios
-    '@nuxtjs/axios',
-    // https://go.nuxtjs.dev/content
-    '@nuxt/content',
-  ],
-
-  // Axios module configuration (https://go.nuxtjs.dev/config-axios)
   axios: {},
-
-  // Content module configuration (https://go.nuxtjs.dev/config-content)
   content: {},
 
-  // Vuetify module configuration (https://go.nuxtjs.dev/config-vuetify)
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
     theme: {
@@ -63,7 +41,6 @@ export default {
     },
   },
 
-  // TypeScript runtime configuration
   typescript: {
     typeCheck: {
       eslint: {
@@ -72,13 +49,11 @@ export default {
     },
   },
 
-  // Environments
   env: {
     firebaseApiKey: process.env.FIREBASE_API_KEY,
     firebaseProjectId: process.env.FIREBASE_PROJECT_ID,
     firebaseMessagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
   },
 
-  // Build Configuration (https://go.nuxtjs.dev/config-build)
   build: {},
 }
