@@ -57,6 +57,7 @@ export default class AuthModule extends VuexModule {
           this.setId(res.uid)
           this.setEmail(res.email)
           this.setEmailVerified(res.emailVerified)
+          this.getIdToken()
 
           resolve()
         } else {
@@ -67,7 +68,7 @@ export default class AuthModule extends VuexModule {
   }
 
   @Action({ rawError: true })
-  public setIdToken(): Promise<void> {
+  public getIdToken(): Promise<void> {
     return new Promise((resolve: () => void, reject: (reason: Error) => void) => {
       firebase
         .auth()
