@@ -50,7 +50,7 @@ export default class AuthModule extends VuexModule {
   }
 
   @Action({ rawError: true })
-  public authentication(): Promise<void> {
+  public authorization(): Promise<void> {
     return new Promise((resolve: () => void, reject: (reason: Error) => void) => {
       firebase.auth().onAuthStateChanged((res: any) => {
         if (res) {
@@ -90,7 +90,7 @@ export default class AuthModule extends VuexModule {
         .auth()
         .signInWithEmailAndPassword(payload.email, payload.password)
         .then(() => {
-          this.authentication()
+          this.authorization()
           resolve()
         })
         .catch((error: any) => {

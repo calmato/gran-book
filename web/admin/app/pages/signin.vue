@@ -32,7 +32,7 @@ export default defineComponent({
 
     const handleClick = async () => {
       // TODO: エラー処理
-      await AuthStore.loginWithEmailAndPassword(form).catch((err: Error) => console.log("debug", err))
+      await AuthStore.loginWithEmailAndPassword(form).catch((err: Error) => console.log('debug', err))
     }
 
     return {
