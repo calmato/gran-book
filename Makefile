@@ -20,7 +20,8 @@ start:
 	docker-compose up --remove-orphans
 
 start-native:
-	cd $(PWD)/native && yarn start
+	./bin/get-local-ip-addr.sh
+	docker-compose up native
 
 start-admin:
 	docker-compose up admin
