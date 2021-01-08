@@ -18,7 +18,9 @@
     "@nuxtjs/composition-api": "^0.17.0",
     "core-js": "^3.6.5",
     "firebase": "^8.2.1",
-    "nuxt": "^2.14.6"
+    "js-cookie": "^2.2.1",
+    "nuxt": "^2.14.6",
+    "vuex-persistedstate": "^4.0.0-beta.2"
   },
   "devDependencies": {
     "@nuxt/types": "^2.14.6",

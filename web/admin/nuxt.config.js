@@ -1,6 +1,7 @@
 import colors from 'vuetify/es5/util/colors'
 
 export default {
+  ssr: false,
   srcDir: 'app',
   head: {
     titleTemplate: '%s - gran-book',
@@ -16,9 +17,13 @@ export default {
   css: [],
 
   components: true,
-  plugins: ['~/plugins/firebase'],
+  plugins: ['~/plugins/firebase', '~/plugins/persisted-state'],
   buildModules: ['@nuxt/typescript-build', '@nuxtjs/composition-api', '@nuxtjs/vuetify'],
   modules: ['@nuxtjs/axios', '@nuxt/content'],
+
+  router: {
+    middleware: ['authenticated'],
+  },
 
   axios: {},
   content: {},

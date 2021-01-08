@@ -52,13 +52,18 @@ export default class AuthModule extends VuexModule {
   @Action({ rawError: true })
   public authorization(): Promise<void> {
     return new Promise((resolve: () => void, reject: (reason: Error) => void) => {
-      firebase.auth().onAuthStateChanged((res: any) => {
+      firebase.auth().onAuthStateChanged(async (res: any) => {
         if (res) {
-          this.setId(res.uid)
-          this.setEmail(res.email)
-          this.setEmailVerified(res.emailVerified)
-          this.getIdToken()
+          const { uid, email, emailVerified } = res
+          if (emailVerified) {
+            this.setId(uid)
+            this.setEmail(email)
+            await this.getIdToken()
+          } else {
+            this.sendEmailVerification()
+          }
 
+          this.setEmailVerified(res.emailVerified)
           resolve()
         } else {
           reject(new Error())
@@ -77,9 +82,20 @@ export default class AuthModule extends VuexModule {
           this.setToken(token)
           resolve()
         })
-        .catch((err: any) => {
-          reject(new Error(err))
+        .catch((err: Error) => {
+          reject(err)
         })
+    })
+  }
+
+  @Action({ rawError: true })
+  public sendEmailVerification(): Promise<void> {
+    return new Promise((resolve: () => void, reject: (reason: Error) => void) => {
+      firebase
+        .auth()
+        .currentUser?.sendEmailVerification()
+        .then(() => resolve())
+        .catch((err: Error) => reject(err))
     })
   }
 
@@ -93,8 +109,8 @@ export default class AuthModule extends VuexModule {
           this.authorization()
           resolve()
         })
-        .catch((error: any) => {
-          reject(error)
+        .catch((err: Error) => {
+          reject(err)
         })
     })
   }
