@@ -7,7 +7,6 @@ setup:
 	$(MAKE) build
 	$(MAKE) install
 	cp $(PWD)/.env.temp $(PWD)/.env
-	yarn global add expo-cli
 
 build:
 	docker-compose build --parallel
