@@ -1,12 +1,7 @@
 swagger: '2.0'
 info:
   title: Gran Book
-  version: 0.1
-servers:
-  - url: http://localhost:8080
-    description: 開発環境
-  - url: https://api.gran-book-stg.calmato.work
-    description: 検証環境
+  version: 0.1.0
 consumes:
   - application/json
 produces:
@@ -16,8 +11,6 @@ paths:
     get:
       operationId: UserService_GetAuth
       summary: 認証情報取得
-      security:
-        - BearerAuth: []
       responses:
         '200':
           description: A successful response.

@@ -141,7 +141,7 @@ services:
       context: ./infra/docker/infra/swagger_ui
       dockerfile: Dockerfile
     volumes:
-      - ./docs/12_backend/11_swagger/apiv1.yaml:/var/swagger/swagger.yaml:cached
+      - ./docs/12_backend/11_swagger/apiv1.openapi.yaml:/var/swagger/swagger.yaml:cached
     ports:
       - 8000:8080
     environment:
