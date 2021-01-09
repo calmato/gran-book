@@ -138,14 +138,22 @@ services:
   swagger:
     container_name: gran_book_swagger
     build:
-      context: ./infra/docker/infra/swagger
+      context: ./infra/docker/infra/swagger_ui
       dockerfile: Dockerfile
     volumes:
-      - ./docs/12_backend/11_swagger/apiv1.swagger.json:/var/swagger/apiv1.json:cached
+      - ./docs/12_backend/11_swagger/apiv1.yaml:/var/swagger/swagger.yaml:cached
     ports:
       - 8000:8080
     environment:
-      SWAGGER_JSON: /var/swagger/apiv1.json
+      SWAGGER_JSON: /var/swagger/swagger.yaml
+
+  swagger_editor:
+    container_name: gran_book_swagger_editor
+    build:
+      context: ./infra/docker/infra/swagger
+      dockerfile: Dockerfile
+    ports:
+      - 8001:8080
 
 networks:
   api:

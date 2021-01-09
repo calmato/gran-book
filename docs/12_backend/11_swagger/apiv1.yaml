@@ -1,0 +1,127 @@
+swagger: '2.0'
+info:
+  title: Gran Book
+  version: 0.1
+servers:
+  - url: http://localhost:8080
+    description: 開発環境
+  - url: https://api.gran-book-stg.calmato.work
+    description: 検証環境
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /v1/auth:
+    get:
+      operationId: UserService_GetAuth
+      summary: 認証情報取得
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/protoAuthResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      tags:
+        - UserService
+  /v1/users:
+    post:
+      operationId: UserService_CreateUser
+      summary: ユーザ登録
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/protoAuthResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/protoCreateUserRequest'
+      tags:
+        - UserService
+definitions:
+  protoAuthResponse:
+    type: object
+    properties:
+      id:
+        type: string
+      username:
+        type: string
+      gender:
+        type: integer
+        format: int32
+      email:
+        type: string
+      phoneNumber:
+        type: string
+      role:
+        type: integer
+        format: int32
+      thumbnailUrl:
+        type: string
+      selfIntroduction:
+        type: string
+      lastName:
+        type: string
+      firstName:
+        type: string
+      lastNameKana:
+        type: string
+      firstNameKana:
+        type: string
+      postalCode:
+        type: string
+      prefecture:
+        type: string
+      city:
+        type: string
+      addressLine1:
+        type: string
+      addressLine2:
+        type: string
+      createdAt:
+        type: string
+      updatedAt:
+        type: string
+  protoCreateUserRequest:
+    type: object
+    properties:
+      username:
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+      passwordConfirmation:
+        type: string
+  protobufAny:
+    type: object
+    properties:
+      typeUrl:
+        type: string
+      value:
+        type: string
+        format: byte
+  rpcStatus:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      details:
+        type: array
+        items:
+          $ref: '#/definitions/protobufAny'
