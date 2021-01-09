@@ -6,6 +6,12 @@ option go_package = "github.com/calmato/gran-book/proto";
 import "google/api/annotations.proto";
 
 service UserService {
+  rpc GetAuth (EmptyUser) returns (AuthResponse) {
+    option (google.api.http) = {
+      get: "/v1/auth"
+    };
+  };
+
   rpc CreateUser (CreateUserRequest) returns (AuthResponse) {
     option (google.api.http) = {
       post: "/v1/users"
@@ -13,6 +19,8 @@ service UserService {
     };
   };
 }
+
+message EmptyUser {}
 
 message CreateUserRequest {
   string username = 1;
