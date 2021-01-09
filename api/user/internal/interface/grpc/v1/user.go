@@ -15,6 +15,11 @@ type UserServer struct {
 	UserApplication application.UserApplication
 }
 
+// GetAuth - 認証情報取得
+func (s *UserServer) GetAuth(ctx context.Context, req *pb.EmptyUser) (*pb.AuthResponse, error) {
+	return &pb.AuthResponse{}, nil
+}
+
 // CreateUser - ユーザ登録
 func (s *UserServer) CreateUser(ctx context.Context, req *pb.CreateUserRequest) (*pb.AuthResponse, error) {
 	in := &input.CreateUser{
