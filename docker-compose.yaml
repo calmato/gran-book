@@ -10,6 +10,13 @@ services:
     working_dir: /var/native
     volumes:
       - ./native:/var/native:cached
+    ports:
+      - 19000:19000
+      - 19001:19001
+      - 19002:19002
+    environment:
+      - REACT_NATIVE_PACKAGER_HOSTNAME=${LOCAL_IP_ADDRESS}
+    command: yarn start
 
   admin:
     container_name: gran_book_admin
