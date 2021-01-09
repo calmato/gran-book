@@ -19,16 +19,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@nuxtjs/composition-api'
+import { defineComponent, reactive } from '@nuxtjs/composition-api'
 import { AuthStore } from '~/store'
 import { SignInForm } from '~/types/forms'
 
 export default defineComponent({
   setup() {
-    const form: SignInForm = {
+    const form = reactive<SignInForm>({
       email: '',
       password: '',
-    }
+    })
 
     const handleClick = async () => {
       // TODO: エラー処理
