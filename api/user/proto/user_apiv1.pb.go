@@ -97,7 +97,7 @@ func (x *CreateUserRequest) GetPasswordConfirmation() string {
 	return ""
 }
 
-type UserResponse struct {
+type AuthResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -123,8 +123,8 @@ type UserResponse struct {
 	UpdatedAt        string `protobuf:"bytes,19,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
 }
 
-func (x *UserResponse) Reset() {
-	*x = UserResponse{}
+func (x *AuthResponse) Reset() {
+	*x = AuthResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_proto_user_apiv1_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -132,13 +132,13 @@ func (x *UserResponse) Reset() {
 	}
 }
 
-func (x *UserResponse) String() string {
+func (x *AuthResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UserResponse) ProtoMessage() {}
+func (*AuthResponse) ProtoMessage() {}
 
-func (x *UserResponse) ProtoReflect() protoreflect.Message {
+func (x *AuthResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_user_apiv1_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -150,138 +150,138 @@ func (x *UserResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UserResponse.ProtoReflect.Descriptor instead.
-func (*UserResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use AuthResponse.ProtoReflect.Descriptor instead.
+func (*AuthResponse) Descriptor() ([]byte, []int) {
 	return file_proto_user_apiv1_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *UserResponse) GetId() string {
+func (x *AuthResponse) GetId() string {
 	if x != nil {
 		return x.Id
 	}
 	return ""
 }
 
-func (x *UserResponse) GetUsername() string {
+func (x *AuthResponse) GetUsername() string {
 	if x != nil {
 		return x.Username
 	}
 	return ""
 }
 
-func (x *UserResponse) GetGender() int32 {
+func (x *AuthResponse) GetGender() int32 {
 	if x != nil {
 		return x.Gender
 	}
 	return 0
 }
 
-func (x *UserResponse) GetEmail() string {
+func (x *AuthResponse) GetEmail() string {
 	if x != nil {
 		return x.Email
 	}
 	return ""
 }
 
-func (x *UserResponse) GetPhoneNumber() string {
+func (x *AuthResponse) GetPhoneNumber() string {
 	if x != nil {
 		return x.PhoneNumber
 	}
 	return ""
 }
 
-func (x *UserResponse) GetRole() int32 {
+func (x *AuthResponse) GetRole() int32 {
 	if x != nil {
 		return x.Role
 	}
 	return 0
 }
 
-func (x *UserResponse) GetThumbnailUrl() string {
+func (x *AuthResponse) GetThumbnailUrl() string {
 	if x != nil {
 		return x.ThumbnailUrl
 	}
 	return ""
 }
 
-func (x *UserResponse) GetSelfIntroduction() string {
+func (x *AuthResponse) GetSelfIntroduction() string {
 	if x != nil {
 		return x.SelfIntroduction
 	}
 	return ""
 }
 
-func (x *UserResponse) GetLastName() string {
+func (x *AuthResponse) GetLastName() string {
 	if x != nil {
 		return x.LastName
 	}
 	return ""
 }
 
-func (x *UserResponse) GetFirstName() string {
+func (x *AuthResponse) GetFirstName() string {
 	if x != nil {
 		return x.FirstName
 	}
 	return ""
 }
 
-func (x *UserResponse) GetLastNameKana() string {
+func (x *AuthResponse) GetLastNameKana() string {
 	if x != nil {
 		return x.LastNameKana
 	}
 	return ""
 }
 
-func (x *UserResponse) GetFirstNameKana() string {
+func (x *AuthResponse) GetFirstNameKana() string {
 	if x != nil {
 		return x.FirstNameKana
 	}
 	return ""
 }
 
-func (x *UserResponse) GetPostalCode() string {
+func (x *AuthResponse) GetPostalCode() string {
 	if x != nil {
 		return x.PostalCode
 	}
 	return ""
 }
 
-func (x *UserResponse) GetPrefecture() string {
+func (x *AuthResponse) GetPrefecture() string {
 	if x != nil {
 		return x.Prefecture
 	}
 	return ""
 }
 
-func (x *UserResponse) GetCity() string {
+func (x *AuthResponse) GetCity() string {
 	if x != nil {
 		return x.City
 	}
 	return ""
 }
 
-func (x *UserResponse) GetAddressLine1() string {
+func (x *AuthResponse) GetAddressLine1() string {
 	if x != nil {
 		return x.AddressLine1
 	}
 	return ""
 }
 
-func (x *UserResponse) GetAddressLine2() string {
+func (x *AuthResponse) GetAddressLine2() string {
 	if x != nil {
 		return x.AddressLine2
 	}
 	return ""
 }
 
-func (x *UserResponse) GetCreatedAt() string {
+func (x *AuthResponse) GetCreatedAt() string {
 	if x != nil {
 		return x.CreatedAt
 	}
 	return ""
 }
 
-func (x *UserResponse) GetUpdatedAt() string {
+func (x *AuthResponse) GetUpdatedAt() string {
 	if x != nil {
 		return x.UpdatedAt
 	}
@@ -304,7 +304,7 @@ var file_proto_user_apiv1_proto_rawDesc = []byte{
 	0x64, 0x12, 0x33, 0x0a, 0x15, 0x70, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x5f, 0x63, 0x6f,
 	0x6e, 0x66, 0x69, 0x72, 0x6d, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09,
 	0x52, 0x14, 0x70, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x72,
-	0x6d, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x22, 0xd8, 0x04, 0x0a, 0x0c, 0x55, 0x73, 0x65, 0x72, 0x52,
+	0x6d, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x22, 0xd8, 0x04, 0x0a, 0x0c, 0x41, 0x75, 0x74, 0x68, 0x52,
 	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20,
 	0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x12, 0x1a, 0x0a, 0x08, 0x75, 0x73, 0x65, 0x72, 0x6e,
 	0x61, 0x6d, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x75, 0x73, 0x65, 0x72, 0x6e,
@@ -346,7 +346,7 @@ var file_proto_user_apiv1_proto_rawDesc = []byte{
 	0x12, 0x51, 0x0a, 0x0a, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x55, 0x73, 0x65, 0x72, 0x12, 0x18,
 	0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x55, 0x73, 0x65,
 	0x72, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x13, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
-	0x2e, 0x55, 0x73, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x14, 0x82,
+	0x2e, 0x41, 0x75, 0x74, 0x68, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x14, 0x82,
 	0xd3, 0xe4, 0x93, 0x02, 0x0e, 0x22, 0x09, 0x2f, 0x76, 0x31, 0x2f, 0x75, 0x73, 0x65, 0x72, 0x73,
 	0x3a, 0x01, 0x2a, 0x42, 0x24, 0x5a, 0x22, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f,
 	0x6d, 0x2f, 0x63, 0x61, 0x6c, 0x6d, 0x61, 0x74, 0x6f, 0x2f, 0x67, 0x72, 0x61, 0x6e, 0x2d, 0x62,
@@ -369,11 +369,11 @@ func file_proto_user_apiv1_proto_rawDescGZIP() []byte {
 var file_proto_user_apiv1_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_proto_user_apiv1_proto_goTypes = []interface{}{
 	(*CreateUserRequest)(nil), // 0: proto.CreateUserRequest
-	(*UserResponse)(nil),      // 1: proto.UserResponse
+	(*AuthResponse)(nil),      // 1: proto.AuthResponse
 }
 var file_proto_user_apiv1_proto_depIdxs = []int32{
 	0, // 0: proto.UserService.CreateUser:input_type -> proto.CreateUserRequest
-	1, // 1: proto.UserService.CreateUser:output_type -> proto.UserResponse
+	1, // 1: proto.UserService.CreateUser:output_type -> proto.AuthResponse
 	1, // [1:2] is the sub-list for method output_type
 	0, // [0:1] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
@@ -400,7 +400,7 @@ func file_proto_user_apiv1_proto_init() {
 			}
 		}
 		file_proto_user_apiv1_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UserResponse); i {
+			switch v := v.(*AuthResponse); i {
 			case 0:
 				return &v.state
 			case 1:

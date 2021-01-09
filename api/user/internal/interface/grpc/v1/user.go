@@ -16,7 +16,7 @@ type UserServer struct {
 }
 
 // CreateUser - ユーザ登録
-func (s *UserServer) CreateUser(ctx context.Context, req *pb.CreateUserRequest) (*pb.UserResponse, error) {
+func (s *UserServer) CreateUser(ctx context.Context, req *pb.CreateUserRequest) (*pb.AuthResponse, error) {
 	in := &input.CreateUser{
 		Username:             req.Username,
 		Email:                req.Email,
@@ -29,7 +29,7 @@ func (s *UserServer) CreateUser(ctx context.Context, req *pb.CreateUserRequest) 
 		return nil, errorHandling(err)
 	}
 
-	res := &pb.UserResponse{
+	res := &pb.AuthResponse{
 		Id:               u.ID,
 		Username:         u.Username,
 		Gender:           u.Gender,
