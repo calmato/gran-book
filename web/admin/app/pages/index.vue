@@ -1,5 +1,11 @@
 <template>
-  <v-btn @click="handleClick">ログインページへ</v-btn>
+  <v-container fill-height>
+    <v-layout wrap>
+      <v-row justify="center" align="center">
+        <v-btn @click="handleClick">ログインページへ</v-btn>
+      </v-row>
+    </v-layout>
+  </v-container>
 </template>
 
 <script lang="ts">

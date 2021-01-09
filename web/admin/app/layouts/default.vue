@@ -1,7 +1,7 @@
 <template>
   <v-app>
-    <v-row justify="center" align="center">
+    <v-main>
       <nuxt />
-    </v-row>
+    </v-main>
   </v-app>
 </template>
