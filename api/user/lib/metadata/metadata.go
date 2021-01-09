@@ -14,5 +14,10 @@ func Get(ctx context.Context, key string) (string, error) {
 		return "", xerrors.New("Metadata connot be retrieved from context")
 	}
 
-	return md.Get(key)[0], nil
+	v := md.Get(key)
+	if len(v) == 0 {
+		return "", xerrors.New("Metadata length is 0")
+	}
+
+	return v[0], nil
 }

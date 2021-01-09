@@ -17,7 +17,34 @@ type UserServer struct {
 
 // GetAuth - 認証情報取得
 func (s *UserServer) GetAuth(ctx context.Context, req *pb.EmptyUser) (*pb.AuthResponse, error) {
-	return &pb.AuthResponse{}, nil
+	u, err := s.UserApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	res := &pb.AuthResponse{
+		Id:               u.ID,
+		Username:         u.Username,
+		Gender:           u.Gender,
+		Email:            u.Email,
+		PhoneNumber:      u.PhoneNumber,
+		Role:             u.Role,
+		ThumbnailUrl:     u.ThumbnailURL,
+		SelfIntroduction: u.SelfIntroduction,
+		LastName:         u.LastName,
+		FirstName:        u.FirstName,
+		LastNameKana:     u.LastNameKana,
+		FirstNameKana:    u.FirstNameKana,
+		PostalCode:       u.PostalCode,
+		Prefecture:       u.Prefecture,
+		City:             u.City,
+		AddressLine1:     u.AddressLine1,
+		AddressLine2:     u.AddressLine2,
+		CreatedAt:        datetime.TimeToString(u.CreatedAt),
+		UpdatedAt:        datetime.TimeToString(u.UpdatedAt),
+	}
+
+	return res, nil
 }
 
 // CreateUser - ユーザ登録
