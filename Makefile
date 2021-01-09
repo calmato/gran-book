@@ -4,9 +4,10 @@
 .PHONY: setup build install start start-native start-admin start-api stop down remove logs proto migrate
 
 setup:
+	cp $(PWD)/.env.temp $(PWD)/.env
 	$(MAKE) build
 	$(MAKE) install
-	cp $(PWD)/.env.temp $(PWD)/.env
+	$(MAKE) migrate
 
 build:
 	docker-compose build --parallel
@@ -19,7 +20,7 @@ start:
 	docker-compose up --remove-orphans
 
 start-native:
-	./bin/get-local-ip-addr.sh
+	$(PWD)/bin/get-local-ip-addr.sh
 	docker-compose up native
 
 start-admin:
@@ -45,5 +46,5 @@ proto:
 
 migrate:
 	docker-compose start mysql
-	docker-compose exec mysql bash -c "mysql -u root -p${DB_PASSWORD} < /docker-entrypoint-initdb.d/*.sql"
+	docker-compose exec mysql bash -c "mysql -u root -p${MYSQL_ROOT_PASSWORD} < /docker-entrypoint-initdb.d/*.sql"
 	docker-compose stop mysql
