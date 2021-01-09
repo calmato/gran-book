@@ -7,3 +7,5 @@ RUN apk add \
   g++ \
   make \
   python
+
+RUN yarn global add expo-cli
