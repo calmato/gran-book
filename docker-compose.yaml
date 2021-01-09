@@ -150,7 +150,7 @@ services:
   swagger_editor:
     container_name: gran_book_swagger_editor
     build:
-      context: ./infra/docker/infra/swagger
+      context: ./infra/docker/infra/swagger_editor
       dockerfile: Dockerfile
     ports:
       - 8001:8080
