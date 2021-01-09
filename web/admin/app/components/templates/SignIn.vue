@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, SetupContext, PropType } from '@nuxtjs/composition-api'
+import { defineComponent, SetupContext, PropType } from '@nuxtjs/composition-api'
 import { ISignInForm } from '~/types/forms'
 import SignInCard from '~/components/organisms/SignInCard.vue'
 import SignInForm from '~/components/organisms/SignInForm.vue'
