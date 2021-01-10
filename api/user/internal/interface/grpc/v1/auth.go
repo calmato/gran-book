@@ -97,6 +97,42 @@ func (s AuthServer) UpdateAuth(ctx context.Context, req *pb.UpdateAuthRequest) (
 func (s AuthServer) UpdateAuthPassword(
 	ctx context.Context, req *pb.UpdateAuthPasswordRequest,
 ) (*pb.AuthResponse, error) {
-	err := exception.NotFound.New(nil)
-	return nil, errorHandling(err)
+	u, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	in := &input.UpdateAuthPassword{
+		Password:             req.Password,
+		PasswordConfirmation: req.PasswordConfirmation,
+	}
+
+	err = s.AuthApplication.UpdatePassword(ctx, in, u)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	res := &pb.AuthResponse{
+		Id:               u.ID,
+		Username:         u.Username,
+		Gender:           u.Gender,
+		Email:            u.Email,
+		PhoneNumber:      u.PhoneNumber,
+		Role:             u.Role,
+		ThumbnailUrl:     u.ThumbnailURL,
+		SelfIntroduction: u.SelfIntroduction,
+		LastName:         u.LastName,
+		FirstName:        u.FirstName,
+		LastNameKana:     u.LastNameKana,
+		FirstNameKana:    u.FirstNameKana,
+		PostalCode:       u.PostalCode,
+		Prefecture:       u.Prefecture,
+		City:             u.City,
+		AddressLine1:     u.AddressLine1,
+		AddressLine2:     u.AddressLine2,
+		CreatedAt:        datetime.TimeToString(u.CreatedAt),
+		UpdatedAt:        datetime.TimeToString(u.UpdatedAt),
+	}
+
+	return res, nil
 }
