@@ -1,7 +1,7 @@
 GOLANGCI_VERSION := 1.33.0
 
 BIN := $(abspath ./bin)
-PACKAGES := $(shell go list ./... | grep -v proto)
+PACKAGES := $(shell go list ./... | grep -v -e "mock" -v -e "proto")
 
 .PHONY: setup run build start fmt vet lint test
 
@@ -31,3 +31,6 @@ lint:
 test:
 	echo "WIP..."
 	# go test -v -cover ./internal/...
+
+mockgen:
+	$(BIN)/build-mocks.sh
