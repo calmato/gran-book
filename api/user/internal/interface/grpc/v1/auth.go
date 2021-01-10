@@ -5,19 +5,20 @@ import (
 
 	"github.com/calmato/gran-book/api/user/internal/application"
 	"github.com/calmato/gran-book/api/user/internal/application/input"
+	"github.com/calmato/gran-book/api/user/internal/domain/exception"
 	"github.com/calmato/gran-book/api/user/lib/datetime"
 	pb "github.com/calmato/gran-book/api/user/proto"
 )
 
-// UserServer - Userインターフェースの構造体
-type UserServer struct {
-	pb.UnimplementedUserServiceServer
-	UserApplication application.UserApplication
+// AuthServer - Authインターフェースの構造体
+type AuthServer struct {
+	pb.UnimplementedAuthServiceServer
+	AuthApplication application.AuthApplication
 }
 
 // GetAuth - 認証情報取得
-func (s *UserServer) GetAuth(ctx context.Context, req *pb.EmptyUser) (*pb.AuthResponse, error) {
-	u, err := s.UserApplication.Authentication(ctx)
+func (s *AuthServer) GetAuth(ctx context.Context, req *pb.EmptyUser) (*pb.AuthResponse, error) {
+	u, err := s.AuthApplication.Authentication(ctx)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -47,16 +48,16 @@ func (s *UserServer) GetAuth(ctx context.Context, req *pb.EmptyUser) (*pb.AuthRe
 	return res, nil
 }
 
-// CreateUser - ユーザ登録
-func (s *UserServer) CreateUser(ctx context.Context, req *pb.CreateUserRequest) (*pb.AuthResponse, error) {
-	in := &input.CreateUser{
+// CreateAuth - ユーザ登録
+func (s *AuthServer) CreateAuth(ctx context.Context, req *pb.CreateAuthRequest) (*pb.AuthResponse, error) {
+	in := &input.CreateAuth{
 		Username:             req.Username,
 		Email:                req.Email,
 		Password:             req.Password,
 		PasswordConfirmation: req.PasswordConfirmation,
 	}
 
-	u, err := s.UserApplication.Create(ctx, in)
+	u, err := s.AuthApplication.Create(ctx, in)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -84,4 +85,18 @@ func (s *UserServer) CreateUser(ctx context.Context, req *pb.CreateUserRequest) 
 	}
 
 	return res, nil
+}
+
+// UpdateAuth - ユーザ情報更新
+func (s AuthServer) UpdateAuth(ctx context.Context, req *pb.UpdateAuthRequest) (*pb.AuthResponse, error) {
+	err := exception.NotFound.New(nil)
+	return nil, errorHandling(err)
+}
+
+// UpdateAuthPassword - ログイン用パスワードの更新
+func (s AuthServer) UpdateAuthPassword(
+	ctx context.Context, req *pb.UpdateAuthPasswordRequest,
+) (*pb.AuthResponse, error) {
+	err := exception.NotFound.New(nil)
+	return nil, errorHandling(err)
 }

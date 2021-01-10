@@ -9,26 +9,26 @@ import (
 	"github.com/calmato/gran-book/api/user/internal/domain/user"
 )
 
-// UserApplication - Userアプリケーションのインターフェース
-type UserApplication interface {
+// AuthApplication - Authアプリケーションのインターフェース
+type AuthApplication interface {
 	Authentication(ctx context.Context) (*user.User, error)
-	Create(ctx context.Context, in *input.CreateUser) (*user.User, error)
+	Create(ctx context.Context, in *input.CreateAuth) (*user.User, error)
 }
 
-type userApplication struct {
-	userRequestValidation validation.UserRequestValidation
+type authApplication struct {
+	authRequestValidation validation.AuthRequestValidation
 	userService           user.Service
 }
 
-// NewUserApplication - UserApplicationの生成
-func NewUserApplication(urv validation.UserRequestValidation, us user.Service) UserApplication {
-	return &userApplication{
-		userRequestValidation: urv,
+// NewAuthApplication - AuthApplicationの生成
+func NewAuthApplication(urv validation.AuthRequestValidation, us user.Service) AuthApplication {
+	return &authApplication{
+		authRequestValidation: urv,
 		userService:           us,
 	}
 }
 
-func (a *userApplication) Authentication(ctx context.Context) (*user.User, error) {
+func (a *authApplication) Authentication(ctx context.Context) (*user.User, error) {
 	u, err := a.userService.Authentication(ctx)
 	if err != nil {
 		return nil, err
@@ -37,8 +37,8 @@ func (a *userApplication) Authentication(ctx context.Context) (*user.User, error
 	return u, nil
 }
 
-func (a *userApplication) Create(ctx context.Context, in *input.CreateUser) (*user.User, error) {
-	err := a.userRequestValidation.CreateUser(in)
+func (a *authApplication) Create(ctx context.Context, in *input.CreateAuth) (*user.User, error) {
+	err := a.authRequestValidation.CreateAuth(in)
 	if err != nil {
 		return nil, err
 	}
