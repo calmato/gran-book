@@ -18,7 +18,6 @@ install:
 generate:
 	$(MAKE) generate-gateway
 	$(MAKE) generate-swagger
-	$(MAKE) generate-helloworld
 	$(MAKE) generate-user-api
 
 generate-gateway:
@@ -42,15 +41,6 @@ generate-swagger:
 		--openapiv2_opt merge_file_name=apiv1 \
 		--openapiv2_opt logtostderr=true \
 		./proto/*.proto
-
-generate-helloworld:
-	protoc -I . \
-		-I ${GOPATH}/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
-		--go_out ./../api/hello \
-		--go_opt paths=source_relative \
-		--go-grpc_out ./../api/hello \
-		--go-grpc_opt paths=source_relative \
-		./proto/hello_world.proto
 
 generate-user-api:
 	protoc -I . \

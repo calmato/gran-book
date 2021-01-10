@@ -137,7 +137,6 @@ services:
     working_dir: /go/src/github.com/calmato/gran-book/proto
     volumes:
       - ./proto:/go/src/github.com/calmato/gran-book/proto:cached
-      - ./api/hello:/go/src/github.com/calmato/gran-book/api/hello:cached
       - ./api/user:/go/src/github.com/calmato/gran-book/api/user:cached
       - ./docs/12_backend/11_swagger:/go/src/github.com/calmato/gran-book/docs/12_backend/11_swagger:cached
       - ./infra/gateway:/go/src/github.com/calmato/gran-book/infra/gateway:cached
