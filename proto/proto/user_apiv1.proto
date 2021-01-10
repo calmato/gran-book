@@ -12,9 +12,23 @@ service UserService {
     };
   };
 
-  rpc CreateUser (CreateUserRequest) returns (AuthResponse) {
+  rpc CreateAuth (CreateAuthRequest) returns (AuthResponse) {
     option (google.api.http) = {
-      post: "/v1/users"
+      post: "/v1/auth"
+      body: "*"
+    };
+  };
+
+  rpc UpdateAuth (UpdateAuthRequest) returns (AuthResponse) {
+    option (google.api.http) = {
+      patch: "/v1/auth"
+      body: "*"
+    };
+  };
+
+  rpc UpdateAuthPassword (UpdateAuthPasswordRequest) returns (AuthResponse) {
+    option (google.api.http) = {
+      patch: "/v1/auth/password"
       body: "*"
     };
   };
@@ -22,11 +36,35 @@ service UserService {
 
 message EmptyUser {}
 
-message CreateUserRequest {
+message CreateAuthRequest {
   string username = 1;
   string email = 2;
   string password = 3;
   string password_confirmation = 4;
+}
+
+message UpdateAuthRequest {
+  string username = 1;
+  int32 gender = 2;
+  string email = 3;
+  string phone_number = 4;
+  int32 role = 5;
+  string thumbnail_url = 6;
+  string self_introduction = 7;
+  string last_name = 8;
+  string first_name = 9;
+  string last_name_kana = 10;
+  string first_name_kana = 11;
+  string postal_code = 12;
+  string prefecture = 13;
+  string city = 14;
+  string address_line1 = 15;
+  string address_line2 = 16;
+}
+
+message UpdateAuthPasswordRequest {
+  string password = 1;
+  string password_confirmation = 2;
 }
 
 message AuthResponse {

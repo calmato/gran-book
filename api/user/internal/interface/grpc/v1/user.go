@@ -47,8 +47,8 @@ func (s *UserServer) GetAuth(ctx context.Context, req *pb.EmptyUser) (*pb.AuthRe
 	return res, nil
 }
 
-// CreateUser - ユーザ登録
-func (s *UserServer) CreateUser(ctx context.Context, req *pb.CreateUserRequest) (*pb.AuthResponse, error) {
+// CreateAuth - ユーザ登録
+func (s *UserServer) CreateAuth(ctx context.Context, req *pb.CreateAuthRequest) (*pb.AuthResponse, error) {
 	in := &input.CreateUser{
 		Username:             req.Username,
 		Email:                req.Email,
