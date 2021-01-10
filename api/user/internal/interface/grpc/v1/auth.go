@@ -5,6 +5,7 @@ import (
 
 	"github.com/calmato/gran-book/api/user/internal/application"
 	"github.com/calmato/gran-book/api/user/internal/application/input"
+	"github.com/calmato/gran-book/api/user/internal/domain/exception"
 	"github.com/calmato/gran-book/api/user/lib/datetime"
 	pb "github.com/calmato/gran-book/api/user/proto"
 )
@@ -88,12 +89,14 @@ func (s *AuthServer) CreateAuth(ctx context.Context, req *pb.CreateAuthRequest) 
 
 // UpdateAuth - ユーザ情報更新
 func (s AuthServer) UpdateAuth(ctx context.Context, req *pb.UpdateAuthRequest) (*pb.AuthResponse, error) {
-	return nil, nil
+	err := exception.NotFound.New(nil)
+	return nil, errorHandling(err)
 }
 
 // UpdateAuthPassword - ログイン用パスワードの更新
 func (s AuthServer) UpdateAuthPassword(
 	ctx context.Context, req *pb.UpdateAuthPasswordRequest,
 ) (*pb.AuthResponse, error) {
-	return nil, nil
+	err := exception.NotFound.New(nil)
+	return nil, errorHandling(err)
 }
