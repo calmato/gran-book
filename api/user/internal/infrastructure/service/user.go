@@ -44,3 +44,18 @@ func (s *userService) Create(ctx context.Context, u *user.User) error {
 
 	return s.userRepository.Create(ctx, u)
 }
+
+func (s *userService) Update(ctx context.Context, u *user.User) error {
+	err := s.userDomainValidation.User(ctx, u)
+	if err != nil {
+		return err
+	}
+
+	u.UpdatedAt = time.Now()
+
+	return s.userRepository.Update(ctx, u)
+}
+
+func (s *userService) UpdatePassword(ctx context.Context, uid string, password string) error {
+	return s.userRepository.UpdatePassword(ctx, uid, password)
+}
