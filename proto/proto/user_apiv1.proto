@@ -24,12 +24,12 @@ service AuthService {
     };
   };
 
-  rpc UpdateAuth (UpdateAuthRequest) returns (AuthResponse) {
+  rpc UpdateAuthEmail (UpdateAuthEmailRequest) returns (AuthResponse) {
     option (google.api.http) = {
-      patch: "/v1/auth"
+      patch: "/v1/auth/email"
       body: "*"
     };
-  };
+  }
 
   rpc UpdateAuthPassword (UpdateAuthPasswordRequest) returns (AuthResponse) {
     option (google.api.http) = {
@@ -51,23 +51,8 @@ message CreateAuthRequest {
   string password_confirmation = 4;
 }
 
-message UpdateAuthRequest {
-  string username = 1;
-  int32 gender = 2;
-  string email = 3;
-  string phone_number = 4;
-  int32 role = 5;
-  string thumbnail_url = 6;
-  string self_introduction = 7;
-  string last_name = 8;
-  string first_name = 9;
-  string last_name_kana = 10;
-  string first_name_kana = 11;
-  string postal_code = 12;
-  string prefecture = 13;
-  string city = 14;
-  string address_line1 = 15;
-  string address_line2 = 16;
+message UpdateAuthEmailRequest {
+  string email = 1;
 }
 
 message UpdateAuthPasswordRequest {

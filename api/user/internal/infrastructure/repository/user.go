@@ -59,6 +59,41 @@ func (r *userRepository) Create(ctx context.Context, u *user.User) error {
 	return nil
 }
 
+func (r *userRepository) Update(ctx context.Context, u *user.User) error {
+	au, err := r.auth.GetUserByUID(ctx, u.ID)
+	if err != nil {
+		return exception.NotFound.New(err)
+	}
+
+	if au.UserInfo == nil {
+		err = xerrors.New("UserInfo is not exists in Firebase Authentication")
+		return exception.ErrorInDatastore.New(err)
+	}
+
+	if u.Email != au.UserInfo.Email {
+		err = r.auth.UpdateEmail(ctx, u.ID, u.Email)
+		if err != nil {
+			return exception.ErrorInDatastore.New(err)
+		}
+	}
+
+	err = r.client.db.Save(u).Error
+	if err != nil {
+		return exception.ErrorInDatastore.New(err)
+	}
+
+	return nil
+}
+
+func (r *userRepository) UpdatePassword(ctx context.Context, uid string, password string) error {
+	err := r.auth.UpdatePassword(ctx, uid, password)
+	if err != nil {
+		return exception.ErrorInDatastore.New(err)
+	}
+
+	return nil
+}
+
 func (r *userRepository) GetUIDByEmail(ctx context.Context, email string) (string, error) {
 	uid, err := r.auth.GetUIDByEmail(ctx, email)
 	if err != nil {
