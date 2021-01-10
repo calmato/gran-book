@@ -24,12 +24,12 @@ service AuthService {
     };
   };
 
-  rpc UpdateAuth (UpdateAuthRequest) returns (AuthResponse) {
+  rpc UpdateAuthEmail (UpdateAuthEmailRequest) returns (AuthResponse) {
     option (google.api.http) = {
-      patch: "/v1/auth"
+      patch: "/v1/auth/email"
       body: "*"
     };
-  };
+  }
 
   rpc UpdateAuthPassword (UpdateAuthPasswordRequest) returns (AuthResponse) {
     option (google.api.http) = {
@@ -51,7 +51,9 @@ message CreateAuthRequest {
   string password_confirmation = 4;
 }
 
-message UpdateAuthRequest {}
+message UpdateAuthEmailRequest {
+  string email = 1;
+}
 
 message UpdateAuthPasswordRequest {
   string password = 1;

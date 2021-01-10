@@ -61,9 +61,11 @@
         "tags": [
           "AuthService"
         ]
-      },
+      }
+    },
+    "/v1/auth/email": {
       "patch": {
-        "operationId": "AuthService_UpdateAuth",
+        "operationId": "AuthService_UpdateAuthEmail",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -84,7 +86,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/protoUpdateAuthRequest"
+              "$ref": "#/definitions/protoUpdateAuthEmailRequest"
             }
           }
         ],
@@ -261,6 +263,14 @@
       },
       "title": "The request message containing the user's name"
     },
+    "protoUpdateAuthEmailRequest": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        }
+      }
+    },
     "protoUpdateAuthPasswordRequest": {
       "type": "object",
       "properties": {
@@ -271,9 +281,6 @@
           "type": "string"
         }
       }
-    },
-    "protoUpdateAuthRequest": {
-      "type": "object"
     },
     "protobufAny": {
       "type": "object",

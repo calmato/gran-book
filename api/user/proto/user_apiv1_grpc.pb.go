@@ -19,7 +19,7 @@ const _ = grpc.SupportPackageIsVersion7
 type AuthServiceClient interface {
 	GetAuth(ctx context.Context, in *EmptyUser, opts ...grpc.CallOption) (*AuthResponse, error)
 	CreateAuth(ctx context.Context, in *CreateAuthRequest, opts ...grpc.CallOption) (*AuthResponse, error)
-	UpdateAuth(ctx context.Context, in *UpdateAuthRequest, opts ...grpc.CallOption) (*AuthResponse, error)
+	UpdateAuthEmail(ctx context.Context, in *UpdateAuthEmailRequest, opts ...grpc.CallOption) (*AuthResponse, error)
 	UpdateAuthPassword(ctx context.Context, in *UpdateAuthPasswordRequest, opts ...grpc.CallOption) (*AuthResponse, error)
 }
 
@@ -49,9 +49,9 @@ func (c *authServiceClient) CreateAuth(ctx context.Context, in *CreateAuthReques
 	return out, nil
 }
 
-func (c *authServiceClient) UpdateAuth(ctx context.Context, in *UpdateAuthRequest, opts ...grpc.CallOption) (*AuthResponse, error) {
+func (c *authServiceClient) UpdateAuthEmail(ctx context.Context, in *UpdateAuthEmailRequest, opts ...grpc.CallOption) (*AuthResponse, error) {
 	out := new(AuthResponse)
-	err := c.cc.Invoke(ctx, "/proto.AuthService/UpdateAuth", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/proto.AuthService/UpdateAuthEmail", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -73,7 +73,7 @@ func (c *authServiceClient) UpdateAuthPassword(ctx context.Context, in *UpdateAu
 type AuthServiceServer interface {
 	GetAuth(context.Context, *EmptyUser) (*AuthResponse, error)
 	CreateAuth(context.Context, *CreateAuthRequest) (*AuthResponse, error)
-	UpdateAuth(context.Context, *UpdateAuthRequest) (*AuthResponse, error)
+	UpdateAuthEmail(context.Context, *UpdateAuthEmailRequest) (*AuthResponse, error)
 	UpdateAuthPassword(context.Context, *UpdateAuthPasswordRequest) (*AuthResponse, error)
 	mustEmbedUnimplementedAuthServiceServer()
 }
@@ -88,8 +88,8 @@ func (UnimplementedAuthServiceServer) GetAuth(context.Context, *EmptyUser) (*Aut
 func (UnimplementedAuthServiceServer) CreateAuth(context.Context, *CreateAuthRequest) (*AuthResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateAuth not implemented")
 }
-func (UnimplementedAuthServiceServer) UpdateAuth(context.Context, *UpdateAuthRequest) (*AuthResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateAuth not implemented")
+func (UnimplementedAuthServiceServer) UpdateAuthEmail(context.Context, *UpdateAuthEmailRequest) (*AuthResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateAuthEmail not implemented")
 }
 func (UnimplementedAuthServiceServer) UpdateAuthPassword(context.Context, *UpdateAuthPasswordRequest) (*AuthResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateAuthPassword not implemented")
@@ -143,20 +143,20 @@ func _AuthService_CreateAuth_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AuthService_UpdateAuth_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateAuthRequest)
+func _AuthService_UpdateAuthEmail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateAuthEmailRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthServiceServer).UpdateAuth(ctx, in)
+		return srv.(AuthServiceServer).UpdateAuthEmail(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/proto.AuthService/UpdateAuth",
+		FullMethod: "/proto.AuthService/UpdateAuthEmail",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).UpdateAuth(ctx, req.(*UpdateAuthRequest))
+		return srv.(AuthServiceServer).UpdateAuthEmail(ctx, req.(*UpdateAuthEmailRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -192,8 +192,8 @@ var _AuthService_serviceDesc = grpc.ServiceDesc{
 			Handler:    _AuthService_CreateAuth_Handler,
 		},
 		{
-			MethodName: "UpdateAuth",
-			Handler:    _AuthService_UpdateAuth_Handler,
+			MethodName: "UpdateAuthEmail",
+			Handler:    _AuthService_UpdateAuthEmail_Handler,
 		},
 		{
 			MethodName: "UpdateAuthPassword",
