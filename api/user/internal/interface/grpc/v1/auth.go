@@ -85,3 +85,15 @@ func (s *AuthServer) CreateAuth(ctx context.Context, req *pb.CreateAuthRequest) 
 
 	return res, nil
 }
+
+// UpdateAuth - ユーザ情報更新
+func (s AuthServer) UpdateAuth(ctx context.Context, req *pb.UpdateAuthRequest) (*pb.AuthResponse, error) {
+	return nil, nil
+}
+
+// UpdateAuthPassword - ログイン用パスワードの更新
+func (s AuthServer) UpdateAuthPassword(
+	ctx context.Context, req *pb.UpdateAuthPasswordRequest,
+) (*pb.AuthResponse, error) {
+	return nil, nil
+}
