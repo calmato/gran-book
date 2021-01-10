@@ -13,6 +13,7 @@ import (
 type AuthApplication interface {
 	Authentication(ctx context.Context) (*user.User, error)
 	Create(ctx context.Context, in *input.CreateAuth) (*user.User, error)
+	UpdatePassword(ctx context.Context, in *input.UpdateAuthPassword, u *user.User) error
 }
 
 type authApplication struct {
@@ -57,4 +58,13 @@ func (a *authApplication) Create(ctx context.Context, in *input.CreateAuth) (*us
 	}
 
 	return u, nil
+}
+
+func (a *authApplication) UpdatePassword(ctx context.Context, in *input.UpdateAuthPassword, u *user.User) error {
+	err := a.authRequestValidation.UpdateAuthPassword(in)
+	if err != nil {
+		return err
+	}
+
+	return a.userService.UpdatePassword(ctx, u.ID, in.Password)
 }

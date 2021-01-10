@@ -77,7 +77,7 @@ func (r *userRepository) Update(ctx context.Context, u *user.User) error {
 		}
 	}
 
-	err = r.client.db.Save(&user).Error
+	err = r.client.db.Save(u).Error
 	if err != nil {
 		return exception.ErrorInDatastore.New(err)
 	}

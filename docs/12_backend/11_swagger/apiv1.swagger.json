@@ -273,59 +273,7 @@
       }
     },
     "protoUpdateAuthRequest": {
-      "type": "object",
-      "properties": {
-        "username": {
-          "type": "string"
-        },
-        "gender": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "email": {
-          "type": "string"
-        },
-        "phoneNumber": {
-          "type": "string"
-        },
-        "role": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "thumbnailUrl": {
-          "type": "string"
-        },
-        "selfIntroduction": {
-          "type": "string"
-        },
-        "lastName": {
-          "type": "string"
-        },
-        "firstName": {
-          "type": "string"
-        },
-        "lastNameKana": {
-          "type": "string"
-        },
-        "firstNameKana": {
-          "type": "string"
-        },
-        "postalCode": {
-          "type": "string"
-        },
-        "prefecture": {
-          "type": "string"
-        },
-        "city": {
-          "type": "string"
-        },
-        "addressLine1": {
-          "type": "string"
-        },
-        "addressLine2": {
-          "type": "string"
-        }
-      }
+      "type": "object"
     },
     "protobufAny": {
       "type": "object",

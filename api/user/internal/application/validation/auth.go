@@ -9,6 +9,7 @@ import (
 // AuthRequestValidation - Auth関連のリクエストバリデータ
 type AuthRequestValidation interface {
 	CreateAuth(in *input.CreateAuth) error
+	UpdateAuthPassword(in *input.UpdateAuthPassword) error
 }
 
 type authRequestValidation struct {
@@ -31,5 +32,15 @@ func (v *authRequestValidation) CreateAuth(in *input.CreateAuth) error {
 	}
 
 	err := xerrors.New("Failed to CreateAuth for RequestValidation")
+	return exception.InvalidRequestValidation.New(err, ves...)
+}
+
+func (v *authRequestValidation) UpdateAuthPassword(in *input.UpdateAuthPassword) error {
+	ves := v.validator.Run(in)
+	if len(ves) == 0 {
+		return nil
+	}
+
+	err := xerrors.New("Failed to UpdateAuthPassword for RequestValidation")
 	return exception.InvalidRequestValidation.New(err, ves...)
 }
