@@ -13,7 +13,7 @@
   "paths": {
     "/v1/auth": {
       "get": {
-        "operationId": "UserService_GetAuth",
+        "operationId": "AuthService_GetAuth",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -29,11 +29,11 @@
           }
         },
         "tags": [
-          "UserService"
+          "AuthService"
         ]
       },
       "post": {
-        "operationId": "UserService_CreateAuth",
+        "operationId": "AuthService_CreateAuth",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -59,11 +59,11 @@
           }
         ],
         "tags": [
-          "UserService"
+          "AuthService"
         ]
       },
       "patch": {
-        "operationId": "UserService_UpdateAuth",
+        "operationId": "AuthService_UpdateAuth",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -89,13 +89,13 @@
           }
         ],
         "tags": [
-          "UserService"
+          "AuthService"
         ]
       }
     },
     "/v1/auth/password": {
       "patch": {
-        "operationId": "UserService_UpdateAuthPassword",
+        "operationId": "AuthService_UpdateAuthPassword",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -121,7 +121,7 @@
           }
         ],
         "tags": [
-          "UserService"
+          "AuthService"
         ]
       }
     },
@@ -222,7 +222,8 @@
         "updatedAt": {
           "type": "string"
         }
-      }
+      },
+      "title": "-----------------------------------------------\nResponse\n-----------------------------------------------"
     },
     "protoCreateAuthRequest": {
       "type": "object",
@@ -239,7 +240,8 @@
         "passwordConfirmation": {
           "type": "string"
         }
-      }
+      },
+      "title": "-----------------------------------------------\nRequest\n-----------------------------------------------"
     },
     "protoHelloReply": {
       "type": "object",

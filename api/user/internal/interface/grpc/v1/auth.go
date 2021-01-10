@@ -9,15 +9,15 @@ import (
 	pb "github.com/calmato/gran-book/api/user/proto"
 )
 
-// UserServer - Userインターフェースの構造体
-type UserServer struct {
-	pb.UnimplementedUserServiceServer
-	UserApplication application.UserApplication
+// AuthServer - Authインターフェースの構造体
+type AuthServer struct {
+	pb.UnimplementedAuthServiceServer
+	AuthApplication application.AuthApplication
 }
 
 // GetAuth - 認証情報取得
-func (s *UserServer) GetAuth(ctx context.Context, req *pb.EmptyUser) (*pb.AuthResponse, error) {
-	u, err := s.UserApplication.Authentication(ctx)
+func (s *AuthServer) GetAuth(ctx context.Context, req *pb.EmptyUser) (*pb.AuthResponse, error) {
+	u, err := s.AuthApplication.Authentication(ctx)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -48,15 +48,15 @@ func (s *UserServer) GetAuth(ctx context.Context, req *pb.EmptyUser) (*pb.AuthRe
 }
 
 // CreateAuth - ユーザ登録
-func (s *UserServer) CreateAuth(ctx context.Context, req *pb.CreateAuthRequest) (*pb.AuthResponse, error) {
-	in := &input.CreateUser{
+func (s *AuthServer) CreateAuth(ctx context.Context, req *pb.CreateAuthRequest) (*pb.AuthResponse, error) {
+	in := &input.CreateAuth{
 		Username:             req.Username,
 		Email:                req.Email,
 		Password:             req.Password,
 		PasswordConfirmation: req.PasswordConfirmation,
 	}
 
-	u, err := s.UserApplication.Create(ctx, in)
+	u, err := s.AuthApplication.Create(ctx, in)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
