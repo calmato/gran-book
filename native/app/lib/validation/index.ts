@@ -6,3 +6,8 @@ export const emailValidation = (value: string | undefined): boolean => {
     return true;
   }
 };
+
+// ６文字以上32文字以下ならtrueを返す
+export const passwordValidation = (value: string): boolean => {
+  return value.length >= 6 && value.length <= 32;
+};

@@ -5,7 +5,7 @@ import MailInput from '~/components/molecules/MailInput';
 import PasswordInput from '~/components/molecules/PasswordInput';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import { SignInForm } from '~/types/forms';
-import { emailValidation } from '~/lib/validation';
+import { emailValidation, passwordValidation } from '~/lib/validation';
 import { AuthStackParamList } from '~/types/navigation';
 import { Button } from 'react-native-elements';
 
@@ -31,7 +31,7 @@ const SignIn = function SignIn(props: Props): ReactElement {
   });
 
   const passwordError: boolean = useMemo((): boolean => {
-    return formData.password.length < 6;
+    return !passwordValidation(formData.password);
   }, [formData.password]);
 
   const emailError: boolean = useMemo((): boolean => {
@@ -39,7 +39,7 @@ const SignIn = function SignIn(props: Props): ReactElement {
   }, [formData.email]);
 
   const canSubmit = useMemo(():boolean => {
-    return !emailError && !passwordError;
+    return !(emailError || passwordError);
   }, [emailError, passwordError]);
 
   return (
@@ -57,7 +57,7 @@ const SignIn = function SignIn(props: Props): ReactElement {
         onChangeText={(text) => setValue({...formData, password: text})}
         value={formData.password}
         placeholder="パスワード"
-        errorMessage="パスワードは6文字以上でなければいけません．"
+        errorMessage="パスワードは6文字以上32文字以下でなければいけません．"
         hasError={passwordError}
       />
       <Button 
