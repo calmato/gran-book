@@ -195,8 +195,8 @@ func TestAuthApplication_UpdatePassword(t *testing.T) {
 				Password:             "12345678",
 				PasswordConfirmation: "12345678",
 			},
-			User:     &user.User{
-					ID: "00000000-0000-0000-0000-000000000000",
+			User: &user.User{
+				ID: "00000000-0000-0000-0000-000000000000",
 			},
 			Expected: nil,
 		},
