@@ -13,6 +13,7 @@ import (
 type AuthApplication interface {
 	Authentication(ctx context.Context) (*user.User, error)
 	Create(ctx context.Context, in *input.CreateAuth) (*user.User, error)
+	UpdateEmail(ctx context.Context, in *input.UpdateAuthEmail, u *user.User) error
 	UpdatePassword(ctx context.Context, in *input.UpdateAuthPassword, u *user.User) error
 }
 
@@ -58,6 +59,17 @@ func (a *authApplication) Create(ctx context.Context, in *input.CreateAuth) (*us
 	}
 
 	return u, nil
+}
+
+func (a *authApplication) UpdateEmail(ctx context.Context, in *input.UpdateAuthEmail, u *user.User) error {
+	err := a.authRequestValidation.UpdateAuthEmail(in)
+	if err != nil {
+		return err
+	}
+
+	u.Email = strings.ToLower(in.Email)
+
+	return a.userService.Update(ctx, u)
 }
 
 func (a *authApplication) UpdatePassword(ctx context.Context, in *input.UpdateAuthPassword, u *user.User) error {
