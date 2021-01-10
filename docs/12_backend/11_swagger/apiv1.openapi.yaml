@@ -10,7 +10,7 @@ servers:
 paths:
   /v1/auth:
     get:
-      operationId: UserService_GetAuth
+      operationId: AuthService_GetAuth
       summary: 認証情報取得
       security:
         - BearerAuth: []
@@ -28,10 +28,56 @@ paths:
               schema:
                 $ref: "#/components/schemas/rpcStatus"
       tags:
-        - UserService
-  /v1/users:
+        - AuthService
     post:
-      operationId: UserService_CreateUser
+      operationId: AuthService_CreateAuth
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/protoAuthResponse"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/rpcStatus"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/protoCreateAuthRequest"
+        required: true
+      tags:
+        - AuthService
+    patch:
+      operationId: AuthService_UpdateAuth
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/protoAuthResponse"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/rpcStatus"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/protoUpdateAuthRequest"
+        required: true
+      tags:
+        - AuthService
+  /v1/auth/password:
+    patch:
+      operationId: AuthService_UpdateAuthPassword
       summary: ユーザ登録
       responses:
         "200":
@@ -50,10 +96,10 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/protoCreateUserRequest"
+              $ref: "#/components/schemas/protoUpdateAuthPasswordRequest"
         required: true
       tags:
-        - UserService
+        - AuthService
 components:
   securitySchemes:
     BearerAuth:
@@ -103,7 +149,7 @@ components:
           type: string
         updatedAt:
           type: string
-    protoCreateUserRequest:
+    protoCreateAuthRequest:
       type: object
       properties:
         username:
@@ -113,6 +159,61 @@ components:
         password:
           type: string
         passwordConfirmation:
+    protoHelloReply:
+      type: object
+      properties:
+        message:
+          type: string
+      title: The response message containing the greetings
+    protoHelloRequest:
+      type: object
+      properties:
+        name:
+          type: string
+      title: The request message containing the user's name
+    protoUpdateAuthPasswordRequest:
+      type: object
+      properties:
+        password:
+          type: string
+        passwordConfirmation:
+          type: string
+    protoUpdateAuthRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        gender:
+          type: integer
+          format: int32
+        email:
+          type: string
+        phoneNumber:
+          type: string
+        role:
+          type: integer
+          format: int32
+        thumbnailUrl:
+          type: string
+        selfIntroduction:
+          type: string
+        lastName:
+          type: string
+        firstName:
+          type: string
+        lastNameKana:
+          type: string
+        firstNameKana:
+          type: string
+        postalCode:
+          type: string
+        prefecture:
+          type: string
+        city:
+          type: string
+        addressLine1:
+          type: string
+        addressLine2:
           type: string
     protobufAny:
       type: object

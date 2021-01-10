@@ -4,5 +4,6 @@ import "context"
 
 // Service - Userドメインサービス
 type Service interface {
+	Authentication(ctx context.Context) (*User, error)
 	Create(ctx context.Context, u *User) error
 }

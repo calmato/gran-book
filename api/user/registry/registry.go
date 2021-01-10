@@ -11,24 +11,25 @@ import (
 
 // Registry - DIコンテナ
 type Registry struct {
-	UserApplication application.UserApplication
+	AuthApplication application.AuthApplication
 }
 
 // NewRegistry - internalディレクトリ配下のファイルを読み込み
 func NewRegistry(db *repository.Client, auth *authentication.Auth) *Registry {
-	ua := userInjection(db, auth)
+	aa := authInjection(db, auth)
 
 	return &Registry{
-		UserApplication: ua,
+		AuthApplication: aa,
 	}
 }
 
-func userInjection(db *repository.Client, auth *authentication.Auth) application.UserApplication {
+func authInjection(db *repository.Client, auth *authentication.Auth) application.AuthApplication {
 	ur := repository.NewUserRepository(db, auth)
 	udv := validation.NewUserDomainValidation(ur)
 	us := service.NewUserService(udv, ur)
-	urv := rv.NewUserRequestValidation()
-	ua := application.NewUserApplication(urv, us)
 
-	return ua
+	arv := rv.NewAuthRequestValidation()
+	aa := application.NewAuthApplication(arv, us)
+
+	return aa
 }
