@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "proto/hello_world.proto",
+    "title": "proto/user_apiv1.proto",
     "version": "version not set"
   },
   "consumes": [
@@ -126,39 +126,6 @@
           "AuthService"
         ]
       }
-    },
-    "/v1/example/echo": {
-      "post": {
-        "summary": "Sends a greeting",
-        "operationId": "Greeter_SayHello",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/protoHelloReply"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/protoHelloRequest"
-            }
-          }
-        ],
-        "tags": [
-          "Greeter"
-        ]
-      }
     }
   },
   "definitions": {
@@ -224,8 +191,7 @@
         "updatedAt": {
           "type": "string"
         }
-      },
-      "title": "-----------------------------------------------\nResponse\n-----------------------------------------------"
+      }
     },
     "protoCreateAuthRequest": {
       "type": "object",
@@ -242,26 +208,7 @@
         "passwordConfirmation": {
           "type": "string"
         }
-      },
-      "title": "-----------------------------------------------\nRequest\n-----------------------------------------------"
-    },
-    "protoHelloReply": {
-      "type": "object",
-      "properties": {
-        "message": {
-          "type": "string"
-        }
-      },
-      "title": "The response message containing the greetings"
-    },
-    "protoHelloRequest": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        }
-      },
-      "title": "The request message containing the user's name"
+      }
     },
     "protoUpdateAuthEmailRequest": {
       "type": "object",
