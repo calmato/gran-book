@@ -29,8 +29,7 @@ lint:
 	$(BIN)/golangci-lint run -c .golangci.yaml ./...
 
 test:
-	echo "WIP..."
-	# go test -v -cover ./internal/...
+	go test -v -cover ./internal/...
 
 mockgen:
 	$(BIN)/build-mocks.sh
