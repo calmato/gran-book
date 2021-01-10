@@ -139,18 +139,6 @@ definitions:
         type: string
       passwordConfirmation:
         type: string
-  protoHelloReply:
-    type: object
-    properties:
-      message:
-        type: string
-    title: The response message containing the greetings
-  protoHelloRequest:
-    type: object
-    properties:
-      name:
-        type: string
-    title: The request message containing the user's name
   protoUpdateAuthEmailRequest:
     type: object
     properties:

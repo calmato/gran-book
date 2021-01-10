@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Gran Book
-  version: "0.1.1"
+  version: "0.1.2"
 servers:
   - url: http://localhost:8080
     description: 開発環境
@@ -167,18 +167,6 @@ components:
           type: string
         passwordConfirmation:
           type: string
-    protoHelloReply:
-      type: object
-      properties:
-        message:
-          type: string
-      title: The response message containing the greetings
-    protoHelloRequest:
-      type: object
-      properties:
-        name:
-          type: string
-      title: The request message containing the user's name
     protoUpdateAuthEmailRequest:
       type: object
       properties:
@@ -206,7 +194,6 @@ components:
           type: integer
           format: int32
         message:
-
           type: string
         details:
           type: array
