@@ -11,6 +11,7 @@ import (
 
 // UserApplication - Userアプリケーションのインターフェース
 type UserApplication interface {
+	Authentication(ctx context.Context) (*user.User, error)
 	Create(ctx context.Context, in *input.CreateUser) (*user.User, error)
 }
 
@@ -25,6 +26,15 @@ func NewUserApplication(urv validation.UserRequestValidation, us user.Service) U
 		userRequestValidation: urv,
 		userService:           us,
 	}
+}
+
+func (a *userApplication) Authentication(ctx context.Context) (*user.User, error) {
+	u, err := a.userService.Authentication(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return u, nil
 }
 
 func (a *userApplication) Create(ctx context.Context, in *input.CreateUser) (*user.User, error) {
