@@ -11,13 +11,15 @@ import (
 type userService struct {
 	userDomainValidation user.Validation
 	userRepository       user.Repository
+	userUploader         user.Uploader
 }
 
 // NewUserService - UserServiceの生成
-func NewUserService(udv user.Validation, ur user.Repository) user.Service {
+func NewUserService(udv user.Validation, ur user.Repository, uu user.Uploader) user.Service {
 	return &userService{
 		userDomainValidation: udv,
 		userRepository:       ur,
+		userUploader:         uu,
 	}
 }
 
@@ -58,4 +60,8 @@ func (s *userService) Update(ctx context.Context, u *user.User) error {
 
 func (s *userService) UpdatePassword(ctx context.Context, uid string, password string) error {
 	return s.userRepository.UpdatePassword(ctx, uid, password)
+}
+
+func (s *userService) UploadThumbnail(ctx context.Context, uid string, thumbnail []byte) (string, error) {
+	return s.userUploader.Thumbnail(ctx, uid, thumbnail)
 }
