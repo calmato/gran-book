@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   title: Gran Book
-  version: 0.1.4
+  version: 0.1.5
 consumes:
   - application/json
 produces:
@@ -40,6 +40,27 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/protoCreateAuthRequest'
+      tags:
+        - AuthService
+  /v1/auth/address:
+    patch:
+      operationId: AuthService_UpdateAuthAddress
+      summary: 住所更新
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/protoAuthResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/protoUpdateAuthAddressRequest'
       tags:
         - AuthService
   /v1/auth/email:
@@ -159,6 +180,29 @@ definitions:
       password:
         type: string
       passwordConfirmation:
+        type: string
+  protoUpdateAuthAddressRequest:
+    type: object
+    properties:
+      lastName:
+        type: string
+      firstName:
+        type: string
+      lastNameKana:
+        type: string
+      firstNameKana:
+        type: string
+      phoneNumber:
+        type: string
+      postalCode:
+        type: string
+      prefecture:
+        type: string
+      city:
+        type: string
+      addressLine1:
+        type: string
+      addressLine2:
         type: string
   protoUpdateAuthEmailRequest:
     type: object

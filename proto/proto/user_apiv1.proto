@@ -39,6 +39,13 @@ service AuthService {
       body: "*"
     };
   };
+
+  rpc UpdateAuthAddress (UpdateAuthAddressRequest) returns (AuthResponse) {
+    option (google.api.http) = {
+      patch: "/v1/auth/address"
+      body: "*"
+    };
+  };
 }
 
 message EmptyUser {}
@@ -64,6 +71,19 @@ message UpdateAuthProfileRequest {
   int32 gender = 2;
   string thumbnail = 3;
   string self_introduction = 4;
+}
+
+message UpdateAuthAddressRequest {
+  string last_name = 1;
+  string first_name = 2;
+  string last_name_kana = 3;
+  string first_name_kana = 4;
+  string phone_number = 5;
+  string postal_code = 6;
+  string prefecture = 7;
+  string city = 8;
+  string address_line1 = 9;
+  string address_line2 = 10;
 }
 
 message AuthResponse {
