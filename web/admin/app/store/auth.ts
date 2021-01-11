@@ -1,6 +1,6 @@
 import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
 import firebase from '~/plugins/firebase'
-import { SignInForm } from '~/types/forms'
+import { ISignInForm } from '~/types/forms'
 
 @Module({
   name: 'auth',
@@ -100,7 +100,7 @@ export default class AuthModule extends VuexModule {
   }
 
   @Action({ rawError: true })
-  public loginWithEmailAndPassword(payload: SignInForm): Promise<void> {
+  public loginWithEmailAndPassword(payload: ISignInForm): Promise<void> {
     return new Promise((resolve: () => void, reject: (reason: Error) => void) => {
       firebase
         .auth()
