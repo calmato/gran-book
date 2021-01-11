@@ -78,6 +78,7 @@ services:
       - DB_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - DB_DATABASE=users
       - GCP_SERVICE_KEY_JSON=${GCP_SERVICE_KEY_JSON}
+      - GCP_STORAGE_BUCKET_NAME=${GCP_STORAGE_BUCKET_NAME}
     networks:
       - api
       - monitoring
