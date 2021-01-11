@@ -26,7 +26,7 @@ func NewRegistry(db *repository.Client, auth *authentication.Auth) *Registry {
 func authInjection(db *repository.Client, auth *authentication.Auth) application.AuthApplication {
 	ur := repository.NewUserRepository(db, auth)
 	udv := validation.NewUserDomainValidation(ur)
-	us := service.NewUserService(udv, ur)
+	us := service.NewUserService(udv, ur, nil)
 
 	arv := rv.NewAuthRequestValidation()
 	aa := application.NewAuthApplication(arv, us)
