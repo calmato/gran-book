@@ -21,6 +21,7 @@ type AuthServiceClient interface {
 	CreateAuth(ctx context.Context, in *CreateAuthRequest, opts ...grpc.CallOption) (*AuthResponse, error)
 	UpdateAuthEmail(ctx context.Context, in *UpdateAuthEmailRequest, opts ...grpc.CallOption) (*AuthResponse, error)
 	UpdateAuthPassword(ctx context.Context, in *UpdateAuthPasswordRequest, opts ...grpc.CallOption) (*AuthResponse, error)
+	UpdateAuthProfile(ctx context.Context, in *UpdateAuthProfileRequest, opts ...grpc.CallOption) (*AuthResponse, error)
 }
 
 type authServiceClient struct {
@@ -67,6 +68,15 @@ func (c *authServiceClient) UpdateAuthPassword(ctx context.Context, in *UpdateAu
 	return out, nil
 }
 
+func (c *authServiceClient) UpdateAuthProfile(ctx context.Context, in *UpdateAuthProfileRequest, opts ...grpc.CallOption) (*AuthResponse, error) {
+	out := new(AuthResponse)
+	err := c.cc.Invoke(ctx, "/proto.AuthService/UpdateAuthProfile", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuthServiceServer is the server API for AuthService service.
 // All implementations must embed UnimplementedAuthServiceServer
 // for forward compatibility
@@ -75,6 +85,7 @@ type AuthServiceServer interface {
 	CreateAuth(context.Context, *CreateAuthRequest) (*AuthResponse, error)
 	UpdateAuthEmail(context.Context, *UpdateAuthEmailRequest) (*AuthResponse, error)
 	UpdateAuthPassword(context.Context, *UpdateAuthPasswordRequest) (*AuthResponse, error)
+	UpdateAuthProfile(context.Context, *UpdateAuthProfileRequest) (*AuthResponse, error)
 	mustEmbedUnimplementedAuthServiceServer()
 }
 
@@ -93,6 +104,9 @@ func (UnimplementedAuthServiceServer) UpdateAuthEmail(context.Context, *UpdateAu
 }
 func (UnimplementedAuthServiceServer) UpdateAuthPassword(context.Context, *UpdateAuthPasswordRequest) (*AuthResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateAuthPassword not implemented")
+}
+func (UnimplementedAuthServiceServer) UpdateAuthProfile(context.Context, *UpdateAuthProfileRequest) (*AuthResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateAuthProfile not implemented")
 }
 func (UnimplementedAuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {}
 
@@ -179,6 +193,24 @@ func _AuthService_UpdateAuthPassword_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthService_UpdateAuthProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateAuthProfileRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).UpdateAuthProfile(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.AuthService/UpdateAuthProfile",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).UpdateAuthProfile(ctx, req.(*UpdateAuthProfileRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _AuthService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "proto.AuthService",
 	HandlerType: (*AuthServiceServer)(nil),
@@ -198,6 +230,10 @@ var _AuthService_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateAuthPassword",
 			Handler:    _AuthService_UpdateAuthPassword_Handler,
+		},
+		{
+			MethodName: "UpdateAuthProfile",
+			Handler:    _AuthService_UpdateAuthProfile_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

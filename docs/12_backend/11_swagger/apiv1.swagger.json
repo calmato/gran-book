@@ -126,6 +126,38 @@
           "AuthService"
         ]
       }
+    },
+    "/v1/auth/profile": {
+      "patch": {
+        "operationId": "AuthService_UpdateAuthProfile",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoAuthResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/protoUpdateAuthProfileRequest"
+            }
+          }
+        ],
+        "tags": [
+          "AuthService"
+        ]
+      }
     }
   },
   "definitions": {
@@ -225,6 +257,23 @@
           "type": "string"
         },
         "passwordConfirmation": {
+          "type": "string"
+        }
+      }
+    },
+    "protoUpdateAuthProfileRequest": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "gender": {
+          "type": "string"
+        },
+        "thumbnail": {
+          "type": "string"
+        },
+        "selfIntroduction": {
           "type": "string"
         }
       }
