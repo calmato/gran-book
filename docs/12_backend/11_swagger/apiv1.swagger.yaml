@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   title: Gran Book
-  version: 0.1.3
+  version: 0.1.4
 consumes:
   - application/json
 produces:
@@ -87,6 +87,7 @@ paths:
   /v1/auth/profile:
     patch:
       operationId: AuthService_UpdateAuthProfile
+      summary: プロフィール更新
       responses:
         '200':
           description: A successful response.
@@ -177,7 +178,8 @@ definitions:
       username:
         type: string
       gender:
-        type: string
+        type: integer
+        format: int32
       thumbnail:
         type: string
       selfIntroduction:
