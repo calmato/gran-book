@@ -36,7 +36,7 @@ func NewRequestValidator() RequestValidator {
 }
 
 const (
-	hiraganaString = "^[ぁ-ん]*$"
+	hiraganaString = "^[ぁ-ゔー]*$"
 	passwordString = "^[a-zA-Z0-9_!@#$_%^&*.?()-=+]*$"
 )
 

@@ -271,3 +271,54 @@ func TestAuthApplication_UpdateProfile(t *testing.T) {
 		})
 	}
 }
+
+func TestAuthApplication_UpdateAddress(t *testing.T) {
+	testCases := map[string]struct {
+		Input    *input.UpdateAuthAddress
+		User     *user.User
+		Expected error
+	}{
+		"ok": {
+			Input: &input.UpdateAuthAddress{
+				LastName:      "テスト",
+				FirstName:     "ユーザ",
+				LastNameKana:  "てすと",
+				FirstNameKana: "ゆーざ",
+				PhoneNumber:   "000-0000-0000",
+				PostalCode:    "000-0000",
+				Prefecture:    "東京都",
+				City:          "小金井市",
+				AddressLine1:  "貫井北町4-1-1",
+				AddressLine2:  "",
+			},
+			User: &user.User{
+				ID: "00000000-0000-0000-0000-000000000000",
+			},
+			Expected: nil,
+		},
+	}
+
+	for result, tc := range testCases {
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		arvm := mock_validation.NewMockAuthRequestValidation(ctrl)
+		arvm.EXPECT().UpdateAuthAddress(tc.Input).Return(nil)
+
+		usm := mock_user.NewMockService(ctrl)
+		usm.EXPECT().Update(ctx, tc.User).Return(tc.Expected)
+
+		t.Run(result, func(t *testing.T) {
+			target := NewAuthApplication(arvm, usm)
+
+			got := target.UpdateAddress(ctx, tc.Input, tc.User)
+			if !reflect.DeepEqual(got, tc.Expected) {
+				t.Fatalf("want %#v, but %#v", tc.Expected, got)
+				return
+			}
+		})
+	}
+}

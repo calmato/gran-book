@@ -363,3 +363,357 @@ func TestAuthRequestValidation_UpdateAuthProfile(t *testing.T) {
 		})
 	}
 }
+
+func TestAuthRequestValidation_UpdateAuthAddress(t *testing.T) {
+	testCases := map[string]struct {
+		Input    *input.UpdateAuthAddress
+		Expected bool
+	}{
+		"ok": {
+			Input: &input.UpdateAuthAddress{
+				LastName:      "テスト",
+				FirstName:     "ユーザ",
+				LastNameKana:  "てすと",
+				FirstNameKana: "ゆーざ",
+				PhoneNumber:   "000-0000-0000",
+				PostalCode:    "000-0000",
+				Prefecture:    "東京都",
+				City:          "小金井市",
+				AddressLine1:  "貫井北町4-1-1",
+				AddressLine2:  "",
+			},
+			Expected: true,
+		},
+		"ng_lastName_required": {
+			Input: &input.UpdateAuthAddress{
+				LastName:      "",
+				FirstName:     "ユーザ",
+				LastNameKana:  "てすと",
+				FirstNameKana: "ゆーざ",
+				PhoneNumber:   "000-0000-0000",
+				PostalCode:    "000-0000",
+				Prefecture:    "東京都",
+				City:          "小金井市",
+			},
+			Expected: false,
+		},
+		"ng_lastName_max": {
+			Input: &input.UpdateAuthAddress{
+				LastName:      strings.Repeat("x", 17),
+				FirstName:     "ユーザ",
+				LastNameKana:  "てすと",
+				FirstNameKana: "ゆーざ",
+				PhoneNumber:   "000-0000-0000",
+				PostalCode:    "000-0000",
+				Prefecture:    "東京都",
+				City:          "小金井市",
+			},
+			Expected: false,
+		},
+		"ng_firstName_required": {
+			Input: &input.UpdateAuthAddress{
+				LastName:      "テスト",
+				FirstName:     "",
+				LastNameKana:  "てすと",
+				FirstNameKana: "ゆーざ",
+				PhoneNumber:   "000-0000-0000",
+				PostalCode:    "000-0000",
+				Prefecture:    "東京都",
+				City:          "小金井市",
+				AddressLine1:  "貫井北町4-1-1",
+				AddressLine2:  "",
+			},
+			Expected: false,
+		},
+		"ng_firstName_max": {
+			Input: &input.UpdateAuthAddress{
+				LastName:      "テスト",
+				FirstName:     strings.Repeat("x", 17),
+				LastNameKana:  "てすと",
+				FirstNameKana: "ゆーざ",
+				PhoneNumber:   "000-0000-0000",
+				PostalCode:    "000-0000",
+				Prefecture:    "東京都",
+				City:          "小金井市",
+				AddressLine1:  "貫井北町4-1-1",
+				AddressLine2:  "",
+			},
+			Expected: false,
+		},
+		"ng_lastNameKana_required": {
+			Input: &input.UpdateAuthAddress{
+				LastName:      "テスト",
+				FirstName:     "ユーザ",
+				LastNameKana:  "",
+				FirstNameKana: "ゆーざ",
+				PhoneNumber:   "000-0000-0000",
+				PostalCode:    "000-0000",
+				Prefecture:    "東京都",
+				City:          "小金井市",
+				AddressLine1:  "貫井北町4-1-1",
+				AddressLine2:  "",
+			},
+			Expected: false,
+		},
+		"ng_lastNameKana_max": {
+			Input: &input.UpdateAuthAddress{
+				LastName:      "テスト",
+				FirstName:     "ユーザ",
+				LastNameKana:  strings.Repeat("あ", 33),
+				FirstNameKana: "ゆーざ",
+				PhoneNumber:   "000-0000-0000",
+				PostalCode:    "000-0000",
+				Prefecture:    "東京都",
+				City:          "小金井市",
+				AddressLine1:  "貫井北町4-1-1",
+				AddressLine2:  "",
+			},
+			Expected: false,
+		},
+		"ng_lastNameKane_format": {
+			Input: &input.UpdateAuthAddress{
+				LastName:      "テスト",
+				FirstName:     "ユーザ",
+				LastNameKana:  "Test",
+				FirstNameKana: "ゆーざ",
+				PhoneNumber:   "000-0000-0000",
+				PostalCode:    "000-0000",
+				Prefecture:    "東京都",
+				City:          "小金井市",
+				AddressLine1:  "貫井北町4-1-1",
+				AddressLine2:  "",
+			},
+			Expected: false,
+		},
+		"ng_firstNameKana_required": {
+			Input: &input.UpdateAuthAddress{
+				LastName:      "テスト",
+				FirstName:     "ユーザ",
+				LastNameKana:  "てすと",
+				FirstNameKana: "",
+				PhoneNumber:   "000-0000-0000",
+				PostalCode:    "000-0000",
+				Prefecture:    "東京都",
+				City:          "小金井市",
+				AddressLine1:  "貫井北町4-1-1",
+				AddressLine2:  "",
+			},
+			Expected: false,
+		},
+		"ng_firstNameKana_max": {
+			Input: &input.UpdateAuthAddress{
+				LastName:      "テスト",
+				FirstName:     "ユーザ",
+				LastNameKana:  "てすと",
+				FirstNameKana: strings.Repeat("あ", 33),
+				PhoneNumber:   "000-0000-0000",
+				PostalCode:    "000-0000",
+				Prefecture:    "東京都",
+				City:          "小金井市",
+				AddressLine1:  "貫井北町4-1-1",
+				AddressLine2:  "",
+			},
+			Expected: false,
+		},
+		"ng_firstNameKana_format": {
+			Input: &input.UpdateAuthAddress{
+				LastName:      "テスト",
+				FirstName:     "ユーザ",
+				LastNameKana:  "てすと",
+				FirstNameKana: "User",
+				PhoneNumber:   "000-0000-0000",
+				PostalCode:    "000-0000",
+				Prefecture:    "東京都",
+				City:          "小金井市",
+				AddressLine1:  "貫井北町4-1-1",
+				AddressLine2:  "",
+			},
+			Expected: false,
+		},
+		"ng_phoneNumber_required": {
+			Input: &input.UpdateAuthAddress{
+				LastName:      "テスト",
+				FirstName:     "ユーザ",
+				LastNameKana:  "てすと",
+				FirstNameKana: "ゆーざ",
+				PhoneNumber:   "",
+				PostalCode:    "000-0000",
+				Prefecture:    "東京都",
+				City:          "小金井市",
+				AddressLine1:  "貫井北町4-1-1",
+				AddressLine2:  "",
+			},
+			Expected: false,
+		},
+		"ng_phoneNumber_max": {
+			Input: &input.UpdateAuthAddress{
+				LastName:      "テスト",
+				FirstName:     "ユーザ",
+				LastNameKana:  "てすと",
+				FirstNameKana: "ゆーざ",
+				PhoneNumber:   strings.Repeat("0", 17),
+				PostalCode:    "000-0000",
+				Prefecture:    "東京都",
+				City:          "小金井市",
+				AddressLine1:  "貫井北町4-1-1",
+				AddressLine2:  "",
+			},
+			Expected: false,
+		},
+		"ng_postalCode_required": {
+			Input: &input.UpdateAuthAddress{
+				LastName:      "テスト",
+				FirstName:     "ユーザ",
+				LastNameKana:  "てすと",
+				FirstNameKana: "ゆーざ",
+				PhoneNumber:   "000-0000-0000",
+				PostalCode:    "",
+				Prefecture:    "東京都",
+				City:          "小金井市",
+				AddressLine1:  "貫井北町4-1-1",
+				AddressLine2:  "",
+			},
+			Expected: false,
+		},
+		"ng_postalCode_max": {
+			Input: &input.UpdateAuthAddress{
+				LastName:      "テスト",
+				FirstName:     "ユーザ",
+				LastNameKana:  "てすと",
+				FirstNameKana: "ゆーざ",
+				PhoneNumber:   "000-0000-0000",
+				PostalCode:    strings.Repeat("0", 17),
+				Prefecture:    "東京都",
+				City:          "小金井市",
+				AddressLine1:  "貫井北町4-1-1",
+				AddressLine2:  "",
+			},
+			Expected: false,
+		},
+		"ng_prefecture_required": {
+			Input: &input.UpdateAuthAddress{
+				LastName:      "テスト",
+				FirstName:     "ユーザ",
+				LastNameKana:  "てすと",
+				FirstNameKana: "ゆーざ",
+				PhoneNumber:   "000-0000-0000",
+				PostalCode:    "000-0000",
+				Prefecture:    "",
+				City:          "小金井市",
+				AddressLine1:  "貫井北町4-1-1",
+				AddressLine2:  "",
+			},
+			Expected: false,
+		},
+		"ng_prefecture_max": {
+			Input: &input.UpdateAuthAddress{
+				LastName:      "テスト",
+				FirstName:     "ユーザ",
+				LastNameKana:  "てすと",
+				FirstNameKana: "ゆーざ",
+				PhoneNumber:   "000-0000-0000",
+				PostalCode:    "000-0000",
+				Prefecture:    strings.Repeat("x", 33),
+				City:          "小金井市",
+				AddressLine1:  "貫井北町4-1-1",
+				AddressLine2:  "",
+			},
+			Expected: false,
+		},
+		"ng_city_required": {
+			Input: &input.UpdateAuthAddress{
+				LastName:      "テスト",
+				FirstName:     "ユーザ",
+				LastNameKana:  "てすと",
+				FirstNameKana: "ゆーざ",
+				PhoneNumber:   "000-0000-0000",
+				PostalCode:    "000-0000",
+				Prefecture:    "東京都",
+				City:          "",
+				AddressLine1:  "貫井北町4-1-1",
+				AddressLine2:  "",
+			},
+			Expected: false,
+		},
+		"ng_city_max": {
+			Input: &input.UpdateAuthAddress{
+				LastName:      "テスト",
+				FirstName:     "ユーザ",
+				LastNameKana:  "てすと",
+				FirstNameKana: "ゆーざ",
+				PhoneNumber:   "000-0000-0000",
+				PostalCode:    "000-0000",
+				Prefecture:    "東京都",
+				City:          strings.Repeat("x", 33),
+				AddressLine1:  "貫井北町4-1-1",
+				AddressLine2:  "",
+			},
+			Expected: false,
+		},
+		"ng_addressLine1_required": {
+			Input: &input.UpdateAuthAddress{
+				LastName:      "テスト",
+				FirstName:     "ユーザ",
+				LastNameKana:  "てすと",
+				FirstNameKana: "ゆーざ",
+				PhoneNumber:   "000-0000-0000",
+				PostalCode:    "000-0000",
+				Prefecture:    "東京都",
+				City:          "小金井市",
+				AddressLine1:  "",
+				AddressLine2:  "",
+			},
+			Expected: false,
+		},
+		"ng_addressLine1_max": {
+			Input: &input.UpdateAuthAddress{
+				LastName:      "テスト",
+				FirstName:     "ユーザ",
+				LastNameKana:  "てすと",
+				FirstNameKana: "ゆーざ",
+				PhoneNumber:   "000-0000-0000",
+				PostalCode:    "000-0000",
+				Prefecture:    "東京都",
+				City:          "小金井市",
+				AddressLine1:  strings.Repeat("x", 65),
+				AddressLine2:  "",
+			},
+			Expected: false,
+		},
+		"ng_addressLine2_max": {
+			Input: &input.UpdateAuthAddress{
+				LastName:      "テスト",
+				FirstName:     "ユーザ",
+				LastNameKana:  "てすと",
+				FirstNameKana: "ゆーざ",
+				PhoneNumber:   "000-0000-0000",
+				PostalCode:    "000-0000",
+				Prefecture:    "東京都",
+				City:          "小金井市",
+				AddressLine1:  "貫井北町4-1-1",
+				AddressLine2:  strings.Repeat("x", 65),
+			},
+			Expected: false,
+		},
+	}
+
+	for result, tc := range testCases {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		t.Run(result, func(t *testing.T) {
+			target := NewAuthRequestValidation()
+
+			got := target.UpdateAuthAddress(tc.Input)
+			if tc.Expected {
+				if got != nil {
+					t.Fatalf("Incorrect result: %#v", got)
+				}
+			} else {
+				if got == nil {
+					t.Fatalf("Incorrect result: result is nil")
+				}
+			}
+		})
+	}
+}
