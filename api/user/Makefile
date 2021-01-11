@@ -1,7 +1,8 @@
 GOLANGCI_VERSION := 1.33.0
 
 BIN := $(abspath ./bin)
-PACKAGES := $(shell go list ./... | grep -v proto)
+PACKAGES := $(shell go list ./... | grep -v -e "mock" -v -e "proto")
+TEST_PACKAGES := $(shell go list ./internal/... ./lib/... | grep -v -e "domain" -v -e "interface" -v -e "application/input" -v -e "infrastructure/repository" -v -e "infrastructure/storage" -v -e "lib/firebase" -v -e "lib/metadata")
 
 .PHONY: setup run build start fmt vet lint test
 
@@ -29,5 +30,7 @@ lint:
 	$(BIN)/golangci-lint run -c .golangci.yaml ./...
 
 test:
-	echo "WIP..."
-	# go test -v -cover ./internal/...
+	go test -v -cover $(TEST_PACKAGES)
+
+mockgen:
+	$(BIN)/build-mocks.sh

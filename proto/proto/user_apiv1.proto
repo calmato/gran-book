@@ -5,23 +5,88 @@ option go_package = "github.com/calmato/gran-book/proto";
 
 import "google/api/annotations.proto";
 
-service UserService {
-  rpc CreateUser (CreateUserRequest) returns (UserResponse) {
+service AuthService {
+  rpc GetAuth (EmptyUser) returns (AuthResponse) {
     option (google.api.http) = {
-      post: "/v1/users"
+      get: "/v1/auth"
+    };
+  };
+
+  rpc CreateAuth (CreateAuthRequest) returns (AuthResponse) {
+    option (google.api.http) = {
+      post: "/v1/auth"
+      body: "*"
+    };
+  };
+
+  rpc UpdateAuthEmail (UpdateAuthEmailRequest) returns (AuthResponse) {
+    option (google.api.http) = {
+      patch: "/v1/auth/email"
+      body: "*"
+    };
+  }
+
+  rpc UpdateAuthPassword (UpdateAuthPasswordRequest) returns (AuthResponse) {
+    option (google.api.http) = {
+      patch: "/v1/auth/password"
+      body: "*"
+    };
+  };
+
+  rpc UpdateAuthProfile (UpdateAuthProfileRequest) returns (AuthResponse) {
+    option (google.api.http) = {
+      patch: "/v1/auth/profile"
+      body: "*"
+    };
+  };
+
+  rpc UpdateAuthAddress (UpdateAuthAddressRequest) returns (AuthResponse) {
+    option (google.api.http) = {
+      patch: "/v1/auth/address"
       body: "*"
     };
   };
 }
 
-message CreateUserRequest {
+message EmptyUser {}
+
+message CreateAuthRequest {
   string username = 1;
   string email = 2;
   string password = 3;
   string password_confirmation = 4;
 }
 
-message UserResponse {
+message UpdateAuthEmailRequest {
+  string email = 1;
+}
+
+message UpdateAuthPasswordRequest {
+  string password = 1;
+  string password_confirmation = 2;
+}
+
+message UpdateAuthProfileRequest {
+  string username = 1;
+  int32 gender = 2;
+  string thumbnail = 3;
+  string self_introduction = 4;
+}
+
+message UpdateAuthAddressRequest {
+  string last_name = 1;
+  string first_name = 2;
+  string last_name_kana = 3;
+  string first_name_kana = 4;
+  string phone_number = 5;
+  string postal_code = 6;
+  string prefecture = 7;
+  string city = 8;
+  string address_line1 = 9;
+  string address_line2 = 10;
+}
+
+message AuthResponse {
   string id = 1;
   string username = 2;
   int32 gender = 3;
