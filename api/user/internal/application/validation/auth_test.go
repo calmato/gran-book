@@ -94,6 +94,15 @@ func TestAuthRequestValidation_CreateAuth(t *testing.T) {
 			},
 			Expected: false,
 		},
+		"ng_password_format": {
+			Input: &input.CreateAuth{
+				Username:             "test-user",
+				Email:                "test-user@calmato.com",
+				Password:             "１２３４５６７８",
+				PasswordConfirmation: "１２３４５６７８",
+			},
+			Expected: false,
+		},
 		"ng_passwordConfirmation_required": {
 			Input: &input.CreateAuth{
 				Username:             "test-user",
@@ -217,6 +226,13 @@ func TestAuthRequestValidation_UpdateAuthPassword(t *testing.T) {
 			Input: &input.UpdateAuthPassword{
 				Password:             strings.Repeat("x", 33),
 				PasswordConfirmation: strings.Repeat("x", 33),
+			},
+			Expected: false,
+		},
+		"ng_password_format": {
+			Input: &input.UpdateAuthPassword{
+				Password:             "１２３４５６７８",
+				PasswordConfirmation: "１２３４５６７８",
 			},
 			Expected: false,
 		},
