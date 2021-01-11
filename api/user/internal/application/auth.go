@@ -18,6 +18,7 @@ type AuthApplication interface {
 	UpdateEmail(ctx context.Context, in *input.UpdateAuthEmail, u *user.User) error
 	UpdatePassword(ctx context.Context, in *input.UpdateAuthPassword, u *user.User) error
 	UpdateProfile(ctx context.Context, in *input.UpdateAuthProfile, u *user.User) error
+	UpdateAddress(ctx context.Context, in *input.UpdateAuthAddress, u *user.User) error
 }
 
 type authApplication struct {
@@ -99,6 +100,27 @@ func (a *authApplication) UpdateProfile(ctx context.Context, in *input.UpdateAut
 	u.Gender = in.Gender
 	u.ThumbnailURL = thumbnailURL
 	u.SelfIntroduction = in.SelfIntroduction
+
+	return a.userService.Update(ctx, u)
+}
+
+func (a *authApplication) UpdateAddress(ctx context.Context, in *input.UpdateAuthAddress, u *user.User) error {
+	err := a.authRequestValidation.UpdateAuthAddress(in)
+	if err != nil {
+		return err
+	}
+
+	u.LastName = in.LastName
+	u.FirstName = in.FirstName
+	u.LastNameKana = in.LastNameKana
+	u.FirstNameKana = in.FirstNameKana
+	u.PhoneNumber = in.PhoneNumber
+	u.PhoneNumber = in.PhoneNumber
+	u.PostalCode = in.PostalCode
+	u.Prefecture = in.Prefecture
+	u.City = in.City
+	u.AddressLine1 = in.AddressLine1
+	u.AddressLine2 = in.AddressLine2
 
 	return a.userService.Update(ctx, u)
 }

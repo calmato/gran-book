@@ -216,3 +216,55 @@ func (s *AuthServer) UpdateAuthProfile(
 
 	return res, err
 }
+
+// UpdateAuthAddress - 住所更新
+func (s *AuthServer) UpdateAuthAddress(
+	ctx context.Context, req *pb.UpdateAuthAddressRequest,
+) (*pb.AuthResponse, error) {
+	u, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	in := &input.UpdateAuthAddress{
+		LastName:      req.LastName,
+		FirstName:     req.FirstName,
+		LastNameKana:  req.LastNameKana,
+		FirstNameKana: req.FirstNameKana,
+		PhoneNumber:   req.PhoneNumber,
+		PostalCode:    req.PostalCode,
+		Prefecture:    req.Prefecture,
+		City:          req.City,
+		AddressLine1:  req.AddressLine1,
+		AddressLine2:  req.AddressLine2,
+	}
+
+	err = s.AuthApplication.UpdateAddress(ctx, in, u)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	res := &pb.AuthResponse{
+		Id:               u.ID,
+		Username:         u.Username,
+		Gender:           u.Gender,
+		Email:            u.Email,
+		PhoneNumber:      u.PhoneNumber,
+		Role:             u.Role,
+		ThumbnailUrl:     u.ThumbnailURL,
+		SelfIntroduction: u.SelfIntroduction,
+		LastName:         u.LastName,
+		FirstName:        u.FirstName,
+		LastNameKana:     u.LastNameKana,
+		FirstNameKana:    u.FirstNameKana,
+		PostalCode:       u.PostalCode,
+		Prefecture:       u.Prefecture,
+		City:             u.City,
+		AddressLine1:     u.AddressLine1,
+		AddressLine2:     u.AddressLine2,
+		CreatedAt:        datetime.TimeToString(u.CreatedAt),
+		UpdatedAt:        datetime.TimeToString(u.UpdatedAt),
+	}
+
+	return res, nil
+}
