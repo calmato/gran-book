@@ -256,3 +256,94 @@ func TestAuthRequestValidation_UpdateAuthPassword(t *testing.T) {
 		})
 	}
 }
+
+func TestAuthRequestValidation_UpdateAuthProfile(t *testing.T) {
+	testCases := map[string]struct {
+		Input    *input.UpdateAuthProfile
+		Expected bool
+	}{
+		"ok": {
+			Input: &input.UpdateAuthProfile{
+				Username:         "test-user",
+				Gender:           0,
+				Thumbnail:        "",
+				SelfIntroduction: "自己紹介",
+			},
+			Expected: true,
+		},
+		"ng_username_required": {
+			Input: &input.UpdateAuthProfile{
+				Username:         "",
+				Gender:           0,
+				Thumbnail:        "",
+				SelfIntroduction: "自己紹介",
+			},
+			Expected: false,
+		},
+		"ng_username_max": {
+			Input: &input.UpdateAuthProfile{
+				Username:         strings.Repeat("x", 33),
+				Gender:           0,
+				Thumbnail:        "",
+				SelfIntroduction: "自己紹介",
+			},
+			Expected: false,
+		},
+		"ng_gender_greater_than": {
+			Input: &input.UpdateAuthProfile{
+				Username:         "test-user",
+				Gender:           -1,
+				Thumbnail:        "",
+				SelfIntroduction: "自己紹介",
+			},
+			Expected: false,
+		},
+		"ng_gender_less_than": {
+			Input: &input.UpdateAuthProfile{
+				Username:         "test-user",
+				Gender:           3,
+				Thumbnail:        "",
+				SelfIntroduction: "自己紹介",
+			},
+			Expected: false,
+		},
+		"ng_thumbnail_format": {
+			Input: &input.UpdateAuthProfile{
+				Username:         "test-user",
+				Gender:           0,
+				Thumbnail:        "invalida-thumbnail",
+				SelfIntroduction: "自己紹介",
+			},
+			Expected: false,
+		},
+		"ng_selfintroduction_max": {
+			Input: &input.UpdateAuthProfile{
+				Username:         "test-user",
+				Gender:           0,
+				Thumbnail:        "",
+				SelfIntroduction: strings.Repeat("x", 257),
+			},
+			Expected: false,
+		},
+	}
+
+	for result, tc := range testCases {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		t.Run(result, func(t *testing.T) {
+			target := NewAuthRequestValidation()
+
+			got := target.UpdateAuthProfile(tc.Input)
+			if tc.Expected {
+				if got != nil {
+					t.Fatalf("Incorrect result: %#v", got)
+				}
+			} else {
+				if got == nil {
+					t.Fatalf("Incorrect result: result is nil")
+				}
+			}
+		})
+	}
+}

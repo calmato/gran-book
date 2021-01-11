@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Gran Book
-  version: "0.1.3"
+  version: "0.1.4"
 servers:
   - url: http://localhost:8080
     description: 開発環境
@@ -110,6 +110,9 @@ paths:
   /v1/auth/profile:
     patch:
       operationId: AuthService_UpdateAuthProfile
+      summary: プロフィール更新
+      security:
+        - BearerAuth: []
       responses:
         "200":
           description: A successful response.
@@ -209,7 +212,8 @@ components:
         username:
           type: string
         gender:
-          type: string
+          type: integer
+          format: int32
         thumbnail:
           type: string
         selfIntroduction:

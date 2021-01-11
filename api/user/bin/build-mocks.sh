@@ -54,7 +54,7 @@ build_package() {
 # --- Domain ---
 build_file 'domain' 'repository.go'
 build_file 'domain' 'service.go'
-# build_file 'domain' 'uploader.go'
+build_file 'domain' 'uploader.go'
 build_file 'domain' 'validation.go'
 
 # --- Application ---

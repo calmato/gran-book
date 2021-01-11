@@ -268,7 +268,8 @@
           "type": "string"
         },
         "gender": {
-          "type": "string"
+          "type": "integer",
+          "format": "int32"
         },
         "thumbnail": {
           "type": "string"

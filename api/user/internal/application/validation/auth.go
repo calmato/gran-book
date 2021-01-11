@@ -11,6 +11,7 @@ type AuthRequestValidation interface {
 	CreateAuth(in *input.CreateAuth) error
 	UpdateAuthEmail(in *input.UpdateAuthEmail) error
 	UpdateAuthPassword(in *input.UpdateAuthPassword) error
+	UpdateAuthProfile(in *input.UpdateAuthProfile) error
 }
 
 type authRequestValidation struct {
@@ -53,5 +54,15 @@ func (v *authRequestValidation) UpdateAuthPassword(in *input.UpdateAuthPassword)
 	}
 
 	err := xerrors.New("Failed to UpdateAuthPassword for RequestValidation")
+	return exception.InvalidRequestValidation.New(err, ves...)
+}
+
+func (v *authRequestValidation) UpdateAuthProfile(in *input.UpdateAuthProfile) error {
+	ves := v.validator.Run(in)
+	if len(ves) == 0 {
+		return nil
+	}
+
+	err := xerrors.New("Failed to UpdateAuthProfile for RequestValidation")
 	return exception.InvalidRequestValidation.New(err, ves...)
 }

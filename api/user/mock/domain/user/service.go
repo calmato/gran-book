@@ -90,3 +90,18 @@ func (mr *MockServiceMockRecorder) UpdatePassword(ctx, uid, password interface{}
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdatePassword", reflect.TypeOf((*MockService)(nil).UpdatePassword), ctx, uid, password)
 }
+
+// UploadThumbnail mocks base method
+func (m *MockService) UploadThumbnail(ctx context.Context, uid string, thumbnail []byte) (string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UploadThumbnail", ctx, uid, thumbnail)
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UploadThumbnail indicates an expected call of UploadThumbnail
+func (mr *MockServiceMockRecorder) UploadThumbnail(ctx, uid, thumbnail interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UploadThumbnail", reflect.TypeOf((*MockService)(nil).UploadThumbnail), ctx, uid, thumbnail)
+}

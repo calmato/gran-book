@@ -2,10 +2,12 @@ package application
 
 import (
 	"context"
+	"encoding/base64"
 	"strings"
 
 	"github.com/calmato/gran-book/api/user/internal/application/input"
 	"github.com/calmato/gran-book/api/user/internal/application/validation"
+	"github.com/calmato/gran-book/api/user/internal/domain/exception"
 	"github.com/calmato/gran-book/api/user/internal/domain/user"
 )
 
@@ -15,6 +17,7 @@ type AuthApplication interface {
 	Create(ctx context.Context, in *input.CreateAuth) (*user.User, error)
 	UpdateEmail(ctx context.Context, in *input.UpdateAuthEmail, u *user.User) error
 	UpdatePassword(ctx context.Context, in *input.UpdateAuthPassword, u *user.User) error
+	UpdateProfile(ctx context.Context, in *input.UpdateAuthProfile, u *user.User) error
 }
 
 type authApplication struct {
@@ -79,4 +82,45 @@ func (a *authApplication) UpdatePassword(ctx context.Context, in *input.UpdateAu
 	}
 
 	return a.userService.UpdatePassword(ctx, u.ID, in.Password)
+}
+
+func (a *authApplication) UpdateProfile(ctx context.Context, in *input.UpdateAuthProfile, u *user.User) error {
+	err := a.authRequestValidation.UpdateAuthProfile(in)
+	if err != nil {
+		return err
+	}
+
+	thumbnailURL, err := a.getThumbnailURL(ctx, u.ID, in.Thumbnail)
+	if err != nil {
+		return err
+	}
+
+	u.Username = in.Username
+	u.Gender = in.Gender
+	u.ThumbnailURL = thumbnailURL
+	u.SelfIntroduction = in.SelfIntroduction
+
+	return a.userService.Update(ctx, u)
+}
+
+func (a *authApplication) getThumbnailURL(ctx context.Context, uid string, thumbnail string) (string, error) {
+	if thumbnail == "" {
+		return "", nil
+	}
+
+	// data:image/png;base64,iVBORw0KGgoAAAA... みたいなのうちの
+	// `data:image/png;base64,` の部分を無くした []byte を取得
+	b64data := thumbnail[strings.IndexByte(thumbnail, ',')+1:]
+
+	data, err := base64.StdEncoding.DecodeString(b64data)
+	if err != nil {
+		ve := &exception.ValidationError{
+			Field:   "thumbnail",
+			Message: exception.UnableConvertBase64Massage,
+		}
+
+		return "", exception.UnableConvertBase64.New(err, ve)
+	}
+
+	return a.userService.UploadThumbnail(ctx, uid, data)
 }

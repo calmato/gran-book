@@ -61,7 +61,7 @@ message UpdateAuthPasswordRequest {
 
 message UpdateAuthProfileRequest {
   string username = 1;
-  string gender = 2;
+  int32 gender = 2;
   string thumbnail = 3;
   string self_introduction = 4;
 }

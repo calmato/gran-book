@@ -226,3 +226,48 @@ func TestAuthApplication_UpdatePassword(t *testing.T) {
 		})
 	}
 }
+
+func TestAuthApplication_UpdateProfile(t *testing.T) {
+	testCases := map[string]struct {
+		Input    *input.UpdateAuthProfile
+		User     *user.User
+		Expected error
+	}{
+		"ok": {
+			Input: &input.UpdateAuthProfile{
+				Username:         "test-user",
+				Gender:           0,
+				Thumbnail:        "",
+				SelfIntroduction: "自己紹介",
+			},
+			User: &user.User{
+				ID: "00000000-0000-0000-0000-000000000000",
+			},
+			Expected: nil,
+		},
+	}
+
+	for result, tc := range testCases {
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		arvm := mock_validation.NewMockAuthRequestValidation(ctrl)
+		arvm.EXPECT().UpdateAuthProfile(tc.Input).Return(nil)
+
+		usm := mock_user.NewMockService(ctrl)
+		usm.EXPECT().Update(ctx, tc.User).Return(tc.Expected)
+
+		t.Run(result, func(t *testing.T) {
+			target := NewAuthApplication(arvm, usm)
+
+			got := target.UpdateProfile(ctx, tc.Input, tc.User)
+			if !reflect.DeepEqual(got, tc.Expected) {
+				t.Fatalf("want %#v, but %#v", tc.Expected, got)
+				return
+			}
+		})
+	}
+}

@@ -74,8 +74,10 @@ func TestUserService_Authentication(t *testing.T) {
 		urm := mock_user.NewMockRepository(ctrl)
 		urm.EXPECT().Authentication(ctx).Return(tc.Expected.User, tc.Expected.Error)
 
+		uum := mock_user.NewMockUploader(ctrl)
+
 		t.Run(result, func(t *testing.T) {
-			target := NewUserService(uvm, urm)
+			target := NewUserService(uvm, urm, uum)
 
 			got, err := target.Authentication(ctx)
 			if !reflect.DeepEqual(err, tc.Expected.Error) {
@@ -136,8 +138,10 @@ func TestUserService_Create(t *testing.T) {
 		urm := mock_user.NewMockRepository(ctrl)
 		urm.EXPECT().Create(ctx, tc.User).Return(tc.Expected)
 
+		uum := mock_user.NewMockUploader(ctrl)
+
 		t.Run(result, func(t *testing.T) {
-			target := NewUserService(uvm, urm)
+			target := NewUserService(uvm, urm, uum)
 
 			got := target.Create(ctx, tc.User)
 			if !reflect.DeepEqual(got, tc.Expected) {
@@ -210,8 +214,10 @@ func TestUserService_Update(t *testing.T) {
 		urm := mock_user.NewMockRepository(ctrl)
 		urm.EXPECT().Update(ctx, tc.User).Return(tc.Expected)
 
+		uum := mock_user.NewMockUploader(ctrl)
+
 		t.Run(result, func(t *testing.T) {
-			target := NewUserService(uvm, urm)
+			target := NewUserService(uvm, urm, uum)
 
 			got := target.Update(ctx, tc.User)
 			if !reflect.DeepEqual(got, tc.Expected) {
@@ -238,11 +244,6 @@ func TestUserService_UpdatePassword(t *testing.T) {
 			Password: "12345678",
 			Expected: nil,
 		},
-		"ng_notfound": {
-			UID:      "",
-			Password: "12345678",
-			Expected: exception.NotFound.New(nil),
-		},
 	}
 
 	for result, tc := range testCases {
@@ -257,12 +258,67 @@ func TestUserService_UpdatePassword(t *testing.T) {
 		urm := mock_user.NewMockRepository(ctrl)
 		urm.EXPECT().UpdatePassword(ctx, tc.UID, tc.Password).Return(tc.Expected)
 
+		uum := mock_user.NewMockUploader(ctrl)
+
 		t.Run(result, func(t *testing.T) {
-			target := NewUserService(uvm, urm)
+			target := NewUserService(uvm, urm, uum)
 
 			got := target.UpdatePassword(ctx, tc.UID, tc.Password)
 			if !reflect.DeepEqual(got, tc.Expected) {
 				t.Fatalf("want %#v, but %#v", tc.Expected, got)
+				return
+			}
+		})
+	}
+}
+
+func TestUserService_UpdateThumbnail(t *testing.T) {
+	testCases := map[string]struct {
+		UID       string
+		Thumbnail []byte
+		Expected  struct {
+			ThumbailURL string
+			Error       error
+		}
+	}{
+		"ok": {
+			UID:       "00000000-0000-0000-0000-000000000000",
+			Thumbnail: []byte{},
+			Expected: struct {
+				ThumbailURL string
+				Error       error
+			}{
+				ThumbailURL: "https://calmato.com/user_thumbnails",
+				Error:       nil,
+			},
+		},
+	}
+
+	for result, tc := range testCases {
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		uvm := mock_user.NewMockValidation(ctrl)
+
+		urm := mock_user.NewMockRepository(ctrl)
+
+		uum := mock_user.NewMockUploader(ctrl)
+		uum.EXPECT().Thumbnail(ctx, tc.UID, tc.Thumbnail).Return(tc.Expected.ThumbailURL, tc.Expected.Error)
+
+		t.Run(result, func(t *testing.T) {
+			target := NewUserService(uvm, urm, uum)
+
+			got, err := target.UploadThumbnail(ctx, tc.UID, tc.Thumbnail)
+			if !reflect.DeepEqual(err, tc.Expected.Error) {
+				t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+				return
+			}
+
+			if !reflect.DeepEqual(got, tc.Expected.ThumbailURL) {
+				t.Fatalf("want %#v, but %#v", tc.Expected.ThumbailURL, got)
 				return
 			}
 		})
