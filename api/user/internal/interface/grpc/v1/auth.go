@@ -87,7 +87,7 @@ func (s *AuthServer) CreateAuth(ctx context.Context, req *pb.CreateAuthRequest) 
 }
 
 // UpdateAuthEmail - ログイン用メールアドレスの更新
-func (s AuthServer) UpdateAuthEmail(ctx context.Context, req *pb.UpdateAuthEmailRequest) (*pb.AuthResponse, error) {
+func (s *AuthServer) UpdateAuthEmail(ctx context.Context, req *pb.UpdateAuthEmailRequest) (*pb.AuthResponse, error) {
 	u, err := s.AuthApplication.Authentication(ctx)
 	if err != nil {
 		return nil, errorHandling(err)
@@ -128,7 +128,7 @@ func (s AuthServer) UpdateAuthEmail(ctx context.Context, req *pb.UpdateAuthEmail
 }
 
 // UpdateAuthPassword - ログイン用パスワードの更新
-func (s AuthServer) UpdateAuthPassword(
+func (s *AuthServer) UpdateAuthPassword(
 	ctx context.Context, req *pb.UpdateAuthPasswordRequest,
 ) (*pb.AuthResponse, error) {
 	u, err := s.AuthApplication.Authentication(ctx)
@@ -169,4 +169,50 @@ func (s AuthServer) UpdateAuthPassword(
 	}
 
 	return res, nil
+}
+
+// UpdateAuthProfile - プロフィール更新
+func (s *AuthServer) UpdateAuthProfile(
+	ctx context.Context, req *pb.UpdateAuthProfileRequest,
+) (*pb.AuthResponse, error) {
+	u, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	in := &input.UpdateAuthProfile{
+		Username:         req.Username,
+		Gender:           req.Gender,
+		Thumbnail:        req.Thumbnail,
+		SelfIntroduction: req.SelfIntroduction,
+	}
+
+	err = s.AuthApplication.UpdateProfile(ctx, in, u)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	res := &pb.AuthResponse{
+		Id:               u.ID,
+		Username:         u.Username,
+		Gender:           u.Gender,
+		Email:            u.Email,
+		PhoneNumber:      u.PhoneNumber,
+		Role:             u.Role,
+		ThumbnailUrl:     u.ThumbnailURL,
+		SelfIntroduction: u.SelfIntroduction,
+		LastName:         u.LastName,
+		FirstName:        u.FirstName,
+		LastNameKana:     u.LastNameKana,
+		FirstNameKana:    u.FirstNameKana,
+		PostalCode:       u.PostalCode,
+		Prefecture:       u.Prefecture,
+		City:             u.City,
+		AddressLine1:     u.AddressLine1,
+		AddressLine2:     u.AddressLine2,
+		CreatedAt:        datetime.TimeToString(u.CreatedAt),
+		UpdatedAt:        datetime.TimeToString(u.UpdatedAt),
+	}
+
+	return res, err
 }
