@@ -74,3 +74,17 @@ func (mr *MockAuthRequestValidationMockRecorder) UpdateAuthPassword(in interface
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAuthPassword", reflect.TypeOf((*MockAuthRequestValidation)(nil).UpdateAuthPassword), in)
 }
+
+// UpdateAuthProfile mocks base method
+func (m *MockAuthRequestValidation) UpdateAuthProfile(in *input.UpdateAuthProfile) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateAuthProfile", in)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpdateAuthProfile indicates an expected call of UpdateAuthProfile
+func (mr *MockAuthRequestValidationMockRecorder) UpdateAuthProfile(in interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAuthProfile", reflect.TypeOf((*MockAuthRequestValidation)(nil).UpdateAuthProfile), in)
+}
