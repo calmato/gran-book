@@ -87,6 +87,8 @@ func validationMessage(tag string, options ...string) string {
 		return fmt.Sprintf(exception.MinMessage, options[0])
 	case exception.MaxTag:
 		return fmt.Sprintf(exception.MaxMessage, options[0])
+	case exception.Base64Tag:
+		return exception.Base64Message
 	case exception.EmailTag:
 		return exception.EmailMessage
 	case exception.PasswordTag:
