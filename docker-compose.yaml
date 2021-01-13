@@ -47,7 +47,7 @@ services:
       - ./tmp/logs/gateway:/var/log/gateway:delegated
     environment:
       - PORT=8080
-      - LOG_PATH=${GATEWAY_LOG_PATH}
+      - LOG_PATH=/var/log/gateway
       - LOG_LEVEL=${LOG_LEVEL}
       - SSL_VALIDATION=${SSL_VALIDATION}
       - USER_API_URL=${USER_API_URL}
@@ -70,7 +70,7 @@ services:
       - ./tmp/logs/user_api:/var/log/api:delegated
     environment:
       - PORT=8080
-      - LOG_PATH=${USER_API_LOG_PATH}
+      - LOG_PATH=/var/log/api
       - LOG_LEVEL=${LOG_LEVEL}
       - DB_HOST=${MYSQL_HOST}
       - DB_PORT=${MYSQL_PORT}
@@ -162,6 +162,21 @@ services:
       dockerfile: Dockerfile
     ports:
       - 8001:8080
+
+  terraform:
+    container_name: gran_book_terraform
+    build:
+      context: ./infra/docker/infra/terraform
+      dockerfile: Dockerfile
+    working_dir: /var/terraform
+    volumes:
+      - ./infra/terraform:/var/terraform:cached
+      - ./secrets:/secrets
+    tty: true
+    stdin_open: true
+    environment:
+      - GOOGLE_CLOUD_KEYFILE_JSON=${TERRAFORM_CREDENTIALS}
+      - GOOGLE_APPLICATION_CREDENTIALS=${TERRAFORM_CREDENTIALS}
 
 networks:
   api:
