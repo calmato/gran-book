@@ -9,7 +9,5 @@ RUN apk add --no-cache \
       wget
 
 RUN wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
-RUN unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip
-
-RUN mv terraform /usr/local/bin
+RUN unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip -d /usr/local/bin
 RUN chmod +x /usr/local/bin/terraform
