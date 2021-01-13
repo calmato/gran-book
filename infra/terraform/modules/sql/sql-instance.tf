@@ -4,7 +4,7 @@
 resource "google_sql_database_instance" "this" {
   name                 = var.sql_instance_name
   master_instance_name = var.sql_instance_name
-  region               = var.location
+  region               = var.region
 
   database_version = var.sql_instance_database_version
   root_password    = var.sql_instance_root_password

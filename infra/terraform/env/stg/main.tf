@@ -1,12 +1,17 @@
 provider "google" {
   project = var.project_id
-  region  = "asia-northeast1"
+  region  = local.region
+}
+
+locals {
+  region   = "asia-northeast1"
+  location = "asia-northeast1-a"
 }
 
 module "gke" {
   source = "./../../modules/gke"
 
-  location = "asia-northeast1-a"
+  location = local.location
 
   #################################################
   # GKE Cluster
@@ -46,17 +51,16 @@ module "gke" {
   global_address_name = "gran-book-stg-ip-address"
 }
 
-
 module "mysql" {
   source = "./../../modules/sql"
 
-  location = "asia-northeast1-a"
+  region = local.region
 
   #################################################
   # Cloud SQL - Instance
   #################################################
   sql_instance_name          = "gran-book-stg-mysql"
-  sql_instance_root_password = "12345678"
+  sql_instance_root_password = var.sql_instance_root_password
 
   sql_instance_database_version = "MYSQL_8_0"
   sql_instance_type             = "db-f1-micro"
