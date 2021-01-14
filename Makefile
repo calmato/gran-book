@@ -67,10 +67,10 @@ migrate:
 ##################################################
 .PHONY: terraform-setup terraform-lint terraform-plan terraform-apply terraform-destroy
 
-terraform-setup:
+terraform-init:
 	docker-compose run --rm terraform make init ENV=${ENV}
 
-terraform-lint:
+terraform-fmt:
 	docker-compose run --rm terraform make fmt ENV=${ENV}
 
 terraform-plan:

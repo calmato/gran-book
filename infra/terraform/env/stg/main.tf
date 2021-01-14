@@ -31,7 +31,7 @@ module "gke" {
       preemptible  = false
       machine_type = "e2-micro"
       disk_type    = "pd-standard"
-      disk_size_gb = 8
+      disk_size_gb = 10
     },
     {
       name         = "gran-book-stg-spot-node"
@@ -39,7 +39,7 @@ module "gke" {
       preemptible  = true
       machine_type = "e2-medium"
       disk_type    = "pd-standard"
-      disk_size_gb = 16
+      disk_size_gb = 10
     },
   ]
 
