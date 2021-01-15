@@ -21,8 +21,8 @@ module "gke" {
   #################################################
   # GKE Cluster
   #################################################
-  gke_cluster_name        = "xxxxxx-cluster"
-  gke_cluster_description = "xxxxxx application cluster for staging"
+  gke_cluster_name        = "gran-book-stg-cluster"
+  gke_cluster_description = "gran-book-stg application cluster for staging"
 
   gke_cluster_min_master_version = "1.17.14-gke.400"
 
@@ -31,7 +31,7 @@ module "gke" {
   #################################################
   gke_node_configs = [
     {
-      name         = "xxxxxx-node"
+      name         = "gran-book-stg-node"
       count        = 1
       preemptible  = false
       machine_type = "e2-micro"
@@ -39,7 +39,7 @@ module "gke" {
       disk_size_gb = 10
     },
     {
-      name         = "xxxxxx-spot-node"
+      name         = "gran-book-stg-spot-node"
       count        = 2
       preemptible  = true
       machine_type = "e2-small"
@@ -53,7 +53,7 @@ module "gke" {
   #################################################
   create_global_address = true
 
-  global_address_name = "xxxxxx-ip-address"
+  global_address_name = "gran-book-stg-ip-address"
 }
 
 module "mysql" {
@@ -64,7 +64,7 @@ module "mysql" {
   #################################################
   # Cloud SQL - Instance
   #################################################
-  sql_instance_name          = "xxxxxx-stg-mysql"
+  sql_instance_name          = "gran-book-stg-db"
   sql_instance_root_password = var.sql_instance_root_password
 
   sql_instance_database_version = "MYSQL_8_0"
@@ -92,4 +92,3 @@ module "mysql" {
   sql_backup_enabled    = false
   sql_backup_start_time = "" # format: HH:mm
 }
-
