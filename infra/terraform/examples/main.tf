@@ -1,3 +1,8 @@
+provider "google" {
+  project = var.project_id
+  region  = local.region
+}
+
 provider "google-beta" {
   project = var.project_id
   region  = local.region
@@ -19,7 +24,7 @@ module "gke" {
   gke_cluster_name        = "xxxxxx-cluster"
   gke_cluster_description = "xxxxxx application cluster for staging"
 
-  gke_cluster_min_master_version = "1.15.11-gke.13"
+  gke_cluster_min_master_version = "1.17.14-gke.400"
 
   #################################################
   # GKE Node
@@ -29,15 +34,15 @@ module "gke" {
       name         = "xxxxxx-node"
       count        = 1
       preemptible  = false
-      machine_type = "g1-small"
+      machine_type = "e2-micro"
       disk_type    = "pd-standard"
       disk_size_gb = 10
     },
     {
       name         = "xxxxxx-spot-node"
-      count        = 1
+      count        = 2
       preemptible  = true
-      machine_type = "g1-small"
+      machine_type = "e2-small"
       disk_type    = "pd-standard"
       disk_size_gb = 10
     },
@@ -69,7 +74,9 @@ module "mysql" {
   # Cloud SQL - Network
   #################################################
   sql_availability_type = "ZONAL" # ZONAL / REGIONAL
-  sql_ipv4_enabled      = false
+
+  # 以下どちらか
+  sql_ipv4_enabled      = true
   sql_private_network   = ""
 
   #################################################

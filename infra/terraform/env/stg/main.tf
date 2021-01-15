@@ -1,3 +1,8 @@
+provider "google" {
+  project = var.project_id
+  region  = local.region
+}
+
 provider "google-beta" {
   project = var.project_id
   region  = local.region
@@ -19,7 +24,7 @@ module "gke" {
   gke_cluster_name        = "gran-book-stg-cluster"
   gke_cluster_description = "gran-book-stg application cluster for staging"
 
-  gke_cluster_min_master_version = "1.18.12-gke.1201"
+  gke_cluster_min_master_version = "1.17.14-gke.400"
 
   #################################################
   # GKE Node
@@ -35,9 +40,9 @@ module "gke" {
     },
     {
       name         = "gran-book-stg-spot-node"
-      count        = 1
+      count        = 2
       preemptible  = true
-      machine_type = "e2-medium"
+      machine_type = "e2-small"
       disk_type    = "pd-standard"
       disk_size_gb = 10
     },
@@ -59,7 +64,7 @@ module "mysql" {
   #################################################
   # Cloud SQL - Instance
   #################################################
-  sql_instance_name          = "gran-book-stg-mysql"
+  sql_instance_name          = "gran-book-stg-db"
   sql_instance_root_password = var.sql_instance_root_password
 
   sql_instance_database_version = "MYSQL_8_0"
@@ -69,7 +74,9 @@ module "mysql" {
   # Cloud SQL - Network
   #################################################
   sql_availability_type = "ZONAL" # ZONAL / REGIONAL
-  sql_ipv4_enabled      = false
+
+  # 以下どちらか
+  sql_ipv4_enabled      = true
   sql_private_network   = ""
 
   #################################################

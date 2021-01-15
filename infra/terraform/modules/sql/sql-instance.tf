@@ -2,8 +2,10 @@
 # Cloud SQL - Instance
 ##################################################
 resource "google_sql_database_instance" "this" {
+  provider = google-beta
+
   name                 = var.sql_instance_name
-  master_instance_name = var.sql_instance_name
+  # master_instance_name = var.sql_instance_name
   region               = var.region
 
   database_version = var.sql_instance_database_version
@@ -21,7 +23,7 @@ resource "google_sql_database_instance" "this" {
 
     ip_configuration {
       ipv4_enabled = var.sql_ipv4_enabled
-      private_network = var.sql_ipv4_enabled ? var.sql_private_network : null
+      private_network = var.sql_ipv4_enabled ? null : var.sql_private_network
     }
 
     backup_configuration {
