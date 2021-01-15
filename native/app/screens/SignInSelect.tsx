@@ -44,7 +44,8 @@ const SignInSelect = function SignInSelect(props: Props): ReactElement {
         <Text style={styles.text}>サインイン及び新規登録について、Gran Bookの利用規約及び個人情報の取り扱いについて、アプリケーションプライバシーポリシーに同意するものとします。</Text>
       </View>
       <SignInButtonGroup
-        handleRegisterMailButton={() => navigation.navigate('SignUp')}
+        handleRegisterWithMail={() => navigation.navigate('SignUp')}
+        handleSignInWithMail={() => navigation.navigate('SignIn')}
       />
     </View>
   );

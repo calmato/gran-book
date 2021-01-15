@@ -2,41 +2,44 @@ import { Ionicons } from '@expo/vector-icons';
 import React, { ReactElement } from 'react';
 import { StyleSheet, ViewStyle } from 'react-native';
 import { Button } from 'react-native-elements';
-import { SOCIAL_BUTTON } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
   buttonStyle: {
-    ...SOCIAL_BUTTON,
+    justifyContent: 'flex-end'
+  },
+  titleStyle: {
+    fontWeight: 'normal',
+    fontSize: 14,
+    color: 'black'
   },
   iconStyle: {
-    marginRight: 10
-  }
+    marginLeft: 10
+  },
 });
 
 interface Props {
-  style?: ViewStyle,
-  onPress: () => void,
+  style?: ViewStyle
 }
 
-const MailSignInButton = function MailSignInButton(props: Props): ReactElement {
+const ForgotPasswoedButton = function ForgotPasswoedButton(props:Props): ReactElement{
   return (
     <Button
       icon={
         <Ionicons
-          name="md-mail"
+          name="chevron-forward-outline"
           size={24}
-          color="white"
+          color="black"
           style={styles.iconStyle}
         />
       }
       buttonStyle={styles.buttonStyle}
+      iconRight={true}
       containerStyle={props.style}
-      onPress={props.onPress}
-      title="メールアドレスでサインイン"
+      title="パスワードを忘れた方"
+      titleStyle={styles.titleStyle}
+      type={'clear'}
     />
   );
 };
 
-// MailSignInButton.defaultProps={}
-
-export default MailSignInButton;
+export default ForgotPasswoedButton;
