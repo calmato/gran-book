@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: user-api
+  template:
+    metadata:
+      labels:
+        app: user-api
+    spec:
+      containers:
+      - name: user-api
+        image: asia.gcr.io/<PROJECT-ID>/user-api:latest
+        imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: 50m
+            memory: 128Mi
+        ports:
+        - name: default
+          containerPort: 8080
+        # TODO: readinessProbe
+        env:
+        - name: PORT
+          value: '8080'
+        - name: LOG_PATH
+          value: '/var/log'
+        - name: LOG_LEVEL
+          value: 'info'
+        - name: DB_SOCKET
+          value: 'unix'
+        - name: DB_HOST
+          valueFrom:
+            secretKeyRef:
+              name: gcp-secret
+              key: USER_DB_HOST
+        - name: DB_PORT
+          valueFrom:
+            secretKeyRef:
+              name: gcp-secret
+              key: USER_DB_PORT
+        - name: DB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: gcp-secret
+              key: USER_DB_USERNAME
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: gcp-secret
+              key: USER_DB_PASSWORD
+        - name: DB_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: gcp-secret
+              key: USER_DB_DATABASE
+        - name: GCP_SERVICE_KEY_JSON
+          valueFrom:
+            secretKeyRef:
+              name: gcp-secret
+              key: GCP_SERVICE_KEY_JSON
+        - name: GCP_STORAGE_BUCKET_NAME
+          valueFrom:
+            secretKeyRef:
+              name: gcp-secret
+              key: GCP_STORAGE_BUCKET_NAME
