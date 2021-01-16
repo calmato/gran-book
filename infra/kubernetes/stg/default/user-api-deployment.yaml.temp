@@ -38,11 +38,6 @@ spec:
             secretKeyRef:
               name: gcp-secret
               key: USER_DB_HOST
-        - name: DB_PORT
-          valueFrom:
-            secretKeyRef:
-              name: gcp-secret
-              key: USER_DB_PORT
         - name: DB_USERNAME
           valueFrom:
             secretKeyRef:
