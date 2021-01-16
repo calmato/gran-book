@@ -1,0 +1,7 @@
+!*.yaml.temp
+
+*-deployment.yaml
+*-secret.yaml
+
+cert.pem
+privkey.pem
