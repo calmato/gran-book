@@ -51,7 +51,7 @@ module "gke" {
   #################################################
   # GCE Global Address
   #################################################
-  create_global_address = true
+  create_global_address = false
 
   global_address_name = "gran-book-stg-ip-address"
 }
