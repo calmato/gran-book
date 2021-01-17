@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kubeip-config
+  namespace: kube-system
+  labels:
+    app: gran-book
+data:
+  KUBEIP_LABELKEY: kubeip
+  KUBEIP_LABELVALUE: gran-book-stg-cluster
+  KUBEIP_NODEPOOL: gran-book-stg-node
+  KUBEIP_FORCEASSIGNMENT: 'true'
+  KUBEIP_ADDITIONALNODEPOOLS: ''
+  KUBEIP_TICKER: '5'
+  KUBEIP_ALLNODEPOOLS: 'false'

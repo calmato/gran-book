@@ -1,0 +1,17 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: traefik
+  labels:
+    app: gran-book
+    service: ingress
+spec:
+  entryPoints:
+  - web
+  routes:
+  - match: PathPrefix(`/`)
+    kind: Rule
+    services:
+    - kind: Service
+      name: gateway
+      port: 8080
