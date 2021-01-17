@@ -2,15 +2,21 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: gateway
+  labels:
+    app: gran-book
+    service: gateway
+    version: v1
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: gateway
+      service: gateway
+      version: v1
   template:
     metadata:
       labels:
-        app: gateway
+        service: gateway
+        version: v1
     spec:
       containers:
       - name: gateway

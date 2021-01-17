@@ -1,16 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: user-api
+  name: user-api-v1
+  labels:
+    app: gran-book
+    service: users
+    version: v1
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: user-api
+      service: user-api
+      version: v1
   template:
     metadata:
       labels:
-        app: user-api
+        service: user-api
+        version: v1
     spec:
       containers:
       - name: user-api
