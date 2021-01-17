@@ -17,7 +17,7 @@ resource "google_container_cluster" "this" {
 
   addons_config {
     istio_config {
-      disabled = false
+      disabled = var.gke_cluster_istio_disabled
     }
   }
 }

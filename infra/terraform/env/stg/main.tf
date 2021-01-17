@@ -25,6 +25,7 @@ module "gke" {
   gke_cluster_description = "gran-book-stg application cluster for staging"
 
   gke_cluster_min_master_version = "1.17.14-gke.400"
+  gke_cluster_istio_disabled     = true
 
   #################################################
   # GKE Node
