@@ -11,7 +11,7 @@ spec:
   type: ClusterIP
   clusterIP: None
   ports:
-  - name: grpc
+  - name: http
     protocol: TCP
     port: 8080
     targetPort: 8080
