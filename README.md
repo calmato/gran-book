@@ -40,6 +40,7 @@
 FIREBASE_API_KEY=xxxxxx
 FIREBASE_PROJECT_ID=xxxxxx
 FIREBASE_MESSAGING_SENDER_ID=xxxxxx
+...
 ```
 
 * secretディレクトリのファイルを.envへ書き込み
@@ -62,14 +63,19 @@ FIREBASE_MESSAGING_SENDER_ID=xxxxxx
 <details>
 <summary>コマンド一覧</summary>
 
-|   Commands   |                                      Description                                       |
-| :----------- | :------------------------------------------------------------------------------------- |
-| make setup   | * 初回のみ実行                                                                         |
-| make install | * コンテナ内にライブラリをインストール<br>* ライブラリを更新する際はこのコマンドを使用 |
-| make start   | * コンテナの起動                                                                       |
-| make stop    | * コンテナの停止                                                                       |
-| make remove  | * コンテナの削除                                                                       |
-| make logs    | * コンテナのログを取得                                                                 |
+|     Commands      |              Description               |
+| :---------------- | :------------------------------------- |
+| make setup        | * 初回のみ実行                         |
+| make build        | * コンテナの再構築                     |
+| make install      | * コンテナ内にライブラリをインストール |
+| make start        | * コンテナを起動                       |
+| make start-native | * ネイティブアプリ関連のコンテナを起動 |
+| make start-admin  | * 管理者コンソール関連のコンテナを起動 |
+| make start-api    | * Swaggerのコンテナを起動              |
+| make start        | * コンテナを起動                       |
+| make stop         | * コンテナの停止                       |
+| make remove       | * コンテナの削除                       |
+| make logs         | * コンテナのログを取得                 |
 
 </details>
 

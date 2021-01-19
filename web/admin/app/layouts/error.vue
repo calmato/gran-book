@@ -1,5 +1,5 @@
 <template>
-  <v-app dark>
+  <v-app>
     <h1 v-if="error.statusCode === 404">
       {{ pageNotFound }}
     </h1>
@@ -10,28 +10,35 @@
   </v-app>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { defineComponent, useMeta } from '@nuxtjs/composition-api'
+
+export default defineComponent({
   layout: 'empty',
+  head: {},
+
   props: {
     error: {
       type: Object,
       default: null,
     },
   },
-  data() {
+
+  setup(props) {
+    const { error } = props
+    const pageNotFound: string = '404 Not Found'
+    const otherError: string = 'An error occurred'
+
+    useMeta(() => ({
+      title: error.statusCode === 404 ? pageNotFound : otherError,
+    }))
+
     return {
-      pageNotFound: '404 Not Found',
-      otherError: 'An error occurred',
+      pageNotFound,
+      otherError,
     }
   },
-  head() {
-    const title = this.error.statusCode === 404 ? this.pageNotFound : this.otherError
-    return {
-      title,
-    }
-  },
-}
+})
 </script>
 
 <style scoped>

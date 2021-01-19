@@ -6,7 +6,9 @@ const (
 	EqFieldTag  = "eqfield"
 	MinTag      = "min"
 	MaxTag      = "max"
+	Base64Tag   = "base64"
 	EmailTag    = "email"
+	HiraganaTag = "hiragana"
 	PasswordTag = "password"
 	UniqueTag   = "unique"
 )
@@ -17,7 +19,9 @@ const (
 	EqFieldMessage  = "does not match %s"
 	MinMessage      = "must be at least %s characters"
 	MaxMessage      = "must be at %s or less characters"
+	Base64Message   = "should be in base64 format"
 	EmailMessage    = "should be in email format"
+	HiraganaMessage = "should be in hiragana format"
 	PasswordMessage = "should be in password format"
 	UniqueMessage   = "must be unique"
 )

@@ -1,0 +1,91 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: user-api
+  template:
+    metadata:
+      labels:
+        app: user-api
+    spec:
+      containers:
+      - name: user-api
+        image: asia.gcr.io/<PROJECT-ID>/user-api:latest
+        imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: 50m
+            memory: 128Mi
+        ports:
+        - name: default
+          containerPort: 8080
+        # TODO: readinessProbe
+        env:
+        - name: PORT
+          value: '8080'
+        - name: LOG_PATH
+          value: '/var/log'
+        - name: LOG_LEVEL
+          value: 'info'
+        - name: DB_HOST
+          value: '127.0.0.1'
+        - name: DB_PORT
+          value: '3306'
+        - name: DB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: user-api-secret
+              key: DB_USERNAME
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: user-api-secret
+              key: DB_PASSWORD
+        - name: DB_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: user-api-secret
+              key: DB_DATABASE
+        - name: GCP_SERVICE_KEY_JSON
+          valueFrom:
+            secretKeyRef:
+              name: common-secret
+              key: gcp-service-key.json
+        - name: GCP_STORAGE_BUCKET_NAME
+          valueFrom:
+            secretKeyRef:
+              name: common-secret
+              key: GCP_STORAGE_BUCKET_NAME
+      - name: cloud-sql-proxy
+        image: gcr.io/cloudsql-docker/gce-proxy:1.19.1-alpine
+        resources:
+          limits:
+            cpu: 50m
+            memory: 64Mi
+        securityContext:
+          runAsNonRoot: true
+        env:
+        - name: INSTANCE_CONNECTION_NAME
+          valueFrom:
+            secretKeyRef:
+              name: user-api-secret
+              key: INSTANCE_CONNECTION_NAME
+        volumeMounts:
+        - name: gcp-secret-volume
+          mountPath: /secrets/
+          readOnly: true
+        command:
+        - "/cloud_sql_proxy"
+        - "-instances=$(INSTANCE_CONNECTION_NAME)=tcp:3306"
+        - "-credential_file=/secrets/gcp-service-key.json"
+      volumes:
+      - name: gcp-secret-volume
+        secret:
+          secretName: common-secret
+          items:
+          - key: gcp-service-key.json
+            path: gcp-service-key.json
