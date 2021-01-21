@@ -14,9 +14,11 @@ get-external-ip:
 .PHONY: generate-parivate-key generate-manifest generate-manifest-all
 
 generate-private-key:
-	openssl req -x509 -nodes \
-		-newkey rsa:2048 -days 365 \
-		-keyout privkey.pem -out cert.pem \
+	mkdir -p $(PWD)/tmp/${EXTERNAL_IP}
+	openssl req \
+		-x509 -nodes -newkey rsa:2048 -days 365 \
+		-keyout $(PWD)/tmp/${EXTERNAL_IP}/privkey.pem \
+		-out $(PWD)/tmp/${EXTERNAL_IP}/cert.pem \
 		-subj "/CN=${EXTERNAL_IP}"
 
 generate-manifest:
