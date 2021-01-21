@@ -26,14 +26,14 @@ data:
     }
 
     server {
-      listen            443;
+      listen            443 ssl;
       server_name       0.0.0.0;
       keepalive_timeout 300;
 
       ssl_protocols              TLSv1.2;
       ssl_prefer_server_ciphers  on;
-      ssl_certificate            /etc/nginx/cert/cert.pem;
-      ssl_certificate_key        /etc/nginx/cert/privkey.pem;
+      ssl_certificate            /etc/tls/cert.pem;
+      ssl_certificate_key        /etc/tls/privkey.pem;
 
       location / {
         set $upsteam http://grpc-gateway.default.svc.cluster.local:8080;
