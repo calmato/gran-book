@@ -65,7 +65,7 @@ module "mysql" {
   #################################################
   # Cloud SQL - Instance
   #################################################
-  sql_instance_name          = "gran-book-stg-db"
+  sql_instance_name          = "gran-book-mysql"
   sql_instance_root_password = var.sql_instance_root_password
 
   sql_instance_database_version = "MYSQL_8_0"

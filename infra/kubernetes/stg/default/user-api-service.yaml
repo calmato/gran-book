@@ -8,7 +8,7 @@ metadata:
 spec:
   selector:
     app: user-api
-  type: ClusterIP
+  # type: ClusterIP
   clusterIP: None
   ports:
   - name: grpc

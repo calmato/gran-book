@@ -1,14 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: gateway
+  name: grpc-gateway
   labels:
-    app: gran-book
-    service: gateway
+    api: grpc-gateway
 spec:
   selector:
-    app: gateway
-  type: ClusterIP
+    app: grpc-gateway
+  # type: ClusterIP
   clusterIP: None
   ports:
   - name: http
