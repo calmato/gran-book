@@ -1,25 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: gateway
+  name: grpc-gateway
   labels:
-    app: gran-book
-    service: gateway
+    app: grpc-gateway
     version: v1
 spec:
   replicas: 2
   selector:
     matchLabels:
-      service: gateway
+      app: grpc-gateway
       version: v1
   template:
     metadata:
       labels:
-        service: gateway
+        app: grpc-gateway
         version: v1
     spec:
       containers:
-      - name: gateway
+      - name: grpc-gateway
         image: asia.gcr.io/<PROJECT-ID>/gateway:latest
         imagePullPolicy: Always
         resources:
@@ -38,4 +37,4 @@ spec:
         - name: SSL_VALIDATION
           value: 'true'
         - name: USER_API_URL
-          value: 'user-api:8080'
+          value: 'user-api.default.svc.cluster.local:8080'

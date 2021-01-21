@@ -1,21 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: user-api-v1
+  name: user-api
   labels:
-    app: gran-book
-    service: users
+    app: user-api
     version: v1
 spec:
   replicas: 2
   selector:
     matchLabels:
-      service: user-api
+      app: user-api
       version: v1
   template:
     metadata:
       labels:
-        service: user-api
+        app: user-api
         version: v1
     spec:
       containers:
@@ -24,7 +23,7 @@ spec:
         imagePullPolicy: Always
         resources:
           limits:
-            cpu: 50m
+            cpu: 100m
             memory: 128Mi
         ports:
         - name: default
