@@ -21,39 +21,39 @@
   > $ gcloud init
 
 2. GKE用の証明書取得
-  > $ gcloud container clusters get-credentials <gke-cluster-name> \
-  >   --zone <zone> \
-  >   --project<project-id>
+  > $ gcloud container clusters get-credentials [gke-cluster-name] \  
+  >   --zone [zone] \  
+  >   --project [project-id]
 
 ### Let's Encryptの設定
 
 1. テスト実行
-  > $ certbot certonly \
-  >   --dry-run \
-  >   --manual \
-  >   --agree-tos \
-  >   --no-eff-email \
-  >   --manual-public-ip-logging-ok \
-  >   --preferred-challenges dns-01 \
-  >   --server https://acme-v02.api.letsencrypt.org/directory \
-  >   --manual-auth-hook /var/scripts/certbot-auth-hook.sh \
-  >   --manual-cleanup-hook /var/scripts/certbot-cleanup-hook.sh \
-  >   -m "<email>" \
-  >   -d "<domain>"
+  > $ certbot certonly \  
+  >   --dry-run \  
+  >   --manual \  
+  >   --agree-tos \  
+  >   --no-eff-email \  
+  >   --manual-public-ip-logging-ok \  
+  >   --preferred-challenges dns-01 \  
+  >   --server https://acme-v02.api.letsencrypt.org/directory \  
+  >   --manual-auth-hook /var/scripts/certbot-auth-hook.sh \  
+  >   --manual-cleanup-hook /var/scripts/certbot-cleanup-hook.sh \  
+  >   -m "[email]" \  
+  >   -d "[domain]"
 
 2. 証明書の発行
-  > $ certbot certonly \
-  >   --manual \
-  >   --agree-tos \
-  >   --no-eff-email \
-  >   --manual-public-ip-logging-ok \
-  >   --manual-public-ip-logging-ok \
-  >   --preferred-challenges dns-01 \
-  >   --server https://acme-v02.api.letsencrypt.org/directory \
-  >   --manual-auth-hook /var/scripts/certbot-auth-hook.sh \
-  >   --manual-cleanup-hook /var/scripts/certbot-cleanup-hook.sh \
-  >   -m "<email>" \
-  >   -d "<domain>"
+  > $ certbot certonly \  
+  >   --manual \  
+  >   --agree-tos \  
+  >   --no-eff-email \  
+  >   --manual-public-ip-logging-ok \  
+  >   --manual-public-ip-logging-ok \  
+  >   --preferred-challenges dns-01 \  
+  >   --server https://acme-v02.api.letsencrypt.org/directory \  
+  >   --manual-auth-hook /var/scripts/certbot-auth-hook.sh \  
+  >   --manual-cleanup-hook /var/scripts/certbot-cleanup-hook.sh \  
+  >   -m "[email]" \  
+  >   -d "[domain]>"
 
 3. 証明書更新のテスト実行
   > $ certbot renew --force-renewal --dry-run
@@ -65,6 +65,14 @@
 
 2. サービスの再起動
   > $ systemctl restart cron.service
+
+### Nginxの設定
+
+1. 設定ファイルをscpで転送
+  > $ scp infra/server/config/nginx.conf [account]@[ip-addr]:/etc/nginx/conf.d/default.conf
+
+2. サービスの再起動
+  > $ systemctl restart nginx.service
 
 ---
 
