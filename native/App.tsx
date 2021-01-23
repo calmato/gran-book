@@ -6,6 +6,7 @@ import Onboarding from '~/screens/Onboarding';
 import { RootStackParamList } from '~/types/navigation';
 import { THEME } from '~~/constants/theme';
 import AuthRoute from '~/routes/AuthRoute';
+import MyPage from'~/screens/MyPage';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -19,7 +20,7 @@ const App = function App(): ReactElement {
             headerShown: false
           }}
         >
-          <Stack.Screen name="Onboarding" component={Onboarding} />
+          <Stack.Screen name="MyPage" component={MyPage} />
           <Stack.Screen name="SignInSelect" component={AuthRoute} />
         </Stack.Navigator>
       </NavigationContainer>

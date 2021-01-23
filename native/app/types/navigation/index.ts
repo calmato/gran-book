@@ -1,5 +1,6 @@
 export type RootStackParamList = {
   Onboarding: undefined,
+  MyPage: undefined
   SignInSelect: undefined,
 }
 
