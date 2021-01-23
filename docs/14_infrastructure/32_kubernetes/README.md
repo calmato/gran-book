@@ -4,7 +4,12 @@
 / [14_infrastructure](./../README.md) 
 / [32_kubernetes](./README.md)
 
-# 各種ドキュメント
+## 実装メモ
+
+* コスト削減のためのメモ
+  > $ kubectl scale --replicas=0 deployment/l7-default-backend --namespace=kube-system
+
+* kubeipとnginxのデプロイ
 
 ## 参考
 
