@@ -18,7 +18,7 @@ if [ "${USER}"  != "root" ]; then
 fi
 
 ### Packages
-apt upgrade -y && apt update -y
+apt update -y && apt upgrade -y
 apt install -y \
   apt-transport-https \
   bash-completion \
@@ -34,6 +34,7 @@ apt install -y \
   make \
   net-tools \
   openssl \
+  software-properties-common \
   traceroute \
   tree \
   unzip \
@@ -47,8 +48,8 @@ localectl set-x11-keymap jp
 timedatectl set-timezone Asia/Tokyo
 
 ### Cloud SDK
-echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
 curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
+echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
 apt update -y
 apt install -y google-cloud-sdk
 
@@ -61,6 +62,17 @@ apt install -y kubectl
 ### Let's Encrypt (Certbot)
 apt install -y certbot
 
+### Nginx
+apt install -y nginx
+
+### Grafana
+wget -q -O - https://packages.grafana.com/gpg.key | sudo apt-key add -
+echo "deb https://packages.grafana.com/oss/deb stable main" | sudo tee -a /etc/apt/sources.list.d/grafana.list
+apt update -y
+apt install -y grafana
+
 ### Service
 systemctl disable --now ufw.service
 systemctl restart rsyslog.service
+systemctl enable --now nginx.service
+systemctl enable --now grafana-server.service

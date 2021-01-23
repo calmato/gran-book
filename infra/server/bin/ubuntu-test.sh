@@ -99,6 +99,7 @@ done
 ### Package
 output_label 'Package'
 output_stdout 'dpkg -l'
+output_stdout 'snap list'
 
 ### User Group
 output_label 'User Group'
