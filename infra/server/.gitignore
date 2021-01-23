@@ -1,0 +1,5 @@
+bin/certbot-auth-hook.sh
+bin/certbot-cleanup-hook.sh
+bin/update-certificate.sh
+
+config/nginx.conf

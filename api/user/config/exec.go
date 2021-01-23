@@ -6,6 +6,7 @@ import (
 	"github.com/calmato/gran-book/api/user/internal/infrastructure/repository"
 	"github.com/calmato/gran-book/api/user/lib/firebase"
 	"github.com/calmato/gran-book/api/user/lib/firebase/authentication"
+	"github.com/calmato/gran-book/api/user/lib/firebase/storage"
 	"github.com/calmato/gran-book/api/user/registry"
 	"google.golang.org/api/option"
 )
@@ -42,7 +43,13 @@ func Execute() error {
 		return err
 	}
 
-	reg := registry.NewRegistry(db, fa)
+	// Cloud Storageの設定
+	gcs, err := storage.NewClient(ctx, fb.App, env.GCPStorageBucketName)
+	if err != nil {
+		return err
+	}
+
+	reg := registry.NewRegistry(db, fa, gcs)
 
 	// gRPC Serverの設定取得
 	gs, err := newGRPCServer(env.Port, env.LogPath, env.LogLevel, reg)

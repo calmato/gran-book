@@ -4,23 +4,32 @@ import (
 	"context"
 	"time"
 
-	"github.com/calmato/gran-book/api/user/internal/domain/exception"
 	"github.com/calmato/gran-book/api/user/internal/domain/user"
 	"github.com/google/uuid"
-	"golang.org/x/xerrors"
 )
 
 type userService struct {
 	userDomainValidation user.Validation
 	userRepository       user.Repository
+	userUploader         user.Uploader
 }
 
 // NewUserService - UserServiceの生成
-func NewUserService(udv user.Validation, ur user.Repository) user.Service {
+func NewUserService(udv user.Validation, ur user.Repository, uu user.Uploader) user.Service {
 	return &userService{
 		userDomainValidation: udv,
 		userRepository:       ur,
+		userUploader:         uu,
 	}
+}
+
+func (s *userService) Authentication(ctx context.Context) (*user.User, error) {
+	u, err := s.userRepository.Authentication(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return u, nil
 }
 
 func (s *userService) Create(ctx context.Context, u *user.User) error {
@@ -35,11 +44,24 @@ func (s *userService) Create(ctx context.Context, u *user.User) error {
 	u.CreatedAt = current
 	u.UpdatedAt = current
 
-	err = s.userRepository.Create(ctx, u)
+	return s.userRepository.Create(ctx, u)
+}
+
+func (s *userService) Update(ctx context.Context, u *user.User) error {
+	err := s.userDomainValidation.User(ctx, u)
 	if err != nil {
-		err = xerrors.Errorf("Failed to CreateUser for Repository: %w", err)
-		return exception.ErrorInDatastore.New(err)
+		return err
 	}
 
-	return nil
+	u.UpdatedAt = time.Now()
+
+	return s.userRepository.Update(ctx, u)
+}
+
+func (s *userService) UpdatePassword(ctx context.Context, uid string, password string) error {
+	return s.userRepository.UpdatePassword(ctx, uid, password)
+}
+
+func (s *userService) UploadThumbnail(ctx context.Context, uid string, thumbnail []byte) (string, error) {
+	return s.userUploader.Thumbnail(ctx, uid, thumbnail)
 }

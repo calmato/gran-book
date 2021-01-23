@@ -2,6 +2,8 @@
 # GKE Cluster
 #################################################
 resource "google_container_cluster" "this" {
+  provider = google-beta
+
   name        = var.gke_cluster_name
   description = var.gke_cluster_description
 
@@ -12,4 +14,10 @@ resource "google_container_cluster" "this" {
 
   remove_default_node_pool = true
   initial_node_count       = 1
+
+  addons_config {
+    istio_config {
+      disabled = var.gke_cluster_istio_disabled
+    }
+  }
 }

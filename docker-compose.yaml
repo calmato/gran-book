@@ -48,8 +48,9 @@ services:
     environment:
       - PORT=8080
       - LOG_PATH=/var/log/gateway
-      - LOG_LEVEL=debug
-      - USER_API_URL=user_api:8080
+      - LOG_LEVEL=${LOG_LEVEL}
+      - SSL_VALIDATION=${SSL_VALIDATION}
+      - USER_API_URL=${USER_API_URL}
     ports:
       - 8080:8080
     networks:
@@ -70,13 +71,14 @@ services:
     environment:
       - PORT=8080
       - LOG_PATH=/var/log/api
-      - LOG_LEVEL=debug
-      - DB_HOST=mysql
-      - DB_PORT=3306
-      - DB_USERNAME=root
-      - DB_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - DB_DATABASE=users
+      - LOG_LEVEL=${LOG_LEVEL}
+      - DB_HOST=${MYSQL_HOST}
+      - DB_PORT=${MYSQL_PORT}
+      - DB_USERNAME=${MYSQL_USERNAME}
+      - DB_PASSWORD=${MYSQL_PASSWORD}
+      - DB_DATABASE=${MYSQL_USER_DATABASE}
       - GCP_SERVICE_KEY_JSON=${GCP_SERVICE_KEY_JSON}
+      - GCP_STORAGE_BUCKET_NAME=${GCP_STORAGE_BUCKET_NAME}
     networks:
       - api
       - monitoring
@@ -96,7 +98,7 @@ services:
       - ./tmp/logs/mysql:/var/log/mysql:delegated
       - ./tmp/data/mysql:/var/lib/mysql:delegated
     environment:
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD}
     ports:
       - 3316:3306
     networks:
@@ -136,7 +138,6 @@ services:
     working_dir: /go/src/github.com/calmato/gran-book/proto
     volumes:
       - ./proto:/go/src/github.com/calmato/gran-book/proto:cached
-      - ./api/hello:/go/src/github.com/calmato/gran-book/api/hello:cached
       - ./api/user:/go/src/github.com/calmato/gran-book/api/user:cached
       - ./docs/12_backend/11_swagger:/go/src/github.com/calmato/gran-book/docs/12_backend/11_swagger:cached
       - ./infra/gateway:/go/src/github.com/calmato/gran-book/infra/gateway:cached
@@ -145,14 +146,37 @@ services:
   swagger:
     container_name: gran_book_swagger
     build:
-      context: ./infra/docker/infra/swagger
+      context: ./infra/docker/infra/swagger_ui
       dockerfile: Dockerfile
     volumes:
-      - ./docs/12_backend/11_swagger/apiv1.swagger.json:/var/swagger/apiv1.json:cached
+      - ./docs/12_backend/11_swagger/apiv1.openapi.yaml:/var/swagger/swagger.yaml:cached
     ports:
       - 8000:8080
     environment:
-      SWAGGER_JSON: /var/swagger/apiv1.json
+      SWAGGER_JSON: /var/swagger/swagger.yaml
+
+  swagger_editor:
+    container_name: gran_book_swagger_editor
+    build:
+      context: ./infra/docker/infra/swagger_editor
+      dockerfile: Dockerfile
+    ports:
+      - 8001:8080
+
+  terraform:
+    container_name: gran_book_terraform
+    build:
+      context: ./infra/docker/infra/terraform
+      dockerfile: Dockerfile
+    working_dir: /var/terraform
+    volumes:
+      - ./infra/terraform:/var/terraform:cached
+      - ./secrets:/secrets
+    tty: true
+    stdin_open: true
+    environment:
+      - GOOGLE_CLOUD_KEYFILE_JSON=${TERRAFORM_CREDENTIALS}
+      - GOOGLE_APPLICATION_CREDENTIALS=${TERRAFORM_CREDENTIALS}
 
 networks:
   api:
