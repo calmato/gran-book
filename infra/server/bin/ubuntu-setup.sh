@@ -53,6 +53,11 @@ echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.clou
 apt update -y
 apt install -y google-cloud-sdk
 
+### Cloud Proxy
+# wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy
+# chmod +x cloud_sql_proxy
+# mv ./cloud_sql_proxy /usr/local/bin/cloud_sql_proxy
+
 ### kubectl
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
 echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
@@ -65,6 +70,9 @@ apt install -y certbot
 ### Nginx
 apt install -y nginx
 
+### Prometheus
+apt install -y prometheus prometheus-node-exporter
+
 ### Grafana
 wget -q -O - https://packages.grafana.com/gpg.key | sudo apt-key add -
 echo "deb https://packages.grafana.com/oss/deb stable main" | sudo tee -a /etc/apt/sources.list.d/grafana.list
@@ -76,3 +84,4 @@ systemctl disable --now ufw.service
 systemctl restart rsyslog.service
 systemctl enable --now nginx.service
 systemctl enable --now grafana-server.service
+systemctl enable --now prometheus prometheus-node-exporter
