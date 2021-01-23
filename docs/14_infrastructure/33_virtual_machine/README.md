@@ -11,6 +11,9 @@
 1. [ubuntu-setup.sh](./../../../infra/server/bin/ubuntu-setup.sh) をscpで転送
 2. root権限に昇格
 3. スクリプトの実行
+4. [Cloud SDKの設定](#cloud-sdkの設定)
+5. [Let's Encryptの設定](#lets-encryptの設定)
+6. [Cronの設定](#cronの設定)
 
 ### Cloud SDKの設定
 
@@ -31,9 +34,12 @@
   >   --agree-tos \
   >   --no-eff-email \
   >   --manual-public-ip-logging-ok \
-  >   --preferred-challenges dns \
+  >   --preferred-challenges dns-01 \
+  >   --server https://acme-v02.api.letsencrypt.org/directory \
+  >   --manual-auth-hook /var/scripts/certbot-auth-hook.sh \
+  >   --manual-cleanup-hook /var/scripts/certbot-cleanup-hook.sh \
   >   -m "<email>" \
-  >   -d "<domain>" \
+  >   -d "<domain>"
 
 2. 証明書の発行
   > $ certbot certonly \
@@ -41,12 +47,24 @@
   >   --agree-tos \
   >   --no-eff-email \
   >   --manual-public-ip-logging-ok \
-  >   --preferred-challenges dns \
+  >   --manual-public-ip-logging-ok \
+  >   --preferred-challenges dns-01 \
+  >   --server https://acme-v02.api.letsencrypt.org/directory \
+  >   --manual-auth-hook /var/scripts/certbot-auth-hook.sh \
+  >   --manual-cleanup-hook /var/scripts/certbot-cleanup-hook.sh \
   >   -m "<email>" \
-  >   -d "<domain>" \
+  >   -d "<domain>"
 
 3. 証明書更新のテスト実行
-  > $ certbot renew
+  > $ certbot renew --force-renewal --dry-run
+
+### Cronの設定
+
+1. 設定ファイルの編集
+  > $ vi /etc/crontab
+
+2. サービスの再起動
+  > $ systemctl restart cron.service
 
 ---
 
