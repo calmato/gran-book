@@ -9,6 +9,7 @@ import { ISignInForm } from '~/types/forms'
 import SignIn from '~/components/templates/SignIn.vue'
 
 export default defineComponent({
+  layout: 'auth',
   components: {
     SignIn,
   },
