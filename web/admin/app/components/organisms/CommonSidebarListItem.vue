@@ -11,12 +11,12 @@
 
 <script lang="ts">
 import { defineComponent, SetupContext, PropType } from '@nuxtjs/composition-api'
-import { ISidebarLink } from '~/types/props'
+import { ISidebarListItem } from '~/types/props'
 
 export default defineComponent({
   props: {
     item: {
-      type: Object as PropType<ISidebarLink>,
+      type: Object as PropType<ISidebarListItem>,
       required: false,
       default: () => ({ icon: '', text: '', link: '' }),
     },

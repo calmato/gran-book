@@ -38,7 +38,7 @@
 <script lang="ts">
 import { defineComponent, SetupContext } from '@nuxtjs/composition-api'
 import CommonSidebarListItem from '~/components/organisms/CommonSidebarListItem.vue'
-import { ISidebarLink } from '~/types/props'
+import { ISidebarListItem } from '~/types/props'
 
 export default defineComponent({
   components: {
@@ -56,26 +56,26 @@ export default defineComponent({
   setup(props, { emit }: SetupContext) {
     const { current } = props
 
-    const commonItems: ISidebarLink[] = [{ icon: 'mdi-home', text: 'ホーム', link: '/' }]
-    const maintenanceItems: ISidebarLink[] = [
+    const commonItems: ISidebarListItem[] = [{ icon: 'mdi-home', text: 'ホーム', link: '/' }]
+    const maintenanceItems: ISidebarListItem[] = [
       { icon: 'mdi-cart', text: 'お取り引き管理', link: '/' },
       { icon: 'mdi-forum', text: 'お問い合わせ管理', link: '/' },
       { icon: 'mdi-bell-ring', text: 'お知らせ管理', link: '/' },
       { icon: 'mdi-cash-100', text: 'セール情報管理', link: '/' },
     ]
-    const developerItems: ISidebarLink[] = [
+    const developerItems: ISidebarListItem[] = [
       { icon: 'mdi-account', text: '利用者管理', link: '/' },
       { icon: 'mdi-book', text: '書籍管理', link: '/' },
       { icon: 'mdi-store', text: 'ECサイト管理', link: '/' },
     ]
-    const systemItems: ISidebarLink[] = [
+    const systemItems: ISidebarListItem[] = [
       { icon: 'mdi-shield-account', text: '管理者管理', link: '/' },
       { icon: 'mdi-cog', text: 'システム設定', link: '/system' },
     ]
 
     // list item内でactiveになってる箇所をPathから判定
-    const items: ISidebarLink[] = commonItems.concat(maintenanceItems, developerItems, systemItems)
-    const target: ISidebarLink[] = items
+    const items: ISidebarListItem[] = commonItems.concat(maintenanceItems, developerItems, systemItems)
+    const target: ISidebarListItem[] = items
       .filter((item) => {
         return item.link === current
       })
