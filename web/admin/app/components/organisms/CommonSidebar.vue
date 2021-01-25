@@ -75,13 +75,13 @@ export default defineComponent({
 
     // list item内でactiveになってる箇所をPathから判定
     const items: ISidebarListItem[] = commonItems.concat(maintenanceItems, developerItems, systemItems)
-    const target: ISidebarListItem[] = items
-      .filter((item) => {
+    const target: ISidebarListItem | undefined = items
+      .filter((item: ISidebarListItem) => {
         return item.link === current
       })
       .shift()
 
-    const selectedItem = items.indexOf(target)
+    const selectedItem: number = target ? items.indexOf(target) : -1
 
     const onClick = (link: string) => {
       emit('click', link)
