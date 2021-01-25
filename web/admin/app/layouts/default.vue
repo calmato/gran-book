@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <common-header />
-    <common-sidebar @click="handleClick" />
+    <common-sidebar :current="current" @click="handleClick" />
     <v-main>
       <nuxt />
     </v-main>
@@ -21,12 +21,14 @@ export default defineComponent({
 
   setup(_, { root }: SetupContext) {
     const router = root.$router
+    const current = root.$route.path
 
     const handleClick = (link: string): void => {
       router.push(link)
     }
 
     return {
+      current,
       handleClick,
     }
   },

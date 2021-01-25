@@ -45,8 +45,17 @@ export default defineComponent({
     CommonSidebarListItem,
   },
 
-  setup(_, { emit }: SetupContext) {
-    const selectedItem: any = undefined
+  props: {
+    current: {
+      type: String,
+      required: true,
+      default: '',
+    },
+  },
+
+  setup(props, { emit }: SetupContext) {
+    const { current } = props
+
     const commonItems: ISidebarLink[] = [{ icon: 'mdi-home', text: 'ホーム', link: '/' }]
     const maintenanceItems: ISidebarLink[] = [
       { icon: 'mdi-cart', text: 'お取り引き管理', link: '/' },
@@ -63,6 +72,16 @@ export default defineComponent({
       { icon: 'mdi-shield-account', text: '管理者管理', link: '/' },
       { icon: 'mdi-cog', text: 'システム設定', link: '/system' },
     ]
+
+    // list item内でactiveになってる箇所をPathから判定
+    const items: ISidebarLink[] = commonItems.concat(maintenanceItems, developerItems, systemItems)
+    const target: ISidebarLink[] = items
+      .filter((item) => {
+        return item.link === current
+      })
+      .shift()
+
+    const selectedItem = items.indexOf(target)
 
     const onClick = (link: string) => {
       emit('click', link)
