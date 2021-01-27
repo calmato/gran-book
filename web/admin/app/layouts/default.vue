@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <common-header @click="handleClick" @change="handleChange" />
+    <common-header @click="handleClick" @change="handleChange" @logout="handleClickLogout" />
     <common-sidebar :current="current" :drawer.sync="drawer" @click="handleClick" />
     <v-main>
       <nuxt />
@@ -10,6 +10,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, SetupContext } from '@nuxtjs/composition-api'
+import { AuthStore } from '~/store'
 import CommonHeader from '~/components/organisms/CommonHeader.vue'
 import CommonSidebar from '~/components/organisms/CommonSidebar.vue'
 
@@ -28,6 +29,11 @@ export default defineComponent({
       router.push(link)
     }
 
+    const handleClickLogout = (): void => {
+      AuthStore.logout()
+      router.push('/signin')
+    }
+
     const handleChange = (): void => {
       drawer.value = !drawer.value
     }
@@ -36,6 +42,7 @@ export default defineComponent({
       drawer,
       current,
       handleClick,
+      handleClickLogout,
       handleChange,
     }
   },

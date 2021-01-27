@@ -16,9 +16,12 @@
           <v-img :src="thumbnail ? thumbnail : '/thumbnail.png'" />
         </v-avatar>
       </template>
-      <v-list>
-        <v-list-item v-for="(item, i) in items" :key="i" dense link>
+      <v-list dense>
+        <v-list-item v-for="(item, i) in items" :key="i" link>
           <v-list-item-title @click="onClick(item.to)">{{ item.text }}</v-list-item-title>
+        </v-list-item>
+        <v-list-item link>
+          <v-list-item-title @click="onClickLogout">ログアウト</v-list-item-title>
         </v-list-item>
       </v-list>
     </v-menu>
@@ -35,13 +38,14 @@ export default defineComponent({
     const thumbnail: string = ''
 
     // TODO: 型定義
-    const items: IHeaderListItem[] = [
-      { text: '設定', to: '/system' },
-      { text: 'ログアウト', to: '/' },
-    ]
+    const items: IHeaderListItem[] = [{ text: '設定', to: '/system' }]
 
     const onClick = (link: string): void => {
       emit('click', link)
+    }
+
+    const onClickLogout = (): void => {
+      emit('logout')
     }
 
     const onChange = (): void => {
@@ -52,6 +56,7 @@ export default defineComponent({
       thumbnail,
       items,
       onClick,
+      onClickLogout,
       onChange,
     }
   },
