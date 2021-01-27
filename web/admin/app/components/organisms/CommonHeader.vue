@@ -18,7 +18,7 @@
       </template>
       <v-list>
         <v-list-item v-for="(item, i) in items" :key="i" dense link>
-          <v-list-item-title @click="onClick(item.to)">{{ item.title }}</v-list-item-title>
+          <v-list-item-title @click="onClick(item.to)">{{ item.text }}</v-list-item-title>
         </v-list-item>
       </v-list>
     </v-menu>
@@ -27,6 +27,7 @@
 
 <script lang="ts">
 import { defineComponent, SetupContext } from '@nuxtjs/composition-api'
+import { IHeaderListItem } from '~/types/props'
 
 export default defineComponent({
   setup(_, { emit }: SetupContext) {
@@ -34,9 +35,9 @@ export default defineComponent({
     const thumbnail: string = ''
 
     // TODO: 型定義
-    const items: any[] = [
-      { title: '設定', to: '/system' },
-      { title: 'ログアウト', to: '/' },
+    const items: IHeaderListItem[] = [
+      { text: '設定', to: '/system' },
+      { text: 'ログアウト', to: '/' },
     ]
 
     const onClick = (link: string): void => {
