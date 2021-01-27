@@ -25,7 +25,12 @@ export default defineComponent({
     const handleSubmit = async () => {
       // TODO: エラー処理
       await AuthStore.loginWithEmailAndPassword(form)
-        .then(() => router.push('/'))
+        .then(async () => {
+          await AuthStore.showAuth()
+            .then(() => console.log('debug', 'success'))
+            .catch((err: Error) => console.log('debug', 'failure', err))
+          router.push('/')
+        })
         .catch((err: Error) => console.log('debug', err))
     }
 

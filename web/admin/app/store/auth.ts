@@ -1,4 +1,5 @@
 import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
+import { $axios } from '~/plugins/axios'
 import firebase from '~/plugins/firebase'
 import { ISignInForm } from '~/types/forms'
 
@@ -107,6 +108,21 @@ export default class AuthModule extends VuexModule {
         .signInWithEmailAndPassword(payload.email, payload.password)
         .then(() => {
           this.authorization()
+          resolve()
+        })
+        .catch((err: Error) => {
+          reject(err)
+        })
+    })
+  }
+
+  @Action({ rawError: true })
+  public showAuth(): Promise<void> {
+    return new Promise((resolve: () => void, reject: (reason: Error) => void) => {
+      $axios
+        .$get('/v1/auth')
+        .then((res: any) => {
+          console.log('debug', res)
           resolve()
         })
         .catch((err: Error) => {
