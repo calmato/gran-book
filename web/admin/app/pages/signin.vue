@@ -3,17 +3,20 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@nuxtjs/composition-api'
+import { defineComponent, reactive, SetupContext } from '@nuxtjs/composition-api'
 import { AuthStore } from '~/store'
 import { ISignInForm } from '~/types/forms'
 import SignIn from '~/components/templates/SignIn.vue'
 
 export default defineComponent({
+  layout: 'auth',
   components: {
     SignIn,
   },
 
-  setup() {
+  setup(_, { root }: SetupContext) {
+    const router = root.$router
+
     const form = reactive<ISignInForm>({
       email: '',
       password: '',
@@ -21,7 +24,9 @@ export default defineComponent({
 
     const handleSubmit = async () => {
       // TODO: エラー処理
-      await AuthStore.loginWithEmailAndPassword(form).catch((err: Error) => console.log('debug', err))
+      await AuthStore.loginWithEmailAndPassword(form)
+        .then(() => router.push('/'))
+        .catch((err: Error) => console.log('debug', err))
     }
 
     return {

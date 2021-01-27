@@ -114,4 +114,17 @@ export default class AuthModule extends VuexModule {
         })
     })
   }
+
+  @Action({ rawError: true })
+  public logout(): void {
+    firebase
+      .auth()
+      .signOut()
+      .finally(() => {
+        this.setId('')
+        this.setEmail('')
+        this.setEmailVerified(false)
+        this.setToken('')
+      })
+  }
 }
