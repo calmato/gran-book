@@ -2,7 +2,7 @@ import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
 import { $axios } from '~/plugins/axios'
 import firebase from '~/plugins/firebase'
 import { ISignInForm } from '~/types/forms'
-import { IShowAuthResponse } from '~/types/responses'
+import { IAuthResponse } from '~/types/responses'
 
 @Module({
   name: 'auth',
@@ -77,13 +77,24 @@ export default class AuthModule extends VuexModule {
   }
 
   @Mutation
-  public setUsername(username: string) {
-    this.username = username
-  }
-
-  @Mutation
-  public setRole(role: number) {
-    this.role = role
+  public setAuth(auth: IAuthResponse) {
+    this.username = auth.username
+    this.gender = auth.gender
+    this.phoneNumber = auth.phoneNumber
+    this.role = auth.role
+    this.thumbnailUrl = auth.thumbnailUrl
+    this.selfIntroduction = auth.selfIntroduction
+    this.lastName = auth.lastName
+    this.firstName = auth.firstName
+    this.lastNameKana = auth.lastNameKana
+    this.firstNameKana = auth.firstNameKana
+    this.postalCode = auth.postalCode
+    this.prefecture = auth.prefecture
+    this.city = auth.city
+    this.addressLine1 = auth.addressLine1
+    this.addressLine2 = auth.addressLine2
+    this.createdAt = auth.createdAt
+    this.updatedAt = auth.updatedAt
   }
 
   @Action({ rawError: true })
@@ -157,11 +168,9 @@ export default class AuthModule extends VuexModule {
     return new Promise((resolve: (role: number) => void, reject: (reason: Error) => void) => {
       $axios
         .$get('/v1/auth')
-        .then((res: IShowAuthResponse) => {
-          const { username, role } = res
-          this.setUsername(username)
-          this.setRole(role)
-          resolve(role)
+        .then((res: IAuthResponse) => {
+          this.setAuth(res)
+          resolve(res.role)
         })
         .catch((err: Error) => {
           reject(err)
@@ -175,12 +184,34 @@ export default class AuthModule extends VuexModule {
       .auth()
       .signOut()
       .finally(() => {
+        // TODO: 初期化のいいやり方あったらリファクタする
+        const res: IAuthResponse = {
+          id: '',
+          email: '',
+          username: '',
+          gender: 0,
+          phoneNumber: '',
+          role: 0,
+          thumbnailUrl: '',
+          selfIntroduction: '',
+          lastName: '',
+          firstName: '',
+          lastNameKana: '',
+          firstNameKana: '',
+          postalCode: '',
+          prefecture: '',
+          city: '',
+          addressLine1: '',
+          addressLine2: '',
+          createdAt: '',
+          updatedAt: '',
+        }
+
         this.setId('')
         this.setEmail('')
         this.setEmailVerified(false)
         this.setToken('')
-        this.setUsername('')
-        this.setRole(0)
+        this.setAuth(res)
       })
   }
 }
