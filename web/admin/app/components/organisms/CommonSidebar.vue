@@ -8,8 +8,8 @@
             <v-img src="/thumbnail.png" />
           </v-list-item-avatar>
           <v-list-item-content>
-            <v-list-item-title>Calmato 管理者</v-list-item-title>
-            <v-list-item-subtitle class="caption">support@calmato.com</v-list-item-subtitle>
+            <v-list-item-title>{{ username }}</v-list-item-title>
+            <v-list-item-subtitle class="caption">{{ email }}</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -56,11 +56,20 @@ export default defineComponent({
       required: true,
       default: true,
     },
+    username: {
+      type: String,
+      required: false,
+      default: 'Calmato 管理者',
+    },
+    email: {
+      type: String,
+      required: false,
+      default: 'support@calamto.com',
+    },
   },
 
   setup(props, { emit }: SetupContext) {
-    // TODO: propsから username, email の取得ができるよう
-    const { current } = props
+    const { current, username, email } = props
 
     const commonItems: ISidebarListItem[] = [{ icon: 'mdi-home', text: 'ホーム', to: '/' }]
     const maintenanceItems: ISidebarListItem[] = [
@@ -94,6 +103,8 @@ export default defineComponent({
 
     return {
       drawer,
+      username,
+      email,
       selectedItem,
       commonItems,
       maintenanceItems,

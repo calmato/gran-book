@@ -2,6 +2,7 @@ import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
 import { $axios } from '~/plugins/axios'
 import firebase from '~/plugins/firebase'
 import { ISignInForm } from '~/types/forms'
+import { IShowAuthResponse } from '~/types/responses'
 
 @Module({
   name: 'auth',
@@ -13,6 +14,23 @@ export default class AuthModule extends VuexModule {
   private email: string = ''
   private emailVerified: boolean = false
   private token: string = ''
+  private username: string = ''
+  private gender: number = 0
+  private phoneNumber: string = ''
+  private role: number = 0
+  private thumbnailUrl: string = ''
+  private selfIntroduction: string = ''
+  private lastName: string = ''
+  private firstName: string = ''
+  private lastNameKana: string = ''
+  private firstNameKana: string = ''
+  private postalCode: string = ''
+  private prefecture: string = ''
+  private city: string = ''
+  private addressLine1: string = ''
+  private addressLine2: string = ''
+  private createdAt: string = ''
+  private updatedAt: string = ''
 
   public get getId() {
     return this.id
@@ -28,6 +46,14 @@ export default class AuthModule extends VuexModule {
 
   public get getToken() {
     return this.token
+  }
+
+  public get getUsername() {
+    return this.username
+  }
+
+  public get getRole() {
+    return this.role
   }
 
   @Mutation
@@ -50,6 +76,16 @@ export default class AuthModule extends VuexModule {
     this.token = token
   }
 
+  @Mutation
+  public setUsername(username: string) {
+    this.username = username
+  }
+
+  @Mutation
+  public setRole(role: number) {
+    this.role = role
+  }
+
   @Action({ rawError: true })
   public authorization(): Promise<void> {
     return new Promise((resolve: () => void, reject: (reason: Error) => void) => {
@@ -67,7 +103,7 @@ export default class AuthModule extends VuexModule {
           this.setEmailVerified(res.emailVerified)
           resolve()
         } else {
-          reject(new Error())
+          reject(new Error('unauthorized'))
         }
       })
     })
@@ -106,8 +142,8 @@ export default class AuthModule extends VuexModule {
       firebase
         .auth()
         .signInWithEmailAndPassword(payload.email, payload.password)
-        .then(() => {
-          this.authorization()
+        .then(async () => {
+          await this.authorization()
           resolve()
         })
         .catch((err: Error) => {
@@ -117,13 +153,15 @@ export default class AuthModule extends VuexModule {
   }
 
   @Action({ rawError: true })
-  public showAuth(): Promise<void> {
-    return new Promise((resolve: () => void, reject: (reason: Error) => void) => {
+  public showAuth(): Promise<number> {
+    return new Promise((resolve: (role: number) => void, reject: (reason: Error) => void) => {
       $axios
         .$get('/v1/auth')
-        .then((res: any) => {
-          console.log('debug', res)
-          resolve()
+        .then((res: IShowAuthResponse) => {
+          const { username, role } = res
+          this.setUsername(username)
+          this.setRole(role)
+          resolve(role)
         })
         .catch((err: Error) => {
           reject(err)
@@ -141,6 +179,8 @@ export default class AuthModule extends VuexModule {
         this.setEmail('')
         this.setEmailVerified(false)
         this.setToken('')
+        this.setUsername('')
+        this.setRole(0)
       })
   }
 }

@@ -27,11 +27,21 @@ export default defineComponent({
       await AuthStore.loginWithEmailAndPassword(form)
         .then(async () => {
           await AuthStore.showAuth()
-            .then(() => console.log('debug', 'success'))
-            .catch((err: Error) => console.log('debug', 'failure', err))
-          router.push('/')
+            .then((role: number) => {
+              if (role === 0) {
+                throw new Error('forbidden user role')
+              }
+
+              router.push('/')
+            })
+            .catch(() => {
+              AuthStore.logout()
+            })
         })
-        .catch((err: Error) => console.log('debug', err))
+        .catch((err: Error) => {
+          // TODO: show alert
+          console.log('debug', err)
+        })
     }
 
     return {
