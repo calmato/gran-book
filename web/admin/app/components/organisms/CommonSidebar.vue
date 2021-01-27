@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer id="main-sidebar" v-model="drawer" clipped mini-variant-width="70" app>
+  <v-navigation-drawer v-model="drawer" app clipped mobile-breakpoint="960" mini-variant-width="70">
     <!-- profile -->
     <v-sheet class="py-1 px-4">
       <v-list>
@@ -36,7 +36,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, SetupContext } from '@nuxtjs/composition-api'
+import { defineComponent, computed, SetupContext } from '@nuxtjs/composition-api'
 import CommonSidebarListItem from '~/components/organisms/CommonSidebarListItem.vue'
 import { ISidebarListItem } from '~/types/props'
 
@@ -51,43 +51,49 @@ export default defineComponent({
       required: true,
       default: '',
     },
+    drawer: {
+      type: Boolean,
+      required: true,
+      default: true,
+    },
   },
 
   setup(props, { emit }: SetupContext) {
+    // TODO: propsから username, email の取得ができるよう
     const { current } = props
 
-    const commonItems: ISidebarListItem[] = [{ icon: 'mdi-home', text: 'ホーム', link: '/' }]
+    const commonItems: ISidebarListItem[] = [{ icon: 'mdi-home', text: 'ホーム', to: '/' }]
     const maintenanceItems: ISidebarListItem[] = [
-      { icon: 'mdi-cart', text: 'お取り引き管理', link: '/' },
-      { icon: 'mdi-forum', text: 'お問い合わせ管理', link: '/' },
-      { icon: 'mdi-bell-ring', text: 'お知らせ管理', link: '/' },
-      { icon: 'mdi-cash-100', text: 'セール情報管理', link: '/' },
+      { icon: 'mdi-cart', text: 'お取り引き管理', to: '/' },
+      { icon: 'mdi-forum', text: 'お問い合わせ管理', to: '/' },
+      { icon: 'mdi-bell-ring', text: 'お知らせ管理', to: '/' },
+      { icon: 'mdi-cash-100', text: 'セール情報管理', to: '/' },
     ]
     const developerItems: ISidebarListItem[] = [
-      { icon: 'mdi-account', text: '利用者管理', link: '/' },
-      { icon: 'mdi-book', text: '書籍管理', link: '/' },
-      { icon: 'mdi-store', text: 'ECサイト管理', link: '/' },
+      { icon: 'mdi-account', text: '利用者管理', to: '/' },
+      { icon: 'mdi-book', text: '書籍管理', to: '/' },
+      { icon: 'mdi-store', text: 'ECサイト管理', to: '/' },
     ]
     const systemItems: ISidebarListItem[] = [
-      { icon: 'mdi-shield-account', text: '管理者管理', link: '/' },
-      { icon: 'mdi-cog', text: 'システム設定', link: '/system' },
+      { icon: 'mdi-shield-account', text: '管理者管理', to: '/' },
+      { icon: 'mdi-cog', text: 'システム設定', to: '/system' },
     ]
 
-    // list item内でactiveになってる箇所をPathから判定
     const items: ISidebarListItem[] = commonItems.concat(maintenanceItems, developerItems, systemItems)
-    const target: ISidebarListItem | undefined = items
-      .filter((item: ISidebarListItem) => {
-        return item.link === current
-      })
-      .shift()
-
+    const target: ISidebarListItem | undefined = items.filter((item: ISidebarListItem) => item.to === current).shift()
     const selectedItem: number = target ? items.indexOf(target) : -1
+
+    const drawer = computed({
+      get: () => props.drawer,
+      set: (val: boolean) => emit('update:drawer', val),
+    })
 
     const onClick = (link: string) => {
       emit('click', link)
     }
 
     return {
+      drawer,
       selectedItem,
       commonItems,
       maintenanceItems,

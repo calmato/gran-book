@@ -1,28 +1,57 @@
 <template>
-  <v-app-bar app clipped-left clipped-right color="primary" dark class="px-2">
+  <v-app-bar app clipped-left dark color="primary" class="px-2">
+    <!-- left -->
     <v-toolbar-title class="align-center d-flex">
       <v-img src="/logo.png" max-width="24" contain />
       <span class="ml-4">Gran Book</span>
-      <v-icon class="ml-4">mdi-menu</v-icon>
+      <v-app-bar-nav-icon class="ml-4" @click="onChange" />
       <v-icon class="ml-4">mdi-magnify</v-icon>
     </v-toolbar-title>
     <v-spacer />
+    <!-- right -->
     <v-icon class="mr-6">mdi-bell-ring</v-icon>
-    <v-avatar size="40" color="grey lighten-2">
-      <v-img :src="thumbnail ? thumbnail : '/thumbnail.png'" />
-    </v-avatar>
+    <v-menu rounded offset-y transition="scroll-x-reverse-transition">
+      <template v-slot:activator="{ on, attrs }">
+        <v-avatar v-bind="attrs" size="40" color="grey lighten-2" v-on="on">
+          <v-img :src="thumbnail ? thumbnail : '/thumbnail.png'" />
+        </v-avatar>
+      </template>
+      <v-list>
+        <v-list-item v-for="(item, i) in items" :key="i" dense link>
+          <v-list-item-title @click="onClick(item.to)">{{ item.title }}</v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-menu>
   </v-app-bar>
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@nuxtjs/composition-api'
+import { defineComponent, SetupContext } from '@nuxtjs/composition-api'
 
 export default defineComponent({
-  setup(_) {
+  setup(_, { emit }: SetupContext) {
+    // TODO: propsから取得
     const thumbnail: string = ''
+
+    // TODO: 型定義
+    const items: any[] = [
+      { title: '設定', to: '/system' },
+      { title: 'ログアウト', to: '/' },
+    ]
+
+    const onClick = (link: string): void => {
+      emit('click', link)
+    }
+
+    const onChange = (): void => {
+      emit('change')
+    }
 
     return {
       thumbnail,
+      items,
+      onClick,
+      onChange,
     }
   },
 })

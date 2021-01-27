@@ -18,7 +18,7 @@ export default defineComponent({
     item: {
       type: Object as PropType<ISidebarListItem>,
       required: false,
-      default: () => ({ icon: '', text: '', link: '' }),
+      default: () => ({ icon: '', text: '', to: '' } as ISidebarListItem),
     },
   },
 
@@ -26,7 +26,7 @@ export default defineComponent({
     const { item } = props
 
     const onClick = () => {
-      emit('click', item.link)
+      emit('click', item.to)
     }
 
     return {

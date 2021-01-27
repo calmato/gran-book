@@ -1,1 +1,1 @@
-export * from './CommonSidebar'
+export * from './common-sidebar'

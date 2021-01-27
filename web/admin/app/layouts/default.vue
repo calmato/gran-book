@@ -1,7 +1,7 @@
 <template>
   <v-app>
-    <common-header />
-    <common-sidebar :current="current" @click="handleClick" />
+    <common-header @click="handleClick" @change="handleChange" />
+    <common-sidebar :current="current" :drawer.sync="drawer" @click="handleClick" />
     <v-main>
       <nuxt />
     </v-main>
@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, SetupContext } from '@nuxtjs/composition-api'
+import { defineComponent, ref, SetupContext } from '@nuxtjs/composition-api'
 import CommonHeader from '~/components/organisms/CommonHeader.vue'
 import CommonSidebar from '~/components/organisms/CommonSidebar.vue'
 
@@ -22,14 +22,21 @@ export default defineComponent({
   setup(_, { root }: SetupContext) {
     const router = root.$router
     const current = root.$route.path
+    const drawer = ref<Boolean>(true)
 
     const handleClick = (link: string): void => {
       router.push(link)
     }
 
+    const handleChange = (): void => {
+      drawer.value = !drawer.value
+    }
+
     return {
+      drawer,
       current,
       handleClick,
+      handleChange,
     }
   },
 })
