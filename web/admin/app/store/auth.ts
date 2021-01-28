@@ -3,6 +3,31 @@ import { $axios } from '~/plugins/axios'
 import firebase from '~/plugins/firebase'
 import { ISignInForm } from '~/types/forms'
 import { IAuthResponse } from '~/types/responses'
+import { IAuthState, IAuthProfile } from '~/types/store'
+
+const initialState: IAuthState = {
+  id: '',
+  email: '',
+  emailVerified: false,
+  token: '',
+  username: '',
+  gender: 0,
+  phoneNumber: '',
+  role: 0,
+  thumbnailUrl: '',
+  selfIntroduction: '',
+  lastName: '',
+  firstName: '',
+  lastNameKana: '',
+  firstNameKana: '',
+  postalCode: '',
+  prefecture: '',
+  city: '',
+  addressLine1: '',
+  addressLine2: '',
+  createdAt: '',
+  updatedAt: '',
+}
 
 @Module({
   name: 'auth',
@@ -10,38 +35,30 @@ import { IAuthResponse } from '~/types/responses'
   namespaced: true,
 })
 export default class AuthModule extends VuexModule {
-  private id: string = ''
-  private email: string = ''
-  private emailVerified: boolean = false
-  private token: string = ''
-  private username: string = ''
-  private gender: number = 0
-  private phoneNumber: string = ''
-  private role: number = 0
-  private thumbnailUrl: string = ''
-  private selfIntroduction: string = ''
-  private lastName: string = ''
-  private firstName: string = ''
-  private lastNameKana: string = ''
-  private firstNameKana: string = ''
-  private postalCode: string = ''
-  private prefecture: string = ''
-  private city: string = ''
-  private addressLine1: string = ''
-  private addressLine2: string = ''
-  private createdAt: string = ''
-  private updatedAt: string = ''
-
-  public get getId() {
-    return this.id
-  }
+  private id: string = initialState.id
+  private email: string = initialState.email
+  private emailVerified: boolean = initialState.emailVerified
+  private token: string = initialState.token
+  private username: string = initialState.username
+  private gender: number = initialState.gender
+  private phoneNumber: string = initialState.phoneNumber
+  private role: number = initialState.role
+  private thumbnailUrl: string = initialState.thumbnailUrl
+  private selfIntroduction: string = initialState.selfIntroduction
+  private lastName: string = initialState.lastName
+  private firstName: string = initialState.firstName
+  private lastNameKana: string = initialState.lastNameKana
+  private firstNameKana: string = initialState.firstNameKana
+  private postalCode: string = initialState.postalCode
+  private prefecture: string = initialState.prefecture
+  private city: string = initialState.city
+  private addressLine1: string = initialState.addressLine1
+  private addressLine2: string = initialState.addressLine2
+  private createdAt: string = initialState.createdAt
+  private updatedAt: string = initialState.updatedAt
 
   public get getEmail() {
     return this.email
-  }
-
-  public get getEmailVerified() {
-    return this.emailVerified
   }
 
   public get getToken() {
@@ -50,10 +67,6 @@ export default class AuthModule extends VuexModule {
 
   public get getUsername() {
     return this.username
-  }
-
-  public get getRole() {
-    return this.role
   }
 
   @Mutation
@@ -77,7 +90,7 @@ export default class AuthModule extends VuexModule {
   }
 
   @Mutation
-  public setAuth(auth: IAuthResponse) {
+  public setProfile(auth: IAuthProfile) {
     this.username = auth.username
     this.gender = auth.gender
     this.phoneNumber = auth.phoneNumber
@@ -169,7 +182,8 @@ export default class AuthModule extends VuexModule {
       $axios
         .$get('/v1/auth')
         .then((res: IAuthResponse) => {
-          this.setAuth(res)
+          const data: IAuthProfile = { ...res }
+          this.setProfile(data)
           resolve(res.role)
         })
         .catch((err: Error) => {
@@ -184,34 +198,13 @@ export default class AuthModule extends VuexModule {
       .auth()
       .signOut()
       .finally(() => {
-        // TODO: 初期化のいいやり方あったらリファクタする
-        const res: IAuthResponse = {
-          id: '',
-          email: '',
-          username: '',
-          gender: 0,
-          phoneNumber: '',
-          role: 0,
-          thumbnailUrl: '',
-          selfIntroduction: '',
-          lastName: '',
-          firstName: '',
-          lastNameKana: '',
-          firstNameKana: '',
-          postalCode: '',
-          prefecture: '',
-          city: '',
-          addressLine1: '',
-          addressLine2: '',
-          createdAt: '',
-          updatedAt: '',
-        }
+        const profile: IAuthProfile = { ...initialState }
 
-        this.setId('')
-        this.setEmail('')
-        this.setEmailVerified(false)
-        this.setToken('')
-        this.setAuth(res)
+        this.setId(initialState.id)
+        this.setEmail(initialState.email)
+        this.setEmailVerified(initialState.emailVerified)
+        this.setToken(initialState.token)
+        this.setProfile(profile)
       })
   }
 }
