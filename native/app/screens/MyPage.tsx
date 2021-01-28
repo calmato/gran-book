@@ -1,6 +1,6 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import { StyleSheet, View, ScrollView, SafeAreaView } from 'react-native';
-import React, { ReactElement, Component } from 'react';
+import React, { ReactElement } from 'react';
 import { RootStackParamList } from '~/types/navigation';
 import { ListItem, Text, colors, Avatar } from 'react-native-elements';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
