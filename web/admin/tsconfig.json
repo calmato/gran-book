@@ -25,11 +25,12 @@
     },
     "types": [
       "@types/node",
+      "@types/jest",
       "@nuxt/types",
       "@nuxtjs/axios",
       "@nuxtjs/vuetify",
       "firebase"
-    ],
+    ]
   },
   "exclude": [
     "node_modules",

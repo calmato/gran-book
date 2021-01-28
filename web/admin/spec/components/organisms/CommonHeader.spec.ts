@@ -1,22 +1,22 @@
 import { mount } from '@vue/test-utils'
-import '~~/spec/helpers/component-helper'
+import * as Options from '~~/spec/helpers/component-helper'
 import CommonHeader from '~/components/organisms/CommonHeader.vue'
 
 describe('components/organisms/CommonHeader', () => {
   let wrapper: any
 
   beforeEach(() => {
-    wrapper = mount(CommonHeader)
+    wrapper = mount(CommonHeader, { ...Options })
   })
 
   describe('script', () => {
     describe('props', () => {
       describe('thumbnailUrl', () => {
-        test('初期値', () => {
+        it('初期値', () => {
           expect(wrapper.props().thumbnailUrl).toBe('')
         })
 
-        test('代入', () => {
+        it('値の代入', () => {
           wrapper.setProps({ thumbnailUrl: '/thumbnail.png' })
           expect(wrapper.props().thumbnailUrl).toBe('/thumbnail.png')
         })
@@ -24,7 +24,7 @@ describe('components/organisms/CommonHeader', () => {
     })
 
     describe('data', () => {
-      describe('items', () => {
+      it('items', () => {
         expect(wrapper.vm.items).toEqual([{ text: '設定', to: '/system' }])
       })
     })

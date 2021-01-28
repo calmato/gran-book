@@ -1,4 +1,8 @@
-import Vue from 'vue'
+import Vue, { VueConstructor } from 'vue'
 import Vuetify from 'vuetify'
+import { createLocalVue } from '@vue/test-utils'
 
-Vue.use(Vuetify)
+const localVue: VueConstructor<Vue> = createLocalVue()
+const vuetify = new Vuetify()
+
+export { localVue, vuetify }
