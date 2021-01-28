@@ -23,7 +23,6 @@ export default defineComponent({
     })
 
     const handleSubmit = async () => {
-      // TODO: エラー処理
       await AuthStore.loginWithEmailAndPassword(form)
         .then(async () => {
           await AuthStore.showAuth()
