@@ -31,22 +31,21 @@
 
 * Cloud CDN
 * Cloud DNS
-* Cloud Run
 * Cloud Storage
 * Cloud SQL for MySQL
-* Compute Engine
 * Firebase Authentication
 * Firebase Hosting
 * Firestore
 * Google AdSense
 * Google Analytics
 * Google Books API
+* Kubernetes Engine
 * Stripe
 
 ### 概算見積もり
 
-* ¥1,400/Month
-* [Google Cloud Pricing Calculator](https://cloud.google.com/products/calculator/#id=29e79416-c2b1-47f0-a522-df691cda1bdd)
+* ¥3,300/Month
+* [Google Cloud Pricing Calculator](https://cloud.google.com/products/calculator/#id=c36aa795-f22a-4c0b-840f-26ef19072641)
 
 ### 構成概要図
 

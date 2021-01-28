@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "proto/hello_world.proto",
+    "title": "proto/user_apiv1.proto",
     "version": "version not set"
   },
   "consumes": [
@@ -11,15 +11,34 @@
     "application/json"
   ],
   "paths": {
-    "/v1/example/echo": {
-      "post": {
-        "summary": "Sends a greeting",
-        "operationId": "Greeter_SayHello",
+    "/v1/auth": {
+      "get": {
+        "operationId": "AuthService_GetAuth",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/protoHelloReply"
+              "$ref": "#/definitions/protoAuthResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "AuthService"
+        ]
+      },
+      "post": {
+        "operationId": "AuthService_CreateAuth",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoAuthResponse"
             }
           },
           "default": {
@@ -35,23 +54,23 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/protoHelloRequest"
+              "$ref": "#/definitions/protoCreateAuthRequest"
             }
           }
         ],
         "tags": [
-          "Greeter"
+          "AuthService"
         ]
       }
     },
-    "/v1/users": {
-      "post": {
-        "operationId": "UserService_CreateUser",
+    "/v1/auth/address": {
+      "patch": {
+        "operationId": "AuthService_UpdateAuthAddress",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/protoUserResponse"
+              "$ref": "#/definitions/protoAuthResponse"
             }
           },
           "default": {
@@ -67,53 +86,114 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/protoCreateUserRequest"
+              "$ref": "#/definitions/protoUpdateAuthAddressRequest"
             }
           }
         ],
         "tags": [
-          "UserService"
+          "AuthService"
+        ]
+      }
+    },
+    "/v1/auth/email": {
+      "patch": {
+        "operationId": "AuthService_UpdateAuthEmail",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoAuthResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/protoUpdateAuthEmailRequest"
+            }
+          }
+        ],
+        "tags": [
+          "AuthService"
+        ]
+      }
+    },
+    "/v1/auth/password": {
+      "patch": {
+        "operationId": "AuthService_UpdateAuthPassword",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoAuthResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/protoUpdateAuthPasswordRequest"
+            }
+          }
+        ],
+        "tags": [
+          "AuthService"
+        ]
+      }
+    },
+    "/v1/auth/profile": {
+      "patch": {
+        "operationId": "AuthService_UpdateAuthProfile",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoAuthResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/protoUpdateAuthProfileRequest"
+            }
+          }
+        ],
+        "tags": [
+          "AuthService"
         ]
       }
     }
   },
   "definitions": {
-    "protoCreateUserRequest": {
-      "type": "object",
-      "properties": {
-        "username": {
-          "type": "string"
-        },
-        "email": {
-          "type": "string"
-        },
-        "password": {
-          "type": "string"
-        },
-        "passwordConfirmation": {
-          "type": "string"
-        }
-      }
-    },
-    "protoHelloReply": {
-      "type": "object",
-      "properties": {
-        "message": {
-          "type": "string"
-        }
-      },
-      "title": "The response message containing the greetings"
-    },
-    "protoHelloRequest": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        }
-      },
-      "title": "The request message containing the user's name"
-    },
-    "protoUserResponse": {
+    "protoAuthResponse": {
       "type": "object",
       "properties": {
         "id": {
@@ -173,6 +253,95 @@
           "type": "string"
         },
         "updatedAt": {
+          "type": "string"
+        }
+      }
+    },
+    "protoCreateAuthRequest": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "passwordConfirmation": {
+          "type": "string"
+        }
+      }
+    },
+    "protoUpdateAuthAddressRequest": {
+      "type": "object",
+      "properties": {
+        "lastName": {
+          "type": "string"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "lastNameKana": {
+          "type": "string"
+        },
+        "firstNameKana": {
+          "type": "string"
+        },
+        "phoneNumber": {
+          "type": "string"
+        },
+        "postalCode": {
+          "type": "string"
+        },
+        "prefecture": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "addressLine1": {
+          "type": "string"
+        },
+        "addressLine2": {
+          "type": "string"
+        }
+      }
+    },
+    "protoUpdateAuthEmailRequest": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        }
+      }
+    },
+    "protoUpdateAuthPasswordRequest": {
+      "type": "object",
+      "properties": {
+        "password": {
+          "type": "string"
+        },
+        "passwordConfirmation": {
+          "type": "string"
+        }
+      }
+    },
+    "protoUpdateAuthProfileRequest": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "gender": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "thumbnail": {
+          "type": "string"
+        },
+        "selfIntroduction": {
           "type": "string"
         }
       }

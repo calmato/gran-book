@@ -5,3 +5,8 @@ export type SingUpForm = {
   username: string,
   agreement: boolean,
 }
+
+export type SignInForm = {
+  email: string,
+  password: string
+}

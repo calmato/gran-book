@@ -5,30 +5,34 @@ import (
 	rv "github.com/calmato/gran-book/api/user/internal/application/validation"
 	"github.com/calmato/gran-book/api/user/internal/infrastructure/repository"
 	"github.com/calmato/gran-book/api/user/internal/infrastructure/service"
-	"github.com/calmato/gran-book/api/user/internal/infrastructure/validation"
+	"github.com/calmato/gran-book/api/user/internal/infrastructure/storage"
+	dv "github.com/calmato/gran-book/api/user/internal/infrastructure/validation"
 	"github.com/calmato/gran-book/api/user/lib/firebase/authentication"
+	gcs "github.com/calmato/gran-book/api/user/lib/firebase/storage"
 )
 
 // Registry - DIコンテナ
 type Registry struct {
-	UserApplication application.UserApplication
+	AuthApplication application.AuthApplication
 }
 
 // NewRegistry - internalディレクトリ配下のファイルを読み込み
-func NewRegistry(db *repository.Client, auth *authentication.Auth) *Registry {
-	ua := userInjection(db, auth)
+func NewRegistry(db *repository.Client, auth *authentication.Auth, s *gcs.Storage) *Registry {
+	aa := authInjection(db, auth, s)
 
 	return &Registry{
-		UserApplication: ua,
+		AuthApplication: aa,
 	}
 }
 
-func userInjection(db *repository.Client, auth *authentication.Auth) application.UserApplication {
+func authInjection(db *repository.Client, auth *authentication.Auth, s *gcs.Storage) application.AuthApplication {
 	ur := repository.NewUserRepository(db, auth)
-	udv := validation.NewUserDomainValidation(ur)
-	us := service.NewUserService(udv, ur)
-	urv := rv.NewUserRequestValidation()
-	ua := application.NewUserApplication(urv, us)
+	udv := dv.NewUserDomainValidation(ur)
+	uu := storage.NewUserUploader(s)
+	us := service.NewUserService(udv, ur, uu)
 
-	return ua
+	arv := rv.NewAuthRequestValidation()
+	aa := application.NewAuthApplication(arv, us)
+
+	return aa
 }

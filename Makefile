@@ -1,13 +1,13 @@
 ##################################################
-# Container Commands - Run containers
+# Container Commands - Run All
 ##################################################
-.PHONY: setup build install start start-native start-admin start-api stop down remove logs proto migrate
+.PHONY: setup build install start stop down remove logs
 
 setup:
+	cp $(PWD)/.env.temp $(PWD)/.env
 	$(MAKE) build
 	$(MAKE) install
-	cp $(PWD)/.env.temp $(PWD)/.env
-	yarn global add expo-cli
+	$(MAKE) migrate
 
 build:
 	docker-compose build --parallel
@@ -18,15 +18,6 @@ install:
 
 start:
 	docker-compose up --remove-orphans
-
-start-native:
-	cd $(PWD)/native && yarn start
-
-start-admin:
-	docker-compose up admin
-
-start-api:
-	docker-compose up gateway user_api mysql
 
 stop:
 	docker-compose stop
@@ -40,10 +31,53 @@ remove:
 logs:
 	docker-compose logs
 
+##################################################
+# Container Commands - Run Container Group
+##################################################
+.PHONY: start-native start-admin start-api
+
+start-native:
+	$(PWD)/bin/get-local-ip-addr.sh
+	docker-compose up native
+
+start-admin:
+	docker-compose up admin
+
+start-api:
+	docker-compose up gateway user_api mysql swagger_editor
+
+start-swagger:
+	docker-compose up swagger swagger_editor
+
+##################################################
+# Container Commands - Single
+##################################################
+.PHONY: proto migrate
+
 proto:
 	docker-compose run --rm proto bash -c "make install && make generate"
 
 migrate:
 	docker-compose start mysql
-	docker-compose exec mysql bash -c "mysql -u root -p${DB_PASSWORD} < /docker-entrypoint-initdb.d/*.sql"
+	docker-compose exec mysql bash -c "mysql -u root -p${MYSQL_ROOT_PASSWORD} < /docker-entrypoint-initdb.d/*.sql"
 	docker-compose stop mysql
+
+##################################################
+# Container Commands - Terraform
+##################################################
+.PHONY: terraform-setup terraform-lint terraform-plan terraform-apply terraform-destroy
+
+terraform-init:
+	docker-compose run --rm terraform make init ENV=${ENV}
+
+terraform-fmt:
+	docker-compose run --rm terraform make fmt ENV=${ENV}
+
+terraform-plan:
+	docker-compose run --rm terraform make plan ENV=${ENV}
+
+terraform-apply:
+	docker-compose run --rm terraform make apply ENV=${ENV}
+
+terraform-destroy:
+	docker-compose run --rm terraform make destroy ENV=${ENV}
