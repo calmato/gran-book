@@ -5,7 +5,7 @@
       <v-list>
         <v-list-item two-line class="px-0">
           <v-list-item-avatar color="grey lighten-2">
-            <v-img src="/thumbnail.png" />
+            <v-img :src="thumbnailUrl ? thumbnailUrl : '/thumbnail.png'" />
           </v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title>{{ username }}</v-list-item-title>
@@ -66,10 +66,15 @@ export default defineComponent({
       required: false,
       default: 'support@calamto.com',
     },
+    thumbnailUrl: {
+      type: String,
+      required: false,
+      default: '',
+    },
   },
 
   setup(props, { emit }: SetupContext) {
-    const { current, username, email } = props
+    const { current, username, email, thumbnailUrl } = props
 
     const commonItems: ISidebarListItem[] = [{ icon: 'mdi-home', text: 'ホーム', to: '/' }]
     const maintenanceItems: ISidebarListItem[] = [
@@ -105,6 +110,7 @@ export default defineComponent({
       drawer,
       username,
       email,
+      thumbnailUrl,
       selectedItem,
       commonItems,
       maintenanceItems,
