@@ -43,7 +43,7 @@ const MyPage = function MyPage(props: Props): ReactElement {
   const navigaton = props.navigaton;
 
   return (
-    <View　style={styles.scrollArea}>
+    <View style={styles.scrollArea}>
       <HeaderWithBackButton
         title="マイページ"
         onPress={() => navigaton.goBack()}
