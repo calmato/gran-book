@@ -31,7 +31,7 @@ func registerServiceHandlers(
 ) error {
 	opts := grpcDialOptions(logPath, logLevel, insecure, skipVerify)
 
-	err := gw.RegisterUserServiceHandlerFromEndpoint(ctx, mux, userAPIURL, opts)
+	err := gw.RegisterAuthServiceHandlerFromEndpoint(ctx, mux, userAPIURL, opts)
 	if err != nil {
 		return err
 	}

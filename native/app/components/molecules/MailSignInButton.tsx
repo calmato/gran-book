@@ -14,7 +14,8 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  style?: ViewStyle
+  style?: ViewStyle,
+  onPress: () => void,
 }
 
 const MailSignInButton = function MailSignInButton(props: Props): ReactElement {
@@ -30,6 +31,7 @@ const MailSignInButton = function MailSignInButton(props: Props): ReactElement {
       }
       buttonStyle={styles.buttonStyle}
       containerStyle={props.style}
+      onPress={props.onPress}
       title="メールアドレスでサインイン"
     />
   );

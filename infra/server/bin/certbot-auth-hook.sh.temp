@@ -1,0 +1,44 @@
+#!/bin/bash
+
+##################################################
+# Variables
+##################################################
+CLOUD_DNS_PROJECT=''
+CLOUD_DNS_ZONE=''
+
+DNS_DOMAIN=${CERTBOT_DOMAIN}'.'
+DNS_NAME='_acme-challenge.'${DNS_DOMAIN}
+
+##################################################
+# Function
+##################################################
+abort_cloud_dns() {
+  gcloud dns record-sets transaction abort \
+    --project ${CLOUD_DNS_PROJECT} \
+    --zone ${CLOUD_DNS_ZONE}
+}
+
+##################################################
+# Main
+##################################################
+abort_cloud_dns
+
+set -e
+trap 'abort_cloud_dns; exit 1' ERR
+
+gcloud dns record-sets transaction start \
+  --project ${CLOUD_DNS_PROJECT} \
+  --zone ${CLOUD_DNS_ZONE}
+
+gcloud dns record-sets transaction add ${CERTBOT_VALIDATION} \
+  --project ${CLOUD_DNS_PROJECT} \
+  --zone ${CLOUD_DNS_ZONE} \
+  --name ${DNS_NAME} \
+  --type 'TXT' \
+  --ttl 30
+
+gcloud dns record-sets transaction execute \
+  --project ${CLOUD_DNS_PROJECT} \
+  --zone ${CLOUD_DNS_ZONE}
+
+sleep 120

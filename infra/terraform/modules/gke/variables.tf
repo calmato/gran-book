@@ -32,6 +32,11 @@ variable "gke_cluster_ipv4_cidr" {
   default     = null
 }
 
+variable "gke_cluster_istio_disabled" {
+  description = "GKE Istio無効化"
+  default     = false
+}
+
 #################################################
 # GKE Node
 #################################################

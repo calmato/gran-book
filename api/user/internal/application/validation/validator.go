@@ -22,6 +22,10 @@ type requestValidator struct {
 func NewRequestValidator() RequestValidator {
 	validate := validator.New()
 
+	if err := validate.RegisterValidation("hiragana", hiraganaCheck); err != nil {
+		return nil
+	}
+
 	if err := validate.RegisterValidation("password", passwordCheck); err != nil {
 		return nil
 	}
@@ -32,10 +36,12 @@ func NewRequestValidator() RequestValidator {
 }
 
 const (
+	hiraganaString = "^[ぁ-ゔー]*$"
 	passwordString = "^[a-zA-Z0-9_!@#$_%^&*.?()-=+]*$"
 )
 
 var (
+	hiraganaRegex = regexp.MustCompile(hiraganaString)
 	passwordRegex = regexp.MustCompile(passwordString)
 )
 
@@ -73,6 +79,10 @@ func (rv *requestValidator) Run(i interface{}) []*exception.ValidationError {
 	return validationErrors
 }
 
+func hiraganaCheck(fl validator.FieldLevel) bool {
+	return hiraganaRegex.MatchString(fl.Field().String())
+}
+
 func passwordCheck(fl validator.FieldLevel) bool {
 	return passwordRegex.MatchString(fl.Field().String())
 }
@@ -87,8 +97,12 @@ func validationMessage(tag string, options ...string) string {
 		return fmt.Sprintf(exception.MinMessage, options[0])
 	case exception.MaxTag:
 		return fmt.Sprintf(exception.MaxMessage, options[0])
+	case exception.Base64Tag:
+		return exception.Base64Message
 	case exception.EmailTag:
 		return exception.EmailMessage
+	case exception.HiraganaTag:
+		return exception.HiraganaMessage
 	case exception.PasswordTag:
 		return exception.PasswordMessage
 	case exception.UniqueTag:

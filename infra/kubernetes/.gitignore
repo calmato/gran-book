@@ -1,0 +1,10 @@
+!*.yaml.temp
+
+!stg/gateway/nginx-deployment.yaml
+!stg/kube-system/kubeip-deployment.yaml
+
+*-deployment.yaml
+*-secret.yaml
+
+cert.pem
+privkey.pem
