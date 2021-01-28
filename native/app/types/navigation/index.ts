@@ -1,12 +1,14 @@
 export type RootStackParamList = {
+  MyPage: undefined,
   Onboarding: undefined,
-  SignInSelect: undefined,
   SignIn:undefined,
+  SignInSelect: undefined,
 }
 
 export type AuthStackParamList = {
+  MyPage: undefined,
+  SignIn: undefined,
   SignInSelect: undefined,
   SignUp: undefined,
   SignUpCheckEmail: { email: string | undefined },
-  SignIn: undefined,
 }
