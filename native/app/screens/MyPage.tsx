@@ -77,7 +77,7 @@ const MyPage = function MyPage(props: Props): ReactElement {
             <ListItem key={3} bottomDivider>
               <MaterialCommunityIcons name="message" size={24} color="black" />
               <ListItem.Content>
-                <ListItem.Title>{'友達一覧'}</ListItem.Title>
+                <ListItem.Title>{'メッセージボックス'}</ListItem.Title>
               </ListItem.Content>
               <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
             </ListItem>
