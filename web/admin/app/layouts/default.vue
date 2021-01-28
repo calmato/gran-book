@@ -1,6 +1,11 @@
 <template>
   <v-app>
-    <common-header :thumbnail-url="thumbnailUrl" @click="handleClick" @change="handleChange" @logout="handleClickLogout" />
+    <common-header
+      :thumbnail-url="thumbnailUrl"
+      @click="handleClick"
+      @change="handleChange"
+      @logout="handleClickLogout"
+    />
     <common-sidebar
       :username="username"
       :email="email"

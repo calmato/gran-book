@@ -12,11 +12,9 @@ module.exports = {
     '^.+\\.js$': 'babel-jest',
     '.*\\.(vue)$': 'vue-jest',
   },
-  testURL: "http://localhost/",
-  testRegex: "(/__tests__/.*|(\\.|/)(test|spec))\\.(js?|ts?)$",
-  setupFiles: [
-    '<rootDir>/spec/helpers/setup.ts'
-  ],
+  testURL: 'http://localhost/',
+  testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.(js?|ts?)$',
+  setupFiles: ['<rootDir>/spec/helpers/setup.ts'],
   collectCoverage: false,
   collectCoverageFrom: [
     '<rootDir>/app/components/**/*.vue',
