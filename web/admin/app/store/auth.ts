@@ -57,40 +57,44 @@ export default class AuthModule extends VuexModule {
   private createdAt: string = initialState.createdAt
   private updatedAt: string = initialState.updatedAt
 
-  public get getEmail() {
+  public get getEmail(): string {
     return this.email
   }
 
-  public get getToken() {
+  public get getToken(): string {
     return this.token
   }
 
-  public get getUsername() {
+  public get getUsername(): string {
     return this.username
   }
 
+  public get getSelfIntroduction(): string {
+    return this.selfIntroduction
+  }
+
   @Mutation
-  public setId(id: string) {
+  public setId(id: string): void {
     this.id = id
   }
 
   @Mutation
-  public setEmail(email: string) {
+  public setEmail(email: string): void {
     this.email = email
   }
 
   @Mutation
-  public setEmailVerified(emailVerified: boolean) {
+  public setEmailVerified(emailVerified: boolean): void {
     this.emailVerified = emailVerified
   }
 
   @Mutation
-  public setToken(token: string) {
+  public setToken(token: string): void {
     this.token = token
   }
 
   @Mutation
-  public setProfile(auth: IAuthProfile) {
+  public setProfile(auth: IAuthProfile): void {
     this.username = auth.username
     this.gender = auth.gender
     this.phoneNumber = auth.phoneNumber
