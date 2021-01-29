@@ -64,7 +64,7 @@ export default defineComponent({
     email: {
       type: String,
       required: false,
-      default: 'support@calamto.com',
+      default: 'support@calmato.com',
     },
     thumbnailUrl: {
       type: String,

@@ -1,4 +1,4 @@
-import { mount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 import * as Options from '~~/spec/helpers/component-helper'
 import CommonHeader from '~/components/organisms/CommonHeader.vue'
 
@@ -6,7 +6,7 @@ describe('components/organisms/CommonHeader', () => {
   let wrapper: any
 
   beforeEach(() => {
-    wrapper = mount(CommonHeader, { ...Options })
+    wrapper = shallowMount(CommonHeader, { ...Options })
   })
 
   describe('script', () => {
@@ -16,7 +16,7 @@ describe('components/organisms/CommonHeader', () => {
           expect(wrapper.props().thumbnailUrl).toBe('')
         })
 
-        it('値の代入されること', () => {
+        it('値が代入されること', () => {
           wrapper.setProps({ thumbnailUrl: '/thumbnail.png' })
           expect(wrapper.props().thumbnailUrl).toBe('/thumbnail.png')
         })
@@ -29,7 +29,7 @@ describe('components/organisms/CommonHeader', () => {
       })
     })
 
-    describe('method', () => {
+    describe('methods', () => {
       describe('onClick', () => {
         it('emitが実行されること', async () => {
           await wrapper.vm.onClick('/')
