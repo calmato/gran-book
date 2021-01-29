@@ -44,7 +44,6 @@ export default defineComponent({
   setup(props, { emit }: SetupContext) {
     const { thumbnailUrl } = props
 
-    // TODO: 型定義
     const items: IHeaderListItem[] = [{ text: '設定', to: '/system' }]
 
     const onClick = (link: string): void => {

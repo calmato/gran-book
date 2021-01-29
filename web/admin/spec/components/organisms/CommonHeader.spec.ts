@@ -16,7 +16,7 @@ describe('components/organisms/CommonHeader', () => {
           expect(wrapper.props().thumbnailUrl).toBe('')
         })
 
-        it('値の代入', () => {
+        it('値の代入されること', () => {
           wrapper.setProps({ thumbnailUrl: '/thumbnail.png' })
           expect(wrapper.props().thumbnailUrl).toBe('/thumbnail.png')
         })
@@ -26,6 +26,30 @@ describe('components/organisms/CommonHeader', () => {
     describe('data', () => {
       it('items', () => {
         expect(wrapper.vm.items).toEqual([{ text: '設定', to: '/system' }])
+      })
+    })
+
+    describe('method', () => {
+      describe('onClick', () => {
+        it('emitが実行されること', async () => {
+          await wrapper.vm.onClick('/')
+          expect(wrapper.emitted().click).toBeTruthy()
+          expect(wrapper.emitted().click[0][0]).toBe('/')
+        })
+      })
+
+      describe('onClickLogout', () => {
+        it('emitが実行されること', async () => {
+          await wrapper.vm.onClickLogout()
+          expect(wrapper.emitted().logout).toBeTruthy()
+        })
+      })
+
+      describe('onChange', () => {
+        it('emitが実行されること', async () => {
+          await wrapper.vm.onChange()
+          expect(wrapper.emitted().change).toBeTruthy()
+        })
       })
     })
   })
