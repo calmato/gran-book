@@ -36,7 +36,7 @@ describe('components/organisms/SignInForm', () => {
       describe('onClick', () => {
         it('emitが実行されること', async () => {
           await wrapper.vm.onClick()
-          expect(wrapper.emitted().click).toBeTruthy()
+          expect(wrapper.emitted('click')).toBeTruthy()
         })
       })
     })

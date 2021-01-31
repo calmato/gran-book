@@ -33,22 +33,22 @@ describe('components/organisms/CommonHeader', () => {
       describe('onClick', () => {
         it('emitが実行されること', async () => {
           await wrapper.vm.onClick('/')
-          expect(wrapper.emitted().click).toBeTruthy()
-          expect(wrapper.emitted().click[0][0]).toBe('/')
+          expect(wrapper.emitted('click')).toBeTruthy()
+          expect(wrapper.emitted('click')[0][0]).toBe('/')
         })
       })
 
       describe('onClickLogout', () => {
         it('emitが実行されること', async () => {
           await wrapper.vm.onClickLogout()
-          expect(wrapper.emitted().logout).toBeTruthy()
+          expect(wrapper.emitted('logout')).toBeTruthy()
         })
       })
 
       describe('onChange', () => {
         it('emitが実行されること', async () => {
           await wrapper.vm.onChange()
-          expect(wrapper.emitted().change).toBeTruthy()
+          expect(wrapper.emitted('change')).toBeTruthy()
         })
       })
     })

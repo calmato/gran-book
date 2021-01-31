@@ -28,8 +28,8 @@ describe('components/organisms/CommonSidebarListItem', () => {
         it('emitが実行されること', async () => {
           wrapper.setData({ item: { icon: 'mdi-home', text: 'ホーム画面', to: '/' } })
           await wrapper.vm.onClick()
-          expect(wrapper.emitted().click).toBeTruthy()
-          expect(wrapper.emitted().click[0][0]).toBe('/')
+          expect(wrapper.emitted('click')).toBeTruthy()
+          expect(wrapper.emitted('click')[0][0]).toBe('/')
         })
       })
     })

@@ -36,7 +36,7 @@ describe('components/templates/Home', () => {
       describe('onClickSubmitButton', () => {
         it('emitが実行されること', async () => {
           await wrapper.vm.onClickSubmitButton()
-          expect(wrapper.emitted().submit).toBeTruthy()
+          expect(wrapper.emitted('submit')).toBeTruthy()
         })
       })
     })

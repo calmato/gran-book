@@ -113,9 +113,10 @@ describe('components/ogranisms/CommonSidebar', () => {
           expect(wrapper.vm.navigationDrawer).toBeTruthy()
         })
 
-        it('setter', () => {
-          wrapper.setProps({ drawer: false })
-          expect(wrapper.vm.navigationDrawer).toBeFalsy()
+        it('setter', async () => {
+          await wrapper.setData({ navigationDrawer: false })
+          expect(wrapper.emitted('update:drawer')).toBeTruthy()
+          expect(wrapper.emitted('update:drawer')[0][0]).toBeFalsy()
         })
       })
     })
@@ -124,8 +125,8 @@ describe('components/ogranisms/CommonSidebar', () => {
       describe('onClick', () => {
         it('emitが実行されること', async () => {
           await wrapper.vm.onClick('/')
-          expect(wrapper.emitted().click).toBeTruthy()
-          expect(wrapper.emitted().click[0][0]).toBe('/')
+          expect(wrapper.emitted('click')).toBeTruthy()
+          expect(wrapper.emitted('click')[0][0]).toBe('/')
         })
       })
     })
