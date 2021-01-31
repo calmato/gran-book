@@ -74,27 +74,27 @@ export default class AuthModule extends VuexModule {
   }
 
   @Mutation
-  public setId(id: string): void {
+  private setId(id: string): void {
     this.id = id
   }
 
   @Mutation
-  public setEmail(email: string): void {
+  private setEmail(email: string): void {
     this.email = email
   }
 
   @Mutation
-  public setEmailVerified(emailVerified: boolean): void {
+  private setEmailVerified(emailVerified: boolean): void {
     this.emailVerified = emailVerified
   }
 
   @Mutation
-  public setToken(token: string): void {
+  private setToken(token: string): void {
     this.token = token
   }
 
   @Mutation
-  public setProfile(auth: IAuthProfile): void {
+  private setProfile(auth: IAuthProfile): void {
     this.username = auth.username
     this.gender = auth.gender
     this.phoneNumber = auth.phoneNumber
@@ -187,6 +187,8 @@ export default class AuthModule extends VuexModule {
         .$get('/v1/auth')
         .then((res: IAuthResponse) => {
           const data: IAuthProfile = { ...res }
+          console.log('debug', 'res', res)
+          console.log('debug', 'data', data)
           this.setProfile(data)
           resolve(res.role)
         })
