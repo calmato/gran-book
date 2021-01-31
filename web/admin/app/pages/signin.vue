@@ -23,10 +23,24 @@ export default defineComponent({
     })
 
     const handleSubmit = async () => {
-      // TODO: エラー処理
       await AuthStore.loginWithEmailAndPassword(form)
-        .then(() => router.push('/'))
-        .catch((err: Error) => console.log('debug', err))
+        .then(async () => {
+          await AuthStore.showAuth()
+            .then((role: number) => {
+              if (role === 0) {
+                throw new Error('forbidden user role')
+              }
+
+              router.push('/')
+            })
+            .catch(() => {
+              AuthStore.logout()
+            })
+        })
+        .catch((err: Error) => {
+          // TODO: show alert
+          console.log('debug', err)
+        })
     }
 
     return {

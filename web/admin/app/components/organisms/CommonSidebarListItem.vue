@@ -23,14 +23,11 @@ export default defineComponent({
   },
 
   setup(props, { emit }: SetupContext) {
-    const { item } = props
-
     const onClick = () => {
-      emit('click', item.to)
+      emit('click', props.item.to)
     }
 
     return {
-      item,
       onClick,
     }
   },

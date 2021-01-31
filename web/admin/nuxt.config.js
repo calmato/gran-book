@@ -20,7 +20,7 @@ export default {
   css: [],
 
   components: true,
-  plugins: ['~/plugins/firebase', '~/plugins/persisted-state'],
+  plugins: ['~/plugins/axios', '~/plugins/axios-accessor', '~/plugins/firebase', '~/plugins/persisted-state'],
   buildModules: ['@nuxt/typescript-build', '@nuxtjs/composition-api', '@nuxtjs/vuetify'],
   modules: ['@nuxtjs/axios', '@nuxt/content'],
 
@@ -28,7 +28,6 @@ export default {
     middleware: ['authenticated'],
   },
 
-  axios: {},
   content: {},
 
   vuetify: {
@@ -61,6 +60,7 @@ export default {
     firebaseApiKey: process.env.FIREBASE_API_KEY,
     firebaseProjectId: process.env.FIREBASE_PROJECT_ID,
     firebaseMessagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+    apiURL: process.env.API_URL,
   },
 
   build: {},

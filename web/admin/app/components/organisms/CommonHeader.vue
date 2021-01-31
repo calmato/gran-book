@@ -13,7 +13,7 @@
     <v-menu rounded offset-y transition="scroll-x-reverse-transition">
       <template v-slot:activator="{ on, attrs }">
         <v-avatar v-bind="attrs" size="40" color="grey lighten-2" v-on="on">
-          <v-img :src="thumbnail ? thumbnail : '/thumbnail.png'" />
+          <v-img :src="thumbnailUrl ? thumbnailUrl : '/thumbnail.png'" />
         </v-avatar>
       </template>
       <v-list dense>
@@ -33,11 +33,15 @@ import { defineComponent, SetupContext } from '@nuxtjs/composition-api'
 import { IHeaderListItem } from '~/types/props'
 
 export default defineComponent({
-  setup(_, { emit }: SetupContext) {
-    // TODO: propsから取得
-    const thumbnail: string = ''
+  props: {
+    thumbnailUrl: {
+      type: String,
+      required: false,
+      default: '',
+    },
+  },
 
-    // TODO: 型定義
+  setup(_, { emit }: SetupContext) {
     const items: IHeaderListItem[] = [{ text: '設定', to: '/system' }]
 
     const onClick = (link: string): void => {
@@ -53,7 +57,6 @@ export default defineComponent({
     }
 
     return {
-      thumbnail,
       items,
       onClick,
       onClickLogout,

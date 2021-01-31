@@ -1,7 +1,19 @@
 <template>
   <v-app>
-    <common-header @click="handleClick" @change="handleChange" @logout="handleClickLogout" />
-    <common-sidebar :current="current" :drawer.sync="drawer" @click="handleClick" />
+    <common-header
+      :thumbnail-url="thumbnailUrl"
+      @click="handleClick"
+      @change="handleChange"
+      @logout="handleClickLogout"
+    />
+    <common-sidebar
+      :username="username"
+      :email="email"
+      :thumbnail-url="thumbnailUrl"
+      :current="current"
+      :drawer.sync="drawer"
+      @click="handleClick"
+    />
     <v-main>
       <nuxt />
     </v-main>
@@ -23,7 +35,12 @@ export default defineComponent({
   setup(_, { root }: SetupContext) {
     const router = root.$router
     const current = root.$route.path
+    const store = root.$store
     const drawer = ref<Boolean>(true)
+
+    const username = store.getters['auth/getUsername']
+    const email = store.getters['auth/getEmail']
+    const thumbnailUrl = store.getters['auth/getThumbnailUrl']
 
     const handleClick = (link: string): void => {
       router.push(link)
@@ -39,8 +56,11 @@ export default defineComponent({
     }
 
     return {
-      drawer,
       current,
+      drawer,
+      username,
+      email,
+      thumbnailUrl,
       handleClick,
       handleClickLogout,
       handleChange,

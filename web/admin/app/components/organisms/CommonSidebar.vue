@@ -1,15 +1,15 @@
 <template>
-  <v-navigation-drawer v-model="drawer" app clipped mobile-breakpoint="960" mini-variant-width="70">
+  <v-navigation-drawer v-model="navigationDrawer" app clipped mobile-breakpoint="960" mini-variant-width="70">
     <!-- profile -->
     <v-sheet class="py-1 px-4">
       <v-list>
         <v-list-item two-line class="px-0">
           <v-list-item-avatar color="grey lighten-2">
-            <v-img src="/thumbnail.png" />
+            <v-img :src="thumbnailUrl ? thumbnailUrl : '/thumbnail.png'" />
           </v-list-item-avatar>
           <v-list-item-content>
-            <v-list-item-title>Calmato 管理者</v-list-item-title>
-            <v-list-item-subtitle class="caption">support@calmato.com</v-list-item-subtitle>
+            <v-list-item-title>{{ username }}</v-list-item-title>
+            <v-list-item-subtitle class="caption">{{ email }}</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -56,10 +56,24 @@ export default defineComponent({
       required: true,
       default: true,
     },
+    username: {
+      type: String,
+      required: false,
+      default: 'Calmato 管理者',
+    },
+    email: {
+      type: String,
+      required: false,
+      default: 'support@calmato.com',
+    },
+    thumbnailUrl: {
+      type: String,
+      required: false,
+      default: '',
+    },
   },
 
   setup(props, { emit }: SetupContext) {
-    // TODO: propsから username, email の取得ができるよう
     const { current } = props
 
     const commonItems: ISidebarListItem[] = [{ icon: 'mdi-home', text: 'ホーム', to: '/' }]
@@ -83,7 +97,7 @@ export default defineComponent({
     const target: ISidebarListItem | undefined = items.filter((item: ISidebarListItem) => item.to === current).shift()
     const selectedItem: number = target ? items.indexOf(target) : -1
 
-    const drawer = computed({
+    const navigationDrawer = computed({
       get: () => props.drawer,
       set: (val: boolean) => emit('update:drawer', val),
     })
@@ -93,7 +107,7 @@ export default defineComponent({
     }
 
     return {
-      drawer,
+      navigationDrawer,
       selectedItem,
       commonItems,
       maintenanceItems,
