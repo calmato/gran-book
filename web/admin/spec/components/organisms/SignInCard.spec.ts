@@ -9,7 +9,7 @@ describe('components/organisms/SignInCard', () => {
     wrapper = shallowMount(SignInCard, { ...Options })
   })
 
-  it('not exist', () => {
-    expect(true).toBeTruthy()
+  it('test is not exist', () => {
+    expect(wrapper.html()).toMatchSnapshot()
   })
 })

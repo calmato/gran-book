@@ -79,9 +79,7 @@ describe('components/ogranisms/CommonSidebar', () => {
       })
 
       it('commonItems', () => {
-        expect(wrapper.vm.commonItems).toEqual([
-          { icon: 'mdi-home', text: 'ホーム', to: '/' },
-        ])
+        expect(wrapper.vm.commonItems).toEqual([{ icon: 'mdi-home', text: 'ホーム', to: '/' }])
       })
 
       it('maintenanceItems', () => {

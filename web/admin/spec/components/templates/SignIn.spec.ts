@@ -26,7 +26,7 @@ describe('components/templates/Home', () => {
         })
 
         it('値が代入されること', () => {
-          wrapper.setProps({ form: { email: 'test@calmato.com', password: '12345678' }})
+          wrapper.setProps({ form: { email: 'test@calmato.com', password: '12345678' } })
           expect(wrapper.props().form).toEqual({ email: 'test@calmato.com', password: '12345678' })
         })
       })

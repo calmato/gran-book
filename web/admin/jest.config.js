@@ -16,5 +16,5 @@ module.exports = {
   testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.(js?|ts?)$',
   setupFiles: ['<rootDir>/spec/helpers/setup.ts'],
   collectCoverage: true,
-  collectCoverageFrom: ['<rootDir>/app/components/**/*.vue','<rootDir>/app/store/**/(?!index)*.ts'],
+  collectCoverageFrom: ['<rootDir>/app/components/**/*.vue', '<rootDir>/app/store/**/(?!index)*.ts'],
 }

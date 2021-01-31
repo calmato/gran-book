@@ -14,26 +14,18 @@ const store = new Vuex.Store({
 })
 
 // Error を返したいときだけ false にする
-let isSafetyMode: boolean = true
+const isSafetyMode: boolean = true
 
 jest.mock('~/plugins/axios', () => ({
   $axios: {
-    $get: (key: string) => isSafetyMode
-      ? Promise.resolve(response['get'][key])
-      : Promise.reject(response['error']),
-    $post: (key: string) => isSafetyMode
-      ? Promise.resolve(response['post'][key])
-      : Promise.reject(response['error']),
-    $patch: (key: string) => isSafetyMode
-      ? Promise.resolve(response['patch'][key])
-      : Promise.reject(response['error']),
-    $put: (key: string) => isSafetyMode
-      ? Promise.resolve(response['put'][key])
-      : Promise.reject(response['error']),
-    $delete: (key: string) => isSafetyMode
-      ? Promise.resolve(response['delete'][key])
-      : Promise.reject(response['error']),
-  }
+    $get: (key: string) => (isSafetyMode ? Promise.resolve(response['get'][key]) : Promise.reject(response['error'])),
+    $post: (key: string) => (isSafetyMode ? Promise.resolve(response['post'][key]) : Promise.reject(response['error'])),
+    $patch: (key: string) =>
+      isSafetyMode ? Promise.resolve(response['patch'][key]) : Promise.reject(response['error']),
+    $put: (key: string) => (isSafetyMode ? Promise.resolve(response['put'][key]) : Promise.reject(response['error'])),
+    $delete: (key: string) =>
+      isSafetyMode ? Promise.resolve(response['delete'][key]) : Promise.reject(response['error']),
+  },
 }))
 
 export { localVue, store, isSafetyMode }
