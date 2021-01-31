@@ -25,6 +25,7 @@ module "gke" {
   gke_cluster_description = "gran-book-stg application cluster for staging"
 
   gke_cluster_min_master_version = "1.17.14-gke.400"
+  gke_cluster_istio_disabled     = true
 
   #################################################
   # GKE Node
@@ -51,7 +52,7 @@ module "gke" {
   #################################################
   # GCE Global Address
   #################################################
-  create_global_address = true
+  create_global_address = false
 
   global_address_name = "gran-book-stg-ip-address"
 }
@@ -64,7 +65,7 @@ module "mysql" {
   #################################################
   # Cloud SQL - Instance
   #################################################
-  sql_instance_name          = "gran-book-stg-db"
+  sql_instance_name          = "gran-book-mysql"
   sql_instance_root_password = var.sql_instance_root_password
 
   sql_instance_database_version = "MYSQL_8_0"

@@ -32,6 +32,7 @@ const PasswordInput = function PasswordInput(props: Props): ReactElement {
         </TouchableOpacity>
       }
       errorMessage={ props.hasError? props.errorMessage : '' }
+      maxLength={32}
     />
   );
 };
