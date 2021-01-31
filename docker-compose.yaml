@@ -89,6 +89,7 @@ services:
   # Database
   mysql:
     container_name: gran_book_mysql
+    platform: linux/x86_64
     build:
       context: ./infra/docker/infra/mysql
       dockerfile: Dockerfile
