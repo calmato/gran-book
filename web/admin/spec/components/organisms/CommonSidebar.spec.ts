@@ -6,7 +6,13 @@ describe('components/ogranisms/CommonSidebar', () => {
   let wrapper: any
 
   beforeEach(() => {
-    wrapper = shallowMount(CommonSidebar, { ...Options })
+    wrapper = shallowMount(CommonSidebar, {
+      ...Options,
+      propsData: {
+        current: '',
+        drawer: true,
+      },
+    })
   })
 
   describe('script', () => {
@@ -104,14 +110,14 @@ describe('components/ogranisms/CommonSidebar', () => {
     })
 
     describe('computed', () => {
-      describe('drawer', () => {
+      describe('navigationDrawer', () => {
         it('getter', () => {
-          expect(wrapper.vm.drawer).toBeTruthy()
+          expect(wrapper.vm.navigationDrawer).toBeTruthy()
         })
 
         it('setter', () => {
           wrapper.setProps({ drawer: false })
-          expect(wrapper.vm.drawer).toBeFalsy()
+          expect(wrapper.vm.navigationDrawer).toBeFalsy()
         })
       })
     })
