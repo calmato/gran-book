@@ -30,6 +30,31 @@ describe('components/templates/Home', () => {
           expect(wrapper.props().form).toEqual({ email: 'test@calmato.com', password: '12345678' })
         })
       })
+
+      describe('hasError', () => {
+        it('初期値', () => {
+          expect(wrapper.props().hasError).toBeFalsy()
+        })
+
+        it('値が代入されること', () => {
+          wrapper.setProps({ hasError: true })
+          expect(wrapper.props().hasError).toBeTruthy()
+        })
+      })
+    })
+
+    describe('computed', () => {
+      describe('showAlert', () => {
+        it('getter', () => {
+          expect(wrapper.vm.showAlert).toBeFalsy()
+        })
+
+        it('setter', async () => {
+          await wrapper.setData({ showAlert: true })
+          expect(wrapper.emitted('update:hasError')).toBeTruthy()
+          expect(wrapper.emitted('update:hasError')[0][0]).toBeTruthy()
+        })
+      })
     })
 
     describe('methods', () => {
