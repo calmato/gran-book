@@ -33,15 +33,12 @@ export default defineComponent({
     },
   },
 
-  setup(props, { emit }: SetupContext) {
-    const { form } = props
-
+  setup(_, { emit }: SetupContext) {
     const onClickSubmitButton = () => {
       emit('submit')
     }
 
     return {
-      form,
       onClickSubmitButton,
     }
   },

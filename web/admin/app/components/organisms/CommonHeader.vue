@@ -41,9 +41,7 @@ export default defineComponent({
     },
   },
 
-  setup(props, { emit }: SetupContext) {
-    const { thumbnailUrl } = props
-
+  setup(_, { emit }: SetupContext) {
     const items: IHeaderListItem[] = [{ text: '設定', to: '/system' }]
 
     const onClick = (link: string): void => {
@@ -59,7 +57,6 @@ export default defineComponent({
     }
 
     return {
-      thumbnailUrl,
       items,
       onClick,
       onClickLogout,

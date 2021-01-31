@@ -187,8 +187,6 @@ export default class AuthModule extends VuexModule {
         .$get('/v1/auth')
         .then((res: IAuthResponse) => {
           const data: IAuthProfile = { ...res }
-          console.log('debug', 'res', res)
-          console.log('debug', 'data', data)
           this.setProfile(data)
           resolve(res.role)
         })

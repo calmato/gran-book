@@ -18,15 +18,12 @@ export default defineComponent({
     },
   },
 
-  setup(props, { emit }: SetupContext) {
-    const { form } = props
-
+  setup(_, { emit }: SetupContext) {
     const onClick = () => {
       emit('click')
     }
 
     return {
-      form,
       onClick,
     }
   },

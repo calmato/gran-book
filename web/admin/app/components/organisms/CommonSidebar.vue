@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer v-model="drawer" app clipped mobile-breakpoint="960" mini-variant-width="70">
+  <v-navigation-drawer v-model="navigationDrawer" app clipped mobile-breakpoint="960" mini-variant-width="70">
     <!-- profile -->
     <v-sheet class="py-1 px-4">
       <v-list>
@@ -74,7 +74,7 @@ export default defineComponent({
   },
 
   setup(props, { emit }: SetupContext) {
-    const { current, username, email, thumbnailUrl } = props
+    const { current } = props
 
     const commonItems: ISidebarListItem[] = [{ icon: 'mdi-home', text: 'ホーム', to: '/' }]
     const maintenanceItems: ISidebarListItem[] = [
@@ -97,7 +97,7 @@ export default defineComponent({
     const target: ISidebarListItem | undefined = items.filter((item: ISidebarListItem) => item.to === current).shift()
     const selectedItem: number = target ? items.indexOf(target) : -1
 
-    const drawer = computed({
+    const navigationDrawer = computed({
       get: () => props.drawer,
       set: (val: boolean) => emit('update:drawer', val),
     })
@@ -107,10 +107,7 @@ export default defineComponent({
     }
 
     return {
-      drawer,
-      username,
-      email,
-      thumbnailUrl,
+      navigationDrawer,
       selectedItem,
       commonItems,
       maintenanceItems,
