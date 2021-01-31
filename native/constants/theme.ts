@@ -4,7 +4,8 @@ import { colors, Theme } from 'react-native-elements';
 const FONT_FAMILY = Platform.OS === 'ios' ? 'Arial' : 'Roboto';
 
 export const COLOR = {
-  MAIN: '#4ABBF3',
+  MAIN: '#FFC107',
+  TITLE: '#6D4C41',
   GREY: '#3A3A3A',
   APPLE: '#333333',
   TWITTER: '#55ACEE',
