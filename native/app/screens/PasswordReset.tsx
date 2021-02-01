@@ -50,7 +50,7 @@ const PasswordReset = function PasswordReset(props: Props): ReactElement {
       <Button
         disabled={hasError}
         onPress={() => undefined}
-        title="メールを送信する"
+        title='メールを送信する'
       />
     </View>
   );
