@@ -13,7 +13,7 @@
     <v-menu rounded offset-y transition="scroll-x-reverse-transition">
       <template v-slot:activator="{ on, attrs }">
         <v-avatar v-bind="attrs" size="40" color="grey lighten-2" v-on="on">
-          <v-img :src="thumbnailUrl ? thumbnailUrl : '/thumbnail.png'" />
+          <v-img :src="thumbnailUrl" />
         </v-avatar>
       </template>
       <v-list dense>

@@ -69,8 +69,24 @@ export default class AuthModule extends VuexModule {
     return this.username
   }
 
+  public get getPhoneNumber(): string {
+    return this.phoneNumber
+  }
+
   public get getThumbnailUrl(): string {
-    return this.thumbnailUrl
+    return this.thumbnailUrl ? this.thumbnailUrl : '/thumbnail.png'
+  }
+
+  public get getSelfIntroduction(): string {
+    return this.selfIntroduction
+  }
+
+  public get getName(): string {
+    return `${this.lastName} ${this.firstName}`
+  }
+
+  public get getNameKana(): string {
+    return `${this.lastNameKana} ${this.firstNameKana}`
   }
 
   @Mutation
