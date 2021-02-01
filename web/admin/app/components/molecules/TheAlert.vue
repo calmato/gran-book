@@ -35,7 +35,9 @@ export default defineComponent({
       emit('update:show', false)
     }
 
-    return {}
+    return {
+      hiddenAlert,
+    }
   },
 })
 </script>
