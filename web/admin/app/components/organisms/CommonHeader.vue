@@ -13,7 +13,7 @@
     <v-menu rounded offset-y transition="scroll-x-reverse-transition">
       <template v-slot:activator="{ on, attrs }">
         <v-avatar v-bind="attrs" size="40" color="grey lighten-2" v-on="on">
-          <v-img :src="thumbnailUrl ? thumbnailUrl : '/thumbnail.png'" />
+          <v-img :src="thumbnailUrl" />
         </v-avatar>
       </template>
       <v-list dense>
@@ -42,7 +42,7 @@ export default defineComponent({
   },
 
   setup(_, { emit }: SetupContext) {
-    const items: IHeaderListItem[] = [{ text: '設定', to: '/system' }]
+    const items: IHeaderListItem[] = [{ text: '設定', to: '/settings' }]
 
     const onClick = (link: string): void => {
       emit('click', link)

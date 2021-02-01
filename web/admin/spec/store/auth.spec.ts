@@ -19,8 +19,24 @@ describe('store/auth', () => {
       expect(AuthStore.getUsername).toBe('')
     })
 
+    it('getPhoneNumber', () => {
+      expect(AuthStore.getPhoneNumber).toBe('')
+    })
+
     it('getThumbnailUrl', () => {
-      expect(AuthStore.getThumbnailUrl).toBe('')
+      expect(AuthStore.getThumbnailUrl).toBe('/thumbnail.png')
+    })
+
+    it('getSelfIntroduction', () => {
+      expect(AuthStore.getSelfIntroduction).toBe('')
+    })
+
+    it('getName', () => {
+      expect(AuthStore.getName).toBe('')
+    })
+
+    it('getNameKana', () => {
+      expect(AuthStore.getNameKana).toBe('')
     })
   })
 
