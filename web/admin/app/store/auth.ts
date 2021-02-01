@@ -88,7 +88,7 @@ export default class AuthModule extends VuexModule {
 
   public get getNameKana(): string {
     const space: string = this.lastNameKana && this.firstNameKana ? ' ' : ''
-    return this.lastNameKana + space +  this.firstNameKana
+    return this.lastNameKana + space + this.firstNameKana
   }
 
   @Mutation

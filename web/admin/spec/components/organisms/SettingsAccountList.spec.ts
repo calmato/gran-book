@@ -18,7 +18,9 @@ describe('components/organisms/SettingsAccountList', () => {
 
         it('値が代入されること', () => {
           wrapper.setProps({ lists: [{ title: 'パスワード', content: '************', to: '/settings/password' }] })
-          expect(wrapper.props().lists).toEqual([{ title: 'パスワード', content: '************', to: '/settings/password' }])
+          expect(wrapper.props().lists).toEqual([
+            { title: 'パスワード', content: '************', to: '/settings/password' },
+          ])
         })
       })
     })
