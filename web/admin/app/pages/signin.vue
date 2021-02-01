@@ -1,9 +1,9 @@
 <template>
-  <sign-in :form="form" @submit="handleSubmit" />
+  <sign-in :form="form" :has-error.sync="hasError" @submit="handleSubmit" />
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, SetupContext } from '@nuxtjs/composition-api'
+import { defineComponent, ref, reactive, SetupContext } from '@nuxtjs/composition-api'
 import { AuthStore } from '~/store'
 import { ISignInForm } from '~/types/forms'
 import SignIn from '~/components/templates/SignIn.vue'
@@ -22,6 +22,8 @@ export default defineComponent({
       password: '',
     })
 
+    const hasError = ref<Boolean>(false)
+
     const handleSubmit = async () => {
       await AuthStore.loginWithEmailAndPassword(form)
         .then(async () => {
@@ -37,14 +39,14 @@ export default defineComponent({
               AuthStore.logout()
             })
         })
-        .catch((err: Error) => {
-          // TODO: show alert
-          console.log('debug', err)
+        .catch(() => {
+          hasError.value = true
         })
     }
 
     return {
       form,
+      hasError,
       handleSubmit,
     }
   },
