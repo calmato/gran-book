@@ -42,7 +42,7 @@ export default defineComponent({
   },
 
   setup(_, { emit }: SetupContext) {
-    const items: IHeaderListItem[] = [{ text: '設定', to: '/system' }]
+    const items: IHeaderListItem[] = [{ text: '設定', to: '/settings' }]
 
     const onClick = (link: string): void => {
       emit('click', link)
