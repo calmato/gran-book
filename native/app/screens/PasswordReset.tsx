@@ -32,8 +32,8 @@ const PasswordReset = function PasswordReset(props: Props): ReactElement {
     return !emailValidation(formData.email);
   }, [formData.email]);
 
-  const canSubmit = useMemo((): boolean => {
-    return !emailError;
+  const hasError = useMemo((): boolean => {
+    return emailError;
   }, [emailError]);
 
   return (
@@ -48,7 +48,7 @@ const PasswordReset = function PasswordReset(props: Props): ReactElement {
         value={formData?.email}
       />
       <Button
-        disabled={!canSubmit}
+        disabled={hasError}
         onPress={() => undefined}
         title="メールを送信する"
       />
