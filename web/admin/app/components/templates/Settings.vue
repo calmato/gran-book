@@ -15,11 +15,11 @@
               </v-tab>
 
               <v-tab-item>
-                <settings-profile-list :lists="profileLists" @click="onClick(profileEditPath)" />
+                <settings-profile-list :lists="profileLists" @click="onClickEditButton(profileEditPath)" />
               </v-tab-item>
 
               <v-tab-item>
-                <settings-account-list :lists="accountLists" @click="onClick" />
+                <settings-account-list :lists="accountLists" @click="onClickEditButton" />
               </v-tab-item>
             </v-tabs>
           </v-card>
@@ -90,7 +90,7 @@ export default defineComponent({
       },
       {
         title: '氏名',
-        content: props.nameKana === ' ' ? props.name : `${props.name} (${props.nameKana})`,
+        content: props.nameKana ? `${props.name} (${props.nameKana})` : props.name,
         contentType: 'text',
       },
       {
@@ -123,7 +123,7 @@ export default defineComponent({
       },
     ]
 
-    const onClick = (path: string) => {
+    const onClickEditButton = (path: string) => {
       emit('click', path)
     }
 
@@ -131,7 +131,7 @@ export default defineComponent({
       profileEditPath,
       profileLists,
       accountLists,
-      onClick,
+      onClickEditButton,
     }
   },
 })

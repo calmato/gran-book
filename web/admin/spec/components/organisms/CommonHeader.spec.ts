@@ -25,7 +25,7 @@ describe('components/organisms/CommonHeader', () => {
 
     describe('data', () => {
       it('items', () => {
-        expect(wrapper.vm.items).toEqual([{ text: '設定', to: '/system' }])
+        expect(wrapper.vm.items).toEqual([{ text: '設定', to: '/settings' }])
       })
     })
 
