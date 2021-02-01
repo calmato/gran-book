@@ -41,6 +41,6 @@ export default defineComponent({
     return {
       onClick,
     }
-  }
+  },
 })
 </script>

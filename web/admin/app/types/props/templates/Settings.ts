@@ -1,11 +1,11 @@
 export interface IAccountList {
-  title: string,
-  content: string,
-  to: string,
+  title: string
+  content: string
+  to: string
 }
 
 export interface IProfileList {
-  title: string,
-  content: string,
-  contentType: string,
+  title: string
+  content: string
+  contentType: string
 }
