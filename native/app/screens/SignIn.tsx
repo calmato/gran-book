@@ -8,6 +8,7 @@ import { SignInForm } from '~/types/forms';
 import { emailValidation, passwordValidation } from '~/lib/validation';
 import { AuthStackParamList } from '~/types/navigation';
 import { Button } from 'react-native-elements';
+import ForgotPasswordButton from '~/components/molecules/ForgotPasswordButton';
 
 const styles = StyleSheet.create({
   container: {
@@ -64,6 +65,9 @@ const SignIn = function SignIn(props: Props): ReactElement {
         disabled={!canSubmit}
         onPress={() => undefined}
         title="サインイン"
+      />
+      <ForgotPasswordButton
+        onPress={() => navigation.navigate('PasswordReset')}
       />
     </View>
   );
