@@ -49,7 +49,7 @@ const PasswordReset = function PasswordReset(props: Props): ReactElement {
       />
       <Button
         disabled={hasError}
-        onPress={() => undefined}
+        onPress={() => navigation.navigate('SignUpCheckEmail', {email: formData.email})}
         title='メールを送信する'
       />
     </View>
