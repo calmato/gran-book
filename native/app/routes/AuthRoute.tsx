@@ -1,9 +1,9 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React, { ReactElement } from 'react';
 import SignInSelect from '~/screens/SignInSelect';
-import SignUp from '~/screens/SignUp';
 import SignUpCheckEmail from '~/screens/SignUpCheckEmail';
 import SingIn from '~/screens/SignIn';
+import { SignUp } from '~/store/containers';
 import { AuthStackParamList } from '~/types/navigation';
 import PasswordReset from '~/screens/PasswordReset';
 
