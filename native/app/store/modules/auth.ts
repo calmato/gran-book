@@ -1,4 +1,3 @@
-import { create } from 'react-test-renderer';
 import { Auth } from '~/store/models';
 
 // Initial
@@ -32,15 +31,15 @@ export type Action =
   | Readonly<ReturnType<typeof reset>>;
 
 // Reducer
-export default function reducer(state: State = createInitialState(), action: Action) {
+export default function reducer(state: State = createInitialState(), action: Action): Auth.Model {
   const { payload } = action;
 
   switch (action.type) {
-    case SET_AUTH:
-      return Auth.setAuth(state, payload.auth);
-    case RESET:
-      return Auth.factory();
-    default:
-      return state;
+  case SET_AUTH:
+    return Auth.setAuth(state, payload.auth);
+  case RESET:
+    return Auth.factory();
+  default:
+    return state;
   }
 }

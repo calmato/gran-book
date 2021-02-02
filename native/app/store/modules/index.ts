@@ -1,22 +1,27 @@
-import { AppState } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { combineReducers, Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-import * as Auth from './auth';
+import * as AuthState from './auth';
+import { Auth } from '~/store/models';
 
-export function createInitialState() {
+interface InitialState {
+  auth: Auth.Model
+}
+
+export function createInitialState(): InitialState {
   return {
-    auth: Auth.createInitialState(),
+    auth: AuthState.createInitialState(),
   };
 }
 
 export type AppState = Readonly<ReturnType<typeof createInitialState>>;
 
 export default combineReducers<AppState>({
-  auth: Auth.default,
+  auth: AuthState.default,
 });
 
-export type ReduxDispatch = ThunkDispatch<AppState, any, Action>;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type ReduxDispatch = ThunkDispatch<AppState, InitialState, Action>;
 
 export function useReduxDispatch(): ReduxDispatch {
   return useDispatch<ReduxDispatch>();

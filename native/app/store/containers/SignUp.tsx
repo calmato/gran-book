@@ -3,7 +3,7 @@ import { useReduxDispatch } from '~/store/modules';
 import { signUpWithEmailAsync } from '~/store/usecases/auth';
 import SignUp from '~/screens/SignUp';
 
-export default function ConnectedSignUp() {
+export default function ConnectedSignUp(): JSX.Element {
   const dispatch = useReduxDispatch();
 
   const actions = React.useMemo(
