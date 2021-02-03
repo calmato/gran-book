@@ -2,6 +2,7 @@ import React, { ReactElement, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { ButtonGroup, Image, Text } from 'react-native-elements';
 import ButtonGroupInfoImp from '~/components/organisms/ButtonGroupInfoImp';
+import FlexBoxBookCategory from '~/components/organisms/FlexBoxBookCategory';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import { COLOR } from '~~/constants/theme';
 
@@ -13,34 +14,41 @@ const styles = StyleSheet.create({
   imageContainer: {
     marginTop: 45, 
     width: 200,
-    height: 200,
+    height: 280,
   },
   titleContainer: {
-    marginTop: 45, 
-    marginLeft: 30,
-    marginRight: 30,
+    marginTop: 35,
+    paddingTop: 10, 
+    paddingLeft: 30,
+    paddingRight: 30,
     fontSize: 20,
     alignSelf: 'stretch',
-    color: COLOR.BLACK
+    color: COLOR.BLACK,
+    backgroundColor: COLOR.WHITE,
   },
   autherContainer: {
-    marginTop: 15,
-    marginLeft: 30,
-    marginRight: 30,
+    paddingTop: 15,
+    paddingLeft: 30,
+    paddingRight: 30,
+    paddingBottom: 10,
     fontSize: 20,
-    alignSelf: 'stretch'
+    alignSelf: 'stretch',
+    backgroundColor: COLOR.WHITE,
   },
   detailContainer: {
-    marginTop: 45, 
-    marginLeft: 20,
-    marginRight: 20,
+    marginTop: 40,
+    paddingTop: 10, 
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingBottom: 10,
     fontSize: 16,
-    alignSelf: 'stretch'
+    alignSelf: 'stretch',
+    backgroundColor: COLOR.WHITE,
   }
 });
 
 const BookShow = function BookShow(): ReactElement {
-  
+
   const [index, setValue] = useState(0);
 
   return (
@@ -56,7 +64,7 @@ const BookShow = function BookShow(): ReactElement {
         selectedIndex={index}
       />
       <Image
-        // TODO 画像のURIを代入
+        // TODO 本の情報を代入
         source={{uri:undefined}}
         style={styles.imageContainer}
         transition={true}
@@ -64,7 +72,7 @@ const BookShow = function BookShow(): ReactElement {
       <Text style={styles.titleContainer}>題名</Text>
       <Text style={styles.autherContainer}>著者</Text>
       <Text style={styles.detailContainer}>本の詳細</Text>
-
+      <FlexBoxBookCategory category={'コミック'}/>
     </View>
   );
 };
