@@ -3,7 +3,7 @@ import React, { ReactElement } from 'react';
 import SignInSelect from '~/screens/SignInSelect';
 import SignUpCheckEmail from '~/screens/SignUpCheckEmail';
 import SingIn from '~/screens/SignIn';
-import { SignUp } from '~/store/containers';
+import { SignUp } from '~/containers';
 import { AuthStackParamList } from '~/types/navigation';
 import PasswordReset from '~/screens/PasswordReset';
 
