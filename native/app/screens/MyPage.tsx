@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
     marginLeft: 12,
     fontSize: 15,
-    color: colors.black,
+    color: '#6D4C41',
     fontWeight: '600'
   },
   scrollArea: {
@@ -27,10 +27,10 @@ const styles = StyleSheet.create({
   }
 });
 
-type MyPageProp = StackNavigationProp<RootStackParamList, 'SignInSelect'>;
+type MyPageProp = StackNavigationProp<RootStackParamList, 'MyPage'>;
 
 interface Props {
-  navigaton: MyPageProp
+  navigation: MyPageProp
 }
 
 const avatarList =
@@ -40,13 +40,13 @@ const avatarList =
   };
 
 const MyPage = function MyPage(props: Props): ReactElement {
-  const navigaton = props.navigaton;
+  const navigation = props.navigation;
 
   return (
     <View style={styles.scrollArea}>
       <HeaderWithBackButton
         title="マイページ"
-        onPress={() => navigaton.goBack()}
+        onPress={() => navigation.goBack()}
       />
       <SafeAreaView>
         <ScrollView>
