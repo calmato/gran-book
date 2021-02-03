@@ -1,6 +1,7 @@
 import React, { ReactElement, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { ButtonGroup, Image, Text } from 'react-native-elements';
+import ButtonGroupInfoImp from '~/components/organisms/ButtonGroupInfoImp';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import { COLOR } from '~~/constants/theme';
 
@@ -40,8 +41,6 @@ const styles = StyleSheet.create({
 
 const BookShow = function BookShow(): ReactElement {
   
-  const buttons = ['情報','感想']
-
   const [index, setValue] = useState(0);
 
   return (
@@ -52,9 +51,8 @@ const BookShow = function BookShow(): ReactElement {
         // TODO Navigation の変数できたらProps作って追加
         onPress={() => undefined}
       />
-      <ButtonGroup
-        buttons={buttons}
-        onPress={(selectedIndex) => setValue(selectedIndex)}
+      <ButtonGroupInfoImp
+        handleOnPressed={(selectedIndex) => setValue(selectedIndex)}
         selectedIndex={index}
       />
       <Image
@@ -66,7 +64,7 @@ const BookShow = function BookShow(): ReactElement {
       <Text style={styles.titleContainer}>題名</Text>
       <Text style={styles.autherContainer}>著者</Text>
       <Text style={styles.detailContainer}>本の詳細</Text>
-      
+
     </View>
   );
 };
