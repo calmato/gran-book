@@ -16,7 +16,7 @@ const HeaderWithBackButton = function HeaderWithBackButton(props: Props): ReactE
       leftComponent={
         <BackButton
           size={24}
-          color={COLOR.TITLE}
+          color={COLOR.TEXT_TITLE}
           onPress={() => props.onPress()}
         />
       }
