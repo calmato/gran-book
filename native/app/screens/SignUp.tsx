@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { StackNavigationProp } from '@react-navigation/stack';
+import { useNavigation } from '@react-navigation/native';
 import React, { ReactElement, useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button, colors, Input } from 'react-native-elements';
@@ -9,7 +9,6 @@ import PasswordInput from '~/components/molecules/PasswordInput';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import { emailValidation } from '~/lib/validation';
 import { SingUpForm } from '~/types/forms';
-import { AuthStackParamList } from '~/types/navigation';
 
 const styles = StyleSheet.create({
   container: {
@@ -21,14 +20,15 @@ const styles = StyleSheet.create({
   },
 });
 
-type SignUpProp = StackNavigationProp<AuthStackParamList, 'SignUp'>
-
 interface Props {
-  navigation: SignUpProp,
+  actions: {
+    signUpWithEmail: (email: string, password: string, passwordConfirmation: string, username: string) => Promise<void>,
+  },
 }
 
 const SignUp = function SignUp(props: Props): ReactElement {
-  const navigation = props.navigation;
+  const navigation = useNavigation();
+  const { signUpWithEmail } = props.actions;
 
   const [formData, setValue] = useState<SingUpForm>({
     email: '',
@@ -52,13 +52,29 @@ const SignUp = function SignUp(props: Props): ReactElement {
 
   const canSubmit = useMemo(():boolean => {
     return !emailError && !passwordError && !passwordConfirmationError && formData.agreement;
-  }, [ emailError, passwordError, passwordConfirmationError, formData.agreement]);
+  }, [emailError, passwordError, passwordConfirmationError, formData.agreement]);
+
+  const handleSubmit = React.useCallback(async () => {
+    await signUpWithEmail(
+      formData.email,
+      formData.password,
+      formData.passwordConfirmation,
+      formData.username,
+    )
+      .then(() => {
+        navigation.navigate('SignUpCheckEmail', { email: formData.email });
+      })
+      .catch((err: Error) => {
+        console.log('debug', err);
+      // TODO: エラー処理
+      });
+  }, [formData.email, formData.password, formData.passwordConfirmation, formData.username, signUpWithEmail]);
 
   return (
     <View style={styles.container} >
       <HeaderWithBackButton
         title="ユーザー登録"
-        onPress={() => navigation.goBack() }
+        onPress={() => navigation.goBack()}
       />
       <MailInput
         onChangeText={(text) => setValue({ ...formData, email: text})}
@@ -93,7 +109,7 @@ const SignUp = function SignUp(props: Props): ReactElement {
         checked={formData.agreement}
         title="利用規約に同意しました．"
       />
-      <Button disabled={!canSubmit} onPress={() => navigation.navigate('SignUpCheckEmail', {email: formData.email})} title="登録する"/>
+      <Button disabled={!canSubmit} onPress={handleSubmit} title="登録する"/>
     </View>
   );
 };
