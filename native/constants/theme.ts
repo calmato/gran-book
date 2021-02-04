@@ -4,7 +4,20 @@ import { colors, Theme } from 'react-native-elements';
 const FONT_FAMILY = Platform.OS === 'ios' ? 'Arial' : 'Roboto';
 
 export const COLOR = {
-  MAIN: '#4ABBF3',
+  PRIMARY: '#FFC107',
+  PRIMARY_LIGHT: '#FFF350',
+  SECONDARY: '#F57C00',
+  ACCENT: '#03A9F4',
+  TEXT_DEFAULT: '#3A3A3A',
+  TEXT_TITLE: '#6D4C41',
+  TEXT_WHITE: '#FFFFFF',
+  TEXT_GRAY: '#939393',
+  TEXT_INFO: '#03A9F4',
+  TEXT_SUCCESS: '#00E676',
+  TEXT_ALERT: '#FF5252',
+  TEXT_WARNING: '#FF5252',
+  BACKGROUND_WHITE: '#FFFFFF',
+  BACKGROUND_GREY: '#F9F9F9',
   GREY: '#3A3A3A',
   APPLE: '#333333',
   TWITTER: '#55ACEE',
@@ -17,7 +30,7 @@ export const COLOR = {
 // react-native-elementsの共通の設定
 export const THEME: Theme = {
   colors: {
-    primary: COLOR.MAIN,
+    primary: COLOR.PRIMARY,
     grey0: COLOR.GREY,
   },
   Button: {

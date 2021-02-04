@@ -1,12 +1,12 @@
 import React, { ReactElement } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import { colors } from 'react-native-elements';
+import { COLOR } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
   textStyle: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: colors.white,
+    color: COLOR.TEXT_TITLE,
   },
   layout: {
     justifyContent: 'center'
