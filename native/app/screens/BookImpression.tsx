@@ -1,18 +1,24 @@
 import React, { ReactElement } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Text, View } from 'react-native';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
-import { ListItem, Avatar } from 'react-native-elements'
+import { ListItem, Avatar, Divider } from 'react-native-elements'
+import { COLOR } from '~~/constants/theme';
+import { Ionicons } from '@expo/vector-icons'; 
 
 const list = [
   {
     name: 'hamachans',
     avatar_url: 'https://storage.cloud.google.com/presto-pay-dev.appspot.com/user_thumbnails/80d01b6c-566f-43fa-89e1-7b54cfcb6558',
-    subtilte: '2020/12/02'
+    subtilte: '2020/12/02',
+    text: '面白すぎわろた',
+    numberOfLikes: 5,
   },
   {
     name: 'Atsuhide',
     avatar_url: 'https://storage.cloud.google.com/presto-pay-dev.appspot.com/user_thumbnails/80d01b6c-566f-43fa-89e1-7b54cfcb6558',
-    subtilte: '2020/12/04'
+    subtilte: '2020/12/04',
+    text: '最高です',
+    numberOfLikes: 10000,
   }
 ]
 
@@ -26,13 +32,21 @@ const BookImpression = function BookImpression(): ReactElement {
       <View>
         {
           list.map((l, i) => (
-            <ListItem key={i} bottomDivider>
-              <Avatar source={{uri: l.avatar_url}} />
-              <ListItem.Content>
-                <ListItem.Title>{l.name + 'が感想を投稿しました'}</ListItem.Title>
-                <ListItem.Subtitle>{l.subtilte}</ListItem.Subtitle>
-              </ListItem.Content>
+            <View style={{backgroundColor: COLOR.TEXT_WHITE}}>
+            <ListItem key={i} >
+                <Avatar source={{uri: l.avatar_url}}/>
+                <ListItem.Content>
+                  <ListItem.Title>{l.name + 'が感想を投稿しました'}</ListItem.Title>
+                  <ListItem.Subtitle>{l.subtilte}</ListItem.Subtitle>
+                </ListItem.Content>
             </ListItem>
+            <Text style={{fontSize: 16, marginStart: 15, marginEnd:15,}}>{l.text}</Text>
+            <View style={{marginStart: 15, flexDirection: 'row',alignItems: 'center'}} >
+              <Ionicons name="heart-outline" size={48} color="black"/>
+              <Text style={{marginStart:10}}>{l.numberOfLikes}</Text>
+            </View>
+            <Divider style={{height: 2}}/>
+            </View>
           ))
         }
       </View>
