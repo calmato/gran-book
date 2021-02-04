@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react';
 import { Text, View } from 'react-native';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
-import { ListItem, Avatar, Divider } from 'react-native-elements'
+import { ListItem, Avatar, Divider, Image } from 'react-native-elements'
 import { COLOR } from '~~/constants/theme';
 import { Ionicons } from '@expo/vector-icons'; 
 
@@ -22,6 +22,12 @@ const list = [
   }
 ]
 
+const bookInfo = {
+  title: '何者',
+  image_url: 'https://storage.cloud.google.com/presto-pay-dev.appspot.com/user_thumbnails/80d01b6c-566f-43fa-89e1-7b54cfcb6558',
+  author: '稲富',
+}
+
 const BookImpression = function BookImpression(): ReactElement {
   return (
     <View>
@@ -29,7 +35,17 @@ const BookImpression = function BookImpression(): ReactElement {
         title='感想'
         onPress={() => undefined}
       />
-      <View>
+      <View style={{flexDirection:'row', marginStart: 10, marginTop: 10, backgroundColor: COLOR.TEXT_WHITE}}>
+        <Image
+          source={{uri:bookInfo.image_url}}
+          style={{width: 50, height: 70,}}
+        />
+        <View style={{justifyContent: 'space-around', marginStart:20}}>
+          <Text style={{fontSize: 16}}>{bookInfo.title}</Text>
+          <Text style={{fontSize: 16, color: COLOR.GREY}}>{bookInfo.author}</Text>
+        </View>
+      </View>
+      <View style={{marginTop: 10}}>
         {
           list.map((l, i) => (
             <View style={{backgroundColor: COLOR.TEXT_WHITE}}>
