@@ -7,7 +7,8 @@
   "license": "MIT",
   "scripts": {
     "build": "webpack --config webpack.config.js",
-    "dev": "yarn build --watch & nodemon dist/server.js"
+    "dev": "yarn build --watch & nodemon dist/server.js",
+    "lint": "eslint --ext .js,.ts --ignore-path .gitignore ./src"
   },
   "dependencies": {
     "cors": "^2.8.5",
@@ -17,7 +18,12 @@
     "@types/cors": "^2.8.9",
     "@types/express": "^4.17.11",
     "@types/node": "^14.14.22",
+    "@typescript-eslint/eslint-plugin": "^4.14.2",
+    "@typescript-eslint/parser": "^4.14.2",
+    "eslint": "^7.19.0",
+    "eslint-config-prettier": "^7.2.0",
     "nodemon": "^2.0.7",
+    "prettier": "^2.2.1",
     "ts-loader": "^8.0.14",
     "ts-node": "^9.1.1",
     "typescript": "^4.1.3",
