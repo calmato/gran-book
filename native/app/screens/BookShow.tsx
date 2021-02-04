@@ -74,7 +74,13 @@ const BookShow = function BookShow(): ReactElement {
       <Text style={styles.autherContainer}>著者</Text>
       <Text style={styles.detailContainer}>本の詳細</Text>
       <FlexBoxBookCategory category={'コミック'}/>
-      <ButtonGroupBookFooter/>
+      <ButtonGroupBookFooter
+        handleNavigateToReadBoook={()=>undefined}
+        handleNavigateToReadingBoook={()=>undefined}
+        handleNavigateToTsundoku={()=>undefined}
+        handleNavigateToSellBoook={()=>undefined}
+        handleNavigateToWishList={()=>undefined}
+      />
     </View>
   );
 };
