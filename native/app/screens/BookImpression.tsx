@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react';
 import { Text, View } from 'react-native';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
-import { ListItem, Avatar, Divider, Image } from 'react-native-elements'
+import { ListItem, Avatar, Divider, Image, Badge } from 'react-native-elements'
 import { COLOR } from '~~/constants/theme';
 import { Ionicons } from '@expo/vector-icons'; 
 
@@ -34,6 +34,10 @@ const BookImpression = function BookImpression(): ReactElement {
       <HeaderWithBackButton
         title='感想'
         onPress={() => undefined}
+      />
+      <Badge 
+        value={<Text style={{fontSize: 16}}>{list.length + '件'}</Text>}
+        badgeStyle={{backgroundColor: COLOR.DARKGREY, alignSelf: 'flex-start', marginStart: 10, marginTop: 10, height: 30, width: 150, borderRadius:75}}
       />
       <View style={{flexDirection:'row', marginStart: 10, marginTop: 10, backgroundColor: COLOR.TEXT_WHITE}}>
         <Image
