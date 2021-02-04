@@ -7,7 +7,7 @@ interface Props {
 }
 
 const ButtonGroupInfoImp = function ButtonGroupInfoImp(props:Props): ReactElement {
-  const buttons = ['情報','感想']
+  const buttons = ['情報','感想'];
   return (
     <ButtonGroup
       buttons={buttons}

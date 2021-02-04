@@ -1,6 +1,6 @@
 import React, { ReactElement, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { ButtonGroup, Image, Text } from 'react-native-elements';
+import { Image, Text } from 'react-native-elements';
 import ButtonGroupInfoImp from '~/components/organisms/ButtonGroupInfoImp';
 import FlexBoxBookCategory from '~/components/organisms/FlexBoxBookCategory';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';

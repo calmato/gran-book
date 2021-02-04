@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  category: String,
+  category: string,
 }
 
 const FlexBoxBookCategory = function FlexBoxBookCategory(props:Props): ReactElement {
