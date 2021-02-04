@@ -35,6 +35,19 @@ services:
     command: yarn dev -H 0.0.0.0 -p 3000
 
   # Backend
+  admin_gateway:
+    container_name: gran_book_admin_gateway
+    build:
+      context: ./infra/docker/api/gateway/admin
+      dockerfile: Dockerfile_development
+    working_dir: /var/gateway
+    volumes:
+      - ./api/gateway/admin:/var/gateway:cached
+      - ./tmp/logs/gateway/admin:/var/log/gateway:delegated
+    networks:
+      - api
+      - monitoring
+
   gateway:
     container_name: gran_book_gateway
     build:
