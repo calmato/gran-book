@@ -1,10 +1,11 @@
 import React, { ReactElement, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Button, StyleSheet, View } from 'react-native';
 import { Image, Text } from 'react-native-elements';
 import ButtonGroupInfoImp from '~/components/organisms/ButtonGroupInfoImp';
 import FlexBoxBookCategory from '~/components/organisms/FlexBoxBookCategory';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import { COLOR } from '~~/constants/theme';
+import ButtonGroupBookFooter from '~/components/organisms/ButtonGroupBookFooter';
 
 const styles = StyleSheet.create({
   container: {
@@ -73,6 +74,7 @@ const BookShow = function BookShow(): ReactElement {
       <Text style={styles.autherContainer}>著者</Text>
       <Text style={styles.detailContainer}>本の詳細</Text>
       <FlexBoxBookCategory category={'コミック'}/>
+      <ButtonGroupBookFooter/>
     </View>
   );
 };
