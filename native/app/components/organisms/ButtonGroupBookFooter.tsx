@@ -66,7 +66,7 @@ const ButtonGroupBookFooter = function ButtonGroupBookFooter(props: Props): Reac
         />
         <Text>手放したい本</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.childStyle} onPress={props.handleNavigateWishList}>
+      <TouchableOpacity style={styles.childStyle} onPress={props.handleNavigateToWishList}>
         <MaterialCommunityIcons 
           name='bookmark-plus' 
           size={ICONSIZE}
