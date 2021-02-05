@@ -6,7 +6,8 @@ const styles = StyleSheet.create({
   boxLayout: {
     flex: 1, 
     flexDirection: 'row', 
-    marginTop: 35,
+    marginTop: 20,
+    marginBottom: 20,
     paddingTop: 10, 
     paddingBottom: 10, 
     paddingLeft: 20,

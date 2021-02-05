@@ -4,7 +4,7 @@ import { MaterialCommunityIcons, Ionicons, FontAwesome5 } from '@expo/vector-ico
 import { COLOR } from '~~/constants/theme';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-const ICONSIZE = 48;
+const ICONSIZE = 36;
 
 const styles = StyleSheet.create({
   parentStyle:{
@@ -13,13 +13,14 @@ const styles = StyleSheet.create({
     backgroundColor: COLOR.WHITE,
     alignSelf: 'stretch',
     justifyContent: 'space-between',
-    alignItems: 'flex-end',
     paddingLeft: 20,
     paddingRight: 20,
-    paddingBottom:20,
+    marginBottom:10,
   },
   childStyle: {
     alignItems: 'center',
+    alignSelf: 'stretch',
+    justifyContent: 'flex-end'
   }
 });
 
@@ -39,14 +40,16 @@ const ButtonGroupBookFooter = function ButtonGroupBookFooter(props: Props): Reac
           name='book-plus' 
           size={ICONSIZE}
           color={COLOR.PRIMARY}
+          style={{marginBottom: 4}}
         />
         <Text>読んだ本</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.childStyle} onPress={props.handleNavigateToReadingBoook}>
-        <Ionicons 
-          name='book' 
+        <MaterialCommunityIcons 
+          name='book-open-page-variant' 
           size={ICONSIZE}
           color={COLOR.PRIMARY}
+          style={{marginBottom: 4}}
         />
         <Text>読んでる本</Text>
       </TouchableOpacity>
@@ -55,6 +58,7 @@ const ButtonGroupBookFooter = function ButtonGroupBookFooter(props: Props): Reac
           name='bookshelf' 
           size={ICONSIZE}
           color={COLOR.PRIMARY}
+          style={{marginBottom: 4}}
         />
         <Text>積読本</Text>
       </TouchableOpacity>
@@ -63,6 +67,7 @@ const ButtonGroupBookFooter = function ButtonGroupBookFooter(props: Props): Reac
           name='people-carry' 
           size={ICONSIZE}
           color={COLOR.PRIMARY}
+          style={{marginBottom: 4}}
         />
         <Text>手放したい本</Text>
       </TouchableOpacity>
@@ -71,6 +76,7 @@ const ButtonGroupBookFooter = function ButtonGroupBookFooter(props: Props): Reac
           name='bookmark-plus' 
           size={ICONSIZE}
           color={COLOR.PRIMARY}
+          style={{marginBottom: 4}}
         />
         <Text>欲しい本</Text>
       </TouchableOpacity>
