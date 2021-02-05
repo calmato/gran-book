@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
-import { ListItem, Avatar, Divider, Image, Badge } from 'react-native-elements'
+import { ListItem, Avatar, Divider, Image, Badge } from 'react-native-elements';
 import { COLOR } from '~~/constants/theme';
 import { Ionicons } from '@expo/vector-icons'; 
 
