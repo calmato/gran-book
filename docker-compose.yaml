@@ -148,11 +148,12 @@ services:
     container_name: gran_book_proto
     build:
       context: ./infra/docker/proto
-      dockerfile: Dockerfile_development
+      dockerfile: Dockerfile
     working_dir: /go/src/github.com/calmato/gran-book/proto
     volumes:
       - ./proto:/go/src/github.com/calmato/gran-book/proto:cached
       - ./api/user:/go/src/github.com/calmato/gran-book/api/user:cached
+      - ./api/gateway/admin:/go/src/github.com/calmato/gran-book/api/gateway/admin:cached
       - ./docs/12_backend/11_swagger:/go/src/github.com/calmato/gran-book/docs/12_backend/11_swagger:cached
       - ./infra/gateway:/go/src/github.com/calmato/gran-book/infra/gateway:cached
       - ./tmp/data/go/pkg/mod:/go/pkg/mod:delegated
