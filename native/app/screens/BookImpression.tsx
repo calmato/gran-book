@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, StyleSheet } from 'react-native';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import { ListItem, Avatar, Divider, Image, Badge } from 'react-native-elements'
 import { COLOR } from '~~/constants/theme';
@@ -28,6 +28,24 @@ const bookInfo = {
   author: '稲富',
 }
 
+const styles = StyleSheet.create({
+  badgeStyle: {
+    backgroundColor: COLOR.DARKGREY, 
+    alignSelf: 'flex-start', 
+    marginStart: 10, 
+    marginTop: 10, 
+    height: 30, 
+    width: 150, 
+    borderRadius:75, 
+  },
+  bookInfoStyle: {
+    flexDirection:'row', 
+    marginStart: 10, 
+    marginTop: 10, 
+    backgroundColor: COLOR.TEXT_WHITE,
+  },
+});
+
 const BookImpression = function BookImpression(): ReactElement {
   return (
     <View>
@@ -37,9 +55,9 @@ const BookImpression = function BookImpression(): ReactElement {
       />
       <Badge 
         value={<Text style={{fontSize: 16}}>{list.length + '件'}</Text>}
-        badgeStyle={{backgroundColor: COLOR.DARKGREY, alignSelf: 'flex-start', marginStart: 10, marginTop: 10, height: 30, width: 150, borderRadius:75}}
+        badgeStyle={styles.badgeStyle}
       />
-      <View style={{flexDirection:'row', marginStart: 10, marginTop: 10, backgroundColor: COLOR.TEXT_WHITE}}>
+      <View style={styles.bookInfoStyle}>
         <Image
           source={{uri:bookInfo.image_url}}
           style={{width: 50, height: 70,}}
