@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import { MaterialCommunityIcons, Ionicons, FontAwesome5 } from '@expo/vector-icons';
+import { MaterialCommunityIcons, FontAwesome5 } from '@expo/vector-icons';
 import { COLOR } from '~~/constants/theme';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
   parentStyle:{
     flex: 1,
     flexDirection: 'row',
-    backgroundColor: COLOR.WHITE,
+    backgroundColor: COLOR.BACKGROUND_WHITE,
     alignSelf: 'stretch',
     justifyContent: 'space-between',
     paddingLeft: 20,
@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
   childStyle: {
     alignItems: 'center',
     alignSelf: 'stretch',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
   }
 });
 

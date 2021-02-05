@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 20,
     alignSelf: 'stretch',
-    backgroundColor: COLOR.WHITE,
+    backgroundColor: COLOR.BACKGROUND_WHITE,
   }
 });
 

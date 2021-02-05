@@ -24,8 +24,6 @@ export const COLOR = {
   TWITTER: '#55ACEE',
   FACEBOOK: '#3B5998',
   GOOGLE: '#FFFFFF',
-  BLACK: '#3A3A3A',
-  WHITE: '#FFFFFF',
 };
 
 // react-native-elementsの共通の設定

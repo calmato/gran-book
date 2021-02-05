@@ -26,8 +26,8 @@ const styles = StyleSheet.create({
     paddingRight: 30,
     fontSize: 16,
     alignSelf: 'stretch',
-    color: COLOR.BLACK,
-    backgroundColor: COLOR.WHITE,
+    color: COLOR.GREY,
+    backgroundColor: COLOR.BACKGROUND_WHITE,
   },
   autherContainer: {
     paddingTop: 10,
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     fontSize: 16,
     alignSelf: 'stretch',
-    backgroundColor: COLOR.WHITE,
+    backgroundColor: COLOR.BACKGROUND_WHITE,
   },
   detailContainer: {
     marginTop: 20,
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     fontSize: 16,
     alignSelf: 'stretch',
-    backgroundColor: COLOR.WHITE,
+    backgroundColor: COLOR.BACKGROUND_WHITE,
   }
 });
 
