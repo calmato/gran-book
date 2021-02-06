@@ -44,7 +44,7 @@ start-admin:
 	docker-compose up admin
 
 start-api:
-	docker-compose up gateway user_api mysql swagger_editor
+	docker-compose up admin_gateway user_api mysql swagger_editor
 
 start-swagger:
 	docker-compose up swagger swagger_editor

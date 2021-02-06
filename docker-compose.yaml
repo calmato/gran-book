@@ -44,9 +44,16 @@ services:
     volumes:
       - ./api/gateway/admin:/var/gateway:cached
       - ./tmp/logs/gateway/admin:/var/log/gateway:delegated
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8080
+      - USER_API_URL=${USER_API_URL}
+    ports:
+      - 8081:8080
     networks:
       - api
       - monitoring
+    command: yarn dev
 
   gateway:
     container_name: gran_book_gateway
