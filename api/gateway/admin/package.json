@@ -16,7 +16,8 @@
   },
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "grpc-web": "^1.2.1"
   },
   "devDependencies": {
     "@types/cors": "^2.8.9",
