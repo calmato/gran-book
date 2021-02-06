@@ -1,6 +1,7 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useState } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
+import ButtonGroupInfoImp from '~/components/organisms/ButtonGroupInfoImp';
 import { ListItem, Avatar, Divider, Image, Badge } from 'react-native-elements';
 import { COLOR } from '~~/constants/theme';
 import { Ionicons } from '@expo/vector-icons'; 
@@ -47,11 +48,18 @@ const styles = StyleSheet.create({
 });
 
 const BookImpression = function BookImpression(): ReactElement {
+  
+  const [index, setValue] = useState(0);
+
   return (
     <View>
       <HeaderWithBackButton
         title='感想'
         onPress={() => undefined}
+      />
+      <ButtonGroupInfoImp
+        handleOnPressed={(selectedIndex) => setValue(selectedIndex)}
+        selectedIndex={index}
       />
       <Badge 
         value={<Text style={{fontSize: 16}}>{list.length + '件'}</Text>}
@@ -80,7 +88,7 @@ const BookImpression = function BookImpression(): ReactElement {
             </ListItem>
             <Text style={{fontSize: 16, marginStart: 15, marginEnd:15,}}>{l.text}</Text>
             <View style={{marginStart: 15, flexDirection: 'row',alignItems: 'center'}} >
-              <Ionicons name="heart-outline" size={48} color="black"/>
+              <Ionicons name="heart-outline" size={36} color="black"/>
               <Text style={{marginStart:10}}>{l.numberOfLikes}</Text>
             </View>
             <Divider style={{height: 2}}/>
