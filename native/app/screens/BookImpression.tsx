@@ -21,13 +21,13 @@ const list = [
     text: '最高です',
     numberOfLikes: 10000,
   }
-]
+];
 
 const bookInfo = {
   title: '何者',
   image_url: 'https://storage.cloud.google.com/presto-pay-dev.appspot.com/user_thumbnails/80d01b6c-566f-43fa-89e1-7b54cfcb6558',
   author: '稲富',
-}
+};
 
 const styles = StyleSheet.create({
   badgeStyle: {
@@ -77,21 +77,21 @@ const BookImpression = function BookImpression(): ReactElement {
       </View>
       <View style={{marginTop: 10}}>
         {
-          list.map((l, i) => (
-            <View style={{backgroundColor: COLOR.TEXT_WHITE}}>
-            <ListItem key={i} >
+          list.map((l, index) => (
+            <View style={{backgroundColor: COLOR.TEXT_WHITE}} key={index}>
+              <ListItem key={index} >
                 <Avatar source={{uri: l.avatar_url}}/>
                 <ListItem.Content>
                   <ListItem.Title>{l.name + 'が感想を投稿しました'}</ListItem.Title>
                   <ListItem.Subtitle>{l.subtilte}</ListItem.Subtitle>
                 </ListItem.Content>
-            </ListItem>
-            <Text style={{fontSize: 16, marginStart: 15, marginEnd:15,}}>{l.text}</Text>
-            <View style={{marginStart: 15, flexDirection: 'row',alignItems: 'center'}} >
-              <Ionicons name="heart-outline" size={36} color="black"/>
-              <Text style={{marginStart:10}}>{l.numberOfLikes}</Text>
-            </View>
-            <Divider style={{height: 2}}/>
+              </ListItem>
+              <Text style={{fontSize: 16, marginStart: 15, marginEnd:15,}}>{l.text}</Text>
+              <View style={{marginStart: 15, flexDirection: 'row',alignItems: 'center'}} >
+                <Ionicons name="heart-outline" size={36} color="black"/>
+                <Text style={{marginStart:10}}>{l.numberOfLikes}</Text>
+              </View>
+              <Divider style={{height: 2}}/>
             </View>
           ))
         }
