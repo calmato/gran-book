@@ -31,7 +31,7 @@ const bookInfo = {
 
 const styles = StyleSheet.create({
   badgeStyle: {
-    backgroundColor: COLOR.DARKGREY, 
+    backgroundColor: COLOR.TEXT_GRAY, 
     alignSelf: 'flex-start', 
     marginStart: 10, 
     marginTop: 10, 
