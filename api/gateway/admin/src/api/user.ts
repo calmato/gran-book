@@ -1,16 +1,15 @@
-import { credentials } from '@grpc/grpc-js'
 import { authClient } from '~/plugins/grpc'
 import { CreateAuthRequest, AuthResponse } from '~/proto/user_apiv1_pb'
 import { ICreateAuthInput } from '~/types/input'
 import { IAuthOutput } from '~/types/output'
 
-export function createAuth(payload: ICreateAuthInput): Promise<IAuthOutput> {
+export function createAuth(input: ICreateAuthInput): Promise<IAuthOutput> {
   const req = new CreateAuthRequest()
 
-  req.setEmail(payload.email)
-  req.setEmail(payload.username)
-  req.setEmail(payload.password)
-  req.setEmail(payload.passwordConfirmation)
+  req.setUsername(input.username)
+  req.setEmail(input.email)
+  req.setPassword(input.password)
+  req.setPasswordConfirmation(input.passwordConfirmation)
 
   return new Promise((resolve: (res: IAuthOutput) => void, reject: (reason: Error) => void) => {
     authClient.createAuth(req, (err: any, res: AuthResponse) => {
