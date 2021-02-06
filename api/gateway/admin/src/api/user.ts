@@ -1,20 +1,11 @@
 import { credentials } from '@grpc/grpc-js'
-import { AuthServiceClient, IAuthServiceClient } from '~/proto/user_apiv1_grpc_pb'
+import { authClient } from '~/plugins/grpc'
 import { CreateAuthRequest, AuthResponse } from '~/proto/user_apiv1_pb'
 import { ICreateAuthInput } from '~/types/input'
 import { IAuthOutput } from '~/types/output'
 
-// TODO: 環境変数から取得するように
-const userAPIURL: string = 'user_api:8080'
-
 export function createAuth(payload: ICreateAuthInput): Promise<IAuthOutput> {
   const req = new CreateAuthRequest()
-
-  // TODO: 共通化
-  const client: IAuthServiceClient = new AuthServiceClient(
-    userAPIURL,
-    credentials.createInsecure(),
-  )
 
   req.setEmail(payload.email)
   req.setEmail(payload.username)
@@ -22,7 +13,7 @@ export function createAuth(payload: ICreateAuthInput): Promise<IAuthOutput> {
   req.setEmail(payload.passwordConfirmation)
 
   return new Promise((resolve: (res: IAuthOutput) => void, reject: (reason: Error) => void) => {
-    client.createAuth(req, (err: any, res: AuthResponse) => {
+    authClient.createAuth(req, (err: any, res: AuthResponse) => {
       if (err) {
         reject(err)
         return
