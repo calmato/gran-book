@@ -6,6 +6,7 @@ const FONT_FAMILY = Platform.OS === 'ios' ? 'Arial' : 'Roboto';
 export const COLOR = {
   PRIMARY: '#FFC107',
   PRIMARY_LIGHT: '#FFF350',
+  PRIMARY_DARK: '#F57C00',
   SECONDARY: '#F57C00',
   ACCENT: '#03A9F4',
   TEXT_DEFAULT: '#3A3A3A',
