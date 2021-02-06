@@ -15,9 +15,10 @@
     "test": "echo 'not running..'"
   },
   "dependencies": {
+    "@grpc/grpc-js": "^1.2.6",
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "grpc-web": "^1.2.1"
+    "google-protobuf": "^3.14.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.9",
