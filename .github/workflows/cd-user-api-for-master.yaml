@@ -3,7 +3,7 @@ on:
   push:
     paths:
       - '.github/workflows/cd-user-api-for-master.yaml'
-      - 'api/user/**'
+      - 'api/server/user/**'
     branches:
       - master
 

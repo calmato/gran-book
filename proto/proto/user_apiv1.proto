@@ -3,49 +3,13 @@ syntax = "proto3";
 package proto;
 option go_package = "github.com/calmato/gran-book/proto";
 
-import "google/api/annotations.proto";
-
 service AuthService {
-  rpc GetAuth (EmptyUser) returns (AuthResponse) {
-    option (google.api.http) = {
-      get: "/v1/auth"
-    };
-  };
-
-  rpc CreateAuth (CreateAuthRequest) returns (AuthResponse) {
-    option (google.api.http) = {
-      post: "/v1/auth"
-      body: "*"
-    };
-  };
-
-  rpc UpdateAuthEmail (UpdateAuthEmailRequest) returns (AuthResponse) {
-    option (google.api.http) = {
-      patch: "/v1/auth/email"
-      body: "*"
-    };
-  }
-
-  rpc UpdateAuthPassword (UpdateAuthPasswordRequest) returns (AuthResponse) {
-    option (google.api.http) = {
-      patch: "/v1/auth/password"
-      body: "*"
-    };
-  };
-
-  rpc UpdateAuthProfile (UpdateAuthProfileRequest) returns (AuthResponse) {
-    option (google.api.http) = {
-      patch: "/v1/auth/profile"
-      body: "*"
-    };
-  };
-
-  rpc UpdateAuthAddress (UpdateAuthAddressRequest) returns (AuthResponse) {
-    option (google.api.http) = {
-      patch: "/v1/auth/address"
-      body: "*"
-    };
-  };
+  rpc GetAuth (EmptyUser) returns (AuthResponse);
+  rpc CreateAuth (CreateAuthRequest) returns (AuthResponse);
+  rpc UpdateAuthEmail (UpdateAuthEmailRequest) returns (AuthResponse);
+  rpc UpdateAuthPassword (UpdateAuthPasswordRequest) returns (AuthResponse);
+  rpc UpdateAuthProfile (UpdateAuthProfileRequest) returns (AuthResponse);
+  rpc UpdateAuthAddress (UpdateAuthAddressRequest) returns (AuthResponse);
 }
 
 message EmptyUser {}
