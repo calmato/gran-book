@@ -80,7 +80,7 @@ const BookImpression = function BookImpression(): ReactElement {
           list.map((l, index) => (
             <View style={{backgroundColor: COLOR.TEXT_WHITE}} key={index}>
               <ListItem key={index} >
-                <Avatar source={{uri: l.avatar_url}}/>
+                <Avatar source={{uri: l.avatar_url}} rounded/>
                 <ListItem.Content>
                   <ListItem.Title>{l.name + 'が感想を投稿しました'}</ListItem.Title>
                   <ListItem.Subtitle>{l.subtilte}</ListItem.Subtitle>
