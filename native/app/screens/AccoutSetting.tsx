@@ -24,6 +24,9 @@ const styles = StyleSheet.create({
   scrollArea: {
     paddingBottom: 200,
   },
+  listMarign: {
+    marginTop: 5,
+  },
   version: {
     fontSize: 20,
     color: COLOR.TEXT_GRAY,
@@ -76,10 +79,10 @@ const AccountSetting  = function AccountSetting(props: Props): ReactElement {
           <Text style={styles.subtilte}>アカウント設定</Text>
           <View>
             {
-              accountSettingList.map((l, i) => (
+              accountSettingList.map((item, i) => (
                 <ListItem key={i} bottomDivider>
                   <ListItem.Content>
-                    <ListItem.Title>{l.title}</ListItem.Title>
+                    <ListItem.Title style={styles.listMarign}>{item.title}</ListItem.Title>
                   </ListItem.Content>
                   <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
                 </ListItem>
@@ -89,14 +92,14 @@ const AccountSetting  = function AccountSetting(props: Props): ReactElement {
           <Text style={styles.subtilte}>プッシュ通知設定</Text>
           <ListItem key={6} bottomDivider>
             <ListItem.Content>
-              <ListItem.Title>{'プッシュ通知設定'}</ListItem.Title>
+              <ListItem.Title style={styles.listMarign}>{'プッシュ通知設定'}</ListItem.Title>
             </ListItem.Content>
             <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
           </ListItem>
           <Text style={styles.subtilte}>ホーム画面表示項目設定</Text>
           <ListItem key={7} bottomDivider>
             <ListItem.Content>
-              <ListItem.Title>{'おすすめの本'}</ListItem.Title>
+              <ListItem.Title style={styles.listMarign}>{'おすすめの本'}</ListItem.Title>
             </ListItem.Content>
             <Switch
               trackColor={{ false: COLOR.GREY, true: COLOR.TEXT_SUCCESS }}
@@ -108,7 +111,7 @@ const AccountSetting  = function AccountSetting(props: Props): ReactElement {
           </ListItem>
           <ListItem key={8} bottomDivider>
             <ListItem.Content>
-              <ListItem.Title>{'新刊情報'}</ListItem.Title>
+              <ListItem.Title style={styles.listMarign}>{'新刊情報'}</ListItem.Title>
             </ListItem.Content>
             <Switch
               trackColor={{ false: COLOR.GREY, true: COLOR.TEXT_SUCCESS }}
@@ -120,7 +123,7 @@ const AccountSetting  = function AccountSetting(props: Props): ReactElement {
           </ListItem>
           <ListItem key={9} bottomDivider>
             <ListItem.Content>
-              <ListItem.Title>{'感想'}</ListItem.Title>
+              <ListItem.Title style={styles.listMarign}>{'感想'}</ListItem.Title>
             </ListItem.Content>
             <Switch
               trackColor={{ false: COLOR.GREY, true: COLOR.TEXT_SUCCESS }}
@@ -133,13 +136,13 @@ const AccountSetting  = function AccountSetting(props: Props): ReactElement {
           <Text style={styles.subtilte}>情報</Text>
           <ListItem key={10} bottomDivider>
             <ListItem.Content>
-              <ListItem.Title>{'ライセンス情報'}</ListItem.Title>
+              <ListItem.Title style={styles.listMarign}>{'ライセンス情報'}</ListItem.Title>
             </ListItem.Content>
             <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
           </ListItem>
           <ListItem key={11} bottomDivider>
             <ListItem.Content>
-              <ListItem.Title>{'バージョン情報'}</ListItem.Title>
+              <ListItem.Title style={styles.listMarign}>{'バージョン情報'}</ListItem.Title>
             </ListItem.Content>
             <Text style={styles.version}>{version}</Text>
           </ListItem>
