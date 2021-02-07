@@ -31,6 +31,24 @@ const styles = StyleSheet.create({
 });
 
 const version = '1.00';
+const accountSettingList = [
+  {
+    title: 'プロフィール'
+  },
+  {
+    title: '発送元・お届け先住所'
+  },
+  {
+    title: 'クレジットコード一覧'
+  },
+  {
+    title: 'メールアドレス・パスワード'
+  },
+  {
+    title: 'サインアウト'
+  }
+];
+
 type AccountSettingProp= StackNavigationProp<RootStackParamList, 'SignInSelect'>;
 
 interface Props {
@@ -49,42 +67,25 @@ const AccountSetting  = function AccountSetting(props: Props): ReactElement {
   return (
     <View>
       <HeaderWithBackButton
-        title="アカウント"
+        title='アカウント'
         onPress={() => navigation.goBack()}
       />
       <SafeAreaView>
         <ScrollView>
+
           <Text style={styles.subtilte}>アカウント設定</Text>
-          <ListItem key={1} bottomDivider>
-            <ListItem.Content>
-              <ListItem.Title>{'プロフィール'}</ListItem.Title>
-            </ListItem.Content>
-            <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
-          </ListItem>
-          <ListItem key={2} bottomDivider>
-            <ListItem.Content>
-              <ListItem.Title>{'発送元・お届け先住所'}</ListItem.Title>
-            </ListItem.Content>
-            <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
-          </ListItem>
-          <ListItem key={3} bottomDivider>
-            <ListItem.Content>
-              <ListItem.Title>{'クレジットカード一覧'}</ListItem.Title>
-            </ListItem.Content>
-            <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
-          </ListItem>
-          <ListItem key={4} bottomDivider>
-            <ListItem.Content>
-              <ListItem.Title>{'メールアドレス・パスワード'}</ListItem.Title>
-            </ListItem.Content>
-            <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
-          </ListItem>
-          <ListItem key={5} bottomDivider>
-            <ListItem.Content>
-              <ListItem.Title>{'サインアウト'}</ListItem.Title>
-            </ListItem.Content>
-            <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
-          </ListItem>
+          <View>
+            {
+              accountSettingList.map((l, i) => (
+                <ListItem key={i} bottomDivider>
+                  <ListItem.Content>
+                    <ListItem.Title>{l.title}</ListItem.Title>
+                  </ListItem.Content>
+                  <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
+                </ListItem>
+              ))
+            }
+          </View>
           <Text style={styles.subtilte}>プッシュ通知設定</Text>
           <ListItem key={6} bottomDivider>
             <ListItem.Content>
