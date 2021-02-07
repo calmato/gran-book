@@ -2,7 +2,7 @@ import 'jest';
 import React from 'react';
 
 import { shallow, configure } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16.1';
+import Adapter from 'enzyme-adapter-react-16';
 import SearchIcon from '~/components/atoms/SearchIcon';
 import { Ionicons } from '@expo/vector-icons';
 import { COLOR } from '~~/constants/theme';
