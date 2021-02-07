@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   version: {
-    fontSize: 20,
+    fontSize: 16,
     color: COLOR.TEXT_GRAY,
   },
 });
@@ -94,7 +94,7 @@ const AccountSetting  = function AccountSetting(props: Props): ReactElement {
             <ListItem.Content>
               <ListItem.Title style={styles.listMarign}>{'プッシュ通知設定'}</ListItem.Title>
             </ListItem.Content>
-            <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
+            <MaterialIcons name="keyboard-arrow-right" size={24} color={COLOR.GREY} />
           </ListItem>
           <Text style={styles.subtilte}>ホーム画面表示項目設定</Text>
           <ListItem key={7} bottomDivider>
@@ -103,7 +103,7 @@ const AccountSetting  = function AccountSetting(props: Props): ReactElement {
             </ListItem.Content>
             <Switch
               trackColor={{ false: COLOR.GREY, true: COLOR.TEXT_SUCCESS }}
-              thumbColor={isEnabledBook ? COLOR.BACKGROUND_WHITE : COLOR.BACKGROUND_WHITE}
+              thumbColor={COLOR.BACKGROUND_WHITE}
               ios_backgroundColor= {COLOR.TEXT_GRAY}
               onValueChange={toggleSwitchBook}
               value={isEnabledBook}
@@ -115,7 +115,7 @@ const AccountSetting  = function AccountSetting(props: Props): ReactElement {
             </ListItem.Content>
             <Switch
               trackColor={{ false: COLOR.GREY, true: COLOR.TEXT_SUCCESS }}
-              thumbColor={isEnabledInformation ? COLOR.BACKGROUND_WHITE : COLOR.BACKGROUND_WHITE}
+              thumbColor={COLOR.BACKGROUND_WHITE}
               ios_backgroundColor= {COLOR.TEXT_GRAY}
               onValueChange={toggleSwitchInformation}
               value={isEnabledInformation}
@@ -127,7 +127,7 @@ const AccountSetting  = function AccountSetting(props: Props): ReactElement {
             </ListItem.Content>
             <Switch
               trackColor={{ false: COLOR.GREY, true: COLOR.TEXT_SUCCESS }}
-              thumbColor={isEnabledImpressions ? COLOR.BACKGROUND_WHITE : COLOR.BACKGROUND_WHITE}
+              thumbColor={COLOR.BACKGROUND_WHITE}
               ios_backgroundColor= {COLOR.TEXT_GRAY}
               onValueChange={toggleSwitchImpressions}
               value={isEnabledImpressions}
