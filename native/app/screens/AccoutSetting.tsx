@@ -23,9 +23,14 @@ const styles = StyleSheet.create({
   },
   scrollArea: {
     paddingBottom: 200,
-  }
+  },
+  version: {
+    fontSize: 20,
+    color: COLOR.TEXT_GRAY,
+  },
 });
 
+const version = '1.00'
 type AccountSettingProp= StackNavigationProp<RootStackParamList, 'SignInSelect'>;
 
 interface Props {
@@ -40,6 +45,7 @@ const AccountSetting  = function AccountSetting(props: Props): ReactElement {
   const toggleSwitchBook = () => setIsEnabledBook(previousState => !previousState);
   const toggleSwitchInformation = () => setIsEnabledInformation(previousState => !previousState);
   const toggleSwitchImpressions = () => setIsEnabledImpressions(previousState => !previousState);
+
   return (
     <View>
       <HeaderWithBackButton
@@ -122,6 +128,19 @@ const AccountSetting  = function AccountSetting(props: Props): ReactElement {
               onValueChange={toggleSwitchImpressions}
               value={isEnabledImpressions}
             />
+          </ListItem>
+          <Text style={styles.subtilte}>情報</Text>
+          <ListItem key={10} bottomDivider>
+            <ListItem.Content>
+              <ListItem.Title>{'ライセンス情報'}</ListItem.Title>
+            </ListItem.Content>
+            <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
+          </ListItem>
+          <ListItem key={11} bottomDivider>
+            <ListItem.Content>
+              <ListItem.Title>{'バージョン情報'}</ListItem.Title>
+            </ListItem.Content>
+          <Text style={styles.version}>{version}</Text>
           </ListItem>
         </ScrollView>
       </SafeAreaView>
