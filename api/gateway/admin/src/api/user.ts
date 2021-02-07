@@ -1,7 +1,8 @@
 import { authClient } from '~/plugins/grpc'
+import { getError } from '~/plugins/grpc-exception'
 import { CreateAuthRequest, AuthResponse } from '~/proto/user_apiv1_pb'
 import { ICreateAuthInput } from '~/types/input'
-import { IAuthOutput } from '~/types/output'
+import { IAuthOutput, IErrorOutput } from '~/types/output'
 
 export function createAuth(input: ICreateAuthInput): Promise<IAuthOutput> {
   const req = new CreateAuthRequest()
@@ -11,10 +12,10 @@ export function createAuth(input: ICreateAuthInput): Promise<IAuthOutput> {
   req.setPassword(input.password)
   req.setPasswordConfirmation(input.passwordConfirmation)
 
-  return new Promise((resolve: (res: IAuthOutput) => void, reject: (reason: Error) => void) => {
+  return new Promise((resolve: (res: IAuthOutput) => void, reject: (reason: IErrorOutput) => void) => {
     authClient.createAuth(req, (err: any, res: AuthResponse) => {
       if (err) {
-        reject(err)
+        reject(getError(err))
         return
       }
 
