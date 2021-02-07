@@ -6,6 +6,7 @@ import { RootStackParamList } from '~/types/navigation';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import { StyleSheet, View, Text, SafeAreaView, ScrollView } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
+import { COLOR } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
   container: {
@@ -33,8 +34,12 @@ interface Props {
 
 const AccountSetting  = function AccountSetting(props: Props): ReactElement {
   const navigation = props.navigation;
-  const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+  const [isEnabledBook, setIsEnabledBook] = useState(false);
+  const [isEnabledInformation, setIsEnabledInformation] = useState(false);
+  const [isEnabledImpressions, setIsEnabledImpressions] = useState(false);
+  const toggleSwitchBook = () => setIsEnabledBook(previousState => !previousState);
+  const toggleSwitchInformation = () => setIsEnabledInformation(previousState => !previousState);
+  const toggleSwitchImpressions = () => setIsEnabledImpressions(previousState => !previousState);
   return (
     <View>
       <HeaderWithBackButton
@@ -86,15 +91,37 @@ const AccountSetting  = function AccountSetting(props: Props): ReactElement {
             <ListItem.Content>
               <ListItem.Title>{'おすすめの本'}</ListItem.Title>
             </ListItem.Content>
-            <View >
-              <Switch
-                trackColor={{ false: '#767577', true: '#81b0ff' }}
-                thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
-                ios_backgroundColor="#3e3e3e"
-                onValueChange={toggleSwitch}
-                value={isEnabled}
-              />
-            </View>
+            <Switch
+              trackColor={{ false: COLOR.GREY, true: COLOR.TEXT_SUCCESS }}
+              thumbColor={isEnabledBook ? COLOR.BACKGROUND_WHITE : COLOR.BACKGROUND_WHITE}
+              ios_backgroundColor= {COLOR.TEXT_GRAY}
+              onValueChange={toggleSwitchBook}
+              value={isEnabledBook}
+            />
+          </ListItem>
+          <ListItem key={8} bottomDivider>
+            <ListItem.Content>
+              <ListItem.Title>{'新刊情報'}</ListItem.Title>
+            </ListItem.Content>
+            <Switch
+              trackColor={{ false: COLOR.GREY, true: COLOR.TEXT_SUCCESS }}
+              thumbColor={isEnabledInformation ? COLOR.BACKGROUND_WHITE : COLOR.BACKGROUND_WHITE}
+              ios_backgroundColor= {COLOR.TEXT_GRAY}
+              onValueChange={toggleSwitchInformation}
+              value={isEnabledInformation}
+            />
+          </ListItem>
+          <ListItem key={9} bottomDivider>
+            <ListItem.Content>
+              <ListItem.Title>{'感想'}</ListItem.Title>
+            </ListItem.Content>
+            <Switch
+              trackColor={{ false: COLOR.GREY, true: COLOR.TEXT_SUCCESS }}
+              thumbColor={isEnabledImpressions ? COLOR.BACKGROUND_WHITE : COLOR.BACKGROUND_WHITE}
+              ios_backgroundColor= {COLOR.TEXT_GRAY}
+              onValueChange={toggleSwitchImpressions}
+              value={isEnabledImpressions}
+            />
           </ListItem>
         </ScrollView>
       </SafeAreaView>
