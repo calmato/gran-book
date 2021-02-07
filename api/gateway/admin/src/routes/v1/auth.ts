@@ -1,9 +1,10 @@
 import express, { Request, Response } from 'express'
 import { createAuth } from '~/api'
+import { getHttpError } from '~/plugins/grpc-status'
 import { ICreateAuthRequest } from '~/types/request'
-import { IAuthResponse } from '~/types/response'
+import { IAuthResponse, IErrorResponse } from '~/types/response'
 import { ICreateAuthInput } from '~/types/input'
-import { IAuthOutput } from '~/types/output'
+import { IAuthOutput, IErrorOutput } from '~/types/output'
 
 const router = express.Router()
 
@@ -11,12 +12,14 @@ router.get('/', (_, res: Response): void => {
   res.status(200).json({ message: 'Hello World!!' })
 })
 
-router.post('/', async ({ body }: Request<ICreateAuthRequest>, res: Response<IAuthResponse|Error>): Promise<void> => {
+router.post('/', async (req: Request<ICreateAuthRequest>, res: Response<IAuthResponse|IErrorResponse>): Promise<void> => {
+  const { username, email, password, passwordConfirmation } = req.body as ICreateAuthRequest
+
   const input: ICreateAuthInput = {
-    username: body.username,
-    email: body.email,
-    password: body.password,
-    passwordConfirmation: body.passwordConfirmation,
+    username: username,
+    email: email,
+    password: password,
+    passwordConfirmation: passwordConfirmation,
   }
 
   await createAuth(input).then((output: IAuthOutput) => {
@@ -39,10 +42,9 @@ router.post('/', async ({ body }: Request<ICreateAuthRequest>, res: Response<IAu
 
     res.status(200).json(response)
   })
-  .catch((err: Error) => {
-    // TODO: status制御
-    // TODO: responseの型定義
-    res.status(400).json(err)
+  .catch((err: IErrorOutput) => {
+    const response: IErrorResponse = getHttpError(err)
+    res.status(response.status).json(response)
   })
 })
 

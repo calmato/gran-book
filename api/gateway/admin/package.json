@@ -9,11 +9,14 @@
     "build:dev": "webpack --config ./config/webpack.dev.js",
     "build": "webpack --config ./config/webpack.prod.js",
     "dev": "yarn build:dev --watch & yarn start:dev",
-    "lint": "eslint --ext .js,.ts --ignore-path .gitignore ./src",
+    "lint": "eslint --ext .js,.ts ./src",
     "start:dev": "nodemon ./dist/server.js",
     "start": "node ./dist/server/js",
     "test": "echo 'not running..'"
   },
+  "eslintIgnore": [
+    "src/proto/*"
+  ],
   "dependencies": {
     "@grpc/grpc-js": "^1.2.6",
     "body-parser": "^1.19.0",
