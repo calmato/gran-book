@@ -35,6 +35,26 @@ services:
     command: yarn dev -H 0.0.0.0 -p 3000
 
   # Backend
+  native_gateway:
+    container_name: gran_book_native_gateway
+    build:
+      context: ./infra/docker/api/gateway/native
+      dockerfile: Dockerfile_development
+    working_dir: /var/gateway
+    volumes:
+      - ./api/gateway/native:/var/gateway:cached
+      - ./tmp/logs/native_gateway:/var/log/gateway:delegated
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8080
+      - USER_API_URL=${USER_API_URL}
+    ports:
+      - 8080:8080
+    networks:
+      - api
+      - monitoring
+    command: yarn dev
+
   admin_gateway:
     container_name: gran_book_admin_gateway
     build:
@@ -43,7 +63,7 @@ services:
     working_dir: /var/gateway
     volumes:
       - ./api/gateway/admin:/var/gateway:cached
-      - ./tmp/logs/gateway/admin:/var/log/gateway:delegated
+      - ./tmp/logs/admin_gateway:/var/log/gateway:delegated
     environment:
       - HOST=0.0.0.0
       - PORT=8080
