@@ -2,7 +2,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { StyleSheet, View, ScrollView, SafeAreaView } from 'react-native';
 import React, { ReactElement } from 'react';
 import { RootStackParamList } from '~/types/navigation';
-import { ListItem, Text, colors, Avatar } from 'react-native-elements';
+import { ListItem, Text, Avatar } from 'react-native-elements';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import { Ionicons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -18,9 +18,10 @@ const styles = StyleSheet.create({
   subtilte: {
     marginTop: 12,
     marginLeft: 12,
+    marginBottom: 6,
     fontSize: 15,
     color: '#6D4C41',
-    fontWeight: '600'
+    fontWeight: '600',
   },
   scrollArea: {
     paddingBottom: 200
