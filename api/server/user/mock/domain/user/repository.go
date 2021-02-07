@@ -6,7 +6,7 @@ package mock_user
 
 import (
 	context "context"
-	user "github.com/calmato/gran-book/api/user/internal/domain/user"
+	user "github.com/calmato/gran-book/api/server/user/internal/domain/user"
 	gomock "github.com/golang/mock/gomock"
 	reflect "reflect"
 )
