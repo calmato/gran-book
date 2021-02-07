@@ -2,6 +2,7 @@ PROTOC_GEN_GRPC_PATH=$(shell which grpc_tools_node_protoc_plugin)
 PROTOC_GEN_TS_PATH=$(shell which protoc-gen-ts)
 
 ADMIN_GATEWAY_PATH='./../api/gateway/admin/src'
+NATIVE_GATEWAY_PATH='./../api/gateway/native/src'
 USER_API_PATH='./../api/server/user'
 
 ##################################################
@@ -22,6 +23,7 @@ install:
 generate:
 	$(MAKE) install
 	$(MAKE) generate-admin-gateway
+	$(MAKE) generate-native-gateway
 	$(MAKE) generate-user-api
 
 generate-admin-gateway:
@@ -31,6 +33,15 @@ generate-admin-gateway:
 		--js_out=import_style=commonjs,binary:${ADMIN_GATEWAY_PATH} \
 		--grpc_out=grpc_js:${ADMIN_GATEWAY_PATH} \
 		--ts_out=grpc_js:${ADMIN_GATEWAY_PATH} \
+		./proto/*.proto
+
+generate-native-gateway:
+	protoc -I . \
+		--plugin=protoc-gen-ts=${PROTOC_GEN_TS_PATH} \
+		--plugin=protoc-gen-grpc=${PROTOC_GEN_GRPC_PATH} \
+		--js_out=import_style=commonjs,binary:${NATIVE_GATEWAY_PATH} \
+		--grpc_out=grpc_js:${NATIVE_GATEWAY_PATH} \
+		--ts_out=grpc_js:${NATIVE_GATEWAY_PATH} \
 		./proto/*.proto
 
 generate-user-api:
