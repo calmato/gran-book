@@ -52,7 +52,7 @@ jobs:
 
       - name: Docker Build
         run: |
-          docker build -f ./infra/docker/api/user/Dockerfile -t ${GCR_HOSTNAME}/${GCP_PROJECT_ID}/${GCR_IMAGE_NAME} .
+          docker build -f ./infra/docker/api/server/user/Dockerfile -t ${GCR_HOSTNAME}/${GCP_PROJECT_ID}/${GCR_IMAGE_NAME} .
 
       - name: Attached Tag
         run: |
