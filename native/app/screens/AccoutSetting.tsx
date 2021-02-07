@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const version = '1.00'
+const version = '1.00';
 type AccountSettingProp= StackNavigationProp<RootStackParamList, 'SignInSelect'>;
 
 interface Props {
@@ -140,7 +140,7 @@ const AccountSetting  = function AccountSetting(props: Props): ReactElement {
             <ListItem.Content>
               <ListItem.Title>{'バージョン情報'}</ListItem.Title>
             </ListItem.Content>
-          <Text style={styles.version}>{version}</Text>
+            <Text style={styles.version}>{version}</Text>
           </ListItem>
         </ScrollView>
       </SafeAreaView>
