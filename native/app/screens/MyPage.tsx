@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   scrollArea: {
-    paddingBottom: 200
+    paddingBottom: 200,
   }
 });
 

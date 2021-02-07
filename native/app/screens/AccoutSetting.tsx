@@ -41,7 +41,6 @@ const AccountSetting  = function AccountSetting(props: Props): ReactElement {
       <SafeAreaView>
         <ScrollView>
           <Text style={styles.subtilte}>アカウント設定</Text>
-        </ScrollView>
             <ListItem key={1} bottomDivider>
               <ListItem.Content>
                 <ListItem.Title>{'プロフィール'}</ListItem.Title>
@@ -72,6 +71,14 @@ const AccountSetting  = function AccountSetting(props: Props): ReactElement {
               </ListItem.Content>
               <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
             </ListItem>
+          <Text style={styles.subtilte}>プッシュ通知設定</Text>
+            <ListItem key={6} bottomDivider>
+              <ListItem.Content>
+                <ListItem.Title>{'プッシュ通知設定'}</ListItem.Title>
+              </ListItem.Content>
+              <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
+            </ListItem>
+        </ScrollView>
       </SafeAreaView>
     </View>
   );
