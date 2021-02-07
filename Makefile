@@ -35,7 +35,7 @@ logs:
 ##################################################
 # Container Commands - Run Container Group
 ##################################################
-.PHONY: start-native start-admin start-api
+.PHONY: start-native start-admin start-api start-swagger
 
 start-native:
 	$(PWD)/bin/get-local-ip-addr.sh
