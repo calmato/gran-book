@@ -18,7 +18,8 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  style?: ViewStyle
+  style?: ViewStyle,
+  onPress: () => void,
 }
 
 const ForgotPasswoedButton = function ForgotPasswoedButton(props:Props): ReactElement{
@@ -38,6 +39,7 @@ const ForgotPasswoedButton = function ForgotPasswoedButton(props:Props): ReactEl
       title="パスワードを忘れた方"
       titleStyle={styles.titleStyle}
       type={'clear'}
+      onPress={props.onPress}
     />
   );
 };

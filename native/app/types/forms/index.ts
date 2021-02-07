@@ -10,3 +10,7 @@ export type SignInForm = {
   email: string,
   password: string
 }
+
+export type PasswordResetForm = {
+  email: string
+}
