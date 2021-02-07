@@ -78,6 +78,7 @@ const AccountSetting  = function AccountSetting(props: Props): ReactElement {
               </ListItem.Content>
               <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
             </ListItem>
+          <Text style={styles.subtilte}>ホーム画面表示項目設定</Text>
         </ScrollView>
       </SafeAreaView>
     </View>
