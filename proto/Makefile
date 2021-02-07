@@ -2,7 +2,7 @@ PROTOC_GEN_GRPC_PATH=$(shell which grpc_tools_node_protoc_plugin)
 PROTOC_GEN_TS_PATH=$(shell which protoc-gen-ts)
 
 ADMIN_GATEWAY_PATH='./../api/gateway/admin/src'
-USER_API_PATH='./../api/user'
+USER_API_PATH='./../api/server/user'
 
 ##################################################
 # For Configuration

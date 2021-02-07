@@ -17,6 +17,7 @@ install:
 	docker-compose run --rm native yarn
 
 start:
+	$(PWD)/bin/get-local-ip-addr.sh
 	docker-compose up --remove-orphans
 
 stop:
