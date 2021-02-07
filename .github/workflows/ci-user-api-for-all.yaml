@@ -3,7 +3,7 @@ on:
   push:
     paths:
       - '.github/workflows/ci-user-api-for-all.yaml'
-      - 'api/user/**'
+      - 'api/server/user/**'
 
 jobs:
   build_and_test:
