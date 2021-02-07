@@ -38,7 +38,7 @@ interface Props {
 const avatarList =
   {
     name: 'hamachans',
-    avatar_url: 'https://storage.cloud.google.com/presto-pay-dev.appspot.com/user_thumbnails/80d01b6c-566f-43fa-89e1-7b54cfcb6558',
+    avatar_url: 'https://pbs.twimg.com/profile_images/1312909954148253696/Utr-sa_Y_400x400.jpg',
   };
 
 const MyPage = function MyPage(props: Props): ReactElement {
@@ -54,7 +54,7 @@ const MyPage = function MyPage(props: Props): ReactElement {
         <ScrollView>
           <View>
             <ListItem bottomDivider>
-              <Avatar source={{uri: avatarList.avatar_url}} />
+              <Avatar source={{uri: avatarList.avatar_url}} rounded/>
               <ListItem.Content>
                 <ListItem.Title>{avatarList.name}</ListItem.Title>
               </ListItem.Content>
