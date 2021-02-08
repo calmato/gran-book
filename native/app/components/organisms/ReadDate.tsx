@@ -1,9 +1,11 @@
 import React, { ReactElement, useState } from 'react';
-import { StyleSheet, View, Text, Switch, Platform, Button } from 'react-native';
+import { StyleSheet, View, Text, Switch, Platform } from 'react-native';
 import { Divider } from 'react-native-elements';
 import { COLOR } from '~~/constants/theme';
-import DefaultDataPicker from '~/components/molecules/DefaultDataPicker';
+import DefaultDataPicker from '~/components/molecules/DefaultDatePicker';
 import dayjs from 'dayjs';
+import { MaterialIcons } from '@expo/vector-icons';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const styles = StyleSheet.create({
   containerStyle: {
@@ -23,6 +25,7 @@ const styles = StyleSheet.create({
   },
   textStyle: {
     fontSize: 16,
+    color: COLOR.GREY,
   },
 });
 
@@ -50,10 +53,11 @@ const ReadDate = function ReadDate(props: Props): ReactElement {
       <View style={styles.childStyle}>
         <Text style={styles.textStyle}>読んだ日</Text>
         {
-          !isEnabled &&        
-           <Button onPress={showDatepicker}
-             title={`${dayjs(props.date).format('YYYY/MM/DD')}`}
-           />
+          !isEnabled &&      
+          <TouchableOpacity style={{flexDirection:'row', alignItems:'center'}} onPress={showDatepicker}>
+            <Text style={[styles.textStyle]}>{`${dayjs(props.date).format('YYYY/MM/DD')}`}</Text> 
+            <MaterialIcons name="keyboard-arrow-right" size={24} color={COLOR.GREY} />
+          </TouchableOpacity>
         }
       </View>
       <Divider/>

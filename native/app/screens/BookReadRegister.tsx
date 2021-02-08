@@ -38,7 +38,7 @@ const BookReadRegister = function BookReadRegister(): ReactElement {
         date={ impreessionData.date }
         handleSetDate={(date) => setState({...impreessionData, date: date})}
       />
-      <Text style={{fontSize: 16, marginStart: 20, marginTop: 20, fontWeight: 'bold'}}>感想</Text>
+      <Text style={{fontSize: 16, marginStart: 20, marginTop: 20, marginBottom: 10, fontWeight: 'bold'}}>感想</Text>
       <Input
         onChangeText={(text) => setState({...impreessionData, impresstion: text})}
         value={impreessionData.impresstion}
