@@ -9,6 +9,7 @@ import PasswordInput from '~/components/molecules/PasswordInput';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import { emailValidation } from '~/lib/validation';
 import { SingUpForm } from '~/types/forms';
+import { Alert } from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
@@ -54,6 +55,17 @@ const SignUp = function SignUp(props: Props): ReactElement {
     return !emailError && !passwordError && !passwordConfirmationError && formData.agreement;
   }, [emailError, passwordError, passwordConfirmationError, formData.agreement]);
 
+  const createAlertNotifySignupError = () =>
+    Alert.alert(
+      'ユーザー登録に失敗',
+      'ユーザー登録に失敗しました。再度登録を行ってください。',
+      [
+        {
+          text: 'OK',
+        }
+      ],
+    );
+
   const handleSubmit = React.useCallback(async () => {
     await signUpWithEmail(
       formData.email,
@@ -66,7 +78,7 @@ const SignUp = function SignUp(props: Props): ReactElement {
       })
       .catch((err: Error) => {
         console.log('debug', err);
-      // TODO: エラー処理
+        createAlertNotifySignupError;
       });
   }, [formData.email, formData.password, formData.passwordConfirmation, formData.username, signUpWithEmail]);
 
