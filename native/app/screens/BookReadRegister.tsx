@@ -1,8 +1,8 @@
 import React, { ReactElement } from 'react';
-import { StyleSheet, View, Text, Image } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import BookNameAuthorRegister from '~/components/organisms/BookNameAuthorRegister';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
-import { COLOR } from '~~/constants/theme';
+import ReadDate from '~/components/organisms/ReadDate';
 
 const styles = StyleSheet.create({
 });
@@ -26,6 +26,7 @@ const BookReadRegister = function BookReadRegister(props: Props): ReactElement {
       image_url={bookInfo.image_url}
       author={bookInfo.author}
     />
+    <ReadDate/>
     </View>
   );
 };
