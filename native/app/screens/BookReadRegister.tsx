@@ -17,9 +17,8 @@ const bookInfo = {
   author: '稲富',
 };
 
-interface Props {}
-const BookReadRegister = function BookReadRegister(props: Props): ReactElement {
-  const [impreessionData, setstate] = useState({
+const BookReadRegister = function BookReadRegister(): ReactElement {
+  const [impreessionData, setState] = useState({
     date: new Date,
     impresstion: '',
   });
@@ -30,22 +29,25 @@ const BookReadRegister = function BookReadRegister(props: Props): ReactElement {
         title='読んだ本登録'
         onPress={() => undefined}
       />
-    <BookNameAuthorRegister 
-      title={bookInfo.title}
-      image_url={bookInfo.image_url}
-      author={bookInfo.author}
-    />
-    <ReadDate/>
-    <Text style={{fontSize: 16, marginStart: 20, marginTop: 20, fontWeight: 'bold'}}>感想</Text>
-    <Input
-      onChangeText={(text) => setstate({...impreessionData, impresstion: text})}
-      value={impreessionData.impresstion}
-      maxLength={1000}
-      multiline={true}
-    />
-    <View style={{alignItems:'center'}}>
-      <Button onPress={undefined} title='本を登録する'/>
-    </View>
+      <BookNameAuthorRegister 
+        title={bookInfo.title}
+        image_url={bookInfo.image_url}
+        author={bookInfo.author}
+      />
+      <ReadDate
+        date={ impreessionData.date }
+        handleSetDate={(date) => setState({...impreessionData, date: date})}
+      />
+      <Text style={{fontSize: 16, marginStart: 20, marginTop: 20, fontWeight: 'bold'}}>感想</Text>
+      <Input
+        onChangeText={(text) => setState({...impreessionData, impresstion: text})}
+        value={impreessionData.impresstion}
+        maxLength={1000}
+        multiline={true}
+      />
+      <View style={{alignItems:'center'}}>
+        <Button onPress={undefined} title='本を登録する'/>
+      </View>
     </View>
   );
 };

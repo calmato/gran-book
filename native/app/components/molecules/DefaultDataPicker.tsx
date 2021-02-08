@@ -9,11 +9,11 @@ interface Props{
 const DefaultDataPicker = function DefaultDataPicker(props: Props): ReactElement {
   return(
     <DateTimePicker
-    testID="dateTimePicker"
-    value={props.date}
-    mode={'date'}
-    display="spinner"
-    onChange={(event, selectedDate) => props.onChange(event,selectedDate)}
+      testID="dateTimePicker"
+      value={props.date}
+      mode={'date'}
+      display="spinner"
+      onChange={(event, selectedDate) => props.onChange(event,selectedDate)}
     />
   );
 };

@@ -2,9 +2,8 @@ import React, { ReactElement, useState } from 'react';
 import { StyleSheet, View, Text, Switch, Platform, Button } from 'react-native';
 import { Divider } from 'react-native-elements';
 import { COLOR } from '~~/constants/theme';
-import DefaultDataPicker from "~/components/molecules/DefaultDataPicker"
+import DefaultDataPicker from '~/components/molecules/DefaultDataPicker';
 import dayjs from 'dayjs';
-
 
 const styles = StyleSheet.create({
   containerStyle: {
@@ -28,24 +27,23 @@ const styles = StyleSheet.create({
 });
 
 interface Props{
+  date: Date,
+  handleSetDate: (date: Date) => void,
 }
 
 const ReadDate = function ReadDate(props: Props): ReactElement {
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
-  const [date, setDate] = useState(new Date())
+  
   const [show, setShow] = useState(false);
-
   const onChange = (_event, selectedDate) => {
     const currentDate = selectedDate;
     setShow(Platform.OS === 'ios');
-    setDate(currentDate);
+    props.handleSetDate(currentDate);
   };
-
   const showDatepicker = () => {
-    setShow(true)
+    setShow(true);
   };
-
 
   return(
     <View style={styles.containerStyle}>
@@ -54,10 +52,9 @@ const ReadDate = function ReadDate(props: Props): ReactElement {
         {
           !isEnabled &&        
            <Button onPress={showDatepicker}
-          title={`${dayjs(date).format('YYYY/MM/DD')}`}
-          />
+             title={`${dayjs(props.date).format('YYYY/MM/DD')}`}
+           />
         }
-
       </View>
       <Divider/>
       <View style={styles.childStyle}>
@@ -70,10 +67,10 @@ const ReadDate = function ReadDate(props: Props): ReactElement {
           value={isEnabled}
         />
       </View>
-      {! isEnabled && show && (
+      {!isEnabled && show && (
         <DefaultDataPicker
-        date={date}
-        onChange={onChange}
+          date={props.date}
+          onChange={onChange}
         />
       )}
     </View>
