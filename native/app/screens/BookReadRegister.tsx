@@ -1,5 +1,5 @@
 import React, { ReactElement, useState } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, ScrollView, Text } from 'react-native';
 import { Input, Button } from 'react-native-elements';
 import BookNameAuthorRegister from '~/components/organisms/BookNameAuthorRegister';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
@@ -29,25 +29,27 @@ const BookReadRegister = function BookReadRegister(): ReactElement {
         title='読んだ本登録'
         onPress={() => undefined}
       />
-      <BookNameAuthorRegister 
-        title={bookInfo.title}
-        image_url={bookInfo.image_url}
-        author={bookInfo.author}
-      />
-      <ReadDate
-        date={ impreessionData.date }
-        handleSetDate={(date) => setState({...impreessionData, date: date})}
-      />
-      <Text style={{fontSize: 16, marginStart: 20, marginTop: 20, marginBottom: 10, fontWeight: 'bold'}}>感想</Text>
-      <Input
-        onChangeText={(text) => setState({...impreessionData, impresstion: text})}
-        value={impreessionData.impresstion}
-        maxLength={1000}
-        multiline={true}
-      />
-      <View style={{alignItems:'center'}}>
-        <Button onPress={undefined} title='本を登録する'/>
-      </View>
+      <ScrollView>
+        <BookNameAuthorRegister 
+          title={bookInfo.title}
+          image_url={bookInfo.image_url}
+          author={bookInfo.author}
+        />
+        <ReadDate
+          date={ impreessionData.date }
+          handleSetDate={(date) => setState({...impreessionData, date: date})}
+        />
+        <Text style={{fontSize: 16, marginStart: 20, marginTop: 20, marginBottom: 10, fontWeight: 'bold'}}>感想</Text>
+        <Input
+          onChangeText={(text) => setState({...impreessionData, impresstion: text})}
+          value={impreessionData.impresstion}
+          maxLength={1000}
+          multiline={true}
+        />
+        <View style={{alignItems:'center', marginBottom: 20}}>
+          <Button onPress={undefined} title='本を登録する'/>
+        </View>
+      </ScrollView>
     </View>
   );
 };
