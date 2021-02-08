@@ -1,10 +1,14 @@
-import React, { ReactElement } from 'react';
-import { StyleSheet, View } from 'react-native';
+import React, { ReactElement, useState } from 'react';
+import { StyleSheet, View, Text } from 'react-native';
+import { Input, Button } from 'react-native-elements';
 import BookNameAuthorRegister from '~/components/organisms/BookNameAuthorRegister';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import ReadDate from '~/components/organisms/ReadDate';
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
 });
 
 const bookInfo = {
@@ -15,8 +19,13 @@ const bookInfo = {
 
 interface Props {}
 const BookReadRegister = function BookReadRegister(props: Props): ReactElement {
+  const [impreessionData, setstate] = useState({
+    date: new Date,
+    impresstion: '',
+  });
+
   return(
-    <View>
+    <View style={styles.container}>
       <HeaderWithBackButton
         title='読んだ本登録'
         onPress={() => undefined}
@@ -27,6 +36,16 @@ const BookReadRegister = function BookReadRegister(props: Props): ReactElement {
       author={bookInfo.author}
     />
     <ReadDate/>
+    <Text style={{fontSize: 16, marginStart: 20, marginTop: 20, fontWeight: 'bold'}}>感想</Text>
+    <Input
+      onChangeText={(text) => setstate({...impreessionData, impresstion: text})}
+      value={impreessionData.impresstion}
+      maxLength={1000}
+      multiline={true}
+    />
+    <View style={{alignItems:'center'}}>
+      <Button onPress={undefined} title='本を登録する'/>
+    </View>
     </View>
   );
 };
