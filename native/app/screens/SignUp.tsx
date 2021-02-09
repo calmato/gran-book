@@ -59,7 +59,7 @@ const SignUp = function SignUp(props: Props): ReactElement {
   const createAlertNotifySignupError = (code: number) =>
     Alert.alert(
       'ユーザー登録に失敗',
-      `${generateErrorMessage(401)}`,
+      `${generateErrorMessage(code)}`,
       [
         {
           text: 'OK',
@@ -69,20 +69,20 @@ const SignUp = function SignUp(props: Props): ReactElement {
 
   const generateErrorMessage = function generateErrorMessage(code:number): string {
     switch(code) {
-      case 400:
-        return ERROR_MESSAGE.BAD_REQUEST;
-      case 401:
-        return ERROR_MESSAGE.UNAUTHORIZED;
-      case 403 || 404 || 409:
-        return ERROR_MESSAGE.PROCESS_FAILED;
-      case 500 || 501 || 503:
-        return ERROR_MESSAGE.SERVER_ERROR;
-      case 504:
-        return ERROR_MESSAGE.TIMEOUT;
-      default:
-        return ERROR_MESSAGE.UNEXPEXTED_ERROR;
+    case 400:
+      return ERROR_MESSAGE.BAD_REQUEST;
+    case 401:
+      return ERROR_MESSAGE.UNAUTHORIZED;
+    case 403 || 404 || 409:
+      return ERROR_MESSAGE.PROCESS_FAILED;
+    case 500 || 501 || 503:
+      return ERROR_MESSAGE.SERVER_ERROR;
+    case 504:
+      return ERROR_MESSAGE.TIMEOUT;
+    default:
+      return ERROR_MESSAGE.UNEXPEXTED_ERROR;
     }
-  }
+  };
 
   const handleSubmit = React.useCallback(async () => {
     await signUpWithEmail(
