@@ -8,9 +8,9 @@ fi
 echo "generate page:$1 related files …"
 
 # 生成するファイルを配置するディレクトリを事前に定義
-s_dir="./app/screen/"
+s_dir="./app/screens/"
 c_dir="./app/containers/"
-t_dir="./test/screen/"
+t_dir="./test/screens/"
 dirs=("$s_dir" "$c_dir" "$t_dir")
 
 for d in ${dirs[@]}; do
