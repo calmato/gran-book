@@ -8,7 +8,8 @@
     "eject": "expo eject",
     "lint": "eslint --ext .js,.ts,.tsx .",
     "test": "jest",
-    "generate-test": "./bin/generate-test-file.sh ./app/components ./test/components"
+    "generate-test": "./bin/generate-test-file.sh ./app/components ./test/components",
+    "generate:page": "./bin/generate-page-files.sh"
   },
   "dependencies": {
     "@expo/vector-icons": "^12.0.2",
