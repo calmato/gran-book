@@ -2,7 +2,7 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import cors from 'cors'
 import { corsOptions } from '~/config/cors'
-import { authentication } from '~/lib/authenticated'
+import { authentication, authorization } from '~/lib/authenticated'
 import { errorHandler } from '~/lib/error-handler'
 import { accessLogHandler } from '~/lib/log-handler'
 import { health, v1Auth } from '~/routes'
@@ -17,6 +17,7 @@ app.use(bodyParser.json())
 app.use(cors(corsOptions))
 app.use(accessLogHandler)
 app.use(authentication)
+app.use(authorization)
 
 app.use('/', health)
 app.use('/v1/auth', v1Auth)
