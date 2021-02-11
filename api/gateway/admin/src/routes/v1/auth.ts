@@ -1,5 +1,5 @@
 import express, { Request, Response, NextFunction } from 'express'
-import { createAuth } from '~/api'
+import { getAuth, createAuth } from '~/api'
 import { ICreateAuthRequest } from '~/types/request'
 import { IAuthResponse } from '~/types/response'
 import { ICreateAuthInput } from '~/types/input'
@@ -8,8 +8,29 @@ import { GrpcError } from '~/types/exception'
 
 const router = express.Router()
 
-router.get('/', (_: Request , res: Response): void => {
-  res.status(200).json({ message: 'Hello World!!' })
+router.get('/', async (req: Request , res: Response<IAuthResponse>, next: NextFunction): Promise<void> => {
+  await getAuth(req)
+    .then((output: IAuthOutput) => {
+      const response: IAuthResponse = {
+        id: output.id,
+        username: output.username,
+        gender: output.gender,
+        email: output.email,
+        phoneNumber: output.phoneNumber,
+        role: output.role,
+        thumbnailUrl: output.thumbnailUrl,
+        selfIntroduction: output.selfIntroduction,
+        lastName: output.lastName,
+        firstName: output.firstName,
+        lastNameKana: output.lastNameKana,
+        firstNameKana: output.firstNameKana,
+        createdAt: output.createdAt,
+        updatedAt: output.updatedAt,
+      }
+
+      res.status(200).json(response)
+    })
+    .catch((err: GrpcError) => next(err))
 })
 
 router.post('/', async (req: Request<ICreateAuthRequest>, res: Response<IAuthResponse>, next: NextFunction): Promise<void> => {
@@ -22,7 +43,7 @@ router.post('/', async (req: Request<ICreateAuthRequest>, res: Response<IAuthRes
     passwordConfirmation: passwordConfirmation,
   }
 
-  await createAuth(input)
+  await createAuth(req, input)
     .then((output: IAuthOutput) => {
       const response: IAuthResponse = {
         id: output.id,
