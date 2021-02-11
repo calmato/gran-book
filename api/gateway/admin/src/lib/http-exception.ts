@@ -21,7 +21,7 @@ function convertStatusGrpcToHttp(grpcStatus: number): number {
   return 500
 }
 
-export function badRequest(details: any): HttpError {
+export function badRequest(details: Array<any>): HttpError {
   const message: string = 'Bad Request'
   return new HttpError(400, message, details)
 }
@@ -41,12 +41,12 @@ export function notFound(): HttpError {
   return new HttpError(403, message)
 }
 
-export function alreadyExists(details: any): HttpError {
+export function alreadyExists(details: Array<any>): HttpError {
   const message: string = 'Conflict'
   return new HttpError(409, message, details)
 }
 
-export function serverError(details: any): HttpError {
+export function serverError(details: Array<any>): HttpError {
   const message: string = 'Internal Server Error'
   return new HttpError(500, message, details)
 }
@@ -54,9 +54,11 @@ export function serverError(details: any): HttpError {
 export function getHttpError(err: Error): HttpError {
   if (err instanceof GrpcError) {
     const status: number = convertStatusGrpcToHttp(err.status)
+    const details: Array<any> = err.details || []
+
     switch (status) {
     case 400:
-      return badRequest(err.details)
+      return badRequest(details)
     case 401:
       return unauthorized()
     case 403:
@@ -64,12 +66,11 @@ export function getHttpError(err: Error): HttpError {
     case 404:
       return notFound()
     case 409:
-      return alreadyExists(err.details)
+      return alreadyExists(details)
     default:
-      return serverError(err.details)
+      return serverError(details)
     }
   } else {
-    // TODO: refactor
-    return serverError(err)
+    return serverError([err])
   }
 }
