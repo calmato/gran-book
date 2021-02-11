@@ -2,6 +2,8 @@ package repository
 
 import (
 	"context"
+	"encoding/base64"
+	"encoding/json"
 	"strings"
 
 	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
@@ -16,6 +18,10 @@ type userRepository struct {
 	auth   *authentication.Auth
 }
 
+type firebaseToken struct {
+	UID string `json:"sub"`
+}
+
 // NewUserRepository - UserRepositoryの生成
 func NewUserRepository(c *Client, auth *authentication.Auth) user.Repository {
 	return &userRepository{
@@ -24,22 +30,26 @@ func NewUserRepository(c *Client, auth *authentication.Auth) user.Repository {
 	}
 }
 
-func (r *userRepository) Authentication(ctx context.Context) (*user.User, error) {
+func (r *userRepository) Authentication(ctx context.Context) (string, error) {
 	t, err := getToken(ctx)
 	if err != nil {
-		return nil, exception.Unauthorized.New(err)
+		return "", exception.Unauthorized.New(err)
 	}
 
-	uid, err := r.auth.VerifyIDToken(ctx, t)
+	fbToken, err := decodeToken(t)
 	if err != nil {
-		return nil, exception.Unauthorized.New(err)
+		return "", exception.Unauthorized.New(err)
 	}
 
+	return fbToken.UID, nil
+}
+
+func (r *userRepository) Show(ctx context.Context, uid string) (*user.User, error) {
 	u := &user.User{}
 
-	err = r.client.db.First(u, "id = ?", uid).Error
+	err := r.client.db.First(u, "id = ?", uid).Error
 	if err != nil {
-		return nil, exception.ErrorInDatastore.New(err)
+		return nil, exception.NotFound.New(err)
 	}
 
 	return u, nil
@@ -115,4 +125,25 @@ func getToken(ctx context.Context) (string, error) {
 
 	t := strings.Replace(authorization, "Bearer ", "", 1)
 	return t, nil
+}
+
+func decodeToken(token string) (*firebaseToken, error) {
+	payload := strings.Split(token, ".")
+	if len(payload) != 3 {
+		return nil, xerrors.New("Authorization header is invalid.")
+	}
+
+	data, err := base64.RawURLEncoding.DecodeString(payload[1])
+	if err != nil {
+		return nil, err
+	}
+
+	fbToken := &firebaseToken{}
+
+	err = json.Unmarshal(data, fbToken)
+	if err != nil {
+		return nil, err
+	}
+
+	return fbToken, nil
 }

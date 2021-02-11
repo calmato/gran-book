@@ -23,8 +23,17 @@ func NewUserService(udv user.Validation, ur user.Repository, uu user.Uploader) u
 	}
 }
 
-func (s *userService) Authentication(ctx context.Context) (*user.User, error) {
-	u, err := s.userRepository.Authentication(ctx)
+func (s *userService) Authentication(ctx context.Context) (string, error) {
+	uid, err := s.userRepository.Authentication(ctx)
+	if err != nil {
+		return "", err
+	}
+
+	return uid, nil
+}
+
+func (s *userService) Show(ctx context.Context, uid string) (*user.User, error) {
+	u, err := s.userRepository.Show(ctx, uid)
 	if err != nil {
 		return nil, err
 	}

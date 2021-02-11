@@ -35,9 +35,14 @@ func NewAuthApplication(urv validation.AuthRequestValidation, us user.Service) A
 }
 
 func (a *authApplication) Authentication(ctx context.Context) (*user.User, error) {
-	u, err := a.userService.Authentication(ctx)
+	uid, err := a.userService.Authentication(ctx)
 	if err != nil {
 		return nil, err
+	}
+
+	u, err := a.userService.Show(ctx, uid)
+	if err != nil {
+		return nil, exception.ErrorInDatastore.New(err)
 	}
 
 	return u, nil
