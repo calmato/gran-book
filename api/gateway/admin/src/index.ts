@@ -1,20 +1,21 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 import cors from 'cors'
+import { corsOptions } from '~/config/cors'
 import { authentication } from '~/lib/authenticated'
-import { corsOptions } from '~/lib/cors'
 import { errorHandler } from '~/lib/error-handler'
+import { logHandler } from '~/lib/log-handler'
 import { health, v1Auth } from '~/routes'
 
 const app = express()
 
-app.use(bodyParser.urlencoded({ extended: true }))
-app.use(bodyParser.json())
-app.use(cors(corsOptions))
-
 const host: string = process.env.HOST || '0.0.0.0'
 const port: string = process.env.PORT || '3000'
 
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.json())
+app.use(cors(corsOptions))
+app.use(logHandler)
 app.use(authentication)
 
 app.use('/', health)

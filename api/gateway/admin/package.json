@@ -24,7 +24,8 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "firebase-admin": "^9.4.2",
-    "google-protobuf": "^3.14.0"
+    "google-protobuf": "^3.14.0",
+    "log4js": "^6.3.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.9",
