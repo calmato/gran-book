@@ -1,18 +1,18 @@
 import express, { Request, Response, NextFunction } from 'express'
 import { createAuth } from '~/api'
 import { ICreateAuthRequest } from '~/types/request'
-import { IAuthResponse, IErrorResponse } from '~/types/response'
+import { IAuthResponse } from '~/types/response'
 import { ICreateAuthInput } from '~/types/input'
 import { IAuthOutput } from '~/types/output'
 import { GrpcError } from '~/types/exception'
 
 const router = express.Router()
 
-router.get('/', async (req: Request , res: Response): Promise<void> => {
+router.get('/', (_: Request , res: Response): void => {
   res.status(200).json({ message: 'Hello World!!' })
 })
 
-router.post('/', async (req: Request<ICreateAuthRequest>, res: Response<IAuthResponse|IErrorResponse>, next: NextFunction): Promise<void> => {
+router.post('/', async (req: Request<ICreateAuthRequest>, res: Response<IAuthResponse>, next: NextFunction): Promise<void> => {
   const { username, email, password, passwordConfirmation } = req.body as ICreateAuthRequest
 
   const input: ICreateAuthInput = {

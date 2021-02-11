@@ -3,7 +3,7 @@ import { getHttpError } from '~/lib/http-exception'
 import { GrpcError, HttpError } from '~/types/exception'
 import { IErrorResponse } from '~/types/response'
 
-export function errorHandler(err: Error, _req: Request, res: Response, next: NextFunction) {
+export function errorHandler(err: Error, _: Request, res: Response, next: NextFunction): void | Response<any> {
   if (!err) {
     return next()
   }

@@ -22,32 +22,32 @@ function convertStatusGrpcToHttp(grpcStatus: number): number {
 }
 
 export function badRequest(details: Array<any>): HttpError {
-  const message: string = 'Bad Request'
+  const message = 'Bad Request'
   return new HttpError(400, message, details)
 }
 
 export function unauthorized(): HttpError {
-  const message: string = 'Unauthorized'
+  const message = 'Unauthorized'
   return new HttpError(401, message)
 }
 
 export function forbidden(): HttpError {
-  const message: string = 'Forbidden'
+  const message = 'Forbidden'
   return new HttpError(403, message)
 }
 
 export function notFound(): HttpError {
-  const message: string = 'Not Found'
+  const message = 'Not Found'
   return new HttpError(403, message)
 }
 
 export function alreadyExists(details: Array<any>): HttpError {
-  const message: string = 'Conflict'
+  const message = 'Conflict'
   return new HttpError(409, message, details)
 }
 
 export function serverError(details: Array<any>): HttpError {
-  const message: string = 'Internal Server Error'
+  const message = 'Internal Server Error'
   return new HttpError(500, message, details)
 }
 
