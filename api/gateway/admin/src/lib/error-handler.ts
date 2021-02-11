@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
-import { getHttpError } from '~/lib/http-exception'
+import { getHttpError, notFound } from '~/lib/http-exception'
 import { GrpcError, HttpError } from '~/types/exception'
 import { IErrorResponse } from '~/types/response'
 
@@ -39,4 +39,8 @@ export function errorHandler(err: Error, _: Request, res: Response, next: NextFu
 
     return res.status(response.status).json(response)
   }
+}
+
+export function notFoundHandler(_req: Request, _res: Response, next: NextFunction): void {
+  next(notFound())
 }
