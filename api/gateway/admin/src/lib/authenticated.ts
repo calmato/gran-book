@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import { auth } from '~/plugins/firebase'
+import { unauthorized } from '~/lib/http-exception'
 
 interface IRoute {
   path: string
@@ -36,14 +37,10 @@ export async function authentication(req: Request, res: Response, next: NextFunc
 
   const token: string = getToken(req)
   if (token === '') {
-    return res.status(401).json({ message: 'debug: token' })
+    return next(unauthorized())
   }
 
   await auth.verifyIdToken(token)
     .then(() => next())
-    .catch((err: Error) => {
-      // TODO: refactor
-      console.log('debug', err)
-      return res.status(401).json({ message: 'debug: request' })
-    })
+    .catch(() => next(unauthorized()))
 }

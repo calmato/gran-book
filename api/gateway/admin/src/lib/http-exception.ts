@@ -69,6 +69,7 @@ export function getHttpError(err: Error): HttpError {
       return serverError(err.details)
     }
   } else {
+    // TODO: refactor
     return serverError(err)
   }
 }
