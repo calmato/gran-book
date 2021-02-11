@@ -1,9 +1,10 @@
 import { Request, Response, NextFunction } from 'express'
-import { getHttpError, notFound } from '~/lib/http-exception'
+import { errorLogHandler } from '~/lib/log-handler'
+import { getHttpError } from '~/lib/http-exception'
 import { GrpcError, HttpError } from '~/types/exception'
 import { IErrorResponse } from '~/types/response'
 
-export function errorHandler(err: Error, _: Request, res: Response, next: NextFunction): void | Response<any> {
+export function errorHandler(err: Error, req: Request, res: Response, next: NextFunction): void | Response<any> {
   if (!err) {
     return next()
   }
@@ -17,6 +18,7 @@ export function errorHandler(err: Error, _: Request, res: Response, next: NextFu
       errors: err.details || [],
     }
 
+    errorLogHandler(req, err)
     return res.status(response.status).json(response)
   } else if (err instanceof GrpcError) {
     const httpError: HttpError = getHttpError(err)
@@ -27,6 +29,7 @@ export function errorHandler(err: Error, _: Request, res: Response, next: NextFu
       errors: httpError.details || [],
     }
 
+    errorLogHandler(req, httpError)
     return res.status(response.status).json(response)
   } else {
     const httpError: HttpError = getHttpError(err)
@@ -37,10 +40,7 @@ export function errorHandler(err: Error, _: Request, res: Response, next: NextFu
       errors: httpError.details || [],
     }
 
+    errorLogHandler(req, httpError)
     return res.status(response.status).json(response)
   }
-}
-
-export function notFoundHandler(_req: Request, _res: Response, next: NextFunction): void {
-  next(notFound())
 }

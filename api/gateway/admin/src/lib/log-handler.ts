@@ -1,37 +1,50 @@
-/* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/unbound-method */
-/* eslint-disable prefer-rest-params */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import { Request, Response, NextFunction} from 'express'
 import logger from '~/plugins/logger'
+import { HttpError } from '~/types/exception'
 
-export function logHandler(req: Request, res: Response, next: NextFunction): void {
-  const [oldWrite, oldEnd] = [res.write, res.end];
-  const chunks: Buffer[] = [];
+const filterWords: string[] = ['password', 'passwordConfirmation']
 
-  (res.write as unknown) = (chunk: any) => {
-    chunks.push(Buffer.from(chunk));
-    (oldWrite as Function).apply(res, arguments);
-  };
+function logFilter(body: any): any {
+  const obj: typeof body[keyof string] = {}
 
-  res.end = (chunk: any) => {
-    if (chunk) {
-      chunks.push(Buffer.from(chunk));
-    }
+  Object.keys(body).forEach((key: string) => {
+    obj[key] = filterWords.includes(key) ? '<FILTERED>' : body[key]
+  })
 
-    const body = Buffer.concat(chunks).toString('utf8');
+  return obj
+}
 
-    const logs: any = {
-      requestHeader: req.headers,
-      requestBody: req.body,
-      responseBody: JSON.parse(body),
-    };
+export function accessLogHandler(req: Request, _: Response, next: NextFunction): void {
+  const logs: any = {
+    direction: 'request',
+    path: req.path,
+    method: req.method,
+    remoteIp: req.ip,
+    requestHeader: req.headers,
+    requestQuery: req.query,
+    requestBody: logFilter(req.body),
+  }
 
-    logger.access.info(req.method, req.path, logs);
-
-    (oldEnd as Function).apply(res, arguments);
-  };
-
+  logger.default.info(JSON.stringify(logs))
+  logger.access.info(JSON.stringify(logs))
   next()
+}
+
+export function errorLogHandler(req: Request, err: HttpError): void {
+  const logs: any = {
+    direction: 'response',
+    path: req.path,
+    method: req.method,
+    remoteIp: req.ip,
+    status: err.status,
+    message: err.message,
+    errors: err.details,
+  }
+
+  logger.default.info(JSON.stringify(logs))
+  logger.access.info(JSON.stringify(logs))
 }
 /* eslint-enable */
