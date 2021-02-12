@@ -22,6 +22,10 @@ const operatorForbiddenRoutes: IRoute[] = [
 ]
 
 function isExcludeAuthenticationRoute(req: Request): boolean {
+  if (req.method === 'OPTIONS') {
+    return true
+  }
+
   return excludeAuthenticationRoutes.some((r: IRoute) => r.path === req.path && r.method === req.method)
 }
 
