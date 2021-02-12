@@ -15,9 +15,6 @@
     "start": "node ./dist/server.js",
     "test": "echo 'not running..'"
   },
-  "eslintIgnore": [
-    "src/proto/*"
-  ],
   "dependencies": {
     "@grpc/grpc-js": "^1.2.6",
     "body-parser": "^1.19.0",
