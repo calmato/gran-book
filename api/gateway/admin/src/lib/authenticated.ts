@@ -9,17 +9,11 @@ interface IRoute {
   method: string
 }
 
-const excludeRoutes: IRoute[] = [
-  { path: '/health', method: 'GET' },
-]
+const excludeRoutes: IRoute[] = [{ path: '/health', method: 'GET' }]
 
-const developerForbiddenRoutes: IRoute[] = [
-  { path: '/v1/auth', method: 'POST' },
-]
+const developerForbiddenRoutes: IRoute[] = [{ path: '/v1/auth', method: 'POST' }]
 
-const operatorForbiddenRoutes: IRoute[] = [
-  { path: '/v1/auth', method: 'POST' },
-]
+const operatorForbiddenRoutes: IRoute[] = [{ path: '/v1/auth', method: 'POST' }]
 
 function isExcludeRoute(req: Request): boolean {
   if (req.method === 'OPTIONS') {
@@ -37,7 +31,7 @@ function isForbiddenRoute(req: Request, role: number): boolean {
       return developerForbiddenRoutes.some((r: IRoute) => r.path === req.path && r.method === req.method)
     case 3: // 3 -> Operator
       return operatorForbiddenRoutes.some((r: IRoute) => r.path === req.path && r.method === req.method)
-    default: // other -> Non Admin User
+    default:
       return true
   }
 }
@@ -66,7 +60,8 @@ export async function authentication(req: Request, res: Response, next: NextFunc
     return next(unauthorized())
   }
 
-  await auth.verifyIdToken(token)
+  await auth
+    .verifyIdToken(token)
     .then(() => next())
     .catch(() => next(unauthorized()))
 }
