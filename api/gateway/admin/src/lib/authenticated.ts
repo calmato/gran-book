@@ -10,9 +10,7 @@ interface IRoute {
 }
 
 const excludeRoutes: IRoute[] = [{ path: '/health', method: 'GET' }]
-
 const developerForbiddenRoutes: IRoute[] = [{ path: '/v1/auth', method: 'POST' }]
-
 const operatorForbiddenRoutes: IRoute[] = [{ path: '/v1/auth', method: 'POST' }]
 
 function isExcludeRoute(req: Request): boolean {
