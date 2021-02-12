@@ -26,7 +26,17 @@ data:
       ssl_certificate_key        /etc/tls/privkey.pem;
 
       location / {
-        set $upsteam http://grpc-gateway.default.svc.cluster.local:8080;
+        set $upsteam http://native-gateway.default.svc.cluster.local:8080;
+
+        proxy_pass       $upsteam;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+      }
+
+      location /admin {
+        set $upsteam http://admin-gateway.default.svc.cluster.local:8080;
 
         proxy_pass       $upsteam;
         proxy_set_header Host $host;
