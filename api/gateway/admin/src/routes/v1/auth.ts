@@ -11,23 +11,7 @@ const router = express.Router()
 router.get('/', async (req: Request , res: Response<IAuthResponse>, next: NextFunction): Promise<void> => {
   await getAuth(req)
     .then((output: IAuthOutput) => {
-      const response: IAuthResponse = {
-        id: output.id,
-        username: output.username,
-        gender: output.gender,
-        email: output.email,
-        phoneNumber: output.phoneNumber,
-        role: output.role,
-        thumbnailUrl: output.thumbnailUrl,
-        selfIntroduction: output.selfIntroduction,
-        lastName: output.lastName,
-        firstName: output.firstName,
-        lastNameKana: output.lastNameKana,
-        firstNameKana: output.firstNameKana,
-        createdAt: output.createdAt,
-        updatedAt: output.updatedAt,
-      }
-
+      const response: IAuthResponse = setAuthResponse(output)
       res.status(200).json(response)
     })
     .catch((err: GrpcError) => next(err))
@@ -45,26 +29,31 @@ router.post('/', async (req: Request<ICreateAuthRequest>, res: Response<IAuthRes
 
   await createAuth(req, input)
     .then((output: IAuthOutput) => {
-      const response: IAuthResponse = {
-        id: output.id,
-        username: output.username,
-        gender: output.gender,
-        email: output.email,
-        phoneNumber: output.phoneNumber,
-        role: output.role,
-        thumbnailUrl: output.thumbnailUrl,
-        selfIntroduction: output.selfIntroduction,
-        lastName: output.lastName,
-        firstName: output.firstName,
-        lastNameKana: output.lastNameKana,
-        firstNameKana: output.firstNameKana,
-        createdAt: output.createdAt,
-        updatedAt: output.updatedAt,
-      }
-
+      const response: IAuthResponse = setAuthResponse(output)
       res.status(200).json(response)
     })
     .catch((err: GrpcError) => next(err))
 })
 
 export default router
+
+function setAuthResponse(output: IAuthOutput): IAuthResponse {
+  const response: IAuthResponse = {
+    id: output.id,
+    username: output.username,
+    gender: output.gender,
+    email: output.email,
+    phoneNumber: output.phoneNumber,
+    role: output.role,
+    thumbnailUrl: output.thumbnailUrl,
+    selfIntroduction: output.selfIntroduction,
+    lastName: output.lastName,
+    firstName: output.firstName,
+    lastNameKana: output.lastNameKana,
+    firstNameKana: output.firstNameKana,
+    createdAt: output.createdAt,
+    updatedAt: output.updatedAt,
+  }
+
+  return response
+}
