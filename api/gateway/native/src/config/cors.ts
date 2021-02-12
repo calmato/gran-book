@@ -15,6 +15,7 @@ const corsOptions: CorsOptions = {
   credentials: true,
   maxAge: 1440, // 60m * 24h
   preflightContinue: true,
+  optionsSuccessStatus: 200,
 }
 
 export { corsOptions }
