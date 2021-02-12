@@ -13,15 +13,75 @@ import (
 )
 
 func TestUserService_Authentication(t *testing.T) {
+	testCases := map[string]struct {
+		Expected struct {
+			UID   string
+			Error error
+		}
+	}{
+		"ok": {
+			Expected: struct {
+				UID   string
+				Error error
+			}{
+				UID:   "00000000-0000-0000-0000-000000000000",
+				Error: nil,
+			},
+		},
+		"ng_unauthorized": {
+			Expected: struct {
+				UID   string
+				Error error
+			}{
+				UID:   "",
+				Error: exception.Unauthorized.New(nil),
+			},
+		},
+	}
+
+	for result, tc := range testCases {
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		uvm := mock_user.NewMockValidation(ctrl)
+
+		urm := mock_user.NewMockRepository(ctrl)
+		urm.EXPECT().Authentication(ctx).Return(tc.Expected.UID, tc.Expected.Error)
+
+		uum := mock_user.NewMockUploader(ctrl)
+
+		t.Run(result, func(t *testing.T) {
+			target := NewUserService(uvm, urm, uum)
+
+			got, err := target.Authentication(ctx)
+			if !reflect.DeepEqual(err, tc.Expected.Error) {
+				t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+				return
+			}
+
+			if !reflect.DeepEqual(got, tc.Expected.UID) {
+				t.Fatalf("want %#v, but %#v", tc.Expected.UID, got)
+				return
+			}
+		})
+	}
+}
+
+func TestUserService_Show(t *testing.T) {
 	current := time.Now()
 
 	testCases := map[string]struct {
+		UID      string
 		Expected struct {
 			User  *user.User
 			Error error
 		}
 	}{
 		"ok": {
+			UID: "00000000-0000-0000-0000-000000000000",
 			Expected: struct {
 				User  *user.User
 				Error error
@@ -51,13 +111,14 @@ func TestUserService_Authentication(t *testing.T) {
 				Error: nil,
 			},
 		},
-		"ng_unauthorized": {
+		"ng_notfound": {
+			UID: "",
 			Expected: struct {
 				User  *user.User
 				Error error
 			}{
 				User:  nil,
-				Error: exception.Unauthorized.New(nil),
+				Error: exception.NotFound.New(nil),
 			},
 		},
 	}
@@ -72,14 +133,14 @@ func TestUserService_Authentication(t *testing.T) {
 		uvm := mock_user.NewMockValidation(ctrl)
 
 		urm := mock_user.NewMockRepository(ctrl)
-		urm.EXPECT().Authentication(ctx).Return(tc.Expected.User, tc.Expected.Error)
+		urm.EXPECT().Show(ctx, tc.UID).Return(tc.Expected.User, tc.Expected.Error)
 
 		uum := mock_user.NewMockUploader(ctrl)
 
 		t.Run(result, func(t *testing.T) {
 			target := NewUserService(uvm, urm, uum)
 
-			got, err := target.Authentication(ctx)
+			got, err := target.Show(ctx, tc.UID)
 			if !reflect.DeepEqual(err, tc.Expected.Error) {
 				t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
 				return

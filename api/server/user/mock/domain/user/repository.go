@@ -35,10 +35,10 @@ func (m *MockRepository) EXPECT() *MockRepositoryMockRecorder {
 }
 
 // Authentication mocks base method
-func (m *MockRepository) Authentication(ctx context.Context) (*user.User, error) {
+func (m *MockRepository) Authentication(ctx context.Context) (string, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Authentication", ctx)
-	ret0, _ := ret[0].(*user.User)
+	ret0, _ := ret[0].(string)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -47,6 +47,21 @@ func (m *MockRepository) Authentication(ctx context.Context) (*user.User, error)
 func (mr *MockRepositoryMockRecorder) Authentication(ctx interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Authentication", reflect.TypeOf((*MockRepository)(nil).Authentication), ctx)
+}
+
+// Show mocks base method
+func (m *MockRepository) Show(ctx context.Context, uid string) (*user.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Show", ctx, uid)
+	ret0, _ := ret[0].(*user.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Show indicates an expected call of Show
+func (mr *MockRepositoryMockRecorder) Show(ctx, uid interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Show", reflect.TypeOf((*MockRepository)(nil).Show), ctx, uid)
 }
 
 // Create mocks base method

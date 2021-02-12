@@ -1,18 +1,39 @@
-import express, { Request, Response } from 'express'
-import { createAuth } from '~/api'
-import { getHttpError } from '~/plugins/grpc-status'
+import express, { Request, Response, NextFunction } from 'express'
+import { getAuth, createAuth } from '~/api'
 import { ICreateAuthRequest } from '~/types/request'
-import { IAuthResponse, IErrorResponse } from '~/types/response'
+import { IAuthResponse } from '~/types/response'
 import { ICreateAuthInput } from '~/types/input'
-import { IAuthOutput, IErrorOutput } from '~/types/output'
+import { IAuthOutput } from '~/types/output'
+import { GrpcError } from '~/types/exception'
 
 const router = express.Router()
 
-router.get('/', (_, res: Response): void => {
-  res.status(200).json({ message: 'Hello World!!' })
+router.get('/', async (req: Request , res: Response<IAuthResponse>, next: NextFunction): Promise<void> => {
+  await getAuth(req)
+    .then((output: IAuthOutput) => {
+      const response: IAuthResponse = {
+        id: output.id,
+        username: output.username,
+        gender: output.gender,
+        email: output.email,
+        phoneNumber: output.phoneNumber,
+        role: output.role,
+        thumbnailUrl: output.thumbnailUrl,
+        selfIntroduction: output.selfIntroduction,
+        lastName: output.lastName,
+        firstName: output.firstName,
+        lastNameKana: output.lastNameKana,
+        firstNameKana: output.firstNameKana,
+        createdAt: output.createdAt,
+        updatedAt: output.updatedAt,
+      }
+
+      res.status(200).json(response)
+    })
+    .catch((err: GrpcError) => next(err))
 })
 
-router.post('/', async (req: Request<ICreateAuthRequest>, res: Response<IAuthResponse|IErrorResponse>): Promise<void> => {
+router.post('/', async (req: Request<ICreateAuthRequest>, res: Response<IAuthResponse>, next: NextFunction): Promise<void> => {
   const { username, email, password, passwordConfirmation } = req.body as ICreateAuthRequest
 
   const input: ICreateAuthInput = {
@@ -22,30 +43,28 @@ router.post('/', async (req: Request<ICreateAuthRequest>, res: Response<IAuthRes
     passwordConfirmation: passwordConfirmation,
   }
 
-  await createAuth(input).then((output: IAuthOutput) => {
-    const response: IAuthResponse = {
-      id: output.id,
-      username: output.username,
-      gender: output.gender,
-      email: output.email,
-      phoneNumber: output.phoneNumber,
-      role: output.role,
-      thumbnailUrl: output.thumbnailUrl,
-      selfIntroduction: output.selfIntroduction,
-      lastName: output.lastName,
-      firstName: output.firstName,
-      lastNameKana: output.lastNameKana,
-      firstNameKana: output.firstNameKana,
-      createdAt: output.createdAt,
-      updatedAt: output.updatedAt,
-    }
+  await createAuth(req, input)
+    .then((output: IAuthOutput) => {
+      const response: IAuthResponse = {
+        id: output.id,
+        username: output.username,
+        gender: output.gender,
+        email: output.email,
+        phoneNumber: output.phoneNumber,
+        role: output.role,
+        thumbnailUrl: output.thumbnailUrl,
+        selfIntroduction: output.selfIntroduction,
+        lastName: output.lastName,
+        firstName: output.firstName,
+        lastNameKana: output.lastNameKana,
+        firstNameKana: output.firstNameKana,
+        createdAt: output.createdAt,
+        updatedAt: output.updatedAt,
+      }
 
-    res.status(200).json(response)
-  })
-  .catch((err: IErrorOutput) => {
-    const response: IErrorResponse = getHttpError(err)
-    res.status(response.status).json(response)
-  })
+      res.status(200).json(response)
+    })
+    .catch((err: GrpcError) => next(err))
 })
 
 export default router
