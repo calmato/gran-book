@@ -35,10 +35,6 @@ function getToken(req: Request): string {
 }
 
 export async function authentication(req: Request, res: Response, next: NextFunction): Promise<any> {
-  if (req.method === 'OPTIONS') {
-    return res.status(200).json({ message: 'ok' })
-  }
-
   if (isExcludeRoute(req)) {
     return next()
   }

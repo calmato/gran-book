@@ -5,7 +5,7 @@ import { corsOptions } from '~/config/cors'
 import { authentication } from '~/lib/authenticated'
 import { errorHandler } from '~/lib/error-handler'
 import { accessLogHandler } from '~/lib/log-handler'
-import { health, v1Auth } from '~/routes'
+import { common, v1Auth } from '~/routes'
 
 const app = express()
 
@@ -18,7 +18,7 @@ app.use(cors(corsOptions))
 app.use(accessLogHandler)
 app.use(authentication)
 
-app.use('/', health)
+app.use('/', common)
 app.use('/v1/auth', v1Auth)
 
 app.use(errorHandler)
