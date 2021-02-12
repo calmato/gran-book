@@ -6,6 +6,7 @@ const accessor: Plugin = ({ $axios, store, redirect }) => {
 
   $axios.onRequest((config: any) => {
     config.baseURL = process.env.apiURL
+    config.withCredentials = true
 
     const token: string = `Bearer ${store.getters['auth/getToken']}`
     if (token) {
