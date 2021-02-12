@@ -24,7 +24,6 @@ module.exports = {
     'prettier/standard',
     'plugin:prettier/recommended',
   ],
-  ignorePatterns: ['src/proto/*'],
   rules: {
     'dot-notation': 'off',
     'no-unused-expressions': 'off',
