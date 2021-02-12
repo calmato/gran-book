@@ -22,10 +22,6 @@ const operatorForbiddenRoutes: IRoute[] = [
 ]
 
 function isExcludeRoute(req: Request): boolean {
-  if (req.method === 'OPTIONS') {
-    return true
-  }
-
   return excludeRoutes.some((r: IRoute) => r.path === req.path && r.method === req.method)
 }
 
@@ -56,7 +52,11 @@ function getToken(req: Request): string {
   return ''
 }
 
-export async function authentication(req: Request, _: Response, next: NextFunction): Promise<any> {
+export async function authentication(req: Request, res: Response, next: NextFunction): Promise<any> {
+  if (req.method === 'OPTIONS') {
+    return res.status(200)
+  }
+
   if (isExcludeRoute(req)) {
     return next()
   }
