@@ -64,7 +64,8 @@ func TestAuthApplication_Authentication(t *testing.T) {
 		arvm := mock_validation.NewMockAuthRequestValidation(ctrl)
 
 		usm := mock_user.NewMockService(ctrl)
-		usm.EXPECT().Authentication(ctx).Return(tc.Expected.User, tc.Expected.Error)
+		usm.EXPECT().Authentication(ctx).Return(tc.Expected.User.ID, tc.Expected.Error)
+		usm.EXPECT().Show(ctx, tc.Expected.User.ID).Return(tc.Expected.User, tc.Expected.Error)
 
 		t.Run(result, func(t *testing.T) {
 			target := NewAuthApplication(arvm, usm)

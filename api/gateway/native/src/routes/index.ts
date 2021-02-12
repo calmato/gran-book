@@ -1,2 +1,2 @@
 export { default as health } from './health'
-export * from './v1'
+export { default as v1Auth } from './v1/auth'

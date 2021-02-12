@@ -6,7 +6,7 @@ package mock_user
 
 import (
 	context "context"
-	user "github.com/calmato/gran-book/api/user/internal/domain/user"
+	user "github.com/calmato/gran-book/api/server/user/internal/domain/user"
 	gomock "github.com/golang/mock/gomock"
 	reflect "reflect"
 )
@@ -35,10 +35,10 @@ func (m *MockService) EXPECT() *MockServiceMockRecorder {
 }
 
 // Authentication mocks base method
-func (m *MockService) Authentication(ctx context.Context) (*user.User, error) {
+func (m *MockService) Authentication(ctx context.Context) (string, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Authentication", ctx)
-	ret0, _ := ret[0].(*user.User)
+	ret0, _ := ret[0].(string)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -47,6 +47,21 @@ func (m *MockService) Authentication(ctx context.Context) (*user.User, error) {
 func (mr *MockServiceMockRecorder) Authentication(ctx interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Authentication", reflect.TypeOf((*MockService)(nil).Authentication), ctx)
+}
+
+// Show mocks base method
+func (m *MockService) Show(ctx context.Context, uid string) (*user.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Show", ctx, uid)
+	ret0, _ := ret[0].(*user.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Show indicates an expected call of Show
+func (mr *MockServiceMockRecorder) Show(ctx, uid interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Show", reflect.TypeOf((*MockService)(nil).Show), ctx, uid)
 }
 
 // Create mocks base method

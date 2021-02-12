@@ -12,7 +12,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: ./api/user
+        working-directory: ./api/server/user
 
     strategy:
       matrix:

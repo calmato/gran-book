@@ -16,8 +16,9 @@ import {   RetryInfo,
   Help,
   LocalizedMessage,
 } from '~/proto/error_details_pb'
+import { GrpcError } from '~/types/exception'
 
-export const googleDeserializeMap = {
+const googleDeserializeMap = {
   'google.rpc.RetryInfo': RetryInfo.deserializeBinary,
   'google.rpc.DebugInfo': DebugInfo.deserializeBinary,
   'google.rpc.QuotaFailure': QuotaFailure.deserializeBinary,
@@ -33,7 +34,7 @@ interface ServiceError {
   metadata?: Metadata
 }
 
-export function deserializeGrpcStatusDetails<T extends Record<string, (bytes: Uint8Array) => any>>(
+function deserializeGrpcStatusDetails<T extends Record<string, (bytes: Uint8Array) => any>>(
   error: ServiceError,
   deserializeMap: T
 ): {
@@ -69,7 +70,7 @@ export function deserializeGrpcStatusDetails<T extends Record<string, (bytes: Ui
   }
 }
 
-export function deserializeGoogleGrpcStatusDetails(error: ServiceError) {
+function deserializeGoogleGrpcStatusDetails(error: ServiceError) {
   return deserializeGrpcStatusDetails(error, googleDeserializeMap)
 }
 
@@ -77,7 +78,7 @@ const notEmpty = <T>(value: T | null | undefined): value is T => {
   return value !== null && value !== undefined
 }
 
-export function getErrorDetails(details: Array<any>): Array<any> {
+function getErrorDetails(details: Array<any>): Array<any> {
   // 配列の1つ目だけ取得 <- APIの設計で1つまでしか含まないようにしているため大丈夫なはず
   const detail = details[0]
 
@@ -89,23 +90,14 @@ export function getErrorDetails(details: Array<any>): Array<any> {
   }
 }
 
-export function getError(err: ServiceError): {status: number; message: string; details: Array<any>} {
+export function getGrpcError(err: ServiceError): GrpcError {
   const grpcErrorDetails = deserializeGoogleGrpcStatusDetails(err);
   if (grpcErrorDetails) {
     const { status, details } = grpcErrorDetails
-    const errorDetails = getErrorDetails(details)
 
-    return {
-      status: status.getCode(),
-      message: status.getMessage(),
-      details: errorDetails,
-    }
+    return new GrpcError(status.getCode(), getErrorDetails(details))
   } else {
-    return {
-      status: 2,
-      message: 'Unknown',
-      details: [],
-    }
+    return new GrpcError(2) // 2 -> Unknown
   }
 }
 /* eslint-enable */
