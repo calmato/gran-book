@@ -79,7 +79,7 @@ export function updateAuthAddress(req: Request<any>, input: IUpdateAuthAddressIn
   request.setAddressLine1(input.addressLine1)
   request.setAddressLine2(input.addressLine2)
 
-  return new Promise((resolve: (res: IAuthOutput) => void, reject: (reason: Error) => void) {
+  return new Promise((resolve: (res: IAuthOutput) => void, reject: (reason: Error) => void) => {
     authClient.updateAuthAddress(request, metadata, (err: any, res: AuthResponse) => {
       if (err) {
         reject(getGrpcError(err))

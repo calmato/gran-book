@@ -5,7 +5,7 @@ export interface ICreateAuthRequest {
   passwordConfirmation: string
 }
 
-export interface IUpdateAuthProfileRequest {
+export interface IUpdateAuthRequest {
   username: string
   gender: number
   thumbnail: string
