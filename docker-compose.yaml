@@ -47,6 +47,7 @@ services:
     environment:
       - HOST=0.0.0.0
       - PORT=8080
+      - LOG_PATH=/var/log/gateway
       - USER_API_URL=${USER_API_URL}
       - FIREBASE_PROJECT_ID=${FIREBASE_PROJECT_ID}
       - FIREBASE_CLIENT_EMAIL=${FIREBASE_CLIENT_EMAIL}
@@ -70,6 +71,7 @@ services:
     environment:
       - HOST=0.0.0.0
       - PORT=8080
+      - LOG_PATH=/var/log/gateway
       - USER_API_URL=${USER_API_URL}
       - FIREBASE_PROJECT_ID=${FIREBASE_PROJECT_ID}
       - FIREBASE_CLIENT_EMAIL=${FIREBASE_CLIENT_EMAIL}
