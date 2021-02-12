@@ -7,13 +7,17 @@ interface IRoute {
   method: string
 }
 
-const openRoutes: IRoute[] = [
+const excludeRoutes: IRoute[] = [
   { path: '/health', method: 'GET' },
   { path: '/v1/auth', method: 'POST' },
 ]
 
-function isOpenRoute(req: Request): boolean {
-  return openRoutes.some((r) => r.path === req.path && r.method === req.method)
+function isExcludeRoute(req: Request): boolean {
+  if (req.method === 'OPTIONS') {
+    return true
+  }
+
+  return excludeRoutes.some((r) => r.path === req.path && r.method === req.method)
 }
 
 function getToken(req: Request): string {
@@ -31,7 +35,11 @@ function getToken(req: Request): string {
 }
 
 export async function authentication(req: Request, res: Response, next: NextFunction): Promise<any> {
-  if (isOpenRoute(req)) {
+  if (req.method === 'OPTIONS') {
+    return res.status(200)
+  }
+
+  if (isExcludeRoute(req)) {
     return next()
   }
 

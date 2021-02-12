@@ -9,7 +9,7 @@ interface IRoute {
   method: string
 }
 
-const excludeAuthenticationRoutes: IRoute[] = [
+const excludeRoutes: IRoute[] = [
   { path: '/health', method: 'GET' },
 ]
 
@@ -21,8 +21,8 @@ const operatorForbiddenRoutes: IRoute[] = [
   { path: '/v1/auth', method: 'POST' },
 ]
 
-function isExcludeAuthenticationRoute(req: Request): boolean {
-  return excludeAuthenticationRoutes.some((r: IRoute) => r.path === req.path && r.method === req.method)
+function isExcludeRoute(req: Request): boolean {
+  return excludeRoutes.some((r: IRoute) => r.path === req.path && r.method === req.method)
 }
 
 function isForbiddenRoute(req: Request, role: number): boolean {
@@ -52,8 +52,12 @@ function getToken(req: Request): string {
   return ''
 }
 
-export async function authentication(req: Request, _: Response, next: NextFunction): Promise<any> {
-  if (isExcludeAuthenticationRoute(req)) {
+export async function authentication(req: Request, res: Response, next: NextFunction): Promise<any> {
+  if (req.method === 'OPTIONS') {
+    return res.status(200)
+  }
+
+  if (isExcludeRoute(req)) {
     return next()
   }
 
@@ -68,7 +72,7 @@ export async function authentication(req: Request, _: Response, next: NextFuncti
 }
 
 export async function authorization(req: Request, _: Response, next: NextFunction): Promise<any> {
-  if (isExcludeAuthenticationRoute(req)) {
+  if (isExcludeRoute(req)) {
     return next()
   }
 

@@ -1,11 +1,21 @@
 import { CorsOptions } from 'cors'
 
 const corsOptions: CorsOptions = {
-  origin: ['*'],
+  origin: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['*'],
+  allowedHeaders: [
+    'Content-Type',
+    'Accept',
+    'User-Agent',
+    'Authorization',
+    'X-Forwarded-For',
+    'X-Forwarded-Proto',
+    'X-Real-Ip',
+  ],
+  credentials: true,
   maxAge: 1440, // 60m * 24h
   preflightContinue: true,
+  optionsSuccessStatus: 200,
 }
 
 export { corsOptions }
