@@ -9,7 +9,8 @@
     "build:dev": "webpack --config ./webpack/webpack.dev.js",
     "build": "webpack --config ./webpack/webpack.prod.js",
     "dev": "yarn build:dev --watch & yarn start:dev",
-    "lint": "eslint --ext .js,.ts ./src",
+    "lint": "eslint ./src/**/*.{js,ts}",
+    "lint:fix": "yarn lint --fix && prettier --write ./src/**/*.{js,ts}",
     "start:dev": "nodemon ./dist/server.js",
     "start": "node ./dist/server.js",
     "test": "echo 'not running..'"
@@ -34,6 +35,7 @@
     "@typescript-eslint/parser": "^4.14.2",
     "eslint": "^7.19.0",
     "eslint-config-prettier": "^7.2.0",
+    "eslint-plugin-prettier": "^3.3.1",
     "nodemon": "^2.0.7",
     "prettier": "^2.2.1",
     "ts-loader": "^8.0.14",
