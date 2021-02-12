@@ -11,7 +11,7 @@
     "dev": "yarn build:dev --watch & yarn start:dev",
     "lint": "eslint --ext .js,.ts ./src",
     "start:dev": "nodemon ./dist/server.js",
-    "start": "node ./dist/server/js",
+    "start": "node ./dist/server.js",
     "test": "echo 'not running..'"
   },
   "eslintIgnore": [
