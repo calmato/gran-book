@@ -5,6 +5,7 @@ const corsOptions: CorsOptions = {
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['*'],
   maxAge: 1440, // 60m * 24h
+  preflightContinue: true,
 }
 
 export { corsOptions }
