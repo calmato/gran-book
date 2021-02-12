@@ -1,1 +1,13 @@
-src/proto/*
+dist
+node_modules
+src/proto
+webpack
+.eslintignore
+.eslintrc.js
+.gitignore
+.prettierignore
+.prettierrc.js
+nodemon.json
+package.json
+tsconfig.json
+yarn.lock
