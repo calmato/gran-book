@@ -5,8 +5,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/unbound-method */
 import { Metadata } from '@grpc/grpc-js'
-import { Status } from "~/proto/status_pb"
-import {   RetryInfo,
+import { Status } from '~/proto/status_pb'
+import {
+  RetryInfo,
   DebugInfo,
   QuotaFailure,
   PreconditionFailure,
@@ -38,15 +39,15 @@ function deserializeGrpcStatusDetails<T extends Record<string, (bytes: Uint8Arra
   error: ServiceError,
   deserializeMap: T
 ): {
-  status: Status;
-  details: Array<ReturnType<T[keyof T]>>;
+  status: Status
+  details: Array<ReturnType<T[keyof T]>>
 } | null {
   if (!error.metadata) {
     return null
   }
 
-  const buffer = error.metadata.get("grpc-status-details-bin")[0]
-  if (!buffer || typeof buffer === "string") {
+  const buffer = error.metadata.get('grpc-status-details-bin')[0]
+  if (!buffer || typeof buffer === 'string') {
     return null
   }
 
@@ -91,7 +92,7 @@ function getErrorDetails(details: Array<any>): Array<any> {
 }
 
 export function getGrpcError(err: ServiceError): GrpcError {
-  const grpcErrorDetails = deserializeGoogleGrpcStatusDetails(err);
+  const grpcErrorDetails = deserializeGoogleGrpcStatusDetails(err)
   if (grpcErrorDetails) {
     const { status, details } = grpcErrorDetails
 

@@ -44,7 +44,8 @@ export async function authentication(req: Request, res: Response, next: NextFunc
     return next(unauthorized())
   }
 
-  await auth.verifyIdToken(token)
+  await auth
+    .verifyIdToken(token)
     .then(() => next())
     .catch(() => next(unauthorized()))
 }
