@@ -101,6 +101,16 @@ components:
           type: string
         firstNameKana:
           type: string
+        postalCode:
+          type: string
+        prefecture:
+          type: string
+        city:
+          type: string
+        addressLine1:
+          type: string
+        addressLine2:
+          type: string
         createdAt:
           type: string
         updatedAt:
