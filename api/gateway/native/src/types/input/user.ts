@@ -5,6 +5,15 @@ export interface ICreateAuthInput {
   passwordConfirmation: string
 }
 
+export interface IUpdateAuthEmailInput {
+  email: string
+}
+
+export interface IUpdateAuthPasswordInput {
+  password: string
+  passwordConfirmation: string
+}
+
 export interface IUpdateAuthProfileInput {
   username: string
   gender: number
