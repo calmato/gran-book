@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Gran Book (Admin)
   description: 管理コンソール用API
-  version: 0.3.0
+  version: 0.4.0
 servers:
   - url: http://localhost:8081
     description: 開発環境
@@ -54,6 +54,54 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorResponse'
+  /v1/auth/email:
+    patch:
+      summary: メールアドレス更新
+      tags:
+        - AuthService
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/updateAuthEmailRequest'
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/authResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+  /v1/auth/password:
+    patch:
+      summary: パスワード更新
+      tags:
+        - AuthService
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/updateAuthPasswordRequest'
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/authResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
 tags:
   - name: AuthService
     description: 認証関連
@@ -86,6 +134,18 @@ components:
         firstNameKana:
           type: string
         phoneNumber:
+          type: string
+    updateAuthEmailRequest:
+      type: object
+      properties:
+        email:
+          type: string
+    updateAuthPasswordRequest:
+      type: object
+      properties:
+        password:
+          type: string
+        passwordConfirmation:
           type: string
     # Response
     authResponse:

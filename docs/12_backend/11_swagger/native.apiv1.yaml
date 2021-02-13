@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Gran Book (Native)
   description: ネイティブアプリ用API
-  version: 0.3.0
+  version: 0.4.0
 servers:
   - url: http://localhost:8080
     description: 開発環境
