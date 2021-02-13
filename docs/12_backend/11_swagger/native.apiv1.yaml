@@ -1,0 +1,127 @@
+openapi: 3.0.0
+info:
+  title: Gran Book (Native)
+  version: '0.3.0'
+servers:
+  - url: http://localhost:8080
+    description: 開発環境
+  - url: https://api.gran-book-stg.calmato.work
+    description: 検証環境
+paths:
+  /v1/auth:
+    get:
+      operationId: AuthService_GetAuth
+      summary: 認証情報取得
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/authResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+      tags:
+        - AuthService
+    post:
+      operationId: AuthService_CreateAuth
+      summary: ユーザ情報登録
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createAuthRequest'
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/authResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+      tags:
+        - AuthService
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+  schemas:
+    # Request
+    createAuthRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        passwordConfirmation:
+          type: string
+    # Response
+    authResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+        gender:
+          type: integer
+          format: int32
+        email:
+          type: string
+        phoneNumber:
+          type: string
+        role:
+          type: integer
+          format: int32
+        thumbnailUrl:
+          type: string
+        selfIntroduction:
+          type: string
+        lastName:
+          type: string
+        firstName:
+          type: string
+        lastNameKana:
+          type: string
+        firstNameKana:
+          type: string
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+    errorResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+              reason:
+                type: string
