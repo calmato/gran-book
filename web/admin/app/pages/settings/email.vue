@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive, SetupContext } from '@nuxtjs/composition-api'
-import { AuthStore } from '~/store'
+import { AuthStore, CommonStore } from '~/store'
 import { ISettingsEmailEditForm } from '~/types/forms'
 import SettingsEmailEdit from '~/components/templates/SettingsEmailEdit.vue'
 
@@ -24,10 +24,13 @@ export default defineComponent({
     const handleSubmit = async () => {
       await AuthStore.updateEmail(form)
         .then(() => {
-          // TODO: トースト表示処理追加
+          CommonStore.showSnackbar({ color: 'info', message: `確認用のメールを送信しました.` })
           router.push('/settings')
         })
-        .catch(() => console.log('debug', 'failure'))
+        .catch(() => {
+          // TODO: エラーメッセージの表示
+          console.log('debug', 'failure')
+        })
     }
 
     const handleCancel = () => {

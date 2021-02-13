@@ -1,6 +1,14 @@
 <template>
   <v-app>
-    <v-snackbar v-model="snackbar" :color="snackbarColor" top>{{ snackbarMessage }}</v-snackbar>
+    <!-- TODO: コンポーネント化 -->
+    <v-snackbar v-model="snackbar" :color="snackbarColor" top>
+      {{ snackbarMessage }}
+      <template v-slot:action="{ attrs }">
+        <v-btn v-bind="attrs" icon @click="snackbar = false">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </template>
+    </v-snackbar>
     <common-header
       :thumbnail-url="thumbnailUrl"
       @click="handleClick"
