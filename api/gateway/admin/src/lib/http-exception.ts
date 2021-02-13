@@ -57,18 +57,18 @@ export function getHttpError(err: Error): HttpError {
     const details: Array<any> = err.details || []
 
     switch (status) {
-    case 400:
-      return badRequest(details)
-    case 401:
-      return unauthorized()
-    case 403:
-      return forbidden()
-    case 404:
-      return notFound()
-    case 409:
-      return alreadyExists(details)
-    default:
-      return serverError(details)
+      case 400:
+        return badRequest(details)
+      case 401:
+        return unauthorized()
+      case 403:
+        return forbidden()
+      case 404:
+        return notFound()
+      case 409:
+        return alreadyExists(details)
+      default:
+        return serverError(details)
     }
   } else {
     return serverError([err])

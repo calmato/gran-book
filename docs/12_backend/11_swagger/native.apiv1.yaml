@@ -1,7 +1,8 @@
 openapi: 3.0.0
 info:
-  title: Gran Book
-  version: "0.2.0"
+  title: Gran Book (Native)
+  description: ネイティブアプリ用API
+  version: 0.4.0
 servers:
   - url: http://localhost:8080
     description: 開発環境
@@ -10,164 +11,220 @@ servers:
 paths:
   /v1/auth:
     get:
-      operationId: AuthService_GetAuth
       summary: 認証情報取得
+      tags:
+        - AuthService
       security:
         - BearerAuth: []
       responses:
-        "200":
+        '200':
           description: A successful response.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/protoAuthResponse"
+                $ref: '#/components/schemas/authResponse'
         default:
           description: An unexpected error response.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/rpcStatus"
-      tags:
-        - AuthService
+                $ref: '#/components/schemas/errorResponse'
     post:
-      operationId: AuthService_CreateAuth
-      summary: ユーザ登録
+      summary: ユーザ情報登録
+      tags:
+        - AuthService
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createAuthRequest'
       responses:
-        "200":
+        '200':
           description: A successful response.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/protoAuthResponse"
+                $ref: '#/components/schemas/authResponse'
         default:
           description: An unexpected error response.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/rpcStatus"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/protoCreateAuthRequest"
-        required: true
-      tags:
-        - AuthService
-  /v1/auth/address:
-    patch:
-      operationId: AuthService_UpdateAuthAddress
-      summary: 住所更新
-      security:
-        - BearerAuth: []
-      responses:
-        "200":
-          description: A successful response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/protoAuthResponse"
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/rpcStatus"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/protoUpdateAuthAddressRequest"
-        required: true
-      tags:
-        - AuthService
+                $ref: '#/components/schemas/errorResponse'
   /v1/auth/email:
     patch:
-      operationId: AuthService_UpdateAuthEmail
-      summary: メールアドレス変更
+      summary: メールアドレス更新
+      tags:
+        - AuthService
       security:
         - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/updateAuthEmailRequest'
       responses:
-        "200":
+        '200':
           description: A successful response.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/protoAuthResponse"
+                $ref: '#/components/schemas/authResponse'
         default:
           description: An unexpected error response.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/rpcStatus"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/protoUpdateAuthEmailRequest"
-        required: true
-      tags:
-        - AuthService
+                $ref: '#/components/schemas/errorResponse'
   /v1/auth/password:
     patch:
-      operationId: AuthService_UpdateAuthPassword
-      summary: メール認証用のパスワード変更
+      summary: パスワード更新
+      tags:
+        - AuthService
       security:
         - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/updateAuthPasswordRequest'
       responses:
-        "200":
+        '200':
           description: A successful response.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/protoAuthResponse"
+                $ref: '#/components/schemas/authResponse'
         default:
           description: An unexpected error response.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/rpcStatus"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/protoUpdateAuthPasswordRequest"
-        required: true
-      tags:
-        - AuthService
+                $ref: '#/components/schemas/errorResponse'
   /v1/auth/profile:
     patch:
-      operationId: AuthService_UpdateAuthProfile
       summary: プロフィール更新
+      tags:
+        - AuthService
       security:
         - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/updateAuthProfileRequest'
       responses:
-        "200":
+        '200':
           description: A successful response.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/protoAuthResponse"
+                $ref: '#/components/schemas/authResponse'
         default:
           description: An unexpected error response.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/rpcStatus"
+                $ref: '#/components/schemas/errorResponse'
+  /v1/auth/address:
+    patch:
+      summary: 住所更新
+      tags:
+        - AuthService
+      security:
+        - BearerAuth: []
       requestBody:
+        required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/protoUpdateAuthProfileRequest"
-        required: true
-      tags:
-        - AuthService
+              $ref: '#/components/schemas/updateAuthAddressRequest'
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/authResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+tags:
+  - name: AuthService
+    description: 認証関連
 components:
   securitySchemes:
     BearerAuth:
       type: http
       scheme: bearer
   schemas:
-    protoAuthResponse:
+    # Request
+    createAuthRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        passwordConfirmation:
+          type: string
+    updateAuthEmailRequest:
+      type: object
+      properties:
+        email:
+          type: string
+    updateAuthPasswordRequest:
+      type: object
+      properties:
+        password:
+          type: string
+        passwordConfirmation:
+          type: string
+    updateAuthProfileRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        gender:
+          type: integer
+          format: int32
+        thumbnail:
+          type: string
+          format: byte
+        selfIntroduction:
+          type: string
+    updateAuthAddressRequest:
+      type: object
+      properties:
+        lastName:
+          type: string
+        firstName:
+          type: string
+        lastNameKana:
+          type: string
+        firstNameKana:
+          type: string
+        postalCode:
+          type: string
+        prefecture:
+          type: string
+        city:
+          type: string
+        addressLine1:
+          type: string
+        addressLine2:
+          type: string
+    # Response
+    authResponse:
       type: object
       properties:
         id:
@@ -210,81 +267,23 @@ components:
           type: string
         updatedAt:
           type: string
-    protoCreateAuthRequest:
+    errorResponse:
       type: object
       properties:
-        username:
-          type: string
-        email:
-          type: string
-        password:
-          type: string
-        passwordConfirmation:
-          type: string
-    protoUpdateAuthAddressRequest:
-      type: object
-      properties:
-        lastName:
-          type: string
-        firstName:
-          type: string
-        lastNameKana:
-          type: string
-        firstNameKana:
-          type: string
-        phoneNumber:
-          type: string
-        postalCode:
-          type: string
-        prefecture:
-          type: string
-        city:
-          type: string
-        addressLine1:
-          type: string
-        addressLine2:
-          type: string
-    protoUpdateAuthEmailRequest:
-      type: object
-      properties:
-        email:
-          type: string
-    protoUpdateAuthPasswordRequest:
-      type: object
-      properties:
-        password:
-          type: string
-        passwordConfirmation:
-          type: string
-    protoUpdateAuthProfileRequest:
-      type: object
-      properties:
-        username:
-          type: string
-        gender:
+        status:
           type: integer
           format: int32
-        thumbnail:
-          type: string
-        selfIntroduction:
-          type: string
-    protobufAny:
-      type: object
-      properties:
-        typeUrl:
-          type: string
-        value:
-          type: string
-          format: byte
-    rpcStatus:
-      type: object
-      properties:
         code:
           type: integer
           format: int32
         message:
           type: string
-        details:
+        errors:
           type: array
           items:
-            $ref: "#/components/schemas/protobufAny"
+            type: object
+            properties:
+              field:
+                type: string
+              reason:
+                type: string
