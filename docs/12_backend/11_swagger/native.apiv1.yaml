@@ -1,7 +1,8 @@
 openapi: 3.0.0
 info:
   title: Gran Book (Native)
-  version: '0.3.0'
+  description: ネイティブアプリ用API
+  version: 0.3.0
 servers:
   - url: http://localhost:8080
     description: 開発環境
@@ -10,8 +11,9 @@ servers:
 paths:
   /v1/auth:
     get:
-      operationId: AuthService_GetAuth
       summary: 認証情報取得
+      tags:
+        - AuthService
       security:
         - BearerAuth: []
       responses:
@@ -27,11 +29,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorResponse'
+    post:
+      summary: ユーザ情報登録
       tags:
         - AuthService
-    post:
-      operationId: AuthService_CreateAuth
-      summary: ユーザ情報登録
       requestBody:
         required: true
         content:
@@ -51,8 +52,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorResponse'
-      tags:
-        - AuthService
+tags:
+  - name: AuthService
+    description: 認証関連
 components:
   securitySchemes:
     BearerAuth:

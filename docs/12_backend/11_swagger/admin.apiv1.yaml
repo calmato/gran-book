@@ -1,7 +1,8 @@
 openapi: 3.0.0
 info:
   title: Gran Book (Admin)
-  version: '0.3.0'
+  description: 管理コンソール用API
+  version: 0.3.0
 servers:
   - url: http://localhost:8081
     description: 開発環境
@@ -10,8 +11,9 @@ servers:
 paths:
   /v1/auth:
     get:
-      operationId: AuthService_GetAuth
       summary: 認証情報取得
+      tags:
+        - AuthService
       security:
         - BearerAuth: []
       responses:
@@ -27,11 +29,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorResponse'
+    patch:
+      summary: ユーザ情報更新
       tags:
         - AuthService
-    patch:
-      operationId: AuthService_UpdateAuth
-      summary: ユーザ情報更新
       security:
         - BearerAuth: []
       requestBody:
@@ -53,8 +54,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorResponse'
-      tags:
-        - AuthService
+tags:
+  - name: AuthService
+    description: 認証関連
 components:
   securitySchemes:
     BearerAuth:
@@ -72,6 +74,7 @@ components:
           format: int32
         thumbnail:
           type: string
+          format: byte
         selfIntroduction:
           type: string
         lastName:
