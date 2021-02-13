@@ -59,6 +59,8 @@ paths:
       summary: メールアドレス更新
       tags:
         - AuthService
+      security:
+        - BearerAuth: []
       requestBody:
         required: true
         content:
@@ -83,6 +85,8 @@ paths:
       summary: パスワード更新
       tags:
         - AuthService
+      security:
+        - BearerAuth: []
       requestBody:
         required: true
         content:
