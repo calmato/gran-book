@@ -9,7 +9,7 @@ import {
   UpdateAuthAddressRequest,
   AuthResponse,
 } from '~/proto/user_apiv1_pb'
-import { ICreateAuthInput, IUpdateAuthProfileInput, IUpdateAuthAddressInput } from '~/types/input'
+import { IUpdateAuthProfileInput, IUpdateAuthAddressInput } from '~/types/input'
 import { IAuthOutput } from '~/types/output'
 
 export function getAuth(req: Request<any>): Promise<IAuthOutput> {
@@ -18,27 +18,6 @@ export function getAuth(req: Request<any>): Promise<IAuthOutput> {
 
   return new Promise((resolve: (res: IAuthOutput) => void, reject: (reason: Error) => void) => {
     authClient.getAuth(request, metadata, (err: any, res: AuthResponse) => {
-      if (err) {
-        reject(getGrpcError(err))
-        return
-      }
-
-      resolve(setAuthOutput(res))
-    })
-  })
-}
-
-export function createAuth(req: Request<any>, input: ICreateAuthInput): Promise<IAuthOutput> {
-  const request = new CreateAuthRequest()
-  const metadata = getGrpcMetadata(req)
-
-  request.setUsername(input.username)
-  request.setEmail(input.email)
-  request.setPassword(input.password)
-  request.setPasswordConfirmation(input.passwordConfirmation)
-
-  return new Promise((resolve: (res: IAuthOutput) => void, reject: (reason: Error) => void) => {
-    authClient.createAuth(request, metadata, (err: any, res: AuthResponse) => {
       if (err) {
         reject(getGrpcError(err))
         return

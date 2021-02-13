@@ -1,10 +1,3 @@
-export interface ICreateAuthInput {
-  username: string
-  email: string
-  password: string
-  passwordConfirmation: string
-}
-
 export interface IUpdateAuthProfileInput {
   username: string
   gender: number

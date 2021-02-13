@@ -1,8 +1,8 @@
 import express, { Request, Response, NextFunction } from 'express'
-import { getAuth, createAuth, updateAuthProfile, updateAuthAddress } from '~/api'
-import { ICreateAuthRequest, IUpdateAuthRequest } from '~/types/request'
+import { getAuth, updateAuthProfile, updateAuthAddress } from '~/api'
+import { IUpdateAuthRequest } from '~/types/request'
 import { IAuthResponse } from '~/types/response'
-import { ICreateAuthInput, IUpdateAuthAddressInput, IUpdateAuthProfileInput } from '~/types/input'
+import { IUpdateAuthAddressInput, IUpdateAuthProfileInput } from '~/types/input'
 import { IAuthOutput } from '~/types/output'
 import { GrpcError } from '~/types/exception'
 
@@ -12,27 +12,6 @@ router.get(
   '/',
   async (req: Request, res: Response<IAuthResponse>, next: NextFunction): Promise<void> => {
     await getAuth(req)
-      .then((output: IAuthOutput) => {
-        const response: IAuthResponse = setAuthResponse(output)
-        res.status(200).json(response)
-      })
-      .catch((err: GrpcError) => next(err))
-  }
-)
-
-router.post(
-  '/',
-  async (req: Request<ICreateAuthRequest>, res: Response<IAuthResponse>, next: NextFunction): Promise<void> => {
-    const { username, email, password, passwordConfirmation } = req.body as ICreateAuthRequest
-
-    const input: ICreateAuthInput = {
-      username: username,
-      email: email,
-      password: password,
-      passwordConfirmation: passwordConfirmation,
-    }
-
-    await createAuth(req, input)
       .then((output: IAuthOutput) => {
         const response: IAuthResponse = setAuthResponse(output)
         res.status(200).json(response)
