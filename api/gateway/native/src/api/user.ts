@@ -2,8 +2,22 @@ import { Request } from 'express'
 import { authClient } from '~/plugins/grpc'
 import { getGrpcError } from '~/lib/grpc-exception'
 import { getGrpcMetadata } from '~/lib/grpc-metadata'
-import { EmptyUser, CreateAuthRequest, AuthResponse, UpdateAuthProfileRequest, UpdateAuthAddressRequest, UpdateAuthEmailRequest, UpdateAuthPasswordRequest } from '~/proto/user_apiv1_pb'
-import { ICreateAuthInput, IUpdateAuthAddressInput, IUpdateAuthEmailInput, IUpdateAuthPasswordInput, IUpdateAuthProfileInput } from '~/types/input'
+import {
+  EmptyUser,
+  CreateAuthRequest,
+  AuthResponse,
+  UpdateAuthAddressRequest,
+  UpdateAuthEmailRequest,
+  UpdateAuthPasswordRequest,
+  UpdateAuthProfileRequest,
+} from '~/proto/user_apiv1_pb'
+import {
+  ICreateAuthInput,
+  IUpdateAuthAddressInput,
+  IUpdateAuthEmailInput,
+  IUpdateAuthPasswordInput,
+  IUpdateAuthProfileInput,
+} from '~/types/input'
 import { IAuthOutput } from '~/types/output'
 
 export function getAuth(req: Request<any>): Promise<IAuthOutput> {

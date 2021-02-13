@@ -1,8 +1,20 @@
 import express, { NextFunction, Request, Response } from 'express'
 import { getAuth, createAuth, updateAuthProfile, updateAuthAddress, updateAuthEmail, UpdateAuthPassword } from '~/api'
-import { ICreateAuthRequest, IUpdateAuthAddressRequest, IUpdateAuthEmailRequest, IUpdateAuthPasswordRequest, IUpdateAuthProfileRequest } from '~/types/request'
+import {
+  ICreateAuthRequest,
+  IUpdateAuthAddressRequest,
+  IUpdateAuthEmailRequest,
+  IUpdateAuthPasswordRequest,
+  IUpdateAuthProfileRequest,
+} from '~/types/request'
 import { IAuthResponse } from '~/types/response'
-import { ICreateAuthInput, IUpdateAuthAddressInput, IUpdateAuthEmailInput, IUpdateAuthPasswordInput, IUpdateAuthProfileInput } from '~/types/input'
+import {
+  ICreateAuthInput,
+  IUpdateAuthAddressInput,
+  IUpdateAuthEmailInput,
+  IUpdateAuthPasswordInput,
+  IUpdateAuthProfileInput,
+} from '~/types/input'
 import { IAuthOutput } from '~/types/output'
 import { GrpcError } from '~/types/exception'
 
