@@ -4,7 +4,10 @@
       <v-row>
         <v-col cols="12">
           <v-card class="pa-4">
-            <settings-email-edit-form :form="form" @click="onClickSubmitButton" />
+            <v-card-title>メールアドレス変更</v-card-title>
+            <v-card-text>
+              <settings-email-edit-form :form="form" @click="onClickSubmitButton" @cancel="onClickCancelButton" />
+            </v-card-text>
           </v-card>
         </v-col>
       </v-row>
@@ -34,8 +37,13 @@ export default defineComponent({
       emit('click')
     }
 
+    const onClickCancelButton = () => {
+      emit('cancel')
+    }
+
     return {
       onClickSubmitButton,
+      onClickCancelButton,
     }
   },
 })

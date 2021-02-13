@@ -1,7 +1,8 @@
 <template>
-  <v-form class="py-8">
-    <v-text-field v-model="form.email" label="email" autofocus />
-    <v-btn :block="true" color="primary" classt="mt-4" @click="onClick">確認メールを送信</v-btn>
+  <v-form>
+    <v-text-field v-model="form.email" label="email" class="mb-4" autofocus />
+    <v-btn color="primary" class="mr-4" @click="onClick">確認メールを送信</v-btn>
+    <v-btn @click="onClickCancel">キャンセル</v-btn>
   </v-form>
 </template>
 
@@ -22,8 +23,13 @@ export default defineComponent({
       emit('click')
     }
 
+    const onClickCancel = () => {
+      emit('cancel')
+    }
+
     return {
       onClick,
+      onClickCancel,
     }
   },
 })

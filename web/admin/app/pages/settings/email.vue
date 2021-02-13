@@ -1,5 +1,5 @@
 <template>
-  <settings-email-edit :form="form" @click="handleSubmit" />
+  <settings-email-edit :form="form" @click="handleSubmit" @cancel="handleCancel" />
 </template>
 
 <script lang="ts">
@@ -30,9 +30,14 @@ export default defineComponent({
         .catch(() => console.log('debug', 'failure'))
     }
 
+    const handleCancel = () => {
+      router.back()
+    }
+
     return {
       form,
       handleSubmit,
+      handleCancel,
     }
   },
 })
