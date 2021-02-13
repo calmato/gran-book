@@ -4,6 +4,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive, SetupContext } from '@nuxtjs/composition-api'
+import { AuthStore } from '~/store'
 import { ISettingsEmailEditForm } from '~/types/forms'
 import SettingsEmailEdit from '~/components/templates/SettingsEmailEdit.vue'
 
@@ -13,14 +14,20 @@ export default defineComponent({
   },
 
   setup(_, { root }: SetupContext) {
+    const router = root.$router
     const store = root.$store
 
     const form = reactive<ISettingsEmailEditForm>({
       email: store.getters['auth/getEmail'],
     })
 
-    const handleSubmit = () => {
-      console.log('debug', form)
+    const handleSubmit = async () => {
+      await AuthStore.updateEmail(form)
+        .then(() => {
+          // TODO: トースト表示処理追加
+          router.push('/settings')
+        })
+        .catch(() => console.log('debug', 'failure'))
     }
 
     return {

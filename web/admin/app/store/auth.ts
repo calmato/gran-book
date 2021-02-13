@@ -1,7 +1,8 @@
 import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
 import { $axios } from '~/plugins/axios'
 import firebase from '~/plugins/firebase'
-import { ISignInForm } from '~/types/forms'
+import { ISettingsEmailEditForm, ISignInForm } from '~/types/forms'
+import { IAuthUpdateEmailRequest } from '~/types/requests'
 import { IAuthResponse } from '~/types/responses'
 import { IAuthState, IAuthProfile } from '~/types/store'
 
@@ -20,11 +21,6 @@ const initialState: IAuthState = {
   firstName: '',
   lastNameKana: '',
   firstNameKana: '',
-  postalCode: '',
-  prefecture: '',
-  city: '',
-  addressLine1: '',
-  addressLine2: '',
   createdAt: '',
   updatedAt: '',
 }
@@ -49,11 +45,6 @@ export default class AuthModule extends VuexModule {
   private firstName: string = initialState.firstName
   private lastNameKana: string = initialState.lastNameKana
   private firstNameKana: string = initialState.firstNameKana
-  private postalCode: string = initialState.postalCode
-  private prefecture: string = initialState.prefecture
-  private city: string = initialState.city
-  private addressLine1: string = initialState.addressLine1
-  private addressLine2: string = initialState.addressLine2
   private createdAt: string = initialState.createdAt
   private updatedAt: string = initialState.updatedAt
 
@@ -123,11 +114,6 @@ export default class AuthModule extends VuexModule {
     this.firstName = auth.firstName
     this.lastNameKana = auth.lastNameKana
     this.firstNameKana = auth.firstNameKana
-    this.postalCode = auth.postalCode
-    this.prefecture = auth.prefecture
-    this.city = auth.city
-    this.addressLine1 = auth.addressLine1
-    this.addressLine2 = auth.addressLine2
     this.createdAt = auth.createdAt
     this.updatedAt = auth.updatedAt
   }
@@ -207,6 +193,27 @@ export default class AuthModule extends VuexModule {
           const data: IAuthProfile = { ...res }
           this.setProfile(data)
           resolve(res.role)
+        })
+        .catch((err: Error) => {
+          reject(err)
+        })
+    })
+  }
+
+  @Action({ rawError: true })
+  public updateEmail(payload: ISettingsEmailEditForm): Promise<void> {
+    const req: IAuthUpdateEmailRequest = {
+      email: payload.email,
+    }
+
+    return new Promise((resolve: () => void, reject: (reason: Error) => void) => {
+      $axios
+        .$patch('/v1/auth/email', req)
+        .then((res: IAuthResponse) => {
+          this.setEmail(res.email)
+          this.setEmailVerified(false)
+          this.sendEmailVerification()
+          resolve()
         })
         .catch((err: Error) => {
           reject(err)

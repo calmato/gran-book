@@ -13,11 +13,6 @@ export interface IAuthState {
   firstName: string
   lastNameKana: string
   firstNameKana: string
-  postalCode: string
-  prefecture: string
-  city: string
-  addressLine1: string
-  addressLine2: string
   createdAt: string
   updatedAt: string
 }
@@ -35,11 +30,6 @@ export interface IAuthProfile {
   firstName: string
   lastNameKana: string
   firstNameKana: string
-  postalCode: string
-  prefecture: string
-  city: string
-  addressLine1: string
-  addressLine2: string
   createdAt: string
   updatedAt: string
 }
