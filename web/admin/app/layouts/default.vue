@@ -1,5 +1,6 @@
 <template>
   <v-app>
+    <v-snackbar v-model="snackbar" :color="snackbarColor" top>{{ snackbarMessage }}</v-snackbar>
     <common-header
       :thumbnail-url="thumbnailUrl"
       @click="handleClick"
@@ -21,8 +22,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, SetupContext } from '@nuxtjs/composition-api'
-import { AuthStore } from '~/store'
+import { defineComponent, ref, computed, watch, SetupContext } from '@nuxtjs/composition-api'
+import { AuthStore, CommonStore } from '~/store'
 import CommonHeader from '~/components/organisms/CommonHeader.vue'
 import CommonSidebar from '~/components/organisms/CommonSidebar.vue'
 
@@ -36,11 +37,25 @@ export default defineComponent({
     const router = root.$router
     const current = root.$route.path
     const store = root.$store
-    const drawer = ref<Boolean>(true)
 
-    const username = store.getters['auth/getUsername']
-    const email = store.getters['auth/getEmail']
-    const thumbnailUrl = store.getters['auth/getThumbnailUrl']
+    const drawer = ref<Boolean>(true)
+    const snackbar = ref<Boolean>(false)
+
+    const username = computed(() => store.getters['auth/getUsername'])
+    const email = computed(() => store.getters['auth/getEmail'])
+    const thumbnailUrl = computed(() => store.getters['auth/getThumbnailUrl'])
+    const snackbarColor = computed(() => store.getters['common/getSnackbarColor'])
+    const snackbarMessage = computed(() => store.getters['common/getSnackbarMessage'])
+
+    watch(snackbarMessage, (): void => {
+      snackbar.value = snackbarMessage.value !== ''
+    })
+
+    watch(snackbar, (): void => {
+      if (!snackbar.value) {
+        CommonStore.hiddenSnackbar()
+      }
+    })
 
     const handleClick = (link: string): void => {
       router.push(link)
@@ -58,6 +73,9 @@ export default defineComponent({
     return {
       current,
       drawer,
+      snackbar,
+      snackbarColor,
+      snackbarMessage,
       username,
       email,
       thumbnailUrl,
