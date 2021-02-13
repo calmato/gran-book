@@ -1,8 +1,8 @@
 import express, { NextFunction, Request, Response } from 'express'
-import { getAuth, createAuth, updateAuthProfile, updateAuthAddress } from '~/api'
-import { ICreateAuthRequest, IUpdateAuthAddressRequest, IUpdateAuthProfileRequest } from '~/types/request'
+import { getAuth, createAuth, updateAuthProfile, updateAuthAddress, updateAuthEmail, UpdateAuthPassword } from '~/api'
+import { ICreateAuthRequest, IUpdateAuthAddressRequest, IUpdateAuthEmailRequest, IUpdateAuthPasswordRequest, IUpdateAuthProfileRequest } from '~/types/request'
 import { IAuthResponse } from '~/types/response'
-import { ICreateAuthInput, IUpdateAuthAddressInput, IUpdateAuthProfileInput } from '~/types/input'
+import { ICreateAuthInput, IUpdateAuthAddressInput, IUpdateAuthEmailInput, IUpdateAuthPasswordInput, IUpdateAuthProfileInput } from '~/types/input'
 import { IAuthOutput } from '~/types/output'
 import { GrpcError } from '~/types/exception'
 
@@ -33,6 +33,43 @@ router.post(
     }
 
     await createAuth(req, input)
+      .then((output: IAuthOutput) => {
+        const response: IAuthResponse = setAuthResponse(output)
+        res.status(200).json(response)
+      })
+      .catch((err: GrpcError) => next(err))
+  }
+)
+
+router.patch(
+  '/email',
+  async (req: Request<IUpdateAuthEmailRequest>, res: Response<IAuthResponse>, next: NextFunction): Promise<void> => {
+    const { email } = req.body as IUpdateAuthEmailRequest
+
+    const input: IUpdateAuthEmailInput = {
+      email: email,
+    }
+
+    await updateAuthEmail(req, input)
+      .then((output: IAuthOutput) => {
+        const response: IAuthResponse = setAuthResponse(output)
+        res.status(200).json(response)
+      })
+      .catch((err: GrpcError) => next(err))
+  }
+)
+
+router.patch(
+  '/password',
+  async (req: Request<IUpdateAuthPasswordRequest>, res: Response<IAuthResponse>, next: NextFunction): Promise<void> => {
+    const { password, passwordConfirmation } = req.body as IUpdateAuthPasswordRequest
+
+    const input: IUpdateAuthPasswordInput = {
+      password: password,
+      passwordConfirmation: passwordConfirmation,
+    }
+
+    await UpdateAuthPassword(req, input)
       .then((output: IAuthOutput) => {
         const response: IAuthResponse = setAuthResponse(output)
         res.status(200).json(response)

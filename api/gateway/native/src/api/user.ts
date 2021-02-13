@@ -2,8 +2,8 @@ import { Request } from 'express'
 import { authClient } from '~/plugins/grpc'
 import { getGrpcError } from '~/lib/grpc-exception'
 import { getGrpcMetadata } from '~/lib/grpc-metadata'
-import { EmptyUser, CreateAuthRequest, AuthResponse, UpdateAuthProfileRequest, UpdateAuthAddressRequest } from '~/proto/user_apiv1_pb'
-import { ICreateAuthInput, IUpdateAuthAddressInput, IUpdateAuthProfileInput } from '~/types/input'
+import { EmptyUser, CreateAuthRequest, AuthResponse, UpdateAuthProfileRequest, UpdateAuthAddressRequest, UpdateAuthEmailRequest, UpdateAuthPasswordRequest } from '~/proto/user_apiv1_pb'
+import { ICreateAuthInput, IUpdateAuthAddressInput, IUpdateAuthEmailInput, IUpdateAuthPasswordInput, IUpdateAuthProfileInput } from '~/types/input'
 import { IAuthOutput } from '~/types/output'
 
 export function getAuth(req: Request<any>): Promise<IAuthOutput> {
@@ -32,6 +32,43 @@ export function createAuth(_: Request<any>, input: ICreateAuthInput): Promise<IA
 
   return new Promise((resolve: (res: IAuthOutput) => void, reject: (reason: Error) => void) => {
     authClient.createAuth(request, (err: any, res: AuthResponse) => {
+      if (err) {
+        reject(getGrpcError(err))
+        return
+      }
+
+      resolve(setAuthOutput(res))
+    })
+  })
+}
+
+export function updateAuthEmail(req: Request<any>, input: IUpdateAuthEmailInput): Promise<IAuthOutput> {
+  const request = new UpdateAuthEmailRequest()
+  const metadata = getGrpcMetadata(req)
+
+  request.setEmail(input.email)
+
+  return new Promise((resolve: (res: IAuthOutput) => void, reject: (reason: Error) => void) => {
+    authClient.updateAuthEmail(request, metadata, (err: any, res: AuthResponse) => {
+      if (err) {
+        reject(getGrpcError(err))
+        return
+      }
+
+      resolve(setAuthOutput(res))
+    })
+  })
+}
+
+export function UpdateAuthPassword(req: Request<any>, input: IUpdateAuthPasswordInput): Promise<IAuthOutput> {
+  const request = new UpdateAuthPasswordRequest()
+  const metadata = getGrpcMetadata(req)
+
+  request.setPassword(input.password)
+  request.setPasswordConfirmation(input.passwordConfirmation)
+
+  return new Promise((resolve: (res: IAuthOutput) => void, reject: (reason: Error) => void) => {
+    authClient.updateAuthPassword(request, metadata, (err: any, res: AuthResponse) => {
       if (err) {
         reject(getGrpcError(err))
         return
