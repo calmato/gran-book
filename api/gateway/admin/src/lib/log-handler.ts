@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
-import { Request, Response, NextFunction} from 'express'
+import { Request, Response, NextFunction } from 'express'
 import logger from '~/plugins/logger'
 import { HttpError } from '~/types/exception'
 
