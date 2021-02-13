@@ -2,13 +2,7 @@ import { Request } from 'express'
 import { authClient } from '~/plugins/grpc'
 import { getGrpcError } from '~/lib/grpc-exception'
 import { getGrpcMetadata } from '~/lib/grpc-metadata'
-import {
-  EmptyUser,
-  CreateAuthRequest,
-  UpdateAuthProfileRequest,
-  UpdateAuthAddressRequest,
-  AuthResponse,
-} from '~/proto/user_apiv1_pb'
+import { EmptyUser, UpdateAuthProfileRequest, UpdateAuthAddressRequest, AuthResponse } from '~/proto/user_apiv1_pb'
 import { IUpdateAuthProfileInput, IUpdateAuthAddressInput } from '~/types/input'
 import { IAuthOutput } from '~/types/output'
 
