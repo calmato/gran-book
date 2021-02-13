@@ -52,6 +52,102 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorResponse'
+  /v1/auth/email:
+    patch:
+      summary: メールアドレス更新
+      tags:
+        - AuthService
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/updateAuthEmailRequest'
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/authResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+  /v1/auth/password:
+    patch:
+      summary: パスワード更新
+      tags:
+        - AuthService
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/updateAuthPasswordRequest'
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/authResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+  /v1/auth/profile:
+    patch:
+      summary: プロフィール更新
+      tags:
+        - AuthService
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/updateAuthProfileRequest'
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/authResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+  /v1/auth/address:
+    patch:
+      summary: 住所更新
+      tags:
+        - AuthService
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/updateAuthAddressRequest'
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/authResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
 tags:
   - name: AuthService
     description: 認証関連
@@ -72,6 +168,52 @@ components:
         password:
           type: string
         passwordConfirmation:
+          type: string
+    updateAuthEmailRequest:
+      type: object
+      properties:
+        email:
+          type: string
+    updateAuthPasswordRequest:
+      type: object
+      properties:
+        password:
+          type: string
+        passwordConfirmation:
+          type: string
+    updateAuthProfileRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        gender:
+          type: integer
+          format: int32
+        thumbnail:
+          type: string
+          format: byte
+        selfIntroduction:
+          type: string
+    updateAuthAddressRequest:
+      type: object
+      properties:
+        lastName:
+          type: string
+        firstName:
+          type: string
+        lastNameKana:
+          type: string
+        firstNameKana:
+          type: string
+        postalCode:
+          type: string
+        prefecture:
+          type: string
+        city:
+          type: string
+        addressLine1:
+          type: string
+        addressLine2:
           type: string
     # Response
     authResponse:
