@@ -1,6 +1,11 @@
-export interface ICreateAuthRequest {
+export interface IUpdateAuthRequest {
   username: string
-  email: string
-  password: string
-  passwordConfirmation: string
+  gender: number
+  thumbnail: string
+  selfIntroduction: string
+  lastName: string
+  firstName: string
+  lastNameKana: string
+  firstNameKana: string
+  phoneNumber: string
 }

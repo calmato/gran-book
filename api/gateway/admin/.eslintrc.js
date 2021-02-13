@@ -13,6 +13,7 @@ module.exports = {
   },
   plugins: [
     '@typescript-eslint',
+    'prettier',
   ],
   extends: [
     'eslint:recommended',
@@ -20,6 +21,8 @@ module.exports = {
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
     'prettier',
     'prettier/@typescript-eslint',
+    'prettier/standard',
+    'plugin:prettier/recommended',
   ],
   rules: {
     'dot-notation': 'off',
