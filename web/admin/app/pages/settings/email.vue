@@ -1,11 +1,11 @@
 <template>
-  <settings-edit-email :form="form" :rules="rules" @click="handleSubmit" @cancel="handleCancel" />
+  <settings-edit-email :form="form" @click="handleSubmit" @cancel="handleCancel" />
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive, SetupContext } from '@nuxtjs/composition-api'
 import { AuthStore, CommonStore } from '~/store'
-import { AuthEditEmailValidate, IAuthEditEmailForm, IAuthEditEmailValidate } from '~/types/forms'
+import { IAuthEditEmailForm, AuthEditEmailOptions } from '~/types/forms'
 import SettingsEditEmail from '~/components/templates/SettingsEditEmail.vue'
 
 export default defineComponent({
@@ -18,10 +18,12 @@ export default defineComponent({
     const store = root.$store
 
     const form = reactive<IAuthEditEmailForm>({
-      email: store.getters['auth/getEmail'],
-    })
-    const rules = reactive<IAuthEditEmailValidate>({
-      ...AuthEditEmailValidate,
+      params: {
+        email: store.getters['auth/getEmail'],
+      },
+      options: {
+        ...AuthEditEmailOptions,
+      },
     })
 
     const handleSubmit = async () => {
@@ -41,7 +43,6 @@ export default defineComponent({
 
     return {
       form,
-      rules,
       handleSubmit,
       handleCancel,
     }

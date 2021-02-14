@@ -3,7 +3,7 @@ import { $axios } from '~/plugins/axios'
 import firebase from '~/plugins/firebase'
 import { ApiError } from '~/types/exception'
 import { ISignInForm, IAuthEditEmailForm } from '~/types/forms'
-import { IAuthUpdateEmailRequest } from '~/types/requests'
+import { IAuthUpdateEmailRequest, IAuthUpdatePasswordRequest } from '~/types/requests'
 import { IAuthResponse, IErrorResponse } from '~/types/responses'
 import { IAuthState, IAuthProfile } from '~/types/store'
 
@@ -101,6 +101,11 @@ export default class AuthModule extends VuexModule {
   @Mutation
   private setToken(token: string): void {
     this.token = token
+  }
+
+  @Mutation
+  private setUpdatedAt(updatedAt: string): void {
+    this.updatedAt = updatedAt
   }
 
   @Mutation
@@ -204,8 +209,10 @@ export default class AuthModule extends VuexModule {
 
   @Action({ rawError: true })
   public updateEmail(payload: IAuthEditEmailForm): Promise<void> {
+    const { email } = payload.params
+
     const req: IAuthUpdateEmailRequest = {
-      email: payload.email,
+      email,
     }
 
     return new Promise((resolve: () => void, reject: (reason: ApiError) => void) => {
@@ -214,7 +221,29 @@ export default class AuthModule extends VuexModule {
         .then((res: IAuthResponse) => {
           this.setEmail(res.email)
           this.setEmailVerified(false)
+          this.setUpdatedAt(res.updatedAt)
           this.sendEmailVerification()
+          resolve()
+        })
+        .catch((err: any) => {
+          const { data, status }: IErrorResponse = err.response
+          reject(new ApiError(status, data.message, data))
+        })
+    })
+  }
+
+  @Action({ rawError: true })
+  public updatePassword(_: any): Promise<void> {
+    const req: IAuthUpdatePasswordRequest = {
+      password: '',
+      passwordConfirmation: '',
+    }
+
+    return new Promise((resolve: () => void, reject: (reason: ApiError) => void) => {
+      $axios
+        .$patch('/v1/auth/password', req)
+        .then((res: IAuthResponse) => {
+          this.setUpdatedAt(res.updatedAt)
           resolve()
         })
         .catch((err: any) => {
