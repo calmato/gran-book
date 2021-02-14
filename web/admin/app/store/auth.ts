@@ -1,9 +1,10 @@
 import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
 import { $axios } from '~/plugins/axios'
 import firebase from '~/plugins/firebase'
+import { ApiError } from '~/types/exception'
 import { ISettingsEmailEditForm, ISignInForm } from '~/types/forms'
 import { IAuthUpdateEmailRequest } from '~/types/requests'
-import { IAuthResponse } from '~/types/responses'
+import { IAuthResponse, IErrorResponse } from '~/types/responses'
 import { IAuthState, IAuthProfile } from '~/types/store'
 
 const initialState: IAuthState = {
@@ -186,7 +187,7 @@ export default class AuthModule extends VuexModule {
 
   @Action({ rawError: true })
   public showAuth(): Promise<number> {
-    return new Promise((resolve: (role: number) => void, reject: (reason: Error) => void) => {
+    return new Promise((resolve: (role: number) => void, reject: (reason: ApiError) => void) => {
       $axios
         .$get('/v1/auth')
         .then((res: IAuthResponse) => {
@@ -194,8 +195,9 @@ export default class AuthModule extends VuexModule {
           this.setProfile(data)
           resolve(res.role)
         })
-        .catch((err: Error) => {
-          reject(err)
+        .catch((err: any) => {
+          const { data, status }: IErrorResponse = err.response
+          reject(new ApiError(status, data.message, data))
         })
     })
   }
@@ -206,7 +208,7 @@ export default class AuthModule extends VuexModule {
       email: payload.email,
     }
 
-    return new Promise((resolve: () => void, reject: (reason: Error) => void) => {
+    return new Promise((resolve: () => void, reject: (reason: ApiError) => void) => {
       $axios
         .$patch('/v1/auth/email', req)
         .then((res: IAuthResponse) => {
@@ -215,8 +217,9 @@ export default class AuthModule extends VuexModule {
           this.sendEmailVerification()
           resolve()
         })
-        .catch((err: Error) => {
-          reject(err)
+        .catch((err: any) => {
+          const { data, status }: IErrorResponse = err.response
+          reject(new ApiError(status, data.message, data))
         })
     })
   }

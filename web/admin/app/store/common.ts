@@ -1,6 +1,7 @@
 import { Action, Module, Mutation, VuexModule } from 'vuex-module-decorators'
-import { ISnackbar } from '~/types/forms'
-import { ICommonState } from '~/types/store'
+import { MESSAGE } from '~/constants/error'
+import { ApiError } from '~/types/exception'
+import { ICommonState, ISnackbar } from '~/types/store'
 
 const initialState: ICommonState = {
   snackbarColor: 'info',
@@ -41,8 +42,46 @@ export default class CommonModule extends VuexModule {
   }
 
   @Action({ rawError: true })
+  public showSuccessInSnackbar(message: string): void {
+    this.setSnackbarColor('success')
+    this.setSnackbarMessage(message)
+  }
+
+  @Action({ rawError: true })
+  public showErrorInSnackbar(err: Error): void {
+    this.setSnackbarColor('error')
+
+    if (err instanceof ApiError) {
+      this.setSnackbarMessage(getApiErrorMessage(err))
+    } else {
+      this.setSnackbarMessage(MESSAGE.UNEXPEXTED_ERROR)
+    }
+  }
+
+  @Action({ rawError: true })
   public hiddenSnackbar(): void {
     this.setSnackbarColor(initialState.snackbarColor)
     this.setSnackbarMessage(initialState.snackbarMessage)
+  }
+}
+
+function getApiErrorMessage(err: ApiError): string {
+  switch (err.status) {
+    case 400:
+      return MESSAGE.BAD_REQUEST
+    case 401:
+      return MESSAGE.UNAUTHORIZED
+    case 403:
+      return MESSAGE.FORBIDDEN
+    case 404:
+      return MESSAGE.PROCESS_FAILED
+    case 409:
+      return MESSAGE.CONFLICT
+    case 500 || 501 || 503:
+      return MESSAGE.SERVER_ERROR
+    case 504:
+      return MESSAGE.TIMEOUT
+    default:
+      return MESSAGE.UNEXPEXTED_ERROR
   }
 }

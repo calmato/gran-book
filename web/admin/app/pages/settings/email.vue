@@ -24,12 +24,11 @@ export default defineComponent({
     const handleSubmit = async () => {
       await AuthStore.updateEmail(form)
         .then(() => {
-          CommonStore.showSnackbar({ color: 'info', message: `確認用のメールを送信しました.` })
+          CommonStore.showSnackbar({ color: 'info', message: `確認用のメールを送信しました。` })
           router.push('/settings')
         })
-        .catch(() => {
-          // TODO: エラーメッセージの表示
-          console.log('debug', 'failure')
+        .catch((err: Error) => {
+          CommonStore.showErrorInSnackbar(err)
         })
     }
 
