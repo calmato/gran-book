@@ -222,7 +222,6 @@ export default class AuthModule extends VuexModule {
           this.setEmail(res.email)
           this.setEmailVerified(false)
           this.setUpdatedAt(res.updatedAt)
-          this.sendEmailVerification()
           resolve()
         })
         .catch((err: any) => {
