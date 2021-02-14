@@ -40,7 +40,7 @@ export default defineComponent({
     rules: {
       type: Object,
       required: false,
-      default: () => {},
+      default: () => ({}),
     },
     type: {
       type: String,
