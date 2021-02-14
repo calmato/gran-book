@@ -6,7 +6,7 @@
           <v-card class="pa-4">
             <v-card-title>メールアドレス変更</v-card-title>
             <v-card-text>
-              <settings-email-edit-form
+              <settings-edit-email-form
                 :form="form"
                 :rules="rules"
                 @click="onClickSubmitButton"
@@ -23,11 +23,11 @@
 <script lang="ts">
 import { defineComponent, SetupContext, PropType } from '@nuxtjs/composition-api'
 import { IAuthEditEmailForm, IAuthEditEmailValidate } from '~/types/forms'
-import SettingsEmailEditForm from '~/components/organisms/SettingsEmailEditForm.vue'
+import SettingsEditEmailForm from '~/components/organisms/SettingsEditEmailForm.vue'
 
 export default defineComponent({
   components: {
-    SettingsEmailEditForm,
+    SettingsEditEmailForm,
   },
 
   props: {

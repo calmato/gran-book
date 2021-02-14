@@ -1,16 +1,16 @@
 <template>
-  <settings-email-edit :form="form" :rules="rules" @click="handleSubmit" @cancel="handleCancel" />
+  <settings-edit-email :form="form" :rules="rules" @click="handleSubmit" @cancel="handleCancel" />
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive, SetupContext } from '@nuxtjs/composition-api'
 import { AuthStore, CommonStore } from '~/store'
 import { AuthEditEmailValidate, IAuthEditEmailForm, IAuthEditEmailValidate } from '~/types/forms'
-import SettingsEmailEdit from '~/components/templates/SettingsEmailEdit.vue'
+import SettingsEditEmail from '~/components/templates/SettingsEditEmail.vue'
 
 export default defineComponent({
   components: {
-    SettingsEmailEdit,
+    SettingsEditEmail,
   },
 
   setup(_, { root }: SetupContext) {
