@@ -2,7 +2,7 @@ import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
 import { $axios } from '~/plugins/axios'
 import firebase from '~/plugins/firebase'
 import { ApiError } from '~/types/exception'
-import { ISettingsEmailEditForm, ISignInForm } from '~/types/forms'
+import { ISignInForm, IAuthEditEmailForm } from '~/types/forms'
 import { IAuthUpdateEmailRequest } from '~/types/requests'
 import { IAuthResponse, IErrorResponse } from '~/types/responses'
 import { IAuthState, IAuthProfile } from '~/types/store'
@@ -203,7 +203,7 @@ export default class AuthModule extends VuexModule {
   }
 
   @Action({ rawError: true })
-  public updateEmail(payload: ISettingsEmailEditForm): Promise<void> {
+  public updateEmail(payload: IAuthEditEmailForm): Promise<void> {
     const req: IAuthUpdateEmailRequest = {
       email: payload.email,
     }

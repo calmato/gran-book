@@ -1,8 +1,8 @@
 import { shallowMount } from '@vue/test-utils'
 import * as Options from '~~/spec/helpers/component-helper'
-import TheAlert from '~/components/molecules/TheAlert.vue'
+import TheAlert from '~/components/atoms/TheAlert.vue'
 
-describe('components/molecules/TheAlert', () => {
+describe('components/atoms/TheAlert', () => {
   let wrapper: any
 
   beforeEach(() => {

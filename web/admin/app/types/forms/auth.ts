@@ -3,6 +3,17 @@ export interface ISignInForm {
   password: string
 }
 
-export interface ISettingsEmailEditForm {
+export interface IAuthEditEmailForm {
   email: string
+}
+
+export interface IAuthEditEmailValidate {
+  email: Object
+}
+
+export const AuthEditEmailValidate = {
+  email: {
+    required: true,
+    email: true,
+  },
 }

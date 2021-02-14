@@ -15,6 +15,7 @@
     "noEmit": true,
     "noImplicitAny": false,
     "noImplicitThis": false,
+    "resolveJsonModule": true,
     "experimentalDecorators": true,
     "baseUrl": "./app",
     "paths": {

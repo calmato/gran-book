@@ -34,12 +34,12 @@ export default defineComponent({
   setup(props, { emit }: SetupContext) {
     const isShow = computed({
       get: () => props.snackbar,
-      set: (val: Boolean) => emit('update:snackbar', val)
+      set: (val: Boolean) => emit('update:snackbar', val),
     })
 
     return {
       isShow,
     }
-  }
+  },
 })
 </script>

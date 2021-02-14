@@ -19,7 +19,7 @@
 <script lang="ts">
 import { defineComponent, computed, SetupContext, PropType } from '@nuxtjs/composition-api'
 import { ISignInForm } from '~/types/forms'
-import TheAlert from '~/components/molecules/TheAlert.vue'
+import TheAlert from '~/components/atoms/TheAlert.vue'
 import SignInCard from '~/components/organisms/SignInCard.vue'
 import SignInForm from '~/components/organisms/SignInForm.vue'
 

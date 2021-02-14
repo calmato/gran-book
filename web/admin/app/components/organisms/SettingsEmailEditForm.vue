@@ -1,19 +1,30 @@
 <template>
-  <v-form>
-    <v-text-field v-model="form.email" label="email" class="mb-4" autofocus />
-    <v-btn color="primary" class="mr-4" @click="onClick">確認メールを送信</v-btn>
-    <v-btn @click="onClickCancel">キャンセル</v-btn>
-  </v-form>
+  <the-form-group>
+    <the-text-field v-model="form.email" label="メールアドレス" :rules="rules.email" :autofocus="true" />
+    <v-btn color="primary" class="mt-4 mr-4" @click="onClick">確認メールを送信</v-btn>
+    <v-btn class="mt-4" @click="onClickCancel">キャンセル</v-btn>
+  </the-form-group>
 </template>
 
 <script lang="ts">
 import { defineComponent, SetupContext, PropType } from '@nuxtjs/composition-api'
-import { ISettingsEmailEditForm } from '~/types/forms'
+import { IAuthEditEmailForm, IAuthEditEmailValidate } from '~/types/forms'
+import TheFormGroup from '~/components/atoms/TheFormGroup.vue'
+import TheTextField from '~/components/atoms/TheTextField.vue'
 
 export default defineComponent({
+  components: {
+    TheFormGroup,
+    TheTextField,
+  },
+
   props: {
     form: {
-      type: Object as PropType<ISettingsEmailEditForm>,
+      type: Object as PropType<IAuthEditEmailForm>,
+      required: true,
+    },
+    rules: {
+      type: Object as PropType<IAuthEditEmailValidate>,
       required: true,
     },
   },
