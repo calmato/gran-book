@@ -14,8 +14,8 @@ export interface IAuthEditEmailForm {
 }
 
 export interface IAuthEditPasswordForm {
-  password: string
-  passwordConfirmation: string
+  params: IAuthEditPasswordParams
+  options: IAutheditPasswordOptions
 }
 
 // ---------------------------
@@ -25,6 +25,11 @@ export interface IAuthEditEmailParams {
   email: string
 }
 
+export interface IAuthEditPasswordParams {
+  password: string
+  passwordConfirmation: string
+}
+
 // ---------------------------
 // interface - options
 // ---------------------------
@@ -32,15 +37,39 @@ export interface IAuthEditEmailOptions {
   email: ITextField
 }
 
+export interface IAutheditPasswordOptions {
+  password: ITextField
+  passwordConfirmation: ITextField
+}
+
 // ---------------------------
 // const - Options
 // ---------------------------
-export const AuthEditEmailOptions = {
+export const AuthEditEmailOptions: IAuthEditEmailOptions = {
   email: {
     label: 'メールアドレス',
     rules: {
       required: true,
       email: true,
+    },
+  } as ITextField,
+}
+
+export const AuthEditPasswordOptions: IAutheditPasswordOptions = {
+  password: {
+    label: 'パスワード',
+    rules: {
+      required: true,
+      alpha_dash: true,
+      min: 6,
+      max: 32,
+    },
+  } as ITextField,
+  passwordConfirmation: {
+    label: 'パスワード(確認用)',
+    rules: {
+      required: true,
+      confirmed: 'パスワード',
     },
   } as ITextField,
 }

@@ -2,7 +2,7 @@ import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
 import { $axios } from '~/plugins/axios'
 import firebase from '~/plugins/firebase'
 import { ApiError } from '~/types/exception'
-import { ISignInForm, IAuthEditEmailForm } from '~/types/forms'
+import { ISignInForm, IAuthEditEmailForm, IAuthEditPasswordForm } from '~/types/forms'
 import { IAuthUpdateEmailRequest, IAuthUpdatePasswordRequest } from '~/types/requests'
 import { IAuthResponse, IErrorResponse } from '~/types/responses'
 import { IAuthState, IAuthProfile } from '~/types/store'
@@ -233,10 +233,12 @@ export default class AuthModule extends VuexModule {
   }
 
   @Action({ rawError: true })
-  public updatePassword(_: any): Promise<void> {
+  public updatePassword(payload: IAuthEditPasswordForm): Promise<void> {
+    const { password, passwordConfirmation } = payload.params
+
     const req: IAuthUpdatePasswordRequest = {
-      password: '',
-      passwordConfirmation: '',
+      password,
+      passwordConfirmation,
     }
 
     return new Promise((resolve: () => void, reject: (reason: ApiError) => void) => {
