@@ -9,7 +9,7 @@
     "generate": "nuxt-ts generate",
     "lint": "eslint --ext .js,.ts,.vue --ignore-path .gitignore .",
     "lint:fix": "yarn lint --fix",
-    "test": "jest --config jest.config.js"
+    "test": "jest --config jest.config.js --coverage --verbose"
   },
   "dependencies": {
     "@nuxt/content": "^1.9.0",
