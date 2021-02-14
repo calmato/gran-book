@@ -1,14 +1,6 @@
 <template>
   <v-app>
-    <!-- TODO: コンポーネント化 -->
-    <v-snackbar v-model="snackbar" :color="snackbarColor" top>
-      {{ snackbarMessage }}
-      <template v-slot:action="{ attrs }">
-        <v-btn v-bind="attrs" icon @click="snackbar = false">
-          <v-icon>mdi-close</v-icon>
-        </v-btn>
-      </template>
-    </v-snackbar>
+    <common-snackbar :snackbar.sync="snackbar" :color="snackbarColor" :message="snackbarMessage" />
     <common-header
       :thumbnail-url="thumbnailUrl"
       @click="handleClick"
@@ -34,11 +26,13 @@ import { defineComponent, ref, computed, watch, SetupContext } from '@nuxtjs/com
 import { AuthStore, CommonStore } from '~/store'
 import CommonHeader from '~/components/organisms/CommonHeader.vue'
 import CommonSidebar from '~/components/organisms/CommonSidebar.vue'
+import CommonSnackbar from '~/components/organisms/CommonSnackbar.vue'
 
 export default defineComponent({
   components: {
     CommonHeader,
     CommonSidebar,
+    CommonSnackbar,
   },
 
   setup(_, { root }: SetupContext) {
