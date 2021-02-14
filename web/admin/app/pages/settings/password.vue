@@ -5,7 +5,7 @@
 <script lang="ts">
 import { defineComponent, reactive, SetupContext } from '@nuxtjs/composition-api'
 import { AuthStore, CommonStore } from '~/store'
-import { IAuthEditPasswordForm, AuthEditPasswordOptions } from '~/types/forms'
+import { IAuthEditPasswordForm, AuthEditPasswordOptions, ISignInForm } from '~/types/forms'
 import SettingsEditPassword from '~/components/templates/SettingsEditPassword.vue'
 
 export default defineComponent({
@@ -15,6 +15,7 @@ export default defineComponent({
 
   setup(_, { root }: SetupContext) {
     const router = root.$router
+    const store = root.$store
 
     const form = reactive<IAuthEditPasswordForm>({
       params: {
@@ -28,7 +29,14 @@ export default defineComponent({
 
     const handleSubmit = async () => {
       await AuthStore.updatePassword(form)
-        .then(() => {
+        .then(async () => {
+          const formData: ISignInForm = {
+            email: store.getters['auth/getEmail'],
+            password: form.params.password,
+          }
+
+          await AuthStore.loginWithEmailAndPassword(formData)
+
           CommonStore.showSnackbar({ color: 'info', message: `パスワードを変更しました。` })
           router.push('/settings')
         })
