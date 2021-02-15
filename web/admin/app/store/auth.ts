@@ -13,7 +13,6 @@ const initialState: IAuthState = {
   emailVerified: false,
   token: '',
   username: '',
-  gender: 0,
   phoneNumber: '',
   role: 0,
   thumbnailUrl: '',
@@ -37,7 +36,6 @@ export default class AuthModule extends VuexModule {
   private emailVerified: boolean = initialState.emailVerified
   private token: string = initialState.token
   private username: string = initialState.username
-  private gender: number = initialState.gender
   private phoneNumber: string = initialState.phoneNumber
   private role: number = initialState.role
   private thumbnailUrl: string = initialState.thumbnailUrl
@@ -111,7 +109,6 @@ export default class AuthModule extends VuexModule {
   @Mutation
   private setProfile(auth: IAuthProfile): void {
     this.username = auth.username
-    this.gender = auth.gender
     this.phoneNumber = auth.phoneNumber
     this.role = auth.role
     this.thumbnailUrl = auth.thumbnailUrl

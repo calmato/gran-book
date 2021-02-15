@@ -4,7 +4,6 @@ export interface IAuthState {
   emailVerified: boolean
   token: string
   username: string
-  gender: number
   phoneNumber: string
   role: number
   thumbnailUrl: string
@@ -20,7 +19,6 @@ export interface IAuthState {
 export interface IAuthProfile {
   id: string
   username: string
-  gender: number
   email: string
   phoneNumber: string
   role: number

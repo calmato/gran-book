@@ -1,7 +1,6 @@
 export interface IAuthResponse {
   id: string
   username: string
-  gender: number
   email: string
   phoneNumber: string
   role: number
