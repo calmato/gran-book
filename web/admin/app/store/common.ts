@@ -77,7 +77,9 @@ function getApiErrorMessage(err: ApiError): string {
       return MESSAGE.PROCESS_FAILED
     case 409:
       return MESSAGE.CONFLICT
-    case 500 || 501 || 503:
+    case 500:
+    case 501:
+    case 503:
       return MESSAGE.SERVER_ERROR
     case 504:
       return MESSAGE.TIMEOUT
