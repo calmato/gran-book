@@ -3,7 +3,7 @@
     <v-layout wrap>
       <v-row>
         <v-col cols="12">
-          <v-card class="pa-4 my-4">
+          <v-card class="pa-4">
             <v-tabs vertical flat>
               <v-tab>
                 <v-icon left>mdi-account</v-icon>

@@ -1,7 +1,6 @@
 export interface IAuthResponse {
   id: string
   username: string
-  gender: number
   email: string
   phoneNumber: string
   role: number
@@ -11,11 +10,6 @@ export interface IAuthResponse {
   firstName: string
   lastNameKana: string
   firstNameKana: string
-  postalCode: string
-  prefecture: string
-  city: string
-  addressLine1: string
-  addressLine2: string
   createdAt: string
   updatedAt: string
 }

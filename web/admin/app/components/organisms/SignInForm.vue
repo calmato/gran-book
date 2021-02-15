@@ -1,5 +1,6 @@
 <template>
   <v-form class="py-8">
+    <!-- TODO: バリデーションの設定 -->
     <v-text-field v-model="form.email" label="email" autofocus outlined />
     <v-text-field v-model="form.password" label="password" type="password" outlined />
     <v-btn :block="true" color="primary" class="mt-4" @click="onClick">ログイン</v-btn>

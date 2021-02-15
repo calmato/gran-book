@@ -1,8 +1,10 @@
 import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
 import { $axios } from '~/plugins/axios'
 import firebase from '~/plugins/firebase'
-import { ISignInForm } from '~/types/forms'
-import { IAuthResponse } from '~/types/responses'
+import { ApiError } from '~/types/exception'
+import { ISignInForm, IAuthEditEmailForm, IAuthEditPasswordForm } from '~/types/forms'
+import { IAuthUpdateEmailRequest, IAuthUpdatePasswordRequest } from '~/types/requests'
+import { IAuthResponse, IErrorResponse } from '~/types/responses'
 import { IAuthState, IAuthProfile } from '~/types/store'
 
 const initialState: IAuthState = {
@@ -11,7 +13,6 @@ const initialState: IAuthState = {
   emailVerified: false,
   token: '',
   username: '',
-  gender: 0,
   phoneNumber: '',
   role: 0,
   thumbnailUrl: '',
@@ -20,11 +21,6 @@ const initialState: IAuthState = {
   firstName: '',
   lastNameKana: '',
   firstNameKana: '',
-  postalCode: '',
-  prefecture: '',
-  city: '',
-  addressLine1: '',
-  addressLine2: '',
   createdAt: '',
   updatedAt: '',
 }
@@ -40,7 +36,6 @@ export default class AuthModule extends VuexModule {
   private emailVerified: boolean = initialState.emailVerified
   private token: string = initialState.token
   private username: string = initialState.username
-  private gender: number = initialState.gender
   private phoneNumber: string = initialState.phoneNumber
   private role: number = initialState.role
   private thumbnailUrl: string = initialState.thumbnailUrl
@@ -49,11 +44,6 @@ export default class AuthModule extends VuexModule {
   private firstName: string = initialState.firstName
   private lastNameKana: string = initialState.lastNameKana
   private firstNameKana: string = initialState.firstNameKana
-  private postalCode: string = initialState.postalCode
-  private prefecture: string = initialState.prefecture
-  private city: string = initialState.city
-  private addressLine1: string = initialState.addressLine1
-  private addressLine2: string = initialState.addressLine2
   private createdAt: string = initialState.createdAt
   private updatedAt: string = initialState.updatedAt
 
@@ -112,9 +102,13 @@ export default class AuthModule extends VuexModule {
   }
 
   @Mutation
+  private setUpdatedAt(updatedAt: string): void {
+    this.updatedAt = updatedAt
+  }
+
+  @Mutation
   private setProfile(auth: IAuthProfile): void {
     this.username = auth.username
-    this.gender = auth.gender
     this.phoneNumber = auth.phoneNumber
     this.role = auth.role
     this.thumbnailUrl = auth.thumbnailUrl
@@ -123,11 +117,6 @@ export default class AuthModule extends VuexModule {
     this.firstName = auth.firstName
     this.lastNameKana = auth.lastNameKana
     this.firstNameKana = auth.firstNameKana
-    this.postalCode = auth.postalCode
-    this.prefecture = auth.prefecture
-    this.city = auth.city
-    this.addressLine1 = auth.addressLine1
-    this.addressLine2 = auth.addressLine2
     this.createdAt = auth.createdAt
     this.updatedAt = auth.updatedAt
   }
@@ -200,7 +189,7 @@ export default class AuthModule extends VuexModule {
 
   @Action({ rawError: true })
   public showAuth(): Promise<number> {
-    return new Promise((resolve: (role: number) => void, reject: (reason: Error) => void) => {
+    return new Promise((resolve: (role: number) => void, reject: (reason: ApiError) => void) => {
       $axios
         .$get('/v1/auth')
         .then((res: IAuthResponse) => {
@@ -208,8 +197,56 @@ export default class AuthModule extends VuexModule {
           this.setProfile(data)
           resolve(res.role)
         })
-        .catch((err: Error) => {
-          reject(err)
+        .catch((err: any) => {
+          const { data, status }: IErrorResponse = err.response
+          reject(new ApiError(status, data.message, data))
+        })
+    })
+  }
+
+  @Action({ rawError: true })
+  public updateEmail(payload: IAuthEditEmailForm): Promise<void> {
+    const { email } = payload.params
+
+    const req: IAuthUpdateEmailRequest = {
+      email,
+    }
+
+    return new Promise((resolve: () => void, reject: (reason: ApiError) => void) => {
+      $axios
+        .$patch('/v1/auth/email', req)
+        .then((res: IAuthResponse) => {
+          this.setEmail(res.email)
+          this.setEmailVerified(false)
+          this.setUpdatedAt(res.updatedAt)
+          resolve()
+        })
+        .catch((err: any) => {
+          const { data, status }: IErrorResponse = err.response
+          reject(new ApiError(status, data.message, data))
+        })
+    })
+  }
+
+  @Action({ rawError: true })
+  public updatePassword(payload: IAuthEditPasswordForm): Promise<void> {
+    const { password, passwordConfirmation } = payload.params
+
+    const req: IAuthUpdatePasswordRequest = {
+      password,
+      passwordConfirmation,
+    }
+
+    return new Promise((resolve: () => void, reject: (reason: ApiError) => void) => {
+      $axios
+        .$patch('/v1/auth/password', req)
+        .then((res: IAuthResponse) => {
+          this.setUpdatedAt(res.updatedAt)
+          resolve()
+        })
+        .catch((err: any) => {
+          const { data, status }: IErrorResponse = err.response
+          reject(new ApiError(status, data.message, data))
         })
     })
   }

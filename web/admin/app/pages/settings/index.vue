@@ -21,6 +21,7 @@ export default defineComponent({
   },
 
   setup(_, { root }: SetupContext) {
+    const router = root.$router
     const store = root.$store
 
     const username = store.getters['auth/getUsername']
@@ -32,7 +33,12 @@ export default defineComponent({
     const email = store.getters['auth/getEmail']
 
     const onClick = (path: string) => {
-      console.log('debug', path)
+      // 実装が終わってる箇所だけ画面遷移
+      if (['/settings/email', '/settings/password'].includes(path)) {
+        router.push(path)
+      } else {
+        console.log('debug', path)
+      }
     }
 
     return {

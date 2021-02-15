@@ -20,7 +20,13 @@ export default {
   css: [],
 
   components: true,
-  plugins: ['~/plugins/axios', '~/plugins/axios-accessor', '~/plugins/firebase', '~/plugins/persisted-state'],
+  plugins: [
+    '~/plugins/axios',
+    '~/plugins/axios-accessor',
+    '~/plugins/firebase',
+    '~/plugins/persisted-state',
+    '~/plugins/vee-validate',
+  ],
   buildModules: ['@nuxt/typescript-build', '@nuxtjs/composition-api', '@nuxtjs/vuetify'],
   modules: ['@nuxtjs/axios', '@nuxt/content'],
 

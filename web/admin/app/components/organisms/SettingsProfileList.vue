@@ -2,7 +2,7 @@
   <v-list class="pa-4">
     <div v-for="list in lists" :key="list.title">
       <v-list-item>
-        <v-list-item-content>
+        <v-list-item-content class="col col-3">
           <v-list-item-subtitle>{{ list.title }}</v-list-item-subtitle>
         </v-list-item-content>
         <v-list-item-content v-if="list.contentType === 'image'">
