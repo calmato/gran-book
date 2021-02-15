@@ -14,7 +14,11 @@ const store = new Vuex.Store({
 })
 
 // Error を返したいときだけ false にする
-const isSafetyMode: boolean = true
+let isSafetyMode: boolean = true
+
+function setSafetyMode(mode: boolean): void {
+  isSafetyMode = mode
+}
 
 jest.mock('~/plugins/axios', () => ({
   $axios: {
@@ -28,4 +32,4 @@ jest.mock('~/plugins/axios', () => ({
   },
 }))
 
-export { localVue, store, isSafetyMode }
+export { localVue, store, setSafetyMode }

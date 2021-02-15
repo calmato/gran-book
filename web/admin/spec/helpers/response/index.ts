@@ -1,9 +1,15 @@
 import * as AuthStore from './auth'
 
 const err = {
-  code: 0,
-  message: 'api error',
-  errors: [],
+  response: {
+    status: 400,
+    data: {
+      status: 400,
+      code: 0,
+      message: 'api error',
+      errors: [],
+    },
+  },
 }
 
 export default {
@@ -11,7 +17,9 @@ export default {
     ...AuthStore.get,
   },
   post: {},
-  patch: {},
+  patch: {
+    ...AuthStore.patch,
+  },
   put: {},
   delete: {},
   error: err,
