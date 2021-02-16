@@ -1,0 +1,207 @@
+openapi: 3.0.0
+info:
+  title: Gran Book (Admin)
+  description: 管理コンソール用API
+  version: 0.4.0
+servers:
+  - url: http://localhost:8081
+    description: 開発環境
+  - url: https://api.gran-book-stg.calmato.work/admin
+    description: 検証環境
+paths:
+  /v1/auth:
+    get:
+      summary: 認証情報取得
+      tags:
+        - AuthService
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/authResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+    patch:
+      summary: ユーザ情報更新
+      tags:
+        - AuthService
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/updateAuthRequest'
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/authResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+  /v1/auth/email:
+    patch:
+      summary: メールアドレス更新
+      tags:
+        - AuthService
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/updateAuthEmailRequest'
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/authResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+  /v1/auth/password:
+    patch:
+      summary: パスワード更新
+      tags:
+        - AuthService
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/updateAuthPasswordRequest'
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/authResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+tags:
+  - name: AuthService
+    description: 認証関連
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+  schemas:
+    # Request
+    updateAuthRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        gender:
+          type: integer
+          format: int32
+        thumbnail:
+          type: string
+          format: byte
+        selfIntroduction:
+          type: string
+        lastName:
+          type: string
+        firstName:
+          type: string
+        lastNameKana:
+          type: string
+        firstNameKana:
+          type: string
+        phoneNumber:
+          type: string
+    updateAuthEmailRequest:
+      type: object
+      properties:
+        email:
+          type: string
+    updateAuthPasswordRequest:
+      type: object
+      properties:
+        password:
+          type: string
+        passwordConfirmation:
+          type: string
+    # Response
+    authResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+        gender:
+          type: integer
+          format: int32
+        email:
+          type: string
+        phoneNumber:
+          type: string
+        role:
+          type: integer
+          format: int32
+        thumbnailUrl:
+          type: string
+        selfIntroduction:
+          type: string
+        lastName:
+          type: string
+        firstName:
+          type: string
+        lastNameKana:
+          type: string
+        firstNameKana:
+          type: string
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+    errorResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+              reason:
+                type: string

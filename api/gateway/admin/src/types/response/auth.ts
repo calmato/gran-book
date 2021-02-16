@@ -1,0 +1,16 @@
+export interface IAuthResponse {
+  id: string
+  username: string
+  gender: number
+  email: string
+  phoneNumber: string
+  role: number
+  thumbnailUrl: string
+  selfIntroduction: string
+  lastName: string
+  firstName: string
+  lastNameKana: string
+  firstNameKana: string
+  createdAt: string
+  updatedAt: string
+}
