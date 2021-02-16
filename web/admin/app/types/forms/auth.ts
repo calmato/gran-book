@@ -15,7 +15,7 @@ export interface IAuthEditEmailForm {
 
 export interface IAuthEditPasswordForm {
   params: IAuthEditPasswordParams
-  options: IAutheditPasswordOptions
+  options: IAuthEditPasswordOptions
 }
 
 // ---------------------------
@@ -37,7 +37,7 @@ export interface IAuthEditEmailOptions {
   email: ITextField
 }
 
-export interface IAutheditPasswordOptions {
+export interface IAuthEditPasswordOptions {
   password: ITextField
   passwordConfirmation: ITextField
 }
@@ -55,7 +55,7 @@ export const AuthEditEmailOptions: IAuthEditEmailOptions = {
   } as ITextField,
 }
 
-export const AuthEditPasswordOptions: IAutheditPasswordOptions = {
+export const AuthEditPasswordOptions: IAuthEditPasswordOptions = {
   password: {
     label: 'パスワード',
     rules: {
