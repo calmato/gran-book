@@ -244,6 +244,9 @@ export class AuthResponse extends jspb.Message {
     getAddressLine2(): string;
     setAddressLine2(value: string): AuthResponse;
 
+    getActivated(): boolean;
+    setActivated(value: boolean): AuthResponse;
+
     getCreatedAt(): string;
     setCreatedAt(value: string): AuthResponse;
 
@@ -280,6 +283,7 @@ export namespace AuthResponse {
         city: string,
         addressLine1: string,
         addressLine2: string,
+        activated: boolean,
         createdAt: string,
         updatedAt: string,
     }

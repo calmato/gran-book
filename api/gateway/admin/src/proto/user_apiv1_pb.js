@@ -1448,8 +1448,9 @@ proto.proto.AuthResponse.toObject = function(includeInstance, msg) {
     city: jspb.Message.getFieldWithDefault(msg, 15, ""),
     addressLine1: jspb.Message.getFieldWithDefault(msg, 16, ""),
     addressLine2: jspb.Message.getFieldWithDefault(msg, 17, ""),
-    createdAt: jspb.Message.getFieldWithDefault(msg, 18, ""),
-    updatedAt: jspb.Message.getFieldWithDefault(msg, 19, "")
+    activated: jspb.Message.getBooleanFieldWithDefault(msg, 18, false),
+    createdAt: jspb.Message.getFieldWithDefault(msg, 19, ""),
+    updatedAt: jspb.Message.getFieldWithDefault(msg, 20, "")
   };
 
   if (includeInstance) {
@@ -1555,10 +1556,14 @@ proto.proto.AuthResponse.deserializeBinaryFromReader = function(msg, reader) {
       msg.setAddressLine2(value);
       break;
     case 18:
+      var value = /** @type {boolean} */ (reader.readBool());
+      msg.setActivated(value);
+      break;
+    case 19:
       var value = /** @type {string} */ (reader.readString());
       msg.setCreatedAt(value);
       break;
-    case 19:
+    case 20:
       var value = /** @type {string} */ (reader.readString());
       msg.setUpdatedAt(value);
       break;
@@ -1710,17 +1715,24 @@ proto.proto.AuthResponse.serializeBinaryToWriter = function(message, writer) {
       f
     );
   }
+  f = message.getActivated();
+  if (f) {
+    writer.writeBool(
+      18,
+      f
+    );
+  }
   f = message.getCreatedAt();
   if (f.length > 0) {
     writer.writeString(
-      18,
+      19,
       f
     );
   }
   f = message.getUpdatedAt();
   if (f.length > 0) {
     writer.writeString(
-      19,
+      20,
       f
     );
   }
@@ -2034,28 +2046,28 @@ proto.proto.AuthResponse.prototype.setAddressLine2 = function(value) {
 
 
 /**
- * optional string created_at = 18;
+ * optional bool activated = 18;
+ * @return {boolean}
+ */
+proto.proto.AuthResponse.prototype.getActivated = function() {
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 18, false));
+};
+
+
+/**
+ * @param {boolean} value
+ * @return {!proto.proto.AuthResponse} returns this
+ */
+proto.proto.AuthResponse.prototype.setActivated = function(value) {
+  return jspb.Message.setProto3BooleanField(this, 18, value);
+};
+
+
+/**
+ * optional string created_at = 19;
  * @return {string}
  */
 proto.proto.AuthResponse.prototype.getCreatedAt = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 18, ""));
-};
-
-
-/**
- * @param {string} value
- * @return {!proto.proto.AuthResponse} returns this
- */
-proto.proto.AuthResponse.prototype.setCreatedAt = function(value) {
-  return jspb.Message.setProto3StringField(this, 18, value);
-};
-
-
-/**
- * optional string updated_at = 19;
- * @return {string}
- */
-proto.proto.AuthResponse.prototype.getUpdatedAt = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 19, ""));
 };
 
@@ -2064,8 +2076,26 @@ proto.proto.AuthResponse.prototype.getUpdatedAt = function() {
  * @param {string} value
  * @return {!proto.proto.AuthResponse} returns this
  */
-proto.proto.AuthResponse.prototype.setUpdatedAt = function(value) {
+proto.proto.AuthResponse.prototype.setCreatedAt = function(value) {
   return jspb.Message.setProto3StringField(this, 19, value);
+};
+
+
+/**
+ * optional string updated_at = 20;
+ * @return {string}
+ */
+proto.proto.AuthResponse.prototype.getUpdatedAt = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 20, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.proto.AuthResponse} returns this
+ */
+proto.proto.AuthResponse.prototype.setUpdatedAt = function(value) {
+  return jspb.Message.setProto3StringField(this, 20, value);
 };
 
 

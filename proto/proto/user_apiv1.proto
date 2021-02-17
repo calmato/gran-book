@@ -68,6 +68,7 @@ message AuthResponse {
   string city = 15;
   string address_line1 = 16;
   string address_line2 = 17;
-  string created_at = 18;
-  string updated_at = 19;
+  bool activated = 18;
+  string created_at = 19;
+  string updated_at = 20;
 }
