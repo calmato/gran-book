@@ -3,7 +3,7 @@ import * as Options from '~~/spec/helpers/component-helper'
 import SettingsEditEmailForm from '~/components/organisms/SettingsEditEmailForm.vue'
 import { IAuthEditEmailForm, IAuthEditEmailParams, AuthEditEmailOptions } from '~/types/forms'
 
-describe('components/organisms/SignInForm', () => {
+describe('components/organisms/SettingsEditEmailForm', () => {
   let wrapper: any
 
   beforeEach(() => {

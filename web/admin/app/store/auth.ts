@@ -2,8 +2,8 @@ import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
 import { $axios } from '~/plugins/axios'
 import firebase from '~/plugins/firebase'
 import { ApiError } from '~/types/exception'
-import { ISignInForm, IAuthEditEmailForm, IAuthEditPasswordForm } from '~/types/forms'
-import { IAuthUpdateEmailRequest, IAuthUpdatePasswordRequest } from '~/types/requests'
+import { ISignInForm, IAuthEditEmailForm, IAuthEditPasswordForm, IAuthEditProfileForm } from '~/types/forms'
+import { IAuthUpdateEmailRequest, IAuthUpdatePasswordRequest, IAuthUpdateProfileRequest } from '~/types/requests'
 import { IAuthResponse, IErrorResponse } from '~/types/responses'
 import { IAuthState, IAuthProfile } from '~/types/store'
 
@@ -69,6 +69,22 @@ export default class AuthModule extends VuexModule {
 
   public get getSelfIntroduction(): string {
     return this.selfIntroduction
+  }
+
+  public get getLastName(): string {
+    return this.lastName
+  }
+
+  public get getFirstName(): string {
+    return this.firstName
+  }
+
+  public get getLastNameKana(): string {
+    return this.lastNameKana
+  }
+
+  public get getFirstNameKana(): string {
+    return this.firstNameKana
   }
 
   public get getName(): string {
@@ -242,6 +258,45 @@ export default class AuthModule extends VuexModule {
         .$patch('/v1/auth/password', req)
         .then((res: IAuthResponse) => {
           this.setUpdatedAt(res.updatedAt)
+          resolve()
+        })
+        .catch((err: any) => {
+          const { data, status }: IErrorResponse = err.response
+          reject(new ApiError(status, data.message, data))
+        })
+    })
+  }
+
+  @Action({ rawError: true })
+  public updateProfile(payload: IAuthEditProfileForm): Promise<void> {
+    const {
+      username,
+      thumbnail,
+      selfIntroduction,
+      lastName,
+      firstName,
+      lastNameKana,
+      firstNameKana,
+      phoneNumber,
+    } = payload.params
+
+    const req: IAuthUpdateProfileRequest = {
+      thumbnail: thumbnail || '',
+      username,
+      selfIntroduction,
+      lastName,
+      firstName,
+      lastNameKana,
+      firstNameKana,
+      phoneNumber,
+    }
+
+    return new Promise((resolve: () => void, reject: (reason: ApiError) => void) => {
+      $axios
+        .$patch('/v1/auth/profile', req)
+        .then((res: IAuthResponse) => {
+          const data: IAuthProfile = { ...res }
+          this.setProfile(data)
           resolve()
         })
         .catch((err: any) => {

@@ -3,7 +3,7 @@ import * as Options from '~~/spec/helpers/component-helper'
 import SettingsEditPasswordForm from '~/components/organisms/SettingsEditPasswordForm.vue'
 import { IAuthEditPasswordForm, IAuthEditPasswordParams, AuthEditPasswordOptions } from '~/types/forms'
 
-describe('components/organisms/SignInForm', () => {
+describe('components/organisms/SettingsEditPasswordForm', () => {
   let wrapper: any
 
   beforeEach(() => {
