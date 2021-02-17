@@ -323,15 +323,6 @@ func TestAuthRequestValidation_UpdateAuthProfile(t *testing.T) {
 			},
 			Expected: false,
 		},
-		"ng_thumbnail_format": {
-			Input: &input.UpdateAuthProfile{
-				Username:         "test-user",
-				Gender:           0,
-				Thumbnail:        "invalida-thumbnail",
-				SelfIntroduction: "自己紹介",
-			},
-			Expected: false,
-		},
 		"ng_selfintroduction_max": {
 			Input: &input.UpdateAuthProfile{
 				Username:         "test-user",
