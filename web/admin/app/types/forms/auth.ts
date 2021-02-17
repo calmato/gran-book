@@ -37,7 +37,7 @@ export interface IAuthEditPasswordParams {
 
 export interface IAuthEditProfileParams {
   username: string
-  thumbnail: string
+  thumbnail?: string
   selfIntroduction: string
   lastName: string
   firstName: string

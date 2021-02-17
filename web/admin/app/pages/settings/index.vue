@@ -33,12 +33,7 @@ export default defineComponent({
     const email = store.getters['auth/getEmail']
 
     const onClick = (path: string) => {
-      // 実装が終わってる箇所だけ画面遷移
-      if (['/settings/email', '/settings/password'].includes(path)) {
-        router.push(path)
-      } else {
-        console.log('debug', path)
-      }
+      router.push(path)
     }
 
     return {
