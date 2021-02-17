@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Gran Book (Admin)
   description: 管理コンソール用API
-  version: 0.4.0
+  version: 0.4.1
 servers:
   - url: http://localhost:8081
     description: 開発環境
@@ -16,31 +16,6 @@ paths:
         - AuthService
       security:
         - BearerAuth: []
-      responses:
-        '200':
-          description: A successful response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/authResponse'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/errorResponse'
-    patch:
-      summary: ユーザ情報更新
-      tags:
-        - AuthService
-      security:
-        - BearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/updateAuthRequest'
       responses:
         '200':
           description: A successful response.
@@ -106,6 +81,32 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorResponse'
+  /v1/auth/profile:
+    patch:
+      summary: ユーザ情報更新
+      tags:
+        - AuthService
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/updateAuthRequest'
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/authResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
 tags:
   - name: AuthService
     description: 認証関連
@@ -116,14 +117,23 @@ components:
       scheme: bearer
   schemas:
     # Request
-    updateAuthRequest:
+    updateAuthEmailRequest:
+      type: object
+      properties:
+        email:
+          type: string
+    updateAuthPasswordRequest:
+      type: object
+      properties:
+        password:
+          type: string
+        passwordConfirmation:
+          type: string
+    updateAuthProfileRequest:
       type: object
       properties:
         username:
           type: string
-        gender:
-          type: integer
-          format: int32
         thumbnail:
           type: string
           format: byte
@@ -139,18 +149,6 @@ components:
           type: string
         phoneNumber:
           type: string
-    updateAuthEmailRequest:
-      type: object
-      properties:
-        email:
-          type: string
-    updateAuthPasswordRequest:
-      type: object
-      properties:
-        password:
-          type: string
-        passwordConfirmation:
-          type: string
     # Response
     authResponse:
       type: object
@@ -159,9 +157,6 @@ components:
           type: string
         username:
           type: string
-        gender:
-          type: integer
-          format: int32
         email:
           type: string
         phoneNumber:
