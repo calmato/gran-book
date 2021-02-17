@@ -7,6 +7,9 @@ import {
   IAuthEditPasswordForm,
   IAuthEditPasswordParams,
   AuthEditPasswordOptions,
+  IAuthEditProfileForm,
+  IAuthEditProfileParams,
+  AuthEditProfileOptions,
 } from '~/types/forms'
 import { ApiError } from '~/types/exception'
 
@@ -38,6 +41,22 @@ describe('store/auth', () => {
 
     it('getSelfIntroduction', () => {
       expect(AuthStore.getSelfIntroduction).toBe('')
+    })
+
+    it('getLastName', () => {
+      expect(AuthStore.getLastName).toBe('')
+    })
+
+    it('getFirstName', () => {
+      expect(AuthStore.getFirstName).toBe('')
+    })
+
+    it('getLastNameKana', () => {
+      expect(AuthStore.getLastNameKana).toBe('')
+    })
+
+    it('getFirstNameKana', () => {
+      expect(AuthStore.getFirstNameKana).toBe('')
     })
 
     it('getName', () => {
@@ -138,6 +157,53 @@ describe('store/auth', () => {
         it('rejectが返されること', async () => {
           const err = new ApiError(400, 'api error', { status: 400, code: 0, message: 'api error', errors: [] })
           await expect(AuthStore.updatePassword(form)).rejects.toThrow(err)
+        })
+      })
+    })
+
+    describe('updateProfile', () => {
+      describe('success', () => {
+        let form: IAuthEditProfileForm
+        beforeEach(() => {
+          setSafetyMode(true)
+          const params: IAuthEditProfileParams = {
+            username: 'test-user',
+            thumbnail: undefined,
+            selfIntroduction: 'よろしく',
+            lastName: 'テスト',
+            firstName: 'ユーザ',
+            lastNameKana: 'てすと',
+            firstNameKana: 'ゆーざ',
+            phoneNumber: '000-0000-0000',
+          }
+          form = { params, options: AuthEditProfileOptions }
+        })
+
+        it('resolveが返されること', async () => {
+          await expect(AuthStore.updateProfile(form)).resolves.toBeUndefined()
+        })
+      })
+
+      describe('failure', () => {
+        let form: IAuthEditProfileForm
+        beforeEach(() => {
+          setSafetyMode(false)
+          const params: IAuthEditProfileParams = {
+            username: '',
+            thumbnail: undefined,
+            selfIntroduction: '',
+            lastName: '',
+            firstName: '',
+            lastNameKana: '',
+            firstNameKana: '',
+            phoneNumber: '',
+          }
+          form = { params, options: AuthEditProfileOptions }
+        })
+
+        it('rejectが返されること', async () => {
+          const err = new ApiError(400, 'api error', { status: 400, code: 0, message: 'api error', errors: [] })
+          await expect(AuthStore.updateProfile(form)).rejects.toThrow(err)
         })
       })
     })

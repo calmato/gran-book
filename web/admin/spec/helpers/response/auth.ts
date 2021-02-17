@@ -17,21 +17,6 @@ export const get = {
 }
 
 export const patch = {
-  '/v1/auth': {
-    id: '00000000-0000-0000-00000000',
-    username: 'test-user',
-    email: 'test@calmato.com',
-    phoneNumber: '000-0000-0000',
-    role: 0,
-    thumbnailUrl: 'https://calmato.com/images/01',
-    selfIntroduction: 'よろしくお願いします',
-    lastName: 'テスト',
-    firstName: 'ユーザ',
-    lastNameKana: 'てすと',
-    firstNameKana: 'ゆーざ',
-    createdAt: '2021-01-01 00:00:00',
-    updatedAt: '2021-01-01 00:00:00',
-  },
   '/v1/auth/email': {
     id: '00000000-0000-0000-00000000',
     username: 'test-user',
@@ -48,6 +33,21 @@ export const patch = {
     updatedAt: '2021-01-01 00:00:00',
   },
   '/v1/auth/password': {
+    id: '00000000-0000-0000-00000000',
+    username: 'test-user',
+    email: 'test@calmato.com',
+    phoneNumber: '000-0000-0000',
+    role: 0,
+    thumbnailUrl: 'https://calmato.com/images/01',
+    selfIntroduction: 'よろしくお願いします',
+    lastName: 'テスト',
+    firstName: 'ユーザ',
+    lastNameKana: 'てすと',
+    firstNameKana: 'ゆーざ',
+    createdAt: '2021-01-01 00:00:00',
+    updatedAt: '2021-01-01 00:00:00',
+  },
+  '/v1/auth/profile': {
     id: '00000000-0000-0000-00000000',
     username: 'test-user',
     email: 'test@calmato.com',
