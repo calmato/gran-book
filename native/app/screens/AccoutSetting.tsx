@@ -7,12 +7,7 @@ import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import { StyleSheet, View, Text, SafeAreaView, ScrollView } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { COLOR } from '~~/constants/theme';
-
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-  },
   subtilte: {
     marginTop: 12,
     marginLeft: 12,
@@ -24,12 +19,9 @@ const styles = StyleSheet.create({
   scrollArea: {
     paddingBottom: 200,
   },
-  listMarign: {
-    marginTop: 5,
-  },
-  version: {
+  textStyle: {
     fontSize: 16,
-    color: COLOR.TEXT_GRAY,
+    color: COLOR.TEXT_DEFAULT,
   },
 });
 
@@ -82,7 +74,7 @@ const AccountSetting  = function AccountSetting(props: Props): ReactElement {
               accountSettingList.map((item, i) => (
                 <ListItem key={i} bottomDivider>
                   <ListItem.Content>
-                    <ListItem.Title style={styles.listMarign}>{item.title}</ListItem.Title>
+                    <Text style={styles.textStyle}>{item.title}</Text>
                   </ListItem.Content>
                   <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
                 </ListItem>
@@ -92,14 +84,14 @@ const AccountSetting  = function AccountSetting(props: Props): ReactElement {
           <Text style={styles.subtilte}>プッシュ通知設定</Text>
           <ListItem key={6} bottomDivider>
             <ListItem.Content>
-              <ListItem.Title style={styles.listMarign}>{'プッシュ通知設定'}</ListItem.Title>
+              <Text style={styles.textStyle}>プッシュ通知</Text>
             </ListItem.Content>
             <MaterialIcons name="keyboard-arrow-right" size={24} color={COLOR.GREY} />
           </ListItem>
           <Text style={styles.subtilte}>ホーム画面表示項目設定</Text>
           <ListItem key={7} bottomDivider>
             <ListItem.Content>
-              <ListItem.Title style={styles.listMarign}>{'おすすめの本'}</ListItem.Title>
+              <Text style={styles.textStyle}>おすすめの本</Text>
             </ListItem.Content>
             <Switch
               trackColor={{ false: COLOR.GREY, true: COLOR.TEXT_SUCCESS }}
@@ -111,7 +103,7 @@ const AccountSetting  = function AccountSetting(props: Props): ReactElement {
           </ListItem>
           <ListItem key={8} bottomDivider>
             <ListItem.Content>
-              <ListItem.Title style={styles.listMarign}>{'新刊情報'}</ListItem.Title>
+              <Text style={styles.textStyle}>新刊情報</Text>
             </ListItem.Content>
             <Switch
               trackColor={{ false: COLOR.GREY, true: COLOR.TEXT_SUCCESS }}
@@ -123,7 +115,7 @@ const AccountSetting  = function AccountSetting(props: Props): ReactElement {
           </ListItem>
           <ListItem key={9} bottomDivider>
             <ListItem.Content>
-              <ListItem.Title style={styles.listMarign}>{'感想'}</ListItem.Title>
+              <Text style={styles.textStyle}>感想</Text>
             </ListItem.Content>
             <Switch
               trackColor={{ false: COLOR.GREY, true: COLOR.TEXT_SUCCESS }}
@@ -136,15 +128,15 @@ const AccountSetting  = function AccountSetting(props: Props): ReactElement {
           <Text style={styles.subtilte}>情報</Text>
           <ListItem key={10} bottomDivider>
             <ListItem.Content>
-              <ListItem.Title style={styles.listMarign}>{'ライセンス情報'}</ListItem.Title>
+              <Text style={styles.textStyle}>ライセンス情報</Text>
             </ListItem.Content>
             <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
           </ListItem>
           <ListItem key={11} bottomDivider>
             <ListItem.Content>
-              <ListItem.Title style={styles.listMarign}>{'バージョン情報'}</ListItem.Title>
+              <Text style={styles.textStyle}>バージョン情報</Text>
             </ListItem.Content>
-            <Text style={styles.version}>{version}</Text>
+            <Text style={styles.textStyle}>{version}</Text>
           </ListItem>
         </ScrollView>
       </SafeAreaView>
