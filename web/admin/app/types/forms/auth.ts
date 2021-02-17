@@ -1,4 +1,4 @@
-import { ITextField } from './utils'
+import { ITextField, ITextArea, IFileInput } from './utils'
 
 // ---------------------------
 // interface - form
@@ -60,8 +60,8 @@ export interface IAuthEditPasswordOptions {
 
 export interface IAuthEditProfileOptions {
   username: ITextField
-  thumbnail: ITextField // TODO: FileInput用コンポーネント作成後変更
-  selfIntroduction: ITextField // TODO: TextArea用コンポーネント作成後変更
+  thumbnail: IFileInput
+  selfIntroduction: ITextArea
   lastName: ITextField
   firstName: ITextField
   lastNameKana: ITextField
@@ -104,34 +104,57 @@ export const AuthEditPasswordOptions: IAuthEditPasswordOptions = {
 export const AuthEditProfileOptions: IAuthEditProfileOptions = {
   username: {
     label: '表示名',
-    rules: {} as ITextField,
-  },
+    rules: {
+      required: true,
+      max: 32,
+    },
+  } as ITextField,
   thumbnail: {
     label: 'サムネイル',
-    rules: {} as ITextField,
-  },
+    rules: {
+      image: true,
+      size: 10000, // 10MB
+    },
+  } as ITextField,
   selfIntroduction: {
     label: '自己紹介',
-    rules: {} as ITextField,
-  },
+    rules: {
+      max: 256,
+    },
+  } as ITextField,
   lastName: {
     label: '姓',
-    rules: {} as ITextField,
-  },
+    rules: {
+      required: true,
+      max: 16,
+    },
+  } as ITextField,
   firstName: {
     label: '名',
-    rules: {} as ITextField,
-  },
+    rules: {
+      required: true,
+      max: 16,
+    },
+  } as ITextField,
   lastNameKana: {
     label: '姓 (かな)',
-    rules: {} as ITextField,
-  },
+    rules: {
+      required: true,
+      max: 32,
+    },
+  } as ITextField,
   firstNameKana: {
     label: '名 (かな)',
-    rules: {} as ITextField,
-  },
+    rules: {
+      required: true,
+      max: 32,
+    },
+  } as ITextField,
   phoneNumber: {
     label: '電話番号',
-    rules: {} as ITextField,
-  },
+    rules: {
+      required: true,
+      max: 16,
+    },
+  } as ITextField,
 }
