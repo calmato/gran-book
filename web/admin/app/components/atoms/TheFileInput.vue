@@ -61,7 +61,7 @@ export default defineComponent({
         return false
       }
 
-      return file.size <= props.limit
+      return file.size <= props.limit * 1000 // KB -> MB
     }
 
     function getBase64(file: File): Promise<String | ArrayBuffer | null> {

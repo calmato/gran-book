@@ -293,7 +293,7 @@ export default class AuthModule extends VuexModule {
 
     return new Promise((resolve: () => void, reject: (reason: ApiError) => void) => {
       $axios
-        .$patch('/v1/auth', req)
+        .$patch('/v1/auth/profile', req)
         .then((res: IAuthResponse) => {
           const data: IAuthProfile = { ...res }
           this.setProfile(data)
