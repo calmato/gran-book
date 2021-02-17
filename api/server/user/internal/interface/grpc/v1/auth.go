@@ -5,6 +5,7 @@ import (
 
 	"github.com/calmato/gran-book/api/server/user/internal/application"
 	"github.com/calmato/gran-book/api/server/user/internal/application/input"
+	"github.com/calmato/gran-book/api/server/user/internal/domain/user"
 	"github.com/calmato/gran-book/api/server/user/lib/datetime"
 	pb "github.com/calmato/gran-book/api/server/user/proto"
 )
@@ -22,28 +23,7 @@ func (s *AuthServer) GetAuth(ctx context.Context, req *pb.EmptyUser) (*pb.AuthRe
 		return nil, errorHandling(err)
 	}
 
-	res := &pb.AuthResponse{
-		Id:               u.ID,
-		Username:         u.Username,
-		Gender:           u.Gender,
-		Email:            u.Email,
-		PhoneNumber:      u.PhoneNumber,
-		Role:             u.Role,
-		ThumbnailUrl:     u.ThumbnailURL,
-		SelfIntroduction: u.SelfIntroduction,
-		LastName:         u.LastName,
-		FirstName:        u.FirstName,
-		LastNameKana:     u.LastNameKana,
-		FirstNameKana:    u.FirstNameKana,
-		PostalCode:       u.PostalCode,
-		Prefecture:       u.Prefecture,
-		City:             u.City,
-		AddressLine1:     u.AddressLine1,
-		AddressLine2:     u.AddressLine2,
-		CreatedAt:        datetime.TimeToString(u.CreatedAt),
-		UpdatedAt:        datetime.TimeToString(u.UpdatedAt),
-	}
-
+	res := getAuthResponse(u)
 	return res, nil
 }
 
@@ -61,28 +41,7 @@ func (s *AuthServer) CreateAuth(ctx context.Context, req *pb.CreateAuthRequest) 
 		return nil, errorHandling(err)
 	}
 
-	res := &pb.AuthResponse{
-		Id:               u.ID,
-		Username:         u.Username,
-		Gender:           u.Gender,
-		Email:            u.Email,
-		PhoneNumber:      u.PhoneNumber,
-		Role:             u.Role,
-		ThumbnailUrl:     u.ThumbnailURL,
-		SelfIntroduction: u.SelfIntroduction,
-		LastName:         u.LastName,
-		FirstName:        u.FirstName,
-		LastNameKana:     u.LastNameKana,
-		FirstNameKana:    u.FirstNameKana,
-		PostalCode:       u.PostalCode,
-		Prefecture:       u.Prefecture,
-		City:             u.City,
-		AddressLine1:     u.AddressLine1,
-		AddressLine2:     u.AddressLine2,
-		CreatedAt:        datetime.TimeToString(u.CreatedAt),
-		UpdatedAt:        datetime.TimeToString(u.UpdatedAt),
-	}
-
+	res := getAuthResponse(u)
 	return res, nil
 }
 
@@ -102,28 +61,7 @@ func (s *AuthServer) UpdateAuthEmail(ctx context.Context, req *pb.UpdateAuthEmai
 		return nil, errorHandling(err)
 	}
 
-	res := &pb.AuthResponse{
-		Id:               u.ID,
-		Username:         u.Username,
-		Gender:           u.Gender,
-		Email:            u.Email,
-		PhoneNumber:      u.PhoneNumber,
-		Role:             u.Role,
-		ThumbnailUrl:     u.ThumbnailURL,
-		SelfIntroduction: u.SelfIntroduction,
-		LastName:         u.LastName,
-		FirstName:        u.FirstName,
-		LastNameKana:     u.LastNameKana,
-		FirstNameKana:    u.FirstNameKana,
-		PostalCode:       u.PostalCode,
-		Prefecture:       u.Prefecture,
-		City:             u.City,
-		AddressLine1:     u.AddressLine1,
-		AddressLine2:     u.AddressLine2,
-		CreatedAt:        datetime.TimeToString(u.CreatedAt),
-		UpdatedAt:        datetime.TimeToString(u.UpdatedAt),
-	}
-
+	res := getAuthResponse(u)
 	return res, nil
 }
 
@@ -146,28 +84,7 @@ func (s *AuthServer) UpdateAuthPassword(
 		return nil, errorHandling(err)
 	}
 
-	res := &pb.AuthResponse{
-		Id:               u.ID,
-		Username:         u.Username,
-		Gender:           u.Gender,
-		Email:            u.Email,
-		PhoneNumber:      u.PhoneNumber,
-		Role:             u.Role,
-		ThumbnailUrl:     u.ThumbnailURL,
-		SelfIntroduction: u.SelfIntroduction,
-		LastName:         u.LastName,
-		FirstName:        u.FirstName,
-		LastNameKana:     u.LastNameKana,
-		FirstNameKana:    u.FirstNameKana,
-		PostalCode:       u.PostalCode,
-		Prefecture:       u.Prefecture,
-		City:             u.City,
-		AddressLine1:     u.AddressLine1,
-		AddressLine2:     u.AddressLine2,
-		CreatedAt:        datetime.TimeToString(u.CreatedAt),
-		UpdatedAt:        datetime.TimeToString(u.UpdatedAt),
-	}
-
+	res := getAuthResponse(u)
 	return res, nil
 }
 
@@ -192,28 +109,7 @@ func (s *AuthServer) UpdateAuthProfile(
 		return nil, errorHandling(err)
 	}
 
-	res := &pb.AuthResponse{
-		Id:               u.ID,
-		Username:         u.Username,
-		Gender:           u.Gender,
-		Email:            u.Email,
-		PhoneNumber:      u.PhoneNumber,
-		Role:             u.Role,
-		ThumbnailUrl:     u.ThumbnailURL,
-		SelfIntroduction: u.SelfIntroduction,
-		LastName:         u.LastName,
-		FirstName:        u.FirstName,
-		LastNameKana:     u.LastNameKana,
-		FirstNameKana:    u.FirstNameKana,
-		PostalCode:       u.PostalCode,
-		Prefecture:       u.Prefecture,
-		City:             u.City,
-		AddressLine1:     u.AddressLine1,
-		AddressLine2:     u.AddressLine2,
-		CreatedAt:        datetime.TimeToString(u.CreatedAt),
-		UpdatedAt:        datetime.TimeToString(u.UpdatedAt),
-	}
-
+	res := getAuthResponse(u)
 	return res, err
 }
 
@@ -244,7 +140,12 @@ func (s *AuthServer) UpdateAuthAddress(
 		return nil, errorHandling(err)
 	}
 
-	res := &pb.AuthResponse{
+	res := getAuthResponse(u)
+	return res, nil
+}
+
+func getAuthResponse(u *user.User) *pb.AuthResponse {
+	return &pb.AuthResponse{
 		Id:               u.ID,
 		Username:         u.Username,
 		Gender:           u.Gender,
@@ -262,9 +163,8 @@ func (s *AuthServer) UpdateAuthAddress(
 		City:             u.City,
 		AddressLine1:     u.AddressLine1,
 		AddressLine2:     u.AddressLine2,
+		Activated:        u.Activated,
 		CreatedAt:        datetime.TimeToString(u.CreatedAt),
 		UpdatedAt:        datetime.TimeToString(u.UpdatedAt),
 	}
-
-	return res, nil
 }
