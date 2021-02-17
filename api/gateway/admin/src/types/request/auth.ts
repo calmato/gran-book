@@ -9,7 +9,6 @@ export interface IUpdateAuthPasswordRequest {
 
 export interface IUpdateAuthRequest {
   username: string
-  gender: number
   thumbnail: string
   selfIntroduction: string
   lastName: string
