@@ -26,11 +26,10 @@ router.get(
 )
 
 router.patch(
-  '/',
+  '/profile',
   async (req: Request<IUpdateAuthRequest>, res: Response<IAuthResponse>, next: NextFunction): Promise<void> => {
     const {
       username,
-      gender,
       thumbnail,
       selfIntroduction,
       lastName,
@@ -42,10 +41,10 @@ router.patch(
 
     await getAuth(req)
       .then(
-        (): Promise<IAuthOutput> => {
+        (output: IAuthOutput): Promise<IAuthOutput> => {
           const input: IUpdateAuthProfileInput = {
             username: username,
-            gender: gender,
+            gender: output.gender,
             thumbnail: thumbnail,
             selfIntroduction: selfIntroduction,
           }
@@ -61,10 +60,10 @@ router.patch(
             lastNameKana: lastNameKana,
             firstNameKana: firstNameKana,
             phoneNumber: phoneNumber,
-            postalCode: output.postalCode,
-            prefecture: output.prefecture,
-            city: output.city,
-            addressLine1: output.addressLine1,
+            postalCode: output.postalCode || '000-0000',
+            prefecture: output.prefecture || 'Unknown',
+            city: output.city || 'Unknown',
+            addressLine1: output.addressLine1 || 'Unknown',
             addressLine2: output.addressLine2,
           }
 
@@ -122,7 +121,6 @@ function setAuthResponse(output: IAuthOutput): IAuthResponse {
   const response: IAuthResponse = {
     id: output.id,
     username: output.username,
-    gender: output.gender,
     email: output.email,
     phoneNumber: output.phoneNumber,
     role: output.role,
