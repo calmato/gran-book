@@ -87,7 +87,7 @@ export const AuthEditPasswordOptions: IAuthEditPasswordOptions = {
     label: 'パスワード',
     rules: {
       required: true,
-      alpha_dash: true,
+      password: true,
       min: 6,
       max: 32,
     },
@@ -106,6 +106,7 @@ export const AuthEditProfileOptions: IAuthEditProfileOptions = {
     label: '表示名',
     rules: {
       required: true,
+      alpha_dash: true,
       max: 32,
     },
   } as ITextField,
@@ -140,6 +141,7 @@ export const AuthEditProfileOptions: IAuthEditProfileOptions = {
     label: '姓 (かな)',
     rules: {
       required: true,
+      hiragana: true,
       max: 32,
     },
   } as ITextField,
@@ -147,6 +149,7 @@ export const AuthEditProfileOptions: IAuthEditProfileOptions = {
     label: '名 (かな)',
     rules: {
       required: true,
+      hiragana: true,
       max: 32,
     },
   } as ITextField,
