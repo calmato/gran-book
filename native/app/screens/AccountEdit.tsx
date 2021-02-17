@@ -50,6 +50,7 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
     return formData.firstName.length < maxNameLength;
   }, [formData.firstName]);
 
+  //TODO: かな入力・数字入力のvalidationを追加する
   return (
     <View style={styles.scrollArea}>
       <HeaderWithBackButton
@@ -76,6 +77,18 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
           <Text style={styles.subtilte}>
             名前(かな)
           </Text>
+          <View style={styles.halfInputRow}>
+            <HalfInput
+              onChangeText={(text) => setValue({...formData, firstNameKana: text})}
+              value={formData.firstNameKana}
+              placeholder="たなか"
+            />
+            <HalfInput
+              onChangeText={(text) => setValue({...formData, lastNameKana: text})}
+              value={formData.lastNameKana}
+              placeholder="たろう"
+            />
+          </View>
         </ScrollView>
       </SafeAreaView>
     </View>
