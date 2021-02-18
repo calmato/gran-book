@@ -1,6 +1,29 @@
 import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
+import { $axios } from '~/plugins/axios'
 import firebase from '~/plugins/firebase'
-import { ISignInForm } from '~/types/forms'
+import { ApiError } from '~/types/exception'
+import { ISignInForm, IAuthEditEmailForm, IAuthEditPasswordForm, IAuthEditProfileForm } from '~/types/forms'
+import { IAuthUpdateEmailRequest, IAuthUpdatePasswordRequest, IAuthUpdateProfileRequest } from '~/types/requests'
+import { IAuthResponse, IErrorResponse } from '~/types/responses'
+import { IAuthState, IAuthProfile } from '~/types/store'
+
+const initialState: IAuthState = {
+  id: '',
+  email: '',
+  emailVerified: false,
+  token: '',
+  username: '',
+  phoneNumber: '',
+  role: 0,
+  thumbnailUrl: '',
+  selfIntroduction: '',
+  lastName: '',
+  firstName: '',
+  lastNameKana: '',
+  firstNameKana: '',
+  createdAt: '',
+  updatedAt: '',
+}
 
 @Module({
   name: 'auth',
@@ -8,45 +31,110 @@ import { ISignInForm } from '~/types/forms'
   namespaced: true,
 })
 export default class AuthModule extends VuexModule {
-  private id: string = ''
-  private email: string = ''
-  private emailVerified: boolean = false
-  private token: string = ''
+  private id: string = initialState.id
+  private email: string = initialState.email
+  private emailVerified: boolean = initialState.emailVerified
+  private token: string = initialState.token
+  private username: string = initialState.username
+  private phoneNumber: string = initialState.phoneNumber
+  private role: number = initialState.role
+  private thumbnailUrl: string = initialState.thumbnailUrl
+  private selfIntroduction: string = initialState.selfIntroduction
+  private lastName: string = initialState.lastName
+  private firstName: string = initialState.firstName
+  private lastNameKana: string = initialState.lastNameKana
+  private firstNameKana: string = initialState.firstNameKana
+  private createdAt: string = initialState.createdAt
+  private updatedAt: string = initialState.updatedAt
 
-  public get getId() {
-    return this.id
-  }
-
-  public get getEmail() {
+  public get getEmail(): string {
     return this.email
   }
 
-  public get getEmailVerified() {
-    return this.emailVerified
-  }
-
-  public get getToken() {
+  public get getToken(): string {
     return this.token
   }
 
+  public get getUsername(): string {
+    return this.username
+  }
+
+  public get getPhoneNumber(): string {
+    return this.phoneNumber
+  }
+
+  public get getThumbnailUrl(): string {
+    return this.thumbnailUrl ? this.thumbnailUrl : '/thumbnail.png'
+  }
+
+  public get getSelfIntroduction(): string {
+    return this.selfIntroduction
+  }
+
+  public get getLastName(): string {
+    return this.lastName
+  }
+
+  public get getFirstName(): string {
+    return this.firstName
+  }
+
+  public get getLastNameKana(): string {
+    return this.lastNameKana
+  }
+
+  public get getFirstNameKana(): string {
+    return this.firstNameKana
+  }
+
+  public get getName(): string {
+    const space: string = this.lastName && this.firstName ? ' ' : ''
+    return this.lastName + space + this.firstName
+  }
+
+  public get getNameKana(): string {
+    const space: string = this.lastNameKana && this.firstNameKana ? ' ' : ''
+    return this.lastNameKana + space + this.firstNameKana
+  }
+
   @Mutation
-  public setId(id: string) {
+  private setId(id: string): void {
     this.id = id
   }
 
   @Mutation
-  public setEmail(email: string) {
+  private setEmail(email: string): void {
     this.email = email
   }
 
   @Mutation
-  public setEmailVerified(emailVerified: boolean) {
+  private setEmailVerified(emailVerified: boolean): void {
     this.emailVerified = emailVerified
   }
 
   @Mutation
-  public setToken(token: string) {
+  private setToken(token: string): void {
     this.token = token
+  }
+
+  @Mutation
+  private setUpdatedAt(updatedAt: string): void {
+    this.updatedAt = updatedAt
+  }
+
+  @Mutation
+  private setProfile(auth: IAuthProfile): void {
+    this.username = auth.username
+    this.phoneNumber = auth.phoneNumber
+    this.role = auth.role
+    this.thumbnailUrl = auth.thumbnailUrl
+    this.selfIntroduction = auth.selfIntroduction
+    this.lastName = auth.lastName
+    this.firstName = auth.firstName
+    this.lastNameKana = auth.lastNameKana
+    this.firstNameKana = auth.firstNameKana
+    this.createdAt = auth.createdAt
+    this.updatedAt = auth.updatedAt
   }
 
   @Action({ rawError: true })
@@ -66,7 +154,7 @@ export default class AuthModule extends VuexModule {
           this.setEmailVerified(res.emailVerified)
           resolve()
         } else {
-          reject(new Error())
+          reject(new Error('unauthorized'))
         }
       })
     })
@@ -105,13 +193,132 @@ export default class AuthModule extends VuexModule {
       firebase
         .auth()
         .signInWithEmailAndPassword(payload.email, payload.password)
-        .then(() => {
-          this.authorization()
+        .then(async () => {
+          await this.authorization()
           resolve()
         })
         .catch((err: Error) => {
           reject(err)
         })
     })
+  }
+
+  @Action({ rawError: true })
+  public showAuth(): Promise<number> {
+    return new Promise((resolve: (role: number) => void, reject: (reason: ApiError) => void) => {
+      $axios
+        .$get('/v1/auth')
+        .then((res: IAuthResponse) => {
+          const data: IAuthProfile = { ...res }
+          this.setProfile(data)
+          resolve(res.role)
+        })
+        .catch((err: any) => {
+          const { data, status }: IErrorResponse = err.response
+          reject(new ApiError(status, data.message, data))
+        })
+    })
+  }
+
+  @Action({ rawError: true })
+  public updateEmail(payload: IAuthEditEmailForm): Promise<void> {
+    const { email } = payload.params
+
+    const req: IAuthUpdateEmailRequest = {
+      email,
+    }
+
+    return new Promise((resolve: () => void, reject: (reason: ApiError) => void) => {
+      $axios
+        .$patch('/v1/auth/email', req)
+        .then((res: IAuthResponse) => {
+          this.setEmail(res.email)
+          this.setEmailVerified(false)
+          this.setUpdatedAt(res.updatedAt)
+          resolve()
+        })
+        .catch((err: any) => {
+          const { data, status }: IErrorResponse = err.response
+          reject(new ApiError(status, data.message, data))
+        })
+    })
+  }
+
+  @Action({ rawError: true })
+  public updatePassword(payload: IAuthEditPasswordForm): Promise<void> {
+    const { password, passwordConfirmation } = payload.params
+
+    const req: IAuthUpdatePasswordRequest = {
+      password,
+      passwordConfirmation,
+    }
+
+    return new Promise((resolve: () => void, reject: (reason: ApiError) => void) => {
+      $axios
+        .$patch('/v1/auth/password', req)
+        .then((res: IAuthResponse) => {
+          this.setUpdatedAt(res.updatedAt)
+          resolve()
+        })
+        .catch((err: any) => {
+          const { data, status }: IErrorResponse = err.response
+          reject(new ApiError(status, data.message, data))
+        })
+    })
+  }
+
+  @Action({ rawError: true })
+  public updateProfile(payload: IAuthEditProfileForm): Promise<void> {
+    const {
+      username,
+      thumbnail,
+      selfIntroduction,
+      lastName,
+      firstName,
+      lastNameKana,
+      firstNameKana,
+      phoneNumber,
+    } = payload.params
+
+    const req: IAuthUpdateProfileRequest = {
+      thumbnail: thumbnail || '',
+      username,
+      selfIntroduction,
+      lastName,
+      firstName,
+      lastNameKana,
+      firstNameKana,
+      phoneNumber,
+    }
+
+    return new Promise((resolve: () => void, reject: (reason: ApiError) => void) => {
+      $axios
+        .$patch('/v1/auth/profile', req)
+        .then((res: IAuthResponse) => {
+          const data: IAuthProfile = { ...res }
+          this.setProfile(data)
+          resolve()
+        })
+        .catch((err: any) => {
+          const { data, status }: IErrorResponse = err.response
+          reject(new ApiError(status, data.message, data))
+        })
+    })
+  }
+
+  @Action({ rawError: true })
+  public logout(): void {
+    firebase
+      .auth()
+      .signOut()
+      .finally(() => {
+        const profile: IAuthProfile = { ...initialState }
+
+        this.setId(initialState.id)
+        this.setEmail(initialState.email)
+        this.setEmailVerified(initialState.emailVerified)
+        this.setToken(initialState.token)
+        this.setProfile(profile)
+      })
   }
 }
