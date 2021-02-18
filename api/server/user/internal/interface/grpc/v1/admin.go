@@ -4,8 +4,10 @@ import (
 	"context"
 
 	"github.com/calmato/gran-book/api/server/user/internal/application"
+	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/user"
 	pb "github.com/calmato/gran-book/api/server/user/proto"
+	"golang.org/x/xerrors"
 )
 
 // AdminServer - Authインターフェースの構造体
@@ -17,12 +19,32 @@ type AdminServer struct {
 
 // CreateAdmin - 管理者登録
 func (s *AdminServer) CreateAdmin(ctx context.Context, req *pb.CreateAdminRequest) (*pb.AdminResponse, error) {
+	cu, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	if cu == nil || cu.Role != user.AdminRole {
+		err := xerrors.New("This account doesn't have administrator privileges")
+		return nil, errorHandling(exception.Forbidden.New(err))
+	}
+
 	res := getAdminResponse(nil)
 	return res, nil
 }
 
 // UpdateAdminRole - 管理者権限更新
 func (s *AdminServer) UpdateAdminRole(ctx context.Context, req *pb.UpdateAdminRoleRequest) (*pb.AdminResponse, error) {
+	cu, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	if cu == nil || cu.Role != user.AdminRole {
+		err := xerrors.New("This account doesn't have administrator privileges")
+		return nil, errorHandling(exception.Forbidden.New(err))
+	}
+
 	res := getAdminResponse(nil)
 	return res, nil
 }
@@ -31,6 +53,16 @@ func (s *AdminServer) UpdateAdminRole(ctx context.Context, req *pb.UpdateAdminRo
 func (s *AdminServer) UpdateAdminPassword(
 	ctx context.Context, req *pb.UpdateAdminPasswordRequest,
 ) (*pb.AdminResponse, error) {
+	cu, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	if cu == nil || cu.Role != user.AdminRole {
+		err := xerrors.New("This account doesn't have administrator privileges")
+		return nil, errorHandling(exception.Forbidden.New(err))
+	}
+
 	res := getAdminResponse(nil)
 	return res, nil
 }
@@ -39,6 +71,16 @@ func (s *AdminServer) UpdateAdminPassword(
 func (s *AdminServer) UpdateAdminProfile(
 	ctx context.Context, req *pb.UpdateAdminProfileRequest,
 ) (*pb.AdminResponse, error) {
+	cu, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	if cu == nil || cu.Role != user.AdminRole {
+		err := xerrors.New("This account doesn't have administrator privileges")
+		return nil, errorHandling(exception.Forbidden.New(err))
+	}
+
 	res := getAdminResponse(nil)
 	return res, nil
 }

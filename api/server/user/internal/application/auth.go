@@ -59,7 +59,7 @@ func (a *authApplication) Create(ctx context.Context, in *input.CreateAuth) (*us
 		Email:     strings.ToLower(in.Email),
 		Password:  in.Password,
 		Gender:    0,
-		Role:      0,
+		Role:      user.UserRole,
 		Activated: true,
 	}
 
