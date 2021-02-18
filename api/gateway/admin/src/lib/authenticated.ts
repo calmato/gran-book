@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import { auth } from '~/plugins/firebase'
 import { unauthorized, forbidden } from '~/lib/http-exception'
-import { getAuth } from '~/api/user'
+import { getAuth } from '~/api/auth'
 import { IAuthOutput } from '~/types/output'
 
 interface IRoute {
