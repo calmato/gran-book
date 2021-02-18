@@ -17,16 +17,16 @@ type Registry struct {
 }
 
 // NewRegistry - internalディレクトリ配下のファイルを読み込み
-func NewRegistry(db *repository.Client, auth *authentication.Auth, s *gcs.Storage) *Registry {
-	aa := authInjection(db, auth, s)
+func NewRegistry(db *repository.Client, fa *authentication.Auth, s *gcs.Storage) *Registry {
+	auth := authInjection(db, fa, s)
 
 	return &Registry{
-		AuthApplication: aa,
+		AuthApplication: auth,
 	}
 }
 
-func authInjection(db *repository.Client, auth *authentication.Auth, s *gcs.Storage) application.AuthApplication {
-	ur := repository.NewUserRepository(db, auth)
+func authInjection(db *repository.Client, fa *authentication.Auth, s *gcs.Storage) application.AuthApplication {
+	ur := repository.NewUserRepository(db, fa)
 	udv := dv.NewUserDomainValidation(ur)
 	uu := storage.NewUserUploader(s)
 	us := service.NewUserService(udv, ur, uu)

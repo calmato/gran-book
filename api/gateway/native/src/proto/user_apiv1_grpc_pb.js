@@ -204,8 +204,12 @@ var AuthServiceService = exports.AuthServiceService = {
     responseSerialize: serialize_proto_AuthResponse,
     responseDeserialize: deserialize_proto_AuthResponse,
   },
+};
+
+exports.AuthServiceClient = grpc.makeGenericClientConstructor(AuthServiceService);
+var AdminServiceService = exports.AdminServiceService = {
   createAdmin: {
-    path: '/proto.AuthService/CreateAdmin',
+    path: '/proto.AdminService/CreateAdmin',
     requestStream: false,
     responseStream: false,
     requestType: proto_user_apiv1_pb.CreateAdminRequest,
@@ -216,7 +220,7 @@ var AuthServiceService = exports.AuthServiceService = {
     responseDeserialize: deserialize_proto_AdminResponse,
   },
   updateAdminRole: {
-    path: '/proto.AuthService/UpdateAdminRole',
+    path: '/proto.AdminService/UpdateAdminRole',
     requestStream: false,
     responseStream: false,
     requestType: proto_user_apiv1_pb.UpdateAdminRoleRequest,
@@ -227,7 +231,7 @@ var AuthServiceService = exports.AuthServiceService = {
     responseDeserialize: deserialize_proto_AdminResponse,
   },
   updateAdminPassword: {
-    path: '/proto.AuthService/UpdateAdminPassword',
+    path: '/proto.AdminService/UpdateAdminPassword',
     requestStream: false,
     responseStream: false,
     requestType: proto_user_apiv1_pb.UpdateAdminPasswordRequest,
@@ -238,7 +242,7 @@ var AuthServiceService = exports.AuthServiceService = {
     responseDeserialize: deserialize_proto_AdminResponse,
   },
   updateAdminProfile: {
-    path: '/proto.AuthService/UpdateAdminProfile',
+    path: '/proto.AdminService/UpdateAdminProfile',
     requestStream: false,
     responseStream: false,
     requestType: proto_user_apiv1_pb.UpdateAdminProfileRequest,
@@ -250,4 +254,4 @@ var AuthServiceService = exports.AuthServiceService = {
   },
 };
 
-exports.AuthServiceClient = grpc.makeGenericClientConstructor(AuthServiceService);
+exports.AdminServiceClient = grpc.makeGenericClientConstructor(AdminServiceService);

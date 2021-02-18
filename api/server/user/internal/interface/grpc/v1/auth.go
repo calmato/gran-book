@@ -144,30 +144,6 @@ func (s *AuthServer) UpdateAuthAddress(
 	return res, nil
 }
 
-// CreateAdmin - 管理者登録
-func (s *AuthServer) CreateAdmin(ctx context.Context, req *pb.CreateAdminRequest) (*pb.AdminResponse, error) {
-	res := getAdminResponse(nil)
-	return res, nil
-}
-
-// UpdateAdminRole - 管理者権限更新
-func (s *AuthServer) UpdateAdminRole(ctx context.Context, req *pb.UpdateAdminRoleRequest) (*pb.AdminResponse, error) {
-	res := getAdminResponse(nil)
-	return res, nil
-}
-
-// UpdateAdminPassword - 管理者パスワード更新
-func (s *AuthServer) UpdateAdminPassword(ctx context.Context, req *pb.UpdateAdminPasswordRequest) (*pb.AdminResponse, error) {
-	res := getAdminResponse(nil)
-	return res, nil
-}
-
-// UpdateAdminProfile - 管理者プロフィール更新
-func (s *AuthServer) UpdateAdminProfile(ctx context.Context, req *pb.UpdateAdminProfileRequest) (*pb.AdminResponse, error) {
-	res := getAdminResponse(nil)
-	return res, nil
-}
-
 func getAuthResponse(u *user.User) *pb.AuthResponse {
 	return &pb.AuthResponse{
 		Id:               u.ID,
@@ -191,8 +167,4 @@ func getAuthResponse(u *user.User) *pb.AuthResponse {
 		CreatedAt:        datetime.TimeToString(u.CreatedAt),
 		UpdatedAt:        datetime.TimeToString(u.UpdatedAt),
 	}
-}
-
-func getAdminResponse(u *user.User) *pb.AdminResponse {
-	return &pb.AdminResponse{}
 }

@@ -40,6 +40,7 @@ func newGRPCServer(port, logPath, logLevel string, reg *registry.Registry) (*grp
 
 	s := grpc.NewServer(opts...)
 	pb.RegisterAuthServiceServer(s, &v1.AuthServer{AuthApplication: reg.AuthApplication})
+	pb.RegisterAdminServiceServer(s, &v1.AdminServer{AuthApplication: reg.AuthApplication})
 
 	grpc_prometheus.Register(s)
 	grpc_prometheus.EnableHandlingTimeHistogram()
