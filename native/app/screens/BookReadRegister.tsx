@@ -21,6 +21,7 @@ const BookReadRegister = function BookReadRegister(): ReactElement {
   const [impreessionData, setState] = useState({
     date: new Date,
     impresstion: '',
+    isDateUnknown: false,
   });
 
   return(
@@ -38,6 +39,8 @@ const BookReadRegister = function BookReadRegister(): ReactElement {
         <ReadDate
           date={ impreessionData.date }
           handleSetDate={(date) => setState({...impreessionData, date: date})}
+          isDateUnknown={ impreessionData.isDateUnknown }
+          handleIsDateUnknown={(isDateUnknown) => setState({...impreessionData, isDateUnknown: isDateUnknown})}
         />
         <Text style={{fontSize: 16, marginStart: 20, marginTop: 20, marginBottom: 10, fontWeight: 'bold'}}>感想</Text>
         <Input

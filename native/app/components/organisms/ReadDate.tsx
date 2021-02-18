@@ -32,11 +32,12 @@ const styles = StyleSheet.create({
 interface Props{
   date: Date,
   handleSetDate: (date: Date) => void,
+  isDateUnknown: boolean,
+  handleIsDateUnknown: (isDateUnknown: boolean) => void,
 }
 
 const ReadDate = function ReadDate(props: Props): ReactElement {
-  const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+  const toggleSwitch = () => props.handleIsDateUnknown(!props.isDateUnknown);
   
   const [show, setShow] = useState(false);
   const onChange = (_event, selectedDate) => {
@@ -53,7 +54,7 @@ const ReadDate = function ReadDate(props: Props): ReactElement {
       <View style={styles.childStyle}>
         <Text style={styles.textStyle}>読んだ日</Text>
         {
-          !isEnabled &&      
+          !props.isDateUnknown &&      
           <TouchableOpacity style={{flexDirection:'row', alignItems:'center'}} onPress={showDatepicker}>
             <Text style={[styles.textStyle]}>{`${dayjs(props.date).format('YYYY/MM/DD')}`}</Text> 
             <MaterialIcons name="keyboard-arrow-right" size={24} color={COLOR.GREY} />
@@ -68,10 +69,10 @@ const ReadDate = function ReadDate(props: Props): ReactElement {
           thumbColor={COLOR.BACKGROUND_WHITE}
           ios_backgroundColor= {COLOR.TEXT_GRAY}
           onValueChange={toggleSwitch}
-          value={isEnabled}
+          value={props.isDateUnknown}
         />
       </View>
-      {!isEnabled && show && (
+      {!props.isDateUnknown && show && (
         <DefaultDataPicker
           date={props.date}
           onChange={onChange}
