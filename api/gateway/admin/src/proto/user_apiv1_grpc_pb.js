@@ -4,6 +4,17 @@
 var grpc = require('@grpc/grpc-js');
 var proto_user_apiv1_pb = require('../proto/user_apiv1_pb.js');
 
+function serialize_proto_AdminResponse(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.AdminResponse)) {
+    throw new Error('Expected argument of type proto.AdminResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_AdminResponse(buffer_arg) {
+  return proto_user_apiv1_pb.AdminResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_proto_AuthResponse(arg) {
   if (!(arg instanceof proto_user_apiv1_pb.AuthResponse)) {
     throw new Error('Expected argument of type proto.AuthResponse');
@@ -13,6 +24,17 @@ function serialize_proto_AuthResponse(arg) {
 
 function deserialize_proto_AuthResponse(buffer_arg) {
   return proto_user_apiv1_pb.AuthResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_proto_CreateAdminRequest(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.CreateAdminRequest)) {
+    throw new Error('Expected argument of type proto.CreateAdminRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_CreateAdminRequest(buffer_arg) {
+  return proto_user_apiv1_pb.CreateAdminRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 function serialize_proto_CreateAuthRequest(arg) {
@@ -35,6 +57,39 @@ function serialize_proto_EmptyUser(arg) {
 
 function deserialize_proto_EmptyUser(buffer_arg) {
   return proto_user_apiv1_pb.EmptyUser.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_proto_UpdateAdminPasswordRequest(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.UpdateAdminPasswordRequest)) {
+    throw new Error('Expected argument of type proto.UpdateAdminPasswordRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_UpdateAdminPasswordRequest(buffer_arg) {
+  return proto_user_apiv1_pb.UpdateAdminPasswordRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_proto_UpdateAdminProfileRequest(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.UpdateAdminProfileRequest)) {
+    throw new Error('Expected argument of type proto.UpdateAdminProfileRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_UpdateAdminProfileRequest(buffer_arg) {
+  return proto_user_apiv1_pb.UpdateAdminProfileRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_proto_UpdateAdminRoleRequest(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.UpdateAdminRoleRequest)) {
+    throw new Error('Expected argument of type proto.UpdateAdminRoleRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_UpdateAdminRoleRequest(buffer_arg) {
+  return proto_user_apiv1_pb.UpdateAdminRoleRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 function serialize_proto_UpdateAuthAddressRequest(arg) {
@@ -148,6 +203,50 @@ var AuthServiceService = exports.AuthServiceService = {
     requestDeserialize: deserialize_proto_UpdateAuthAddressRequest,
     responseSerialize: serialize_proto_AuthResponse,
     responseDeserialize: deserialize_proto_AuthResponse,
+  },
+  createAdmin: {
+    path: '/proto.AuthService/CreateAdmin',
+    requestStream: false,
+    responseStream: false,
+    requestType: proto_user_apiv1_pb.CreateAdminRequest,
+    responseType: proto_user_apiv1_pb.AdminResponse,
+    requestSerialize: serialize_proto_CreateAdminRequest,
+    requestDeserialize: deserialize_proto_CreateAdminRequest,
+    responseSerialize: serialize_proto_AdminResponse,
+    responseDeserialize: deserialize_proto_AdminResponse,
+  },
+  updateAdminRole: {
+    path: '/proto.AuthService/UpdateAdminRole',
+    requestStream: false,
+    responseStream: false,
+    requestType: proto_user_apiv1_pb.UpdateAdminRoleRequest,
+    responseType: proto_user_apiv1_pb.AdminResponse,
+    requestSerialize: serialize_proto_UpdateAdminRoleRequest,
+    requestDeserialize: deserialize_proto_UpdateAdminRoleRequest,
+    responseSerialize: serialize_proto_AdminResponse,
+    responseDeserialize: deserialize_proto_AdminResponse,
+  },
+  updateAdminPassword: {
+    path: '/proto.AuthService/UpdateAdminPassword',
+    requestStream: false,
+    responseStream: false,
+    requestType: proto_user_apiv1_pb.UpdateAdminPasswordRequest,
+    responseType: proto_user_apiv1_pb.AdminResponse,
+    requestSerialize: serialize_proto_UpdateAdminPasswordRequest,
+    requestDeserialize: deserialize_proto_UpdateAdminPasswordRequest,
+    responseSerialize: serialize_proto_AdminResponse,
+    responseDeserialize: deserialize_proto_AdminResponse,
+  },
+  updateAdminProfile: {
+    path: '/proto.AuthService/UpdateAdminProfile',
+    requestStream: false,
+    responseStream: false,
+    requestType: proto_user_apiv1_pb.UpdateAdminProfileRequest,
+    responseType: proto_user_apiv1_pb.AdminResponse,
+    requestSerialize: serialize_proto_UpdateAdminProfileRequest,
+    requestDeserialize: deserialize_proto_UpdateAdminProfileRequest,
+    responseSerialize: serialize_proto_AdminResponse,
+    responseDeserialize: deserialize_proto_AdminResponse,
   },
 };
 

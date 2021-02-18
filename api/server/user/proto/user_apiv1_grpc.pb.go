@@ -23,6 +23,10 @@ type AuthServiceClient interface {
 	UpdateAuthPassword(ctx context.Context, in *UpdateAuthPasswordRequest, opts ...grpc.CallOption) (*AuthResponse, error)
 	UpdateAuthProfile(ctx context.Context, in *UpdateAuthProfileRequest, opts ...grpc.CallOption) (*AuthResponse, error)
 	UpdateAuthAddress(ctx context.Context, in *UpdateAuthAddressRequest, opts ...grpc.CallOption) (*AuthResponse, error)
+	CreateAdmin(ctx context.Context, in *CreateAdminRequest, opts ...grpc.CallOption) (*AdminResponse, error)
+	UpdateAdminRole(ctx context.Context, in *UpdateAdminRoleRequest, opts ...grpc.CallOption) (*AdminResponse, error)
+	UpdateAdminPassword(ctx context.Context, in *UpdateAdminPasswordRequest, opts ...grpc.CallOption) (*AdminResponse, error)
+	UpdateAdminProfile(ctx context.Context, in *UpdateAdminProfileRequest, opts ...grpc.CallOption) (*AdminResponse, error)
 }
 
 type authServiceClient struct {
@@ -87,6 +91,42 @@ func (c *authServiceClient) UpdateAuthAddress(ctx context.Context, in *UpdateAut
 	return out, nil
 }
 
+func (c *authServiceClient) CreateAdmin(ctx context.Context, in *CreateAdminRequest, opts ...grpc.CallOption) (*AdminResponse, error) {
+	out := new(AdminResponse)
+	err := c.cc.Invoke(ctx, "/proto.AuthService/CreateAdmin", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) UpdateAdminRole(ctx context.Context, in *UpdateAdminRoleRequest, opts ...grpc.CallOption) (*AdminResponse, error) {
+	out := new(AdminResponse)
+	err := c.cc.Invoke(ctx, "/proto.AuthService/UpdateAdminRole", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) UpdateAdminPassword(ctx context.Context, in *UpdateAdminPasswordRequest, opts ...grpc.CallOption) (*AdminResponse, error) {
+	out := new(AdminResponse)
+	err := c.cc.Invoke(ctx, "/proto.AuthService/UpdateAdminPassword", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) UpdateAdminProfile(ctx context.Context, in *UpdateAdminProfileRequest, opts ...grpc.CallOption) (*AdminResponse, error) {
+	out := new(AdminResponse)
+	err := c.cc.Invoke(ctx, "/proto.AuthService/UpdateAdminProfile", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuthServiceServer is the server API for AuthService service.
 // All implementations must embed UnimplementedAuthServiceServer
 // for forward compatibility
@@ -97,6 +137,10 @@ type AuthServiceServer interface {
 	UpdateAuthPassword(context.Context, *UpdateAuthPasswordRequest) (*AuthResponse, error)
 	UpdateAuthProfile(context.Context, *UpdateAuthProfileRequest) (*AuthResponse, error)
 	UpdateAuthAddress(context.Context, *UpdateAuthAddressRequest) (*AuthResponse, error)
+	CreateAdmin(context.Context, *CreateAdminRequest) (*AdminResponse, error)
+	UpdateAdminRole(context.Context, *UpdateAdminRoleRequest) (*AdminResponse, error)
+	UpdateAdminPassword(context.Context, *UpdateAdminPasswordRequest) (*AdminResponse, error)
+	UpdateAdminProfile(context.Context, *UpdateAdminProfileRequest) (*AdminResponse, error)
 	mustEmbedUnimplementedAuthServiceServer()
 }
 
@@ -121,6 +165,18 @@ func (UnimplementedAuthServiceServer) UpdateAuthProfile(context.Context, *Update
 }
 func (UnimplementedAuthServiceServer) UpdateAuthAddress(context.Context, *UpdateAuthAddressRequest) (*AuthResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateAuthAddress not implemented")
+}
+func (UnimplementedAuthServiceServer) CreateAdmin(context.Context, *CreateAdminRequest) (*AdminResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateAdmin not implemented")
+}
+func (UnimplementedAuthServiceServer) UpdateAdminRole(context.Context, *UpdateAdminRoleRequest) (*AdminResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateAdminRole not implemented")
+}
+func (UnimplementedAuthServiceServer) UpdateAdminPassword(context.Context, *UpdateAdminPasswordRequest) (*AdminResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateAdminPassword not implemented")
+}
+func (UnimplementedAuthServiceServer) UpdateAdminProfile(context.Context, *UpdateAdminProfileRequest) (*AdminResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateAdminProfile not implemented")
 }
 func (UnimplementedAuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {}
 
@@ -243,6 +299,78 @@ func _AuthService_UpdateAuthAddress_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthService_CreateAdmin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateAdminRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).CreateAdmin(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.AuthService/CreateAdmin",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).CreateAdmin(ctx, req.(*CreateAdminRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_UpdateAdminRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateAdminRoleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).UpdateAdminRole(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.AuthService/UpdateAdminRole",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).UpdateAdminRole(ctx, req.(*UpdateAdminRoleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_UpdateAdminPassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateAdminPasswordRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).UpdateAdminPassword(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.AuthService/UpdateAdminPassword",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).UpdateAdminPassword(ctx, req.(*UpdateAdminPasswordRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_UpdateAdminProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateAdminProfileRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).UpdateAdminProfile(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.AuthService/UpdateAdminProfile",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).UpdateAdminProfile(ctx, req.(*UpdateAdminProfileRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _AuthService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "proto.AuthService",
 	HandlerType: (*AuthServiceServer)(nil),
@@ -270,6 +398,22 @@ var _AuthService_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateAuthAddress",
 			Handler:    _AuthService_UpdateAuthAddress_Handler,
+		},
+		{
+			MethodName: "CreateAdmin",
+			Handler:    _AuthService_CreateAdmin_Handler,
+		},
+		{
+			MethodName: "UpdateAdminRole",
+			Handler:    _AuthService_UpdateAdminRole_Handler,
+		},
+		{
+			MethodName: "UpdateAdminPassword",
+			Handler:    _AuthService_UpdateAdminPassword_Handler,
+		},
+		{
+			MethodName: "UpdateAdminProfile",
+			Handler:    _AuthService_UpdateAdminProfile_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
