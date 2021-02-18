@@ -6,7 +6,7 @@ type CreateAdmin struct {
 	Email                string `json:"email" validate:"required,email,max=256"`
 	Password             string `json:"password" validate:"required,password,min=6,max=32"`
 	PasswordConfirmation string `json:"passwordConfirmation" validate:"required,eqfield=Password"`
-	Role                 int32  `json:"role" validate:"gte=0,lte=2"`
+	Role                 int32  `json:"role" validate:"gte=1,lte=3"`
 	LastName             string `json:"lastName" validate:"required,max=16"`
 	FirstName            string `json:"firstName" validate:"required,max=16"`
 	LastNameKana         string `json:"lastNameKana" validate:"required,hiragana,max=32"`
@@ -15,7 +15,7 @@ type CreateAdmin struct {
 
 // UpdateAdminRole - 管理者権限変更のリクエスト
 type UpdateAdminRole struct {
-	Role int32 `json:"role" validate:"gte=0,lte=2"`
+	Role int32 `json:"role" validate:"gte=1,lte=3"`
 }
 
 // UpdateAdminPassword - 管理者パスワード変更のリクエスト
