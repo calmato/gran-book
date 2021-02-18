@@ -192,6 +192,158 @@ export namespace UpdateAuthAddressRequest {
     }
 }
 
+export class CreateAdminRequest extends jspb.Message { 
+    getUsername(): string;
+    setUsername(value: string): CreateAdminRequest;
+
+    getEmail(): string;
+    setEmail(value: string): CreateAdminRequest;
+
+    getPassword(): string;
+    setPassword(value: string): CreateAdminRequest;
+
+    getPasswordConfirmation(): string;
+    setPasswordConfirmation(value: string): CreateAdminRequest;
+
+    getRole(): number;
+    setRole(value: number): CreateAdminRequest;
+
+    getLastName(): string;
+    setLastName(value: string): CreateAdminRequest;
+
+    getFirstName(): string;
+    setFirstName(value: string): CreateAdminRequest;
+
+    getLastNameKana(): string;
+    setLastNameKana(value: string): CreateAdminRequest;
+
+    getFirstNameKana(): string;
+    setFirstNameKana(value: string): CreateAdminRequest;
+
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): CreateAdminRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: CreateAdminRequest): CreateAdminRequest.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: CreateAdminRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): CreateAdminRequest;
+    static deserializeBinaryFromReader(message: CreateAdminRequest, reader: jspb.BinaryReader): CreateAdminRequest;
+}
+
+export namespace CreateAdminRequest {
+    export type AsObject = {
+        username: string,
+        email: string,
+        password: string,
+        passwordConfirmation: string,
+        role: number,
+        lastName: string,
+        firstName: string,
+        lastNameKana: string,
+        firstNameKana: string,
+    }
+}
+
+export class UpdateAdminRoleRequest extends jspb.Message { 
+    getId(): string;
+    setId(value: string): UpdateAdminRoleRequest;
+
+    getRole(): number;
+    setRole(value: number): UpdateAdminRoleRequest;
+
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): UpdateAdminRoleRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: UpdateAdminRoleRequest): UpdateAdminRoleRequest.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: UpdateAdminRoleRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): UpdateAdminRoleRequest;
+    static deserializeBinaryFromReader(message: UpdateAdminRoleRequest, reader: jspb.BinaryReader): UpdateAdminRoleRequest;
+}
+
+export namespace UpdateAdminRoleRequest {
+    export type AsObject = {
+        id: string,
+        role: number,
+    }
+}
+
+export class UpdateAdminPasswordRequest extends jspb.Message { 
+    getId(): string;
+    setId(value: string): UpdateAdminPasswordRequest;
+
+    getPassword(): string;
+    setPassword(value: string): UpdateAdminPasswordRequest;
+
+    getPasswordConfirmation(): string;
+    setPasswordConfirmation(value: string): UpdateAdminPasswordRequest;
+
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): UpdateAdminPasswordRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: UpdateAdminPasswordRequest): UpdateAdminPasswordRequest.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: UpdateAdminPasswordRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): UpdateAdminPasswordRequest;
+    static deserializeBinaryFromReader(message: UpdateAdminPasswordRequest, reader: jspb.BinaryReader): UpdateAdminPasswordRequest;
+}
+
+export namespace UpdateAdminPasswordRequest {
+    export type AsObject = {
+        id: string,
+        password: string,
+        passwordConfirmation: string,
+    }
+}
+
+export class UpdateAdminProfileRequest extends jspb.Message { 
+    getId(): string;
+    setId(value: string): UpdateAdminProfileRequest;
+
+    getUsername(): string;
+    setUsername(value: string): UpdateAdminProfileRequest;
+
+    getEmail(): string;
+    setEmail(value: string): UpdateAdminProfileRequest;
+
+    getLastName(): string;
+    setLastName(value: string): UpdateAdminProfileRequest;
+
+    getFirstName(): string;
+    setFirstName(value: string): UpdateAdminProfileRequest;
+
+    getLastNameKana(): string;
+    setLastNameKana(value: string): UpdateAdminProfileRequest;
+
+    getFirstNameKana(): string;
+    setFirstNameKana(value: string): UpdateAdminProfileRequest;
+
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): UpdateAdminProfileRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: UpdateAdminProfileRequest): UpdateAdminProfileRequest.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: UpdateAdminProfileRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): UpdateAdminProfileRequest;
+    static deserializeBinaryFromReader(message: UpdateAdminProfileRequest, reader: jspb.BinaryReader): UpdateAdminProfileRequest;
+}
+
+export namespace UpdateAdminProfileRequest {
+    export type AsObject = {
+        id: string,
+        username: string,
+        email: string,
+        lastName: string,
+        firstName: string,
+        lastNameKana: string,
+        firstNameKana: string,
+    }
+}
+
 export class AuthResponse extends jspb.Message { 
     getId(): string;
     setId(value: string): AuthResponse;
@@ -283,6 +435,79 @@ export namespace AuthResponse {
         city: string,
         addressLine1: string,
         addressLine2: string,
+        activated: boolean,
+        createdAt: string,
+        updatedAt: string,
+    }
+}
+
+export class AdminResponse extends jspb.Message { 
+    getId(): string;
+    setId(value: string): AdminResponse;
+
+    getUsername(): string;
+    setUsername(value: string): AdminResponse;
+
+    getEmail(): string;
+    setEmail(value: string): AdminResponse;
+
+    getPhoneNumber(): string;
+    setPhoneNumber(value: string): AdminResponse;
+
+    getRole(): number;
+    setRole(value: number): AdminResponse;
+
+    getThumbnailUrl(): string;
+    setThumbnailUrl(value: string): AdminResponse;
+
+    getSelfIntroduction(): string;
+    setSelfIntroduction(value: string): AdminResponse;
+
+    getLastName(): string;
+    setLastName(value: string): AdminResponse;
+
+    getFirstName(): string;
+    setFirstName(value: string): AdminResponse;
+
+    getLastNameKana(): string;
+    setLastNameKana(value: string): AdminResponse;
+
+    getFirstNameKana(): string;
+    setFirstNameKana(value: string): AdminResponse;
+
+    getActivated(): boolean;
+    setActivated(value: boolean): AdminResponse;
+
+    getCreatedAt(): string;
+    setCreatedAt(value: string): AdminResponse;
+
+    getUpdatedAt(): string;
+    setUpdatedAt(value: string): AdminResponse;
+
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): AdminResponse.AsObject;
+    static toObject(includeInstance: boolean, msg: AdminResponse): AdminResponse.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: AdminResponse, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): AdminResponse;
+    static deserializeBinaryFromReader(message: AdminResponse, reader: jspb.BinaryReader): AdminResponse;
+}
+
+export namespace AdminResponse {
+    export type AsObject = {
+        id: string,
+        username: string,
+        email: string,
+        phoneNumber: string,
+        role: number,
+        thumbnailUrl: string,
+        selfIntroduction: string,
+        lastName: string,
+        firstName: string,
+        lastNameKana: string,
+        firstNameKana: string,
         activated: boolean,
         createdAt: string,
         updatedAt: string,

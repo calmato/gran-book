@@ -12,6 +12,13 @@ service AuthService {
   rpc UpdateAuthAddress (UpdateAuthAddressRequest) returns (AuthResponse);
 }
 
+service AdminService {
+  rpc CreateAdmin (CreateAdminRequest) returns (AdminResponse);
+  rpc UpdateAdminRole (UpdateAdminRoleRequest) returns (AdminResponse);
+  rpc UpdateAdminPassword (UpdateAdminPasswordRequest) returns (AdminResponse);
+  rpc UpdateAdminProfile (UpdateAdminProfileRequest) returns (AdminResponse);
+}
+
 message EmptyUser {}
 
 message CreateAuthRequest {
@@ -50,6 +57,39 @@ message UpdateAuthAddressRequest {
   string address_line2 = 10;
 }
 
+message CreateAdminRequest {
+  string username = 1;
+  string email = 2;
+  string password = 3;
+  string password_confirmation = 4;
+  int32 role = 5;
+  string last_name = 6;
+  string first_name = 7;
+  string last_name_kana = 8;
+  string first_name_kana = 9;
+}
+
+message UpdateAdminRoleRequest {
+  string id = 1;
+  int32 role = 2;
+}
+
+message UpdateAdminPasswordRequest {
+  string id = 1;
+  string password = 2;
+  string password_confirmation = 3;
+}
+
+message UpdateAdminProfileRequest {
+  string id = 1;
+  string username = 2;
+  string email = 3;
+  string last_name = 4;
+  string first_name = 5;
+  string last_name_kana = 6;
+  string first_name_kana = 7;
+}
+
 message AuthResponse {
   string id = 1;
   string username = 2;
@@ -71,4 +111,21 @@ message AuthResponse {
   bool activated = 18;
   string created_at = 19;
   string updated_at = 20;
+}
+
+message AdminResponse {
+  string id = 1;
+  string username = 2;
+  string email = 3;
+  string phone_number = 4;
+  int32 role = 5;
+  string thumbnail_url = 6;
+  string self_introduction = 7;
+  string last_name = 8;
+  string first_name = 9;
+  string last_name_kana = 10;
+  string first_name_kana = 11;
+  bool activated = 12;
+  string created_at = 13;
+  string updated_at = 14;
 }

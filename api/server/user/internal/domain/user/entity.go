@@ -27,3 +27,11 @@ type User struct {
 	CreatedAt        time.Time `gorm:"not null;<-:create"`
 	UpdatedAt        time.Time `gorm:"not null"`
 }
+
+// ユーザ権限
+const (
+	UserRole int32 = iota
+	AdminRole
+	DeveloperRole
+	OperatorRole
+)

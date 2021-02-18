@@ -13,20 +13,35 @@ import (
 
 // Registry - DIコンテナ
 type Registry struct {
-	AuthApplication application.AuthApplication
+	AdminApplication application.AdminApplication
+	AuthApplication  application.AuthApplication
 }
 
 // NewRegistry - internalディレクトリ配下のファイルを読み込み
-func NewRegistry(db *repository.Client, auth *authentication.Auth, s *gcs.Storage) *Registry {
-	aa := authInjection(db, auth, s)
+func NewRegistry(db *repository.Client, fa *authentication.Auth, s *gcs.Storage) *Registry {
+	admin := adminInjection(db, fa, s)
+	auth := authInjection(db, fa, s)
 
 	return &Registry{
-		AuthApplication: aa,
+		AdminApplication: admin,
+		AuthApplication:  auth,
 	}
 }
 
-func authInjection(db *repository.Client, auth *authentication.Auth, s *gcs.Storage) application.AuthApplication {
-	ur := repository.NewUserRepository(db, auth)
+func adminInjection(db *repository.Client, fa *authentication.Auth, s *gcs.Storage) application.AdminApplication {
+	ur := repository.NewUserRepository(db, fa)
+	udv := dv.NewUserDomainValidation(ur)
+	uu := storage.NewUserUploader(s)
+	us := service.NewUserService(udv, ur, uu)
+
+	arv := rv.NewAdminRequestValidation()
+	aa := application.NewAdminApplication(arv, us)
+
+	return aa
+}
+
+func authInjection(db *repository.Client, fa *authentication.Auth, s *gcs.Storage) application.AuthApplication {
+	ur := repository.NewUserRepository(db, fa)
 	udv := dv.NewUserDomainValidation(ur)
 	uu := storage.NewUserUploader(s)
 	us := service.NewUserService(udv, ur, uu)

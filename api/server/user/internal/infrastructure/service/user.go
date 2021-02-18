@@ -50,7 +50,6 @@ func (s *userService) Create(ctx context.Context, u *user.User) error {
 	current := time.Now()
 
 	u.ID = uuid.New().String()
-	u.Activated = true
 	u.CreatedAt = current
 	u.UpdatedAt = current
 
