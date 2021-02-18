@@ -246,6 +246,9 @@ export namespace CreateAdminRequest {
 }
 
 export class UpdateAdminRoleRequest extends jspb.Message { 
+    getId(): string;
+    setId(value: string): UpdateAdminRoleRequest;
+
     getRole(): number;
     setRole(value: number): UpdateAdminRoleRequest;
 
@@ -262,11 +265,15 @@ export class UpdateAdminRoleRequest extends jspb.Message {
 
 export namespace UpdateAdminRoleRequest {
     export type AsObject = {
+        id: string,
         role: number,
     }
 }
 
 export class UpdateAdminPasswordRequest extends jspb.Message { 
+    getId(): string;
+    setId(value: string): UpdateAdminPasswordRequest;
+
     getPassword(): string;
     setPassword(value: string): UpdateAdminPasswordRequest;
 
@@ -286,12 +293,16 @@ export class UpdateAdminPasswordRequest extends jspb.Message {
 
 export namespace UpdateAdminPasswordRequest {
     export type AsObject = {
+        id: string,
         password: string,
         passwordConfirmation: string,
     }
 }
 
 export class UpdateAdminProfileRequest extends jspb.Message { 
+    getId(): string;
+    setId(value: string): UpdateAdminProfileRequest;
+
     getUsername(): string;
     setUsername(value: string): UpdateAdminProfileRequest;
 
@@ -323,6 +334,7 @@ export class UpdateAdminProfileRequest extends jspb.Message {
 
 export namespace UpdateAdminProfileRequest {
     export type AsObject = {
+        id: string,
         username: string,
         email: string,
         lastName: string,

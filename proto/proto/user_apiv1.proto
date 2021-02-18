@@ -70,21 +70,24 @@ message CreateAdminRequest {
 }
 
 message UpdateAdminRoleRequest {
-  int32 role = 1;
+  string id = 1;
+  int32 role = 2;
 }
 
 message UpdateAdminPasswordRequest {
-  string password = 1;
-  string password_confirmation = 2;
+  string id = 1;
+  string password = 2;
+  string password_confirmation = 3;
 }
 
 message UpdateAdminProfileRequest {
-  string username = 1;
-  string email = 2;
-  string last_name = 3;
-  string first_name = 4;
-  string last_name_kana = 5;
-  string first_name_kana = 6;
+  string id = 1;
+  string username = 2;
+  string email = 3;
+  string last_name = 4;
+  string first_name = 5;
+  string last_name_kana = 6;
+  string first_name_kana = 7;
 }
 
 message AuthResponse {

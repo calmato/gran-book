@@ -1911,7 +1911,8 @@ proto.proto.UpdateAdminRoleRequest.prototype.toObject = function(opt_includeInst
  */
 proto.proto.UpdateAdminRoleRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    role: jspb.Message.getFieldWithDefault(msg, 1, 0)
+    id: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    role: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -1949,6 +1950,10 @@ proto.proto.UpdateAdminRoleRequest.deserializeBinaryFromReader = function(msg, r
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setId(value);
+      break;
+    case 2:
       var value = /** @type {number} */ (reader.readInt32());
       msg.setRole(value);
       break;
@@ -1981,10 +1986,17 @@ proto.proto.UpdateAdminRoleRequest.prototype.serializeBinary = function() {
  */
 proto.proto.UpdateAdminRoleRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
+  f = message.getId();
+  if (f.length > 0) {
+    writer.writeString(
+      1,
+      f
+    );
+  }
   f = message.getRole();
   if (f !== 0) {
     writer.writeInt32(
-      1,
+      2,
       f
     );
   }
@@ -1992,11 +2004,29 @@ proto.proto.UpdateAdminRoleRequest.serializeBinaryToWriter = function(message, w
 
 
 /**
- * optional int32 role = 1;
+ * optional string id = 1;
+ * @return {string}
+ */
+proto.proto.UpdateAdminRoleRequest.prototype.getId = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.proto.UpdateAdminRoleRequest} returns this
+ */
+proto.proto.UpdateAdminRoleRequest.prototype.setId = function(value) {
+  return jspb.Message.setProto3StringField(this, 1, value);
+};
+
+
+/**
+ * optional int32 role = 2;
  * @return {number}
  */
 proto.proto.UpdateAdminRoleRequest.prototype.getRole = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
 };
 
 
@@ -2005,7 +2035,7 @@ proto.proto.UpdateAdminRoleRequest.prototype.getRole = function() {
  * @return {!proto.proto.UpdateAdminRoleRequest} returns this
  */
 proto.proto.UpdateAdminRoleRequest.prototype.setRole = function(value) {
-  return jspb.Message.setProto3IntField(this, 1, value);
+  return jspb.Message.setProto3IntField(this, 2, value);
 };
 
 
@@ -2041,8 +2071,9 @@ proto.proto.UpdateAdminPasswordRequest.prototype.toObject = function(opt_include
  */
 proto.proto.UpdateAdminPasswordRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    password: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    passwordConfirmation: jspb.Message.getFieldWithDefault(msg, 2, "")
+    id: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    password: jspb.Message.getFieldWithDefault(msg, 2, ""),
+    passwordConfirmation: jspb.Message.getFieldWithDefault(msg, 3, "")
   };
 
   if (includeInstance) {
@@ -2081,9 +2112,13 @@ proto.proto.UpdateAdminPasswordRequest.deserializeBinaryFromReader = function(ms
     switch (field) {
     case 1:
       var value = /** @type {string} */ (reader.readString());
-      msg.setPassword(value);
+      msg.setId(value);
       break;
     case 2:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setPassword(value);
+      break;
+    case 3:
       var value = /** @type {string} */ (reader.readString());
       msg.setPasswordConfirmation(value);
       break;
@@ -2116,17 +2151,24 @@ proto.proto.UpdateAdminPasswordRequest.prototype.serializeBinary = function() {
  */
 proto.proto.UpdateAdminPasswordRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getPassword();
+  f = message.getId();
   if (f.length > 0) {
     writer.writeString(
       1,
       f
     );
   }
-  f = message.getPasswordConfirmation();
+  f = message.getPassword();
   if (f.length > 0) {
     writer.writeString(
       2,
+      f
+    );
+  }
+  f = message.getPasswordConfirmation();
+  if (f.length > 0) {
+    writer.writeString(
+      3,
       f
     );
   }
@@ -2134,10 +2176,10 @@ proto.proto.UpdateAdminPasswordRequest.serializeBinaryToWriter = function(messag
 
 
 /**
- * optional string password = 1;
+ * optional string id = 1;
  * @return {string}
  */
-proto.proto.UpdateAdminPasswordRequest.prototype.getPassword = function() {
+proto.proto.UpdateAdminPasswordRequest.prototype.getId = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
@@ -2146,16 +2188,16 @@ proto.proto.UpdateAdminPasswordRequest.prototype.getPassword = function() {
  * @param {string} value
  * @return {!proto.proto.UpdateAdminPasswordRequest} returns this
  */
-proto.proto.UpdateAdminPasswordRequest.prototype.setPassword = function(value) {
+proto.proto.UpdateAdminPasswordRequest.prototype.setId = function(value) {
   return jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
 /**
- * optional string password_confirmation = 2;
+ * optional string password = 2;
  * @return {string}
  */
-proto.proto.UpdateAdminPasswordRequest.prototype.getPasswordConfirmation = function() {
+proto.proto.UpdateAdminPasswordRequest.prototype.getPassword = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
 };
 
@@ -2164,8 +2206,26 @@ proto.proto.UpdateAdminPasswordRequest.prototype.getPasswordConfirmation = funct
  * @param {string} value
  * @return {!proto.proto.UpdateAdminPasswordRequest} returns this
  */
-proto.proto.UpdateAdminPasswordRequest.prototype.setPasswordConfirmation = function(value) {
+proto.proto.UpdateAdminPasswordRequest.prototype.setPassword = function(value) {
   return jspb.Message.setProto3StringField(this, 2, value);
+};
+
+
+/**
+ * optional string password_confirmation = 3;
+ * @return {string}
+ */
+proto.proto.UpdateAdminPasswordRequest.prototype.getPasswordConfirmation = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.proto.UpdateAdminPasswordRequest} returns this
+ */
+proto.proto.UpdateAdminPasswordRequest.prototype.setPasswordConfirmation = function(value) {
+  return jspb.Message.setProto3StringField(this, 3, value);
 };
 
 
@@ -2201,12 +2261,13 @@ proto.proto.UpdateAdminProfileRequest.prototype.toObject = function(opt_includeI
  */
 proto.proto.UpdateAdminProfileRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    username: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    email: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    lastName: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    firstName: jspb.Message.getFieldWithDefault(msg, 4, ""),
-    lastNameKana: jspb.Message.getFieldWithDefault(msg, 5, ""),
-    firstNameKana: jspb.Message.getFieldWithDefault(msg, 6, "")
+    id: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    username: jspb.Message.getFieldWithDefault(msg, 2, ""),
+    email: jspb.Message.getFieldWithDefault(msg, 3, ""),
+    lastName: jspb.Message.getFieldWithDefault(msg, 4, ""),
+    firstName: jspb.Message.getFieldWithDefault(msg, 5, ""),
+    lastNameKana: jspb.Message.getFieldWithDefault(msg, 6, ""),
+    firstNameKana: jspb.Message.getFieldWithDefault(msg, 7, "")
   };
 
   if (includeInstance) {
@@ -2245,25 +2306,29 @@ proto.proto.UpdateAdminProfileRequest.deserializeBinaryFromReader = function(msg
     switch (field) {
     case 1:
       var value = /** @type {string} */ (reader.readString());
-      msg.setUsername(value);
+      msg.setId(value);
       break;
     case 2:
       var value = /** @type {string} */ (reader.readString());
-      msg.setEmail(value);
+      msg.setUsername(value);
       break;
     case 3:
       var value = /** @type {string} */ (reader.readString());
-      msg.setLastName(value);
+      msg.setEmail(value);
       break;
     case 4:
       var value = /** @type {string} */ (reader.readString());
-      msg.setFirstName(value);
+      msg.setLastName(value);
       break;
     case 5:
       var value = /** @type {string} */ (reader.readString());
-      msg.setLastNameKana(value);
+      msg.setFirstName(value);
       break;
     case 6:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setLastNameKana(value);
+      break;
+    case 7:
       var value = /** @type {string} */ (reader.readString());
       msg.setFirstNameKana(value);
       break;
@@ -2296,45 +2361,52 @@ proto.proto.UpdateAdminProfileRequest.prototype.serializeBinary = function() {
  */
 proto.proto.UpdateAdminProfileRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getUsername();
+  f = message.getId();
   if (f.length > 0) {
     writer.writeString(
       1,
       f
     );
   }
-  f = message.getEmail();
+  f = message.getUsername();
   if (f.length > 0) {
     writer.writeString(
       2,
       f
     );
   }
-  f = message.getLastName();
+  f = message.getEmail();
   if (f.length > 0) {
     writer.writeString(
       3,
       f
     );
   }
-  f = message.getFirstName();
+  f = message.getLastName();
   if (f.length > 0) {
     writer.writeString(
       4,
       f
     );
   }
-  f = message.getLastNameKana();
+  f = message.getFirstName();
   if (f.length > 0) {
     writer.writeString(
       5,
       f
     );
   }
-  f = message.getFirstNameKana();
+  f = message.getLastNameKana();
   if (f.length > 0) {
     writer.writeString(
       6,
+      f
+    );
+  }
+  f = message.getFirstNameKana();
+  if (f.length > 0) {
+    writer.writeString(
+      7,
       f
     );
   }
@@ -2342,10 +2414,10 @@ proto.proto.UpdateAdminProfileRequest.serializeBinaryToWriter = function(message
 
 
 /**
- * optional string username = 1;
+ * optional string id = 1;
  * @return {string}
  */
-proto.proto.UpdateAdminProfileRequest.prototype.getUsername = function() {
+proto.proto.UpdateAdminProfileRequest.prototype.getId = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
@@ -2354,16 +2426,16 @@ proto.proto.UpdateAdminProfileRequest.prototype.getUsername = function() {
  * @param {string} value
  * @return {!proto.proto.UpdateAdminProfileRequest} returns this
  */
-proto.proto.UpdateAdminProfileRequest.prototype.setUsername = function(value) {
+proto.proto.UpdateAdminProfileRequest.prototype.setId = function(value) {
   return jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
 /**
- * optional string email = 2;
+ * optional string username = 2;
  * @return {string}
  */
-proto.proto.UpdateAdminProfileRequest.prototype.getEmail = function() {
+proto.proto.UpdateAdminProfileRequest.prototype.getUsername = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
 };
 
@@ -2372,16 +2444,16 @@ proto.proto.UpdateAdminProfileRequest.prototype.getEmail = function() {
  * @param {string} value
  * @return {!proto.proto.UpdateAdminProfileRequest} returns this
  */
-proto.proto.UpdateAdminProfileRequest.prototype.setEmail = function(value) {
+proto.proto.UpdateAdminProfileRequest.prototype.setUsername = function(value) {
   return jspb.Message.setProto3StringField(this, 2, value);
 };
 
 
 /**
- * optional string last_name = 3;
+ * optional string email = 3;
  * @return {string}
  */
-proto.proto.UpdateAdminProfileRequest.prototype.getLastName = function() {
+proto.proto.UpdateAdminProfileRequest.prototype.getEmail = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
 };
 
@@ -2390,16 +2462,16 @@ proto.proto.UpdateAdminProfileRequest.prototype.getLastName = function() {
  * @param {string} value
  * @return {!proto.proto.UpdateAdminProfileRequest} returns this
  */
-proto.proto.UpdateAdminProfileRequest.prototype.setLastName = function(value) {
+proto.proto.UpdateAdminProfileRequest.prototype.setEmail = function(value) {
   return jspb.Message.setProto3StringField(this, 3, value);
 };
 
 
 /**
- * optional string first_name = 4;
+ * optional string last_name = 4;
  * @return {string}
  */
-proto.proto.UpdateAdminProfileRequest.prototype.getFirstName = function() {
+proto.proto.UpdateAdminProfileRequest.prototype.getLastName = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, ""));
 };
 
@@ -2408,16 +2480,16 @@ proto.proto.UpdateAdminProfileRequest.prototype.getFirstName = function() {
  * @param {string} value
  * @return {!proto.proto.UpdateAdminProfileRequest} returns this
  */
-proto.proto.UpdateAdminProfileRequest.prototype.setFirstName = function(value) {
+proto.proto.UpdateAdminProfileRequest.prototype.setLastName = function(value) {
   return jspb.Message.setProto3StringField(this, 4, value);
 };
 
 
 /**
- * optional string last_name_kana = 5;
+ * optional string first_name = 5;
  * @return {string}
  */
-proto.proto.UpdateAdminProfileRequest.prototype.getLastNameKana = function() {
+proto.proto.UpdateAdminProfileRequest.prototype.getFirstName = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 5, ""));
 };
 
@@ -2426,16 +2498,16 @@ proto.proto.UpdateAdminProfileRequest.prototype.getLastNameKana = function() {
  * @param {string} value
  * @return {!proto.proto.UpdateAdminProfileRequest} returns this
  */
-proto.proto.UpdateAdminProfileRequest.prototype.setLastNameKana = function(value) {
+proto.proto.UpdateAdminProfileRequest.prototype.setFirstName = function(value) {
   return jspb.Message.setProto3StringField(this, 5, value);
 };
 
 
 /**
- * optional string first_name_kana = 6;
+ * optional string last_name_kana = 6;
  * @return {string}
  */
-proto.proto.UpdateAdminProfileRequest.prototype.getFirstNameKana = function() {
+proto.proto.UpdateAdminProfileRequest.prototype.getLastNameKana = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 6, ""));
 };
 
@@ -2444,8 +2516,26 @@ proto.proto.UpdateAdminProfileRequest.prototype.getFirstNameKana = function() {
  * @param {string} value
  * @return {!proto.proto.UpdateAdminProfileRequest} returns this
  */
-proto.proto.UpdateAdminProfileRequest.prototype.setFirstNameKana = function(value) {
+proto.proto.UpdateAdminProfileRequest.prototype.setLastNameKana = function(value) {
   return jspb.Message.setProto3StringField(this, 6, value);
+};
+
+
+/**
+ * optional string first_name_kana = 7;
+ * @return {string}
+ */
+proto.proto.UpdateAdminProfileRequest.prototype.getFirstNameKana = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 7, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.proto.UpdateAdminProfileRequest} returns this
+ */
+proto.proto.UpdateAdminProfileRequest.prototype.setFirstNameKana = function(value) {
+  return jspb.Message.setProto3StringField(this, 7, value);
 };
 
 

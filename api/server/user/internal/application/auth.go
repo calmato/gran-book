@@ -27,9 +27,9 @@ type authApplication struct {
 }
 
 // NewAuthApplication - AuthApplicationの生成
-func NewAuthApplication(urv validation.AuthRequestValidation, us user.Service) AuthApplication {
+func NewAuthApplication(arv validation.AuthRequestValidation, us user.Service) AuthApplication {
 	return &authApplication{
-		authRequestValidation: urv,
+		authRequestValidation: arv,
 		userService:           us,
 	}
 }

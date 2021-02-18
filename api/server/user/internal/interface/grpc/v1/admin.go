@@ -24,9 +24,9 @@ func (s *AdminServer) CreateAdmin(ctx context.Context, req *pb.CreateAdminReques
 		return nil, errorHandling(err)
 	}
 
-	if cu == nil || cu.Role != user.AdminRole {
-		err := xerrors.New("This account doesn't have administrator privileges")
-		return nil, errorHandling(exception.Forbidden.New(err))
+	err = hasAdminRole(cu, "")
+	if err != nil {
+		return nil, errorHandling(err)
 	}
 
 	res := getAdminResponse(nil)
@@ -40,9 +40,9 @@ func (s *AdminServer) UpdateAdminRole(ctx context.Context, req *pb.UpdateAdminRo
 		return nil, errorHandling(err)
 	}
 
-	if cu == nil || cu.Role != user.AdminRole {
-		err := xerrors.New("This account doesn't have administrator privileges")
-		return nil, errorHandling(exception.Forbidden.New(err))
+	err = hasAdminRole(cu, req.Id)
+	if err != nil {
+		return nil, errorHandling(err)
 	}
 
 	res := getAdminResponse(nil)
@@ -58,9 +58,9 @@ func (s *AdminServer) UpdateAdminPassword(
 		return nil, errorHandling(err)
 	}
 
-	if cu == nil || cu.Role != user.AdminRole {
-		err := xerrors.New("This account doesn't have administrator privileges")
-		return nil, errorHandling(exception.Forbidden.New(err))
+	err = hasAdminRole(cu, req.Id)
+	if err != nil {
+		return nil, errorHandling(err)
 	}
 
 	res := getAdminResponse(nil)
@@ -76,13 +76,27 @@ func (s *AdminServer) UpdateAdminProfile(
 		return nil, errorHandling(err)
 	}
 
-	if cu == nil || cu.Role != user.AdminRole {
-		err := xerrors.New("This account doesn't have administrator privileges")
-		return nil, errorHandling(exception.Forbidden.New(err))
+	err = hasAdminRole(cu, req.Id)
+	if err != nil {
+		return nil, errorHandling(err)
 	}
 
 	res := getAdminResponse(nil)
 	return res, nil
+}
+
+func hasAdminRole(u *user.User, uid string) error {
+	if u == nil || u.ID == uid {
+		err := xerrors.New("This ID belongs to the current user")
+		return exception.Forbidden.New(err)
+	}
+
+	if u.Role != user.AdminRole {
+		err := xerrors.New("This account doesn't have administrator privileges")
+		return exception.Forbidden.New(err)
+	}
+
+	return nil
 }
 
 func getAdminResponse(u *user.User) *pb.AdminResponse {
