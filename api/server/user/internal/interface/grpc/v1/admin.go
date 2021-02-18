@@ -44,6 +44,9 @@ func (s *AdminServer) CreateAdmin(ctx context.Context, req *pb.CreateAdminReques
 	}
 
 	u, err := s.AdminApplication.Create(ctx, in)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
 
 	res := getAdminResponse(u)
 	return res, nil
@@ -61,7 +64,16 @@ func (s *AdminServer) UpdateAdminRole(ctx context.Context, req *pb.UpdateAdminRo
 		return nil, errorHandling(err)
 	}
 
-	res := getAdminResponse(nil)
+	in := &input.UpdateAdminRole{
+		Role: req.Role,
+	}
+
+	u, err := s.AdminApplication.UpdateRole(ctx, in, req.Id)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	res := getAdminResponse(u)
 	return res, nil
 }
 
@@ -79,7 +91,17 @@ func (s *AdminServer) UpdateAdminPassword(
 		return nil, errorHandling(err)
 	}
 
-	res := getAdminResponse(nil)
+	in := &input.UpdateAdminPassword{
+		Password:             req.Password,
+		PasswordConfirmation: req.PasswordConfirmation,
+	}
+
+	u, err := s.AdminApplication.UpdatePassword(ctx, in, req.Id)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	res := getAdminResponse(u)
 	return res, nil
 }
 
@@ -97,7 +119,21 @@ func (s *AdminServer) UpdateAdminProfile(
 		return nil, errorHandling(err)
 	}
 
-	res := getAdminResponse(nil)
+	in := &input.UpdateAdminProfile{
+		Username:      req.Username,
+		Email:         req.Email,
+		LastName:      req.LastName,
+		FirstName:     req.FirstName,
+		LastNameKana:  req.LastNameKana,
+		FirstNameKana: req.FirstNameKana,
+	}
+
+	u, err := s.AdminApplication.UpdateProfile(ctx, in, req.Id)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	res := getAdminResponse(u)
 	return res, nil
 }
 

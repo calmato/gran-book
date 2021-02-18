@@ -79,7 +79,9 @@ func (a *adminApplication) UpdateRole(ctx context.Context, in *input.UpdateAdmin
 	return u, nil
 }
 
-func (a *adminApplication) UpdatePassword(ctx context.Context, in *input.UpdateAdminPassword, uid string) (*user.User, error) {
+func (a *adminApplication) UpdatePassword(
+	ctx context.Context, in *input.UpdateAdminPassword, uid string,
+) (*user.User, error) {
 	err := a.adminRequestValidation.UpdateAdminPassword(in)
 	if err != nil {
 		return nil, err
@@ -98,7 +100,9 @@ func (a *adminApplication) UpdatePassword(ctx context.Context, in *input.UpdateA
 	return u, nil
 }
 
-func (a *adminApplication) UpdateProfile(ctx context.Context, in *input.UpdateAdminProfile, uid string) (*user.User, error) {
+func (a *adminApplication) UpdateProfile(
+	ctx context.Context, in *input.UpdateAdminProfile, uid string,
+) (*user.User, error) {
 	err := a.adminRequestValidation.UpdateAdminProfile(in)
 	if err != nil {
 		return nil, err
