@@ -475,6 +475,9 @@ export class AdminResponse extends jspb.Message {
     getFirstNameKana(): string;
     setFirstNameKana(value: string): AdminResponse;
 
+    getActivated(): boolean;
+    setActivated(value: boolean): AdminResponse;
+
     getCreatedAt(): string;
     setCreatedAt(value: string): AdminResponse;
 
@@ -505,6 +508,7 @@ export namespace AdminResponse {
         firstName: string,
         lastNameKana: string,
         firstNameKana: string,
+        activated: boolean,
         createdAt: string,
         updatedAt: string,
     }

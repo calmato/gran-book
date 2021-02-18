@@ -4,8 +4,10 @@ import (
 	"context"
 
 	"github.com/calmato/gran-book/api/server/user/internal/application"
+	"github.com/calmato/gran-book/api/server/user/internal/application/input"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/user"
+	"github.com/calmato/gran-book/api/server/user/lib/datetime"
 	pb "github.com/calmato/gran-book/api/server/user/proto"
 	"golang.org/x/xerrors"
 )
@@ -13,8 +15,8 @@ import (
 // AdminServer - Authインターフェースの構造体
 type AdminServer struct {
 	pb.UnimplementedAdminServiceServer
-	AuthApplication application.AuthApplication
-	// AdminApplication application.AdminApplication
+	AuthApplication  application.AuthApplication
+	AdminApplication application.AdminApplication
 }
 
 // CreateAdmin - 管理者登録
@@ -29,7 +31,21 @@ func (s *AdminServer) CreateAdmin(ctx context.Context, req *pb.CreateAdminReques
 		return nil, errorHandling(err)
 	}
 
-	res := getAdminResponse(nil)
+	in := &input.CreateAdmin{
+		Username:             req.Username,
+		Email:                req.Email,
+		Password:             req.Password,
+		PasswordConfirmation: req.PasswordConfirmation,
+		Role:                 req.Role,
+		LastName:             req.LastName,
+		FirstName:            req.FirstName,
+		LastNameKana:         req.LastNameKana,
+		FirstNameKana:        req.FirstNameKana,
+	}
+
+	u, err := s.AdminApplication.Create(ctx, in)
+
+	res := getAdminResponse(u)
 	return res, nil
 }
 
@@ -100,5 +116,20 @@ func hasAdminRole(u *user.User, uid string) error {
 }
 
 func getAdminResponse(u *user.User) *pb.AdminResponse {
-	return &pb.AdminResponse{}
+	return &pb.AdminResponse{
+		Id:               u.ID,
+		Username:         u.Username,
+		Email:            u.Email,
+		PhoneNumber:      u.PhoneNumber,
+		Role:             u.Role,
+		ThumbnailUrl:     u.ThumbnailURL,
+		SelfIntroduction: u.SelfIntroduction,
+		LastName:         u.LastName,
+		FirstName:        u.FirstName,
+		LastNameKana:     u.LastNameKana,
+		FirstNameKana:    u.FirstNameKana,
+		Activated:        u.Activated,
+		CreatedAt:        datetime.TimeToString(u.CreatedAt),
+		UpdatedAt:        datetime.TimeToString(u.UpdatedAt),
+	}
 }

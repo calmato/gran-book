@@ -3282,8 +3282,9 @@ proto.proto.AdminResponse.toObject = function(includeInstance, msg) {
     firstName: jspb.Message.getFieldWithDefault(msg, 9, ""),
     lastNameKana: jspb.Message.getFieldWithDefault(msg, 10, ""),
     firstNameKana: jspb.Message.getFieldWithDefault(msg, 11, ""),
-    createdAt: jspb.Message.getFieldWithDefault(msg, 12, ""),
-    updatedAt: jspb.Message.getFieldWithDefault(msg, 13, "")
+    activated: jspb.Message.getBooleanFieldWithDefault(msg, 12, false),
+    createdAt: jspb.Message.getFieldWithDefault(msg, 13, ""),
+    updatedAt: jspb.Message.getFieldWithDefault(msg, 14, "")
   };
 
   if (includeInstance) {
@@ -3365,10 +3366,14 @@ proto.proto.AdminResponse.deserializeBinaryFromReader = function(msg, reader) {
       msg.setFirstNameKana(value);
       break;
     case 12:
+      var value = /** @type {boolean} */ (reader.readBool());
+      msg.setActivated(value);
+      break;
+    case 13:
       var value = /** @type {string} */ (reader.readString());
       msg.setCreatedAt(value);
       break;
-    case 13:
+    case 14:
       var value = /** @type {string} */ (reader.readString());
       msg.setUpdatedAt(value);
       break;
@@ -3478,17 +3483,24 @@ proto.proto.AdminResponse.serializeBinaryToWriter = function(message, writer) {
       f
     );
   }
+  f = message.getActivated();
+  if (f) {
+    writer.writeBool(
+      12,
+      f
+    );
+  }
   f = message.getCreatedAt();
   if (f.length > 0) {
     writer.writeString(
-      12,
+      13,
       f
     );
   }
   f = message.getUpdatedAt();
   if (f.length > 0) {
     writer.writeString(
-      13,
+      14,
       f
     );
   }
@@ -3694,28 +3706,28 @@ proto.proto.AdminResponse.prototype.setFirstNameKana = function(value) {
 
 
 /**
- * optional string created_at = 12;
+ * optional bool activated = 12;
+ * @return {boolean}
+ */
+proto.proto.AdminResponse.prototype.getActivated = function() {
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 12, false));
+};
+
+
+/**
+ * @param {boolean} value
+ * @return {!proto.proto.AdminResponse} returns this
+ */
+proto.proto.AdminResponse.prototype.setActivated = function(value) {
+  return jspb.Message.setProto3BooleanField(this, 12, value);
+};
+
+
+/**
+ * optional string created_at = 13;
  * @return {string}
  */
 proto.proto.AdminResponse.prototype.getCreatedAt = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 12, ""));
-};
-
-
-/**
- * @param {string} value
- * @return {!proto.proto.AdminResponse} returns this
- */
-proto.proto.AdminResponse.prototype.setCreatedAt = function(value) {
-  return jspb.Message.setProto3StringField(this, 12, value);
-};
-
-
-/**
- * optional string updated_at = 13;
- * @return {string}
- */
-proto.proto.AdminResponse.prototype.getUpdatedAt = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 13, ""));
 };
 
@@ -3724,8 +3736,26 @@ proto.proto.AdminResponse.prototype.getUpdatedAt = function() {
  * @param {string} value
  * @return {!proto.proto.AdminResponse} returns this
  */
-proto.proto.AdminResponse.prototype.setUpdatedAt = function(value) {
+proto.proto.AdminResponse.prototype.setCreatedAt = function(value) {
   return jspb.Message.setProto3StringField(this, 13, value);
+};
+
+
+/**
+ * optional string updated_at = 14;
+ * @return {string}
+ */
+proto.proto.AdminResponse.prototype.getUpdatedAt = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 14, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.proto.AdminResponse} returns this
+ */
+proto.proto.AdminResponse.prototype.setUpdatedAt = function(value) {
+  return jspb.Message.setProto3StringField(this, 14, value);
 };
 
 

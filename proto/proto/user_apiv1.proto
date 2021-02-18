@@ -125,6 +125,7 @@ message AdminResponse {
   string first_name = 9;
   string last_name_kana = 10;
   string first_name_kana = 11;
-  string created_at = 12;
-  string updated_at = 13;
+  bool activated = 12;
+  string created_at = 13;
+  string updated_at = 14;
 }
