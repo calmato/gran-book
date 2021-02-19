@@ -5,11 +5,12 @@ import { COLOR } from '~~/constants/theme';
 interface Props{
   placeholder: string,
   value: string | undefined,
+  length: number | undefined,
   onChangeText: (value: string) => void | undefined,
 }
 
 const styles = StyleSheet.create({
-  halfInput: {
+  halfTextInput: {
     width: '50%',
     padding: 15,
     marginRight: 5,
@@ -17,18 +18,18 @@ const styles = StyleSheet.create({
   },
 });
 
-const HalfInput = function HalfInput(props: Props): ReactElement {
+const HalfTextInput = function HalfInput(props: Props): ReactElement {
 
   return (
-    <View style={styles.halfInput}>
+    <View style={styles.halfTextInput}>
       <TextInput
         onChangeText={(text) => props.onChangeText(text)}
         value={props.value}
         placeholder={props.placeholder}
-        maxLength={16}
+        maxLength={props.length}
       />
     </View>
   );
 };
 
-export default HalfInput;
+export default HalfTextInput;

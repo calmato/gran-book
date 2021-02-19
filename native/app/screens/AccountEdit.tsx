@@ -5,7 +5,8 @@ import { StyleSheet, View, Text, ScrollView, SafeAreaView, TextInput } from 'rea
 import { COLOR } from '~~/constants/theme';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import { AccountEditForm } from '~/types/forms';
-import HalfInput from '~/components/molecules/HalfInput';
+import HalfTextInput from '~/components/molecules/HalfTextInput';
+import NumberTextInput from '~/components/molecules/NumberTextInput';
 
 const maxNameLength = 16;
 const styles = StyleSheet.create({
@@ -63,32 +64,48 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
             名前
           </Text>
           <View style={styles.halfInputRow}>
-            <HalfInput
+            <HalfTextInput
               onChangeText={(text) => setValue({...formData, firstName: text})}
               value={formData.firstName}
-              placeholder="田中"
+              placeholder='田中'
+              length={16}
             />
-            <HalfInput
+            <HalfTextInput
               onChangeText={(text) => setValue({...formData, lastName: text})}
               value={formData.lastName}
-              placeholder="太郎"
+              placeholder='太郎'
+              length={16}
             />
           </View>
           <Text style={styles.subtilte}>
             名前(かな)
           </Text>
           <View style={styles.halfInputRow}>
-            <HalfInput
+            <HalfTextInput
               onChangeText={(text) => setValue({...formData, firstNameKana: text})}
               value={formData.firstNameKana}
-              placeholder="たなか"
+              placeholder='たなか'
+              length={16}
             />
-            <HalfInput
+            <HalfTextInput
               onChangeText={(text) => setValue({...formData, lastNameKana: text})}
               value={formData.lastNameKana}
-              placeholder="たろう"
+              placeholder='たろう'
+              length={16}
             />
           </View>
+          <Text style={styles.subtilte}>
+            電話番号
+          </Text>
+          <NumberTextInput
+            onChangeText={(text) => setValue({...formData, phoneNumber: text})}
+            value={formData.phoneNumber}
+            placeholder=''
+            length={16}
+          />
+          <Text style={styles.subtilte}>
+            住所
+          </Text>
         </ScrollView>
       </SafeAreaView>
     </View>
