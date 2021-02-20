@@ -10,11 +10,11 @@ export interface ICreateAdminRequest {
   firstNameKana: string
 }
 
-export interface IUpdateAdminRoleInput {
+export interface IUpdateAdminRoleRequest {
   role: number
 }
 
-export interface IUpdateAdminPasswordInput {
+export interface IUpdateAdminPasswordRequest {
   password: string
   passwordConfirmation: string
 }
