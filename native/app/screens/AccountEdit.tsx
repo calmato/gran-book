@@ -7,6 +7,7 @@ import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import { AccountEditForm } from '~/types/forms';
 import HalfTextInput from '~/components/molecules/HalfTextInput';
 import NumberTextInput from '~/components/molecules/NumberTextInput';
+import FullTextInput from '~/components/molecules/FullTextInput';
 
 const maxNameLength = 16;
 const styles = StyleSheet.create({
@@ -31,7 +32,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   searchButton: {
-    flex: 1,
+    flex: 1.5,
     backgroundColor: COLOR.PRIMARY,
   }
 });
@@ -144,6 +145,12 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
               <Button onPress={handlePostaSubmit} title='検索する' color={COLOR.TEXT_TITLE}/>
             </View>
           </View>
+          <FullTextInput
+              onChangeText={(text) => setValue({...formData, city: text})}
+              value={formData.city}
+              placeholder='市区町村'
+              length={16}
+            />
         </ScrollView>
       </SafeAreaView>
     </View>
