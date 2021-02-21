@@ -5,7 +5,7 @@ import { Request, Response, NextFunction } from 'express'
 import logger from '~/plugins/logger'
 import { HttpError } from '~/types/exception'
 
-const filterWords: string[] = ['password', 'passwordConfirmation']
+const filterWords: string[] = ['password', 'passwordConfirmation', 'authorization']
 
 function logFilter(body: any): any {
   const obj: typeof body[keyof string] = {}
@@ -23,8 +23,8 @@ export function accessLogHandler(req: Request, _: Response, next: NextFunction):
     path: req.path,
     method: req.method,
     remoteIp: req.ip,
-    requestHeader: req.headers,
-    requestQuery: req.query,
+    requestHeader: logFilter(req.headers),
+    requestQuery: logFilter(req.query),
     requestBody: logFilter(req.body),
   }
 

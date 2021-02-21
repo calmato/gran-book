@@ -70,7 +70,9 @@ export function getHttpError(err: Error): HttpError {
       default:
         return serverError(details)
     }
+  } else if (err instanceof HttpError) {
+    return err
   } else {
-    return serverError([err])
+    return serverError([])
   }
 }
