@@ -47,7 +47,7 @@ const MyPage = function MyPage(props: Props): ReactElement {
   return (
     <View style={styles.scrollArea}>
       <HeaderWithBackButton
-        title="マイページ"
+        title='マイページ'
         onPress={() => navigation.goBack()}
       />
       <SafeAreaView>

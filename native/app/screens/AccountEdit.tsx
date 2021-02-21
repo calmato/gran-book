@@ -1,7 +1,7 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '~/types/navigation';
 import React, { ReactElement, useState, useMemo } from 'react';
-import { StyleSheet, View, Text, ScrollView, SafeAreaView, TextInput } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, SafeAreaView, TextInput, Button } from 'react-native';
 import { COLOR } from '~~/constants/theme';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import { AccountEditForm } from '~/types/forms';
@@ -19,20 +19,34 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   scrollArea: {
-    paddingBottom: 200,
+    // paddingBottom: 200,
   },
   halfInputRow: {
     flexDirection: 'row',
   },
+  postalArea: {
+    padding: 15,
+    backgroundColor: COLOR.BACKGROUND_WHITE,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  searchButton: {
+    flex: 1,
+    backgroundColor: COLOR.PRIMARY,
+  }
 });
 
 type AccountEditProp = StackNavigationProp<RootStackParamList, 'AccountEdit'>;
 
 interface Props {
-  navigation: AccountEditProp
+  navigation: AccountEditProp,
+  actions: {
+    searchAdress: (postalCode: string) => Promise<void>,
+  },
 }
 
 const AccountEdit = function AccountEdit(props: Props): ReactElement {
+  const searchAdress = props.actions;
   const navigation = props.navigation;
   const [formData, setValue] = useState<AccountEditForm>({
     firstName: '',
@@ -50,6 +64,16 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
   const nameError: boolean = useMemo((): boolean => {
     return formData.firstName.length < maxNameLength;
   }, [formData.firstName]);
+
+  const handlePostaSubmit = React.useCallback(async () => {
+    await searchAdress(
+      formData.postalCode
+    );
+    // .then(() => {
+    // })
+    // .catch(() => {
+    // });
+  }, [formData.postalCode]);
 
   //TODO: かな入力・数字入力のvalidationを追加する
   return (
@@ -106,6 +130,20 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
           <Text style={styles.subtilte}>
             住所
           </Text>
+          <View style={styles.postalArea}>
+            <Text>〒 </Text>
+            <TextInput
+              onChangeText={(text) => setValue({...formData, postalCode: text})}
+              value={formData.postalCode}
+              maxLength={7}
+              keyboardType="number-pad"
+              style={{flex:3, alignSelf: 'stretch'}}
+            >
+            </TextInput>
+            <View style={styles.searchButton}>
+              <Button onPress={handlePostaSubmit} title='検索する' color={COLOR.TEXT_TITLE}/>
+            </View>
+          </View>
         </ScrollView>
       </SafeAreaView>
     </View>
