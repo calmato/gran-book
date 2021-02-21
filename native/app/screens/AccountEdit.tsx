@@ -158,6 +158,12 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
           placeholder='地名・番地'
           length={32}
         />
+        <FullTextInput
+          onChangeText={(text) => setValue({...formData, addressLine1: text})}
+          value={formData.addressLine1}
+          placeholder='マンション・ビル名 部屋番号'
+          length={32}
+        />
       </SafeAreaView>
     </View>
   );
