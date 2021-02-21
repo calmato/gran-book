@@ -3,7 +3,7 @@ import bodyParser from 'body-parser'
 import cors from 'cors'
 import { corsOptions } from '~/config/cors'
 import { authentication } from '~/lib/authenticated'
-import { errorHandler } from '~/lib/error-handler'
+import { notFoundErrorHandler, otherErrorHandler } from '~/lib/error-handler'
 import { accessLogHandler } from '~/lib/log-handler'
 import { common, v1Auth } from '~/routes'
 
@@ -21,7 +21,8 @@ app.use(authentication)
 app.use('/', common)
 app.use('/v1/auth', v1Auth)
 
-app.use(errorHandler)
+app.use(notFoundErrorHandler)
+app.use(otherErrorHandler)
 
 app.listen(port, (): void => {
   console.log(`listening at http://${host}:${port}`)
