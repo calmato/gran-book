@@ -146,12 +146,18 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
             </View>
           </View>
           <FullTextInput
-              onChangeText={(text) => setValue({...formData, city: text})}
-              value={formData.city}
-              placeholder='市区町村'
-              length={16}
-            />
+            onChangeText={(text) => setValue({...formData, city: text})}
+            value={formData.city}
+            placeholder='市区町村'
+            length={32}
+          />
         </ScrollView>
+        <FullTextInput
+          onChangeText={(text) => setValue({...formData, addressLine1: text})}
+          value={formData.addressLine1}
+          placeholder='地名・番地'
+          length={32}
+        />
       </SafeAreaView>
     </View>
   );
