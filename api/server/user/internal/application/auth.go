@@ -27,9 +27,9 @@ type authApplication struct {
 }
 
 // NewAuthApplication - AuthApplicationの生成
-func NewAuthApplication(urv validation.AuthRequestValidation, us user.Service) AuthApplication {
+func NewAuthApplication(arv validation.AuthRequestValidation, us user.Service) AuthApplication {
 	return &authApplication{
-		authRequestValidation: urv,
+		authRequestValidation: arv,
 		userService:           us,
 	}
 }
@@ -55,11 +55,12 @@ func (a *authApplication) Create(ctx context.Context, in *input.CreateAuth) (*us
 	}
 
 	u := &user.User{
-		Username: in.Username,
-		Email:    strings.ToLower(in.Email),
-		Password: in.Password,
-		Gender:   0,
-		Role:     0,
+		Username:  in.Username,
+		Email:     strings.ToLower(in.Email),
+		Password:  in.Password,
+		Gender:    0,
+		Role:      user.UserRole,
+		Activated: true,
 	}
 
 	err = a.userService.Create(ctx, u)

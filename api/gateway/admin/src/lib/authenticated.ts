@@ -1,24 +1,46 @@
 import { Request, Response, NextFunction } from 'express'
 import { auth } from '~/plugins/firebase'
 import { unauthorized, forbidden } from '~/lib/http-exception'
-import { getAuth } from '~/api/user'
+import { getAuth } from '~/api/auth'
 import { IAuthOutput } from '~/types/output'
 
 interface IRoute {
-  path: string
+  pathRegex: RegExp
   method: string
 }
 
-const excludeRoutes: IRoute[] = [{ path: '/health', method: 'GET' }]
-const developerForbiddenRoutes: IRoute[] = [{ path: '/v1/auth', method: 'POST' }]
-const operatorForbiddenRoutes: IRoute[] = [{ path: '/v1/auth', method: 'POST' }]
+const excludeRoutes: IRoute[] = [
+  { pathRegex: /^\/health$/g, method: 'GET' }, // GET - /v/health
+]
+const developerForbiddenRoutes: IRoute[] = [
+  { pathRegex: /^\/v1\/admin$/g, method: 'POST' }, // POST - /v1/admin
+  { pathRegex: /^\/v1\/admin\/[^/].*\/role$/g, method: 'PATCH' }, // PATCH - /v1/admin/{userId}/role
+  { pathRegex: /^\/v1\/admin\/[^/].*\/password$/g, method: 'PATCH' }, // PATCH - /v1/admin/{userId}/password
+  { pathRegex: /^\/v1\/admin\/[^/].*\/profile$/g, method: 'PATCH' }, // PATCH - /v1/admin/{userId}/profile
+]
+const operatorForbiddenRoutes: IRoute[] = [
+  { pathRegex: /^\/v1\/admin$/g, method: 'POST' }, // POST - /v1/admin
+  { pathRegex: /^\/v1\/admin\/[^/].*\/role$/g, method: 'PATCH' }, // PATCH - /v1/admin/{userId}/role
+  { pathRegex: /^\/v1\/admin\/[^/].*\/password$/g, method: 'PATCH' }, // PATCH - /v1/admin/{userId}/password
+  { pathRegex: /^\/v1\/admin\/[^/].*\/profile$/g, method: 'PATCH' }, // PATCH - /v1/admin/{userId}/profile
+]
+
+function isMatchRoute(req: Request, routes: IRoute[]): boolean {
+  return routes.some((r: IRoute) => {
+    if (r.method !== req.method) {
+      return false
+    }
+
+    return r.pathRegex.test(req.path)
+  })
+}
 
 function isExcludeRoute(req: Request): boolean {
   if (req.method === 'OPTIONS') {
     return true
   }
 
-  return excludeRoutes.some((r: IRoute) => r.path === req.path && r.method === req.method)
+  return isMatchRoute(req, excludeRoutes)
 }
 
 function isForbiddenRoute(req: Request, role: number): boolean {
@@ -26,9 +48,9 @@ function isForbiddenRoute(req: Request, role: number): boolean {
     case 1: // 1 -> Administrator
       return false
     case 2: // 2 -> Developer
-      return developerForbiddenRoutes.some((r: IRoute) => r.path === req.path && r.method === req.method)
+      return isMatchRoute(req, developerForbiddenRoutes)
     case 3: // 3 -> Operator
-      return operatorForbiddenRoutes.some((r: IRoute) => r.path === req.path && r.method === req.method)
+      return isMatchRoute(req, operatorForbiddenRoutes)
     default:
       return true
   }

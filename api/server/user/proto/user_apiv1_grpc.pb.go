@@ -275,3 +275,194 @@ var _AuthService_serviceDesc = grpc.ServiceDesc{
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "proto/user_apiv1.proto",
 }
+
+// AdminServiceClient is the client API for AdminService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type AdminServiceClient interface {
+	CreateAdmin(ctx context.Context, in *CreateAdminRequest, opts ...grpc.CallOption) (*AdminResponse, error)
+	UpdateAdminRole(ctx context.Context, in *UpdateAdminRoleRequest, opts ...grpc.CallOption) (*AdminResponse, error)
+	UpdateAdminPassword(ctx context.Context, in *UpdateAdminPasswordRequest, opts ...grpc.CallOption) (*AdminResponse, error)
+	UpdateAdminProfile(ctx context.Context, in *UpdateAdminProfileRequest, opts ...grpc.CallOption) (*AdminResponse, error)
+}
+
+type adminServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewAdminServiceClient(cc grpc.ClientConnInterface) AdminServiceClient {
+	return &adminServiceClient{cc}
+}
+
+func (c *adminServiceClient) CreateAdmin(ctx context.Context, in *CreateAdminRequest, opts ...grpc.CallOption) (*AdminResponse, error) {
+	out := new(AdminResponse)
+	err := c.cc.Invoke(ctx, "/proto.AdminService/CreateAdmin", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) UpdateAdminRole(ctx context.Context, in *UpdateAdminRoleRequest, opts ...grpc.CallOption) (*AdminResponse, error) {
+	out := new(AdminResponse)
+	err := c.cc.Invoke(ctx, "/proto.AdminService/UpdateAdminRole", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) UpdateAdminPassword(ctx context.Context, in *UpdateAdminPasswordRequest, opts ...grpc.CallOption) (*AdminResponse, error) {
+	out := new(AdminResponse)
+	err := c.cc.Invoke(ctx, "/proto.AdminService/UpdateAdminPassword", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminServiceClient) UpdateAdminProfile(ctx context.Context, in *UpdateAdminProfileRequest, opts ...grpc.CallOption) (*AdminResponse, error) {
+	out := new(AdminResponse)
+	err := c.cc.Invoke(ctx, "/proto.AdminService/UpdateAdminProfile", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// AdminServiceServer is the server API for AdminService service.
+// All implementations must embed UnimplementedAdminServiceServer
+// for forward compatibility
+type AdminServiceServer interface {
+	CreateAdmin(context.Context, *CreateAdminRequest) (*AdminResponse, error)
+	UpdateAdminRole(context.Context, *UpdateAdminRoleRequest) (*AdminResponse, error)
+	UpdateAdminPassword(context.Context, *UpdateAdminPasswordRequest) (*AdminResponse, error)
+	UpdateAdminProfile(context.Context, *UpdateAdminProfileRequest) (*AdminResponse, error)
+	mustEmbedUnimplementedAdminServiceServer()
+}
+
+// UnimplementedAdminServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedAdminServiceServer struct {
+}
+
+func (UnimplementedAdminServiceServer) CreateAdmin(context.Context, *CreateAdminRequest) (*AdminResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateAdmin not implemented")
+}
+func (UnimplementedAdminServiceServer) UpdateAdminRole(context.Context, *UpdateAdminRoleRequest) (*AdminResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateAdminRole not implemented")
+}
+func (UnimplementedAdminServiceServer) UpdateAdminPassword(context.Context, *UpdateAdminPasswordRequest) (*AdminResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateAdminPassword not implemented")
+}
+func (UnimplementedAdminServiceServer) UpdateAdminProfile(context.Context, *UpdateAdminProfileRequest) (*AdminResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateAdminProfile not implemented")
+}
+func (UnimplementedAdminServiceServer) mustEmbedUnimplementedAdminServiceServer() {}
+
+// UnsafeAdminServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to AdminServiceServer will
+// result in compilation errors.
+type UnsafeAdminServiceServer interface {
+	mustEmbedUnimplementedAdminServiceServer()
+}
+
+func RegisterAdminServiceServer(s grpc.ServiceRegistrar, srv AdminServiceServer) {
+	s.RegisterService(&_AdminService_serviceDesc, srv)
+}
+
+func _AdminService_CreateAdmin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateAdminRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).CreateAdmin(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.AdminService/CreateAdmin",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).CreateAdmin(ctx, req.(*CreateAdminRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_UpdateAdminRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateAdminRoleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).UpdateAdminRole(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.AdminService/UpdateAdminRole",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).UpdateAdminRole(ctx, req.(*UpdateAdminRoleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_UpdateAdminPassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateAdminPasswordRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).UpdateAdminPassword(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.AdminService/UpdateAdminPassword",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).UpdateAdminPassword(ctx, req.(*UpdateAdminPasswordRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AdminService_UpdateAdminProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateAdminProfileRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).UpdateAdminProfile(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.AdminService/UpdateAdminProfile",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).UpdateAdminProfile(ctx, req.(*UpdateAdminProfileRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+var _AdminService_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "proto.AdminService",
+	HandlerType: (*AdminServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "CreateAdmin",
+			Handler:    _AdminService_CreateAdmin_Handler,
+		},
+		{
+			MethodName: "UpdateAdminRole",
+			Handler:    _AdminService_UpdateAdminRole_Handler,
+		},
+		{
+			MethodName: "UpdateAdminPassword",
+			Handler:    _AdminService_UpdateAdminPassword_Handler,
+		},
+		{
+			MethodName: "UpdateAdminProfile",
+			Handler:    _AdminService_UpdateAdminProfile_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "proto/user_apiv1.proto",
+}
