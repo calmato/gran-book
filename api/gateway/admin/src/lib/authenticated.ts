@@ -10,19 +10,19 @@ interface IRoute {
 }
 
 const excludeRoutes: IRoute[] = [
-  { pathRegex: /^\/health$/g, method: 'GET' }, // GET - /v/health
+  { pathRegex: /^\/health$/, method: 'GET' }, // GET - /health
 ]
 const developerForbiddenRoutes: IRoute[] = [
-  { pathRegex: /^\/v1\/admin$/g, method: 'POST' }, // POST - /v1/admin
-  { pathRegex: /^\/v1\/admin\/[^/].*\/role$/g, method: 'PATCH' }, // PATCH - /v1/admin/{userId}/role
-  { pathRegex: /^\/v1\/admin\/[^/].*\/password$/g, method: 'PATCH' }, // PATCH - /v1/admin/{userId}/password
-  { pathRegex: /^\/v1\/admin\/[^/].*\/profile$/g, method: 'PATCH' }, // PATCH - /v1/admin/{userId}/profile
+  { pathRegex: /^\/v1\/admin$/, method: 'POST' }, // POST - /v1/admin
+  { pathRegex: /^\/v1\/admin\/[^/].*\/role$/, method: 'PATCH' }, // PATCH - /v1/admin/{userId}/role
+  { pathRegex: /^\/v1\/admin\/[^/].*\/password$/, method: 'PATCH' }, // PATCH - /v1/admin/{userId}/password
+  { pathRegex: /^\/v1\/admin\/[^/].*\/profile$/, method: 'PATCH' }, // PATCH - /v1/admin/{userId}/profile
 ]
 const operatorForbiddenRoutes: IRoute[] = [
-  { pathRegex: /^\/v1\/admin$/g, method: 'POST' }, // POST - /v1/admin
-  { pathRegex: /^\/v1\/admin\/[^/].*\/role$/g, method: 'PATCH' }, // PATCH - /v1/admin/{userId}/role
-  { pathRegex: /^\/v1\/admin\/[^/].*\/password$/g, method: 'PATCH' }, // PATCH - /v1/admin/{userId}/password
-  { pathRegex: /^\/v1\/admin\/[^/].*\/profile$/g, method: 'PATCH' }, // PATCH - /v1/admin/{userId}/profile
+  { pathRegex: /^\/v1\/admin$/, method: 'POST' }, // POST - /v1/admin
+  { pathRegex: /^\/v1\/admin\/[^/].*\/role$/, method: 'PATCH' }, // PATCH - /v1/admin/{userId}/role
+  { pathRegex: /^\/v1\/admin\/[^/].*\/password$/, method: 'PATCH' }, // PATCH - /v1/admin/{userId}/password
+  { pathRegex: /^\/v1\/admin\/[^/].*\/profile$/, method: 'PATCH' }, // PATCH - /v1/admin/{userId}/profile
 ]
 
 function isMatchRoute(req: Request, routes: IRoute[]): boolean {
