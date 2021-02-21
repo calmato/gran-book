@@ -32,6 +32,7 @@ const googleDeserializeMap = {
 }
 
 interface ServiceError {
+  code: number
   metadata?: Metadata
 }
 
@@ -92,13 +93,13 @@ function getErrorDetails(details: Array<any>): Array<any> {
 }
 
 export function getGrpcError(err: ServiceError): GrpcError {
-  const grpcErrorDetails = deserializeGoogleGrpcStatusDetails(err)
-  if (grpcErrorDetails) {
-    const { status, details } = grpcErrorDetails
+  const grpcStatusDetails = deserializeGoogleGrpcStatusDetails(err)
+  if (grpcStatusDetails) {
+    const { status, details } = grpcStatusDetails
 
     return new GrpcError(status.getCode(), getErrorDetails(details))
   } else {
-    return new GrpcError(2) // 2 -> Unknown
+    return new GrpcError(err.code)
   }
 }
 /* eslint-enable */

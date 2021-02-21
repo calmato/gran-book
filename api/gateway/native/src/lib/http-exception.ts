@@ -38,7 +38,7 @@ export function forbidden(): HttpError {
 
 export function notFound(): HttpError {
   const message = 'Not Found'
-  return new HttpError(403, message)
+  return new HttpError(404, message)
 }
 
 export function alreadyExists(details: Array<any>): HttpError {
