@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/calmato/gran-book/api/server/user/internal/domain"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/user"
 	"github.com/google/uuid"
 )
@@ -30,6 +31,15 @@ func (s *userService) Authentication(ctx context.Context) (string, error) {
 	}
 
 	return uid, nil
+}
+
+func (s *userService) List(ctx context.Context, query *domain.ListQuery) ([]*user.User, error) {
+	us, err := s.userRepository.List(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+
+	return us, nil
 }
 
 func (s *userService) Show(ctx context.Context, uid string) (*user.User, error) {

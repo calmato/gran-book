@@ -2,7 +2,9 @@ package repository
 
 import (
 	"fmt"
+	"strings"
 
+	"github.com/calmato/gran-book/api/server/user/internal/domain"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
@@ -43,6 +45,21 @@ func getDBConfig(socket, host, port, database, username, password string) string
 			host,
 			database,
 		)
+	default:
+		return ""
+	}
+}
+
+func getOrder(o *domain.QueryOrder) string {
+	if o.By == "" || o.Description == "" {
+		return ""
+	}
+
+	switch strings.ToLower(o.Description) {
+	case "asc":
+		return fmt.Sprintf("%s asc", o.By)
+	case "desc":
+		return fmt.Sprintf("%s desc", o.By)
 	default:
 		return ""
 	}
