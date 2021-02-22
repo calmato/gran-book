@@ -74,7 +74,7 @@ func listQueryFilter(q *domain.ListQuery) error {
 		return xerrors.New("offset is out of range")
 	}
 
-	if q.Order == nil {
+	if getOrder(q.Order) == "" {
 		q.Order = &domain.QueryOrder{
 			By:        defaultOrderBy,
 			Direction: defaultOrderDirection,
