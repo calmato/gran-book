@@ -1,3 +1,8 @@
+export interface IListAdminInput {
+  limit: number
+  offset: number
+}
+
 export interface ICreateAdminInput {
   username: string
   email: string
