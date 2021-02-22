@@ -9,6 +9,8 @@ import PasswordInput from '~/components/molecules/PasswordInput';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import { emailValidation } from '~/lib/validation';
 import { SingUpForm } from '~/types/forms';
+import { Alert } from 'react-native';
+import { generateErrorMessage } from '~/lib/util/ErrorUtil';
 
 const styles = StyleSheet.create({
   container: {
@@ -54,6 +56,18 @@ const SignUp = function SignUp(props: Props): ReactElement {
     return !emailError && !passwordError && !passwordConfirmationError && formData.agreement;
   }, [emailError, passwordError, passwordConfirmationError, formData.agreement]);
 
+  const createAlertNotifySignupError = (code: number) =>
+    Alert.alert(
+      'ユーザー登録に失敗',
+      `${generateErrorMessage(code)}`,
+      [
+        {
+          text: 'OK',
+        }
+      ],
+    );
+
+
   const handleSubmit = React.useCallback(async () => {
     await signUpWithEmail(
       formData.email,
@@ -64,9 +78,9 @@ const SignUp = function SignUp(props: Props): ReactElement {
       .then(() => {
         navigation.navigate('SignUpCheckEmail', { email: formData.email });
       })
-      .catch((err: Error) => {
+      .catch((err) => {
         console.log('debug', err);
-      // TODO: エラー処理
+        createAlertNotifySignupError(err.code);
       });
   }, [formData.email, formData.password, formData.passwordConfirmation, formData.username, signUpWithEmail]);
 
