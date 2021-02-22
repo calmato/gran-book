@@ -45,10 +45,6 @@ func (a *adminApplication) List(ctx context.Context, in *input.ListAdmin) ([]*us
 		Offset: in.Offset,
 	}
 
-	if query.Limit == 0 {
-		query.Limit = 100
-	}
-
 	us, total, err := a.userService.List(ctx, query)
 	if err != nil {
 		return nil, nil, err
@@ -58,6 +54,11 @@ func (a *adminApplication) List(ctx context.Context, in *input.ListAdmin) ([]*us
 		Limit:  query.Limit,
 		Offset: query.Offset,
 		Total:  total,
+	}
+
+	if query.Order != nil {
+		out.Order.By = query.Order.By
+		out.Order.Direction = query.Order.Direction
 	}
 
 	return us, out, nil

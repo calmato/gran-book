@@ -56,20 +56,25 @@ func (r *userRepository) List(ctx context.Context, query *domain.ListQuery) ([]*
 	var count int64
 	us := []*user.User{}
 
+	err := listQueryFilter(query)
+	if err != nil {
+		return nil, 0, exception.InvalidDomainValidation.New(err)
+	}
+
 	o := getOrder(query.Order)
 	if o == "" {
-		err := r.client.db.Limit(query.Limit).Offset(query.Offset).Find(us).Error
+		err = r.client.db.Limit(query.Limit).Offset(query.Offset).Find(&us).Error
 		if err != nil {
 			return nil, 0, exception.ErrorInDatastore.New(err)
 		}
 	} else {
-		err := r.client.db.Order(o).Limit(query.Limit).Offset(query.Offset).Find(us).Error
+		err = r.client.db.Order(o).Limit(query.Limit).Offset(query.Offset).Find(&us).Error
 		if err != nil {
 			return nil, 0, exception.ErrorInDatastore.New(err)
 		}
 	}
 
-	err := r.client.db.Model(&user.User{}).Count(&count).Error
+	err = r.client.db.Model(&user.User{}).Count(&count).Error
 	if err != nil {
 		return nil, 0, err
 	}

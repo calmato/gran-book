@@ -56,7 +56,9 @@ func (s *AdminServer) SearchAdmin(ctx context.Context, req *pb.SearchAdminReques
 		return nil, errorHandling(err)
 	}
 
-	res := getAdminListResponse(nil, nil)
+	us := []*user.User{}
+	out := &output.ListQuery{}
+	res := getAdminListResponse(us, out)
 	return res, nil
 }
 
@@ -249,18 +251,25 @@ func getAdminListResponse(us []*user.User, out *output.ListQuery) *pb.AdminListR
 			LastNameKana:     u.LastNameKana,
 			FirstNameKana:    u.FirstNameKana,
 			Activated:        u.Activated,
+			CreatedAt:        datetime.TimeToString(u.CreatedAt),
+			UpdatedAt:        datetime.TimeToString(u.UpdatedAt),
 		}
 
 		users[i] = user
 	}
 
-	order := &pb.AdminListResponse_Order{}
+	order := &pb.AdminListResponse_Order{
+		By:        out.Order.By,
+		Direction: out.Order.Direction,
+	}
 
-	return &pb.AdminListResponse{
+	res := &pb.AdminListResponse{
 		Users:  users,
 		Limit:  out.Limit,
 		Offset: out.Offset,
 		Total:  out.Total,
 		Order:  order,
 	}
+
+	return res
 }

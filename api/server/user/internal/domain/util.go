@@ -25,6 +25,6 @@ type QueryField struct {
 
 // QueryOrder - ソート用の構造体
 type QueryOrder struct {
-	By          string
-	Description string
+	By        string
+	Direction string
 }
