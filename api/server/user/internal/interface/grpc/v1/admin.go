@@ -5,11 +5,9 @@ import (
 
 	"github.com/calmato/gran-book/api/server/user/internal/application"
 	"github.com/calmato/gran-book/api/server/user/internal/application/input"
-	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/user"
 	"github.com/calmato/gran-book/api/server/user/lib/datetime"
 	pb "github.com/calmato/gran-book/api/server/user/proto"
-	"golang.org/x/xerrors"
 )
 
 // AdminServer - Authインターフェースの構造体
@@ -19,9 +17,62 @@ type AdminServer struct {
 	AdminApplication application.AdminApplication
 }
 
+// ListAdmin - 管理者一覧取得
+func (s *AdminServer) ListAdmin(ctx context.Context, req *pb.ListAdminRequest) (*pb.AdminListResponse, error) {
+	cu, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	err = authorization(cu)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	res := getAdminListResponse(nil)
+	return res, nil
+}
+
+// SearchAdmin - 管理者検索
+func (s *AdminServer) SearchAdmin(ctx context.Context, req *pb.SearchAdminRequest) (*pb.AdminListResponse, error) {
+	cu, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	err = authorization(cu)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	res := getAdminListResponse(nil)
+	return res, nil
+}
+
+// GetAdmin - 管理者情報取得
+func (s *AdminServer) GetAdmin(ctx context.Context, req *pb.GetAdminRequest) (*pb.AdminResponse, error) {
+	cu, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	err = authorization(cu)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	res := getAdminResponse(nil)
+	return res, nil
+}
+
 // CreateAdmin - 管理者登録
 func (s *AdminServer) CreateAdmin(ctx context.Context, req *pb.CreateAdminRequest) (*pb.AdminResponse, error) {
 	cu, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	err = authorization(cu)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -59,6 +110,11 @@ func (s *AdminServer) UpdateAdminRole(ctx context.Context, req *pb.UpdateAdminRo
 		return nil, errorHandling(err)
 	}
 
+	err = authorization(cu)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
 	err = hasAdminRole(cu, req.Id)
 	if err != nil {
 		return nil, errorHandling(err)
@@ -82,6 +138,11 @@ func (s *AdminServer) UpdateAdminPassword(
 	ctx context.Context, req *pb.UpdateAdminPasswordRequest,
 ) (*pb.AdminResponse, error) {
 	cu, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	err = authorization(cu)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -114,6 +175,11 @@ func (s *AdminServer) UpdateAdminProfile(
 		return nil, errorHandling(err)
 	}
 
+	err = authorization(cu)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
 	err = hasAdminRole(cu, req.Id)
 	if err != nil {
 		return nil, errorHandling(err)
@@ -137,20 +203,6 @@ func (s *AdminServer) UpdateAdminProfile(
 	return res, nil
 }
 
-func hasAdminRole(u *user.User, uid string) error {
-	if u == nil || u.ID == uid {
-		err := xerrors.New("This ID belongs to the current user")
-		return exception.Forbidden.New(err)
-	}
-
-	if u.Role != user.AdminRole {
-		err := xerrors.New("This account doesn't have administrator privileges")
-		return exception.Forbidden.New(err)
-	}
-
-	return nil
-}
-
 func getAdminResponse(u *user.User) *pb.AdminResponse {
 	return &pb.AdminResponse{
 		Id:               u.ID,
@@ -168,4 +220,8 @@ func getAdminResponse(u *user.User) *pb.AdminResponse {
 		CreatedAt:        datetime.TimeToString(u.CreatedAt),
 		UpdatedAt:        datetime.TimeToString(u.UpdatedAt),
 	}
+}
+
+func getAdminListResponse(u *user.User) *pb.AdminListResponse {
+	return &pb.AdminListResponse{}
 }
