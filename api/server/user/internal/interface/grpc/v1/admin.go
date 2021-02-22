@@ -258,17 +258,20 @@ func getAdminListResponse(us []*user.User, out *output.ListQuery) *pb.AdminListR
 		users[i] = user
 	}
 
-	order := &pb.AdminListResponse_Order{
-		By:        out.Order.By,
-		Direction: out.Order.Direction,
-	}
-
 	res := &pb.AdminListResponse{
 		Users:  users,
 		Limit:  out.Limit,
 		Offset: out.Offset,
 		Total:  out.Total,
-		Order:  order,
+	}
+
+	if out.Order != nil {
+		order := &pb.AdminListResponse_Order{
+			By:        out.Order.By,
+			Direction: out.Order.Direction,
+		}
+
+		res.Order = order
 	}
 
 	return res
