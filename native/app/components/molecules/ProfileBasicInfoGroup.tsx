@@ -1,22 +1,43 @@
 import React, { ReactElement } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Button, Rating, Text, Avatar } from 'react-native-elements';
+import { ListItem, Button, Rating, Text, Avatar } from 'react-native-elements';
 import { MaterialIcons } from '@expo/vector-icons';
+import { COLOR } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flex:1,
+    // alignItems: 'center',
+    backgroundColor: COLOR.BACKGROUND_WHITE,
+    padding: 10,
   },
   avator: {
-    flex: 1,
+    // padding:20,
   },
   group: {
-    flex: 5,
+    // padding:10,
   },
   reviewContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    // alignContent: 'stretch',
+    paddingTop:10,
+    paddingBottom:10,
+  },
+  reviewRate: {
+    paddingStart:10,
+    paddingEnd:10,
+    color: COLOR.TEXT_DEFAULT
+  },
+  icon:{
+    paddingStart:30,
+  },
+  button: {
+    height:35,
+    alignSelf:'flex-end',
+  },
+  buttonTitle: {
+    color: COLOR.TEXT_TITLE,
   }
 });
 
@@ -29,23 +50,24 @@ interface Props {
 
 const ProfileBasicInfoGroup = function ProfileBasicInfoGroup(props: Props): ReactElement {
   return (
-    <View style={styles.container}>
-      <Avatar source={{uri: props.avatar_url}} rounded avatarStyle={styles.avator}/>
-      <View style={styles.group}>
-        <Text>{props.name}</Text>
-        <View style={styles.reviewContainer}>
-          <Rating 
-            fractions={1}
-            readonly={true}
-            startingValue={props.rating}
-          />
-          <Text>{props.rating}</Text>
-          <Text>{`(${props.numberOfReviews}件)`}</Text>
-          <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
-        </View>
-        <Button title={'プロフィールを編集'}/>
-      </View>
-    </View>
+      <ListItem style={styles.container}>
+        <Avatar source={{uri: props.avatar_url}} rounded avatarStyle={styles.avator} size='medium'/>
+        <ListItem.Content style={styles.group}>
+          <ListItem.Title>{props.name}</ListItem.Title>
+          <View style={styles.reviewContainer}>
+            <Rating 
+              fractions={1}
+              readonly={true}
+              startingValue={props.rating}
+              imageSize={20}
+            />
+            <Text style={styles.reviewRate}>{props.rating}</Text>
+            <Text>{`(${props.numberOfReviews}件)`}</Text>
+            <MaterialIcons name="keyboard-arrow-right" size={24} color="black" style={styles.icon}/>
+          </View>
+          <Button title={'プロフィールを編集'} buttonStyle={styles.button} titleStyle={styles.buttonTitle}/>
+        </ListItem.Content>
+      </ListItem>
   );
 };
 
