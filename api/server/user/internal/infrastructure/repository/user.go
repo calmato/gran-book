@@ -52,23 +52,29 @@ func (r *userRepository) Authentication(ctx context.Context) (string, error) {
 	return fbToken.Subject, nil
 }
 
-func (r *userRepository) List(ctx context.Context, query *domain.ListQuery) ([]*user.User, error) {
+func (r *userRepository) List(ctx context.Context, query *domain.ListQuery) ([]*user.User, int64, error) {
+	var count int64
 	us := []*user.User{}
 
 	o := getOrder(query.Order)
 	if o == "" {
 		err := r.client.db.Limit(query.Limit).Offset(query.Offset).Find(us).Error
 		if err != nil {
-			return nil, exception.ErrorInDatastore.New(err)
+			return nil, 0, exception.ErrorInDatastore.New(err)
 		}
 	} else {
 		err := r.client.db.Order(o).Limit(query.Limit).Offset(query.Offset).Find(us).Error
 		if err != nil {
-			return nil, exception.ErrorInDatastore.New(err)
+			return nil, 0, exception.ErrorInDatastore.New(err)
 		}
 	}
 
-	return us, nil
+	err := r.client.db.Model(&user.User{}).Count(&count).Error
+	if err != nil {
+		return nil, 0, err
+	}
+
+	return us, count, nil
 }
 
 func (r *userRepository) Show(ctx context.Context, uid string) (*user.User, error) {

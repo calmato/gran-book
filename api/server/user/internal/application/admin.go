@@ -5,13 +5,16 @@ import (
 	"strings"
 
 	"github.com/calmato/gran-book/api/server/user/internal/application/input"
+	"github.com/calmato/gran-book/api/server/user/internal/application/output"
 	"github.com/calmato/gran-book/api/server/user/internal/application/validation"
+	"github.com/calmato/gran-book/api/server/user/internal/domain"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/user"
 )
 
 // AdminApplication - Adminアプリケーションのインターフェース
 type AdminApplication interface {
+	List(ctx context.Context, in *input.ListAdmin) ([]*user.User, *output.ListQuery, error)
 	Create(ctx context.Context, in *input.CreateAdmin) (*user.User, error)
 	UpdateRole(ctx context.Context, in *input.UpdateAdminRole, uid string) (*user.User, error)
 	UpdatePassword(ctx context.Context, in *input.UpdateAdminPassword, uid string) (*user.User, error)
@@ -29,6 +32,35 @@ func NewAdminApplication(arv validation.AdminRequestValidation, us user.Service)
 		adminRequestValidation: arv,
 		userService:            us,
 	}
+}
+
+func (a *adminApplication) List(ctx context.Context, in *input.ListAdmin) ([]*user.User, *output.ListQuery, error) {
+	err := a.adminRequestValidation.ListAdmin(in)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	query := &domain.ListQuery{
+		Limit:  in.Limit,
+		Offset: in.Offset,
+	}
+
+	if query.Limit == 0 {
+		query.Limit = 100
+	}
+
+	us, total, err := a.userService.List(ctx, query)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	out := &output.ListQuery{
+		Limit:  query.Limit,
+		Offset: query.Offset,
+		Total:  total,
+	}
+
+	return us, out, nil
 }
 
 func (a *adminApplication) Create(ctx context.Context, in *input.CreateAdmin) (*user.User, error) {

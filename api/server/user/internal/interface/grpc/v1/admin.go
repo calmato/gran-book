@@ -5,6 +5,7 @@ import (
 
 	"github.com/calmato/gran-book/api/server/user/internal/application"
 	"github.com/calmato/gran-book/api/server/user/internal/application/input"
+	"github.com/calmato/gran-book/api/server/user/internal/application/output"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/user"
 	"github.com/calmato/gran-book/api/server/user/lib/datetime"
 	pb "github.com/calmato/gran-book/api/server/user/proto"
@@ -29,7 +30,17 @@ func (s *AdminServer) ListAdmin(ctx context.Context, req *pb.ListAdminRequest) (
 		return nil, errorHandling(err)
 	}
 
-	res := getAdminListResponse(nil)
+	in := &input.ListAdmin{
+		Limit:  req.Limit,
+		Offset: req.Offset,
+	}
+
+	us, out, err := s.AdminApplication.List(ctx, in)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	res := getAdminListResponse(us, out)
 	return res, nil
 }
 
@@ -45,7 +56,7 @@ func (s *AdminServer) SearchAdmin(ctx context.Context, req *pb.SearchAdminReques
 		return nil, errorHandling(err)
 	}
 
-	res := getAdminListResponse(nil)
+	res := getAdminListResponse(nil, nil)
 	return res, nil
 }
 
@@ -222,6 +233,34 @@ func getAdminResponse(u *user.User) *pb.AdminResponse {
 	}
 }
 
-func getAdminListResponse(u *user.User) *pb.AdminListResponse {
-	return &pb.AdminListResponse{}
+func getAdminListResponse(us []*user.User, out *output.ListQuery) *pb.AdminListResponse {
+	users := make([]*pb.AdminListResponse_User, len(us))
+	for i, u := range us {
+		user := &pb.AdminListResponse_User{
+			Id:               u.ID,
+			Username:         u.Username,
+			Email:            u.Email,
+			PhoneNumber:      u.PhoneNumber,
+			Role:             u.Role,
+			ThumbnailUrl:     u.ThumbnailURL,
+			SelfIntroduction: u.SelfIntroduction,
+			LastName:         u.LastName,
+			FirstName:        u.FirstName,
+			LastNameKana:     u.LastNameKana,
+			FirstNameKana:    u.FirstNameKana,
+			Activated:        u.Activated,
+		}
+
+		users[i] = user
+	}
+
+	order := &pb.AdminListResponse_Order{}
+
+	return &pb.AdminListResponse{
+		Users:  users,
+		Limit:  out.Limit,
+		Offset: out.Offset,
+		Total:  out.Total,
+		Order:  order,
+	}
 }

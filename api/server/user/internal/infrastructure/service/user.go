@@ -33,13 +33,13 @@ func (s *userService) Authentication(ctx context.Context) (string, error) {
 	return uid, nil
 }
 
-func (s *userService) List(ctx context.Context, query *domain.ListQuery) ([]*user.User, error) {
-	us, err := s.userRepository.List(ctx, query)
+func (s *userService) List(ctx context.Context, query *domain.ListQuery) ([]*user.User, int64, error) {
+	us, total, err := s.userRepository.List(ctx, query)
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 
-	return us, nil
+	return us, total, nil
 }
 
 func (s *userService) Show(ctx context.Context, uid string) (*user.User, error) {
