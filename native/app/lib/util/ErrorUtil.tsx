@@ -1,4 +1,4 @@
-import { ERROR_MESSAGE } from "../resources/messages_ja";
+import { ERROR_MESSAGE } from '../resources/messages_ja';
 
 export const generateErrorMessage = function generateErrorMessage(code:number): string {
   switch(code) {
