@@ -119,7 +119,7 @@ export function getAuthAsync() {
       .catch((err: Error) => {
         throw err;
       });
-  }
+  };
 }
 
 function onAuthStateChanged(): Promise<IAuth> {
