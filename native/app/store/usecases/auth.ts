@@ -5,8 +5,9 @@ import axios from '~/lib/axios';
 import firebase from '~/lib/firebase';
 import * as LocalStorage from '~/lib/local-storage';
 import { Auth } from '~/store/models';
-import { setAuth } from '~/store/modules/auth';
-import { ISignUpResponse } from '~/types/response';
+import { AppState } from '~/store/modules';
+import { setAuth, setProfile } from '~/store/modules/auth';
+import { IAuthResponse } from '~/types/response';
 
 interface IAuth {
   user: Firebase.User
@@ -31,6 +32,7 @@ export function signInWithEmailAsync(email: string, password: string) {
         };
 
         const model: Auth.Model = {
+          ...Auth.initialState,
           id: values.id,
           token: values.token,
           email: values.email || '',
@@ -55,14 +57,69 @@ export function signUpWithEmailAsync(email: string, password: string, passwordCo
         passwordConfirmation,
         username,
       })
-      .then((res: AxiosResponse<ISignUpResponse>) => {
-        // TODO: レスポンス処理
+      .then(async (res: AxiosResponse<IAuthResponse>) => {
         console.log('debug', res);
       })
       .catch((err: Error) => {
         throw err;
       });
   };
+}
+
+export function getAuthAsync() {
+  return async (dispatch: Dispatch, getState: () => AppState): Promise<void> => {
+    return await axios
+      .get('/v1/auth')
+      .then(async (res: AxiosResponse<IAuthResponse>) => {
+        const {
+          username,
+          gender,
+          phoneNumber,
+          role,
+          thumbnailUrl,
+          selfIntroduction,
+          lastName,
+          firstName,
+          lastNameKana,
+          firstNameKana,
+          postalCode,
+          prefecture,
+          city,
+          addressLine1,
+          addressLine2,
+          createdAt,
+          updatedAt,
+        } = res.data;
+
+        const values: Auth.ProfileValues = {
+          username,
+          gender,
+          phoneNumber,
+          role,
+          thumbnailUrl,
+          selfIntroduction,
+          lastName,
+          firstName,
+          lastNameKana,
+          firstNameKana,
+          postalCode,
+          prefecture,
+          city,
+          addressLine1,
+          addressLine2,
+          createdAt,
+          updatedAt,
+        };
+
+        dispatch(setProfile(values));
+
+        const auth: Auth.Model = getState().auth;
+        await LocalStorage.AuthStorage.save(auth);
+      })
+      .catch((err: Error) => {
+        throw err;
+      });
+  }
 }
 
 function onAuthStateChanged(): Promise<IAuth> {
