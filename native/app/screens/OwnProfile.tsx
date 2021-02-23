@@ -10,7 +10,7 @@ import { COLOR } from '~~/constants/theme';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
+    // alignItems: 'center',
   },
   bio: {
     backgroundColor: COLOR.BACKGROUND_WHITE,
@@ -19,6 +19,10 @@ const styles = StyleSheet.create({
     padding: 10,
     alignSelf: 'stretch',
   },
+  title: {
+    color: COLOR.TEXT_TITLE,
+    padding: 10,
+  }
 });
 
 const userInfo = 
@@ -52,6 +56,7 @@ const OwnProfile = function OwnProfile(): ReactElement {
       numberOfFollows={userInfo.numberOfFollows}
       />
       <Text style={styles.bio}>{userInfo.bio}</Text>
+      <Text style={styles.title}>出品リスト</Text>
     </View>
   );
 };
