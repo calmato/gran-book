@@ -41,6 +41,4 @@ const GoogleButton = function GoogleButton(props: Props): ReactElement {
   );
 };
 
-// GoogleButton.defaultProps={}
-
 export default GoogleButton;

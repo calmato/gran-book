@@ -1,5 +1,5 @@
+import React, { ReactElement, useState } from 'react';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
-import React, { ReactElement } from 'react';
 import { colors, Input } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
@@ -15,7 +15,7 @@ const color = colors.grey0;
 
 const PasswordInput = function PasswordInput(props: Props): ReactElement {
 
-  const [hidden, setValue] = React.useState(true);
+  const [hidden, setValue] = useState(true);
 
   return (
     <Input

@@ -37,6 +37,4 @@ const MailSignInButton = function MailSignInButton(props: Props): ReactElement {
   );
 };
 
-// MailSignInButton.defaultProps={}
-
 export default MailSignInButton;

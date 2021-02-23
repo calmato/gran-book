@@ -2,13 +2,14 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { StyleSheet, View, ScrollView, SafeAreaView } from 'react-native';
 import React, { ReactElement } from 'react';
 import { RootStackParamList } from '~/types/navigation';
-import { ListItem, Text, colors, Avatar } from 'react-native-elements';
+import { ListItem, Text, Avatar } from 'react-native-elements';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import { Ionicons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { COLOR } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
   container: {
@@ -18,41 +19,42 @@ const styles = StyleSheet.create({
   subtilte: {
     marginTop: 12,
     marginLeft: 12,
+    marginBottom: 6,
     fontSize: 15,
-    color: colors.black,
-    fontWeight: '600'
+    color: COLOR.TEXT_TITLE,
+    fontWeight: '600',
   },
   scrollArea: {
-    paddingBottom: 200
+    paddingBottom: 200,
   }
 });
 
-type MyPageProp = StackNavigationProp<RootStackParamList, 'SignInSelect'>;
+type MyPageProp = StackNavigationProp<RootStackParamList, 'MyPage'>;
 
 interface Props {
-  navigaton: MyPageProp
+  navigation: MyPageProp
 }
 
 const avatarList =
   {
     name: 'hamachans',
-    avatar_url: 'https://storage.cloud.google.com/presto-pay-dev.appspot.com/user_thumbnails/80d01b6c-566f-43fa-89e1-7b54cfcb6558',
+    avatar_url: 'https://pbs.twimg.com/profile_images/1312909954148253696/Utr-sa_Y_400x400.jpg',
   };
 
 const MyPage = function MyPage(props: Props): ReactElement {
-  const navigaton = props.navigaton;
+  const navigation = props.navigation;
 
   return (
     <View style={styles.scrollArea}>
       <HeaderWithBackButton
         title="マイページ"
-        onPress={() => navigaton.goBack()}
+        onPress={() => navigation.goBack()}
       />
       <SafeAreaView>
         <ScrollView>
           <View>
             <ListItem bottomDivider>
-              <Avatar source={{uri: avatarList.avatar_url}} />
+              <Avatar source={{uri: avatarList.avatar_url}} rounded/>
               <ListItem.Content>
                 <ListItem.Title>{avatarList.name}</ListItem.Title>
               </ListItem.Content>

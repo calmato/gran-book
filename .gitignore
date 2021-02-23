@@ -26,3 +26,6 @@ tmp/
 # parcel-bundler cache (https://parceljs.org/)
 .cache
 *.bak
+
+# code-snippets
+.vscode
