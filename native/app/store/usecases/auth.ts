@@ -1,16 +1,35 @@
+import { Dispatch } from 'redux';
 import { AxiosResponse } from 'axios';
 import Firebase from 'firebase';
 import axios from '~/lib/axios';
 import firebase from '~/lib/firebase';
+import { Auth } from '~/store/models';
+import { setAuth } from '~/store/modules/auth';
 import { ISignUpResponse } from '~/types/response';
 
+interface IAuth {
+  user: Firebase.User
+  token: string
+}
+
 export function signInWithEmailAsync(email: string, password: string) {
-  return async (): Promise<void> => {
+  return async (dispatch: Dispatch): Promise<void> => {
     return await firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
-      .then((res: Firebase.auth.UserCredential) => {
-        console.log('debug', res);
+      .then(async () => {
+        return await onAuthStateChanged();
+      })
+      .then((res: IAuth) => {
+        const { user, token } = res;
+        const values: Auth.AuthValues = {
+          id: user.uid,
+          email: user.email || '',
+          emailVerified: user.emailVerified,
+          token,
+        };
+
+        dispatch(setAuth(values));
       })
       .catch((err: Error) => {
         throw err;
@@ -35,4 +54,59 @@ export function signUpWithEmailAsync(email: string, password: string, passwordCo
         throw err;
       });
   };
+}
+
+function onAuthStateChanged(): Promise<IAuth> {
+  return new Promise((resolve: (auth: IAuth) => void, reject: (reason: Error) => void) => {
+    firebase
+      .auth()
+      .onAuthStateChanged(async (user: Firebase.User | null) => {
+        if (!user) {
+          reject(new Error('Unauthorized'));
+          return;
+        }
+
+        if (!user.emailVerified) {
+          sendEmailVerification();
+          reject(new Error('Email address is unapproved'));
+          return;
+        }
+
+        await getIdToken()
+          .then((token: string) => {
+            resolve({ user, token });
+          })
+          .catch((err: Error) => {
+            reject(err);
+          });
+      });
+  });
+}
+
+function getIdToken(): Promise<string> {
+  return new Promise((resolve: (token: string) => void, reject: (reason: Error) => void) => {
+    firebase
+      .auth()
+      .currentUser?.getIdToken(true)
+      .then((token: string) => {
+        resolve(token);
+      })
+      .catch((err: Error) => {
+        reject(err);
+      });
+  });
+}
+
+function sendEmailVerification(): Promise<void> {
+  return new Promise((resolve: () => void, reject: (reason: Error) => void) => {
+    firebase
+      .auth()
+      .currentUser?.sendEmailVerification()
+      .then(() => {
+        resolve();
+      })
+      .catch((err: Error) => {
+        reject(err);
+      });
+  });
 }
