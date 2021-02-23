@@ -10,7 +10,6 @@ import { COLOR } from '~~/constants/theme';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // alignItems: 'center',
   },
   bio: {
     backgroundColor: COLOR.BACKGROUND_WHITE,
@@ -35,7 +34,7 @@ const userInfo =
   numberOfFollowers: 20,
   numberOfFollows: 5,
   bio: 'よろしくお願いします。',
-}
+};
 
 const OwnProfile = function OwnProfile(): ReactElement {
   return (
@@ -45,15 +44,15 @@ const OwnProfile = function OwnProfile(): ReactElement {
         onPress={()=>undefined}
       />
       <ProfileViewGroup
-      name={userInfo.name}
-      avatar_url={userInfo.avatar_url}
-      rating={userInfo.rating}
-      numberOfReviews={userInfo.numberOfReviews}
+        name={userInfo.name}
+        avatar_url={userInfo.avatar_url}
+        rating={userInfo.rating}
+        numberOfReviews={userInfo.numberOfReviews}
       />
       <ProfileFollowFollwer
-      numberOfSales={userInfo.numberOfSales}
-      numberOfFollowers={userInfo.numberOfFollowers}
-      numberOfFollows={userInfo.numberOfFollows}
+        numberOfSales={userInfo.numberOfSales}
+        numberOfFollowers={userInfo.numberOfFollowers}
+        numberOfFollows={userInfo.numberOfFollows}
       />
       <Text style={styles.bio}>{userInfo.bio}</Text>
       <Text style={styles.title}>出品リスト</Text>

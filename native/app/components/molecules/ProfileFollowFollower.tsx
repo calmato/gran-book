@@ -1,22 +1,20 @@
 import React, { ReactElement } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Divider } from 'react-native-elements';
 import { COLOR } from '~~/constants/theme';
 import ProfileNumberOfThings from '../atoms/ProfileNumberOfThings';
 
 const styles = StyleSheet.create({
-container: {
-  // flex: 1 ,
-  flexDirection: 'row',
-  alignItems: 'center',
-  padding: 5,
-  backgroundColor: COLOR.BACKGROUND_WHITE,
-},
-divider: {
-  borderLeftWidth: 1,
-  borderLeftColor: COLOR.TEXT_GRAY,
-  alignSelf: 'stretch',
-}
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 5,
+    backgroundColor: COLOR.BACKGROUND_WHITE,
+  },
+  divider: {
+    borderLeftWidth: 1,
+    borderLeftColor: COLOR.TEXT_GRAY,
+    alignSelf: 'stretch',
+  },
 });
 
 interface Props {
@@ -29,18 +27,18 @@ const ProfileFollowFollwer = function ProfileFollowFollwer(props: Props): ReactE
   return (
     <View style={styles.container}>
       <ProfileNumberOfThings
-      name={'出品数'}
-      numberOfThings={props.numberOfSales}
+        name={'出品数'}
+        numberOfThings={props.numberOfSales}
       />
       <View style={styles.divider}/>
       <ProfileNumberOfThings
-      name={'フォロワー'}
-      numberOfThings={props.numberOfFollowers}
+        name={'フォロワー'}
+        numberOfThings={props.numberOfFollowers}
       />
       <View style={styles.divider}/>
       <ProfileNumberOfThings
-      name={'フォロー中'}
-      numberOfThings={props.numberOfFollows}
+        name={'フォロー中'}
+        numberOfThings={props.numberOfFollows}
       />
     </View>
   );
