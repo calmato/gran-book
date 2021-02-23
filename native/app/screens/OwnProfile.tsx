@@ -1,9 +1,25 @@
 import React, { ReactElement } from 'react';
-import { View } from 'react-native';
-import { Divider } from 'react-native-elements';
+import { StyleSheet, View } from 'react-native';
+import { Text } from 'react-native-elements';
 import ProfileFollowFollwer from '~/components/molecules/ProfileFollowFollower';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import ProfileViewGroup from '~/components/organisms/ProfileViewGroup';
+import { COLOR } from '~~/constants/theme';
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  bio: {
+    backgroundColor: COLOR.BACKGROUND_WHITE,
+    color: COLOR.TEXT_DEFAULT,
+    marginTop: 10,
+    padding: 10,
+    alignSelf: 'stretch',
+  },
+});
 
 const userInfo = 
 {
@@ -14,11 +30,12 @@ const userInfo =
   numberOfSales: 3,
   numberOfFollowers: 20,
   numberOfFollows: 5,
+  bio: 'よろしくお願いします。',
 }
 
 const OwnProfile = function OwnProfile(): ReactElement {
   return (
-    <View>
+    <View style={styles.container}>
       <HeaderWithBackButton
         title="プロフィール"
         onPress={()=>undefined}
@@ -34,6 +51,7 @@ const OwnProfile = function OwnProfile(): ReactElement {
       numberOfFollowers={userInfo.numberOfFollowers}
       numberOfFollows={userInfo.numberOfFollows}
       />
+      <Text style={styles.bio}>{userInfo.bio}</Text>
     </View>
   );
 };
