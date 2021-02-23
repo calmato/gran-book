@@ -16,7 +16,7 @@ const App = function App(): ReactElement {
 
   // ログインの実装はまだなのでisLoggedInでOnBoardingとログイン後の画面の出し分けを一時的に行う
   // true -> ログイン後の画面を表示 / false -> OnBoardingの画面を表示
-  const isLoggedIn = true;
+  const isLoggedIn = false;
 
   let navigator: ReactElement;
 

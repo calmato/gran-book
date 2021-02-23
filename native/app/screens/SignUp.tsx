@@ -67,7 +67,6 @@ const SignUp = function SignUp(props: Props): ReactElement {
       ],
     );
 
-
   const handleSubmit = React.useCallback(async () => {
     await signUpWithEmail(
       formData.email,
