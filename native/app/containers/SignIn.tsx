@@ -9,8 +9,6 @@ export default function ConnectedSignIn(): JSX.Element {
   const actions = React.useMemo(
     () => ({
       signInWithEmail(email: string, password: string): Promise<void> {
-        console.log('debug', 'email', email);
-        console.log('debug', 'password', password);
         return dispatch(signInWithEmailAsync(email, password));
       },
     }), [dispatch],

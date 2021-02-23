@@ -13,7 +13,6 @@ export function signInWithEmailAsync(email: string, password: string) {
         console.log('debug', res);
       })
       .catch((err: Error) => {
-        console.log('debug', err);
         throw err;
       });
   };
