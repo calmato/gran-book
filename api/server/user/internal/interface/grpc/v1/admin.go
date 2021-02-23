@@ -74,7 +74,12 @@ func (s *AdminServer) GetAdmin(ctx context.Context, req *pb.GetAdminRequest) (*p
 		return nil, errorHandling(err)
 	}
 
-	res := getAdminResponse(nil)
+	u, err := s.AdminApplication.Show(ctx, req.Id)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	res := getAdminResponse(u)
 	return res, nil
 }
 

@@ -15,6 +15,7 @@ import (
 // AdminApplication - Adminアプリケーションのインターフェース
 type AdminApplication interface {
 	List(ctx context.Context, in *input.ListAdmin) ([]*user.User, *output.ListQuery, error)
+	Show(ctx context.Context, uid string) (*user.User, error)
 	Create(ctx context.Context, in *input.CreateAdmin) (*user.User, error)
 	UpdateRole(ctx context.Context, in *input.UpdateAdminRole, uid string) (*user.User, error)
 	UpdatePassword(ctx context.Context, in *input.UpdateAdminPassword, uid string) (*user.User, error)
@@ -62,6 +63,15 @@ func (a *adminApplication) List(ctx context.Context, in *input.ListAdmin) ([]*us
 	}
 
 	return us, out, nil
+}
+
+func (a *adminApplication) Show(ctx context.Context, uid string) (*user.User, error) {
+	u, err := a.userService.Show(ctx, uid)
+	if err != nil {
+		return nil, exception.NotFound.New(err)
+	}
+
+	return u, nil
 }
 
 func (a *adminApplication) Create(ctx context.Context, in *input.CreateAdmin) (*user.User, error) {
