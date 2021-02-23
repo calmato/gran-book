@@ -104,6 +104,79 @@ func TestAdminApplication_List(t *testing.T) {
 	}
 }
 
+func TestAdminApplication_Show(t *testing.T) {
+	current := time.Now()
+
+	testCases := map[string]struct {
+		UID      string
+		Expected struct {
+			User  *user.User
+			Error error
+		}
+	}{
+		"ok": {
+			UID: "00000000-0000-0000-0000-000000000000",
+			Expected: struct {
+				User  *user.User
+				Error error
+			}{
+				User: &user.User{
+					ID:               "00000000-0000-0000-0000-000000000000",
+					Username:         "test-user",
+					Gender:           0,
+					Email:            "test-user@calmato.com",
+					PhoneNumber:      "000-0000-0000",
+					Role:             0,
+					ThumbnailURL:     "",
+					SelfIntroduction: "",
+					LastName:         "テスト",
+					FirstName:        "ユーザ",
+					LastNameKana:     "てすと",
+					FirstNameKana:    "ゆーざ",
+					PostalCode:       "000-0000",
+					Prefecture:       "東京都",
+					City:             "小金井市",
+					AddressLine1:     "貫井北町4-1-1",
+					AddressLine2:     "",
+					InstanceID:       "",
+					Activated:        true,
+					CreatedAt:        current,
+					UpdatedAt:        current,
+				},
+				Error: nil,
+			},
+		},
+	}
+
+	for result, tc := range testCases {
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		arvm := mock_validation.NewMockAdminRequestValidation(ctrl)
+
+		usm := mock_user.NewMockService(ctrl)
+		usm.EXPECT().Show(ctx, tc.UID).Return(tc.Expected.User, tc.Expected.Error)
+
+		t.Run(result, func(t *testing.T) {
+			target := NewAdminApplication(arvm, usm)
+
+			got, err := target.Show(ctx, tc.UID)
+			if !reflect.DeepEqual(err, tc.Expected.Error) {
+				t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+				return
+			}
+
+			if !reflect.DeepEqual(got, tc.Expected.User) {
+				t.Fatalf("want %#v, but %#v", tc.Expected.User, got)
+				return
+			}
+		})
+	}
+}
+
 func TestAdminApplication_Create(t *testing.T) {
 	testCases := map[string]struct {
 		Input    *input.CreateAdmin
