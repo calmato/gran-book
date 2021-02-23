@@ -3,6 +3,7 @@ import { AxiosResponse } from 'axios';
 import Firebase from 'firebase';
 import axios from '~/lib/axios';
 import firebase from '~/lib/firebase';
+import * as LocalStorage from '~/lib/local-storage';
 import { Auth } from '~/store/models';
 import { setAuth } from '~/store/modules/auth';
 import { ISignUpResponse } from '~/types/response';
@@ -20,16 +21,24 @@ export function signInWithEmailAsync(email: string, password: string) {
       .then(async () => {
         return await onAuthStateChanged();
       })
-      .then((res: IAuth) => {
+      .then(async (res: IAuth) => {
         const { user, token } = res;
         const values: Auth.AuthValues = {
           id: user.uid,
-          email: user.email || '',
+          email: user.email || undefined,
           emailVerified: user.emailVerified,
           token,
         };
 
+        const model: Auth.Model = {
+          id: values.id,
+          token: values.token,
+          email: values.email || '',
+          emailVerified: values.emailVerified || false,
+        };
+
         dispatch(setAuth(values));
+        await LocalStorage.AuthStorage.save(model);
       })
       .catch((err: Error) => {
         throw err;
