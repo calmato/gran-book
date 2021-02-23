@@ -1,3 +1,10 @@
+PROTOC_GEN_GRPC_PATH=$(shell which grpc_tools_node_protoc_plugin)
+PROTOC_GEN_TS_PATH=$(shell which protoc-gen-ts)
+
+ADMIN_GATEWAY_PATH='./../api/gateway/admin/src'
+NATIVE_GATEWAY_PATH='./../api/gateway/native/src'
+USER_API_PATH='./../api/server/user'
+
 ##################################################
 # For Configuration
 ##################################################
@@ -5,8 +12,6 @@
 
 install:
 	go install \
-    github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway \
-    github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2 \
     google.golang.org/protobuf/cmd/protoc-gen-go \
     google.golang.org/grpc/cmd/protoc-gen-go-grpc
 
@@ -16,37 +21,33 @@ install:
 .PHONY: generate
 
 generate:
-	$(MAKE) generate-gateway
-	$(MAKE) generate-swagger
+	$(MAKE) install
+	$(MAKE) generate-admin-gateway
+	$(MAKE) generate-native-gateway
 	$(MAKE) generate-user-api
 
-generate-gateway:
+generate-admin-gateway:
 	protoc -I . \
-		-I ${GOPATH}/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
-		--go_out ./../infra/gateway \
-		--go_opt paths=source_relative \
-		--go-grpc_out ./../infra/gateway \
-		--go-grpc_opt paths=source_relative \
-		--grpc-gateway_out ./../infra/gateway \
-		--grpc-gateway_opt logtostderr=true \
-		--grpc-gateway_opt paths=source_relative \
-		--grpc-gateway_opt generate_unbound_methods=true \
+		--plugin=protoc-gen-ts=${PROTOC_GEN_TS_PATH} \
+		--plugin=protoc-gen-grpc=${PROTOC_GEN_GRPC_PATH} \
+		--js_out=import_style=commonjs,binary:${ADMIN_GATEWAY_PATH} \
+		--grpc_out=grpc_js:${ADMIN_GATEWAY_PATH} \
+		--ts_out=grpc_js:${ADMIN_GATEWAY_PATH} \
 		./proto/*.proto
 
-generate-swagger:
+generate-native-gateway:
 	protoc -I . \
-		-I ${GOPATH}/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
-		--openapiv2_out ./../docs/12_backend/11_swagger \
-		--openapiv2_opt allow_merge=true \
-		--openapiv2_opt merge_file_name=apiv1 \
-		--openapiv2_opt logtostderr=true \
+		--plugin=protoc-gen-ts=${PROTOC_GEN_TS_PATH} \
+		--plugin=protoc-gen-grpc=${PROTOC_GEN_GRPC_PATH} \
+		--js_out=import_style=commonjs,binary:${NATIVE_GATEWAY_PATH} \
+		--grpc_out=grpc_js:${NATIVE_GATEWAY_PATH} \
+		--ts_out=grpc_js:${NATIVE_GATEWAY_PATH} \
 		./proto/*.proto
 
 generate-user-api:
 	protoc -I . \
-		-I ${GOPATH}/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
-		--go_out ./../api/user \
+		--go_out ${USER_API_PATH} \
 		--go_opt paths=source_relative \
-		--go-grpc_out ./../api/user \
+		--go-grpc_out ${USER_API_PATH} \
 		--go-grpc_opt paths=source_relative \
 		./proto/user_apiv1.proto

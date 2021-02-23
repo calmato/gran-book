@@ -1,4 +1,4 @@
-const excludedPaths: string[] = ['/', '/signin']
+const excludedPaths: string[] = ['/signin']
 
 export default async ({ route, store, redirect }) => {
   if (excludedPaths.includes(route.path)) {

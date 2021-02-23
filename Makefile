@@ -17,6 +17,7 @@ install:
 	docker-compose run --rm native yarn
 
 start:
+	$(PWD)/bin/get-local-ip-addr.sh
 	docker-compose up --remove-orphans
 
 stop:
@@ -34,7 +35,7 @@ logs:
 ##################################################
 # Container Commands - Run Container Group
 ##################################################
-.PHONY: start-native start-admin start-api
+.PHONY: start-native start-admin start-api start-swagger
 
 start-native:
 	$(PWD)/bin/get-local-ip-addr.sh
@@ -44,7 +45,7 @@ start-admin:
 	docker-compose up admin
 
 start-api:
-	docker-compose up gateway user_api mysql swagger_editor
+	docker-compose up native_gateway admin_gateway user_api mysql swagger_editor
 
 start-swagger:
 	docker-compose up swagger swagger_editor
