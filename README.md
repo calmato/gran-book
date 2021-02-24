@@ -11,8 +11,11 @@
 
 * Frontend
   * Node: 15.4.0
+  * Expo: 4.0.13
 * Backend
   * Golang: 1.15.6
+  * Node: 15.4.0
+  * MySQL: 8.0.22
 
 </details>
 
@@ -36,13 +39,6 @@
 
 * .envファイルの編集
 
-```.env
-FIREBASE_API_KEY=xxxxxx
-FIREBASE_PROJECT_ID=xxxxxx
-FIREBASE_MESSAGING_SENDER_ID=xxxxxx
-...
-```
-
 * secretディレクトリのファイルを.envへ書き込み
 
 > $ var=$(jq -c < ./secrets/[ファイル名])
@@ -63,19 +59,19 @@ FIREBASE_MESSAGING_SENDER_ID=xxxxxx
 <details>
 <summary>コマンド一覧</summary>
 
-|     Commands      |              Description               |
-| :---------------- | :------------------------------------- |
-| make setup        | * 初回のみ実行                         |
-| make build        | * コンテナの再構築                     |
-| make install      | * コンテナ内にライブラリをインストール |
-| make start        | * コンテナを起動                       |
-| make start-native | * ネイティブアプリ関連のコンテナを起動 |
-| make start-admin  | * 管理者コンソール関連のコンテナを起動 |
-| make start-api    | * Swaggerのコンテナを起動              |
-| make start        | * コンテナを起動                       |
-| make stop         | * コンテナの停止                       |
-| make remove       | * コンテナの削除                       |
-| make logs         | * コンテナのログを取得                 |
+|      Commands      |              Description               |
+| :----------------- | :------------------------------------- |
+| make setup         | * 初回のみ実行                         |
+| make build         | * コンテナの再構築                     |
+| make install       | * コンテナ内にライブラリをインストール |
+| make start         | * コンテナを起動                       |
+| make start-native  | * ネイティブアプリ関連のコンテナを起動 |
+| make start-admin   | * 管理者コンソール関連のコンテナを起動 |
+| make start-api     | * API関連のコンテナを起動              |
+| make start-swagger | * Swaggerのコンテナを起動              |
+| make stop          | * コンテナの停止                       |
+| make down          | * コンテナの削除                       |
+| make logs          | * コンテナのログを取得                 |
 
 </details>
 
@@ -111,6 +107,8 @@ FIREBASE_MESSAGING_SENDER_ID=xxxxxx
   * [12_firebase](./docs/14_infrastructure/12_firebase/README.md)
   * [21_reverse-proxy](./docs/14_infrastructure/21_reverse-proxy/README.md)
   * [31_docker](./docs/14_infrastructure/31_docker/README.md)
+  * [32_kubernetes](./docs/14_infrastructure/32_kubernetes/README.md)
+  * [33_virtual_machine](./docs/14_infrastructure/33_virtual_machine/README.md)
   * [41_prometheus](./docs/14_infrastructure/41_prometheus/README.md)
   * [42_grafana](./docs/14_infrastructure/42_grafana/README.md)
   * [43_fluentd](./docs/14_infrastructure/43_fluentd/README.md)

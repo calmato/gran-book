@@ -1,0 +1,54 @@
+name: BFF(Native) Build and Test
+
+on:
+  push:
+    paths:
+      - '.github/workflows/ci-native-gateway-for-all.yaml'
+      - 'api/gateway/native/**'
+
+jobs:
+  build_and_test:
+    name: Build and Test
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./api/gateway/native
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest] # exclude: macos-latest, windows-latest
+        node: [15.4]
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Use Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
+
+      - uses: actions/cache@v2
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install
+        run: yarn --check-files --frozen-lockfile --non-interactive
+
+      - name: Lint
+        run: yarn lint
+
+      - name: Test
+        run: yarn test
+
+      - name: Build
+        run: yarn build

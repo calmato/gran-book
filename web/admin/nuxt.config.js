@@ -11,13 +11,22 @@ export default {
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: '' },
     ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    link: [
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Roboto' },
+    ],
   },
 
   css: [],
 
   components: true,
-  plugins: ['~/plugins/firebase', '~/plugins/persisted-state'],
+  plugins: [
+    '~/plugins/axios',
+    '~/plugins/axios-accessor',
+    '~/plugins/firebase',
+    '~/plugins/persisted-state',
+    '~/plugins/vee-validate',
+  ],
   buildModules: ['@nuxt/typescript-build', '@nuxtjs/composition-api', '@nuxtjs/vuetify'],
   modules: ['@nuxtjs/axios', '@nuxt/content'],
 
@@ -25,7 +34,6 @@ export default {
     middleware: ['authenticated'],
   },
 
-  axios: {},
   content: {},
 
   vuetify: {
@@ -58,6 +66,7 @@ export default {
     firebaseApiKey: process.env.FIREBASE_API_KEY,
     firebaseProjectId: process.env.FIREBASE_PROJECT_ID,
     firebaseMessagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+    apiURL: process.env.API_URL,
   },
 
   build: {},

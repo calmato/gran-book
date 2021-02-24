@@ -16,6 +16,7 @@ services:
       - 19002:19002
     environment:
       - REACT_NATIVE_PACKAGER_HOSTNAME=${LOCAL_IP_ADDRESS}
+      - API_URL=${NATIVE_API_URL}
     command: yarn start
 
   admin:
@@ -32,40 +33,66 @@ services:
       - FIREBASE_API_KEY=${FIREBASE_API_KEY}
       - FIREBASE_PROJECT_ID=${FIREBASE_PROJECT_ID}
       - FIREBASE_MESSAGING_SENDER_ID=${FIREBASE_MESSAGING_SENDER_ID}
+      - API_URL=${ADMIN_API_URL}
     command: yarn dev -H 0.0.0.0 -p 3000
 
   # Backend
-  gateway:
-    container_name: gran_book_gateway
+  native_gateway:
+    container_name: gran_book_native_gateway
     build:
-      context: ./infra/docker/infra/gateway
+      context: ./infra/docker/api/gateway/native
       dockerfile: Dockerfile_development
-    working_dir: /go/src/github.com/calmato/gran-book/infra/gateway
+    working_dir: /var/gateway
     volumes:
-      - ./infra/gateway:/go/src/github.com/calmato/gran-book/infra/gateway:cached
-      - ./tmp/data/go/pkg/mod:/go/pkg/mod:delegated
-      - ./tmp/logs/gateway:/var/log/gateway:delegated
+      - ./api/gateway/native:/var/gateway:cached
+      - ./tmp/logs/native_gateway:/var/log/gateway:delegated
     environment:
+      - HOST=0.0.0.0
       - PORT=8080
       - LOG_PATH=/var/log/gateway
-      - LOG_LEVEL=${LOG_LEVEL}
-      - SSL_VALIDATION=${SSL_VALIDATION}
       - USER_API_URL=${USER_API_URL}
+      - FIREBASE_PROJECT_ID=${FIREBASE_PROJECT_ID}
+      - FIREBASE_CLIENT_EMAIL=${FIREBASE_CLIENT_EMAIL}
+      - FIREBASE_PRIVATE_KEY=${FIREBASE_PRIVATE_KEY}
     ports:
       - 8080:8080
     networks:
       - api
       - monitoring
-    command: realize start
+    command: yarn dev
+
+  admin_gateway:
+    container_name: gran_book_admin_gateway
+    build:
+      context: ./infra/docker/api/gateway/admin
+      dockerfile: Dockerfile_development
+    working_dir: /var/gateway
+    volumes:
+      - ./api/gateway/admin:/var/gateway:cached
+      - ./tmp/logs/admin_gateway:/var/log/gateway:delegated
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8080
+      - LOG_PATH=/var/log/gateway
+      - USER_API_URL=${USER_API_URL}
+      - FIREBASE_PROJECT_ID=${FIREBASE_PROJECT_ID}
+      - FIREBASE_CLIENT_EMAIL=${FIREBASE_CLIENT_EMAIL}
+      - FIREBASE_PRIVATE_KEY=${FIREBASE_PRIVATE_KEY}
+    ports:
+      - 8081:8080
+    networks:
+      - api
+      - monitoring
+    command: yarn dev
 
   user_api:
     container_name: gran_book_user_api
     build:
-      context: ./infra/docker/api/user
+      context: ./infra/docker/api/server/user
       dockerfile: Dockerfile_development
-    working_dir: /go/src/github.com/calmato/gran-book/api/user
+    working_dir: /go/src/github.com/calmato/gran-book/api/server/user
     volumes:
-      - ./api/user:/go/src/github.com/calmato/gran-book/api/user:cached
+      - ./api/server/user:/go/src/github.com/calmato/gran-book/api/server/user:cached
       - ./tmp/data/go/pkg/mod:/go/pkg/mod:delegated
       - ./tmp/logs/user_api:/var/log/api:delegated
     environment:
@@ -135,13 +162,13 @@ services:
     container_name: gran_book_proto
     build:
       context: ./infra/docker/proto
-      dockerfile: Dockerfile_development
+      dockerfile: Dockerfile
     working_dir: /go/src/github.com/calmato/gran-book/proto
     volumes:
       - ./proto:/go/src/github.com/calmato/gran-book/proto:cached
-      - ./api/user:/go/src/github.com/calmato/gran-book/api/user:cached
-      - ./docs/12_backend/11_swagger:/go/src/github.com/calmato/gran-book/docs/12_backend/11_swagger:cached
-      - ./infra/gateway:/go/src/github.com/calmato/gran-book/infra/gateway:cached
+      - ./api/server/user:/go/src/github.com/calmato/gran-book/api/server/user:cached
+      - ./api/gateway/admin:/go/src/github.com/calmato/gran-book/api/gateway/admin:cached
+      - ./api/gateway/native:/go/src/github.com/calmato/gran-book/api/gateway/native:cached
       - ./tmp/data/go/pkg/mod:/go/pkg/mod:delegated
 
   swagger:
@@ -150,11 +177,12 @@ services:
       context: ./infra/docker/infra/swagger_ui
       dockerfile: Dockerfile
     volumes:
-      - ./docs/12_backend/11_swagger/apiv1.openapi.yaml:/var/swagger/swagger.yaml:cached
+      - ./docs/12_backend/11_swagger/admin.apiv1.yaml:/var/swagger/admin.yaml:cached
+      - ./docs/12_backend/11_swagger/native.apiv1.yaml:/var/swagger/native.yaml:cached
     ports:
       - 8000:8080
     environment:
-      SWAGGER_JSON: /var/swagger/swagger.yaml
+      SWAGGER_JSON: /var/swagger/native.yaml
 
   swagger_editor:
     container_name: gran_book_swagger_editor
