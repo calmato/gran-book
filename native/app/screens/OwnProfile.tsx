@@ -27,12 +27,12 @@ const styles = StyleSheet.create({
 const userInfo = 
 {
   name: 'hamachans',
-  avatar_url: 'https://pbs.twimg.com/profile_images/1312909954148253696/Utr-sa_Y_400x400.jpg',
+  avatarUrl: 'https://pbs.twimg.com/profile_images/1312909954148253696/Utr-sa_Y_400x400.jpg',
   rating: 2.4,
-  numberOfReviews: 20,
-  numberOfSales: 3,
-  numberOfFollowers: 20,
-  numberOfFollows: 5,
+  reviewNum: 20,
+  saleNum: 3,
+  followerNum: 20,
+  followNum: 5,
   bio: 'よろしくお願いします。',
 };
 
@@ -45,14 +45,14 @@ const OwnProfile = function OwnProfile(): ReactElement {
       />
       <ProfileViewGroup
         name={userInfo.name}
-        avatar_url={userInfo.avatar_url}
+        avatarUrl={userInfo.avatarUrl}
         rating={userInfo.rating}
-        numberOfReviews={userInfo.numberOfReviews}
+        reviewNum={userInfo.reviewNum}
       />
       <ProfileFollowFollwer
-        numberOfSales={userInfo.numberOfSales}
-        numberOfFollowers={userInfo.numberOfFollowers}
-        numberOfFollows={userInfo.numberOfFollows}
+        saleNum={userInfo.saleNum}
+        followerNum={userInfo.followerNum}
+        followNum={userInfo.followNum}
       />
       <Text style={styles.bio}>{userInfo.bio}</Text>
       <Text style={styles.title}>出品リスト</Text>

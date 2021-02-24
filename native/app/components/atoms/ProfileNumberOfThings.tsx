@@ -20,7 +20,7 @@ interface Props {
   numberOfThings: number
 }
 
-const ProfileNumberOfThings = function ProfileNumberOfThings(props:Props): ReactElement {
+const ProfileNumberOfThings = function ProfileNumberOfThings(props: Props): ReactElement {
   return (
     <View style={styles.container}>
       <Text style={styles.number}>{props.numberOfThings}</Text>

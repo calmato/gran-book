@@ -11,9 +11,9 @@ const styles = StyleSheet.create({
 
 interface Props {
   name: string
-  avatar_url: string
+  avatarUrl: string
   rating: number
-  numberOfReviews: number
+  reviewNum: number
 }
 
 const ProfileViewGroup = function ProfileViewGroup(props:Props): ReactElement {
@@ -21,9 +21,9 @@ const ProfileViewGroup = function ProfileViewGroup(props:Props): ReactElement {
     <View style={styles.container}>
       <ProfileBasicInfoGroup
         name={props.name}
-        avatar_url={props.avatar_url}
+        avatarUrl={props.avatarUrl}
         rating={props.rating}
-        numberOfReviews={props.numberOfReviews}
+        reviewNum={props.reviewNum}
       />
     </View>
   );

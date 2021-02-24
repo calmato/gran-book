@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
   reviewRate: {
     paddingStart:10,
     paddingEnd:10,
-    color: COLOR.TEXT_DEFAULT
+    color: COLOR.TEXT_DEFAULT,
   },
   icon:{
     paddingStart:30,
@@ -35,15 +35,15 @@ const styles = StyleSheet.create({
 
 interface Props {
   name: string
-  avatar_url: string
+  avatarUrl: string
   rating: number
-  numberOfReviews: number
+  reviewNum: number
 }
 
 const ProfileBasicInfoGroup = function ProfileBasicInfoGroup(props: Props): ReactElement {
   return (
     <ListItem style={styles.container}>
-      <Avatar source={{uri: props.avatar_url}} rounded size='medium'/>
+      <Avatar source={{uri: props.avatarUrl}} rounded size='medium'/>
       <ListItem.Content>
         <ListItem.Title>{props.name}</ListItem.Title>
         <View style={styles.reviewContainer}>
@@ -54,7 +54,7 @@ const ProfileBasicInfoGroup = function ProfileBasicInfoGroup(props: Props): Reac
             imageSize={20}
           />
           <Text style={styles.reviewRate}>{props.rating}</Text>
-          <Text>{`(${props.numberOfReviews}件)`}</Text>
+          <Text>({props.reviewNum}件)</Text>
           <MaterialIcons name="keyboard-arrow-right" size={24} color="black" style={styles.icon}/>
         </View>
         <Button title={'プロフィールを編集'} buttonStyle={styles.button} titleStyle={styles.buttonTitle}/>
