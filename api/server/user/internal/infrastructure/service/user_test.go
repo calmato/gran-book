@@ -6,6 +6,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/calmato/gran-book/api/server/user/internal/domain"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/user"
 	mock_user "github.com/calmato/gran-book/api/server/user/mock/domain/user"
@@ -64,6 +65,95 @@ func TestUserService_Authentication(t *testing.T) {
 
 			if !reflect.DeepEqual(got, tc.Expected.UID) {
 				t.Fatalf("want %#v, but %#v", tc.Expected.UID, got)
+				return
+			}
+		})
+	}
+}
+
+func TestUserService_List(t *testing.T) {
+	current := time.Now()
+
+	testCases := map[string]struct {
+		Query    *domain.ListQuery
+		Expected struct {
+			Users []*user.User
+			Total int64
+			Error error
+		}
+	}{
+		"ok": {
+			Query: &domain.ListQuery{
+				Limit:  100,
+				Offset: 0,
+				Order:  nil,
+			},
+			Expected: struct {
+				Users []*user.User
+				Total int64
+				Error error
+			}{
+				Users: []*user.User{
+					{
+						ID:               "00000000-0000-0000-0000-000000000000",
+						Username:         "test-user",
+						Gender:           0,
+						Email:            "test-user@calmato.com",
+						PhoneNumber:      "000-0000-0000",
+						Role:             0,
+						ThumbnailURL:     "",
+						SelfIntroduction: "",
+						LastName:         "テスト",
+						FirstName:        "ユーザ",
+						LastNameKana:     "てすと",
+						FirstNameKana:    "ゆーざ",
+						PostalCode:       "000-0000",
+						Prefecture:       "東京都",
+						City:             "小金井市",
+						AddressLine1:     "貫井北町4-1-1",
+						AddressLine2:     "",
+						InstanceID:       "",
+						Activated:        true,
+						CreatedAt:        current,
+						UpdatedAt:        current,
+					},
+				},
+				Total: 1,
+				Error: nil,
+			},
+		},
+	}
+
+	for result, tc := range testCases {
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		uvm := mock_user.NewMockValidation(ctrl)
+
+		urm := mock_user.NewMockRepository(ctrl)
+		urm.EXPECT().List(ctx, tc.Query).Return(tc.Expected.Users, tc.Expected.Total, tc.Expected.Error)
+
+		uum := mock_user.NewMockUploader(ctrl)
+
+		t.Run(result, func(t *testing.T) {
+			target := NewUserService(uvm, urm, uum)
+
+			users, total, err := target.List(ctx, tc.Query)
+			if !reflect.DeepEqual(err, tc.Expected.Error) {
+				t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+				return
+			}
+
+			if !reflect.DeepEqual(users, tc.Expected.Users) {
+				t.Fatalf("want %#v, but %#v", tc.Expected.Users, users)
+				return
+			}
+
+			if !reflect.DeepEqual(total, tc.Expected.Total) {
+				t.Fatalf("want %#v, but %#v", tc.Expected.Total, total)
 				return
 			}
 		})

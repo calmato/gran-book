@@ -8,6 +8,62 @@ import (
 	"github.com/golang/mock/gomock"
 )
 
+func TestAdminRequestValidation_ListAdmin(t *testing.T) {
+	testCases := map[string]struct {
+		Input    *input.ListAdmin
+		Expected bool
+	}{
+		"ok": {
+			Input: &input.ListAdmin{
+				Limit:  100,
+				Offset: 0,
+			},
+			Expected: true,
+		},
+		"ng_limit_greater_than": {
+			Input: &input.ListAdmin{
+				Limit:  -1,
+				Offset: 0,
+			},
+			Expected: false,
+		},
+		"ng_limit_less_than": {
+			Input: &input.ListAdmin{
+				Limit:  1001,
+				Offset: 0,
+			},
+			Expected: false,
+		},
+		"ng_offset_greater_than": {
+			Input: &input.ListAdmin{
+				Limit:  100,
+				Offset: -1,
+			},
+			Expected: false,
+		},
+	}
+
+	for result, tc := range testCases {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		t.Run(result, func(t *testing.T) {
+			target := NewAdminRequestValidation()
+
+			got := target.ListAdmin(tc.Input)
+			if tc.Expected {
+				if got != nil {
+					t.Fatalf("Incorrect result: %#v", got)
+				}
+			} else {
+				if got == nil {
+					t.Fatalf("Incorrect result: result is nil")
+				}
+			}
+		})
+	}
+}
+
 func TestAdminRequestValidation_CreateAdmin(t *testing.T) {
 	testCases := map[string]struct {
 		Input    *input.CreateAdmin

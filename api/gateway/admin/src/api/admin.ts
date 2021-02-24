@@ -3,19 +3,41 @@ import { adminClient } from '~/plugins/grpc'
 import { getGrpcError } from '~/lib/grpc-exception'
 import { getGrpcMetadata } from '~/lib/grpc-metadata'
 import {
+  AdminListResponse,
   AdminResponse,
   CreateAdminRequest,
+  ListAdminRequest,
   UpdateAdminPasswordRequest,
   UpdateAdminProfileRequest,
   UpdateAdminRoleRequest,
 } from '~/proto/user_apiv1_pb'
 import {
   ICreateAdminInput,
+  IListAdminInput,
   IUpdateAdminPasswordInput,
   IUpdateAdminProfileInput,
   IUpdateAdminRoleInput,
 } from '~/types/input'
-import { IAdminOutput } from '~/types/output'
+import { IAdminListOutput, IAdminListOutputOrder, IAdminListOutputUser, IAdminOutput } from '~/types/output'
+
+export function listAdmin(req: Request<any>, input: IListAdminInput): Promise<IAdminListOutput> {
+  const request = new ListAdminRequest()
+  const metadata = getGrpcMetadata(req)
+
+  request.setLimit(input.limit)
+  request.setOffset(input.offset)
+
+  return new Promise((resolve: (res: IAdminListOutput) => void, reject: (reason: Error) => void) => {
+    adminClient.listAdmin(request, metadata, (err: any, res: AdminListResponse) => {
+      if (err) {
+        reject(getGrpcError(err))
+        return
+      }
+
+      resolve(setAdminListOutput(res))
+    })
+  })
+}
 
 export function createAdmin(req: Request<any>, input: ICreateAdminInput): Promise<IAdminOutput> {
   const request = new CreateAdminRequest()
@@ -122,6 +144,46 @@ function setAdminOutput(res: AdminResponse): IAdminOutput {
     activated: res.getActivated(),
     createdAt: res.getCreatedAt(),
     updatedAt: res.getUpdatedAt(),
+  }
+
+  return output
+}
+
+function setAdminListOutput(res: AdminListResponse): IAdminListOutput {
+  const users: IAdminListOutputUser[] = res.getUsersList().map(
+    (u: AdminListResponse.User): IAdminListOutputUser => ({
+      id: u.getId(),
+      username: u.getUsername(),
+      email: u.getEmail(),
+      phoneNumber: u.getPhoneNumber(),
+      role: u.getRole(),
+      thumbnailUrl: u.getThumbnailUrl(),
+      selfIntroduction: u.getSelfIntroduction(),
+      lastName: u.getLastName(),
+      firstName: u.getFirstName(),
+      lastNameKana: u.getLastNameKana(),
+      firstNameKana: u.getFirstNameKana(),
+      activated: u.getActivated(),
+      createdAt: u.getCreatedAt(),
+      updatedAt: u.getUpdatedAt(),
+    })
+  )
+
+  const output: IAdminListOutput = {
+    users,
+    limit: res.getLimit(),
+    offset: res.getOffset(),
+    total: res.getTotal(),
+  }
+
+  const orderRes: AdminListResponse.Order | undefined = res.getOrder()
+  if (orderRes) {
+    const order: IAdminListOutputOrder = {
+      by: orderRes.getBy(),
+      direction: orderRes.getDirection(),
+    }
+
+    output.order = order
   }
 
   return output
