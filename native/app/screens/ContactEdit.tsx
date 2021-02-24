@@ -18,8 +18,8 @@ const styles = StyleSheet.create({
   },
   mailStatus: {
     padding: 15,
-    textAlign: 'right',
     fontSize: 16,
+    textAlign: 'right',
     color: COLOR.TEXT_DEFAULT,
     backgroundColor: COLOR.BACKGROUND_WHITE
   },
@@ -52,10 +52,15 @@ const ContactEdit = function ContactEdit(props: Props): ReactElement {
         </ListItem.Content>
         <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
       </ListItem>
+      <Text style={styles.subtitle}>パスワード</Text>
+      <ListItem style={{ marginTop: 5 }} bottomDivider >
+        <ListItem.Content>
+          <Text style={styles.textStyle}>パスワードの変更</Text>
+        </ListItem.Content>
+        <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
+      </ListItem>
     </View>
   );
 };
-
-// .defaultProps={}
 
 export default ContactEdit;
