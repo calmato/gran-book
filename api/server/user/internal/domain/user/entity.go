@@ -23,6 +23,15 @@ type User struct {
 	AddressLine1     string    `gorm:"size:64"`
 	AddressLine2     string    `gorm:"size:64"`
 	InstanceID       string    `gorm:"size:256"`
+	Activated        bool      `gorm:"not null;default:true"`
 	CreatedAt        time.Time `gorm:"not null;<-:create"`
 	UpdatedAt        time.Time `gorm:"not null"`
 }
+
+// ユーザ権限
+const (
+	UserRole int32 = iota
+	AdminRole
+	DeveloperRole
+	OperatorRole
+)

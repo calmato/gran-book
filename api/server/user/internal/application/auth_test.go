@@ -46,6 +46,7 @@ func TestAuthApplication_Authentication(t *testing.T) {
 					AddressLine1:     "貫井北町4-1-1",
 					AddressLine2:     "",
 					InstanceID:       "",
+					Activated:        true,
 					CreatedAt:        current,
 					UpdatedAt:        current,
 				},
@@ -104,11 +105,12 @@ func TestAuthApplication_Create(t *testing.T) {
 				Error error
 			}{
 				User: &user.User{
-					Username: "test-user",
-					Email:    "test-user@calmato.com",
-					Password: "12345678",
-					Gender:   0,
-					Role:     0,
+					Username:  "test-user",
+					Email:     "test-user@calmato.com",
+					Password:  "12345678",
+					Gender:    0,
+					Role:      0,
+					Activated: true,
 				},
 				Error: nil,
 			},

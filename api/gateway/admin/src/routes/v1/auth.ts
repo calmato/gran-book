@@ -26,66 +26,12 @@ router.get(
 )
 
 router.patch(
-  '/',
-  async (req: Request<IUpdateAuthRequest>, res: Response<IAuthResponse>, next: NextFunction): Promise<void> => {
-    const {
-      username,
-      gender,
-      thumbnail,
-      selfIntroduction,
-      lastName,
-      firstName,
-      lastNameKana,
-      firstNameKana,
-      phoneNumber,
-    } = req.body as IUpdateAuthRequest
-
-    await getAuth(req)
-      .then(
-        (): Promise<IAuthOutput> => {
-          const input: IUpdateAuthProfileInput = {
-            username: username,
-            gender: gender,
-            thumbnail: thumbnail,
-            selfIntroduction: selfIntroduction,
-          }
-
-          return updateAuthProfile(req, input)
-        }
-      )
-      .then(
-        (output: IAuthOutput): Promise<IAuthOutput> => {
-          const input: IUpdateAuthAddressInput = {
-            lastName: lastName,
-            firstName: firstName,
-            lastNameKana: lastNameKana,
-            firstNameKana: firstNameKana,
-            phoneNumber: phoneNumber,
-            postalCode: output.postalCode,
-            prefecture: output.prefecture,
-            city: output.city,
-            addressLine1: output.addressLine1,
-            addressLine2: output.addressLine2,
-          }
-
-          return updateAuthAddress(req, input)
-        }
-      )
-      .then((output: IAuthOutput) => {
-        const response: IAuthResponse = setAuthResponse(output)
-        res.status(200).json(response)
-      })
-      .catch((err: GrpcError) => next(err))
-  }
-)
-
-router.patch(
   '/email',
   async (req: Request<IUpdateAuthEmailRequest>, res: Response<IAuthResponse>, next: NextFunction): Promise<void> => {
     const { email } = req.body as IUpdateAuthEmailRequest
 
     const input: IUpdateAuthEmailInput = {
-      email: email,
+      email,
     }
 
     await updateAuthEmail(req, input)
@@ -103,11 +49,64 @@ router.patch(
     const { password, passwordConfirmation } = req.body as IUpdateAuthPasswordRequest
 
     const input: IUpdateAuthPasswordInput = {
-      password: password,
-      passwordConfirmation: passwordConfirmation,
+      password,
+      passwordConfirmation,
     }
 
     await UpdateAuthPassword(req, input)
+      .then((output: IAuthOutput) => {
+        const response: IAuthResponse = setAuthResponse(output)
+        res.status(200).json(response)
+      })
+      .catch((err: GrpcError) => next(err))
+  }
+)
+
+router.patch(
+  '/profile',
+  async (req: Request<IUpdateAuthRequest>, res: Response<IAuthResponse>, next: NextFunction): Promise<void> => {
+    const {
+      username,
+      thumbnail,
+      selfIntroduction,
+      lastName,
+      firstName,
+      lastNameKana,
+      firstNameKana,
+      phoneNumber,
+    } = req.body as IUpdateAuthRequest
+
+    await getAuth(req)
+      .then(
+        (output: IAuthOutput): Promise<IAuthOutput> => {
+          const input: IUpdateAuthProfileInput = {
+            username,
+            gender: output.gender,
+            thumbnail,
+            selfIntroduction,
+          }
+
+          return updateAuthProfile(req, input)
+        }
+      )
+      .then(
+        (output: IAuthOutput): Promise<IAuthOutput> => {
+          const input: IUpdateAuthAddressInput = {
+            lastName,
+            firstName,
+            lastNameKana,
+            firstNameKana,
+            phoneNumber,
+            postalCode: output.postalCode || '000-0000',
+            prefecture: output.prefecture || 'Unknown',
+            city: output.city || 'Unknown',
+            addressLine1: output.addressLine1 || 'Unknown',
+            addressLine2: output.addressLine2,
+          }
+
+          return updateAuthAddress(req, input)
+        }
+      )
       .then((output: IAuthOutput) => {
         const response: IAuthResponse = setAuthResponse(output)
         res.status(200).json(response)
@@ -122,7 +121,6 @@ function setAuthResponse(output: IAuthOutput): IAuthResponse {
   const response: IAuthResponse = {
     id: output.id,
     username: output.username,
-    gender: output.gender,
     email: output.email,
     phoneNumber: output.phoneNumber,
     role: output.role,

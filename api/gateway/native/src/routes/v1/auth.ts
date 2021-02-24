@@ -38,10 +38,10 @@ router.post(
     const { username, email, password, passwordConfirmation } = req.body as ICreateAuthRequest
 
     const input: ICreateAuthInput = {
-      username: username,
-      email: email,
-      password: password,
-      passwordConfirmation: passwordConfirmation,
+      username,
+      email,
+      password,
+      passwordConfirmation,
     }
 
     await createAuth(req, input)
@@ -59,7 +59,7 @@ router.patch(
     const { email } = req.body as IUpdateAuthEmailRequest
 
     const input: IUpdateAuthEmailInput = {
-      email: email,
+      email,
     }
 
     await updateAuthEmail(req, input)
@@ -77,8 +77,8 @@ router.patch(
     const { password, passwordConfirmation } = req.body as IUpdateAuthPasswordRequest
 
     const input: IUpdateAuthPasswordInput = {
-      password: password,
-      passwordConfirmation: passwordConfirmation,
+      password,
+      passwordConfirmation,
     }
 
     await UpdateAuthPassword(req, input)
@@ -96,10 +96,10 @@ router.patch(
     const { username, gender, thumbnail, selfIntroduction } = req.body as IUpdateAuthProfileRequest
 
     const input: IUpdateAuthProfileInput = {
-      username: username,
-      gender: gender,
-      thumbnail: thumbnail,
-      selfIntroduction: selfIntroduction,
+      username,
+      gender,
+      thumbnail,
+      selfIntroduction,
     }
 
     await updateAuthProfile(req, input)
@@ -128,16 +128,16 @@ router.patch(
     } = req.body as IUpdateAuthAddressRequest
 
     const input: IUpdateAuthAddressInput = {
-      lastName: lastName,
-      firstName: firstName,
-      lastNameKana: lastNameKana,
-      firstNameKana: firstNameKana,
-      phoneNumber: phoneNumber,
-      postalCode: postalCode,
-      prefecture: prefecture,
-      city: city,
-      addressLine1: addressLine1,
-      addressLine2: addressLine2,
+      lastName,
+      firstName,
+      lastNameKana,
+      firstNameKana,
+      phoneNumber,
+      postalCode,
+      prefecture,
+      city,
+      addressLine1,
+      addressLine2,
     }
 
     await updateAuthAddress(req, input)
