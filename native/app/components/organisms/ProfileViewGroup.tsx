@@ -12,7 +12,7 @@ interface Props {
   followerNum: number
   followNum: number
   buttonTitle: string
-  handleButtonPress: () => void
+  handleClick: () => void
 }
 
 const ProfileViewGroup = function ProfileViewGroup(props:Props): ReactElement {
@@ -24,7 +24,7 @@ const ProfileViewGroup = function ProfileViewGroup(props:Props): ReactElement {
         rating={props.rating}
         reviewNum={props.reviewNum}
         buttonTitle={props.buttonTitle}
-        handleButtonPress={props.handleButtonPress}
+        handleClick={props.handleClick}
       />
       <ProfileFollowFollwer
         saleNum={props.saleNum}

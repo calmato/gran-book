@@ -15,6 +15,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     padding: 10,
     alignSelf: 'stretch',
+    minHeight: 100,
   },
   title: {
     color: COLOR.TEXT_TITLE,
@@ -51,7 +52,7 @@ const OtherProfile = function OtherProfile(): ReactElement {
         followerNum={userInfo.followerNum}
         followNum={userInfo.followNum}
         buttonTitle={'フォローする'}
-        handleButtonPress={() => undefined}
+        handleClick={() => undefined}
       />
       <Text style={styles.bio}>{userInfo.bio}</Text>
       <Text style={styles.title}>出品リスト</Text>
