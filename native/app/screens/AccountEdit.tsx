@@ -35,7 +35,7 @@ const styles = StyleSheet.create(
       alignItems: 'center',
     },
     prefectureArea: {
-      padding: 20,
+      padding: 15,
       marginTop: 12,
       backgroundColor: COLOR.BACKGROUND_WHITE,
     },
