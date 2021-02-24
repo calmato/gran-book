@@ -2,8 +2,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React, { ReactElement } from 'react';
 import SignInSelect from '~/screens/SignInSelect';
 import SignUpCheckEmail from '~/screens/SignUpCheckEmail';
-import SingIn from '~/screens/SignIn';
-import { SignUp } from '~/containers';
+import { SignIn, SignUp } from '~/containers';
 import { AuthStackParamList } from '~/types/navigation';
 import PasswordReset from '~/screens/PasswordReset';
 
@@ -20,7 +19,7 @@ const AuthRoute = function AuthRoute(): ReactElement {
       <AuthStack.Screen name="SignInSelect" component={SignInSelect}/>
       <AuthStack.Screen name="SignUp" component={SignUp} />
       <AuthStack.Screen name="SignUpCheckEmail" component={SignUpCheckEmail} />
-      <AuthStack.Screen name="SignIn" component={SingIn} />
+      <AuthStack.Screen name="SignIn" component={SignIn} />
       <AuthStack.Screen name="PasswordReset" component={PasswordReset} />
     </AuthStack.Navigator>
   );

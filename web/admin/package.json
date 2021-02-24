@@ -9,7 +9,7 @@
     "generate": "nuxt-ts generate",
     "lint": "eslint --ext .js,.ts,.vue --ignore-path .gitignore .",
     "lint:fix": "yarn lint --fix",
-    "test": "jest"
+    "test": "jest --config jest.config.js --coverage --verbose"
   },
   "dependencies": {
     "@nuxt/content": "^1.9.0",
@@ -20,9 +20,13 @@
     "firebase": "^8.2.1",
     "js-cookie": "^2.2.1",
     "nuxt": "^2.14.6",
+    "vee-validate": "^3.4.5",
     "vuex-persistedstate": "^4.0.0-beta.2"
   },
   "devDependencies": {
+    "@babel/core": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
+    "@babel/preset-typescript": "^7.12.7",
     "@nuxt/types": "^2.14.6",
     "@nuxt/typescript-build": "^2.0.3",
     "@nuxtjs/eslint-config": "^3.1.0",
@@ -32,12 +36,13 @@
     "@vue/test-utils": "^1.1.0",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "^10.1.0",
-    "babel-jest": "^26.5.0",
+    "babel-jest": "^26.6.3",
     "eslint": "^7.10.0",
     "eslint-config-prettier": "^6.12.0",
     "eslint-plugin-nuxt": "^1.0.0",
     "eslint-plugin-prettier": "^3.1.4",
     "jest": "^26.5.0",
+    "lodash.clonedeep": "^4.5.0",
     "prettier": "^2.1.2",
     "ts-jest": "^26.4.1",
     "vue-jest": "^3.0.4",

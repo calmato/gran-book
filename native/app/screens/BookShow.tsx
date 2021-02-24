@@ -1,9 +1,7 @@
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button, Image, Text } from 'react-native-elements';
-import ButtonGroupInfoImp from '~/components/organisms/ButtonGroupInfoImp';
 import FlexBoxBookCategory from '~/components/organisms/FlexBoxBookCategory';
-import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import { COLOR } from '~~/constants/theme';
 import ButtonGroupBookFooter from '~/components/organisms/ButtonGroupBookFooter';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -52,20 +50,8 @@ const styles = StyleSheet.create({
 
 const BookShow = function BookShow(): ReactElement {
 
-  const [index, setValue] = useState(0);
-
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <HeaderWithBackButton
-        // TODO 本の名前をタイトルに入れる
-        title='タイトル'
-        // TODO Navigation の変数できたらProps作って追加
-        onPress={() => undefined}
-      />
-      <ButtonGroupInfoImp
-        handleOnPressed={(selectedIndex) => setValue(selectedIndex)}
-        selectedIndex={index}
-      />
       <View style={{flexDirection:'row',alignSelf: 'stretch' , justifyContent: 'space-around', alignItems: 'center'}}>
         <MaterialCommunityIcons name="chevron-left-circle" size={36} color={COLOR.TEXT_GRAY} />
         <Image

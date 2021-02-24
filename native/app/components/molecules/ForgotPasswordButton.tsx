@@ -22,7 +22,7 @@ interface Props {
   onPress: () => void,
 }
 
-const ForgotPasswoedButton = function ForgotPasswoedButton(props:Props): ReactElement{
+const ForgotPasswordButton = function ForgotPasswordButton(props:Props): ReactElement{
   return (
     <Button
       icon={
@@ -44,4 +44,4 @@ const ForgotPasswoedButton = function ForgotPasswoedButton(props:Props): ReactEl
   );
 };
 
-export default ForgotPasswoedButton;
+export default ForgotPasswordButton;
