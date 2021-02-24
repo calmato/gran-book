@@ -4,6 +4,8 @@ import MailInput from '~/components/molecules/MailInput';
 import PasswordInput from '~/components/molecules/PasswordInput';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import { SignInForm } from '~/types/forms';
+import { UiContext } from '~/lib/context';
+import { Status } from '~/lib/context/ui';
 import { emailValidation, passwordValidation } from '~/lib/validation';
 import { Button } from 'react-native-elements';
 import ForgotPasswordButton from '~/components/molecules/ForgotPasswordButton';
@@ -26,6 +28,7 @@ interface Props {
 
 const SignIn = function SignIn(props: Props): ReactElement {
   const navigation = useNavigation();
+  const { setApplicationState } = React.useContext(UiContext);
   const { signInWithEmail, getAuth } = props.actions;
 
   const [formData, setValue] = useState<SignInForm>({
@@ -65,13 +68,12 @@ const SignIn = function SignIn(props: Props): ReactElement {
         return getAuth();
       })
       .then(() => {
-        // TODO: 画面遷移
-        console.log('debug', 'success');
+        setApplicationState(Status.AUTHORIZED);
       })
       .catch((err) => {
         createAlertNotifySignupError(err.code);
       });
-  }, [formData.email, formData.password, signInWithEmail, getAuth]);
+  }, [formData.email, formData.password, signInWithEmail, getAuth, setApplicationState]);
 
   return (
     <View style={styles.container}>
