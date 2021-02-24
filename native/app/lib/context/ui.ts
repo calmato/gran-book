@@ -11,7 +11,9 @@ export function createApplicationInitialState(): Status {
   return Status.LOADING;
 }
 
+/* eslint-disable @typescript-eslint/no-empty-function */
 export const Context = React.createContext({
   applicationState: createApplicationInitialState(),
   setApplicationState: (_: Status) => {},
 });
+/* eslint-enable */

@@ -6,6 +6,7 @@ export async function save(values: Auth.Model): Promise<void> {
   await AsyncStorage.setItem(AUTH_KEY, JSON.stringify(values));
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function retrieve(): Promise<any> {
   const serialized = await AsyncStorage.getItem(AUTH_KEY);
   if (!serialized) {

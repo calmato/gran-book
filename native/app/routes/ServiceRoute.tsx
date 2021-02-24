@@ -16,6 +16,7 @@ const styles = StyleSheet.create({
 });
 
 function TabBarIcon(name: string, focused: boolean, size: number) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let iconName: any;
 
   switch (name) {
