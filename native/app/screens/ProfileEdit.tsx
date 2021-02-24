@@ -1,9 +1,14 @@
 import React, { ReactElement } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import ChangeIconGroup from '~/components/organisms/ChangeIconGroup';
+import ChangeNickname from '~/components/organisms/ChangeNickname';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+
+  },
+});
 
 interface Props {}
 
@@ -29,6 +34,10 @@ const ProfileEdit = function ProfileEdit(props: Props): ReactElement {
     <ChangeIconGroup
       avatarUrl={userInfo.avatarUrl}
       handleOnPressed={()=>undefined}
+    />
+    <ChangeNickname
+    defaultValue={userInfo.name}
+    handelOnChangeText={()=>undefined}
     />
   </View>
   );
