@@ -8,10 +8,12 @@ import { AccountEditForm } from '~/types/forms';
 import HalfTextInput from '~/components/molecules/HalfTextInput';
 import NumberTextInput from '~/components/molecules/NumberTextInput';
 import FullTextInput from '~/components/molecules/FullTextInput';
-import { MaterialIcons } from '@expo/vector-icons';
 import PrefecturePicker from '~/components/molecules/PrefecturePicker';
 
-const maxNameLength = 16;
+const maxNameLength7 = 7;
+const maxNameLength16 = 16;
+const maxNameLength32 = 32;
+const maxNameLength64 = 64;
 const styles = StyleSheet.create(
   {
     subtilte: {
@@ -34,15 +36,14 @@ const styles = StyleSheet.create(
     prefectureArea: {
       padding: 20,
       marginTop: 12,
-      flexDirection: 'row',
-      justifyContent: 'space-between',
       backgroundColor: COLOR.BACKGROUND_WHITE,
     },
     searchButton: {
       flex: 1,
       borderRadius: 10,
       backgroundColor: COLOR.PRIMARY,
-    }
+    },
+
   });
 
 type AccountEditProp = StackNavigationProp<RootStackParamList, 'AccountEdit'>;
@@ -70,10 +71,7 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
     addressLine2: '',
   });
 
-  const nameError: boolean = useMemo((): boolean => {
-    return formData.firstName.length < maxNameLength;
-  }, [formData.firstName]);
-
+  //TODO: ボタンを押した時の処理を追加する
   const handlePostaSubmit = React.useCallback(async () => {
     await searchAdress(
       formData.postalCode
@@ -84,7 +82,17 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
     // });
   }, [formData.postalCode]);
 
-  //TODO: かな入力・数字入力のvalidationを追加する
+  const handleAccountEditSubmit = React.useCallback(async () => {
+    await accountEditResiter(
+      formData.postalCode
+    );
+    // .then(() => {
+    // })
+    // .catch(() => {
+    // });
+  }, [formData.firstName, formData.lastName, formData.firstNameKana, formData.lastNameKana, formData.phoneNumber,
+    formData.postalCode, formData.prefecture, formData.city, formData.addressLine1, formData.addressLine2]);
+
   return (
     <View>
       <HeaderWithBackButton
@@ -101,13 +109,13 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
               onChangeText={(text) => setValue({...formData, firstName: text})}
               value={formData.firstName}
               placeholder='田中'
-              length={16}
+              length={maxNameLength16}
             />
             <HalfTextInput
               onChangeText={(text) => setValue({...formData, lastName: text})}
               value={formData.lastName}
               placeholder='太郎'
-              length={16}
+              length={maxNameLength16}
             />
           </View>
           <Text style={styles.subtilte}>
@@ -118,13 +126,13 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
               onChangeText={(text) => setValue({...formData, firstNameKana: text})}
               value={formData.firstNameKana}
               placeholder='たなか'
-              length={16}
+              length={maxNameLength16}
             />
             <HalfTextInput
               onChangeText={(text) => setValue({...formData, lastNameKana: text})}
               value={formData.lastNameKana}
               placeholder='たろう'
-              length={16}
+              length={maxNameLength16}
             />
           </View>
           <Text style={styles.subtilte}>
@@ -134,7 +142,7 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
             onChangeText={(text) => setValue({...formData, phoneNumber: text})}
             value={formData.phoneNumber}
             placeholder=''
-            length={16}
+            length={maxNameLength16}
           />
           <Text style={styles.subtilte}>
             住所
@@ -144,8 +152,8 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
             <TextInput
               onChangeText={(text) => setValue({...formData, postalCode: text})}
               value={formData.postalCode}
-              maxLength={7}
-              keyboardType="number-pad"
+              maxLength={maxNameLength7}
+              keyboardType='number-pad'
               style={{flex:3, alignSelf: 'stretch'}}
             >
             </TextInput>
@@ -163,20 +171,26 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
             onChangeText={(text) => setValue({...formData, city: text})}
             value={formData.city}
             placeholder='市区町村'
-            length={32}
+            length={maxNameLength32}
           />
           <FullTextInput
             onChangeText={(text) => setValue({...formData, addressLine1: text})}
             value={formData.addressLine1}
             placeholder='地名・番地'
-            length={64}
+            length={maxNameLength64}
           />
           <FullTextInput
             onChangeText={(text) => setValue({...formData, addressLine2: text})}
             value={formData.addressLine2}
             placeholder='マンション・ビル名 部屋番号'
-            length={64}
+            length={maxNameLength64}
           />
+          <View>
+          <Button onPress={handleAccountEditSubmit}
+            title='保存する'
+            color={COLOR.TEXT_TITLE}
+          />
+          </View>
         </ScrollView>
       </SafeAreaView>
     </View>
