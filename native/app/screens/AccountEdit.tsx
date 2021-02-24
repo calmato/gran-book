@@ -18,7 +18,7 @@ const maxNameLength64 = 64;
 
 const styles = StyleSheet.create(
   {
-    subtilte: {
+    subtitle: {
       marginTop: 12,
       marginLeft: 12,
       marginBottom: 6,
@@ -114,7 +114,7 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
         title='発送元・お届け先住所'
         onPress={() => navigation.goBack()}
       />
-      <Text style={styles.subtilte}>
+      <Text style={styles.subtitle}>
             名前
       </Text>
       <View style={styles.halfInputRow}>
@@ -131,7 +131,7 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
           length={maxNameLength16}
         />
       </View>
-      <Text style={styles.subtilte}>
+      <Text style={styles.subtitle}>
             名前(かな)
       </Text>
       <View style={styles.halfInputRow}>
@@ -148,7 +148,7 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
           length={maxNameLength16}
         />
       </View>
-      <Text style={styles.subtilte}>
+      <Text style={styles.subtitle}>
             電話番号
       </Text>
       <NumberTextInput
@@ -157,7 +157,7 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
         placeholder=''
         length={maxNameLength16}
       />
-      <Text style={styles.subtilte}>
+      <Text style={styles.subtitle}>
             住所
       </Text>
       <View style={styles.postalArea}>
