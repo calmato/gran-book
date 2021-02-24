@@ -1,10 +1,11 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '~/types/navigation';
-import React, { ReactElement, useState, useMemo } from 'react';
-import { StyleSheet, View, Text, ScrollView, SafeAreaView, TextInput, Button, KeyboardAvoidingView } from 'react-native';
+import React, { ReactElement, useState } from 'react';
+import { StyleSheet, View, Text, TextInput } from 'react-native';
 import { COLOR } from '~~/constants/theme';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import { AccountEditForm } from '~/types/forms';
+import { Button } from 'react-native-elements';
 import HalfTextInput from '~/components/molecules/HalfTextInput';
 import NumberTextInput from '~/components/molecules/NumberTextInput';
 import FullTextInput from '~/components/molecules/FullTextInput';
@@ -45,7 +46,6 @@ const styles = StyleSheet.create(
       backgroundColor: COLOR.PRIMARY,
     },
     saveButton: {
-      width: '75%',
       alignSelf: 'center',
       marginTop: 20,
       backgroundColor: COLOR.PRIMARY,
@@ -171,9 +171,12 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
         >
         </TextInput>
         <View style={styles.searchButton}>
-          <Button onPress={handlePostaSubmit}
+          <Button
+            buttonStyle={{width: '100%'}}
+            disabled={false}
+            onPress={() => undefined}
             title='検索'
-            color={COLOR.TEXT_TITLE}
+            titleStyle={{ color: COLOR.TEXT_TITLE}}
           />
         </View>
       </View>
@@ -199,9 +202,11 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
         length={maxNameLength64}
       />
       <View style={styles.saveButton}>
-        <Button onPress={handleAccountEditSubmit}
+        <Button
+          disabled={false}
+          onPress={() => undefined}
           title='保存する'
-          color={COLOR.TEXT_TITLE}
+          titleStyle={{ color: COLOR.TEXT_TITLE}}
         />
       </View>
     </View>
