@@ -1,6 +1,6 @@
 import React from 'react';
 import { useReduxDispatch } from '~/store/modules';
-import { signUpWithEmailAsync } from '~/store/usecases/auth';
+import { signUpWithEmailAsync } from '~/store/usecases';
 import SignUp from '~/screens/SignUp';
 
 export default function ConnectedSignUp(): JSX.Element {

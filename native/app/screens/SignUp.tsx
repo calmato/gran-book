@@ -67,7 +67,6 @@ const SignUp = function SignUp(props: Props): ReactElement {
       ],
     );
 
-
   const handleSubmit = React.useCallback(async () => {
     await signUpWithEmail(
       formData.email,
@@ -82,7 +81,7 @@ const SignUp = function SignUp(props: Props): ReactElement {
         console.log('debug', err);
         createAlertNotifySignupError(err.code);
       });
-  }, [formData.email, formData.password, formData.passwordConfirmation, formData.username, signUpWithEmail]);
+  }, [formData.email, formData.password, formData.passwordConfirmation, formData.username, signUpWithEmail, navigation]);
 
   return (
     <View style={styles.container} >
