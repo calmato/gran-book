@@ -170,15 +170,14 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
           style={{flex:3, alignSelf: 'stretch'}}
         >
         </TextInput>
-        <View style={styles.searchButton}>
-          <Button
-            buttonStyle={{width: '100%'}}
-            disabled={false}
-            onPress={() => undefined}
-            title='検索'
-            titleStyle={{ color: COLOR.TEXT_TITLE}}
-          />
-        </View>
+        <Button
+          buttonStyle={{width: '100%'}}
+          containerStyle={styles.searchButton}
+          disabled={false}
+          onPress={() => undefined}
+          title='検索'
+          titleStyle={{ color: COLOR.TEXT_TITLE}}
+        />
       </View>
       <View style={styles.prefectureArea}>
         <PrefecturePicker />
@@ -201,14 +200,13 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
         placeholder='マンション・ビル名 部屋番号'
         length={maxNameLength64}
       />
-      <View style={styles.saveButton}>
-        <Button
-          disabled={false}
-          onPress={() => undefined}
-          title='保存する'
-          titleStyle={{ color: COLOR.TEXT_TITLE}}
-        />
-      </View>
+      <Button
+        containerStyle={styles.saveButton}
+        disabled={false}
+        onPress={() => undefined}
+        title='保存する'
+        titleStyle={{ color: COLOR.TEXT_TITLE}}
+      />
     </View>
   );
 };

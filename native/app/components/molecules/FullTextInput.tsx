@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react';
-import { StyleSheet, TextInput, View } from 'react-native';
+import { StyleSheet, TextInput } from 'react-native';
 import { COLOR } from '~~/constants/theme';
 
 interface Props{
@@ -10,7 +10,7 @@ interface Props{
 }
 
 const styles = StyleSheet.create({
-  halfTextInput: {
+  fullTextInput: {
     width: '100%',
     padding: 15,
     marginRight: 5,
@@ -22,14 +22,13 @@ const styles = StyleSheet.create({
 const FullTextInput = function FullInput(props: Props): ReactElement {
 
   return (
-    <View style={styles.halfTextInput}>
-      <TextInput
-        onChangeText={(text) => props.onChangeText(text)}
-        value={props.value}
-        placeholder={props.placeholder}
-        maxLength={props.length}
-      />
-    </View>
+    <TextInput
+      style={styles.fullTextInput}
+      onChangeText={(text) => props.onChangeText(text)}
+      value={props.value}
+      placeholder={props.placeholder}
+      maxLength={props.length}
+    />
   );
 };
 
