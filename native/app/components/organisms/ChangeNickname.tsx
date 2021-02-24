@@ -39,7 +39,9 @@ return (
     textAlign='right' 
     multiline={true} 
     value={props.defaultValue} 
-    onChangeText={(text)=>props.handelOnChangeText(text)}/>
+    onChangeText={(text)=>props.handelOnChangeText(text)}
+    placeholder={'ニックネームを入力してください'}
+    placeholderTextColor={COLOR.TEXT_ALERT}/>
   </View>
 );
 }

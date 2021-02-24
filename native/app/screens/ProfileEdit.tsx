@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement, useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Input } from 'react-native-elements';
 import ChangeIconGroup from '~/components/organisms/ChangeIconGroup';
@@ -25,6 +25,11 @@ const ProfileEdit = function ProfileEdit(props: Props): ReactElement {
     avatarUrl: 'https://pbs.twimg.com/profile_images/1312909954148253696/Utr-sa_Y_400x400.jpg',
     bio: 'よろしくお願いします。',
   })
+
+  const nameError: boolean = useMemo((): boolean => {
+    return (userInfo.name === '');
+  }, [userInfo.name])
+
   return (
   <View>
     <HeaderWithBackButton 
