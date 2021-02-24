@@ -8,34 +8,42 @@ import { AccountEditForm } from '~/types/forms';
 import HalfTextInput from '~/components/molecules/HalfTextInput';
 import NumberTextInput from '~/components/molecules/NumberTextInput';
 import FullTextInput from '~/components/molecules/FullTextInput';
+import { MaterialIcons } from '@expo/vector-icons';
+import PrefecturePicker from '~/components/molecules/PrefecturePicker';
 
 const maxNameLength = 16;
-const styles = StyleSheet.create({
-  subtilte: {
-    marginTop: 12,
-    marginLeft: 12,
-    marginBottom: 6,
-    fontSize: 15,
-    color: COLOR.TEXT_TITLE,
-    fontWeight: '600',
-  },
-  scrollArea: {
-    // paddingBottom: 200,
-  },
-  halfInputRow: {
-    flexDirection: 'row',
-  },
-  postalArea: {
-    padding: 15,
-    backgroundColor: COLOR.BACKGROUND_WHITE,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  searchButton: {
-    flex: 1.5,
-    backgroundColor: COLOR.PRIMARY,
-  }
-});
+const styles = StyleSheet.create(
+  {
+    subtilte: {
+      marginTop: 12,
+      marginLeft: 12,
+      marginBottom: 6,
+      fontSize: 15,
+      color: COLOR.TEXT_TITLE,
+      fontWeight: '600',
+    },
+    halfInputRow: {
+      flexDirection: 'row',
+    },
+    postalArea: {
+      padding: 10,
+      backgroundColor: COLOR.BACKGROUND_WHITE,
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    prefectureArea: {
+      padding: 20,
+      marginTop: 12,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      backgroundColor: COLOR.BACKGROUND_WHITE,
+    },
+    searchButton: {
+      flex: 1,
+      borderRadius: 10,
+      backgroundColor: COLOR.PRIMARY,
+    }
+  });
 
 type AccountEditProp = StackNavigationProp<RootStackParamList, 'AccountEdit'>;
 
@@ -78,7 +86,7 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
 
   //TODO: かな入力・数字入力のvalidationを追加する
   return (
-    <View style={styles.scrollArea}>
+    <View>
       <HeaderWithBackButton
         title='発送元・お届け先住所'
         onPress={() => navigation.goBack()}
@@ -142,8 +150,14 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
             >
             </TextInput>
             <View style={styles.searchButton}>
-              <Button onPress={handlePostaSubmit} title='検索する' color={COLOR.TEXT_TITLE}/>
+              <Button onPress={handlePostaSubmit}
+                title='検索'
+                color={COLOR.TEXT_TITLE}
+              />
             </View>
+          </View>
+          <View style={styles.prefectureArea}>
+            <PrefecturePicker />
           </View>
           <FullTextInput
             onChangeText={(text) => setValue({...formData, city: text})}
@@ -151,19 +165,19 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
             placeholder='市区町村'
             length={32}
           />
+          <FullTextInput
+            onChangeText={(text) => setValue({...formData, addressLine1: text})}
+            value={formData.addressLine1}
+            placeholder='地名・番地'
+            length={64}
+          />
+          <FullTextInput
+            onChangeText={(text) => setValue({...formData, addressLine2: text})}
+            value={formData.addressLine2}
+            placeholder='マンション・ビル名 部屋番号'
+            length={64}
+          />
         </ScrollView>
-        <FullTextInput
-          onChangeText={(text) => setValue({...formData, addressLine1: text})}
-          value={formData.addressLine1}
-          placeholder='地名・番地'
-          length={32}
-        />
-        <FullTextInput
-          onChangeText={(text) => setValue({...formData, addressLine1: text})}
-          value={formData.addressLine1}
-          placeholder='マンション・ビル名 部屋番号'
-          length={32}
-        />
       </SafeAreaView>
     </View>
   );
