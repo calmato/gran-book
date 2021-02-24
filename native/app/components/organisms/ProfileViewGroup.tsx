@@ -1,29 +1,35 @@
 import React, { ReactElement } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import ProfileBasicInfoGroup from '../molecules/ProfileBasicInfoGroup';
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-});
+import ProfileFollowFollwer from '~/components/molecules/ProfileFollowFollower';
 
 interface Props {
   name: string
   avatarUrl: string
   rating: number
   reviewNum: number
+  saleNum: number
+  followerNum: number
+  followNum: number
+  buttonTitle: string
+  handleButtonPress: () => void
 }
 
 const ProfileViewGroup = function ProfileViewGroup(props:Props): ReactElement {
   return (
-    <View style={styles.container}>
+    <View>
       <ProfileBasicInfoGroup
         name={props.name}
         avatarUrl={props.avatarUrl}
         rating={props.rating}
         reviewNum={props.reviewNum}
+        buttonTitle={props.buttonTitle}
+        handleButtonPress={props.handleButtonPress}
+      />
+      <ProfileFollowFollwer
+        saleNum={props.saleNum}
+        followerNum={props.followerNum}
+        followNum={props.followNum}
       />
     </View>
   );

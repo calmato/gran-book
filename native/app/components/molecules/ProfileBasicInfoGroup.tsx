@@ -6,7 +6,6 @@ import { COLOR } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: COLOR.BACKGROUND_WHITE,
     padding: 10,
   },
@@ -38,6 +37,8 @@ interface Props {
   avatarUrl: string
   rating: number
   reviewNum: number
+  buttonTitle: string
+  handleButtonPress: () => void
 }
 
 const ProfileBasicInfoGroup = function ProfileBasicInfoGroup(props: Props): ReactElement {
@@ -57,7 +58,7 @@ const ProfileBasicInfoGroup = function ProfileBasicInfoGroup(props: Props): Reac
           <Text>({props.reviewNum}件)</Text>
           <MaterialIcons name="keyboard-arrow-right" size={24} color="black" style={styles.icon}/>
         </View>
-        <Button title={'プロフィールを編集'} buttonStyle={styles.button} titleStyle={styles.buttonTitle}/>
+        <Button title={props.buttonTitle} buttonStyle={styles.button} titleStyle={styles.buttonTitle} onPress={props.handleButtonPress}/>
       </ListItem.Content>
     </ListItem>
   );

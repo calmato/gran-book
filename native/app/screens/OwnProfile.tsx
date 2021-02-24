@@ -1,11 +1,9 @@
 import React, { ReactElement } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-elements';
-import ProfileFollowFollwer from '~/components/molecules/ProfileFollowFollower';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import ProfileViewGroup from '~/components/organisms/ProfileViewGroup';
 import { COLOR } from '~~/constants/theme';
-
 
 const styles = StyleSheet.create({
   container: {
@@ -48,11 +46,11 @@ const OwnProfile = function OwnProfile(): ReactElement {
         avatarUrl={userInfo.avatarUrl}
         rating={userInfo.rating}
         reviewNum={userInfo.reviewNum}
-      />
-      <ProfileFollowFollwer
         saleNum={userInfo.saleNum}
         followerNum={userInfo.followerNum}
         followNum={userInfo.followNum}
+        buttonTitle={'フォローする'}
+        handleButtonPress={() => undefined}
       />
       <Text style={styles.bio}>{userInfo.bio}</Text>
       <Text style={styles.title}>出品リスト</Text>
