@@ -14,3 +14,9 @@ export type SignInForm = {
 export type PasswordResetForm = {
   email: string
 }
+
+export type ProfileEditForm = {
+  name: string,
+  avatarUrl: string,
+  bio: string,
+}

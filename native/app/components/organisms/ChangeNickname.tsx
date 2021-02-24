@@ -6,6 +6,7 @@ import { COLOR } from '~~/constants/theme';
 const styles = StyleSheet.create({
   container: {
     marginTop: 20,
+    marginBottom: 20,
     padding: 20,
     flexDirection: 'row',
     backgroundColor: COLOR.BACKGROUND_WHITE,
@@ -25,7 +26,7 @@ const styles = StyleSheet.create({
 
 interface Props {
   defaultValue: string,
-  handelOnChangeText: () => void,
+  handelOnChangeText: (text) => void,
 }
 
 const ChangeNickname = function ChangeNickname(props: Props): ReactElement {
@@ -38,7 +39,7 @@ return (
     textAlign='right' 
     multiline={true} 
     value={props.defaultValue} 
-    onChangeText={props.handelOnChangeText}/>
+    onChangeText={(text)=>props.handelOnChangeText(text)}/>
   </View>
 );
 }
