@@ -64,7 +64,7 @@ export default class AuthModule extends VuexModule {
   }
 
   public get getThumbnailUrl(): string {
-    return this.thumbnailUrl ? this.thumbnailUrl : '/thumbnail.png'
+    return this.thumbnailUrl || '/thumbnail.png'
   }
 
   public get getSelfIntroduction(): string {
