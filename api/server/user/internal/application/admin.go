@@ -44,6 +44,13 @@ func (a *adminApplication) List(ctx context.Context, in *input.ListAdmin) ([]*us
 	query := &domain.ListQuery{
 		Limit:  in.Limit,
 		Offset: in.Offset,
+		Conditions: []*domain.QueryCondition{
+			{
+				Field:    "role",
+				Operator: "BETWEEN",
+				Value:    []int64{1, 3},
+			},
+		},
 	}
 
 	us, total, err := a.userService.List(ctx, query)
@@ -55,11 +62,10 @@ func (a *adminApplication) List(ctx context.Context, in *input.ListAdmin) ([]*us
 		Limit:  query.Limit,
 		Offset: query.Offset,
 		Total:  total,
-	}
-
-	if query.Order != nil {
-		out.Order.By = query.Order.By
-		out.Order.Direction = query.Order.Direction
+		Order: &output.QueryOrder{
+			By:        query.Order.By,
+			Direction: query.Order.Direction,
+		},
 	}
 
 	return us, out, nil

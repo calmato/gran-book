@@ -57,33 +57,94 @@ func getDBConfig(socket, host, port, database, username, password string) string
 	}
 }
 
-func listQueryFilter(q *domain.ListQuery) error {
+// getListQuery - SELECT SQL文作成用メソッド
+func (c *Client) getListQuery(q *domain.ListQuery) (*gorm.DB, error) {
+	db := c.db
+
 	if q == nil {
-		q = &domain.ListQuery{}
+		return db, nil
 	}
 
-	if q.Limit == 0 {
-		q.Limit = defaultLimit
+	// WHERE句の追加
+	for _, condition := range q.Conditions {
+		c, err := getConditionQuery(condition)
+		if err != nil {
+			return nil, err
+		}
+
+		switch condition.Operator {
+		case "BETWEEN":
+			m, n := convertConditionValues(condition)
+			db = db.Where(c, m, n)
+		default:
+			db = db.Where(c, condition.Value)
+		}
 	}
 
-	if q.Limit < 0 || 1000 < q.Limit {
-		return xerrors.New("limit is out of range")
-	}
-
-	if q.Offset < 0 {
-		return xerrors.New("offset is out of range")
-	}
-
-	if getOrder(q.Order) == "" {
+	// ORDER句の追加
+	if q.Order == nil {
 		q.Order = &domain.QueryOrder{
 			By:        defaultOrderBy,
 			Direction: defaultOrderDirection,
 		}
 	}
 
-	return nil
+	db = db.Order(getOrder(q.Order))
+
+	// LIMIT句の追加
+	if q.Limit == 0 {
+		db = db.Limit(q.Limit)
+	} else {
+		db = db.Limit(defaultLimit)
+	}
+
+	// OFFSET句の追加
+	if q.Offset == 0 {
+		db = db.Offset(q.Offset)
+	}
+
+	return db, nil
 }
 
+// getConditionQuery - WHERE句の作成用
+func getConditionQuery(q *domain.QueryCondition) (string, error) {
+	if q == nil {
+		err := xerrors.New("QueryCondition is nil")
+		return "", err
+	}
+
+	switch q.Operator {
+	case "==", "!=", ">", "<", ">=", "<=":
+		return fmt.Sprintf("%s %s ?", q.Field, q.Operator), nil
+	case "IN", "LIKE":
+		return fmt.Sprintf("%s %s ?", q.Field, q.Operator), nil
+	case "BETWEEN":
+		return fmt.Sprintf("%s BETWEEN ? AND ?", q.Field), nil
+	default:
+		err := xerrors.New("Operator in QueryCondition is invalid word")
+		return "", err
+	}
+}
+
+// convertConditionValues - BETWEENのとき、valueが配列になっているため
+func convertConditionValues(q *domain.QueryCondition) (interface{}, interface{}) {
+	var m, n interface{}
+	switch q.Value.(type) {
+	case []int32:
+		m = q.Value.([]int32)[0]
+		n = q.Value.([]int32)[1]
+	case []int64:
+		m = q.Value.([]int64)[0]
+		n = q.Value.([]int64)[1]
+	case []string:
+		m = q.Value.([]string)[0]
+		n = q.Value.([]string)[1]
+	}
+
+	return m, n
+}
+
+// getOrder - ORDER句の作成用
 func getOrder(o *domain.QueryOrder) string {
 	if o == nil {
 		return ""
