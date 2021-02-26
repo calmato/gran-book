@@ -7,7 +7,6 @@ import (
 	"github.com/calmato/gran-book/api/server/user/internal/domain"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
-	"golang.org/x/xerrors"
 )
 
 const (
@@ -66,9 +65,8 @@ func (c *Client) getListQuery(q *domain.ListQuery) (*gorm.DB, error) {
 	}
 
 	// WHERE句の追加
-	db, err := setWhere(db, q.Conditions)
-	if err != nil {
-		return nil, err
+	for _, c := range q.Conditions {
+		db = setWhere(db, c)
 	}
 
 	// ORDER句の追加
@@ -90,22 +88,14 @@ func (c *Client) getListCount(q *domain.ListQuery, model interface{}) (int64, er
 	var count int64
 	db := c.db.Model(model)
 
-	if q == nil {
-		err := db.Count(&count).Error
-		if err != nil {
-			return 0, err
+	if q != nil {
+		// WHERE句の追加
+		for _, c := range q.Conditions {
+			db = setWhere(db, c)
 		}
-
-		return count, nil
 	}
 
-	// WHERE句の追加
-	db, err := setWhere(db, q.Conditions)
-	if err != nil {
-		return 0, err
-	}
-
-	err = db.Count(&count).Error
+	err := db.Count(&count).Error
 	if err != nil {
 		return 0, err
 	}
@@ -113,41 +103,35 @@ func (c *Client) getListCount(q *domain.ListQuery, model interface{}) (int64, er
 	return count, nil
 }
 
-func setWhere(db *gorm.DB, cs []*domain.QueryCondition) (*gorm.DB, error) {
-	for _, c := range cs {
-		if c == nil {
-			err := xerrors.New("QueryCondition is nil")
-			return nil, err
-		}
-
-		switch c.Operator {
-		case "==":
-			q := fmt.Sprintf("%s = ?", c.Field)
-			db = db.Where(q, c.Value)
-		case "!=":
-			q := fmt.Sprintf("%s <> ?", c.Field)
-			db = db.Where(q, c.Value)
-		case ">", "<", ">=", "<=":
-			q := fmt.Sprintf("%s %s ?", c.Field, c.Operator)
-			db = db.Where(q, c.Value)
-		case "IN":
-			q := fmt.Sprintf("%s IN ?", c.Field)
-			db = db.Where(q, c.Value)
-		case "LIKE":
-			q := fmt.Sprintf("%s LIKE ?", c.Field)
-			n := fmt.Sprintf("%%%s%%", c.Value) // e.g.) あいうえお -> %あいうえお%
-			db = db.Where(q, n)
-		case "BETWEEN":
-			q := fmt.Sprintf("%s BETWEEN ? AND ?", c.Field)
-			m, n := convertConditionValues(c)
-			db = db.Where(q, m, n)
-		default:
-			err := xerrors.New("Operator in QueryCondition is invalid word")
-			return nil, err
-		}
+func setWhere(db *gorm.DB, c *domain.QueryCondition) *gorm.DB {
+	if c == nil {
+		return db
 	}
 
-	return db, nil
+	switch c.Operator {
+	case "==":
+		q := fmt.Sprintf("%s = ?", c.Field)
+		return db.Where(q, c.Value)
+	case "!=":
+		q := fmt.Sprintf("%s <> ?", c.Field)
+		return db.Where(q, c.Value)
+	case ">", "<", ">=", "<=":
+		q := fmt.Sprintf("%s %s ?", c.Field, c.Operator)
+		return db.Where(q, c.Value)
+	case "IN":
+		q := fmt.Sprintf("%s IN ?", c.Field)
+		return db.Where(q, c.Value)
+	case "LIKE":
+		q := fmt.Sprintf("%s LIKE ?", c.Field)
+		n := fmt.Sprintf("%%%s%%", c.Value) // e.g.) あいうえお -> %あいうえお%
+		return db.Where(q, n)
+	case "BETWEEN":
+		q := fmt.Sprintf("%s BETWEEN ? AND ?", c.Field)
+		m, n := convertConditionValues(c)
+		return db.Where(q, m, n)
+	default:
+		return db
+	}
 }
 
 func setOrder(db *gorm.DB, o *domain.QueryOrder) *gorm.DB {
