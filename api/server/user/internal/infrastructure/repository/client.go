@@ -66,19 +66,9 @@ func (c *Client) getListQuery(q *domain.ListQuery) (*gorm.DB, error) {
 	}
 
 	// WHERE句の追加
-	for _, condition := range q.Conditions {
-		c, err := getConditionQuery(condition)
-		if err != nil {
-			return nil, err
-		}
-
-		switch condition.Operator {
-		case "BETWEEN":
-			m, n := convertConditionValues(condition)
-			db = db.Where(c, m, n)
-		default:
-			db = db.Where(c, condition.Value)
-		}
+	db, err := setWhere(db, q.Conditions)
+	if err != nil {
+		return nil, err
 	}
 
 	// ORDER句の追加
@@ -89,41 +79,100 @@ func (c *Client) getListQuery(q *domain.ListQuery) (*gorm.DB, error) {
 		}
 	}
 
-	db = db.Order(getOrder(q.Order))
+	db = setOrder(db, q.Order)
+	db = setLimit(db, q.Limit)
+	db = setOffset(db, q.Offset)
 
-	// LIMIT句の追加
-	if q.Limit == 0 {
-		db = db.Limit(q.Limit)
-	} else {
-		db = db.Limit(defaultLimit)
+	return db, nil
+}
+
+func (c *Client) getListCount(q *domain.ListQuery, model interface{}) (int64, error) {
+	var count int64
+	db := c.db.Model(model)
+
+	if q == nil {
+		err := db.Count(&count).Error
+		if err != nil {
+			return 0, err
+		}
+
+		return count, nil
 	}
 
-	// OFFSET句の追加
-	if q.Offset == 0 {
-		db = db.Offset(q.Offset)
+	// WHERE句の追加
+	db, err := setWhere(db, q.Conditions)
+	if err != nil {
+		return 0, err
+	}
+
+	err = db.Count(&count).Error
+	if err != nil {
+		return 0, err
+	}
+
+	return count, nil
+}
+
+func setWhere(db *gorm.DB, cs []*domain.QueryCondition) (*gorm.DB, error) {
+	for _, c := range cs {
+		if c == nil {
+			err := xerrors.New("QueryCondition is nil")
+			return nil, err
+		}
+
+		switch c.Operator {
+		case "==":
+			q := fmt.Sprintf("%s = ?", c.Field)
+			db = db.Where(q, c.Value)
+		case "!=":
+			q := fmt.Sprintf("%s <> ?", c.Field)
+			db = db.Where(q, c.Value)
+		case ">", "<", ">=", "<=":
+			q := fmt.Sprintf("%s %s ?", c.Field, c.Operator)
+			db = db.Where(q, c.Value)
+		case "IN":
+			q := fmt.Sprintf("%s IN ?", c.Field)
+			db = db.Where(q, c.Value)
+		case "LIKE":
+			q := fmt.Sprintf("%s LIKE ?", c.Field)
+			n := fmt.Sprintf("%%%s%%", c.Value) // e.g.) あいうえお -> %あいうえお%
+			db = db.Where(q, n)
+		case "BETWEEN":
+			q := fmt.Sprintf("%s BETWEEN ? AND ?", c.Field)
+			m, n := convertConditionValues(c)
+			db = db.Where(q, m, n)
+		default:
+			err := xerrors.New("Operator in QueryCondition is invalid word")
+			return nil, err
+		}
 	}
 
 	return db, nil
 }
 
-// getConditionQuery - WHERE句の作成用
-func getConditionQuery(q *domain.QueryCondition) (string, error) {
-	if q == nil {
-		err := xerrors.New("QueryCondition is nil")
-		return "", err
+func setOrder(db *gorm.DB, o *domain.QueryOrder) *gorm.DB {
+	if o == nil || o.By == "" {
+		return db
 	}
 
-	switch q.Operator {
-	case "==", "!=", ">", "<", ">=", "<=":
-		return fmt.Sprintf("%s %s ?", q.Field, q.Operator), nil
-	case "IN", "LIKE":
-		return fmt.Sprintf("%s %s ?", q.Field, q.Operator), nil
-	case "BETWEEN":
-		return fmt.Sprintf("%s BETWEEN ? AND ?", q.Field), nil
+	switch strings.ToLower(o.Direction) {
+	case "asc":
+		q := fmt.Sprintf("%s asc", o.By)
+		return db.Order(q)
+	case "desc":
+		q := fmt.Sprintf("%s desc", o.By)
+		return db.Order(q)
 	default:
-		err := xerrors.New("Operator in QueryCondition is invalid word")
-		return "", err
+		return db
 	}
+}
+
+func setLimit(db *gorm.DB, limit int64) *gorm.DB {
+	return db.Limit(limit)
+}
+
+func setOffset(db *gorm.DB, offset int64) *gorm.DB {
+	return db.Offset(offset)
 }
 
 // convertConditionValues - BETWEENのとき、valueが配列になっているため
@@ -142,24 +191,4 @@ func convertConditionValues(q *domain.QueryCondition) (interface{}, interface{})
 	}
 
 	return m, n
-}
-
-// getOrder - ORDER句の作成用
-func getOrder(o *domain.QueryOrder) string {
-	if o == nil {
-		return ""
-	}
-
-	if o.By == "" || o.Direction == "" {
-		return ""
-	}
-
-	switch strings.ToLower(o.Direction) {
-	case "asc":
-		return fmt.Sprintf("%s asc", o.By)
-	case "desc":
-		return fmt.Sprintf("%s desc", o.By)
-	default:
-		return ""
-	}
 }

@@ -53,7 +53,6 @@ func (r *userRepository) Authentication(ctx context.Context) (string, error) {
 }
 
 func (r *userRepository) List(ctx context.Context, query *domain.ListQuery) ([]*user.User, int64, error) {
-	var count int64
 	us := []*user.User{}
 
 	db, err := r.client.getListQuery(query)
@@ -67,7 +66,7 @@ func (r *userRepository) List(ctx context.Context, query *domain.ListQuery) ([]*
 	}
 
 	// err = r.client.db.Model(&user.User{}).Select("COUNT(DISTINCT(id))").Count(&count).Error
-	err = r.client.db.Model(&user.User{}).Count(&count).Error
+	count, err := r.client.getListCount(query, &user.User{})
 	if err != nil {
 		return nil, 0, err
 	}
