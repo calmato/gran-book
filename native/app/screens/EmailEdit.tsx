@@ -29,8 +29,8 @@ const styles = StyleSheet.create({
     color: COLOR.TEXT_TITLE,
     fontWeight: '600',
     alignSelf: 'flex-start',
-   },
-   mailStatus: {
+  },
+  mailStatus: {
     padding: 16,
     fontSize: 16,
     textAlign: 'right',
@@ -56,29 +56,29 @@ interface Props {
 
 const EmailEdit = function EmailEdit
 (props: Props): ReactElement {
-const [emailForm, setState] = useState(props.email || '')
+  const [emailForm, setState] = useState(props.email || '');
 
-const emailError: boolean = useMemo((): boolean => {
-  return !emailValidation(emailForm);
-}, [emailForm]);
-return (
-  <View style={styles.container}>
-    <HeaderWithBackButton 
-    title='メールアドレスの変更' 
-    onPress={()=>undefined}
-    />
-    <Text style={styles.textCard}>新しいメールアドレスを入力してください。{'\n'}確認メールが送信されます。</Text>
-    <Text style={styles.subtitle}>現在のメールアドレス</Text>
-    <Text style={styles.mailStatus}>{props.email || 'メールアドレス未登録'}</Text>
-    <Text style={styles.subtitle}>新しいメールアドレス</Text>
-    <MailInput
-    onChangeText={(text) => setState(text)}
-    value={emailForm}
-    hasError={emailError}
-    />
-    <Button containerStyle={styles.buttonStyle} disabled={emailError} onPress={undefined} title='変更する'/>
-  </View>
-);
-}
+  const emailError: boolean = useMemo((): boolean => {
+    return !emailValidation(emailForm);
+  }, [emailForm]);
+  return (
+    <View style={styles.container}>
+      <HeaderWithBackButton 
+        title='メールアドレスの変更' 
+        onPress={()=>undefined}
+      />
+      <Text style={styles.textCard}>新しいメールアドレスを入力してください。{'\n'}確認メールが送信されます。</Text>
+      <Text style={styles.subtitle}>現在のメールアドレス</Text>
+      <Text style={styles.mailStatus}>{props.email || 'メールアドレス未登録'}</Text>
+      <Text style={styles.subtitle}>新しいメールアドレス</Text>
+      <MailInput
+        onChangeText={(text) => setState(text)}
+        value={emailForm}
+        hasError={emailError}
+      />
+      <Button containerStyle={styles.buttonStyle} disabled={emailError} onPress={undefined} title='変更する'/>
+    </View>
+  );
+};
 
-export default EmailEdit
+export default EmailEdit;
