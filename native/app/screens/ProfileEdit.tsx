@@ -25,44 +25,44 @@ const ProfileEdit = function ProfileEdit(): ReactElement {
     avatarUrl: 'https://pbs.twimg.com/profile_images/1312909954148253696/Utr-sa_Y_400x400.jpg',
     bio: 'よろしくお願いします。',
     gender: 3,
-  })
+  });
 
   const nameError: boolean = useMemo((): boolean => {
     return (userInfo.name === '');
-  }, [userInfo.name])
+  }, [userInfo.name]);
 
   return (
-  <View>
-    <HeaderWithBackButton 
-      title='プロフィール編集'
-      onPress={()=>undefined}
-    />
-    <ChangeIconGroup
-      avatarUrl={userInfo.avatarUrl}
-      handleOnPressed={()=>undefined}
-    />
-    <ChangeNickname
-    defaultValue={userInfo.name}
-    handelOnChangeText={(text)=>setValue({...userInfo, name: text})}
-    />
-    <Input
-    style={styles.bio}
-    placeholder={'自己紹介を入力してください'}
-    multiline={true}
-    maxLength={256}
-    onChangeText={(text)=>setValue({...userInfo, bio: text})}
-    value={userInfo.bio}
-    />
-    <GenderRadioGroup
-    gender={userInfo.gender}
-    />
-    <Button
-    title={'保存する'}
-    onPress={()=>undefined}
-    containerStyle={styles.button} 
-    />
-  </View>
+    <View>
+      <HeaderWithBackButton 
+        title='プロフィール編集'
+        onPress={()=>undefined}
+      />
+      <ChangeIconGroup
+        avatarUrl={userInfo.avatarUrl}
+        handleOnPressed={()=>undefined}
+      />
+      <ChangeNickname
+        defaultValue={userInfo.name}
+        handelOnChangeText={(text)=>setValue({...userInfo, name: text})}
+      />
+      <Input
+        style={styles.bio}
+        placeholder={'自己紹介を入力してください'}
+        multiline={true}
+        maxLength={256}
+        onChangeText={(text)=>setValue({...userInfo, bio: text})}
+        value={userInfo.bio}
+      />
+      <GenderRadioGroup
+        gender={userInfo.gender}
+      />
+      <Button
+        title={'保存する'}
+        onPress={()=>undefined}
+        containerStyle={styles.button} 
+      />
+    </View>
   );
-}
+};
 
-export default ProfileEdit
+export default ProfileEdit;

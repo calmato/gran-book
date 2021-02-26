@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  　text: {
+  text: {
     color: COLOR.TEXT_DEFAULT,
     fontSize: 16,
     flex: 1,
@@ -30,20 +30,20 @@ interface Props {
 }
 
 const ChangeNickname = function ChangeNickname(props: Props): ReactElement {
-return (
-  <View style={styles.container}>
-    <Text style={styles.text}>ニックネーム</Text>
-    <TextInput 
-    style={styles.input} 
-    maxLength={32} 
-    textAlign='right' 
-    multiline={true} 
-    value={props.defaultValue} 
-    onChangeText={(text)=>props.handelOnChangeText(text)}
-    placeholder={'ニックネームを入力してください'}
-    placeholderTextColor={COLOR.TEXT_ALERT}/>
-  </View>
-);
-}
+  return (
+    <View style={styles.container}>
+      <Text style={styles.text}>ニックネーム</Text>
+      <TextInput 
+        style={styles.input} 
+        maxLength={32} 
+        textAlign='right' 
+        multiline={true} 
+        value={props.defaultValue} 
+        onChangeText={(text)=>props.handelOnChangeText(text)}
+        placeholder={'ニックネームを入力してください'}
+        placeholderTextColor={COLOR.TEXT_ALERT}/>
+    </View>
+  );
+};
 
-export default ChangeNickname
+export default ChangeNickname;

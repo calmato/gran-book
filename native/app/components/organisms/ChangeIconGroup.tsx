@@ -21,7 +21,7 @@ interface Props {
 }
 
 const ChangeIconGroup = function ChangeIconGroup(props: Props): ReactElement {
-return (
+  return (
     <ListItem style={{alignItems:'flex-start'}} Component={TouchableOpacity} onPress={()=>props.handleOnPressed}>
       <Avatar source={{uri: props.avatarUrl}} rounded size='medium'/>
       <ListItem.Content style={styles.listItem}>
@@ -29,7 +29,7 @@ return (
         <MaterialIcons name="keyboard-arrow-right" size={24} color="black"/>
       </ListItem.Content>
     </ListItem>
-);
-}
+  );
+};
 
-export default ChangeIconGroup
+export default ChangeIconGroup;
