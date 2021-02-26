@@ -3,6 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { Input } from 'react-native-elements';
 import ChangeIconGroup from '~/components/organisms/ChangeIconGroup';
 import ChangeNickname from '~/components/organisms/ChangeNickname';
+import GenderRadioGroup from '~/components/organisms/GenderRadioGroup';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import { ProfileEditForm } from '~/types/forms';
 
@@ -52,6 +53,7 @@ const ProfileEdit = function ProfileEdit(props: Props): ReactElement {
     onChangeText={(text)=>setValue({...userInfo, bio: text})}
     value={userInfo.bio}
     />
+    <GenderRadioGroup/>
   </View>
   );
 }
