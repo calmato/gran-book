@@ -4,6 +4,7 @@ import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import { COLOR } from '~~/constants/theme';
 import MailInput from '~/components/molecules/MailInput';
 import { emailValidation } from '~/lib/validation';
+import { Button } from 'react-native-elements';
 
 const styles = StyleSheet.create({
   container:{
@@ -44,6 +45,9 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     backgroundColor:COLOR.BACKGROUND_WHITE,
   },
+  buttonStyle: {
+    marginTop:20,
+  },
 });
 
 interface Props {
@@ -72,6 +76,7 @@ return (
     value={emailForm}
     hasError={emailError}
     />
+    <Button containerStyle={styles.buttonStyle} disabled={emailError} onPress={undefined} title='変更する'/>
   </View>
 );
 }
