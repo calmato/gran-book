@@ -20,8 +20,8 @@
                 {{ item.name }}
               </template>
               <template v-slot:[`item.role`]="{ item }">
-                <v-chip :color="item.role.color" dark>
-                  {{ item.role.value }}
+                <v-chip :color="getColor(item.role)" dark>
+                  {{ getRole(item.role) }}
                 </v-chip>
               </template>
               <template v-slot:[`item.actions`]="{ item }">
@@ -39,6 +39,7 @@
 <script lang="ts">
 import { defineComponent, SetupContext, computed } from '@nuxtjs/composition-api'
 import { AdminStore } from '~/store'
+import { IAdminTableHeader, IAdminTableContent } from '~/types/props'
 import { IAdminUser } from '~/types/store'
 
 export default defineComponent({
@@ -46,11 +47,7 @@ export default defineComponent({
     const store = root.$store
 
     const search = ''
-    const headers: Array<{
-      text: string
-      value: string
-      sortable: boolean
-    }> = [
+    const headers: Array<IAdminTableHeader> = [
       { text: 'サムネ', value: 'thumbnailUrl', sortable: false },
       { text: '氏名', value: 'name', sortable: true },
       { text: 'メールアドレス', value: 'email', sortable: true },
@@ -58,30 +55,24 @@ export default defineComponent({
       { text: '権限', value: 'role', sortable: true },
       { text: 'Actions', value: 'actions', sortable: false },
     ]
+
     const desserts = computed(() => {
       const users = store.getters['admin/getUsers']
 
-      return users.map((user: IAdminUser): {
-        name: string
-        email: string
-        phoneNumber: string
-        thumbnailUrl: string
-        role: { color: string; value: string }
-      } => {
-        const space: string = user.lastName && user.firstName ? ' ' : ''
-        const name: string = user.lastName + space + user.firstName
+      return users.map(
+        (user: IAdminUser): IAdminTableContent => {
+          const space: string = user.lastName && user.firstName ? ' ' : ''
+          const name: string = user.lastName + space + user.firstName
 
-        return {
-          name,
-          email: user.email,
-          phoneNumber: user.phoneNumber,
-          thumbnailUrl: user.thumbnailUrl || '/thumbnail.png',
-          role: {
-            color: getColor(user.role),
-            value: getRole(user.role),
-          },
+          return {
+            name,
+            email: user.email,
+            phoneNumber: user.phoneNumber,
+            thumbnailUrl: user.thumbnailUrl || '/thumbnail.png',
+            role: user.role,
+          }
         }
-      })
+      )
     })
 
     const getColor = (role: number): string => {
