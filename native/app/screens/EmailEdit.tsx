@@ -18,13 +18,31 @@ const styles = StyleSheet.create({
     paddingStart: 30,
     paddingVertical: 10,
   },
+  subtitle: {
+    marginTop: 30,
+    marginLeft: 12,
+    marginBottom: 6,
+    fontSize: 15,
+    color: COLOR.TEXT_TITLE,
+    fontWeight: '600',
+    alignSelf: 'flex-start',
+   },
+   mailStatus: {
+    padding: 15,
+    fontSize: 16,
+    textAlign: 'right',
+    color: COLOR.TEXT_DEFAULT,
+    backgroundColor: COLOR.BACKGROUND_WHITE,
+    alignSelf: 'stretch',
+  },
 });
 
-interface Props {}
+interface Props {
+  email: string
+}
 
 const EmailEdit = function EmailEdit
 (props: Props): ReactElement {
-  const statusDefault = 'メールアドレス未登録';
 return (
   <View style={styles.container}>
     <HeaderWithBackButton 
@@ -32,6 +50,8 @@ return (
     onPress={()=>undefined}
     />
     <Text style={styles.textCard}>新しいメールアドレスを入力してください。{'\n'}確認メールが送信されます。</Text>
+    <Text style={styles.subtitle}>現在のメールアドレス</Text>
+    <Text style={styles.mailStatus}>{props.email || 'メールアドレス未登録'}</Text>
   </View>
 );
 }
