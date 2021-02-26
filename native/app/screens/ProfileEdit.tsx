@@ -18,13 +18,12 @@ const styles = StyleSheet.create({
   },
 });
 
-interface Props {}
-
 const ProfileEdit = function ProfileEdit(props: Props): ReactElement {
   const [userInfo, setValue] = useState<ProfileEditForm>({
     name: 'hamachans',
     avatarUrl: 'https://pbs.twimg.com/profile_images/1312909954148253696/Utr-sa_Y_400x400.jpg',
     bio: 'よろしくお願いします。',
+    gender: 3,
   })
 
   const nameError: boolean = useMemo((): boolean => {
@@ -53,7 +52,9 @@ const ProfileEdit = function ProfileEdit(props: Props): ReactElement {
     onChangeText={(text)=>setValue({...userInfo, bio: text})}
     value={userInfo.bio}
     />
-    <GenderRadioGroup/>
+    <GenderRadioGroup
+    gender={userInfo.gender}
+    />
   </View>
   );
 }

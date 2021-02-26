@@ -10,8 +10,8 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     alignItems: 'center',
     backgroundColor: COLOR.BACKGROUND_WHITE,
-    marginStart: 10,
-    marginEnd: 10,
+    paddingStart: 10,
+    paddingEnd: 10,
   },
   text: {
     fontSize: 16,
@@ -26,6 +26,7 @@ const styles = StyleSheet.create({
   },
   box: {
     flex: 1,
+    borderColor: COLOR.TEXT_WHITE,
   },
 });
 

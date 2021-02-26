@@ -19,4 +19,5 @@ export type ProfileEditForm = {
   name: string,
   avatarUrl: string,
   bio: string,
+  gender: number,
 }
