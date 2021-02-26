@@ -1,6 +1,6 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import React, { ReactElement } from 'react';
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet, Text, Touchable } from 'react-native';
 import { Avatar, ListItem } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
@@ -22,15 +22,13 @@ interface Props {
 
 const ChangeIconGroup = function ChangeIconGroup(props: Props): ReactElement {
 return (
-  <TouchableOpacity onPress={()=>props.handleOnPressed}>
-    <ListItem>
+    <ListItem style={{alignItems:'flex-start'}} Component={TouchableOpacity} onPress={()=>props.handleOnPressed}>
       <Avatar source={{uri: props.avatarUrl}} rounded size='medium'/>
       <ListItem.Content style={styles.listItem}>
         <Text style={styles.text}>アイコン変更</Text>
         <MaterialIcons name="keyboard-arrow-right" size={24} color="black"/>
       </ListItem.Content>
     </ListItem>
-  </TouchableOpacity>
 );
 }
 
