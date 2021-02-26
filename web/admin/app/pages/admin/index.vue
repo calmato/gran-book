@@ -13,17 +13,20 @@
             <v-data-table :headers="headers" :items="desserts" :search="search">
               <template v-slot:[`item.thumbnailUrl`]="{ item }">
                 <v-avatar>
-                  <v-img :src="getThumbnailUrl(item.thumbnailUrl)" />
+                  <v-img :src="item.thumbnailUrl" />
                 </v-avatar>
               </template>
+              <template v-slot:[`item.name`]="{ item }">
+                {{ item.name }}
+              </template>
               <template v-slot:[`item.role`]="{ item }">
-                <v-chip :color="getColor(item.role)" dark>
-                  {{ getRole(item.role) }}
+                <v-chip :color="item.role.color" dark>
+                  {{ item.role.value }}
                 </v-chip>
               </template>
               <template v-slot:[`item.actions`]="{ item }">
-                <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
-                <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
+                <v-icon small class="mr-2" @click="editItem(item.index)">mdi-pencil</v-icon>
+                <v-icon small @click="deleteItem(item.item)">mdi-delete</v-icon>
               </template>
             </v-data-table>
           </v-card>
@@ -34,10 +37,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from '@nuxtjs/composition-api'
+import { defineComponent, SetupContext, computed } from '@nuxtjs/composition-api'
+import { AdminStore } from '~/store'
+import { IAdminUser } from '~/types/store'
 
 export default defineComponent({
-  setup(_) {
+  setup(_, { root }: SetupContext) {
+    const store = root.$store
+
     const search = ''
     const headers: Array<{
       text: string
@@ -51,43 +58,31 @@ export default defineComponent({
       { text: '権限', value: 'role', sortable: true },
       { text: 'Actions', value: 'actions', sortable: false },
     ]
-    const desserts = reactive<
-      Array<{
+    const desserts = computed(() => {
+      const users = store.getters['admin/getUsers']
+
+      return users.map((user: IAdminUser): {
         name: string
         email: string
         phoneNumber: string
-        role: number
-      }>
-    >([
-      {
-        name: '濵田 広大',
-        email: 'k.hamada@calmato.com',
-        phoneNumber: '000-0000-0000',
-        role: 1,
-      },
-      {
-        name: '西川 直志',
-        email: 't.nishikawa@calmato.com',
-        phoneNumber: '111-1111-1111',
-        role: 1,
-      },
-      {
-        name: '山田 侑樹',
-        email: 'y.yamada@calmato.com',
-        phoneNumber: '000-1111-1111',
-        role: 2,
-      },
-      {
-        name: 'Inatomi Atsuhide',
-        email: 'a.inatomi@calmato.com',
-        phoneNumber: '111-0000-0000',
-        role: 3,
-      },
-    ])
+        thumbnailUrl: string
+        role: { color: string; value: string }
+      } => {
+        const space: string = user.lastName && user.firstName ? ' ' : ''
+        const name: string = user.lastName + space + user.firstName
 
-    const getThumbnailUrl = (thumbnailUrl: string): string => {
-      return thumbnailUrl || '/thumbnail.png'
-    }
+        return {
+          name,
+          email: user.email,
+          phoneNumber: user.phoneNumber,
+          thumbnailUrl: user.thumbnailUrl || '/thumbnail.png',
+          role: {
+            color: getColor(user.role),
+            value: getRole(user.role),
+          },
+        }
+      })
+    })
 
     const getColor = (role: number): string => {
       switch (role) {
@@ -115,14 +110,8 @@ export default defineComponent({
       }
     }
 
-    const newItem = (): void => {
-      console.log('debug', 'newItem')
-      desserts.push({
-        name: 'new user',
-        email: 'u.new@calmato.com',
-        phoneNumber: '123-1234-1234',
-        role: 3,
-      })
+    const newItem = async (): Promise<void> => {
+      await AdminStore.createUser()
     }
 
     const editItem = (item: { name: string; email: string; phoneNumber: string; role: number }): void => {
@@ -137,7 +126,6 @@ export default defineComponent({
       search,
       headers,
       desserts,
-      getThumbnailUrl,
       getColor,
       getRole,
       newItem,
