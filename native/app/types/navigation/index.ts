@@ -13,3 +13,8 @@ export type AuthStackParamList = {
   SignUpCheckEmail: { email: string | undefined },
   PasswordReset: undefined,
 }
+
+export type SettingStackParamList = {
+  MyPage: undefined,
+  OwnProfile: undefined,
+}

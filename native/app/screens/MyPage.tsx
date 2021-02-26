@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
 import { StyleSheet, View, ScrollView, SafeAreaView } from 'react-native';
-import { ListItem, Text, Avatar } from 'react-native-elements';
+import { ListItem, Text, Avatar, Header } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -8,8 +8,8 @@ import { FontAwesome } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { COLOR } from '~~/constants/theme';
 import { Auth } from '~/store/models';
-import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import { useNavigation } from '@react-navigation/native';
+import HeaderText from '~/components/atoms/HeaderText';
 
 const styles = StyleSheet.create({
   container: {
@@ -45,14 +45,11 @@ const MyPage = function MyPage(props: Props): ReactElement {
 
   return (
     <View style={styles.scrollArea}>
-      <HeaderWithBackButton
-        title="マイページ"
-        onPress={() => navigation.goBack()}
-      />
+      <Header centerComponent={<HeaderText title="マイページ"/>} />
       <SafeAreaView>
         <ScrollView>
           <View>
-            <ListItem bottomDivider>
+            <ListItem bottomDivider onPress={()=>navigation.navigate('OwnProfile')}>
               <Avatar source={{uri: avatar.thumbnailUrl}} rounded/>
               <ListItem.Content>
                 <ListItem.Title>{avatar.name}</ListItem.Title>
