@@ -1,15 +1,15 @@
-import { StackNavigationProp } from '@react-navigation/stack';
-import { StyleSheet, View, ScrollView, SafeAreaView } from 'react-native';
 import React, { ReactElement } from 'react';
-import { RootStackParamList } from '~/types/navigation';
+import { StyleSheet, View, ScrollView, SafeAreaView } from 'react-native';
 import { ListItem, Text, Avatar } from 'react-native-elements';
-import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import { Ionicons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { COLOR } from '~~/constants/theme';
+import { Auth } from '~/store/models';
+import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
+import { useNavigation } from '@react-navigation/native';
 
 const styles = StyleSheet.create({
   container: {
@@ -29,20 +29,19 @@ const styles = StyleSheet.create({
   }
 });
 
-type MyPageProp = StackNavigationProp<RootStackParamList, 'MyPage'>;
-
 interface Props {
-  navigation: MyPageProp
+  auth: Auth.Model
 }
 
-const avatarList =
-  {
-    name: 'hamachans',
-    avatar_url: 'https://pbs.twimg.com/profile_images/1312909954148253696/Utr-sa_Y_400x400.jpg',
-  };
-
 const MyPage = function MyPage(props: Props): ReactElement {
-  const navigation = props.navigation;
+  const navigation = useNavigation();
+  const { auth } = props;
+
+  // TODO: 型定義
+  const avatar = {
+    name: auth?.username || 'hamachans',
+    thumbnailUrl: auth?.thumbnailUrl || 'https://pbs.twimg.com/profile_images/1312909954148253696/Utr-sa_Y_400x400.jpg',
+  };
 
   return (
     <View style={styles.scrollArea}>
@@ -54,9 +53,9 @@ const MyPage = function MyPage(props: Props): ReactElement {
         <ScrollView>
           <View>
             <ListItem bottomDivider>
-              <Avatar source={{uri: avatarList.avatar_url}} rounded/>
+              <Avatar source={{uri: avatar.thumbnailUrl}} rounded/>
               <ListItem.Content>
-                <ListItem.Title>{avatarList.name}</ListItem.Title>
+                <ListItem.Title>{avatar.name}</ListItem.Title>
               </ListItem.Content>
             </ListItem>
           </View>

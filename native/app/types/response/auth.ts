@@ -1,4 +1,4 @@
-export interface ISignUpResponse {
+export interface IAuthResponse {
   id: string
   username: string
   gender: number
