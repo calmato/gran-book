@@ -62,10 +62,15 @@ func (a *adminApplication) List(ctx context.Context, in *input.ListAdmin) ([]*us
 		Limit:  query.Limit,
 		Offset: query.Offset,
 		Total:  total,
-		Order: &output.QueryOrder{
+	}
+
+	if query.Order != nil {
+		o := &output.QueryOrder{
 			By:        query.Order.By,
 			Direction: query.Order.Direction,
-		},
+		}
+
+		out.Order = o
 	}
 
 	return us, out, nil
