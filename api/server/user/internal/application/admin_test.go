@@ -64,10 +64,7 @@ func TestAdminApplication_List(t *testing.T) {
 					Limit:  100,
 					Offset: 0,
 					Total:  1,
-					Order: &output.QueryOrder{
-						By:        "id",
-						Direction: "asc",
-					},
+					Order:  nil,
 				},
 				Error: nil,
 			},

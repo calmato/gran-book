@@ -84,9 +84,10 @@ func TestUserService_List(t *testing.T) {
 	}{
 		"ok": {
 			Query: &domain.ListQuery{
-				Limit:  100,
-				Offset: 0,
-				Order:  nil,
+				Limit:      100,
+				Offset:     0,
+				Order:      nil,
+				Conditions: []*domain.QueryCondition{},
 			},
 			Expected: struct {
 				Users []*user.User
