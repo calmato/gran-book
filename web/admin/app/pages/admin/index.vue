@@ -10,7 +10,16 @@
               <v-spacer />
               <v-btn color="primary" dark class="mb-2" @click="newItem">New Item</v-btn>
             </v-card-title>
-            <v-data-table :headers="headers" :items="desserts" :search="search">
+            <v-data-table
+              :search="search"
+              :page.sync="page"
+              :items-per-page.sync="itemsPerPage"
+              :sort-by.sync="sortBy"
+              :sort-desc.sync="sortDesc"
+              :headers="headers"
+              :items="desserts"
+              :server-items-length="total"
+            >
               <template v-slot:[`item.thumbnailUrl`]="{ item }">
                 <v-avatar>
                   <v-img :src="item.thumbnailUrl" />
@@ -26,7 +35,7 @@
               </template>
               <template v-slot:[`item.actions`]="{ item }">
                 <v-icon small class="mr-2" @click="editItem(item.index)">mdi-pencil</v-icon>
-                <v-icon small @click="deleteItem(item.item)">mdi-delete</v-icon>
+                <v-icon small @click="deleteItem(item.index)">mdi-delete</v-icon>
               </template>
             </v-data-table>
           </v-card>
@@ -37,8 +46,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, SetupContext, computed } from '@nuxtjs/composition-api'
+import { defineComponent, SetupContext, ref, useAsync, computed, watch } from '@nuxtjs/composition-api'
 import { AdminStore } from '~/store'
+import { IAdminListForm } from '~/types/forms'
 import { IAdminTableHeader, IAdminTableContent } from '~/types/props'
 import { IAdminUser } from '~/types/store'
 
@@ -46,7 +56,6 @@ export default defineComponent({
   setup(_, { root }: SetupContext) {
     const store = root.$store
 
-    const search = ''
     const headers: Array<IAdminTableHeader> = [
       { text: 'サムネ', value: 'thumbnailUrl', sortable: false },
       { text: '氏名', value: 'name', sortable: true },
@@ -55,9 +64,15 @@ export default defineComponent({
       { text: '権限', value: 'role', sortable: true },
       { text: 'Actions', value: 'actions', sortable: false },
     ]
+    const search = ref<string>('')
+    const page = ref<number>(1)
+    const itemsPerPage = ref<number>(5)
+    const sortBy = ref<string>('')
+    const sortDesc = ref<boolean>(true)
 
-    const desserts = computed(() => {
-      const users = store.getters['admin/getUsers']
+    const total = computed(() => store.getters['admin/getTotal'])
+    const desserts = computed((): IAdminTableContent[] => {
+      const users: IAdminUser[] = store.getters['admin/getUsers']
 
       return users.map(
         (user: IAdminUser): IAdminTableContent => {
@@ -73,6 +88,31 @@ export default defineComponent({
           }
         }
       )
+    })
+
+    watch(search, (): void => {
+      // TODO: search
+      console.log('debug', search)
+    })
+
+    watch(page, (): void => {
+      indexAdmin()
+    })
+
+    watch(itemsPerPage, (): void => {
+      indexAdmin()
+    })
+
+    watch(sortBy, (): void => {
+      indexAdmin()
+    })
+
+    watch(sortDesc, (): void => {
+      indexAdmin()
+    })
+
+    useAsync(async () => {
+      await indexAdmin()
     })
 
     const getColor = (role: number): string => {
@@ -105,17 +145,35 @@ export default defineComponent({
       await AdminStore.createUser()
     }
 
-    const editItem = (item: { name: string; email: string; phoneNumber: string; role: number }): void => {
-      console.log('debug', 'editItem', item)
+    const editItem = (index: number): void => {
+      console.log('debug', 'editItem', index)
     }
 
-    const deleteItem = (item: { name: string; email: string; phoneNumber: string; role: number }): void => {
-      console.log('debug', 'deleteItem', item)
+    const deleteItem = (index: number): void => {
+      console.log('debug', 'deleteItem', index)
+    }
+
+    async function indexAdmin(): Promise<void> {
+      const form: IAdminListForm = {
+        limit: itemsPerPage.value,
+        offset: itemsPerPage.value * (page.value - 1),
+        order: {
+          by: sortBy.value,
+          desc: sortDesc.value,
+        },
+      }
+
+      await AdminStore.indexAdmin(form)
     }
 
     return {
       search,
+      page,
+      itemsPerPage,
+      sortBy,
+      sortDesc,
       headers,
+      total,
       desserts,
       getColor,
       getRole,

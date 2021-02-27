@@ -1,69 +1,13 @@
 import { Action, Module, Mutation, VuexModule } from 'vuex-module-decorators'
+import { $axios } from '~/plugins/axios'
+import { ApiError } from '~/types/exception'
+import { IAdminListForm } from '~/types/forms'
+import { IAdminListResponse, IAdminListResponseUser, IErrorResponse } from '~/types/responses'
 import { IAdminState, IAdminUser } from '~/types/store'
 
 const initialState: IAdminState = {
-  users: [
-    {
-      id: '1',
-      username: 'k.hamada',
-      email: 'k.hamada@calmato.com',
-      phoneNumber: '000-0000-0000',
-      role: 1,
-      thumbnailUrl: '',
-      selfIntroduction: '',
-      lastName: '濵田',
-      firstName: '広大',
-      lastNameKana: 'はまだ',
-      firstNameKana: 'こうだい',
-      createdAt: '2020-01-01 00:00:00',
-      updatedAt: '2020-01-01 00:00:00',
-    },
-    {
-      id: '2',
-      username: 't.nishikawa',
-      email: 't.nishikawa@calmato.com',
-      phoneNumber: '111-1111-1111',
-      role: 1,
-      thumbnailUrl: '',
-      selfIntroduction: '',
-      lastName: '西川',
-      firstName: '西川',
-      lastNameKana: 'にしかわ',
-      firstNameKana: 'ただし',
-      createdAt: '2020-01-01 00:00:00',
-      updatedAt: '2020-01-01 00:00:00',
-    },
-    {
-      id: '3',
-      username: 'y.yamada',
-      email: 'y.yamada@calmato.com',
-      phoneNumber: '000-1111-1111',
-      role: 2,
-      thumbnailUrl: '',
-      selfIntroduction: '',
-      lastName: '山田',
-      firstName: '侑樹',
-      lastNameKana: 'やまだ',
-      firstNameKana: 'ゆうき',
-      createdAt: '2020-01-01 00:00:00',
-      updatedAt: '2020-01-01 00:00:00',
-    },
-    {
-      id: '4',
-      username: 'a.inatomi',
-      email: 'a.inatomi@calmato.com',
-      phoneNumber: '111-0000-0000',
-      role: 3,
-      thumbnailUrl: '',
-      selfIntroduction: '',
-      lastName: 'Inatomi',
-      firstName: 'Atsuhide',
-      lastNameKana: 'いなとみ',
-      firstNameKana: 'あつひで',
-      createdAt: '2020-01-01 00:00:00',
-      updatedAt: '2020-01-01 00:00:00',
-    },
-  ],
+  users: [],
+  total: 0,
 }
 
 @Module({
@@ -73,14 +17,61 @@ const initialState: IAdminState = {
 })
 export default class AdminModule extends VuexModule {
   private users: IAdminUser[] = initialState.users
+  private total: number = initialState.total
 
   public get getUsers(): IAdminUser[] {
     return this.users
   }
 
+  public get getTotal(): number {
+    return this.total
+  }
+
+  @Mutation
+  private setUsers(users: IAdminUser[]): void {
+    this.users = users
+  }
+
   @Mutation
   private addUser(user: IAdminUser): void {
     this.users.push(user)
+  }
+
+  @Mutation
+  private setTotal(total: number): void {
+    this.total = total
+  }
+
+  @Action({ rawError: true })
+  public indexAdmin(payload: IAdminListForm): Promise<void> {
+    const { limit, offset, order } = payload
+
+    let query: string = `limit=${limit}&offset=${offset}`
+
+    if (order?.by) {
+      const direction: string = order.desc ? 'desc' : 'asc'
+      query += `&by=${order.by}&direction=${direction}`
+    }
+
+    return new Promise((resolve: () => void, reject: (reason: Error) => void) => {
+      $axios
+        .$get(`/v1/admin?${query}`)
+        .then((res: IAdminListResponse) => {
+          const { users, total } = res
+          const data: IAdminUser[] = users.map(
+            (user: IAdminListResponseUser): IAdminUser => {
+              return { ...user } as IAdminUser
+            }
+          )
+          this.setUsers(data)
+          this.setTotal(total)
+          resolve()
+        })
+        .catch((err: any) => {
+          const { data, status }: IErrorResponse = err.response
+          reject(new ApiError(status, data.message, data))
+        })
+    })
   }
 
   @Action({ rawError: true })
