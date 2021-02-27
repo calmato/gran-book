@@ -154,9 +154,9 @@ func setOrder(db *gorm.DB, o *domain.QueryOrder) *gorm.DB {
 func setLimit(db *gorm.DB, limit int64) *gorm.DB {
 	if limit == 0 {
 		return db.Limit(defaultLimit)
-	} else {
-		return db.Limit(limit)
 	}
+
+	return db.Limit(limit)
 }
 
 func setOffset(db *gorm.DB, offset int64) *gorm.DB {
