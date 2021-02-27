@@ -45,12 +45,12 @@ const data = [
   },
   {
     label: '未選択',
-    code: 3,
+    code: 0,
   },
 ];
 
 const GenderRadioGroup = function GenderRadioGroup(props: Props): ReactElement {
-  const [gender, setValue] = React.useState(props.gender || 3);
+  const [gender, setValue] = React.useState(props.gender || 0);
   return (
     <View style={styles.container}>
       <Text style={[styles.text, {flex: 1}]}>性別</Text>
@@ -59,7 +59,7 @@ const GenderRadioGroup = function GenderRadioGroup(props: Props): ReactElement {
         boxStyle={styles.box}
         textStyle={styles.text}
         data={data}
-        initial={gender}
+        initial={gender || 3}
         selectedBtn={(e) => setValue(e.code)}
         activeColor={COLOR.PRIMARY}
       />

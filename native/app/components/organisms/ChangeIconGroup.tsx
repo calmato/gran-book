@@ -17,12 +17,12 @@ const styles = StyleSheet.create({
 
 interface Props {
   avatarUrl: string,
-  handleOnPressed: () => void,
+  handleOnClicked: () => void,
 }
 
 const ChangeIconGroup = function ChangeIconGroup(props: Props): ReactElement {
   return (
-    <ListItem style={{alignItems:'flex-start'}} Component={TouchableOpacity} onPress={()=>props.handleOnPressed}>
+    <ListItem style={{alignItems:'flex-start'}} Component={TouchableOpacity} onPress={()=>props.handleOnClicked}>
       <Avatar source={{uri: props.avatarUrl}} rounded size='medium'/>
       <ListItem.Content style={styles.listItem}>
         <Text style={styles.text}>アイコン変更</Text>

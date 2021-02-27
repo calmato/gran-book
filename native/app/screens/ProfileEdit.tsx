@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
 const ProfileEdit = function ProfileEdit(): ReactElement {
   const [userInfo, setValue] = useState<ProfileEditForm>({
     name: 'hamachans',
-    avatarUrl: 'https://pbs.twimg.com/profile_images/1312909954148253696/Utr-sa_Y_400x400.jpg',
+    avatar: 'https://pbs.twimg.com/profile_images/1312909954148253696/Utr-sa_Y_400x400.jpg',
     bio: 'よろしくお願いします。',
     gender: 3,
   });
@@ -38,11 +38,11 @@ const ProfileEdit = function ProfileEdit(): ReactElement {
         onPress={()=>undefined}
       />
       <ChangeIconGroup
-        avatarUrl={userInfo.avatarUrl}
-        handleOnPressed={()=>undefined}
+        avatarUrl={userInfo.avatar}
+        handleOnClicked={()=>undefined}
       />
       <ChangeNickname
-        defaultValue={userInfo.name}
+        value={userInfo.name}
         handelOnChangeText={(text)=>setValue({...userInfo, name: text})}
       />
       <Input
