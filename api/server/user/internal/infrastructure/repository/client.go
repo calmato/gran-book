@@ -57,11 +57,11 @@ func getDBConfig(socket, host, port, database, username, password string) string
 }
 
 // getListQuery - SELECT SQL文作成用メソッド
-func (c *Client) getListQuery(q *domain.ListQuery) (*gorm.DB, error) {
+func (c *Client) getListQuery(q *domain.ListQuery) *gorm.DB {
 	db := c.db
 
 	if q == nil {
-		return db, nil
+		return db
 	}
 
 	// WHERE句の追加
@@ -81,7 +81,7 @@ func (c *Client) getListQuery(q *domain.ListQuery) (*gorm.DB, error) {
 	db = setLimit(db, q.Limit)
 	db = setOffset(db, q.Offset)
 
-	return db, nil
+	return db
 }
 
 func (c *Client) getListCount(q *domain.ListQuery, model interface{}) (int64, error) {
@@ -152,7 +152,11 @@ func setOrder(db *gorm.DB, o *domain.QueryOrder) *gorm.DB {
 }
 
 func setLimit(db *gorm.DB, limit int64) *gorm.DB {
-	return db.Limit(limit)
+	if limit == 0 {
+		return db.Limit(defaultLimit)
+	} else {
+		return db.Limit(limit)
+	}
 }
 
 func setOffset(db *gorm.DB, offset int64) *gorm.DB {
@@ -161,18 +165,14 @@ func setOffset(db *gorm.DB, offset int64) *gorm.DB {
 
 // convertConditionValues - BETWEENのとき、valueが配列になっているため
 func convertConditionValues(q *domain.QueryCondition) (interface{}, interface{}) {
-	var m, n interface{}
-	switch q.Value.(type) {
+	switch v := q.Value.(type) {
 	case []int32:
-		m = q.Value.([]int32)[0]
-		n = q.Value.([]int32)[1]
+		return v[0], v[1]
 	case []int64:
-		m = q.Value.([]int64)[0]
-		n = q.Value.([]int64)[1]
+		return v[0], v[1]
 	case []string:
-		m = q.Value.([]string)[0]
-		n = q.Value.([]string)[1]
+		return v[0], v[1]
+	default:
+		return v, ""
 	}
-
-	return m, n
 }

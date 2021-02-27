@@ -54,18 +54,13 @@ func (r *userRepository) Authentication(ctx context.Context) (string, error) {
 
 func (r *userRepository) List(ctx context.Context, query *domain.ListQuery) ([]*user.User, int64, error) {
 	us := []*user.User{}
+	db := r.client.getListQuery(query)
 
-	db, err := r.client.getListQuery(query)
-	if err != nil {
-		return nil, 0, exception.InvalidDomainValidation.New(err)
-	}
-
-	err = db.Find(&us).Error
+	err := db.Find(&us).Error
 	if err != nil {
 		return nil, 0, exception.ErrorInDatastore.New(err)
 	}
 
-	// err = r.client.db.Model(&user.User{}).Select("COUNT(DISTINCT(id))").Count(&count).Error
 	count, err := r.client.getListCount(query, &user.User{})
 	if err != nil {
 		return nil, 0, err
