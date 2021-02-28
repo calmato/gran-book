@@ -10,7 +10,6 @@ import { Button } from 'react-native-elements';
 const styles = StyleSheet.create({
   buttonStyle: {
     alignSelf: 'center',
-    marginTop: 10
   },
   subtilte: {
     marginTop: 12,
