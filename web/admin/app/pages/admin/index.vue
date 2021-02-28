@@ -33,11 +33,10 @@ export default defineComponent({
     const store = root.$store
 
     const initializeNewForm: IAdminNewParams = {
-      username: '',
       email: '',
       password: '',
       passwordConfirmation: '',
-      role: 0,
+      role: 2,
       lastName: '',
       firstName: '',
       lastNameKana: '',

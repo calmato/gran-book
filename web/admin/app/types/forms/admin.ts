@@ -23,7 +23,6 @@ export interface IAdminNewForm {
 // interface - params
 // ---------------------------
 export interface IAdminNewParams {
-  username: string
   email: string
   password: string
   passwordConfirmation: string
@@ -38,7 +37,6 @@ export interface IAdminNewParams {
 // interface - options
 // ---------------------------
 export interface IAdminNewOptions {
-  username: ITextField
   email: ITextField
   password: ITextField
   passwordConfirmation: ITextField
@@ -53,14 +51,6 @@ export interface IAdminNewOptions {
 // const - Options
 // ---------------------------
 export const AdminNewOptions: IAdminNewOptions = {
-  username: {
-    label: '表示名',
-    rules: {
-      required: true,
-      alpha_dash: true,
-      max: 32,
-    },
-  } as ITextField,
   email: {
     label: 'メールアドレス',
     rules: {

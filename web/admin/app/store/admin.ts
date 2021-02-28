@@ -78,7 +78,6 @@ export default class AdminModule extends VuexModule {
   @Action({ rawError: true })
   public createUser(payload: IAdminNewForm): Promise<void> {
     const {
-      username,
       email,
       password,
       passwordConfirmation,
@@ -90,7 +89,7 @@ export default class AdminModule extends VuexModule {
     } = payload.params
 
     const req: IAdminNewRequest = {
-      username,
+      username: `${lastName} ${firstName}`,
       email,
       password,
       passwordConfirmation,
