@@ -8,9 +8,9 @@
     :loading="loading"
     :users="users"
     :total="total"
-    @new="handleNewItem"
-    @edit="handleEditItem"
-    @delete="handleDeleteItem"
+    @new="handleClickNewItem"
+    @edit="handleClickEditItem"
+    @delete="handleClickDeleteItem"
   />
 </template>
 
@@ -58,15 +58,15 @@ export default defineComponent({
       await indexAdmin()
     })
 
-    const handleNewItem = async (): Promise<void> => {
+    const handleClickNewItem = async (): Promise<void> => {
       await AdminStore.createUser()
     }
 
-    const handleEditItem = (index: number): void => {
+    const handleClickEditItem = (index: number): void => {
       console.log('debug', 'editItem', index)
     }
 
-    const handleDeleteItem = (index: number): void => {
+    const handleClickDeleteItem = (index: number): void => {
       console.log('debug', 'deleteItem', index)
     }
 
@@ -96,9 +96,9 @@ export default defineComponent({
       sortDesc,
       users,
       total,
-      handleNewItem,
-      handleEditItem,
-      handleDeleteItem,
+      handleClickNewItem,
+      handleClickEditItem,
+      handleClickDeleteItem,
     }
   },
 })

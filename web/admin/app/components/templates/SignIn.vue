@@ -4,7 +4,7 @@
       <v-row justify="center" align="center">
         <v-col cols="12" sm="8">
           <v-img src="/logo.png" max-height="96px" contain class="mb-8" />
-          <the-alert :show.sync="showAlert" type="error">
+          <the-alert :show="hasError" type="error" @update:show="$emit('update:has-error', $event)">
             メールアドレス もしくは パスワード が間違っています
           </the-alert>
           <sign-in-card>
@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, SetupContext, PropType } from '@nuxtjs/composition-api'
+import { defineComponent, SetupContext, PropType } from '@nuxtjs/composition-api'
 import { ISignInForm } from '~/types/forms'
 import TheAlert from '~/components/atoms/TheAlert.vue'
 import SignInCard from '~/components/organisms/SignInCard.vue'
@@ -42,18 +42,12 @@ export default defineComponent({
     },
   },
 
-  setup(props, { emit }: SetupContext) {
-    const showAlert = computed({
-      get: () => props.hasError,
-      set: (val: Boolean) => emit('update:hasError', val),
-    })
-
+  setup(_, { emit }: SetupContext) {
     const onClickSubmitButton = () => {
       emit('submit')
     }
 
     return {
-      showAlert,
       onClickSubmitButton,
     }
   },
