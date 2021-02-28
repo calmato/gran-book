@@ -117,7 +117,7 @@ func validationMessage(tag string, options ...string) string {
 	case exception.GreaterThanEqualTag:
 		return fmt.Sprintf(exception.GreaterThanEqualMessage, options[0])
 	case exception.OneOfTag:
-		str := strings.Replace(options[0], " ", ", ", -1)
+		str := strings.ReplaceAll(options[0], " ", ",")
 		return fmt.Sprintf(exception.OneOfMessage, str)
 	default:
 		return "Unknown"
