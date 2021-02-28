@@ -15,29 +15,55 @@ func TestAdminRequestValidation_ListAdmin(t *testing.T) {
 	}{
 		"ok": {
 			Input: &input.ListAdmin{
-				Limit:  100,
-				Offset: 0,
+				Limit:     100,
+				Offset:    0,
+				By:        "email",
+				Direction: "asc",
 			},
 			Expected: true,
 		},
 		"ng_limit_greater_than": {
 			Input: &input.ListAdmin{
-				Limit:  -1,
-				Offset: 0,
+				Limit:     -1,
+				Offset:    0,
+				By:        "",
+				Direction: "",
 			},
 			Expected: false,
 		},
 		"ng_limit_less_than": {
 			Input: &input.ListAdmin{
-				Limit:  1001,
-				Offset: 0,
+				Limit:     1001,
+				Offset:    0,
+				By:        "",
+				Direction: "",
 			},
 			Expected: false,
 		},
 		"ng_offset_greater_than": {
 			Input: &input.ListAdmin{
-				Limit:  100,
-				Offset: -1,
+				Limit:     100,
+				Offset:    -1,
+				By:        "",
+				Direction: "",
+			},
+			Expected: false,
+		},
+		"ng_by_other_word": {
+			Input: &input.ListAdmin{
+				Limit:     100,
+				Offset:    0,
+				By:        "test",
+				Direction: "",
+			},
+			Expected: false,
+		},
+		"ng_direction_other_word": {
+			Input: &input.ListAdmin{
+				Limit:     100,
+				Offset:    0,
+				By:        "test",
+				Direction: "",
 			},
 			Expected: false,
 		},
