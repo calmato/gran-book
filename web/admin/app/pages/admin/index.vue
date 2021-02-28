@@ -1,18 +1,17 @@
 <template>
-  <div>
-    <admin-list
-      :loading="loading"
-      :page.sync="page"
-      :items-per-page.sync="itemsPerPage"
-      :sort-by.sync="sortBy"
-      :sort-desc.sync="sortDesc"
-      :users="users"
-      :total="total"
-      @new="handleNewItem"
-      @edit="handleEditItem"
-      @delete="handleDeleteItem"
-    />
-  </div>
+  <admin-list
+    :search.sync="search"
+    :page.sync="page"
+    :items-per-page.sync="itemsPerPage"
+    :sort-by.sync="sortBy"
+    :sort-desc.sync="sortDesc"
+    :loading="loading"
+    :users="users"
+    :total="total"
+    @new="handleNewItem"
+    @edit="handleEditItem"
+    @delete="handleDeleteItem"
+  />
 </template>
 
 <script lang="ts">
@@ -30,6 +29,7 @@ export default defineComponent({
     const store = root.$store
 
     const loading = ref<boolean>(false)
+    const search = ref<string>()
     const page = ref<number>(1)
     const itemsPerPage = ref<number>(20)
     const sortBy = ref<string>()
@@ -89,6 +89,7 @@ export default defineComponent({
 
     return {
       loading,
+      search,
       page,
       itemsPerPage,
       sortBy,
