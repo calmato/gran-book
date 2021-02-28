@@ -281,7 +281,6 @@ var _AuthService_serviceDesc = grpc.ServiceDesc{
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AdminServiceClient interface {
 	ListAdmin(ctx context.Context, in *ListAdminRequest, opts ...grpc.CallOption) (*AdminListResponse, error)
-	SearchAdmin(ctx context.Context, in *SearchAdminRequest, opts ...grpc.CallOption) (*AdminListResponse, error)
 	GetAdmin(ctx context.Context, in *GetAdminRequest, opts ...grpc.CallOption) (*AdminResponse, error)
 	CreateAdmin(ctx context.Context, in *CreateAdminRequest, opts ...grpc.CallOption) (*AdminResponse, error)
 	UpdateAdminRole(ctx context.Context, in *UpdateAdminRoleRequest, opts ...grpc.CallOption) (*AdminResponse, error)
@@ -300,15 +299,6 @@ func NewAdminServiceClient(cc grpc.ClientConnInterface) AdminServiceClient {
 func (c *adminServiceClient) ListAdmin(ctx context.Context, in *ListAdminRequest, opts ...grpc.CallOption) (*AdminListResponse, error) {
 	out := new(AdminListResponse)
 	err := c.cc.Invoke(ctx, "/proto.AdminService/ListAdmin", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *adminServiceClient) SearchAdmin(ctx context.Context, in *SearchAdminRequest, opts ...grpc.CallOption) (*AdminListResponse, error) {
-	out := new(AdminListResponse)
-	err := c.cc.Invoke(ctx, "/proto.AdminService/SearchAdmin", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -365,7 +355,6 @@ func (c *adminServiceClient) UpdateAdminProfile(ctx context.Context, in *UpdateA
 // for forward compatibility
 type AdminServiceServer interface {
 	ListAdmin(context.Context, *ListAdminRequest) (*AdminListResponse, error)
-	SearchAdmin(context.Context, *SearchAdminRequest) (*AdminListResponse, error)
 	GetAdmin(context.Context, *GetAdminRequest) (*AdminResponse, error)
 	CreateAdmin(context.Context, *CreateAdminRequest) (*AdminResponse, error)
 	UpdateAdminRole(context.Context, *UpdateAdminRoleRequest) (*AdminResponse, error)
@@ -380,9 +369,6 @@ type UnimplementedAdminServiceServer struct {
 
 func (UnimplementedAdminServiceServer) ListAdmin(context.Context, *ListAdminRequest) (*AdminListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListAdmin not implemented")
-}
-func (UnimplementedAdminServiceServer) SearchAdmin(context.Context, *SearchAdminRequest) (*AdminListResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SearchAdmin not implemented")
 }
 func (UnimplementedAdminServiceServer) GetAdmin(context.Context, *GetAdminRequest) (*AdminResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAdmin not implemented")
@@ -426,24 +412,6 @@ func _AdminService_ListAdmin_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AdminServiceServer).ListAdmin(ctx, req.(*ListAdminRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _AdminService_SearchAdmin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SearchAdminRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AdminServiceServer).SearchAdmin(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/proto.AdminService/SearchAdmin",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServiceServer).SearchAdmin(ctx, req.(*SearchAdminRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -545,10 +513,6 @@ var _AdminService_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListAdmin",
 			Handler:    _AdminService_ListAdmin_Handler,
-		},
-		{
-			MethodName: "SearchAdmin",
-			Handler:    _AdminService_SearchAdmin_Handler,
 		},
 		{
 			MethodName: "GetAdmin",

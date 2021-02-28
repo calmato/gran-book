@@ -200,6 +200,12 @@ export class ListAdminRequest extends jspb.Message {
     setOffset(value: number): ListAdminRequest;
 
 
+    hasOrder(): boolean;
+    clearOrder(): void;
+    getOrder(): ListAdminRequest.Order | undefined;
+    setOrder(value?: ListAdminRequest.Order): ListAdminRequest;
+
+
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): ListAdminRequest.AsObject;
     static toObject(includeInstance: boolean, msg: ListAdminRequest): ListAdminRequest.AsObject;
@@ -214,72 +220,9 @@ export namespace ListAdminRequest {
     export type AsObject = {
         limit: number,
         offset: number,
-    }
-}
-
-export class SearchAdminRequest extends jspb.Message { 
-    getLimit(): number;
-    setLimit(value: number): SearchAdminRequest;
-
-    getOffset(): number;
-    setOffset(value: number): SearchAdminRequest;
-
-
-    hasQuery(): boolean;
-    clearQuery(): void;
-    getQuery(): SearchAdminRequest.Query | undefined;
-    setQuery(value?: SearchAdminRequest.Query): SearchAdminRequest;
-
-
-    hasOrder(): boolean;
-    clearOrder(): void;
-    getOrder(): SearchAdminRequest.Order | undefined;
-    setOrder(value?: SearchAdminRequest.Order): SearchAdminRequest;
-
-
-    serializeBinary(): Uint8Array;
-    toObject(includeInstance?: boolean): SearchAdminRequest.AsObject;
-    static toObject(includeInstance: boolean, msg: SearchAdminRequest): SearchAdminRequest.AsObject;
-    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-    static serializeBinaryToWriter(message: SearchAdminRequest, writer: jspb.BinaryWriter): void;
-    static deserializeBinary(bytes: Uint8Array): SearchAdminRequest;
-    static deserializeBinaryFromReader(message: SearchAdminRequest, reader: jspb.BinaryReader): SearchAdminRequest;
-}
-
-export namespace SearchAdminRequest {
-    export type AsObject = {
-        limit: number,
-        offset: number,
-        query?: SearchAdminRequest.Query.AsObject,
-        order?: SearchAdminRequest.Order.AsObject,
+        order?: ListAdminRequest.Order.AsObject,
     }
 
-
-    export class Query extends jspb.Message { 
-        getField(): string;
-        setField(value: string): Query;
-
-        getValue(): string;
-        setValue(value: string): Query;
-
-
-        serializeBinary(): Uint8Array;
-        toObject(includeInstance?: boolean): Query.AsObject;
-        static toObject(includeInstance: boolean, msg: Query): Query.AsObject;
-        static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-        static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-        static serializeBinaryToWriter(message: Query, writer: jspb.BinaryWriter): void;
-        static deserializeBinary(bytes: Uint8Array): Query;
-        static deserializeBinaryFromReader(message: Query, reader: jspb.BinaryReader): Query;
-    }
-
-    export namespace Query {
-        export type AsObject = {
-            field: string,
-            value: string,
-        }
-    }
 
     export class Order extends jspb.Message { 
         getBy(): string;

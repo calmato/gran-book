@@ -35,29 +35,16 @@ func (s *AdminServer) ListAdmin(ctx context.Context, req *pb.ListAdminRequest) (
 		Offset: req.Offset,
 	}
 
+	if req.Order != nil {
+		in.By = req.Order.By
+		in.Direction = req.Order.Direction
+	}
+
 	us, out, err := s.AdminApplication.List(ctx, in)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
-	res := getAdminListResponse(us, out)
-	return res, nil
-}
-
-// SearchAdmin - 管理者検索
-func (s *AdminServer) SearchAdmin(ctx context.Context, req *pb.SearchAdminRequest) (*pb.AdminListResponse, error) {
-	cu, err := s.AuthApplication.Authentication(ctx)
-	if err != nil {
-		return nil, errorHandling(err)
-	}
-
-	err = authorization(cu)
-	if err != nil {
-		return nil, errorHandling(err)
-	}
-
-	us := []*user.User{}
-	out := &output.ListQuery{}
 	res := getAdminListResponse(us, out)
 	return res, nil
 }

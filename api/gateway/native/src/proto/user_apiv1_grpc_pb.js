@@ -92,17 +92,6 @@ function deserialize_proto_ListAdminRequest(buffer_arg) {
   return proto_user_apiv1_pb.ListAdminRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
-function serialize_proto_SearchAdminRequest(arg) {
-  if (!(arg instanceof proto_user_apiv1_pb.SearchAdminRequest)) {
-    throw new Error('Expected argument of type proto.SearchAdminRequest');
-  }
-  return Buffer.from(arg.serializeBinary());
-}
-
-function deserialize_proto_SearchAdminRequest(buffer_arg) {
-  return proto_user_apiv1_pb.SearchAdminRequest.deserializeBinary(new Uint8Array(buffer_arg));
-}
-
 function serialize_proto_UpdateAdminPasswordRequest(arg) {
   if (!(arg instanceof proto_user_apiv1_pb.UpdateAdminPasswordRequest)) {
     throw new Error('Expected argument of type proto.UpdateAdminPasswordRequest');
@@ -260,17 +249,6 @@ var AdminServiceService = exports.AdminServiceService = {
     responseType: proto_user_apiv1_pb.AdminListResponse,
     requestSerialize: serialize_proto_ListAdminRequest,
     requestDeserialize: deserialize_proto_ListAdminRequest,
-    responseSerialize: serialize_proto_AdminListResponse,
-    responseDeserialize: deserialize_proto_AdminListResponse,
-  },
-  searchAdmin: {
-    path: '/proto.AdminService/SearchAdmin',
-    requestStream: false,
-    responseStream: false,
-    requestType: proto_user_apiv1_pb.SearchAdminRequest,
-    responseType: proto_user_apiv1_pb.AdminListResponse,
-    requestSerialize: serialize_proto_SearchAdminRequest,
-    requestDeserialize: deserialize_proto_SearchAdminRequest,
     responseSerialize: serialize_proto_AdminListResponse,
     responseDeserialize: deserialize_proto_AdminListResponse,
   },

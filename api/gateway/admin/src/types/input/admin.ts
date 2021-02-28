@@ -1,6 +1,8 @@
 export interface IListAdminInput {
   limit: number
   offset: number
+  by: string
+  direction: string
 }
 
 export interface ICreateAdminInput {
