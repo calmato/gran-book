@@ -34,16 +34,16 @@ const PasswordEdit = function PasswordEdit(props: Props): ReactElement {
     passwordConfirmation: '',
   });
 
-const passwordError: boolean = useMemo((): boolean => {
+  const passwordError: boolean = useMemo((): boolean => {
     return formData.password.length < 6;
-  }, [formData.password])
+  }, [formData.password]);
 
-const passwordConfirmationError: boolean = useMemo(():boolean => {
+  const passwordConfirmationError: boolean = useMemo(():boolean => {
     return formData.password !== formData.passwordConfirmation;
-  }, [formData.password, formData.passwordConfirmation])
+  }, [formData.password, formData.passwordConfirmation]);
 
   const canSubmit = useMemo(():boolean => {
-    return !passwordError && !passwordConfirmationError
+    return !passwordError && !passwordConfirmationError;
   }, [passwordError, passwordConfirmationError]);
 
 
@@ -95,11 +95,11 @@ const passwordConfirmationError: boolean = useMemo(():boolean => {
         hasError={passwordConfirmationError}
       />
       <Button
-      containerStyle={styles.buttonStyle}
-      disabled={!canSubmit}
-      onPress={handleSubmit}
-      titleStyle={{ color: COLOR.TEXT_TITLE}}
-      title="変更する"/>
+        containerStyle={styles.buttonStyle}
+        disabled={!canSubmit}
+        onPress={handleSubmit}
+        titleStyle={{ color: COLOR.TEXT_TITLE}}
+        title="変更する"/>
     </View>
   );
 };
