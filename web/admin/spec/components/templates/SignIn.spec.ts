@@ -42,28 +42,5 @@ describe('components/templates/Home', () => {
         })
       })
     })
-
-    describe('computed', () => {
-      describe('showAlert', () => {
-        it('getter', () => {
-          expect(wrapper.vm.showAlert).toBeFalsy()
-        })
-
-        it('setter', async () => {
-          await wrapper.setData({ showAlert: true })
-          expect(wrapper.emitted('update:hasError')).toBeTruthy()
-          expect(wrapper.emitted('update:hasError')[0][0]).toBeTruthy()
-        })
-      })
-    })
-
-    describe('methods', () => {
-      describe('onClickSubmitButton', () => {
-        it('emitが実行されること', async () => {
-          await wrapper.vm.onClickSubmitButton()
-          expect(wrapper.emitted('submit')).toBeTruthy()
-        })
-      })
-    })
   })
 })
