@@ -4,6 +4,10 @@ export interface IAdminTableHeader {
   sortable: boolean
 }
 
+export interface IAdminTableFooter {
+  itemsPerPageOptions: number[]
+}
+
 export interface IAdminTableContent {
   name: string
   email: string

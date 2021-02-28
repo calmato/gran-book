@@ -4,6 +4,17 @@
 var grpc = require('@grpc/grpc-js');
 var proto_user_apiv1_pb = require('../proto/user_apiv1_pb.js');
 
+function serialize_proto_AdminListResponse(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.AdminListResponse)) {
+    throw new Error('Expected argument of type proto.AdminListResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_AdminListResponse(buffer_arg) {
+  return proto_user_apiv1_pb.AdminListResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_proto_AdminResponse(arg) {
   if (!(arg instanceof proto_user_apiv1_pb.AdminResponse)) {
     throw new Error('Expected argument of type proto.AdminResponse');
@@ -57,6 +68,28 @@ function serialize_proto_EmptyUser(arg) {
 
 function deserialize_proto_EmptyUser(buffer_arg) {
   return proto_user_apiv1_pb.EmptyUser.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_proto_GetAdminRequest(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.GetAdminRequest)) {
+    throw new Error('Expected argument of type proto.GetAdminRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_GetAdminRequest(buffer_arg) {
+  return proto_user_apiv1_pb.GetAdminRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_proto_ListAdminRequest(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.ListAdminRequest)) {
+    throw new Error('Expected argument of type proto.ListAdminRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_ListAdminRequest(buffer_arg) {
+  return proto_user_apiv1_pb.ListAdminRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 function serialize_proto_UpdateAdminPasswordRequest(arg) {
@@ -208,6 +241,28 @@ var AuthServiceService = exports.AuthServiceService = {
 
 exports.AuthServiceClient = grpc.makeGenericClientConstructor(AuthServiceService);
 var AdminServiceService = exports.AdminServiceService = {
+  listAdmin: {
+    path: '/proto.AdminService/ListAdmin',
+    requestStream: false,
+    responseStream: false,
+    requestType: proto_user_apiv1_pb.ListAdminRequest,
+    responseType: proto_user_apiv1_pb.AdminListResponse,
+    requestSerialize: serialize_proto_ListAdminRequest,
+    requestDeserialize: deserialize_proto_ListAdminRequest,
+    responseSerialize: serialize_proto_AdminListResponse,
+    responseDeserialize: deserialize_proto_AdminListResponse,
+  },
+  getAdmin: {
+    path: '/proto.AdminService/GetAdmin',
+    requestStream: false,
+    responseStream: false,
+    requestType: proto_user_apiv1_pb.GetAdminRequest,
+    responseType: proto_user_apiv1_pb.AdminResponse,
+    requestSerialize: serialize_proto_GetAdminRequest,
+    requestDeserialize: deserialize_proto_GetAdminRequest,
+    responseSerialize: serialize_proto_AdminResponse,
+    responseDeserialize: deserialize_proto_AdminResponse,
+  },
   createAdmin: {
     path: '/proto.AdminService/CreateAdmin',
     requestStream: false,

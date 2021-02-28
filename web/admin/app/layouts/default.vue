@@ -1,18 +1,13 @@
 <template>
   <v-app>
     <common-snackbar :snackbar.sync="snackbar" :color="snackbarColor" :message="snackbarMessage" />
-    <common-header
-      :thumbnail-url="thumbnailUrl"
-      @click="handleClick"
-      @change="handleChange"
-      @logout="handleClickLogout"
-    />
+    <common-header :thumbnail-url="thumbnailUrl" @click="handleClick" @change="handleChange" @logout="handleLogout" />
     <common-sidebar
+      :drawer.sync="drawer"
       :username="username"
       :email="email"
       :thumbnail-url="thumbnailUrl"
       :current="current"
-      :drawer.sync="drawer"
       @click="handleClick"
     />
     <v-main>
@@ -63,7 +58,7 @@ export default defineComponent({
       router.push(link)
     }
 
-    const handleClickLogout = (): void => {
+    const handleLogout = (): void => {
       AuthStore.logout()
       router.push('/signin')
     }
@@ -82,7 +77,7 @@ export default defineComponent({
       email,
       thumbnailUrl,
       handleClick,
-      handleClickLogout,
+      handleLogout,
       handleChange,
     }
   },

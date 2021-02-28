@@ -1,6 +1,7 @@
 import Vue, { VueConstructor } from 'vue'
 import Vuex from 'vuex'
 import { createLocalVue } from '@vue/test-utils'
+import AdminStore from '~/store/admin'
 import AuthStore from '~/store/auth'
 import CommonStore from '~/store/common'
 import response from '~~/spec/helpers/response'
@@ -10,6 +11,7 @@ localVue.use(Vuex)
 
 const store = new Vuex.Store({
   modules: {
+    admin: AdminStore,
     auth: AuthStore,
     common: CommonStore,
   },
