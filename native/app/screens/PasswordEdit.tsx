@@ -49,7 +49,7 @@ const PasswordEdit = function PasswordEdit(props: Props): ReactElement {
 
   const createAlertNotifyEditPasswordError= (code: number) =>
     Alert.alert(
-      'パスワード編集に失敗',
+      'パスワードの変更に失敗',
       `${generateErrorMessage(code)}`,
       [
         {
@@ -70,7 +70,7 @@ const PasswordEdit = function PasswordEdit(props: Props): ReactElement {
         console.log('debug', err);
         createAlertNotifyEditPasswordError(err.code);
       });
-  }, [formData.password, formData.passwordConfirmation]);
+  }, [formData.password, formData.passwordConfirmation, editPassword]);
 
 
   return (
