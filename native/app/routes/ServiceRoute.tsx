@@ -8,7 +8,7 @@ import { COLOR } from '~~/constants/theme';
 import Store from '~/screens/Store';
 import Bookshelf from '~/screens/Bookshelf';
 import Sale from '~/screens/Sale';
-import SettingRoute from './SettingRoute';
+import UserInfoRoute from './UserInfoRoute';
 
 const styles = StyleSheet.create({
   labelStyle: {
@@ -65,7 +65,7 @@ const ServiceRoute = function ServiceRoute(): ReactElement {
       <Tab.Screen name="本棚" component={Bookshelf} />
       <Tab.Screen name="本を出品" component={Sale} />
       <Tab.Screen name="本を買う" component={Store} />
-      <Tab.Screen name="マイページ" component={SettingRoute} />
+      <Tab.Screen name="マイページ" component={UserInfoRoute} />
     </Tab.Navigator>
   );
 };

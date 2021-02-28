@@ -14,7 +14,7 @@ export type AuthStackParamList = {
   PasswordReset: undefined,
 }
 
-export type SettingStackParamList = {
+export type UserInfoStackParamList = {
   MyPage: undefined,
   OwnProfile: undefined,
 }
