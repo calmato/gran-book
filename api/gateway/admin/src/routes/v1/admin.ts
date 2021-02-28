@@ -22,11 +22,13 @@ const router = express.Router()
 router.get(
   '/',
   async (req: Request, res: Response<IAdminListResponse>, next: NextFunction): Promise<void> => {
-    const { limit, offset } = req.query
+    const { limit, offset, by, direction } = req.query
 
     const input: IListAdminInput = {
       limit: Number(limit) || 100,
       offset: Number(offset) || 0,
+      by: String(by),
+      direction: String(direction),
     }
 
     await listAdmin(req, input)
