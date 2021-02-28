@@ -27,8 +27,8 @@ router.get(
     const input: IListAdminInput = {
       limit: Number(limit) || 100,
       offset: Number(offset) || 0,
-      by: String(by),
-      direction: String(direction),
+      by: by ? String(by) : '',
+      direction: direction ? String(direction) : '',
     }
 
     await listAdmin(req, input)

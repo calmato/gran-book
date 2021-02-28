@@ -53,6 +53,15 @@ func (a *adminApplication) List(ctx context.Context, in *input.ListAdmin) ([]*us
 		},
 	}
 
+	if in.By != "" {
+		o := &domain.QueryOrder{
+			By:        in.By,
+			Direction: in.Direction,
+		}
+
+		query.Order = o
+	}
+
 	us, total, err := a.userService.List(ctx, query)
 	if err != nil {
 		return nil, nil, err

@@ -2,8 +2,14 @@ package input
 
 // ListAdmin - 管理者一覧のリクエスト
 type ListAdmin struct {
-	Limit  int64 `json:"limit" validate:"gte=0,lte=1000"`
-	Offset int64 `json:"offset" validate:"gte=0"`
+	Limit     int64  `json:"limit" validate:"gte=0,lte=1000"`
+	Offset    int64  `json:"offset" validate:"gte=0"`
+	By        string `json:"by" validate:"omitempty,oneof=id username email role"`
+	Direction string `json:"direction" validate:"omitempty,oneof=asc desc"`
+}
+
+// ListAdminOrder - 管理者一覧ソート用の構造体
+type ListAdminOrder struct {
 }
 
 // CreateAdmin - 管理者登録のリクエスト

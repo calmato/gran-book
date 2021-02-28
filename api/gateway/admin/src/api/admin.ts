@@ -27,7 +27,7 @@ export function listAdmin(req: Request<any>, input: IListAdminInput): Promise<IA
   request.setLimit(input.limit)
   request.setOffset(input.offset)
 
-  if (input.by) {
+  if (input.by !== '') {
     const order = new ListAdminRequest.Order()
     order.setBy(input.by)
     order.setDirection(input.direction)

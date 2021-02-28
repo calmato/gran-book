@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"reflect"
 	"regexp"
+	"strings"
 
 	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
 	"github.com/go-playground/validator/v10"
@@ -65,7 +66,7 @@ func (rv *requestValidator) Run(i interface{}) []*exception.ValidationError {
 		switch v.Tag() {
 		case exception.EqFieldTag:
 			eqField, _ := rt.FieldByName(v.Param())
-			errorMessage = validationMessage(v.Tag(), eqField.Tag.Get("label"))
+			errorMessage = validationMessage(v.Tag(), eqField.Tag.Get("json"))
 		default:
 			errorMessage = validationMessage(v.Tag(), v.Param())
 		}
@@ -107,6 +108,17 @@ func validationMessage(tag string, options ...string) string {
 		return exception.PasswordMessage
 	case exception.UniqueTag:
 		return exception.UniqueMessage
+	case exception.LessThanTag:
+		return fmt.Sprintf(exception.LessThanMessage, options[0])
+	case exception.GreaterThanTag:
+		return fmt.Sprintf(exception.GreaterThanMessage, options[0])
+	case exception.LessThanEqualTag:
+		return fmt.Sprintf(exception.LessThanEuqalMessage, options[0])
+	case exception.GreaterThanEqualTag:
+		return fmt.Sprintf(exception.GreaterThanEqualMessage, options[0])
+	case exception.OneOfTag:
+		str := strings.Replace(options[0], " ", ", ", -1)
+		return fmt.Sprintf(exception.OneOfMessage, str)
 	default:
 		return "Unknown"
 	}
