@@ -8,8 +8,9 @@ import { generateErrorMessage } from '~/lib/util/ErrorUtil';
 import { Button } from 'react-native-elements';
 
 const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
+  buttonStyle: {
+    alignSelf: 'center',
+    marginTop: 10
   },
   subtilte: {
     marginTop: 12,
@@ -95,9 +96,10 @@ const passwordConfirmationError: boolean = useMemo(():boolean => {
         hasError={passwordConfirmationError}
       />
       <Button
-      containerStyle={styles.container}
+      containerStyle={styles.buttonStyle}
       disabled={!canSubmit}
       onPress={handleSubmit}
+      titleStyle={{ color: COLOR.TEXT_TITLE}}
       title="変更する"/>
     </View>
   );
