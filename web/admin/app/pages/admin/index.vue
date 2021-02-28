@@ -68,11 +68,11 @@ export default defineComponent({
     ]
     const search = ''
     const loading = ref<boolean>(false)
-    const footerProps = { itemsPerPageOptions: [20, 30, 50] }
+    const footerProps = { itemsPerPageOptions: [20, 30, 50, 100] }
     const page = ref<number>(1)
     const itemsPerPage = ref<number>(20)
-    const sortBy = ref<string>('')
-    const sortDesc = ref<boolean>(true)
+    const sortBy = ref<string[]>([])
+    const sortDesc = ref<boolean[]>([])
 
     const total = computed(() => store.getters['admin/getTotal'])
     const desserts = computed((): IAdminTableContent[] => {
@@ -159,8 +159,8 @@ export default defineComponent({
         limit: itemsPerPage.value,
         offset: itemsPerPage.value * (page.value - 1),
         order: {
-          by: sortBy.value,
-          desc: sortDesc.value,
+          by: sortBy.value[0],
+          desc: sortDesc.value[0],
         },
       }
 
