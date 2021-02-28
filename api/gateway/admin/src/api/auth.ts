@@ -25,6 +25,7 @@ export function getAuth(req: Request<any>): Promise<IAuthOutput> {
   return new Promise((resolve: (res: IAuthOutput) => void, reject: (reason: Error) => void) => {
     authClient.getAuth(request, metadata, (err: any, res: AuthResponse) => {
       if (err) {
+        console.log('debug', err)
         reject(getGrpcError(err))
         return
       }

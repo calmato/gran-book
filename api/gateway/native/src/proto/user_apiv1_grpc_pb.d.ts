@@ -127,12 +127,32 @@ export class AuthServiceClient extends grpc.Client implements IAuthServiceClient
 }
 
 interface IAdminServiceService extends grpc.ServiceDefinition<grpc.UntypedServiceImplementation> {
+    listAdmin: IAdminServiceService_IListAdmin;
+    getAdmin: IAdminServiceService_IGetAdmin;
     createAdmin: IAdminServiceService_ICreateAdmin;
     updateAdminRole: IAdminServiceService_IUpdateAdminRole;
     updateAdminPassword: IAdminServiceService_IUpdateAdminPassword;
     updateAdminProfile: IAdminServiceService_IUpdateAdminProfile;
 }
 
+interface IAdminServiceService_IListAdmin extends grpc.MethodDefinition<proto_user_apiv1_pb.ListAdminRequest, proto_user_apiv1_pb.AdminListResponse> {
+    path: "/proto.AdminService/ListAdmin";
+    requestStream: false;
+    responseStream: false;
+    requestSerialize: grpc.serialize<proto_user_apiv1_pb.ListAdminRequest>;
+    requestDeserialize: grpc.deserialize<proto_user_apiv1_pb.ListAdminRequest>;
+    responseSerialize: grpc.serialize<proto_user_apiv1_pb.AdminListResponse>;
+    responseDeserialize: grpc.deserialize<proto_user_apiv1_pb.AdminListResponse>;
+}
+interface IAdminServiceService_IGetAdmin extends grpc.MethodDefinition<proto_user_apiv1_pb.GetAdminRequest, proto_user_apiv1_pb.AdminResponse> {
+    path: "/proto.AdminService/GetAdmin";
+    requestStream: false;
+    responseStream: false;
+    requestSerialize: grpc.serialize<proto_user_apiv1_pb.GetAdminRequest>;
+    requestDeserialize: grpc.deserialize<proto_user_apiv1_pb.GetAdminRequest>;
+    responseSerialize: grpc.serialize<proto_user_apiv1_pb.AdminResponse>;
+    responseDeserialize: grpc.deserialize<proto_user_apiv1_pb.AdminResponse>;
+}
 interface IAdminServiceService_ICreateAdmin extends grpc.MethodDefinition<proto_user_apiv1_pb.CreateAdminRequest, proto_user_apiv1_pb.AdminResponse> {
     path: "/proto.AdminService/CreateAdmin";
     requestStream: false;
@@ -173,6 +193,8 @@ interface IAdminServiceService_IUpdateAdminProfile extends grpc.MethodDefinition
 export const AdminServiceService: IAdminServiceService;
 
 export interface IAdminServiceServer extends grpc.UntypedServiceImplementation {
+    listAdmin: grpc.handleUnaryCall<proto_user_apiv1_pb.ListAdminRequest, proto_user_apiv1_pb.AdminListResponse>;
+    getAdmin: grpc.handleUnaryCall<proto_user_apiv1_pb.GetAdminRequest, proto_user_apiv1_pb.AdminResponse>;
     createAdmin: grpc.handleUnaryCall<proto_user_apiv1_pb.CreateAdminRequest, proto_user_apiv1_pb.AdminResponse>;
     updateAdminRole: grpc.handleUnaryCall<proto_user_apiv1_pb.UpdateAdminRoleRequest, proto_user_apiv1_pb.AdminResponse>;
     updateAdminPassword: grpc.handleUnaryCall<proto_user_apiv1_pb.UpdateAdminPasswordRequest, proto_user_apiv1_pb.AdminResponse>;
@@ -180,6 +202,12 @@ export interface IAdminServiceServer extends grpc.UntypedServiceImplementation {
 }
 
 export interface IAdminServiceClient {
+    listAdmin(request: proto_user_apiv1_pb.ListAdminRequest, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminListResponse) => void): grpc.ClientUnaryCall;
+    listAdmin(request: proto_user_apiv1_pb.ListAdminRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminListResponse) => void): grpc.ClientUnaryCall;
+    listAdmin(request: proto_user_apiv1_pb.ListAdminRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminListResponse) => void): grpc.ClientUnaryCall;
+    getAdmin(request: proto_user_apiv1_pb.GetAdminRequest, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminResponse) => void): grpc.ClientUnaryCall;
+    getAdmin(request: proto_user_apiv1_pb.GetAdminRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminResponse) => void): grpc.ClientUnaryCall;
+    getAdmin(request: proto_user_apiv1_pb.GetAdminRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminResponse) => void): grpc.ClientUnaryCall;
     createAdmin(request: proto_user_apiv1_pb.CreateAdminRequest, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminResponse) => void): grpc.ClientUnaryCall;
     createAdmin(request: proto_user_apiv1_pb.CreateAdminRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminResponse) => void): grpc.ClientUnaryCall;
     createAdmin(request: proto_user_apiv1_pb.CreateAdminRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminResponse) => void): grpc.ClientUnaryCall;
@@ -196,6 +224,12 @@ export interface IAdminServiceClient {
 
 export class AdminServiceClient extends grpc.Client implements IAdminServiceClient {
     constructor(address: string, credentials: grpc.ChannelCredentials, options?: Partial<grpc.ClientOptions>);
+    public listAdmin(request: proto_user_apiv1_pb.ListAdminRequest, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminListResponse) => void): grpc.ClientUnaryCall;
+    public listAdmin(request: proto_user_apiv1_pb.ListAdminRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminListResponse) => void): grpc.ClientUnaryCall;
+    public listAdmin(request: proto_user_apiv1_pb.ListAdminRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminListResponse) => void): grpc.ClientUnaryCall;
+    public getAdmin(request: proto_user_apiv1_pb.GetAdminRequest, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminResponse) => void): grpc.ClientUnaryCall;
+    public getAdmin(request: proto_user_apiv1_pb.GetAdminRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminResponse) => void): grpc.ClientUnaryCall;
+    public getAdmin(request: proto_user_apiv1_pb.GetAdminRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminResponse) => void): grpc.ClientUnaryCall;
     public createAdmin(request: proto_user_apiv1_pb.CreateAdminRequest, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminResponse) => void): grpc.ClientUnaryCall;
     public createAdmin(request: proto_user_apiv1_pb.CreateAdminRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminResponse) => void): grpc.ClientUnaryCall;
     public createAdmin(request: proto_user_apiv1_pb.CreateAdminRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminResponse) => void): grpc.ClientUnaryCall;

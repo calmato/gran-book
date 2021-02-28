@@ -6,6 +6,7 @@ package mock_user
 
 import (
 	context "context"
+	domain "github.com/calmato/gran-book/api/server/user/internal/domain"
 	user "github.com/calmato/gran-book/api/server/user/internal/domain/user"
 	gomock "github.com/golang/mock/gomock"
 	reflect "reflect"
@@ -47,6 +48,22 @@ func (m *MockService) Authentication(ctx context.Context) (string, error) {
 func (mr *MockServiceMockRecorder) Authentication(ctx interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Authentication", reflect.TypeOf((*MockService)(nil).Authentication), ctx)
+}
+
+// List mocks base method
+func (m *MockService) List(ctx context.Context, query *domain.ListQuery) ([]*user.User, int64, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "List", ctx, query)
+	ret0, _ := ret[0].([]*user.User)
+	ret1, _ := ret[1].(int64)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// List indicates an expected call of List
+func (mr *MockServiceMockRecorder) List(ctx, query interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockService)(nil).List), ctx, query)
 }
 
 // Show mocks base method

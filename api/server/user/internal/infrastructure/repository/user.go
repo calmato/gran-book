@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/calmato/gran-book/api/server/user/internal/domain"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/user"
 	"github.com/calmato/gran-book/api/server/user/lib/firebase/authentication"
@@ -49,6 +50,23 @@ func (r *userRepository) Authentication(ctx context.Context) (string, error) {
 	}
 
 	return fbToken.Subject, nil
+}
+
+func (r *userRepository) List(ctx context.Context, query *domain.ListQuery) ([]*user.User, int64, error) {
+	us := []*user.User{}
+	db := r.client.getListQuery(query)
+
+	err := db.Find(&us).Error
+	if err != nil {
+		return nil, 0, exception.ErrorInDatastore.New(err)
+	}
+
+	count, err := r.client.getListCount(query, &user.User{})
+	if err != nil {
+		return nil, 0, err
+	}
+
+	return us, count, nil
 }
 
 func (r *userRepository) Show(ctx context.Context, uid string) (*user.User, error) {
