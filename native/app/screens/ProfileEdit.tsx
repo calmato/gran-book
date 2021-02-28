@@ -33,18 +33,18 @@ const ProfileEdit = function ProfileEdit(): ReactElement {
 
   const handleGenderChange = (value: string) => {
     switch (value) {
-      case '男性':
-        setValue({...userInfo, gender: 1});
-        break;
-      case '女性':
-        setValue({...userInfo, gender: 2});
-        break;
-      default:
+    case '男性':
+      setValue({...userInfo, gender: 1});
+      break;
+    case '女性':
+      setValue({...userInfo, gender: 2});
+      break;
+    default:
       setValue({...userInfo, gender: 0});
       break;
     }
-  }
-  console.log(userInfo)
+  };
+  console.log(userInfo);
   return (
     <View>
       <HeaderWithBackButton 
