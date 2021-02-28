@@ -92,7 +92,7 @@ export default defineComponent({
       { text: 'Actions', value: 'actions', sortable: false },
     ]
     const footers: IAdminTableFooter = {
-      itemsPerPageOptions: [5, 20, 30, 50, 100],
+      itemsPerPageOptions: [20, 30, 50, 100],
     }
     const items = computed((): IAdminTableContent[] => {
       return props.users.map(

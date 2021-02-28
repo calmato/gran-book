@@ -42,5 +42,14 @@ describe('components/templates/Home', () => {
         })
       })
     })
+
+    describe('methods', () => {
+      describe('onClickSubmitButton', () => {
+        it('emitが実行されること', async () => {
+          await wrapper.vm.onClickSubmitButton()
+          expect(wrapper.emitted('submit')).toBeTruthy()
+        })
+      })
+    })
   })
 })
