@@ -12,6 +12,7 @@
             </v-card-title>
             <v-data-table
               :search="search"
+              :loading="loading"
               :page.sync="page"
               :items-per-page.sync="itemsPerPage"
               :sort-by.sync="sortBy"
@@ -19,6 +20,7 @@
               :headers="headers"
               :items="desserts"
               :server-items-length="total"
+              :footer-props="footerProps"
             >
               <template v-slot:[`item.thumbnailUrl`]="{ item }">
                 <v-avatar>
@@ -64,9 +66,11 @@ export default defineComponent({
       { text: '権限', value: 'role', sortable: true },
       { text: 'Actions', value: 'actions', sortable: false },
     ]
-    const search = ref<string>('')
+    const search = ''
+    const loading = ref<boolean>(false)
+    const footerProps = { itemsPerPageOptions: [20, 30, 50] }
     const page = ref<number>(1)
-    const itemsPerPage = ref<number>(5)
+    const itemsPerPage = ref<number>(20)
     const sortBy = ref<string>('')
     const sortDesc = ref<boolean>(true)
 
@@ -88,11 +92,6 @@ export default defineComponent({
           }
         }
       )
-    })
-
-    watch(search, (): void => {
-      // TODO: search
-      console.log('debug', search)
     })
 
     watch(page, (): void => {
@@ -154,6 +153,8 @@ export default defineComponent({
     }
 
     async function indexAdmin(): Promise<void> {
+      loading.value = true
+
       const form: IAdminListForm = {
         limit: itemsPerPage.value,
         offset: itemsPerPage.value * (page.value - 1),
@@ -163,11 +164,15 @@ export default defineComponent({
         },
       }
 
-      await AdminStore.indexAdmin(form)
+      await AdminStore.indexAdmin(form).finally(() => {
+        loading.value = false
+      })
     }
 
     return {
+      loading,
       search,
+      footerProps,
       page,
       itemsPerPage,
       sortBy,
