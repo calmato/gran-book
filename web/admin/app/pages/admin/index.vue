@@ -8,17 +8,21 @@
     :loading="loading"
     :users="users"
     :total="total"
-    @new="handleClickNewItem"
+    :new-form="newForm"
+    :new-dialog.sync="newDialog"
+    @new:open="handleClickNewItem"
+    @new:close="handleClickCloseNewItem"
+    @create="handleClickCreateItem"
     @edit="handleClickEditItem"
     @delete="handleClickDeleteItem"
   />
 </template>
 
 <script lang="ts">
-import { defineComponent, SetupContext, ref, useAsync, computed, watch } from '@nuxtjs/composition-api'
+import { defineComponent, SetupContext, ref, reactive, useAsync, computed, watch } from '@nuxtjs/composition-api'
 import AdminList from '~/components/templates/AdminList.vue'
 import { AdminStore } from '~/store'
-import { IAdminListForm } from '~/types/forms'
+import { AdminNewOptions, IAdminListForm, IAdminNewForm, IAdminNewParams } from '~/types/forms'
 
 export default defineComponent({
   components: {
@@ -28,12 +32,33 @@ export default defineComponent({
   setup(_, { root }: SetupContext) {
     const store = root.$store
 
+    const initializeNewForm: IAdminNewParams = {
+      username: '',
+      email: '',
+      password: '',
+      passwordConfirmation: '',
+      role: 0,
+      lastName: '',
+      firstName: '',
+      lastNameKana: '',
+      firstNameKana: '',
+    }
+
     const loading = ref<boolean>(false)
     const search = ref<string>()
     const page = ref<number>(1)
     const itemsPerPage = ref<number>(20)
     const sortBy = ref<string>()
     const sortDesc = ref<boolean>()
+    const newDialog = ref<boolean>(false)
+    const newForm = reactive<IAdminNewForm>({
+      params: {
+        ...initializeNewForm,
+      },
+      options: {
+        ...AdminNewOptions,
+      },
+    })
 
     const users = computed(() => store.getters['admin/getUsers'])
     const total = computed(() => store.getters['admin/getTotal'])
@@ -58,8 +83,23 @@ export default defineComponent({
       await indexAdmin()
     })
 
-    const handleClickNewItem = async (): Promise<void> => {
-      await AdminStore.createUser()
+    const handleClickNewItem = (): void => {
+      newDialog.value = true
+      newForm.params = { ...initializeNewForm }
+    }
+
+    const handleClickCloseNewItem = (): void => {
+      newDialog.value = false
+    }
+
+    const handleClickCreateItem = async (): Promise<void> => {
+      await AdminStore.createUser(newForm)
+        .then(() => {
+          newDialog.value = false
+        })
+        .catch((err: Error) => {
+          console.log('debug', err)
+        })
     }
 
     const handleClickEditItem = (index: number): void => {
@@ -96,7 +136,11 @@ export default defineComponent({
       sortDesc,
       users,
       total,
+      newForm,
+      newDialog,
       handleClickNewItem,
+      handleClickCloseNewItem,
+      handleClickCreateItem,
       handleClickEditItem,
       handleClickDeleteItem,
     }

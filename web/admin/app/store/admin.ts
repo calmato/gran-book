@@ -1,8 +1,9 @@
 import { Action, Module, Mutation, VuexModule } from 'vuex-module-decorators'
 import { $axios } from '~/plugins/axios'
 import { ApiError } from '~/types/exception'
-import { IAdminListForm } from '~/types/forms'
-import { IAdminListResponse, IAdminListResponseUser, IErrorResponse } from '~/types/responses'
+import { IAdminListForm, IAdminNewForm } from '~/types/forms'
+import { IAdminNewRequest } from '~/types/requests'
+import { IAdminListResponse, IAdminListResponseUser, IAdminResponse, IErrorResponse } from '~/types/responses'
 import { IAdminState, IAdminUser } from '~/types/store'
 
 const initialState: IAdminState = {
@@ -75,26 +76,43 @@ export default class AdminModule extends VuexModule {
   }
 
   @Action({ rawError: true })
-  public createUser(): Promise<void> {
-    return new Promise((resolve: () => void) => {
-      const user: IAdminUser = {
-        id: '5',
-        username: 'a.inatomi',
-        email: 'u.new@calmato.com',
-        phoneNumber: '123-1234-1234',
-        role: 3,
-        thumbnailUrl: '',
-        selfIntroduction: '',
-        lastName: 'テスト',
-        firstName: 'ユーザー',
-        lastNameKana: 'てすと',
-        firstNameKana: 'ゆーざー',
-        createdAt: '2020-01-01 00:00:00',
-        updatedAt: '2020-01-01 00:00:00',
-      }
-      this.addUser(user)
-      console.log('debug', this.users)
-      resolve()
+  public createUser(payload: IAdminNewForm): Promise<void> {
+    const {
+      username,
+      email,
+      password,
+      passwordConfirmation,
+      role,
+      lastName,
+      firstName,
+      lastNameKana,
+      firstNameKana,
+    } = payload.params
+
+    const req: IAdminNewRequest = {
+      username,
+      email,
+      password,
+      passwordConfirmation,
+      role,
+      lastName,
+      firstName,
+      lastNameKana,
+      firstNameKana,
+    }
+
+    return new Promise((resolve: () => void, reject: (reason: ApiError) => void) => {
+      $axios
+        .$post('/v1/admin', req)
+        .then((res: IAdminResponse) => {
+          const data: IAdminUser = { ...res }
+          this.addUser(data)
+          resolve()
+        })
+        .catch((err: any) => {
+          const { data, status }: IErrorResponse = err.response
+          reject(new ApiError(status, data.message, data))
+        })
     })
   }
 }
