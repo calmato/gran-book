@@ -14,3 +14,8 @@ export type SignInForm = {
 export type PasswordResetForm = {
   email: string
 }
+
+export type PasswordEditForm = {
+  password: string,
+  passwordConfirmation: string,
+}
