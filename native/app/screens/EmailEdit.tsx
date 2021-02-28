@@ -4,7 +4,7 @@ import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import { COLOR } from '~~/constants/theme';
 import MailInput from '~/components/molecules/MailInput';
 import { emailValidation } from '~/lib/validation';
-import { Button } from 'react-native-elements';
+import { Button, Input } from 'react-native-elements';
 
 const styles = StyleSheet.create({
   container:{
@@ -48,6 +48,9 @@ const styles = StyleSheet.create({
   buttonStyle: {
     marginTop:20,
   },
+  buttonTitleStyle: {
+    color: COLOR.TEXT_TITLE,
+  },
 });
 
 interface Props {
@@ -56,7 +59,7 @@ interface Props {
 
 const EmailEdit = function EmailEdit
 (props: Props): ReactElement {
-  const [emailForm, setState] = useState(props.email || '');
+  const [emailForm, setState] = useState('');
 
   const emailError: boolean = useMemo((): boolean => {
     return !emailValidation(emailForm);
@@ -75,8 +78,9 @@ const EmailEdit = function EmailEdit
         onChangeText={(text) => setState(text)}
         value={emailForm}
         hasError={emailError}
+        sameEmailError={emailForm === 'A@f'}
       />
-      <Button containerStyle={styles.buttonStyle} disabled={emailError} onPress={undefined} title='変更する'/>
+      <Button containerStyle={styles.buttonStyle} disabled={emailError} onPress={undefined} title='変更する' titleStyle={styles.buttonTitleStyle}/>
     </View>
   );
 };
