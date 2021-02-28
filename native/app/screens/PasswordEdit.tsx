@@ -28,7 +28,7 @@ interface Props {
 }
 
 const PasswordEdit = function PasswordEdit(props: Props): ReactElement {
-  const editPassword = props.actions;
+  const { editPassword } = props.actions;
   const [formData, setValue] = useState<PasswordEditForm>({
     password: '',
     passwordConfirmation: '',
@@ -83,14 +83,14 @@ const passwordConfirmationError: boolean = useMemo(():boolean => {
       <PasswordInput
         onChangeText={(text) => setValue({...formData, password: text})}
         value={formData.password}
-        placeholder="パスワード"
+        placeholder="新しいパスワード"
         errorMessage="パスワードは6文字以上でなければいけません．"
         hasError={passwordError}
       />
       <PasswordInput
         onChangeText={(text) => setValue({...formData, passwordConfirmation: text})}
         value={formData.passwordConfirmation}
-        placeholder="パスワード(確認用)"
+        placeholder="新しいパスワード(確認用)"
         errorMessage="パスワードが一致しません．"
         hasError={passwordConfirmationError}
       />
