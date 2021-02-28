@@ -1,8 +1,8 @@
 import React, { ReactElement } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, ShadowPropTypesIOS } from 'react-native';
 import { COLOR } from '~~/constants/theme';
 import RadioButtonRN from 'radio-buttons-react-native';
-
+import { RadioGroupForm } from '~/types/forms';
 
 const styles = StyleSheet.create({
   container: {
@@ -31,36 +31,23 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  gender: number,
+  handleOnChange: (value: string) => void,
+  data: Array<RadioGroupForm>,
+  title: string,
+  initial: number,
 }
 
-const data = [
-  {
-    label: '男性',
-    code: 1,
-  },
-  {
-    label: '女性',
-    code: 2,
-  },
-  {
-    label: '未選択',
-    code: 0,
-  },
-];
-
 const GenderRadioGroup = function GenderRadioGroup(props: Props): ReactElement {
-  const [gender, setValue] = React.useState(props.gender || 0);
   return (
     <View style={styles.container}>
-      <Text style={[styles.text, {flex: 1}]}>性別</Text>
+      <Text style={[styles.text, {flex: 1}]}>{props.title}</Text>
       <RadioButtonRN
         style={styles.radioButton}
         boxStyle={styles.box}
         textStyle={styles.text}
-        data={data}
-        initial={gender || 3}
-        selectedBtn={(e) => setValue(e.code)}
+        data={props.data}
+        initial={props.initial}
+        selectedBtn={(e) => props.handleOnChange(e.label)}
         activeColor={COLOR.PRIMARY}
       />
     </View>

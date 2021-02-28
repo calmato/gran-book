@@ -24,13 +24,27 @@ const ProfileEdit = function ProfileEdit(): ReactElement {
     name: 'hamachans',
     avatar: 'https://pbs.twimg.com/profile_images/1312909954148253696/Utr-sa_Y_400x400.jpg',
     bio: 'よろしくお願いします。',
-    gender: 3,
+    gender: 0,
   });
 
   const nameError: boolean = useMemo((): boolean => {
     return (userInfo.name === '');
   }, [userInfo.name]);
 
+  const handleGenderChange = (value: string) => {
+    switch (value) {
+      case '男性':
+        setValue({...userInfo, gender: 1});
+        break;
+      case '女性':
+        setValue({...userInfo, gender: 2});
+        break;
+      default:
+      setValue({...userInfo, gender: 0});
+      break;
+    }
+  }
+  console.log(userInfo)
   return (
     <View>
       <HeaderWithBackButton 
@@ -54,7 +68,10 @@ const ProfileEdit = function ProfileEdit(): ReactElement {
         value={userInfo.bio}
       />
       <GenderRadioGroup
-        gender={userInfo.gender}
+        handleOnChange={(value)=>handleGenderChange(value)}
+        data={[{label:'男性'}, {label:'女性'}, {label:'未選択'}]}
+        title={'性別'}
+        initial={(userInfo.gender === 0) ? 3 : userInfo.gender}
       />
       <Button
         title={'保存する'}

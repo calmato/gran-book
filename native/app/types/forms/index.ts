@@ -21,3 +21,7 @@ export type ProfileEditForm = {
   bio: string,
   gender: number,
 }
+
+export type RadioGroupForm = {
+  label: string,
+}
