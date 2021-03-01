@@ -25,3 +25,8 @@ export type ProfileEditForm = {
 export type RadioGroupForm = {
   label: string,
 }
+
+export type PasswordEditForm = {
+  password: string,
+  passwordConfirmation: string,
+}

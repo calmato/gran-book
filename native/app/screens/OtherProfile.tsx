@@ -1,4 +1,3 @@
-import { useNavigation } from '@react-navigation/native';
 import React, { ReactElement } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-elements';
@@ -21,28 +20,28 @@ const styles = StyleSheet.create({
   title: {
     color: COLOR.TEXT_TITLE,
     padding: 10,
-  }
+  },
 });
 
 const userInfo = 
 {
-  name: 'hamachans',
+  name: 'にしくん',
   avatarUrl: 'https://pbs.twimg.com/profile_images/1312909954148253696/Utr-sa_Y_400x400.jpg',
-  rating: 2.4,
+  rating: 4.8,
   reviewNum: 20,
   saleNum: 3,
-  followerNum: 20,
-  followNum: 5,
-  bio: 'よろしくお願いします。',
+  followerNum: 1,
+  followNum: 1,
+  bio: 'たくさん買うぞー。',
 };
 
-const OwnProfile = function OwnProfile(): ReactElement {
-  const navigation = useNavigation();
+const OtherProfile = function OtherProfile(): ReactElement {
+  
   return (
     <View style={styles.container}>
       <HeaderWithBackButton
         title="プロフィール"
-        onPress={()=>navigation.goBack()}
+        onPress={()=>undefined}
       />
       <ProfileViewGroup
         name={userInfo.name}
@@ -61,4 +60,4 @@ const OwnProfile = function OwnProfile(): ReactElement {
   );
 };
 
-export default OwnProfile;
+export default OtherProfile;

@@ -66,6 +66,22 @@ export function signUpWithEmailAsync(email: string, password: string, passwordCo
   };
 }
 
+export function editPasswordAsync(password: string, passwordConfirmation: string) {
+  return async (): Promise<void> => {
+    return await axios
+      .patch('/v1/auth/password', {
+        password,
+        passwordConfirmation,
+      })
+      .then(async (res: AxiosResponse<IAuthResponse>) => {
+        console.log('debug', res);
+      })
+      .catch((err: Error) => {
+        throw err;
+      });
+  };
+}
+
 export function getAuthAsync() {
   return async (dispatch: Dispatch, getState: () => AppState): Promise<void> => {
     return await axios
