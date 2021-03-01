@@ -109,7 +109,7 @@ export default defineComponent({
     newForm: {
       type: Object as PropType<IAdminNewForm>,
       required: false,
-      default: () => {},
+      default: () => ({}),
     },
     newDialog: {
       type: Boolean,

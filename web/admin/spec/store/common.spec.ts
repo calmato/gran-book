@@ -1,11 +1,15 @@
-import { store } from '~~/spec/helpers/store-helper'
-import { initialiseStores, CommonStore } from '~/store'
+import { setup, refresh } from '~~/spec/helpers/store-helper'
+import { CommonStore } from '~/store'
 import { ISnackbar } from '~/types/store'
 import { ApiError } from '~/types/exception'
 
 describe('store/common', () => {
   beforeEach(() => {
-    initialiseStores(store)
+    setup()
+  })
+
+  afterEach(() => {
+    refresh()
   })
 
   describe('getters', () => {

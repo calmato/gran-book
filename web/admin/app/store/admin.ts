@@ -36,6 +36,7 @@ export default class AdminModule extends VuexModule {
   @Mutation
   private addUser(user: IAdminUser): void {
     this.users.push(user)
+    this.total = this.total + 1
   }
 
   @Mutation
@@ -75,8 +76,14 @@ export default class AdminModule extends VuexModule {
     })
   }
 
+  @Action({})
+  public factory(): void {
+    this.setUsers(initialState.users)
+    this.setTotal(initialState.total)
+  }
+
   @Action({ rawError: true })
-  public createUser(payload: IAdminNewForm): Promise<void> {
+  public createAdmin(payload: IAdminNewForm): Promise<void> {
     const {
       email,
       password,

@@ -92,7 +92,7 @@ export default defineComponent({
     }
 
     const handleClickCreateItem = async (): Promise<void> => {
-      await AdminStore.createUser(newForm)
+      await AdminStore.createAdmin(newForm)
         .then(() => {
           newDialog.value = false
           CommonStore.showSnackbar({ color: 'info', message: '管理者を新規登録しました。' })

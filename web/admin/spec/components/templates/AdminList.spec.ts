@@ -1,6 +1,7 @@
 import { shallowMount } from '@vue/test-utils'
 import * as Options from '~~/spec/helpers/component-helper'
 import AdminList from '~/components/templates/AdminList.vue'
+import { AdminNewOptions } from '~/types/forms'
 
 describe('components/templates/AdminList', () => {
   let wrapper: any
@@ -122,6 +123,54 @@ describe('components/templates/AdminList', () => {
         })
       })
 
+      describe('newForm', () => {
+        it('初期値', () => {
+          expect(wrapper.props().newForm).toEqual({})
+        })
+
+        it('値が代入されること', () => {
+          wrapper.setProps({
+            newForm: {
+              params: {
+                email: 'test@calmato.com',
+                password: '12345678',
+                passwordConfirmation: '12345678',
+                role: 1,
+                lastName: 'テスト',
+                firstName: 'ユーザー',
+                lastNameKana: 'てすと',
+                firstNameKana: 'ゆーざー',
+              },
+              options: AdminNewOptions,
+            },
+          })
+          expect(wrapper.props().newForm).toEqual({
+            params: {
+              email: 'test@calmato.com',
+              password: '12345678',
+              passwordConfirmation: '12345678',
+              role: 1,
+              lastName: 'テスト',
+              firstName: 'ユーザー',
+              lastNameKana: 'てすと',
+              firstNameKana: 'ゆーざー',
+            },
+            options: AdminNewOptions,
+          })
+        })
+      })
+
+      describe('newDialog', () => {
+        it('初期値', () => {
+          expect(wrapper.props().newDialog).toBeFalsy()
+        })
+
+        it('値が代入されること', () => {
+          wrapper.setProps({ newDialog: true })
+          expect(wrapper.props().newDialog).toBeTruthy()
+        })
+      })
+
       describe('total', () => {
         it('初期値', () => {
           expect(wrapper.props().total).toBe(0)
@@ -134,11 +183,31 @@ describe('components/templates/AdminList', () => {
       })
     })
 
+    describe('data', () => {
+      it('dialog', () => {
+        expect(wrapper.vm.dialog).toBeFalsy()
+      })
+    })
+
     describe('methods', () => {
       describe('onClickNewButton', () => {
         it('emitが実行されること', async () => {
           await wrapper.vm.onClickNewButton()
-          expect(wrapper.emitted('new')).toBeTruthy()
+          expect(wrapper.emitted('new:open')).toBeTruthy()
+        })
+      })
+
+      describe('onClickNewClose', () => {
+        it('emitが実行されること', async () => {
+          await wrapper.vm.onClickNewClose()
+          expect(wrapper.emitted('new:close')).toBeTruthy()
+        })
+      })
+
+      describe('onClickCreateButton', () => {
+        it('emitが実行されること', async () => {
+          await wrapper.vm.onClickCreateButton()
+          expect(wrapper.emitted('create')).toBeTruthy()
         })
       })
 

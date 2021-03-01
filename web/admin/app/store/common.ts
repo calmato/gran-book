@@ -35,6 +35,12 @@ export default class CommonModule extends VuexModule {
     this.snackbarMessage = message
   }
 
+  @Action({})
+  public factory(): void {
+    this.setSnackbarColor(initialState.snackbarColor)
+    this.setSnackbarMessage(initialState.snackbarMessage)
+  }
+
   @Action({ rawError: true })
   public showSnackbar(payload: ISnackbar): void {
     this.setSnackbarColor(payload.color)
