@@ -14,6 +14,7 @@ interface Props {
   keyword: string,
   placeholder?: string,
   onChangeText: (t: string) => void,
+  onSubmitEditing: () => void,
   onCancel?: () => void,
 }
 
@@ -34,6 +35,9 @@ const SearchBar = function SearchBar(props: Props): ReactElement {
       value={props.keyword}
       onChangeText={props.onChangeText}
       onCancel={props.onCancel}
+      onSubmitEditing={props.onSubmitEditing}
+      multiline={false}
+      returnKeyType={'search'}
     />
   );
 };
