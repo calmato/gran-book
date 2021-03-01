@@ -50,6 +50,7 @@ const MyPage = function MyPage(props: Props): ReactElement {
             username: auth.username, 
             selfIntroduction: auth.selfIntroduction,
             thumbnailUrl: auth.thumbnailUrl,
+            gender: auth.gender,
             })}>
             <Avatar source={{uri: avatar.thumbnailUrl}} rounded/>
             <ListItem.Content>

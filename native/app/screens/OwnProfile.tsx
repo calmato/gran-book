@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
 });
 
 const OwnProfile = function OwnProfile({ route, navigation }): ReactElement {
-  const {username, selfIntroduction, thumbnailUrl} = route.params;
+  const {username, selfIntroduction, thumbnailUrl, gender} = route.params;
   // TODO 出品数・フォロワー数・フォロー数・星レート・レビュー数を実装
   const userInfo = 
 {
@@ -50,7 +50,12 @@ const OwnProfile = function OwnProfile({ route, navigation }): ReactElement {
         followerNum={userInfo.followerNum}
         followNum={userInfo.followNum}
         buttonTitle={'プロフィールを編集'}
-        handleClick={() => undefined}
+        handleClick={() => navigation.navigate('ProfileEdit', {
+          username: username, 
+          selfIntroduction: selfIntroduction,
+          thumbnailUrl: thumbnailUrl,
+          gender: gender,
+        })}
       />
       <Text style={styles.bio}>{selfIntroduction}</Text>
       <Text style={styles.title}>出品リスト</Text>

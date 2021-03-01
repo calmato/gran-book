@@ -19,12 +19,12 @@ const styles = StyleSheet.create({
   },
 });
 
-const ProfileEdit = function ProfileEdit(): ReactElement {
+const ProfileEdit = function ProfileEdit({ route, navigation }): ReactElement {
   const [userInfo, setValue] = useState<ProfileEditForm>({
-    name: 'hamachans',
-    avatar: 'https://pbs.twimg.com/profile_images/1312909954148253696/Utr-sa_Y_400x400.jpg',
-    bio: 'よろしくお願いします。',
-    gender: 0,
+    name: route.params.username,
+    avatar: route.params.thumbnailUrl,
+    bio: route.params.selfIntroduction,
+    gender: route.params.gender,
   });
 
   const nameError: boolean = useMemo((): boolean => {
@@ -49,7 +49,7 @@ const ProfileEdit = function ProfileEdit(): ReactElement {
     <View>
       <HeaderWithBackButton 
         title='プロフィール編集'
-        onPress={()=>undefined}
+        onPress={()=>navigation.goBack}
       />
       <ChangeIconGroup
         avatarUrl={userInfo.avatar}
