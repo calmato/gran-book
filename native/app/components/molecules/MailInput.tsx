@@ -8,9 +8,20 @@ interface Props {
   onChangeText: (value: string) => void | undefined,
   value: string,
   hasError: boolean,
+  sameEmailError: boolean,
 }
 
 const MailInput = function MailInput(props: Props): ReactElement {
+
+  const generateErrorMessage = () => {
+    if (props.hasError) {
+      return 'メールアドレスを入力してください．';
+    } else if (props.sameEmailError) {
+      return '現在登録されたものとは異なるメールアドレスを入力してください．';
+    } else {
+      return undefined;
+    }
+  };
 
   return (
     <Input
@@ -21,7 +32,7 @@ const MailInput = function MailInput(props: Props): ReactElement {
       value={props.value}
       keyboardType="email-address"
       placeholder="メールアドレス"
-      errorMessage={props.hasError ? 'メールアドレスを入力してください．' : undefined }
+      errorMessage={ generateErrorMessage() }
     />
   );
 };
