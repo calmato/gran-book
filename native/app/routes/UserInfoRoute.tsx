@@ -3,8 +3,9 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { MyPage } from '~/containers';
 import OwnProfile from '~/screens/OwnProfile';
 import { UserInfoStackParamList } from '~/types/navigation';
+import AccountSetting from '~/screens/AccoutSetting';
 
-const UserInfoStack = createStackNavigator();
+const UserInfoStack = createStackNavigator<UserInfoStackParamList>();
 
 const UserInfoRoute = function SettingRoute() {
   return (
@@ -14,6 +15,12 @@ const UserInfoRoute = function SettingRoute() {
     >
       <UserInfoStack.Screen name='MyPage' component={MyPage} />
       <UserInfoStack.Screen name='OwnProfile' component={OwnProfile}/>
+      <UserInfoStack.Screen name='AccountSetting' component={AccountSetting}/>
+      {/* <UserInfoStack.Screen name='AccountEdit' component={AccountEdit}/> */}
+      {/* <UserInfoStack.Screen name='ProfileEdit' component={ProfileEdit}/> */}
+      {/* <UserInfoStack.Screen name='ContactEdit' component={ContactEdit}/> */}
+      {/* <UserInfoStack.Screen name='EmailEdit' component={EmailEdit}/> */}
+      {/* <UserInfoStack.Screen name='PasswordEmailEdit' componet={PasswordEmailEdit}/> */}
     </UserInfoStack.Navigator>
   );
 };
