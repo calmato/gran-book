@@ -162,7 +162,7 @@ const MyPage = function MyPage(props: Props): ReactElement {
               </ListItem.Content>
               <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
             </ListItem>
-            <ListItem key={15} bottomDivider>
+            <ListItem key={15} bottomDivider onPress={()=>navigation.navigate('AccountSetting')}>
               <ListItem.Content>
                 <ListItem.Title>{'設定'}</ListItem.Title>
               </ListItem.Content>
