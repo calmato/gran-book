@@ -24,20 +24,17 @@ const styles = StyleSheet.create({
   }
 });
 
-const userInfo = 
+const OwnProfile = function OwnProfile({ route, navigation }): ReactElement {
+  const {username, selfIntroduction, thumbnailUrl} = route.params;
+  // TODO 出品数・フォロワー数・フォロー数・星レート・レビュー数を実装
+  const userInfo = 
 {
-  name: 'hamachans',
-  avatarUrl: 'https://pbs.twimg.com/profile_images/1312909954148253696/Utr-sa_Y_400x400.jpg',
   rating: 2.4,
   reviewNum: 20,
   saleNum: 3,
   followerNum: 20,
   followNum: 5,
-  bio: 'よろしくお願いします。',
 };
-
-const OwnProfile = function OwnProfile(): ReactElement {
-  const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <HeaderWithBackButton
@@ -45,17 +42,17 @@ const OwnProfile = function OwnProfile(): ReactElement {
         onPress={()=>navigation.goBack()}
       />
       <ProfileViewGroup
-        name={userInfo.name}
-        avatarUrl={userInfo.avatarUrl}
+        name={username}
+        avatarUrl={thumbnailUrl}
         rating={userInfo.rating}
         reviewNum={userInfo.reviewNum}
         saleNum={userInfo.saleNum}
         followerNum={userInfo.followerNum}
         followNum={userInfo.followNum}
-        buttonTitle={'フォローする'}
+        buttonTitle={'プロフィールを編集'}
         handleClick={() => undefined}
       />
-      <Text style={styles.bio}>{userInfo.bio}</Text>
+      <Text style={styles.bio}>{selfIntroduction}</Text>
       <Text style={styles.title}>出品リスト</Text>
     </View>
   );
