@@ -13,3 +13,14 @@ export type AuthStackParamList = {
   SignUpCheckEmail: { email: string | undefined },
   PasswordReset: undefined,
 }
+
+export type UserInfoStackParamList = {
+  MyPage: undefined,
+  OwnProfile: undefined,
+  AccountSetting: undefined,
+  AccountEdit: undefined,
+  ProfileEdit: undefined,
+  ContactEdit: undefined,
+  EmailEdit: undefined,
+  PasswordEmailEdit: undefined,
+}

@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { ReactElement } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-elements';
@@ -36,11 +37,12 @@ const userInfo =
 };
 
 const OwnProfile = function OwnProfile(): ReactElement {
+  const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <HeaderWithBackButton
         title="プロフィール"
-        onPress={()=>undefined}
+        onPress={()=>navigation.goBack()}
       />
       <ProfileViewGroup
         name={userInfo.name}
