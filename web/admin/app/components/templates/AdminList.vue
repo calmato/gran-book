@@ -1,5 +1,18 @@
 <template>
   <v-container fill-height>
+    <v-dialog v-model="newDialog" width="600px" scrollable @click:outside="$emit('update:new-dialog', false)">
+      <v-card>
+        <v-toolbar color="primary" dark>管理者ユーザー 追加</v-toolbar>
+        <v-card-text>
+          <admin-new-form :form="newForm" />
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="onClickNewClose"> Close </v-btn>
+          <v-btn color="blue darken-1" text @click="onClickCreateButton"> Save </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-layout wrap>
       <v-row>
         <v-col cols="12">
@@ -34,13 +47,22 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, SetupContext, PropType } from '@nuxtjs/composition-api'
+import { defineComponent, ref, SetupContext, PropType } from '@nuxtjs/composition-api'
+import TheFormGroup from '~/components/atoms/TheFormGroup.vue'
+import TheSelect from '~/components/atoms/TheSelect.vue'
+import TheTextField from '~/components/atoms/TheTextField.vue'
 import AdminListTable from '~/components/organisms/AdminListTable.vue'
+import AdminNewForm from '~/components/organisms/AdminNewForm.vue'
+import { IAdminNewForm } from '~/types/forms'
 import { IAdminUser } from '~/types/store'
 
 export default defineComponent({
   components: {
     AdminListTable,
+    AdminNewForm,
+    TheFormGroup,
+    TheSelect,
+    TheTextField,
   },
 
   props: {
@@ -84,11 +106,31 @@ export default defineComponent({
       required: false,
       default: 0,
     },
+    newForm: {
+      type: Object as PropType<IAdminNewForm>,
+      required: false,
+      default: () => ({}),
+    },
+    newDialog: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
   },
 
   setup(_, { emit }: SetupContext) {
+    const dialog = ref<boolean>(false)
+
     const onClickNewButton = (): void => {
-      emit('new')
+      emit('new:open')
+    }
+
+    const onClickNewClose = (): void => {
+      emit('new:close')
+    }
+
+    const onClickCreateButton = (): void => {
+      emit('create')
     }
 
     const onClickEditButton = (index: number): void => {
@@ -100,7 +142,10 @@ export default defineComponent({
     }
 
     return {
+      dialog,
       onClickNewButton,
+      onClickNewClose,
+      onClickCreateButton,
       onClickEditButton,
       onClickDeleteButton,
     }

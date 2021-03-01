@@ -1,9 +1,10 @@
 import Vue, { VueConstructor } from 'vue'
 import Vuex from 'vuex'
 import { createLocalVue } from '@vue/test-utils'
-import AdminStore from '~/store/admin'
-import AuthStore from '~/store/auth'
-import CommonStore from '~/store/common'
+import { AdminStore, AuthStore, CommonStore, initialiseStores } from '~/store'
+import AdminModule from '~/store/admin'
+import AuthModule from '~/store/auth'
+import CommonModule from '~/store/common'
 import response from '~~/spec/helpers/response'
 
 const localVue: VueConstructor<Vue> = createLocalVue()
@@ -11,11 +12,21 @@ localVue.use(Vuex)
 
 const store = new Vuex.Store({
   modules: {
-    admin: AdminStore,
-    auth: AuthStore,
-    common: CommonStore,
+    admin: AdminModule,
+    auth: AuthModule,
+    common: CommonModule,
   },
 })
+
+function setup(): void {
+  initialiseStores(store)
+}
+
+function refresh(): void {
+  AdminStore.factory()
+  AuthStore.factory()
+  CommonStore.factory()
+}
 
 // Error を返したいときだけ false にする
 let isSafetyMode: boolean = true
@@ -36,4 +47,4 @@ jest.mock('~/plugins/axios', () => ({
   },
 }))
 
-export { localVue, store, setSafetyMode }
+export { localVue, setup, refresh, setSafetyMode }

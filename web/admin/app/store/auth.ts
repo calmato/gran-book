@@ -137,6 +137,17 @@ export default class AuthModule extends VuexModule {
     this.updatedAt = auth.updatedAt
   }
 
+  @Action({})
+  public factory(): void {
+    const profile: IAuthProfile = { ...initialState }
+
+    this.setId(initialState.id)
+    this.setEmail(initialState.email)
+    this.setEmailVerified(initialState.emailVerified)
+    this.setToken(initialState.token)
+    this.setProfile(profile)
+  }
+
   @Action({ rawError: true })
   public authorization(): Promise<void> {
     return new Promise((resolve: () => void, reject: (reason: Error) => void) => {
@@ -312,13 +323,7 @@ export default class AuthModule extends VuexModule {
       .auth()
       .signOut()
       .finally(() => {
-        const profile: IAuthProfile = { ...initialState }
-
-        this.setId(initialState.id)
-        this.setEmail(initialState.email)
-        this.setEmailVerified(initialState.emailVerified)
-        this.setToken(initialState.token)
-        this.setProfile(profile)
+        this.factory()
       })
   }
 }

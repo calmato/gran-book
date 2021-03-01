@@ -18,7 +18,9 @@ export default {
     ...AdminStore.get,
     ...AuthStore.get,
   },
-  post: {},
+  post: {
+    ...AdminStore.post,
+  },
   patch: {
     ...AuthStore.patch,
   },
