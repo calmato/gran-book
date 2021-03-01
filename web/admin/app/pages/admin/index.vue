@@ -21,7 +21,7 @@
 <script lang="ts">
 import { defineComponent, SetupContext, ref, reactive, useAsync, computed, watch } from '@nuxtjs/composition-api'
 import AdminList from '~/components/templates/AdminList.vue'
-import { AdminStore } from '~/store'
+import { AdminStore, CommonStore } from '~/store'
 import { AdminNewOptions, IAdminListForm, IAdminNewForm, IAdminNewParams } from '~/types/forms'
 
 export default defineComponent({
@@ -95,9 +95,10 @@ export default defineComponent({
       await AdminStore.createUser(newForm)
         .then(() => {
           newDialog.value = false
+          CommonStore.showSnackbar({ color: 'info', message: '管理者を新規登録しました。' })
         })
         .catch((err: Error) => {
-          console.log('debug', err)
+          CommonStore.showErrorInSnackbar(err)
         })
     }
 
