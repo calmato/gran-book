@@ -46,6 +46,7 @@ const PasswordReset = function PasswordReset(props: Props): ReactElement {
         onChangeText={(text) => setValue({ ...formData, email: text})}
         hasError={emailError}
         value={formData?.email}
+        sameEmailError={false}
       />
       <Button
         disabled={hasError}

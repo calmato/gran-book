@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
-import { StyleSheet, View, ScrollView } from 'react-native';
-import { ListItem, Text, Avatar } from 'react-native-elements';
+import { StyleSheet, View, ScrollView, SafeAreaView } from 'react-native';
+import { ListItem, Text, Avatar, Header } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -8,8 +8,8 @@ import { FontAwesome } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { COLOR } from '~~/constants/theme';
 import { Auth } from '~/store/models';
-import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import { useNavigation } from '@react-navigation/native';
+import HeaderText from '~/components/atoms/HeaderText';
 
 const styles = StyleSheet.create({
   container: {
@@ -45,12 +45,9 @@ const MyPage = function MyPage(props: Props): ReactElement {
       <ScrollView
         stickyHeaderIndices={[0]}
       >
-        <HeaderWithBackButton
-          title="マイページ"
-          onPress={() => navigation.goBack()}
-        />
+        <Header centerComponent={<HeaderText title="マイページ"/>} />
         <View>
-          <ListItem bottomDivider>
+          <ListItem bottomDivider onPress={()=>navigation.navigate('OwnProfile')}>
             <Avatar source={{uri: avatar.thumbnailUrl}} rounded/>
             <ListItem.Content>
               <ListItem.Title>{avatar.name}</ListItem.Title>
@@ -163,7 +160,7 @@ const MyPage = function MyPage(props: Props): ReactElement {
             </ListItem.Content>
             <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
           </ListItem>
-          <ListItem key={15} bottomDivider>
+          <ListItem key={15} bottomDivider onPress={()=>navigation.navigate('AccountSetting')}>
             <ListItem.Content>
               <ListItem.Title>{'設定'}</ListItem.Title>
             </ListItem.Content>

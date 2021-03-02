@@ -85,6 +85,7 @@ const SignIn = function SignIn(props: Props): ReactElement {
         onChangeText={(text) => setValue({ ...formData, email: text})}
         hasError={emailError}
         value={formData?.email}
+        sameEmailError={false}
       />
       <PasswordInput
         onChangeText={(text) => setValue({...formData, password: text})}

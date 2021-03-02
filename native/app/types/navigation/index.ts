@@ -21,5 +21,15 @@ export type HomeTabStackPramList = {
   Home: undefined,
   SearchResult: { keyword: string, results: ISearchResponse },
   SearchResultBookShow: { book: ISearchResultItem }
-  // SearchResultBookShow: undefined
+}
+
+export type UserInfoStackParamList = {
+  MyPage: undefined,
+  OwnProfile: undefined,
+  AccountSetting: undefined,
+  AccountEdit: undefined,
+  ProfileEdit: undefined,
+  ContactEdit: undefined,
+  EmailEdit: undefined,
+  PasswordEmailEdit: undefined,
 }
