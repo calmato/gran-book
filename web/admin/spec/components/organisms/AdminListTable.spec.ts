@@ -149,7 +149,7 @@ describe('components/organisms/AdminListTable', () => {
 
       it('footers', () => {
         expect(wrapper.vm.footers).toEqual({
-          itemsPerPageOptions: [20, 30, 50, 100],
+          itemsPerPageOptions: [10, 20, 30, 50, 100],
         })
       })
     })
