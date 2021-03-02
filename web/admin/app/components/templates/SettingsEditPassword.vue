@@ -6,7 +6,12 @@
           <v-card class="pa-4">
             <v-card-title>パスワード変更</v-card-title>
             <v-card-text>
-              <settings-edit-password-form :form="form" :loading="loading" @click="onClickSubmitButton" @cancel="onClickCancelButton" />
+              <settings-edit-password-form
+                :form="form"
+                :loading="loading"
+                @click="onClickSubmitButton"
+                @cancel="onClickCancelButton"
+              />
             </v-card-text>
           </v-card>
         </v-col>

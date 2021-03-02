@@ -6,7 +6,9 @@
       :rules="form.options.email.rules"
       :autofocus="true"
     />
-    <v-btn :loading="loading" :disabled="loading" color="primary" class="mt-4 mr-4" @click="onClick">確認メールを送信</v-btn>
+    <v-btn :loading="loading" :disabled="loading" color="primary" class="mt-4 mr-4" @click="onClick"
+      >確認メールを送信</v-btn
+    >
     <v-btn class="mt-4" @click="onClickCancel">キャンセル</v-btn>
   </the-form-group>
 </template>

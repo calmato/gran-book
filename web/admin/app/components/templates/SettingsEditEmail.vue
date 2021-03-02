@@ -6,7 +6,12 @@
           <v-card class="pa-4">
             <v-card-title>メールアドレス変更</v-card-title>
             <v-card-text>
-              <settings-edit-email-form :form="form" :loading="loading" @click="onClickSubmitButton" @cancel="onClickCancelButton" />
+              <settings-edit-email-form
+                :form="form"
+                :loading="loading"
+                @click="onClickSubmitButton"
+                @cancel="onClickCancelButton"
+              />
             </v-card-text>
           </v-card>
         </v-col>
