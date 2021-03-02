@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  avatarUrl: string,
+  avatarUrl: string | undefined,
   handleOnClicked: () => void,
 }
 

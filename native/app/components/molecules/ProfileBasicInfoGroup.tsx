@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
 
 interface Props {
   name: string
-  avatarUrl: string
+  avatarUrl: string | undefined
   rating: number
   reviewNum: number
   buttonTitle: string
