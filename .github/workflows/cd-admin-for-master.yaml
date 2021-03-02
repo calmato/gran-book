@@ -10,6 +10,10 @@ on:
 
 env:
   FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+  FIREBASE_API_KEY: ${{ secrets.STG_FIREBASE_API_KEY }}
+  FIREBASE_PROJECT_ID: ${{ secrets.STG_FIREBASE_PROJECT_ID }}
+  FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.STG_FIREBASE_MESSAGING_SENDER_ID }}
+  API_URL: ${{ secrets.STG_ADMIN_API_URL }}
 
 jobs:
   deploy_for_staging:
