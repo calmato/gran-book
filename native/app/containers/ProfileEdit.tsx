@@ -16,13 +16,13 @@ export default function ConnectedProfilrEdit(): JSX.Element {
         return dispatch(profileEditAsync(username, gender, thumbnail, selfIntroduction));
       },
     }), [dispatch],
-  )
+  );
 
   return <ProfileEdit 
-  username={auth.username} 
-  selfIntroduction={auth.selfIntroduction} 
-  thumbnailUrl={auth.thumbnailUrl}
-  gender={auth.gender}
-  actions={actions}
-  />
+    username={auth.username} 
+    selfIntroduction={auth.selfIntroduction} 
+    thumbnailUrl={auth.thumbnailUrl}
+    gender={auth.gender}
+    actions={actions}
+  />;
 }

@@ -60,15 +60,15 @@ const ProfileEdit = function ProfileEdit(props: Props): ReactElement {
   };
 
   const createAlertNotifyProfileEditError = (code: number) =>
-  Alert.alert(
-    'ユーザー登録に失敗',
-    `${generateErrorMessage(code)}`,
-    [
-      {
-        text: 'OK',
-      }
-    ],
-  );
+    Alert.alert(
+      'ユーザー登録に失敗',
+      `${generateErrorMessage(code)}`,
+      [
+        {
+          text: 'OK',
+        }
+      ],
+    );
 
   const handleSubmit = React.useCallback(async () => {
     await profileEdit(
@@ -77,13 +77,13 @@ const ProfileEdit = function ProfileEdit(props: Props): ReactElement {
       userInfo.avatar,
       userInfo.bio,
     )
-    .then(() => {
-      navigation.navigate('OwnProfile');
-    })
-    .catch((err) => {
-      console.log('debug', err);
-      createAlertNotifyProfileEditError(err.code);
-    });
+      .then(() => {
+        navigation.navigate('OwnProfile');
+      })
+      .catch((err) => {
+        console.log('debug', err);
+        createAlertNotifyProfileEditError(err.code);
+      });
   }, [userInfo.name, userInfo.gender, userInfo.avatar, userInfo.bio, profileEdit, navigation]);
 
   return (
