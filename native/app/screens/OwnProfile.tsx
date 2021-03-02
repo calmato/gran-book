@@ -1,9 +1,8 @@
-import { RouteProp, useNavigation } from '@react-navigation/native';
+import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { ReactElement } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-elements';
-import { Route } from 'react-native-tab-view';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import ProfileViewGroup from '~/components/organisms/ProfileViewGroup';
 import { UserInfoStackParamList } from '~/types/navigation';

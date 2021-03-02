@@ -3,7 +3,6 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StyleSheet } from 'react-native';
 import Home from '~/screens/Home';
-import { MyPage } from '~/containers';
 import { COLOR } from '~~/constants/theme';
 import Store from '~/screens/Store';
 import Bookshelf from '~/screens/Bookshelf';

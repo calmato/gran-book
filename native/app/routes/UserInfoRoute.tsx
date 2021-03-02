@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { MyPage } from '~/containers';
 import OwnProfile from '~/screens/OwnProfile';

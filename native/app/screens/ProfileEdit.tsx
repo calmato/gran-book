@@ -62,7 +62,6 @@ const ProfileEdit = function ProfileEdit({ route, navigation }: Props): ReactEle
       break;
     }
   };
-  console.log(userInfo);
   return (
     <View>
       <HeaderWithBackButton 
