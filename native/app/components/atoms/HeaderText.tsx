@@ -20,7 +20,7 @@ interface Props {
 const HeaderText = function HeaderText(props: Props): ReactElement {
   return (
     <View style={styles.layout}>
-      <Text style={styles.textStyle}>{props.title}</Text>
+      <Text style={styles.textStyle} numberOfLines={1}>{props.title}</Text>
     </View>
   );
 };
