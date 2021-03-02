@@ -43,7 +43,7 @@
       :label="form.options.phoneNumber.label"
       :rules="form.options.phoneNumber.rules"
     />
-    <v-btn color="primary" class="mt-4 mr-4" @click="onClick">変更する</v-btn>
+    <v-btn :loading="loading" color="primary" class="mt-4 mr-4" @click="onClick">変更する</v-btn>
     <v-btn class="mt-4" @click="onClickCancel">キャンセル</v-btn>
   </the-form-group>
 </template>
@@ -68,6 +68,11 @@ export default defineComponent({
     form: {
       type: Object as PropType<IAuthEditProfileForm>,
       required: true,
+    },
+    loading: {
+      type: Boolean,
+      required: false,
+      default: false,
     },
   },
 

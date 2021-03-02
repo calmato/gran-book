@@ -20,9 +20,10 @@
 
 <script lang="ts">
 import { defineComponent, SetupContext, ref, reactive, useAsync, computed, watch } from '@nuxtjs/composition-api'
-import AdminList from '~/components/templates/AdminList.vue'
 import { AdminStore, CommonStore } from '~/store'
 import { AdminNewOptions, IAdminListForm, IAdminNewForm, IAdminNewParams } from '~/types/forms'
+import { PromiseState } from '~/types/store'
+import AdminList from '~/components/templates/AdminList.vue'
 
 export default defineComponent({
   components: {
@@ -43,7 +44,6 @@ export default defineComponent({
       firstNameKana: '',
     }
 
-    const loading = ref<boolean>(false)
     const search = ref<string>()
     const page = ref<number>(1)
     const itemsPerPage = ref<number>(20)
@@ -61,6 +61,10 @@ export default defineComponent({
 
     const users = computed(() => store.getters['admin/getUsers'])
     const total = computed(() => store.getters['admin/getTotal'])
+    const loading = computed((): boolean => {
+      const status = store.getters['common/getPromiseState']
+      return status === PromiseState.LOADING
+    })
 
     watch(page, (): void => {
       indexAdmin()
@@ -92,6 +96,7 @@ export default defineComponent({
     }
 
     const handleClickCreateItem = async (): Promise<void> => {
+      CommonStore.startConnection()
       await AdminStore.createAdmin(newForm)
         .then(() => {
           newDialog.value = false
@@ -99,6 +104,9 @@ export default defineComponent({
         })
         .catch((err: Error) => {
           CommonStore.showErrorInSnackbar(err)
+        })
+        .finally(() => {
+          CommonStore.endConnection()
         })
     }
 
@@ -111,7 +119,7 @@ export default defineComponent({
     }
 
     async function indexAdmin(): Promise<void> {
-      loading.value = true
+      CommonStore.startConnection()
 
       const form: IAdminListForm = {
         limit: itemsPerPage.value,
@@ -123,7 +131,7 @@ export default defineComponent({
       }
 
       await AdminStore.indexAdmin(form).finally(() => {
-        loading.value = false
+        CommonStore.endConnection()
       })
     }
 

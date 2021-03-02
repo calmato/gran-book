@@ -1,13 +1,13 @@
 <template>
-  <sign-in :form="form" :is-loading="isLoading" :has-error.sync="hasError" @submit="handleSubmit" />
+  <sign-in :form="form" :loading="loading" :has-error.sync="hasError" @submit="handleSubmit" />
 </template>
 
 <script lang="ts">
 import { defineComponent, computed, reactive, ref, SetupContext } from '@nuxtjs/composition-api'
 import { AuthStore, CommonStore } from '~/store'
 import { ISignInForm } from '~/types/forms'
-import SignIn from '~/components/templates/SignIn.vue'
 import { PromiseState } from '~/types/store'
+import SignIn from '~/components/templates/SignIn.vue'
 
 export default defineComponent({
   layout: 'auth',
@@ -25,7 +25,7 @@ export default defineComponent({
       password: '',
     })
 
-    const isLoading = computed((): boolean => {
+    const loading = computed((): boolean => {
       const status = store.getters['common/getPromiseState']
       return status === PromiseState.LOADING
     })
@@ -57,7 +57,7 @@ export default defineComponent({
     return {
       form,
       hasError,
-      isLoading,
+      loading,
       handleSubmit,
     }
   },

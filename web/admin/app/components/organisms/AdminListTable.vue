@@ -27,7 +27,7 @@
       </v-chip>
     </template>
     <template v-slot:[`item.actions`]="{ item }">
-      <v-icon small class="mr-2" @click="onClickEdit(item)">mdi-pencil</v-icon>
+      <v-icon small :loading="loading" class="mr-2" @click="onClickEdit(item)">mdi-pencil</v-icon>
       <v-icon small @click="onClickDelete(item)">mdi-delete</v-icon>
     </template>
   </v-data-table>

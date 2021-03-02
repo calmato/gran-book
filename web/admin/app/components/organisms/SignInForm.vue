@@ -3,7 +3,7 @@
     <!-- TODO: バリデーションの設定 -->
     <v-text-field v-model="form.email" label="email" autofocus outlined />
     <v-text-field v-model="form.password" label="password" type="password" outlined />
-    <v-btn :block="true" :loading="isLoading" color="primary" class="mt-4" @click="onClick">ログイン</v-btn>
+    <v-btn :block="true" :loading="loading" color="primary" class="mt-4" @click="onClick">ログイン</v-btn>
   </v-form>
 </template>
 
@@ -17,7 +17,7 @@ export default defineComponent({
       type: Object as PropType<ISignInForm>,
       required: true,
     },
-    isLoading: {
+    loading: {
       type: Boolean,
       required: false,
       default: false,
