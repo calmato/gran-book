@@ -43,7 +43,7 @@
       :label="form.options.phoneNumber.label"
       :rules="form.options.phoneNumber.rules"
     />
-    <v-btn :loading="loading" color="primary" class="mt-4 mr-4" @click="onClick">変更する</v-btn>
+    <v-btn :loading="loading" :disabled="loading" color="primary" class="mt-4 mr-4" @click="onClick">変更する</v-btn>
     <v-btn class="mt-4" @click="onClickCancel">キャンセル</v-btn>
   </the-form-group>
 </template>
