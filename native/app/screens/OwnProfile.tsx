@@ -1,9 +1,12 @@
-import { useNavigation } from '@react-navigation/native';
+import { RouteProp, useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import React, { ReactElement } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-elements';
+import { Route } from 'react-native-tab-view';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import ProfileViewGroup from '~/components/organisms/ProfileViewGroup';
+import { UserInfoStackParamList } from '~/types/navigation';
 import { COLOR } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
@@ -24,7 +27,22 @@ const styles = StyleSheet.create({
   }
 });
 
-const OwnProfile = function OwnProfile({ route, navigation }): ReactElement {
+type OwnProfileNavigationProp = StackNavigationProp<
+  UserInfoStackParamList,
+  'OwnProfile'
+>
+
+type OwnProfileRouteProp = RouteProp<
+  UserInfoStackParamList, 
+  'OwnProfile'
+>
+
+interface Props {
+  route: OwnProfileRouteProp,
+  navigation: OwnProfileNavigationProp,
+}
+
+const OwnProfile = function OwnProfile({ route, navigation }: Props): ReactElement {
   const {username, selfIntroduction, thumbnailUrl, gender} = route.params;
   // TODO 出品数・フォロワー数・フォロー数・星レート・レビュー数を実装
   const userInfo = 

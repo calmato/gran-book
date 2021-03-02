@@ -16,10 +16,10 @@ export type AuthStackParamList = {
 
 export type UserInfoStackParamList = {
   MyPage: undefined,
-  OwnProfile: undefined,
+  OwnProfile: {username: string, selfIntroduction: string, thumbnailUrl: string, gender: number},
   AccountSetting: undefined,
   AccountEdit: undefined,
-  ProfileEdit: undefined,
+  ProfileEdit: {username: string, selfIntroduction: string, thumbnailUrl: string, gender: number},
   ContactEdit: undefined,
   EmailEdit: undefined,
   PasswordEmailEdit: undefined,

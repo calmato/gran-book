@@ -1,3 +1,5 @@
+import { RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import React, { ReactElement, useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button, Input } from 'react-native-elements';
@@ -6,6 +8,7 @@ import ChangeNickname from '~/components/organisms/ChangeNickname';
 import GenderRadioGroup from '~/components/organisms/GenderRadioGroup';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import { ProfileEditForm } from '~/types/forms';
+import { UserInfoStackParamList } from '~/types/navigation';
 
 const styles = StyleSheet.create({
   bio: {
@@ -19,7 +22,22 @@ const styles = StyleSheet.create({
   },
 });
 
-const ProfileEdit = function ProfileEdit({ route, navigation }): ReactElement {
+type ProfileEditNavigationProp = StackNavigationProp<
+  UserInfoStackParamList,
+  'ProfileEdit'
+>
+
+type ProfileEditRouteProp = RouteProp <
+  UserInfoStackParamList,
+  'ProfileEdit'
+>
+
+interface Props {
+  route: ProfileEditRouteProp,
+  navigation: ProfileEditNavigationProp,
+}
+
+const ProfileEdit = function ProfileEdit({ route, navigation }: Props): ReactElement {
   const [userInfo, setValue] = useState<ProfileEditForm>({
     name: route.params.username,
     avatar: route.params.thumbnailUrl,
@@ -49,7 +67,7 @@ const ProfileEdit = function ProfileEdit({ route, navigation }): ReactElement {
     <View>
       <HeaderWithBackButton 
         title='プロフィール編集'
-        onPress={()=>navigation.goBack}
+        onPress={()=>navigation.goBack()}
       />
       <ChangeIconGroup
         avatarUrl={userInfo.avatar}

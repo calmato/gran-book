@@ -15,10 +15,18 @@ const UserInfoRoute = function SettingRoute() {
       headerMode='none'
     >
       <UserInfoStack.Screen name='MyPage' component={MyPage} />
-      <UserInfoStack.Screen name='OwnProfile' component={OwnProfile}/>
+      <UserInfoStack.Screen
+        name='OwnProfile' 
+        component={OwnProfile}
+        initialParams={{username:'', selfIntroduction:'', thumbnailUrl:'', gender: 0}}
+      />
       <UserInfoStack.Screen name='AccountSetting' component={AccountSetting}/>
       {/* <UserInfoStack.Screen name='AccountEdit' component={AccountEdit}/> */}
-      <UserInfoStack.Screen name='ProfileEdit' component={ProfileEdit}/>
+      <UserInfoStack.Screen 
+        name='ProfileEdit' 
+        component={ProfileEdit}
+        initialParams={{username:'', selfIntroduction:'', thumbnailUrl:'', gender: 0}}
+      />
       {/* <UserInfoStack.Screen name='ContactEdit' component={ContactEdit}/> */}
       {/* <UserInfoStack.Screen name='EmailEdit' component={EmailEdit}/> */}
       {/* <UserInfoStack.Screen name='PasswordEmailEdit' componet={PasswordEmailEdit}/> */}
