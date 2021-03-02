@@ -106,7 +106,6 @@ export const AuthEditProfileOptions: IAuthEditProfileOptions = {
     label: '表示名',
     rules: {
       required: true,
-      alpha_dash: true,
       max: 32,
     },
   } as ITextField,
