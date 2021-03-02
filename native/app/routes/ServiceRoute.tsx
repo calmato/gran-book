@@ -2,12 +2,12 @@ import React, { ReactElement } from 'react';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StyleSheet } from 'react-native';
-import Home from '~/screens/Home';
 import { MyPage } from '~/containers';
 import { COLOR } from '~~/constants/theme';
 import Store from '~/screens/Store';
 import Bookshelf from '~/screens/Bookshelf';
 import Sale from '~/screens/Sale';
+import HomeTabRoute from '~/routes/HomeTabRoute';
 
 const styles = StyleSheet.create({
   labelStyle: {
@@ -60,7 +60,7 @@ const ServiceRoute = function ServiceRoute(): ReactElement {
         labelStyle: styles.labelStyle
       }}
     >
-      <Tab.Screen name="ホーム" component={Home} />
+      <Tab.Screen name="ホーム" component={HomeTabRoute} />
       <Tab.Screen name="本棚" component={Bookshelf} />
       <Tab.Screen name="本を出品" component={Sale} />
       <Tab.Screen name="本を買う" component={Store} />
