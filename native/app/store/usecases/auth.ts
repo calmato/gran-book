@@ -194,7 +194,7 @@ function sendEmailVerification(): Promise<void> {
 }
 
 export function profileEditAsync(username: string, gender: number, thumbnail: string | undefined, selfIntroduction: string | undefined) {
-  return async (): Promise<void> => { 
+  return async (dispatch: Dispatch, getState: () => AppState): Promise<void> => { 
     return await axios
       .patch('/v1/auth/profile', {
         username,
@@ -204,6 +204,50 @@ export function profileEditAsync(username: string, gender: number, thumbnail: st
       })
       .then(async (res: AxiosResponse<IAuthResponse>) => {
         console.log('debug', res);
+        const {
+          username,
+          gender,
+          phoneNumber,
+          role,
+          thumbnailUrl,
+          selfIntroduction,
+          lastName,
+          firstName,
+          lastNameKana,
+          firstNameKana,
+          postalCode,
+          prefecture,
+          city,
+          addressLine1,
+          addressLine2,
+          createdAt,
+          updatedAt,
+        } = res.data;
+
+        const values: Auth.ProfileValues = {
+          username,
+          gender,
+          phoneNumber,
+          role,
+          thumbnailUrl,
+          selfIntroduction,
+          lastName,
+          firstName,
+          lastNameKana,
+          firstNameKana,
+          postalCode,
+          prefecture,
+          city,
+          addressLine1,
+          addressLine2,
+          createdAt,
+          updatedAt,
+        };
+
+        dispatch(setProfile(values));
+
+        const auth: Auth.Model = getState().auth;
+        await LocalStorage.AuthStorage.save(auth);
       })
       .catch((err: Error) => {
         throw err;
