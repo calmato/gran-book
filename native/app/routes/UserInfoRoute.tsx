@@ -4,7 +4,7 @@ import { MyPage } from '~/containers';
 import { OwnProfile } from '~/containers';
 import { UserInfoStackParamList } from '~/types/navigation';
 import AccountSetting from '~/screens/AccoutSetting';
-import ProfileEdit from '~/screens/ProfileEdit';
+import { ProfileEdit } from '~/containers';
 
 const UserInfoStack = createStackNavigator<UserInfoStackParamList>();
 

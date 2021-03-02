@@ -57,12 +57,7 @@ const OwnProfile = function OwnProfile( props : Props): ReactElement {
         followerNum={userInfo.followerNum}
         followNum={userInfo.followNum}
         buttonTitle={'プロフィールを編集'}
-        handleClick={() => navigation.navigate('ProfileEdit', {
-          username: props.username, 
-          selfIntroduction: props.selfIntroduction,
-          thumbnailUrl: props.thumbnailUrl,
-          gender: props.gender,
-        })}
+        handleClick={() => navigation.navigate('ProfileEdit')}
       />
       <Text style={styles.bio}>{props.selfIntroduction}</Text>
       <Text style={styles.title}>出品リスト</Text>

@@ -1,4 +1,4 @@
-import { RouteProp } from '@react-navigation/native';
+import { RouteProp, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { ReactElement, useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -22,28 +22,21 @@ const styles = StyleSheet.create({
   },
 });
 
-type ProfileEditNavigationProp = StackNavigationProp<
-  UserInfoStackParamList,
-  'ProfileEdit'
->
-
-type ProfileEditRouteProp = RouteProp <
-  UserInfoStackParamList,
-  'ProfileEdit'
->
-
 interface Props {
-  route: ProfileEditRouteProp,
-  navigation: ProfileEditNavigationProp,
+  username: string, 
+  selfIntroduction: string | undefined, 
+  thumbnailUrl: string | undefined, 
+  gender: number
 }
 
-const ProfileEdit = function ProfileEdit({ route, navigation }: Props): ReactElement {
+const ProfileEdit = function ProfileEdit(props: Props): ReactElement {
   const [userInfo, setValue] = useState<ProfileEditForm>({
-    name: route.params.username,
-    avatar: route.params.thumbnailUrl,
-    bio: route.params.selfIntroduction,
-    gender: route.params.gender,
+    name: props.username,
+    avatar: props.thumbnailUrl,
+    bio: props.selfIntroduction,
+    gender: props.gender,
   });
+  const navigation = useNavigation();
 
   const nameError: boolean = useMemo((): boolean => {
     return (userInfo.name === '');
