@@ -1,14 +1,13 @@
-import { RouteProp, useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
+import { useNavigation } from '@react-navigation/native';
 import React, { ReactElement, useMemo, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Alert } from 'react-native';
 import { Button, Input } from 'react-native-elements';
 import ChangeIconGroup from '~/components/organisms/ChangeIconGroup';
 import ChangeNickname from '~/components/organisms/ChangeNickname';
 import GenderRadioGroup from '~/components/organisms/GenderRadioGroup';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import { ProfileEditForm } from '~/types/forms';
-import { UserInfoStackParamList } from '~/types/navigation';
+import { generateErrorMessage } from '~/lib/util/ErrorUtil';
 
 const styles = StyleSheet.create({
   bio: {
@@ -26,7 +25,10 @@ interface Props {
   username: string, 
   selfIntroduction: string | undefined, 
   thumbnailUrl: string | undefined, 
-  gender: number
+  gender: number,
+  actions: {
+    profileEdit: (username: string, gender: number, thumbnail: string | undefined, selfIntroduction: string | undefined) => Promise<void>,
+  },
 }
 
 const ProfileEdit = function ProfileEdit(props: Props): ReactElement {
@@ -37,6 +39,7 @@ const ProfileEdit = function ProfileEdit(props: Props): ReactElement {
     gender: props.gender,
   });
   const navigation = useNavigation();
+  const{ profileEdit } = props.actions;
 
   const nameError: boolean = useMemo((): boolean => {
     return (userInfo.name === '');
@@ -55,6 +58,34 @@ const ProfileEdit = function ProfileEdit(props: Props): ReactElement {
       break;
     }
   };
+
+  const createAlertNotifyProfileEditError = (code: number) =>
+  Alert.alert(
+    'ユーザー登録に失敗',
+    `${generateErrorMessage(code)}`,
+    [
+      {
+        text: 'OK',
+      }
+    ],
+  );
+
+  const handleSubmit = React.useCallback(async () => {
+    await profileEdit(
+      userInfo.name,
+      userInfo.gender,
+      userInfo.avatar,
+      userInfo.bio,
+    )
+    .then(() => {
+      navigation.navigate('OwnProfile');
+    })
+    .catch((err) => {
+      console.log('debug', err);
+      createAlertNotifyProfileEditError(err.code);
+    });
+  }, [userInfo.name, userInfo.gender, userInfo.avatar, userInfo.bio, profileEdit, navigation]);
+
   return (
     <View>
       <HeaderWithBackButton 
@@ -85,7 +116,7 @@ const ProfileEdit = function ProfileEdit(props: Props): ReactElement {
       />
       <Button
         title={'保存する'}
-        onPress={()=>undefined}
+        onPress={handleSubmit}
         containerStyle={styles.button} 
       />
     </View>

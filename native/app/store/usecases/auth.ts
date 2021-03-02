@@ -192,3 +192,22 @@ function sendEmailVerification(): Promise<void> {
       });
   });
 }
+
+export function profileEditAsync(username: string, gender: number, thumbnail: string | undefined, selfIntroduction: string | undefined) {
+  return async (): Promise<void> => { 
+    return await axios
+      .patch('/v1/auth/profile', {
+        username,
+        gender,
+        thumbnail,
+        selfIntroduction,
+      })
+      .then(async (res: AxiosResponse<IAuthResponse>) => {
+        console.log('debug', res);
+      })
+      .catch((err: Error) => {
+        throw err;
+      });
+  };
+
+}

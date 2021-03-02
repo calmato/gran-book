@@ -19,7 +19,7 @@ export type UserInfoStackParamList = {
   OwnProfile: undefined,
   AccountSetting: undefined,
   AccountEdit: undefined,
-  ProfileEdit: {username: string, selfIntroduction: string | undefined, thumbnailUrl: string | undefined, gender: number},
+  ProfileEdit: undefined,
   ContactEdit: undefined,
   EmailEdit: undefined,
   PasswordEmailEdit: undefined,
