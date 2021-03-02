@@ -1,5 +1,4 @@
-// todo: 相対パスでのインポートを直す
-import { ISearchResponse, ISearchResultItem } from '../response/search';
+import { ISearchResponse, ISearchResultItem } from '~/types/response/search';
 
 export type RootStackParamList = {
   MyPage: undefined,
