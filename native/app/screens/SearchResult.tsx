@@ -27,7 +27,7 @@ const SearchResult = function SearchResult(props: Props): ReactElement {
 
   const selectBook = useCallback((item) => {
     return navigation.navigate('SearchResultBookShow', {book: item});
-  }, []);
+  }, [navigation]);
 
   return (
     <View>
