@@ -46,12 +46,7 @@ const MyPage = function MyPage(props: Props): ReactElement {
       >
         <Header centerComponent={<HeaderText title="マイページ"/>} />
         <View>
-          <ListItem bottomDivider onPress={()=>navigation.navigate('OwnProfile', {
-            username: auth.username, 
-            selfIntroduction: auth.selfIntroduction,
-            thumbnailUrl: auth.thumbnailUrl,
-            gender: auth.gender,
-          })}>
+          <ListItem bottomDivider onPress={()=>navigation.navigate('OwnProfile')}>
             <Avatar source={{uri: avatar.thumbnailUrl}} rounded/>
             <ListItem.Content>
               <ListItem.Title>{avatar.name}</ListItem.Title>

@@ -1,11 +1,9 @@
-import { RouteProp, useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
+import { useNavigation } from '@react-navigation/native';
 import React, { ReactElement } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-elements';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import ProfileViewGroup from '~/components/organisms/ProfileViewGroup';
-import { UserInfoStackParamList } from '~/types/navigation';
 import { COLOR } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
@@ -25,16 +23,6 @@ const styles = StyleSheet.create({
     padding: 10,
   }
 });
-
-type OwnProfileNavigationProp = StackNavigationProp<
-  UserInfoStackParamList,
-  'OwnProfile'
->
-
-type OwnProfileRouteProp = RouteProp<
-  UserInfoStackParamList, 
-  'OwnProfile'
->
 
 interface Props {
   username: string, 
