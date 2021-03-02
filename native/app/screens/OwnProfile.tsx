@@ -1,4 +1,4 @@
-import { RouteProp } from '@react-navigation/native';
+import { RouteProp, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { ReactElement } from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -37,12 +37,13 @@ type OwnProfileRouteProp = RouteProp<
 >
 
 interface Props {
-  route: OwnProfileRouteProp,
-  navigation: OwnProfileNavigationProp,
+  username: string, 
+  selfIntroduction: string | undefined, 
+  thumbnailUrl: string | undefined, 
+  gender: number
 }
 
-const OwnProfile = function OwnProfile({ route, navigation }: Props): ReactElement {
-  const {username, selfIntroduction, thumbnailUrl, gender} = route.params;
+const OwnProfile = function OwnProfile( props : Props): ReactElement {
   // TODO 出品数・フォロワー数・フォロー数・星レート・レビュー数を実装
   const userInfo = 
 {
@@ -52,6 +53,7 @@ const OwnProfile = function OwnProfile({ route, navigation }: Props): ReactEleme
   followerNum: 20,
   followNum: 5,
 };
+  const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <HeaderWithBackButton
@@ -59,8 +61,8 @@ const OwnProfile = function OwnProfile({ route, navigation }: Props): ReactEleme
         onPress={()=>navigation.goBack()}
       />
       <ProfileViewGroup
-        name={username}
-        avatarUrl={thumbnailUrl}
+        name={props.username}
+        avatarUrl={props.thumbnailUrl}
         rating={userInfo.rating}
         reviewNum={userInfo.reviewNum}
         saleNum={userInfo.saleNum}
@@ -68,13 +70,13 @@ const OwnProfile = function OwnProfile({ route, navigation }: Props): ReactEleme
         followNum={userInfo.followNum}
         buttonTitle={'プロフィールを編集'}
         handleClick={() => navigation.navigate('ProfileEdit', {
-          username: username, 
-          selfIntroduction: selfIntroduction,
-          thumbnailUrl: thumbnailUrl,
-          gender: gender,
+          username: props.username, 
+          selfIntroduction: props.selfIntroduction,
+          thumbnailUrl: props.thumbnailUrl,
+          gender: props.gender,
         })}
       />
-      <Text style={styles.bio}>{selfIntroduction}</Text>
+      <Text style={styles.bio}>{props.selfIntroduction}</Text>
       <Text style={styles.title}>出品リスト</Text>
     </View>
   );
