@@ -8,7 +8,7 @@
             メールアドレス もしくは パスワード が間違っています
           </the-alert>
           <sign-in-card>
-            <sign-in-form :form="form" @click="onClickSubmitButton" />
+            <sign-in-form :form="form" :loading="loading" @click="onClickSubmitButton" />
           </sign-in-card>
         </v-col>
       </v-row>
@@ -36,6 +36,11 @@ export default defineComponent({
       required: true,
     },
     hasError: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+    loading: {
       type: Boolean,
       required: false,
       default: false,

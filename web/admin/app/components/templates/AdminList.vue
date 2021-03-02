@@ -9,7 +9,9 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text @click="onClickNewClose"> Close </v-btn>
-          <v-btn color="blue darken-1" text @click="onClickCreateButton"> Save </v-btn>
+          <v-btn color="blue darken-1" text :loading="loading" :disabled="loading" @click="onClickCreateButton">
+            Save
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
