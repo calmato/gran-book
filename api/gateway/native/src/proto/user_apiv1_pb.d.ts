@@ -424,6 +424,27 @@ export namespace UpdateAdminProfileRequest {
     }
 }
 
+export class GetUserProfileRequest extends jspb.Message { 
+    getId(): string;
+    setId(value: string): GetUserProfileRequest;
+
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): GetUserProfileRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: GetUserProfileRequest): GetUserProfileRequest.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: GetUserProfileRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): GetUserProfileRequest;
+    static deserializeBinaryFromReader(message: GetUserProfileRequest, reader: jspb.BinaryReader): GetUserProfileRequest;
+}
+
+export namespace GetUserProfileRequest {
+    export type AsObject = {
+        id: string,
+    }
+}
+
 export class AuthResponse extends jspb.Message { 
     getId(): string;
     setId(value: string): AuthResponse;
@@ -732,6 +753,133 @@ export namespace AdminListResponse {
             by: string,
             direction: string,
         }
+    }
+
+}
+
+export class UserProfileResponse extends jspb.Message { 
+    getId(): string;
+    setId(value: string): UserProfileResponse;
+
+    getUsername(): string;
+    setUsername(value: string): UserProfileResponse;
+
+    getThumbnailUrl(): string;
+    setThumbnailUrl(value: string): UserProfileResponse;
+
+    getSelfIntroduction(): string;
+    setSelfIntroduction(value: string): UserProfileResponse;
+
+    getRating(): number;
+    setRating(value: number): UserProfileResponse;
+
+    getReviewCount(): number;
+    setReviewCount(value: number): UserProfileResponse;
+
+    getIsFollow(): boolean;
+    setIsFollow(value: boolean): UserProfileResponse;
+
+    getIsFollower(): boolean;
+    setIsFollower(value: boolean): UserProfileResponse;
+
+    getFollowCount(): number;
+    setFollowCount(value: number): UserProfileResponse;
+
+    getFollowerCount(): number;
+    setFollowerCount(value: number): UserProfileResponse;
+
+    clearProductsList(): void;
+    getProductsList(): Array<UserProfileResponse.Product>;
+    setProductsList(value: Array<UserProfileResponse.Product>): UserProfileResponse;
+    addProducts(value?: UserProfileResponse.Product, index?: number): UserProfileResponse.Product;
+
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): UserProfileResponse.AsObject;
+    static toObject(includeInstance: boolean, msg: UserProfileResponse): UserProfileResponse.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: UserProfileResponse, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): UserProfileResponse;
+    static deserializeBinaryFromReader(message: UserProfileResponse, reader: jspb.BinaryReader): UserProfileResponse;
+}
+
+export namespace UserProfileResponse {
+    export type AsObject = {
+        id: string,
+        username: string,
+        thumbnailUrl: string,
+        selfIntroduction: string,
+        rating: number,
+        reviewCount: number,
+        isFollow: boolean,
+        isFollower: boolean,
+        followCount: number,
+        followerCount: number,
+        productsList: Array<UserProfileResponse.Product.AsObject>,
+    }
+
+
+    export class Product extends jspb.Message { 
+        getId(): number;
+        setId(value: number): Product;
+
+        getName(): string;
+        setName(value: string): Product;
+
+        getThumbnailUrl(): string;
+        setThumbnailUrl(value: string): Product;
+
+        clearAuthorsList(): void;
+        getAuthorsList(): Array<UserProfileResponse.Product.Author>;
+        setAuthorsList(value: Array<UserProfileResponse.Product.Author>): Product;
+        addAuthors(value?: UserProfileResponse.Product.Author, index?: number): UserProfileResponse.Product.Author;
+
+
+        serializeBinary(): Uint8Array;
+        toObject(includeInstance?: boolean): Product.AsObject;
+        static toObject(includeInstance: boolean, msg: Product): Product.AsObject;
+        static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+        static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+        static serializeBinaryToWriter(message: Product, writer: jspb.BinaryWriter): void;
+        static deserializeBinary(bytes: Uint8Array): Product;
+        static deserializeBinaryFromReader(message: Product, reader: jspb.BinaryReader): Product;
+    }
+
+    export namespace Product {
+        export type AsObject = {
+            id: number,
+            name: string,
+            thumbnailUrl: string,
+            authorsList: Array<UserProfileResponse.Product.Author.AsObject>,
+        }
+
+
+        export class Author extends jspb.Message { 
+            getId(): number;
+            setId(value: number): Author;
+
+            getName(): string;
+            setName(value: string): Author;
+
+
+            serializeBinary(): Uint8Array;
+            toObject(includeInstance?: boolean): Author.AsObject;
+            static toObject(includeInstance: boolean, msg: Author): Author.AsObject;
+            static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+            static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+            static serializeBinaryToWriter(message: Author, writer: jspb.BinaryWriter): void;
+            static deserializeBinary(bytes: Uint8Array): Author;
+            static deserializeBinaryFromReader(message: Author, reader: jspb.BinaryReader): Author;
+        }
+
+        export namespace Author {
+            export type AsObject = {
+                id: number,
+                name: string,
+            }
+        }
+
     }
 
 }

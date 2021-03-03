@@ -81,6 +81,17 @@ function deserialize_proto_GetAdminRequest(buffer_arg) {
   return proto_user_apiv1_pb.GetAdminRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_proto_GetUserProfileRequest(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.GetUserProfileRequest)) {
+    throw new Error('Expected argument of type proto.GetUserProfileRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_GetUserProfileRequest(buffer_arg) {
+  return proto_user_apiv1_pb.GetUserProfileRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_proto_ListAdminRequest(arg) {
   if (!(arg instanceof proto_user_apiv1_pb.ListAdminRequest)) {
     throw new Error('Expected argument of type proto.ListAdminRequest');
@@ -167,6 +178,17 @@ function serialize_proto_UpdateAuthProfileRequest(arg) {
 
 function deserialize_proto_UpdateAuthProfileRequest(buffer_arg) {
   return proto_user_apiv1_pb.UpdateAuthProfileRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_proto_UserProfileResponse(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.UserProfileResponse)) {
+    throw new Error('Expected argument of type proto.UserProfileResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_UserProfileResponse(buffer_arg) {
+  return proto_user_apiv1_pb.UserProfileResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 
@@ -310,3 +332,18 @@ var AdminServiceService = exports.AdminServiceService = {
 };
 
 exports.AdminServiceClient = grpc.makeGenericClientConstructor(AdminServiceService);
+var UserServiceService = exports.UserServiceService = {
+  getUserProfile: {
+    path: '/proto.UserService/GetUserProfile',
+    requestStream: false,
+    responseStream: false,
+    requestType: proto_user_apiv1_pb.GetUserProfileRequest,
+    responseType: proto_user_apiv1_pb.UserProfileResponse,
+    requestSerialize: serialize_proto_GetUserProfileRequest,
+    requestDeserialize: deserialize_proto_GetUserProfileRequest,
+    responseSerialize: serialize_proto_UserProfileResponse,
+    responseDeserialize: deserialize_proto_UserProfileResponse,
+  },
+};
+
+exports.UserServiceClient = grpc.makeGenericClientConstructor(UserServiceService);
