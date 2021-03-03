@@ -1,15 +1,15 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '~/types/navigation';
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement, useState, useMemo } from 'react';
 import { StyleSheet, View, Text, TextInput } from 'react-native';
 import { COLOR } from '~~/constants/theme';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
-import { AccountEditForm } from '~/types/forms';
 import { Button } from 'react-native-elements';
 import HalfTextInput from '~/components/molecules/HalfTextInput';
 import NumberTextInput from '~/components/molecules/NumberTextInput';
 import FullTextInput from '~/components/molecules/FullTextInput';
 import PrefecturePicker from '~/components/molecules/PrefecturePicker';
+import { AccountEditForm } from '~/types/forms';
 
 const maxNameLength7 = 7;
 const maxNameLength16 = 16;
@@ -42,7 +42,6 @@ const styles = StyleSheet.create(
     },
     searchButton: {
       flex: 1,
-      borderRadius: 10,
       backgroundColor: COLOR.PRIMARY,
     },
     saveButton: {
@@ -76,6 +75,14 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
     addressLine1: '',
     addressLine2: '',
   });
+
+  const postalCheck: boolean = useMemo((): boolean => {
+    return formData.postalCode.length == 7;
+  }, [formData.postalCode])
+
+  const canSubmit = useMemo((): boolean => {
+    return postalCheck;
+  }, [postalCheck])
 
   //TODO: ボタンを押した時の処理を追加する
   const handlePostaSubmit = React.useCallback(async () => {
@@ -173,7 +180,7 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
         <Button
           buttonStyle={{width: '100%'}}
           containerStyle={styles.searchButton}
-          disabled={false}
+          disabled={!postalCheck}
           onPress={() => undefined}
           title='検索'
           titleStyle={{ color: COLOR.TEXT_TITLE}}
