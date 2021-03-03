@@ -19,7 +19,7 @@ export const get = {
     ],
     limit: 20,
     offset: 0,
-    total: 1,
+    total: 2,
     order: {
       by: 'id',
       direction: 'asc',
