@@ -156,9 +156,38 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorResponse'
+  /v1/users/{userId}/profile:
+    get:
+      summary: ユーザプロフィール取得
+      tags:
+        - UserService
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: string
+          required: true
+          description: ユーザーID
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userProfileResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
 tags:
   - name: AuthService
     description: 認証関連
+  - name: UserService
+    description: ユーザ関連
 components:
   securitySchemes:
     BearerAuth:
@@ -267,6 +296,47 @@ components:
           type: string
         updatedAt:
           type: string
+    userProfileResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+        thumbnailUrl:
+          type: string
+        selfIntroduction:
+          type: string
+        isFollow:
+          type: boolean
+        isFollower:
+          type: boolean
+        followCount:
+          type: integer
+        followerCount:
+          type: integer
+        rating:
+          type: integer
+        products:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              name:
+                type: string
+              thumbnailUrl:
+                type: string
+              authors:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
     errorResponse:
       type: object
       properties:
