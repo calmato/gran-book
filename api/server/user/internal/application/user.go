@@ -3,7 +3,6 @@ package application
 import (
 	"context"
 
-	"github.com/calmato/gran-book/api/server/user/internal/application/input"
 	"github.com/calmato/gran-book/api/server/user/internal/application/output"
 	"github.com/calmato/gran-book/api/server/user/internal/application/validation"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
@@ -12,7 +11,7 @@ import (
 
 // UserApplication - Userアプリケーションのインターフェース
 type UserApplication interface {
-	GetProfile(ctx context.Context, in *input.GetUserProfile) (*user.User, *output.GetUserProfile, error)
+	GetProfile(ctx context.Context, uid string, cuid string) (*user.User, *output.GetUserProfile, error)
 }
 
 type userApplication struct {
@@ -29,14 +28,9 @@ func NewUserApplication(urv validation.UserRequestValidation, us user.Service) U
 }
 
 func (a *userApplication) GetProfile(
-	ctx context.Context, in *input.GetUserProfile,
+	ctx context.Context, uid string, cuid string,
 ) (*user.User, *output.GetUserProfile, error) {
-	err := a.userRequestValidation.GetUserProfile(in)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	u, err := a.userService.Show(ctx, in.ID)
+	u, err := a.userService.Show(ctx, uid)
 	if err != nil {
 		return nil, nil, exception.NotFound.New(err)
 	}
@@ -46,7 +40,14 @@ func (a *userApplication) GetProfile(
 		return nil, nil, err
 	}
 
+	isFollow, isFollower, err := a.userService.IsFriend(ctx, u, cuid)
+	if err != nil {
+		return nil, nil, err
+	}
+
 	out := &output.GetUserProfile{
+		IsFollow:       isFollow,
+		IsFollower:     isFollower,
 		FollowsTotal:   followsTotal,
 		FollowersTotal: followersTotal,
 	}

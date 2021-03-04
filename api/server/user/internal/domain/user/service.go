@@ -16,4 +16,5 @@ type Service interface {
 	Update(ctx context.Context, u *User) error
 	UpdatePassword(ctx context.Context, uid string, password string) error
 	UploadThumbnail(ctx context.Context, uid string, thumbnail []byte) (string, error)
+	IsFriend(ctx context.Context, u *User, cuid string) (bool, bool, error)
 }

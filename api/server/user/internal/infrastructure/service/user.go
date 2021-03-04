@@ -5,8 +5,10 @@ import (
 	"time"
 
 	"github.com/calmato/gran-book/api/server/user/internal/domain"
+	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/user"
 	"github.com/google/uuid"
+	"golang.org/x/xerrors"
 )
 
 type userService struct {
@@ -48,10 +50,15 @@ func (s *userService) List(ctx context.Context, q *domain.ListQuery) ([]*user.Us
 }
 
 func (s *userService) ListFriendsCount(ctx context.Context, u *user.User) (int64, int64, error) {
+	if u == nil {
+		err := xerrors.New("User is nil")
+		return 0, 0, exception.NotFound.New(err)
+	}
+
 	followsQuery := &domain.ListQuery{
 		Conditions: []*domain.QueryCondition{
 			{
-				Field:    "follower_id",
+				Field:    "follow_id",
 				Operator: "==",
 				Value:    u.ID,
 			},
@@ -61,7 +68,7 @@ func (s *userService) ListFriendsCount(ctx context.Context, u *user.User) (int64
 	followersQuery := &domain.ListQuery{
 		Conditions: []*domain.QueryCondition{
 			{
-				Field:    "follow_id",
+				Field:    "follower_id",
 				Operator: "==",
 				Value:    u.ID,
 			},
@@ -122,4 +129,66 @@ func (s *userService) UpdatePassword(ctx context.Context, uid string, password s
 
 func (s *userService) UploadThumbnail(ctx context.Context, uid string, thumbnail []byte) (string, error) {
 	return s.userUploader.Thumbnail(ctx, uid, thumbnail)
+}
+
+func (s *userService) IsFriend(ctx context.Context, u *user.User, cuid string) (bool, bool, error) {
+	isFollow := false
+	isFollower := false
+
+	if u == nil {
+		err := xerrors.New("User is nil")
+		return false, false, exception.NotFound.New(err)
+	}
+
+	followsQuery := &domain.ListQuery{
+		Limit: 1,
+		Conditions: []*domain.QueryCondition{
+			{
+				Field:    "follow_id",
+				Operator: "==",
+				Value:    u.ID,
+			},
+			{
+				Field:    "follower_id",
+				Operator: "==",
+				Value:    cuid,
+			},
+		},
+	}
+
+	followersQuery := &domain.ListQuery{
+		Limit: 1,
+		Conditions: []*domain.QueryCondition{
+			{
+				Field:    "follower_id",
+				Operator: "==",
+				Value:    u.ID,
+			},
+			{
+				Field:    "follow_id",
+				Operator: "==",
+				Value:    cuid,
+			},
+		},
+	}
+
+	follows, err := s.userRepository.ListFollows(ctx, followsQuery)
+	if err != nil {
+		return false, false, err
+	}
+
+	followers, err := s.userRepository.ListFollowers(ctx, followersQuery)
+	if err != nil {
+		return false, false, err
+	}
+
+	if len(follows) > 0 {
+		isFollower = true
+	}
+
+	if len(followers) > 0 {
+		isFollow = true
+	}
+
+	return isFollow, isFollower, nil
 }

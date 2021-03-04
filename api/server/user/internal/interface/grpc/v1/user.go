@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/calmato/gran-book/api/server/user/internal/application"
-	"github.com/calmato/gran-book/api/server/user/internal/application/input"
 	pb "github.com/calmato/gran-book/api/server/user/proto"
 )
 
@@ -19,16 +18,12 @@ type UserServer struct {
 func (s *UserServer) GetUserProfile(
 	ctx context.Context, req *pb.GetUserProfileRequest,
 ) (*pb.UserProfileResponse, error) {
-	_, err := s.AuthApplication.Authentication(ctx)
+	cu, err := s.AuthApplication.Authentication(ctx)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
-	in := &input.GetUserProfile{
-		ID: req.Id,
-	}
-
-	u, out, err := s.UserApplication.GetProfile(ctx, in)
+	u, out, err := s.UserApplication.GetProfile(ctx, req.Id, cu.ID)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
