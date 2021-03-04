@@ -10,7 +10,7 @@ import { ProfileEditForm } from '~/types/forms';
 import { generateErrorMessage } from '~/lib/util/ErrorUtil';
 
 const styles = StyleSheet.create({
-  bio: {
+  selfIntroduction: {
     minHeight: 100,
     textAlignVertical: 'top',
     paddingRight: 20,
@@ -35,7 +35,7 @@ const ProfileEdit = function ProfileEdit(props: Props): ReactElement {
   const [userInfo, setValue] = useState<ProfileEditForm>({
     name: props.username,
     avatar: props.thumbnailUrl,
-    bio: props.selfIntroduction,
+    selfIntroduction: props.selfIntroduction,
     gender: props.gender,
   });
   const navigation = useNavigation();
@@ -75,7 +75,7 @@ const ProfileEdit = function ProfileEdit(props: Props): ReactElement {
       userInfo.name,
       userInfo.gender,
       userInfo.avatar,
-      userInfo.bio,
+      userInfo.selfIntroduction,
     )
       .then(() => {
         navigation.navigate('OwnProfile');
@@ -84,7 +84,7 @@ const ProfileEdit = function ProfileEdit(props: Props): ReactElement {
         console.log('debug', err);
         createAlertNotifyProfileEditError(err.code);
       });
-  }, [userInfo.name, userInfo.gender, userInfo.avatar, userInfo.bio, profileEdit, navigation]);
+  }, [userInfo.name, userInfo.gender, userInfo.avatar, userInfo.selfIntroduction, profileEdit, navigation]);
 
   return (
     <View>
@@ -101,12 +101,12 @@ const ProfileEdit = function ProfileEdit(props: Props): ReactElement {
         handelOnChangeText={(text)=>setValue({...userInfo, name: text})}
       />
       <Input
-        style={styles.bio}
+        style={styles.selfIntroduction}
         placeholder={'自己紹介を入力してください'}
         multiline={true}
         maxLength={256}
-        onChangeText={(text)=>setValue({...userInfo, bio: text})}
-        value={userInfo.bio}
+        onChangeText={(text)=>setValue({...userInfo, selfIntroduction: text})}
+        value={userInfo.selfIntroduction}
       />
       <GenderRadioGroup
         handleOnChange={(value)=>handleGenderChange(value)}

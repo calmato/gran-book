@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  bio: {
+  selfIntroduction: {
     backgroundColor: COLOR.BACKGROUND_WHITE,
     color: COLOR.TEXT_DEFAULT,
     marginTop: 10,
@@ -59,7 +59,7 @@ const OwnProfile = function OwnProfile( props : Props): ReactElement {
         buttonTitle={'プロフィールを編集'}
         handleClick={() => navigation.navigate('ProfileEdit')}
       />
-      <Text style={styles.bio}>{props.selfIntroduction}</Text>
+      <Text style={styles.selfIntroduction}>{props.selfIntroduction}</Text>
       <Text style={styles.title}>出品リスト</Text>
     </View>
   );
