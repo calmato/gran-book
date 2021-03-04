@@ -1,11 +1,10 @@
-import { StackNavigationProp } from '@react-navigation/stack';
 import React, { ReactElement } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
-import { RootStackParamList } from '~/types/navigation';
 import { COLOR } from '~~/constants/theme';
 import { ListItem } from 'react-native-elements';
 import { MaterialIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 const styles = StyleSheet.create({
   subtitle: {
@@ -29,14 +28,12 @@ const styles = StyleSheet.create({
   },
 });
 
-type ContactEditProp = StackNavigationProp<RootStackParamList, 'ContactEdit'>;
-
 interface Props {
-  navigation: ContactEditProp
+  email: string
 }
 
 const ContactEdit = function ContactEdit(props: Props): ReactElement {
-  const navigation = props.navigation;
+  const navigation = useNavigation();
   const statusDefault = 'メールアドレス未登録';
   return (
     <View>
