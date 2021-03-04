@@ -51,19 +51,93 @@ func (mr *MockRepositoryMockRecorder) Authentication(ctx interface{}) *gomock.Ca
 }
 
 // List mocks base method
-func (m *MockRepository) List(ctx context.Context, query *domain.ListQuery) ([]*user.User, int64, error) {
+func (m *MockRepository) List(ctx context.Context, q *domain.ListQuery) ([]*user.User, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "List", ctx, query)
+	ret := m.ctrl.Call(m, "List", ctx, q)
 	ret0, _ := ret[0].([]*user.User)
-	ret1, _ := ret[1].(int64)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // List indicates an expected call of List
-func (mr *MockRepositoryMockRecorder) List(ctx, query interface{}) *gomock.Call {
+func (mr *MockRepositoryMockRecorder) List(ctx, q interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockRepository)(nil).List), ctx, query)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockRepository)(nil).List), ctx, q)
+}
+
+// ListFollows mocks base method
+func (m *MockRepository) ListFollows(ctx context.Context, q *domain.ListQuery) ([]*user.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListFollows", ctx, q)
+	ret0, _ := ret[0].([]*user.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListFollows indicates an expected call of ListFollows
+func (mr *MockRepositoryMockRecorder) ListFollows(ctx, q interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListFollows", reflect.TypeOf((*MockRepository)(nil).ListFollows), ctx, q)
+}
+
+// ListFollowers mocks base method
+func (m *MockRepository) ListFollowers(ctx context.Context, q *domain.ListQuery) ([]*user.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListFollowers", ctx, q)
+	ret0, _ := ret[0].([]*user.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListFollowers indicates an expected call of ListFollowers
+func (mr *MockRepositoryMockRecorder) ListFollowers(ctx, q interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListFollowers", reflect.TypeOf((*MockRepository)(nil).ListFollowers), ctx, q)
+}
+
+// ListCount mocks base method
+func (m *MockRepository) ListCount(ctx context.Context, q *domain.ListQuery) (int64, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListCount", ctx, q)
+	ret0, _ := ret[0].(int64)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListCount indicates an expected call of ListCount
+func (mr *MockRepositoryMockRecorder) ListCount(ctx, q interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListCount", reflect.TypeOf((*MockRepository)(nil).ListCount), ctx, q)
+}
+
+// ListFollowsCount mocks base method
+func (m *MockRepository) ListFollowsCount(ctx context.Context, q *domain.ListQuery) (int64, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListFollowsCount", ctx, q)
+	ret0, _ := ret[0].(int64)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListFollowsCount indicates an expected call of ListFollowsCount
+func (mr *MockRepositoryMockRecorder) ListFollowsCount(ctx, q interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListFollowsCount", reflect.TypeOf((*MockRepository)(nil).ListFollowsCount), ctx, q)
+}
+
+// ListFollowersCount mocks base method
+func (m *MockRepository) ListFollowersCount(ctx context.Context, q *domain.ListQuery) (int64, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListFollowersCount", ctx, q)
+	ret0, _ := ret[0].(int64)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListFollowersCount indicates an expected call of ListFollowersCount
+func (mr *MockRepositoryMockRecorder) ListFollowersCount(ctx, q interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListFollowersCount", reflect.TypeOf((*MockRepository)(nil).ListFollowersCount), ctx, q)
 }
 
 // Show mocks base method
