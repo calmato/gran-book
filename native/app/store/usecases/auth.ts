@@ -196,26 +196,26 @@ function sendEmailVerification(): Promise<void> {
 export function editEmailAsync(email: string) {
   return async (dispatch: Dispatch, getState: () => AppState): Promise<void> => {
     return await axios
-    .patch('/v1/auth/email', {
-      email
-    })
-    .then(async (res: AxiosResponse<IAuthResponse>) => {
-      console.log('debug', res);
-      const {
-        email,
-      } = res.data;
+      .patch('/v1/auth/email', {
+        email
+      })
+      .then(async (res: AxiosResponse<IAuthResponse>) => {
+        console.log('debug', res);
+        const {
+          email,
+        } = res.data;
 
-      const values: Auth.Email = {
-        email,
-      };
+        const values: Auth.Email = {
+          email,
+        };
 
-      dispatch(setEmail(values));
+        dispatch(setEmail(values));
 
-      const auth: Auth.Model = getState().auth;
-      await LocalStorage.AuthStorage.save(auth);
-    })
-    .catch((err: Error) => {
-      throw err;
-    });
+        const auth: Auth.Model = getState().auth;
+        await LocalStorage.AuthStorage.save(auth);
+      })
+      .catch((err: Error) => {
+        throw err;
+      });
   };
 }

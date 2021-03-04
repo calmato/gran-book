@@ -74,7 +74,7 @@ const EmailEdit = function EmailEdit
 
   const emailSameError: boolean = useMemo((): boolean => {
     return emailForm === props.email;
-  }, [emailForm]);
+  }, [emailForm, props.email]);
 
   const createAlertNotifyEmailEditError = (code: number) =>
     Alert.alert(
@@ -87,8 +87,8 @@ const EmailEdit = function EmailEdit
       ],
     );
 
-    const handleSubmit = React.useCallback(async () => {
-      await emailEdit(emailForm)
+  const handleSubmit = React.useCallback(async () => {
+    await emailEdit(emailForm)
       .then(() => {
         navigation.goBack();
       })
@@ -96,7 +96,7 @@ const EmailEdit = function EmailEdit
         console.log('debug', err);
         createAlertNotifyEmailEditError(err.code);
       });
-    }, [emailForm, emailEdit, navigation])
+  }, [emailForm, emailEdit, navigation]);
 
   return (
     <View style={styles.container}>

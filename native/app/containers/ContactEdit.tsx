@@ -7,5 +7,5 @@ import ContactEdit from '~/screens/ContactEdit';
 export default function ConnectedContactEdit(): JSX.Element {
   const auth: Auth.Model = useSelector(authSelector);
 
-  return <ContactEdit email={auth.email}/>
+  return <ContactEdit email={auth.email}/>;
 }

@@ -16,7 +16,7 @@ export default function ConnectedEmailEdit(): JSX.Element {
         return dispatch(editEmailAsync(email));
       },
     }), [dispatch],
-  )
+  );
 
   return <EmailEdit email={auth.email} actions={actions}/>;
 }
