@@ -72,6 +72,10 @@ const EmailEdit = function EmailEdit
     return !emailValidation(emailForm);
   }, [emailForm]);
 
+  const emailSameError: boolean = useMemo((): boolean => {
+    return emailForm === props.email;
+  }, [emailForm]);
+
   const createAlertNotifyEmailEditError = (code: number) =>
     Alert.alert(
       'メールアドレス変更に失敗',
@@ -108,9 +112,9 @@ const EmailEdit = function EmailEdit
         onChangeText={(text) => setState(text)}
         value={emailForm}
         hasError={emailError}
-        sameEmailError={emailForm === 'A@f'}
+        sameEmailError={emailSameError}
       />
-      <Button containerStyle={styles.buttonStyle} disabled={emailError} onPress={() => handleSubmit()} title='変更する' titleStyle={styles.buttonTitleStyle}/>
+      <Button containerStyle={styles.buttonStyle} disabled={emailError || emailSameError} onPress={() => handleSubmit()} title='変更する' titleStyle={styles.buttonTitleStyle}/>
     </View>
   );
 };
