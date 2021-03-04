@@ -52,21 +52,61 @@ func (r *userRepository) Authentication(ctx context.Context) (string, error) {
 	return fbToken.Subject, nil
 }
 
-func (r *userRepository) List(ctx context.Context, query *domain.ListQuery) ([]*user.User, int64, error) {
+func (r *userRepository) List(ctx context.Context, q *domain.ListQuery) ([]*user.User, error) {
 	us := []*user.User{}
-	db := r.client.getListQuery(query)
+
+	sql := r.client.db
+	db := r.client.getListQuery(sql, q)
 
 	err := db.Find(&us).Error
 	if err != nil {
-		return nil, 0, exception.ErrorInDatastore.New(err)
+		return nil, exception.ErrorInDatastore.New(err)
 	}
 
-	count, err := r.client.getListCount(query, &user.User{})
+	return us, nil
+}
+
+func (r *userRepository) ListFollows(ctx context.Context, q *domain.ListQuery) ([]*user.User, error) {
+	us := []*user.User{}
+
+	sql := r.client.db.Table("users").Joins("LEFT JOIN follows ON follows.follow_id = users.id")
+	db := r.client.getListQuery(sql, q)
+
+	err := db.Scan(&us).Error
 	if err != nil {
-		return nil, 0, err
+		return nil, exception.ErrorInDatastore.New(err)
 	}
 
-	return us, count, nil
+	return us, nil
+}
+
+func (r *userRepository) ListFollowers(ctx context.Context, q *domain.ListQuery) ([]*user.User, error) {
+	us := []*user.User{}
+
+	sql := r.client.db.Table("users").Joins("LEFT JOIN follows ON follows.follower_id = users.id")
+	db := r.client.getListQuery(sql, q)
+
+	err := db.Scan(&us).Error
+	if err != nil {
+		return nil, exception.ErrorInDatastore.New(err)
+	}
+
+	return us, nil
+}
+
+func (r *userRepository) ListCount(ctx context.Context, q *domain.ListQuery) (int64, error) {
+	sql := r.client.db.Model(&user.User{})
+	return r.client.getListCount(sql, q)
+}
+
+func (r *userRepository) ListFollowsCount(ctx context.Context, q *domain.ListQuery) (int64, error) {
+	sql := r.client.db.Table("users").Joins("LEFT JOIN follows ON follows.follow_id = users.id")
+	return r.client.getListCount(sql, q)
+}
+
+func (r *userRepository) ListFollowersCount(ctx context.Context, q *domain.ListQuery) (int64, error) {
+	sql := r.client.db.Table("users").Joins("LEFT JOIN follows ON follows.follower_id = users.id")
+	return r.client.getListCount(sql, q)
 }
 
 func (r *userRepository) Show(ctx context.Context, uid string) (*user.User, error) {
