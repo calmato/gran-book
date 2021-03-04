@@ -5,6 +5,7 @@ import { COLOR } from '~~/constants/theme';
 import MailInput from '~/components/molecules/MailInput';
 import { emailValidation } from '~/lib/validation';
 import { Button, Input } from 'react-native-elements';
+import { useNavigation } from '@react-navigation/native';
 
 const styles = StyleSheet.create({
   container:{
@@ -59,6 +60,7 @@ interface Props {
 
 const EmailEdit = function EmailEdit
 (props: Props): ReactElement {
+  const navigation = useNavigation();
   const [emailForm, setState] = useState('');
 
   const emailError: boolean = useMemo((): boolean => {
@@ -68,7 +70,7 @@ const EmailEdit = function EmailEdit
     <View style={styles.container}>
       <HeaderWithBackButton 
         title='メールアドレスの変更' 
-        onPress={()=>undefined}
+        onPress={()=>navigation.goBack()}
       />
       <Text style={styles.textCard}>新しいメールアドレスを入力してください。{'\n'}確認メールが送信されます。</Text>
       <Text style={styles.subtitle}>現在のメールアドレス</Text>

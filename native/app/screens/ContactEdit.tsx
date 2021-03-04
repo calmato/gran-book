@@ -43,7 +43,7 @@ const ContactEdit = function ContactEdit(props: Props): ReactElement {
       />
       <Text style={styles.subtitle}>現在のメールアドレス</Text>
       <Text style={styles.mailStatus}>{statusDefault}</Text>
-      <ListItem style={{ marginTop: 5 }} bottomDivider >
+      <ListItem style={{ marginTop: 5 }} bottomDivider onPress={()=>navigation.navigate('EmailEdit')}>
         <ListItem.Content>
           <Text style={styles.textStyle}>メールアドレスの変更</Text>
         </ListItem.Content>

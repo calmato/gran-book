@@ -4,8 +4,8 @@ import { MyPage } from '~/containers';
 import OwnProfile from '~/screens/OwnProfile';
 import { UserInfoStackParamList } from '~/types/navigation';
 import AccountSetting from '~/screens/AccoutSetting';
-import EmailEdit from '~/screens/EmailEdit';
-import ContactEdit from '~/screens/ContactEdit';
+import { EmailEdit } from '~/containers';
+import { ContactEdit } from '~/containers';
 
 const UserInfoStack = createStackNavigator<UserInfoStackParamList>();
 
