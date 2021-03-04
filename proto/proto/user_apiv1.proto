@@ -21,6 +21,10 @@ service AdminService {
   rpc UpdateAdminProfile (UpdateAdminProfileRequest) returns (AdminResponse);
 }
 
+service UserService {
+  rpc GetUserProfile (GetUserProfileRequest) returns (UserProfileResponse);
+}
+
 message EmptyUser {}
 
 message CreateAuthRequest {
@@ -106,6 +110,10 @@ message UpdateAdminProfileRequest {
   string first_name_kana = 7;
 }
 
+message GetUserProfileRequest {
+  string id = 1;
+}
+
 message AuthResponse {
   string id = 1;
   string username = 2;
@@ -172,4 +180,28 @@ message AdminListResponse {
   int64 offset = 3;
   int64 total = 4;
   Order order = 5;
+}
+
+message UserProfileResponse {
+  message Product {
+    message Author {
+      int64 id = 1;
+      string name = 2;
+    }
+    int64 id = 1;
+    string name = 2;
+    string thumbnail_url = 3;
+    repeated Author authors = 4;
+  }
+  string id = 1;
+  string username = 2;
+  string thumbnail_url = 3;
+  string self_introduction = 4;
+  float rating = 5;
+  int32 review_count = 6;
+  bool is_follow = 7;
+  bool is_follower = 8;
+  int32 follow_count = 9;
+  int32 follower_count = 10;
+  repeated Product products = 11;
 }
