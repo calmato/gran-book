@@ -51,9 +51,9 @@ func (mr *MockServiceMockRecorder) Authentication(ctx interface{}) *gomock.Call 
 }
 
 // List mocks base method
-func (m *MockService) List(ctx context.Context, query *domain.ListQuery) ([]*user.User, int64, error) {
+func (m *MockService) List(ctx context.Context, q *domain.ListQuery) ([]*user.User, int64, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "List", ctx, query)
+	ret := m.ctrl.Call(m, "List", ctx, q)
 	ret0, _ := ret[0].([]*user.User)
 	ret1, _ := ret[1].(int64)
 	ret2, _ := ret[2].(error)
@@ -61,9 +61,25 @@ func (m *MockService) List(ctx context.Context, query *domain.ListQuery) ([]*use
 }
 
 // List indicates an expected call of List
-func (mr *MockServiceMockRecorder) List(ctx, query interface{}) *gomock.Call {
+func (mr *MockServiceMockRecorder) List(ctx, q interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockService)(nil).List), ctx, query)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockService)(nil).List), ctx, q)
+}
+
+// ListFriendsCount mocks base method
+func (m *MockService) ListFriendsCount(ctx context.Context, u *user.User) (int64, int64, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListFriendsCount", ctx, u)
+	ret0, _ := ret[0].(int64)
+	ret1, _ := ret[1].(int64)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// ListFriendsCount indicates an expected call of ListFriendsCount
+func (mr *MockServiceMockRecorder) ListFriendsCount(ctx, u interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListFriendsCount", reflect.TypeOf((*MockService)(nil).ListFriendsCount), ctx, u)
 }
 
 // Show mocks base method
@@ -136,4 +152,20 @@ func (m *MockService) UploadThumbnail(ctx context.Context, uid string, thumbnail
 func (mr *MockServiceMockRecorder) UploadThumbnail(ctx, uid, thumbnail interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UploadThumbnail", reflect.TypeOf((*MockService)(nil).UploadThumbnail), ctx, uid, thumbnail)
+}
+
+// IsFriend mocks base method
+func (m *MockService) IsFriend(ctx context.Context, u *user.User, cuid string) (bool, bool, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "IsFriend", ctx, u, cuid)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(bool)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// IsFriend indicates an expected call of IsFriend
+func (mr *MockServiceMockRecorder) IsFriend(ctx, u, cuid interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsFriend", reflect.TypeOf((*MockService)(nil).IsFriend), ctx, u, cuid)
 }
