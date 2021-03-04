@@ -193,7 +193,7 @@ function sendEmailVerification(): Promise<void> {
   });
 }
 
-export function profileEditAsync(username: string, gender: number, thumbnail: string | undefined, selfIntroduction: string | undefined) {
+export function profileEditAsync(username: string, gender: number, thumbnail: string | undefined, selfIntroduction: string) {
   return async (dispatch: Dispatch, getState: () => AppState): Promise<void> => { 
     return await axios
       .patch('/v1/auth/profile', {

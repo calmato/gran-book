@@ -12,7 +12,7 @@ export default function ConnectedProfilrEdit(): JSX.Element {
 
   const actions = React.useMemo(
     () => ({
-      profileEdit(username: string, gender: number, thumbnail: string | undefined, selfIntroduction: string | undefined): Promise<void> {
+      profileEdit(username: string, gender: number, thumbnail: string | undefined, selfIntroduction: string): Promise<void> {
         return dispatch(profileEditAsync(username, gender, thumbnail, selfIntroduction));
       },
     }), [dispatch],

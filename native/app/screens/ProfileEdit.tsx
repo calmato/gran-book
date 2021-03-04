@@ -23,11 +23,11 @@ const styles = StyleSheet.create({
 
 interface Props {
   username: string, 
-  selfIntroduction: string | undefined, 
+  selfIntroduction: string | '', 
   thumbnailUrl: string | undefined, 
   gender: number,
   actions: {
-    profileEdit: (username: string, gender: number, thumbnail: string | undefined, selfIntroduction: string | undefined) => Promise<void>,
+    profileEdit: (username: string, gender: number, thumbnail: string | undefined, selfIntroduction: string) => Promise<void>,
   },
 }
 

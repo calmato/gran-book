@@ -18,7 +18,7 @@ export type PasswordResetForm = {
 export type ProfileEditForm = {
   name: string,
   avatar: string | undefined,
-  bio: string | undefined,
+  bio: string,
   gender: number,
 }
 

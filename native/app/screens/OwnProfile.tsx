@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
 
 interface Props {
   username: string, 
-  selfIntroduction: string | undefined, 
+  selfIntroduction: string, 
   thumbnailUrl: string | undefined, 
   gender: number
 }
