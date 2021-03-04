@@ -6,7 +6,7 @@ import firebase from '~/lib/firebase';
 import * as LocalStorage from '~/lib/local-storage';
 import { Auth } from '~/store/models';
 import { AppState } from '~/store/modules';
-import { setAuth, setProfile } from '~/store/modules/auth';
+import { setAuth, setProfile, setEmail } from '~/store/modules/auth';
 import { IAuthResponse } from '~/types/response';
 
 interface IAuth {
@@ -191,4 +191,31 @@ function sendEmailVerification(): Promise<void> {
         reject(err);
       });
   });
+}
+
+export function editEmailAsync(email: string) {
+  return async (dispatch: Dispatch, getState: () => AppState): Promise<void> => {
+    return await axios
+    .patch('/v1/auth/email', {
+      email
+    })
+    .then(async (res: AxiosResponse<IAuthResponse>) => {
+      console.log('debug', res);
+      const {
+        email,
+      } = res.data;
+
+      const values: Auth.Email = {
+        email,
+      };
+
+      dispatch(setEmail(values));
+
+      const auth: Auth.Model = getState().auth;
+      await LocalStorage.AuthStorage.save(auth);
+    })
+    .catch((err: Error) => {
+      throw err;
+    });
+  };
 }

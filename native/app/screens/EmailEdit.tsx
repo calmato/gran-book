@@ -1,11 +1,12 @@
 import React, { ReactElement, useState, useMemo } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, Alert } from 'react-native';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import { COLOR } from '~~/constants/theme';
 import MailInput from '~/components/molecules/MailInput';
 import { emailValidation } from '~/lib/validation';
 import { Button, Input } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
+import { generateErrorMessage } from '~/lib/util/ErrorUtil';
 
 const styles = StyleSheet.create({
   container:{
@@ -55,17 +56,44 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  email: string
+  email: string,
+  actions: {
+    emailEdit: (email: string) => Promise<void>,
+  },
 }
 
 const EmailEdit = function EmailEdit
 (props: Props): ReactElement {
   const navigation = useNavigation();
+  const { emailEdit } = props.actions;
   const [emailForm, setState] = useState('');
 
   const emailError: boolean = useMemo((): boolean => {
     return !emailValidation(emailForm);
   }, [emailForm]);
+
+  const createAlertNotifyEmailEditError = (code: number) =>
+    Alert.alert(
+      'メールアドレス変更に失敗',
+      `${generateErrorMessage(code)}`,
+      [
+        {
+          text: 'OK',
+        }
+      ],
+    );
+
+    const handleSubmit = React.useCallback(async () => {
+      await emailEdit(emailForm)
+      .then(() => {
+        navigation.goBack();
+      })
+      .catch((err) => {
+        console.log('debug', err);
+        createAlertNotifyEmailEditError(err.code);
+      });
+    }, [emailForm, emailEdit, navigation])
+
   return (
     <View style={styles.container}>
       <HeaderWithBackButton 
@@ -82,7 +110,7 @@ const EmailEdit = function EmailEdit
         hasError={emailError}
         sameEmailError={emailForm === 'A@f'}
       />
-      <Button containerStyle={styles.buttonStyle} disabled={emailError} onPress={undefined} title='変更する' titleStyle={styles.buttonTitleStyle}/>
+      <Button containerStyle={styles.buttonStyle} disabled={emailError} onPress={() => handleSubmit()} title='変更する' titleStyle={styles.buttonTitleStyle}/>
     </View>
   );
 };
