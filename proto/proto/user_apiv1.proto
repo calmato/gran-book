@@ -183,25 +183,12 @@ message AdminListResponse {
 }
 
 message UserProfileResponse {
-  message Product {
-    message Author {
-      int64 id = 1;
-      string name = 2;
-    }
-    int64 id = 1;
-    string name = 2;
-    string thumbnail_url = 3;
-    repeated Author authors = 4;
-  }
   string id = 1;
   string username = 2;
   string thumbnail_url = 3;
   string self_introduction = 4;
-  float rating = 5;
-  int32 review_count = 6;
-  bool is_follow = 7;
-  bool is_follower = 8;
-  int32 follow_count = 9;
-  int32 follower_count = 10;
-  repeated Product products = 11;
+  bool is_follow = 5;
+  bool is_follower = 6;
+  int32 follow_count = 7;
+  int32 follower_count = 8;
 }
