@@ -34,7 +34,7 @@ interface Props {
 
 const ContactEdit = function ContactEdit(props: Props): ReactElement {
   const navigation = useNavigation();
-  const statusDefault = 'メールアドレス未登録';
+  const statusDefault = (props.email === undefined) ? 'メールアドレス未登録' : props.email;
   return (
     <View>
       <HeaderWithBackButton
