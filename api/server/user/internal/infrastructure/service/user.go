@@ -75,7 +75,7 @@ func (s *userService) ListFriendsCount(ctx context.Context, u *user.User) (int64
 		},
 	}
 
-	followsCount, err := s.userRepository.ListFollowersCount(ctx, followsQuery)
+	followsCount, err := s.userRepository.ListFollowsCount(ctx, followsQuery)
 	if err != nil {
 		return 0, 0, err
 	}
