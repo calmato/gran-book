@@ -9,7 +9,12 @@ import (
 // Repository - Userレポジトリ
 type Repository interface {
 	Authentication(ctx context.Context) (string, error)
-	List(ctx context.Context, query *domain.ListQuery) ([]*User, int64, error)
+	List(ctx context.Context, q *domain.ListQuery) ([]*User, error)
+	ListFollows(ctx context.Context, q *domain.ListQuery) ([]*User, error)
+	ListFollowers(ctx context.Context, q *domain.ListQuery) ([]*User, error)
+	ListCount(ctx context.Context, q *domain.ListQuery) (int64, error)
+	ListFollowsCount(ctx context.Context, q *domain.ListQuery) (int64, error)
+	ListFollowersCount(ctx context.Context, q *domain.ListQuery) (int64, error)
 	Show(ctx context.Context, uid string) (*User, error)
 	Create(ctx context.Context, u *User) error
 	Update(ctx context.Context, u *User) error
