@@ -16,8 +16,11 @@ type Repository interface {
 	ListFollowsCount(ctx context.Context, q *domain.ListQuery) (int64, error)
 	ListFollowersCount(ctx context.Context, q *domain.ListQuery) (int64, error)
 	Show(ctx context.Context, uid string) (*User, error)
+	ShowFollow(ctx context.Context, id int64) (*Follow, error)
 	Create(ctx context.Context, u *User) error
+	CreateFollow(ctx context.Context, f *Follow) error
 	Update(ctx context.Context, u *User) error
 	UpdatePassword(ctx context.Context, uid string, password string) error
+	DeleteFollow(ctx context.Context, f *Follow) error
 	GetUIDByEmail(ctx context.Context, email string) (string, error)
 }

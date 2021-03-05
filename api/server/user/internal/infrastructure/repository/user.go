@@ -120,6 +120,17 @@ func (r *userRepository) Show(ctx context.Context, uid string) (*user.User, erro
 	return u, nil
 }
 
+func (r *userRepository) ShowFollow(ctx context.Context, id int64) (*user.Follow, error) {
+	f := &follow.Follow{}
+
+	err := r.client.db.First(f, "id = ?", id).Error
+	if err != nil {
+		return nil, exception.NotFound.New(err)
+	}
+
+	return u, nil
+}
+
 func (r *userRepository) Create(ctx context.Context, u *user.User) error {
 	_, err := r.auth.CreateUser(ctx, u.ID, u.Email, u.Password)
 	if err != nil {
@@ -127,6 +138,15 @@ func (r *userRepository) Create(ctx context.Context, u *user.User) error {
 	}
 
 	err = r.client.db.Create(&u).Error
+	if err != nil {
+		return exception.ErrorInDatastore.New(err)
+	}
+
+	return nil
+}
+
+func (r *userRepository) CreateFollow(ctx context.Context, f *user.Follow) error {
+	err = r.client.db.Create(&f).Error
 	if err != nil {
 		return exception.ErrorInDatastore.New(err)
 	}
@@ -162,6 +182,15 @@ func (r *userRepository) Update(ctx context.Context, u *user.User) error {
 
 func (r *userRepository) UpdatePassword(ctx context.Context, uid string, password string) error {
 	err := r.auth.UpdatePassword(ctx, uid, password)
+	if err != nil {
+		return exception.ErrorInDatastore.New(err)
+	}
+
+	return nil
+}
+
+func (r *userRepository) DeleteFollow(ctx context.Context, f *user.Follow) error {
+	err := r.client.db.Delete(f).Error
 	if err != nil {
 		return exception.ErrorInDatastore.New(err)
 	}
