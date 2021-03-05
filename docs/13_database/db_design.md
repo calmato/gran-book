@@ -33,6 +33,16 @@
 | created_at        | DATETIME     |       |  true   |          |       |         | 登録日時                          |                        |
 | updated_at        | DATETIME     |       |  true   |          |       |         | 更新日時                          |                        |
 
+### relationships
+
+|    Field    |  DataType   | PK/FK | NotNull | Unsigned | Other | Default |       Explanation        | Validation |
+| :---------- | :---------- | :---: | :-----: | :------: | :---: | :------ | :----------------------- | ---------- |
+| id          | VARCHAR(36) |  PK   |  true   |          |  AI   |         | ID                       |            |
+| follow_id   | VARCHAR(36) |  FK   |  true   |          |  UQ   |         | フォローするユーザーID   |            |
+| follower_id | VARCHAR(36) |  FK   |  true   |          |  UQ   |         | フォローされるユーザーID |            |
+| created_at  | DATETIME    |       |  true   |          |       |         | 登録日時                 |            |
+| updated_at  | DATETIME    |       |  true   |          |       |         | 更新日時                 |            |
+
 ### books
 
 |     Field     |  DataType   | PK/FK | NotNull | Unsigned | Other | Default | Explanation | Validation |
@@ -105,16 +115,6 @@
 | book_id     | BIGINT(20) |  FK   |  true   |   true   |  UQ   |         | 本ID         |            |
 | created_at  | DATETIME   |       |  true   |          |       |         | 登録日時     |            |
 | updated_at  | DATETIME   |       |  true   |          |       |         | 更新日時     |            |
-
-### follows
-
-|    Field    |  DataType   | PK/FK | NotNull | Unsigned | Other | Default |       Explanation        | Validation |
-| :---------- | :---------- | :---: | :-----: | :------: | :---: | :------ | :----------------------- | ---------- |
-| id          | VARCHAR(36) |  PK   |  true   |          |  AI   |         | ID                       |            |
-| follow_id   | VARCHAR(36) |  FK   |  true   |          |  UQ   |         | フォローするユーザーID   |            |
-| follower_id | VARCHAR(36) |  FK   |  true   |          |  UQ   |         | フォローされるユーザーID |            |
-| created_at  | DATETIME    |       |  true   |          |       |         | 登録日時                 |            |
-| updated_at  | DATETIME    |       |  true   |          |       |         | 更新日時                 |            |
 
 ### Sale
 
