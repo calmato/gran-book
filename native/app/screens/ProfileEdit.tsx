@@ -1,14 +1,16 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { ReactElement, useMemo, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Alert } from 'react-native';
 import { Button, Input } from 'react-native-elements';
 import ChangeIconGroup from '~/components/organisms/ChangeIconGroup';
 import ChangeNickname from '~/components/organisms/ChangeNickname';
 import GenderRadioGroup from '~/components/organisms/GenderRadioGroup';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import { ProfileEditForm } from '~/types/forms';
+import { generateErrorMessage } from '~/lib/util/ErrorUtil';
 
 const styles = StyleSheet.create({
-  bio: {
+  selfIntroduction: {
     minHeight: 100,
     textAlignVertical: 'top',
     paddingRight: 20,
@@ -19,13 +21,25 @@ const styles = StyleSheet.create({
   },
 });
 
-const ProfileEdit = function ProfileEdit(): ReactElement {
+interface Props {
+  username: string, 
+  selfIntroduction: string | '', 
+  thumbnailUrl: string | undefined, 
+  gender: number,
+  actions: {
+    profileEdit: (username: string, gender: number, thumbnail: string | undefined, selfIntroduction: string) => Promise<void>,
+  },
+}
+
+const ProfileEdit = function ProfileEdit(props: Props): ReactElement {
   const [userInfo, setValue] = useState<ProfileEditForm>({
-    name: 'hamachans',
-    avatar: 'https://pbs.twimg.com/profile_images/1312909954148253696/Utr-sa_Y_400x400.jpg',
-    bio: 'よろしくお願いします。',
-    gender: 0,
+    name: props.username,
+    avatar: props.thumbnailUrl,
+    selfIntroduction: props.selfIntroduction,
+    gender: props.gender,
   });
+  const navigation = useNavigation();
+  const{ profileEdit } = props.actions;
 
   const nameError: boolean = useMemo((): boolean => {
     return (userInfo.name === '');
@@ -44,12 +58,39 @@ const ProfileEdit = function ProfileEdit(): ReactElement {
       break;
     }
   };
-  console.log(userInfo);
+
+  const createAlertNotifyProfileEditError = (code: number) =>
+    Alert.alert(
+      'ユーザー登録に失敗',
+      `${generateErrorMessage(code)}`,
+      [
+        {
+          text: 'OK',
+        }
+      ],
+    );
+
+  const handleSubmit = React.useCallback(async () => {
+    await profileEdit(
+      userInfo.name,
+      userInfo.gender,
+      userInfo.avatar,
+      userInfo.selfIntroduction,
+    )
+      .then(() => {
+        navigation.navigate('OwnProfile');
+      })
+      .catch((err) => {
+        console.log('debug', err);
+        createAlertNotifyProfileEditError(err.code);
+      });
+  }, [userInfo.name, userInfo.gender, userInfo.avatar, userInfo.selfIntroduction, profileEdit, navigation]);
+
   return (
     <View>
       <HeaderWithBackButton 
         title='プロフィール編集'
-        onPress={()=>undefined}
+        onPress={()=>navigation.goBack()}
       />
       <ChangeIconGroup
         avatarUrl={userInfo.avatar}
@@ -60,12 +101,12 @@ const ProfileEdit = function ProfileEdit(): ReactElement {
         handelOnChangeText={(text)=>setValue({...userInfo, name: text})}
       />
       <Input
-        style={styles.bio}
+        style={styles.selfIntroduction}
         placeholder={'自己紹介を入力してください'}
         multiline={true}
         maxLength={256}
-        onChangeText={(text)=>setValue({...userInfo, bio: text})}
-        value={userInfo.bio}
+        onChangeText={(text)=>setValue({...userInfo, selfIntroduction: text})}
+        value={userInfo.selfIntroduction}
       />
       <GenderRadioGroup
         handleOnChange={(value)=>handleGenderChange(value)}
@@ -75,7 +116,7 @@ const ProfileEdit = function ProfileEdit(): ReactElement {
       />
       <Button
         title={'保存する'}
-        onPress={()=>undefined}
+        onPress={handleSubmit}
         containerStyle={styles.button} 
       />
     </View>

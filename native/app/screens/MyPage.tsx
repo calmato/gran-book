@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react';
-import { StyleSheet, View, ScrollView, SafeAreaView } from 'react-native';
+import { StyleSheet, View, ScrollView } from 'react-native';
 import { ListItem, Text, Avatar, Header } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -33,7 +33,6 @@ interface Props {
 const MyPage = function MyPage(props: Props): ReactElement {
   const navigation = useNavigation();
   const { auth } = props;
-
   // TODO: 型定義
   const avatar = {
     name: auth?.username || 'hamachans',

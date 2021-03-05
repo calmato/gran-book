@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  bio: {
+  selfIntroduction: {
     backgroundColor: COLOR.BACKGROUND_WHITE,
     color: COLOR.TEXT_DEFAULT,
     marginTop: 10,
@@ -24,19 +24,23 @@ const styles = StyleSheet.create({
   }
 });
 
-const userInfo = 
+interface Props {
+  username: string, 
+  selfIntroduction: string, 
+  thumbnailUrl: string | undefined, 
+  gender: number
+}
+
+const OwnProfile = function OwnProfile( props : Props): ReactElement {
+  // TODO 出品数・フォロワー数・フォロー数・星レート・レビュー数を実装
+  const userInfo = 
 {
-  name: 'hamachans',
-  avatarUrl: 'https://pbs.twimg.com/profile_images/1312909954148253696/Utr-sa_Y_400x400.jpg',
   rating: 2.4,
   reviewNum: 20,
   saleNum: 3,
   followerNum: 20,
   followNum: 5,
-  bio: 'よろしくお願いします。',
 };
-
-const OwnProfile = function OwnProfile(): ReactElement {
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
@@ -45,17 +49,17 @@ const OwnProfile = function OwnProfile(): ReactElement {
         onPress={()=>navigation.goBack()}
       />
       <ProfileViewGroup
-        name={userInfo.name}
-        avatarUrl={userInfo.avatarUrl}
+        name={props.username}
+        avatarUrl={props.thumbnailUrl}
         rating={userInfo.rating}
         reviewNum={userInfo.reviewNum}
         saleNum={userInfo.saleNum}
         followerNum={userInfo.followerNum}
         followNum={userInfo.followNum}
-        buttonTitle={'フォローする'}
-        handleClick={() => undefined}
+        buttonTitle={'プロフィールを編集'}
+        handleClick={() => navigation.navigate('ProfileEdit')}
       />
-      <Text style={styles.bio}>{userInfo.bio}</Text>
+      <Text style={styles.selfIntroduction}>{props.selfIntroduction}</Text>
       <Text style={styles.title}>出品リスト</Text>
     </View>
   );

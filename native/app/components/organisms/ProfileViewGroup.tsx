@@ -5,7 +5,7 @@ import ProfileFollowFollwer from '~/components/molecules/ProfileFollowFollower';
 
 interface Props {
   name: string
-  avatarUrl: string
+  avatarUrl: string | undefined
   rating: number
   reviewNum: number
   saleNum: number
