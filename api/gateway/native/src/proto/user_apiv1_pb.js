@@ -5648,11 +5648,11 @@ proto.proto.UserProfileResponse.deserializeBinaryFromReader = function(msg, read
       msg.setIsFollower(value);
       break;
     case 7:
-      var value = /** @type {number} */ (reader.readInt32());
+      var value = /** @type {number} */ (reader.readInt64());
       msg.setFollowCount(value);
       break;
     case 8:
-      var value = /** @type {number} */ (reader.readInt32());
+      var value = /** @type {number} */ (reader.readInt64());
       msg.setFollowerCount(value);
       break;
     default:
@@ -5728,14 +5728,14 @@ proto.proto.UserProfileResponse.serializeBinaryToWriter = function(message, writ
   }
   f = message.getFollowCount();
   if (f !== 0) {
-    writer.writeInt32(
+    writer.writeInt64(
       7,
       f
     );
   }
   f = message.getFollowerCount();
   if (f !== 0) {
-    writer.writeInt32(
+    writer.writeInt64(
       8,
       f
     );
@@ -5852,7 +5852,7 @@ proto.proto.UserProfileResponse.prototype.setIsFollower = function(value) {
 
 
 /**
- * optional int32 follow_count = 7;
+ * optional int64 follow_count = 7;
  * @return {number}
  */
 proto.proto.UserProfileResponse.prototype.getFollowCount = function() {
@@ -5870,7 +5870,7 @@ proto.proto.UserProfileResponse.prototype.setFollowCount = function(value) {
 
 
 /**
- * optional int32 follower_count = 8;
+ * optional int64 follower_count = 8;
  * @return {number}
  */
 proto.proto.UserProfileResponse.prototype.getFollowerCount = function() {

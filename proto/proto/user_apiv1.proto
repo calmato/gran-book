@@ -189,6 +189,6 @@ message UserProfileResponse {
   string self_introduction = 4;
   bool is_follow = 5;
   bool is_follower = 6;
-  int32 follow_count = 7;
-  int32 follower_count = 8;
+  int64 follow_count = 7;
+  int64 follower_count = 8;
 }
