@@ -66,7 +66,7 @@ func (r *userRepository) List(ctx context.Context, q *domain.ListQuery) ([]*user
 	return us, nil
 }
 
-func (r *userRepository) ListFollows(ctx context.Context, q *domain.ListQuery) ([]*user.User, error) {
+func (r *userRepository) ListFollow(ctx context.Context, q *domain.ListQuery) ([]*user.User, error) {
 	us := []*user.User{}
 
 	sql := r.client.db.Table("users").Joins("LEFT JOIN follows ON follows.follow_id = users.id")
@@ -80,7 +80,7 @@ func (r *userRepository) ListFollows(ctx context.Context, q *domain.ListQuery) (
 	return us, nil
 }
 
-func (r *userRepository) ListFollowers(ctx context.Context, q *domain.ListQuery) ([]*user.User, error) {
+func (r *userRepository) ListFollower(ctx context.Context, q *domain.ListQuery) ([]*user.User, error) {
 	us := []*user.User{}
 
 	sql := r.client.db.Table("users").Joins("LEFT JOIN follows ON follows.follower_id = users.id")
@@ -95,17 +95,12 @@ func (r *userRepository) ListFollowers(ctx context.Context, q *domain.ListQuery)
 }
 
 func (r *userRepository) ListCount(ctx context.Context, q *domain.ListQuery) (int64, error) {
-	sql := r.client.db.Model(&user.User{})
+	sql := r.client.db.Table("users")
 	return r.client.getListCount(sql, q)
 }
 
-func (r *userRepository) ListFollowsCount(ctx context.Context, q *domain.ListQuery) (int64, error) {
-	sql := r.client.db.Table("users").Joins("LEFT JOIN follows ON follows.follow_id = users.id")
-	return r.client.getListCount(sql, q)
-}
-
-func (r *userRepository) ListFollowersCount(ctx context.Context, q *domain.ListQuery) (int64, error) {
-	sql := r.client.db.Table("users").Joins("LEFT JOIN follows ON follows.follower_id = users.id")
+func (r *userRepository) ListFollowCount(ctx context.Context, q *domain.ListQuery) (int64, error) {
+	sql := r.client.db.Table("follows")
 	return r.client.getListCount(sql, q)
 }
 
@@ -205,6 +200,19 @@ func (r *userRepository) GetUIDByEmail(ctx context.Context, email string) (strin
 	}
 
 	return uid, nil
+}
+
+func (r *userRepository) GetFollowIDByUserID(
+	ctx context.Context, followID string, followerID string,
+) (int64, error) {
+	f := &user.Follow{}
+
+	err := r.client.db.Select("id").First(f, "follow_id = ? AND follower_id = ?", followID, followerID).Error
+	if err != nil {
+		return 0, exception.NotFound.New(err)
+	}
+
+	return f.ID, nil
 }
 
 func getToken(ctx context.Context) (string, error) {

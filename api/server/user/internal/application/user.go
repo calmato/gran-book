@@ -35,7 +35,7 @@ func (a *userApplication) GetProfile(
 		return nil, nil, exception.NotFound.New(err)
 	}
 
-	followsTotal, followersTotal, err := a.userService.ListFriendsCount(ctx, u)
+	followsTotal, followersTotal, err := a.userService.ListFriendCount(ctx, u)
 	if err != nil {
 		return nil, nil, err
 	}

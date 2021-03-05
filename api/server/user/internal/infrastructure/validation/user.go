@@ -36,7 +36,7 @@ func (v *userDomainValidation) User(ctx context.Context, u *user.User) error {
 }
 
 func (v *userDomainValidation) Follow(ctx context.Context, f *user.Follow) error {
-	err := v.uniqueCheckFollower(ctx, f.ID, f.FollowId, f.FollowerID)
+	err := v.uniqueCheckFollower(ctx, f.ID, f.FollowID, f.FollowerID)
 	if err != nil {
 		ves := []*exception.ValidationError{
 			{
@@ -67,24 +67,12 @@ func (v *userDomainValidation) uniqueCheckEmail(ctx context.Context, id string, 
 func (v *userDomainValidation) uniqueCheckFollower(
 	ctx context.Context, id int64, followID string, followerID string,
 ) error {
-	q := &domain.ListQuery{
-		Limit: 1,
-		Conditions: []*domain.QueryCondition{
-			{
-				Field:    "follow_id",
-				Operator: "==",
-				Value:    followID,
-			},
-			{
-				Field:    "follower_id",
-				Operator: "==",
-				Value:    followerID,
-			},
-		},
+	if followID == "" || followerID == "" {
+		return nil
 	}
 
-	fs, _ := v.userRepository.ListFollow(ctx, q)
-	if len(fs) == 0 || id == fs[0].ID {
+	fid, _ := v.userRepository.GetFollowIDByUserID(ctx, followID, followerID)
+	if fid == 0 || id == fid {
 		return nil
 	}
 
