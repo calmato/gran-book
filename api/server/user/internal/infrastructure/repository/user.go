@@ -66,8 +66,41 @@ func (r *userRepository) List(ctx context.Context, q *domain.ListQuery) ([]*user
 	return us, nil
 }
 
+func (r *userRepository) ListFollow(ctx context.Context, q *domain.ListQuery) ([]*user.Follow, error) {
+	fs := []*user.Follow{}
+
+	sql := r.client.db.Table("relationships").Joins("LEFT JOIN users ON relationships.follow_id = users.id")
+	db := r.client.getListQuery(sql, q)
+
+	err := db.Find(&fs).Error
+	if err != nil {
+		return nil, exception.ErrorInDatastore.New(err)
+	}
+
+	return fs, nil
+}
+
+func (r *userRepository) ListFollower(ctx context.Context, q *domain.ListQuery) ([]*user.Follower, error) {
+	fs := []*user.Follower{}
+
+	sql := r.client.db.Table("relationships").Joins("LEFT JOIN users ON relationships.follower_id = users.id")
+	db := r.client.getListQuery(sql, q)
+
+	err := db.Find(&fs).Error
+	if err != nil {
+		return nil, exception.ErrorInDatastore.New(err)
+	}
+
+	return fs, nil
+}
+
 func (r *userRepository) ListCount(ctx context.Context, q *domain.ListQuery) (int64, error) {
 	sql := r.client.db.Table("users")
+	return r.client.getListCount(sql, q)
+}
+
+func (r *userRepository) ListRelationshipCount(ctx context.Context, q *domain.ListQuery) (int64, error) {
+	sql := r.client.db.Table("relationships")
 	return r.client.getListCount(sql, q)
 }
 
@@ -82,6 +115,17 @@ func (r *userRepository) Show(ctx context.Context, uid string) (*user.User, erro
 	return u, nil
 }
 
+func (r *userRepository) ShowRelationship(ctx context.Context, id int64) (*user.Relationship, error) {
+	rs := &user.Relationship{}
+
+	err := r.client.db.First(rs, "id = ?", id).Error
+	if err != nil {
+		return nil, exception.NotFound.New(err)
+	}
+
+	return rs, nil
+}
+
 func (r *userRepository) Create(ctx context.Context, u *user.User) error {
 	_, err := r.auth.CreateUser(ctx, u.ID, u.Email, u.Password)
 	if err != nil {
@@ -89,6 +133,15 @@ func (r *userRepository) Create(ctx context.Context, u *user.User) error {
 	}
 
 	err = r.client.db.Create(&u).Error
+	if err != nil {
+		return exception.ErrorInDatastore.New(err)
+	}
+
+	return nil
+}
+
+func (r *userRepository) CreateRelationship(ctx context.Context, rs *user.Relationship) error {
+	err := r.client.db.Create(&rs).Error
 	if err != nil {
 		return exception.ErrorInDatastore.New(err)
 	}
@@ -124,6 +177,15 @@ func (r *userRepository) Update(ctx context.Context, u *user.User) error {
 
 func (r *userRepository) UpdatePassword(ctx context.Context, uid string, password string) error {
 	err := r.auth.UpdatePassword(ctx, uid, password)
+	if err != nil {
+		return exception.ErrorInDatastore.New(err)
+	}
+
+	return nil
+}
+
+func (r *userRepository) DeleteRelationship(ctx context.Context, id int64) error {
+	err := r.client.db.Delete(&user.Relationship{}, id).Error
 	if err != nil {
 		return exception.ErrorInDatastore.New(err)
 	}
