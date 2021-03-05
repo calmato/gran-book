@@ -3380,8 +3380,9 @@ proto.proto.ListFollowRequest.prototype.toObject = function(opt_includeInstance)
  */
 proto.proto.ListFollowRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    limit: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    offset: jspb.Message.getFieldWithDefault(msg, 2, 0)
+    id: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    limit: jspb.Message.getFieldWithDefault(msg, 2, 0),
+    offset: jspb.Message.getFieldWithDefault(msg, 3, 0)
   };
 
   if (includeInstance) {
@@ -3419,10 +3420,14 @@ proto.proto.ListFollowRequest.deserializeBinaryFromReader = function(msg, reader
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setId(value);
+      break;
+    case 2:
       var value = /** @type {number} */ (reader.readInt64());
       msg.setLimit(value);
       break;
-    case 2:
+    case 3:
       var value = /** @type {number} */ (reader.readInt64());
       msg.setOffset(value);
       break;
@@ -3455,46 +3460,53 @@ proto.proto.ListFollowRequest.prototype.serializeBinary = function() {
  */
 proto.proto.ListFollowRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getLimit();
-  if (f !== 0) {
-    writer.writeInt64(
+  f = message.getId();
+  if (f.length > 0) {
+    writer.writeString(
       1,
       f
     );
   }
-  f = message.getOffset();
+  f = message.getLimit();
   if (f !== 0) {
     writer.writeInt64(
       2,
       f
     );
   }
+  f = message.getOffset();
+  if (f !== 0) {
+    writer.writeInt64(
+      3,
+      f
+    );
+  }
 };
 
 
 /**
- * optional int64 limit = 1;
+ * optional string id = 1;
+ * @return {string}
+ */
+proto.proto.ListFollowRequest.prototype.getId = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.proto.ListFollowRequest} returns this
+ */
+proto.proto.ListFollowRequest.prototype.setId = function(value) {
+  return jspb.Message.setProto3StringField(this, 1, value);
+};
+
+
+/**
+ * optional int64 limit = 2;
  * @return {number}
  */
 proto.proto.ListFollowRequest.prototype.getLimit = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
-};
-
-
-/**
- * @param {number} value
- * @return {!proto.proto.ListFollowRequest} returns this
- */
-proto.proto.ListFollowRequest.prototype.setLimit = function(value) {
-  return jspb.Message.setProto3IntField(this, 1, value);
-};
-
-
-/**
- * optional int64 offset = 2;
- * @return {number}
- */
-proto.proto.ListFollowRequest.prototype.getOffset = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
 };
 
@@ -3503,8 +3515,26 @@ proto.proto.ListFollowRequest.prototype.getOffset = function() {
  * @param {number} value
  * @return {!proto.proto.ListFollowRequest} returns this
  */
-proto.proto.ListFollowRequest.prototype.setOffset = function(value) {
+proto.proto.ListFollowRequest.prototype.setLimit = function(value) {
   return jspb.Message.setProto3IntField(this, 2, value);
+};
+
+
+/**
+ * optional int64 offset = 3;
+ * @return {number}
+ */
+proto.proto.ListFollowRequest.prototype.getOffset = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.proto.ListFollowRequest} returns this
+ */
+proto.proto.ListFollowRequest.prototype.setOffset = function(value) {
+  return jspb.Message.setProto3IntField(this, 3, value);
 };
 
 
@@ -3540,8 +3570,9 @@ proto.proto.ListFollowerRequest.prototype.toObject = function(opt_includeInstanc
  */
 proto.proto.ListFollowerRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    limit: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    offset: jspb.Message.getFieldWithDefault(msg, 2, 0)
+    id: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    limit: jspb.Message.getFieldWithDefault(msg, 2, 0),
+    offset: jspb.Message.getFieldWithDefault(msg, 3, 0)
   };
 
   if (includeInstance) {
@@ -3579,10 +3610,14 @@ proto.proto.ListFollowerRequest.deserializeBinaryFromReader = function(msg, read
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setId(value);
+      break;
+    case 2:
       var value = /** @type {number} */ (reader.readInt64());
       msg.setLimit(value);
       break;
-    case 2:
+    case 3:
       var value = /** @type {number} */ (reader.readInt64());
       msg.setOffset(value);
       break;
@@ -3615,46 +3650,53 @@ proto.proto.ListFollowerRequest.prototype.serializeBinary = function() {
  */
 proto.proto.ListFollowerRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getLimit();
-  if (f !== 0) {
-    writer.writeInt64(
+  f = message.getId();
+  if (f.length > 0) {
+    writer.writeString(
       1,
       f
     );
   }
-  f = message.getOffset();
+  f = message.getLimit();
   if (f !== 0) {
     writer.writeInt64(
       2,
       f
     );
   }
+  f = message.getOffset();
+  if (f !== 0) {
+    writer.writeInt64(
+      3,
+      f
+    );
+  }
 };
 
 
 /**
- * optional int64 limit = 1;
+ * optional string id = 1;
+ * @return {string}
+ */
+proto.proto.ListFollowerRequest.prototype.getId = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.proto.ListFollowerRequest} returns this
+ */
+proto.proto.ListFollowerRequest.prototype.setId = function(value) {
+  return jspb.Message.setProto3StringField(this, 1, value);
+};
+
+
+/**
+ * optional int64 limit = 2;
  * @return {number}
  */
 proto.proto.ListFollowerRequest.prototype.getLimit = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
-};
-
-
-/**
- * @param {number} value
- * @return {!proto.proto.ListFollowerRequest} returns this
- */
-proto.proto.ListFollowerRequest.prototype.setLimit = function(value) {
-  return jspb.Message.setProto3IntField(this, 1, value);
-};
-
-
-/**
- * optional int64 offset = 2;
- * @return {number}
- */
-proto.proto.ListFollowerRequest.prototype.getOffset = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
 };
 
@@ -3663,8 +3705,26 @@ proto.proto.ListFollowerRequest.prototype.getOffset = function() {
  * @param {number} value
  * @return {!proto.proto.ListFollowerRequest} returns this
  */
-proto.proto.ListFollowerRequest.prototype.setOffset = function(value) {
+proto.proto.ListFollowerRequest.prototype.setLimit = function(value) {
   return jspb.Message.setProto3IntField(this, 2, value);
+};
+
+
+/**
+ * optional int64 offset = 3;
+ * @return {number}
+ */
+proto.proto.ListFollowerRequest.prototype.getOffset = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.proto.ListFollowerRequest} returns this
+ */
+proto.proto.ListFollowerRequest.prototype.setOffset = function(value) {
+  return jspb.Message.setProto3IntField(this, 3, value);
 };
 
 

@@ -44,8 +44,6 @@ type Follow struct {
 	FollowID         string
 	FollowerID       string
 	Username         string
-	Email            string
-	PhoneNumber      string
 	ThumbnailURL     string
 	SelfIntroduction string
 }
@@ -55,8 +53,6 @@ type Follower struct {
 	FollowID         string
 	FollowerID       string
 	Username         string
-	Email            string
-	PhoneNumber      string
 	ThumbnailURL     string
 	SelfIntroduction string
 }

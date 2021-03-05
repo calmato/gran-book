@@ -425,6 +425,9 @@ export namespace UpdateAdminProfileRequest {
 }
 
 export class ListFollowRequest extends jspb.Message { 
+    getId(): string;
+    setId(value: string): ListFollowRequest;
+
     getLimit(): number;
     setLimit(value: number): ListFollowRequest;
 
@@ -444,12 +447,16 @@ export class ListFollowRequest extends jspb.Message {
 
 export namespace ListFollowRequest {
     export type AsObject = {
+        id: string,
         limit: number,
         offset: number,
     }
 }
 
 export class ListFollowerRequest extends jspb.Message { 
+    getId(): string;
+    setId(value: string): ListFollowerRequest;
+
     getLimit(): number;
     setLimit(value: number): ListFollowerRequest;
 
@@ -469,6 +476,7 @@ export class ListFollowerRequest extends jspb.Message {
 
 export namespace ListFollowerRequest {
     export type AsObject = {
+        id: string,
         limit: number,
         offset: number,
     }
