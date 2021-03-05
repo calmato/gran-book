@@ -61,6 +61,20 @@ func (s *userService) Create(ctx context.Context, u *user.User) error {
 	return s.userRepository.Create(ctx, u)
 }
 
+func (s *userService) CreateRelationship(ctx context.Context, r *user.Relationship) error {
+	err := s.userDomainValidation.Relationship(ctx, r)
+	if err != nil {
+		return err
+	}
+
+	current := time.Now()
+
+	r.CreatedAt = current
+	r.UpdatedAt = current
+
+	return s.userRepository.CreateRelationship(ctx, r)
+}
+
 func (s *userService) Update(ctx context.Context, u *user.User) error {
 	err := s.userDomainValidation.User(ctx, u)
 	if err != nil {
@@ -74,6 +88,10 @@ func (s *userService) Update(ctx context.Context, u *user.User) error {
 
 func (s *userService) UpdatePassword(ctx context.Context, uid string, password string) error {
 	return s.userRepository.UpdatePassword(ctx, uid, password)
+}
+
+func (s *userService) DeleteRelationship(ctx context.Context, id int64) error {
+	return s.userRepository.DeleteRelationship(ctx, id)
 }
 
 func (s *userService) UploadThumbnail(ctx context.Context, uid string, thumbnail []byte) (string, error) {

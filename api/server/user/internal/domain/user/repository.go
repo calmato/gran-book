@@ -22,4 +22,5 @@ type Repository interface {
 	UpdatePassword(ctx context.Context, uid string, password string) error
 	DeleteRelationship(ctx context.Context, id int64) error
 	GetUIDByEmail(ctx context.Context, email string) (string, error)
+	GetRelationshipIDByUID(ctx context.Context, followID string, followerID string) (int64, error)
 }

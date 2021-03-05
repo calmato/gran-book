@@ -12,7 +12,9 @@ type Service interface {
 	List(ctx context.Context, q *domain.ListQuery) ([]*User, int64, error)
 	Show(ctx context.Context, uid string) (*User, error)
 	Create(ctx context.Context, u *User) error
+	CreateRelationship(ctx context.Context, r *Relationship) error
 	Update(ctx context.Context, u *User) error
 	UpdatePassword(ctx context.Context, uid string, password string) error
+	DeleteRelationship(ctx context.Context, id int64) error
 	UploadThumbnail(ctx context.Context, uid string, thumbnail []byte) (string, error)
 }

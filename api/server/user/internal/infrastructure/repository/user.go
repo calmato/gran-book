@@ -202,6 +202,19 @@ func (r *userRepository) GetUIDByEmail(ctx context.Context, email string) (strin
 	return uid, nil
 }
 
+func (r *userRepository) GetRelationshipIDByUID(
+	ctx context.Context, followID string, followerID string,
+) (int64, error) {
+	rs := &user.Relationship{}
+
+	err := r.client.db.Select("id").First(rs, "follow_id = ? AND follower_id = ?", followID, followerID).Error
+	if err != nil {
+		return 0, exception.NotFound.New(err)
+	}
+
+	return rs.ID, nil
+}
+
 func getToken(ctx context.Context) (string, error) {
 	authorization, err := metadata.Get(ctx, "Authorization")
 	if err != nil {
