@@ -18,26 +18,5 @@ type UserServer struct {
 func (s *UserServer) GetUserProfile(
 	ctx context.Context, req *pb.GetUserProfileRequest,
 ) (*pb.UserProfileResponse, error) {
-	cu, err := s.AuthApplication.Authentication(ctx)
-	if err != nil {
-		return nil, errorHandling(err)
-	}
-
-	u, out, err := s.UserApplication.GetProfile(ctx, req.Id, cu.ID)
-	if err != nil {
-		return nil, errorHandling(err)
-	}
-
-	res := &pb.UserProfileResponse{
-		Id:               u.ID,
-		Username:         u.Username,
-		ThumbnailUrl:     u.ThumbnailURL,
-		SelfIntroduction: u.SelfIntroduction,
-		IsFollow:         out.IsFollow,
-		IsFollower:       out.IsFollower,
-		FollowCount:      out.FollowsTotal,
-		FollowerCount:    out.FollowersTotal,
-	}
-
-	return res, nil
+	return &pb.UserProfileResponse{}, nil
 }
