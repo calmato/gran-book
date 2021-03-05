@@ -1,5 +1,5 @@
-﻿import React, { ReactElement } from 'react';
-import { StyleSheet, View, Text, Image, ImageURISource, ViewStyle, ImageProps } from 'react-native';
+import React, { ReactElement } from 'react';
+import { StyleSheet, View, Text, ImageURISource, ViewStyle, ImageProps } from 'react-native';
 import { Tile } from 'react-native-elements';
 import { COLOR } from '~~/constants/theme';
 
