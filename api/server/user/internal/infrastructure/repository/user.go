@@ -121,14 +121,14 @@ func (r *userRepository) Show(ctx context.Context, uid string) (*user.User, erro
 }
 
 func (r *userRepository) ShowFollow(ctx context.Context, id int64) (*user.Follow, error) {
-	f := &follow.Follow{}
+	f := &user.Follow{}
 
 	err := r.client.db.First(f, "id = ?", id).Error
 	if err != nil {
 		return nil, exception.NotFound.New(err)
 	}
 
-	return u, nil
+	return f, nil
 }
 
 func (r *userRepository) Create(ctx context.Context, u *user.User) error {
@@ -146,7 +146,7 @@ func (r *userRepository) Create(ctx context.Context, u *user.User) error {
 }
 
 func (r *userRepository) CreateFollow(ctx context.Context, f *user.Follow) error {
-	err = r.client.db.Create(&f).Error
+	err := r.client.db.Create(&f).Error
 	if err != nil {
 		return exception.ErrorInDatastore.New(err)
 	}
