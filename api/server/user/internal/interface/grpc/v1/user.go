@@ -35,8 +35,8 @@ func (s *UserServer) GetUserProfile(
 		SelfIntroduction: u.SelfIntroduction,
 		IsFollow:         out.IsFollow,
 		IsFollower:       out.IsFollower,
-		FollowCount:      int32(out.FollowsTotal),
-		FollowerCount:    int32(out.FollowersTotal),
+		FollowCount:      out.FollowsTotal,
+		FollowerCount:    out.FollowersTotal,
 	}
 
 	return res, nil
