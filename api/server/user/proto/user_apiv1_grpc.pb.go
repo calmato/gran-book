@@ -543,6 +543,10 @@ var _AdminService_serviceDesc = grpc.ServiceDesc{
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserServiceClient interface {
+	ListFollow(ctx context.Context, in *ListFollowRequest, opts ...grpc.CallOption) (*UserProfileListResponse, error)
+	ListFollower(ctx context.Context, in *ListFollowerRequest, opts ...grpc.CallOption) (*UserProfileListResponse, error)
+	RegisterFollow(ctx context.Context, in *RegisterFollowRequest, opts ...grpc.CallOption) (*UserProfileListResponse, error)
+	UnregisterFollow(ctx context.Context, in *UnregisterFollowRequest, opts ...grpc.CallOption) (*UserProfileListResponse, error)
 	GetUserProfile(ctx context.Context, in *GetUserProfileRequest, opts ...grpc.CallOption) (*UserProfileResponse, error)
 }
 
@@ -552,6 +556,42 @@ type userServiceClient struct {
 
 func NewUserServiceClient(cc grpc.ClientConnInterface) UserServiceClient {
 	return &userServiceClient{cc}
+}
+
+func (c *userServiceClient) ListFollow(ctx context.Context, in *ListFollowRequest, opts ...grpc.CallOption) (*UserProfileListResponse, error) {
+	out := new(UserProfileListResponse)
+	err := c.cc.Invoke(ctx, "/proto.UserService/ListFollow", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) ListFollower(ctx context.Context, in *ListFollowerRequest, opts ...grpc.CallOption) (*UserProfileListResponse, error) {
+	out := new(UserProfileListResponse)
+	err := c.cc.Invoke(ctx, "/proto.UserService/ListFollower", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) RegisterFollow(ctx context.Context, in *RegisterFollowRequest, opts ...grpc.CallOption) (*UserProfileListResponse, error) {
+	out := new(UserProfileListResponse)
+	err := c.cc.Invoke(ctx, "/proto.UserService/RegisterFollow", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) UnregisterFollow(ctx context.Context, in *UnregisterFollowRequest, opts ...grpc.CallOption) (*UserProfileListResponse, error) {
+	out := new(UserProfileListResponse)
+	err := c.cc.Invoke(ctx, "/proto.UserService/UnregisterFollow", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *userServiceClient) GetUserProfile(ctx context.Context, in *GetUserProfileRequest, opts ...grpc.CallOption) (*UserProfileResponse, error) {
@@ -567,6 +607,10 @@ func (c *userServiceClient) GetUserProfile(ctx context.Context, in *GetUserProfi
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
 type UserServiceServer interface {
+	ListFollow(context.Context, *ListFollowRequest) (*UserProfileListResponse, error)
+	ListFollower(context.Context, *ListFollowerRequest) (*UserProfileListResponse, error)
+	RegisterFollow(context.Context, *RegisterFollowRequest) (*UserProfileListResponse, error)
+	UnregisterFollow(context.Context, *UnregisterFollowRequest) (*UserProfileListResponse, error)
 	GetUserProfile(context.Context, *GetUserProfileRequest) (*UserProfileResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
@@ -575,6 +619,18 @@ type UserServiceServer interface {
 type UnimplementedUserServiceServer struct {
 }
 
+func (UnimplementedUserServiceServer) ListFollow(context.Context, *ListFollowRequest) (*UserProfileListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListFollow not implemented")
+}
+func (UnimplementedUserServiceServer) ListFollower(context.Context, *ListFollowerRequest) (*UserProfileListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListFollower not implemented")
+}
+func (UnimplementedUserServiceServer) RegisterFollow(context.Context, *RegisterFollowRequest) (*UserProfileListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RegisterFollow not implemented")
+}
+func (UnimplementedUserServiceServer) UnregisterFollow(context.Context, *UnregisterFollowRequest) (*UserProfileListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UnregisterFollow not implemented")
+}
 func (UnimplementedUserServiceServer) GetUserProfile(context.Context, *GetUserProfileRequest) (*UserProfileResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserProfile not implemented")
 }
@@ -589,6 +645,78 @@ type UnsafeUserServiceServer interface {
 
 func RegisterUserServiceServer(s grpc.ServiceRegistrar, srv UserServiceServer) {
 	s.RegisterService(&_UserService_serviceDesc, srv)
+}
+
+func _UserService_ListFollow_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListFollowRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).ListFollow(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.UserService/ListFollow",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).ListFollow(ctx, req.(*ListFollowRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_ListFollower_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListFollowerRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).ListFollower(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.UserService/ListFollower",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).ListFollower(ctx, req.(*ListFollowerRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_RegisterFollow_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RegisterFollowRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).RegisterFollow(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.UserService/RegisterFollow",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).RegisterFollow(ctx, req.(*RegisterFollowRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_UnregisterFollow_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UnregisterFollowRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).UnregisterFollow(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.UserService/UnregisterFollow",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).UnregisterFollow(ctx, req.(*UnregisterFollowRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _UserService_GetUserProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -613,6 +741,22 @@ var _UserService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "proto.UserService",
 	HandlerType: (*UserServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "ListFollow",
+			Handler:    _UserService_ListFollow_Handler,
+		},
+		{
+			MethodName: "ListFollower",
+			Handler:    _UserService_ListFollower_Handler,
+		},
+		{
+			MethodName: "RegisterFollow",
+			Handler:    _UserService_RegisterFollow_Handler,
+		},
+		{
+			MethodName: "UnregisterFollow",
+			Handler:    _UserService_UnregisterFollow_Handler,
+		},
 		{
 			MethodName: "GetUserProfile",
 			Handler:    _UserService_GetUserProfile_Handler,

@@ -103,6 +103,50 @@ function deserialize_proto_ListAdminRequest(buffer_arg) {
   return proto_user_apiv1_pb.ListAdminRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_proto_ListFollowRequest(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.ListFollowRequest)) {
+    throw new Error('Expected argument of type proto.ListFollowRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_ListFollowRequest(buffer_arg) {
+  return proto_user_apiv1_pb.ListFollowRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_proto_ListFollowerRequest(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.ListFollowerRequest)) {
+    throw new Error('Expected argument of type proto.ListFollowerRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_ListFollowerRequest(buffer_arg) {
+  return proto_user_apiv1_pb.ListFollowerRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_proto_RegisterFollowRequest(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.RegisterFollowRequest)) {
+    throw new Error('Expected argument of type proto.RegisterFollowRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_RegisterFollowRequest(buffer_arg) {
+  return proto_user_apiv1_pb.RegisterFollowRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_proto_UnregisterFollowRequest(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.UnregisterFollowRequest)) {
+    throw new Error('Expected argument of type proto.UnregisterFollowRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_UnregisterFollowRequest(buffer_arg) {
+  return proto_user_apiv1_pb.UnregisterFollowRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_proto_UpdateAdminPasswordRequest(arg) {
   if (!(arg instanceof proto_user_apiv1_pb.UpdateAdminPasswordRequest)) {
     throw new Error('Expected argument of type proto.UpdateAdminPasswordRequest');
@@ -178,6 +222,17 @@ function serialize_proto_UpdateAuthProfileRequest(arg) {
 
 function deserialize_proto_UpdateAuthProfileRequest(buffer_arg) {
   return proto_user_apiv1_pb.UpdateAuthProfileRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_proto_UserProfileListResponse(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.UserProfileListResponse)) {
+    throw new Error('Expected argument of type proto.UserProfileListResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_UserProfileListResponse(buffer_arg) {
+  return proto_user_apiv1_pb.UserProfileListResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 function serialize_proto_UserProfileResponse(arg) {
@@ -333,6 +388,50 @@ var AdminServiceService = exports.AdminServiceService = {
 
 exports.AdminServiceClient = grpc.makeGenericClientConstructor(AdminServiceService);
 var UserServiceService = exports.UserServiceService = {
+  listFollow: {
+    path: '/proto.UserService/ListFollow',
+    requestStream: false,
+    responseStream: false,
+    requestType: proto_user_apiv1_pb.ListFollowRequest,
+    responseType: proto_user_apiv1_pb.UserProfileListResponse,
+    requestSerialize: serialize_proto_ListFollowRequest,
+    requestDeserialize: deserialize_proto_ListFollowRequest,
+    responseSerialize: serialize_proto_UserProfileListResponse,
+    responseDeserialize: deserialize_proto_UserProfileListResponse,
+  },
+  listFollower: {
+    path: '/proto.UserService/ListFollower',
+    requestStream: false,
+    responseStream: false,
+    requestType: proto_user_apiv1_pb.ListFollowerRequest,
+    responseType: proto_user_apiv1_pb.UserProfileListResponse,
+    requestSerialize: serialize_proto_ListFollowerRequest,
+    requestDeserialize: deserialize_proto_ListFollowerRequest,
+    responseSerialize: serialize_proto_UserProfileListResponse,
+    responseDeserialize: deserialize_proto_UserProfileListResponse,
+  },
+  registerFollow: {
+    path: '/proto.UserService/RegisterFollow',
+    requestStream: false,
+    responseStream: false,
+    requestType: proto_user_apiv1_pb.RegisterFollowRequest,
+    responseType: proto_user_apiv1_pb.UserProfileListResponse,
+    requestSerialize: serialize_proto_RegisterFollowRequest,
+    requestDeserialize: deserialize_proto_RegisterFollowRequest,
+    responseSerialize: serialize_proto_UserProfileListResponse,
+    responseDeserialize: deserialize_proto_UserProfileListResponse,
+  },
+  unregisterFollow: {
+    path: '/proto.UserService/UnregisterFollow',
+    requestStream: false,
+    responseStream: false,
+    requestType: proto_user_apiv1_pb.UnregisterFollowRequest,
+    responseType: proto_user_apiv1_pb.UserProfileListResponse,
+    requestSerialize: serialize_proto_UnregisterFollowRequest,
+    requestDeserialize: deserialize_proto_UnregisterFollowRequest,
+    responseSerialize: serialize_proto_UserProfileListResponse,
+    responseDeserialize: deserialize_proto_UserProfileListResponse,
+  },
   getUserProfile: {
     path: '/proto.UserService/GetUserProfile',
     requestStream: false,

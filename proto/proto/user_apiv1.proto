@@ -22,6 +22,10 @@ service AdminService {
 }
 
 service UserService {
+  rpc ListFollow (ListFollowRequest) returns (UserProfileListResponse);
+  rpc ListFollower (ListFollowerRequest) returns (UserProfileListResponse);
+  rpc RegisterFollow (RegisterFollowRequest) returns (UserProfileListResponse);
+  rpc UnregisterFollow (UnregisterFollowRequest) returns (UserProfileListResponse);
   rpc GetUserProfile (GetUserProfileRequest) returns (UserProfileResponse);
 }
 
@@ -110,7 +114,25 @@ message UpdateAdminProfileRequest {
   string first_name_kana = 7;
 }
 
+message ListFollowRequest {
+  int64 limit = 1;
+  int64 offset = 2;
+}
+
+message ListFollowerRequest {
+  int64 limit = 1;
+  int64 offset = 2;
+}
+
 message GetUserProfileRequest {
+  string id = 1;
+}
+
+message RegisterFollowRequest {
+  string id = 1;
+}
+
+message UnregisterFollowRequest {
   string id = 1;
 }
 
@@ -191,4 +213,21 @@ message UserProfileResponse {
   bool is_follower = 6;
   int64 follow_count = 7;
   int64 follower_count = 8;
+}
+
+message UserProfileListResponse {
+  message User {
+    string id = 1;
+    string username = 2;
+    string thumbnail_url = 3;
+    string self_introduction = 4;
+    bool is_follow = 5;
+    bool is_follower = 6;
+    int64 follow_count = 7;
+    int64 follower_count = 8;
+  }
+  repeated User users = 1;
+  int64 limit = 2;
+  int64 offset = 3;
+  int64 total = 4;
 }
