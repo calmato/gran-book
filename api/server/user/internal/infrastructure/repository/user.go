@@ -79,7 +79,7 @@ func (r *userRepository) ListFollow(ctx context.Context, q *domain.ListQuery) ([
 	sql := r.client.db.
 		Table("relationships").
 		Select(strings.Join(columns, ", ")).
-		Joins("LEFT JOIN users ON relationships.follow_id = users.id")
+		Joins("LEFT JOIN users ON relationships.follower_id = users.id")
 	db := r.client.getListQuery(sql, q)
 
 	err := db.Scan(&fs).Error
@@ -103,7 +103,7 @@ func (r *userRepository) ListFollower(ctx context.Context, q *domain.ListQuery) 
 	sql := r.client.db.
 		Table("relationships").
 		Select(strings.Join(columns, ", ")).
-		Joins("LEFT JOIN users ON relationships.follower_id = users.id")
+		Joins("LEFT JOIN users ON relationships.follow_id = users.id")
 	db := r.client.getListQuery(sql, q)
 
 	err := db.Scan(&fs).Error
