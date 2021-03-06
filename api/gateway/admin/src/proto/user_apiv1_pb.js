@@ -6852,11 +6852,7 @@ proto.proto.UserProfileListResponse.User.toObject = function(includeInstance, ms
     id: jspb.Message.getFieldWithDefault(msg, 1, ""),
     username: jspb.Message.getFieldWithDefault(msg, 2, ""),
     thumbnailUrl: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    selfIntroduction: jspb.Message.getFieldWithDefault(msg, 4, ""),
-    isFollow: jspb.Message.getBooleanFieldWithDefault(msg, 5, false),
-    isFollower: jspb.Message.getBooleanFieldWithDefault(msg, 6, false),
-    followCount: jspb.Message.getFieldWithDefault(msg, 7, 0),
-    followerCount: jspb.Message.getFieldWithDefault(msg, 8, 0)
+    selfIntroduction: jspb.Message.getFieldWithDefault(msg, 4, "")
   };
 
   if (includeInstance) {
@@ -6908,22 +6904,6 @@ proto.proto.UserProfileListResponse.User.deserializeBinaryFromReader = function(
     case 4:
       var value = /** @type {string} */ (reader.readString());
       msg.setSelfIntroduction(value);
-      break;
-    case 5:
-      var value = /** @type {boolean} */ (reader.readBool());
-      msg.setIsFollow(value);
-      break;
-    case 6:
-      var value = /** @type {boolean} */ (reader.readBool());
-      msg.setIsFollower(value);
-      break;
-    case 7:
-      var value = /** @type {number} */ (reader.readInt64());
-      msg.setFollowCount(value);
-      break;
-    case 8:
-      var value = /** @type {number} */ (reader.readInt64());
-      msg.setFollowerCount(value);
       break;
     default:
       reader.skipField();
@@ -6979,34 +6959,6 @@ proto.proto.UserProfileListResponse.User.serializeBinaryToWriter = function(mess
   if (f.length > 0) {
     writer.writeString(
       4,
-      f
-    );
-  }
-  f = message.getIsFollow();
-  if (f) {
-    writer.writeBool(
-      5,
-      f
-    );
-  }
-  f = message.getIsFollower();
-  if (f) {
-    writer.writeBool(
-      6,
-      f
-    );
-  }
-  f = message.getFollowCount();
-  if (f !== 0) {
-    writer.writeInt64(
-      7,
-      f
-    );
-  }
-  f = message.getFollowerCount();
-  if (f !== 0) {
-    writer.writeInt64(
-      8,
       f
     );
   }
@@ -7082,78 +7034,6 @@ proto.proto.UserProfileListResponse.User.prototype.getSelfIntroduction = functio
  */
 proto.proto.UserProfileListResponse.User.prototype.setSelfIntroduction = function(value) {
   return jspb.Message.setProto3StringField(this, 4, value);
-};
-
-
-/**
- * optional bool is_follow = 5;
- * @return {boolean}
- */
-proto.proto.UserProfileListResponse.User.prototype.getIsFollow = function() {
-  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 5, false));
-};
-
-
-/**
- * @param {boolean} value
- * @return {!proto.proto.UserProfileListResponse.User} returns this
- */
-proto.proto.UserProfileListResponse.User.prototype.setIsFollow = function(value) {
-  return jspb.Message.setProto3BooleanField(this, 5, value);
-};
-
-
-/**
- * optional bool is_follower = 6;
- * @return {boolean}
- */
-proto.proto.UserProfileListResponse.User.prototype.getIsFollower = function() {
-  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 6, false));
-};
-
-
-/**
- * @param {boolean} value
- * @return {!proto.proto.UserProfileListResponse.User} returns this
- */
-proto.proto.UserProfileListResponse.User.prototype.setIsFollower = function(value) {
-  return jspb.Message.setProto3BooleanField(this, 6, value);
-};
-
-
-/**
- * optional int64 follow_count = 7;
- * @return {number}
- */
-proto.proto.UserProfileListResponse.User.prototype.getFollowCount = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 7, 0));
-};
-
-
-/**
- * @param {number} value
- * @return {!proto.proto.UserProfileListResponse.User} returns this
- */
-proto.proto.UserProfileListResponse.User.prototype.setFollowCount = function(value) {
-  return jspb.Message.setProto3IntField(this, 7, value);
-};
-
-
-/**
- * optional int64 follower_count = 8;
- * @return {number}
- */
-proto.proto.UserProfileListResponse.User.prototype.getFollowerCount = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 8, 0));
-};
-
-
-/**
- * @param {number} value
- * @return {!proto.proto.UserProfileListResponse.User} returns this
- */
-proto.proto.UserProfileListResponse.User.prototype.setFollowerCount = function(value) {
-  return jspb.Message.setProto3IntField(this, 8, value);
 };
 
 

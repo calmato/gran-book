@@ -223,10 +223,6 @@ message UserProfileListResponse {
     string username = 2;
     string thumbnail_url = 3;
     string self_introduction = 4;
-    bool is_follow = 5;
-    bool is_follower = 6;
-    int64 follow_count = 7;
-    int64 follower_count = 8;
   }
   repeated User users = 1;
   int64 limit = 2;

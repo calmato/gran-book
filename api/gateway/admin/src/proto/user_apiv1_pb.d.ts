@@ -954,18 +954,6 @@ export namespace UserProfileListResponse {
         getSelfIntroduction(): string;
         setSelfIntroduction(value: string): User;
 
-        getIsFollow(): boolean;
-        setIsFollow(value: boolean): User;
-
-        getIsFollower(): boolean;
-        setIsFollower(value: boolean): User;
-
-        getFollowCount(): number;
-        setFollowCount(value: number): User;
-
-        getFollowerCount(): number;
-        setFollowerCount(value: number): User;
-
 
         serializeBinary(): Uint8Array;
         toObject(includeInstance?: boolean): User.AsObject;
@@ -983,10 +971,6 @@ export namespace UserProfileListResponse {
             username: string,
             thumbnailUrl: string,
             selfIntroduction: string,
-            isFollow: boolean,
-            isFollower: boolean,
-            followCount: number,
-            followerCount: number,
         }
     }
 
