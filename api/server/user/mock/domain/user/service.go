@@ -66,22 +66,6 @@ func (mr *MockServiceMockRecorder) List(ctx, q interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockService)(nil).List), ctx, q)
 }
 
-// ListFriendsCount mocks base method
-func (m *MockService) ListFriendsCount(ctx context.Context, u *user.User) (int64, int64, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListFriendsCount", ctx, u)
-	ret0, _ := ret[0].(int64)
-	ret1, _ := ret[1].(int64)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// ListFriendsCount indicates an expected call of ListFriendsCount
-func (mr *MockServiceMockRecorder) ListFriendsCount(ctx, u interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListFriendsCount", reflect.TypeOf((*MockService)(nil).ListFriendsCount), ctx, u)
-}
-
 // Show mocks base method
 func (m *MockService) Show(ctx context.Context, uid string) (*user.User, error) {
 	m.ctrl.T.Helper()
@@ -109,6 +93,20 @@ func (m *MockService) Create(ctx context.Context, u *user.User) error {
 func (mr *MockServiceMockRecorder) Create(ctx, u interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockService)(nil).Create), ctx, u)
+}
+
+// CreateRelationship mocks base method
+func (m *MockService) CreateRelationship(ctx context.Context, r *user.Relationship) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateRelationship", ctx, r)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CreateRelationship indicates an expected call of CreateRelationship
+func (mr *MockServiceMockRecorder) CreateRelationship(ctx, r interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateRelationship", reflect.TypeOf((*MockService)(nil).CreateRelationship), ctx, r)
 }
 
 // Update mocks base method
@@ -139,6 +137,20 @@ func (mr *MockServiceMockRecorder) UpdatePassword(ctx, uid, password interface{}
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdatePassword", reflect.TypeOf((*MockService)(nil).UpdatePassword), ctx, uid, password)
 }
 
+// DeleteRelationship mocks base method
+func (m *MockService) DeleteRelationship(ctx context.Context, id int64) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteRelationship", ctx, id)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteRelationship indicates an expected call of DeleteRelationship
+func (mr *MockServiceMockRecorder) DeleteRelationship(ctx, id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteRelationship", reflect.TypeOf((*MockService)(nil).DeleteRelationship), ctx, id)
+}
+
 // UploadThumbnail mocks base method
 func (m *MockService) UploadThumbnail(ctx context.Context, uid string, thumbnail []byte) (string, error) {
 	m.ctrl.T.Helper()
@@ -152,20 +164,4 @@ func (m *MockService) UploadThumbnail(ctx context.Context, uid string, thumbnail
 func (mr *MockServiceMockRecorder) UploadThumbnail(ctx, uid, thumbnail interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UploadThumbnail", reflect.TypeOf((*MockService)(nil).UploadThumbnail), ctx, uid, thumbnail)
-}
-
-// IsFriend mocks base method
-func (m *MockService) IsFriend(ctx context.Context, u *user.User, cuid string) (bool, bool, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "IsFriend", ctx, u, cuid)
-	ret0, _ := ret[0].(bool)
-	ret1, _ := ret[1].(bool)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// IsFriend indicates an expected call of IsFriend
-func (mr *MockServiceMockRecorder) IsFriend(ctx, u, cuid interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsFriend", reflect.TypeOf((*MockService)(nil).IsFriend), ctx, u, cuid)
 }
