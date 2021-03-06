@@ -135,7 +135,7 @@ message RegisterFollowRequest {
 }
 
 message UnregisterFollowRequest {
-  string id = 1;
+  int64 id = 1;
 }
 
 message AuthResponse {
