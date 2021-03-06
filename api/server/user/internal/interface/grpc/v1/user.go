@@ -18,7 +18,7 @@ type UserServer struct {
 }
 
 // ListFollow - フォロー一覧取得
-func (s *UserServer) ListFollow(ctx context.Context, req *pb.ListFollowRequest) (*pb.UserProfileListResponse, error) {
+func (s *UserServer) ListFollow(ctx context.Context, req *pb.ListFollowRequest) (*pb.FollowListResponse, error) {
 	_, err := s.AuthApplication.Authentication(ctx)
 	if err != nil {
 		return nil, errorHandling(err)
@@ -34,9 +34,9 @@ func (s *UserServer) ListFollow(ctx context.Context, req *pb.ListFollowRequest) 
 		return nil, errorHandling(err)
 	}
 
-	us := make([]*pb.UserProfileListResponse_User, len(fs))
+	us := make([]*pb.FollowListResponse_User, len(fs))
 	for i, f := range fs {
-		u := &pb.UserProfileListResponse_User{
+		u := &pb.FollowListResponse_User{
 			Id:           f.FollowID,
 			Username:     f.Username,
 			ThumbnailUrl: f.ThumbnailURL,
@@ -45,7 +45,7 @@ func (s *UserServer) ListFollow(ctx context.Context, req *pb.ListFollowRequest) 
 		us[i] = u
 	}
 
-	res := &pb.UserProfileListResponse{
+	res := &pb.FollowListResponse{
 		Users:  us,
 		Limit:  out.Limit,
 		Offset: out.Offset,
@@ -56,9 +56,7 @@ func (s *UserServer) ListFollow(ctx context.Context, req *pb.ListFollowRequest) 
 }
 
 // ListFollower - フォロワー一覧取得
-func (s *UserServer) ListFollower(
-	ctx context.Context, req *pb.ListFollowerRequest,
-) (*pb.UserProfileListResponse, error) {
+func (s *UserServer) ListFollower(ctx context.Context, req *pb.ListFollowerRequest) (*pb.FollowerListResponse, error) {
 	_, err := s.AuthApplication.Authentication(ctx)
 	if err != nil {
 		return nil, errorHandling(err)
@@ -74,9 +72,9 @@ func (s *UserServer) ListFollower(
 		return nil, errorHandling(err)
 	}
 
-	us := make([]*pb.UserProfileListResponse_User, len(fs))
+	us := make([]*pb.FollowerListResponse_User, len(fs))
 	for i, f := range fs {
-		u := &pb.UserProfileListResponse_User{
+		u := &pb.FollowerListResponse_User{
 			Id:           f.FollowerID,
 			Username:     f.Username,
 			ThumbnailUrl: f.ThumbnailURL,
@@ -85,7 +83,7 @@ func (s *UserServer) ListFollower(
 		us[i] = u
 	}
 
-	res := &pb.UserProfileListResponse{
+	res := &pb.FollowerListResponse{
 		Users:  us,
 		Limit:  out.Limit,
 		Offset: out.Offset,

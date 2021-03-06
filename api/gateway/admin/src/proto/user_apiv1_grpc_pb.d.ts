@@ -252,23 +252,23 @@ interface IUserServiceService extends grpc.ServiceDefinition<grpc.UntypedService
     unregisterFollow: IUserServiceService_IUnregisterFollow;
 }
 
-interface IUserServiceService_IListFollow extends grpc.MethodDefinition<proto_user_apiv1_pb.ListFollowRequest, proto_user_apiv1_pb.UserProfileListResponse> {
+interface IUserServiceService_IListFollow extends grpc.MethodDefinition<proto_user_apiv1_pb.ListFollowRequest, proto_user_apiv1_pb.FollowListResponse> {
     path: "/proto.UserService/ListFollow";
     requestStream: false;
     responseStream: false;
     requestSerialize: grpc.serialize<proto_user_apiv1_pb.ListFollowRequest>;
     requestDeserialize: grpc.deserialize<proto_user_apiv1_pb.ListFollowRequest>;
-    responseSerialize: grpc.serialize<proto_user_apiv1_pb.UserProfileListResponse>;
-    responseDeserialize: grpc.deserialize<proto_user_apiv1_pb.UserProfileListResponse>;
+    responseSerialize: grpc.serialize<proto_user_apiv1_pb.FollowListResponse>;
+    responseDeserialize: grpc.deserialize<proto_user_apiv1_pb.FollowListResponse>;
 }
-interface IUserServiceService_IListFollower extends grpc.MethodDefinition<proto_user_apiv1_pb.ListFollowerRequest, proto_user_apiv1_pb.UserProfileListResponse> {
+interface IUserServiceService_IListFollower extends grpc.MethodDefinition<proto_user_apiv1_pb.ListFollowerRequest, proto_user_apiv1_pb.FollowerListResponse> {
     path: "/proto.UserService/ListFollower";
     requestStream: false;
     responseStream: false;
     requestSerialize: grpc.serialize<proto_user_apiv1_pb.ListFollowerRequest>;
     requestDeserialize: grpc.deserialize<proto_user_apiv1_pb.ListFollowerRequest>;
-    responseSerialize: grpc.serialize<proto_user_apiv1_pb.UserProfileListResponse>;
-    responseDeserialize: grpc.deserialize<proto_user_apiv1_pb.UserProfileListResponse>;
+    responseSerialize: grpc.serialize<proto_user_apiv1_pb.FollowerListResponse>;
+    responseDeserialize: grpc.deserialize<proto_user_apiv1_pb.FollowerListResponse>;
 }
 interface IUserServiceService_IGetUserProfile extends grpc.MethodDefinition<proto_user_apiv1_pb.GetUserProfileRequest, proto_user_apiv1_pb.UserProfileResponse> {
     path: "/proto.UserService/GetUserProfile";
@@ -301,20 +301,20 @@ interface IUserServiceService_IUnregisterFollow extends grpc.MethodDefinition<pr
 export const UserServiceService: IUserServiceService;
 
 export interface IUserServiceServer extends grpc.UntypedServiceImplementation {
-    listFollow: grpc.handleUnaryCall<proto_user_apiv1_pb.ListFollowRequest, proto_user_apiv1_pb.UserProfileListResponse>;
-    listFollower: grpc.handleUnaryCall<proto_user_apiv1_pb.ListFollowerRequest, proto_user_apiv1_pb.UserProfileListResponse>;
+    listFollow: grpc.handleUnaryCall<proto_user_apiv1_pb.ListFollowRequest, proto_user_apiv1_pb.FollowListResponse>;
+    listFollower: grpc.handleUnaryCall<proto_user_apiv1_pb.ListFollowerRequest, proto_user_apiv1_pb.FollowerListResponse>;
     getUserProfile: grpc.handleUnaryCall<proto_user_apiv1_pb.GetUserProfileRequest, proto_user_apiv1_pb.UserProfileResponse>;
     registerFollow: grpc.handleUnaryCall<proto_user_apiv1_pb.RegisterFollowRequest, proto_user_apiv1_pb.UserProfileResponse>;
     unregisterFollow: grpc.handleUnaryCall<proto_user_apiv1_pb.UnregisterFollowRequest, proto_user_apiv1_pb.UserProfileResponse>;
 }
 
 export interface IUserServiceClient {
-    listFollow(request: proto_user_apiv1_pb.ListFollowRequest, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.UserProfileListResponse) => void): grpc.ClientUnaryCall;
-    listFollow(request: proto_user_apiv1_pb.ListFollowRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.UserProfileListResponse) => void): grpc.ClientUnaryCall;
-    listFollow(request: proto_user_apiv1_pb.ListFollowRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.UserProfileListResponse) => void): grpc.ClientUnaryCall;
-    listFollower(request: proto_user_apiv1_pb.ListFollowerRequest, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.UserProfileListResponse) => void): grpc.ClientUnaryCall;
-    listFollower(request: proto_user_apiv1_pb.ListFollowerRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.UserProfileListResponse) => void): grpc.ClientUnaryCall;
-    listFollower(request: proto_user_apiv1_pb.ListFollowerRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.UserProfileListResponse) => void): grpc.ClientUnaryCall;
+    listFollow(request: proto_user_apiv1_pb.ListFollowRequest, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.FollowListResponse) => void): grpc.ClientUnaryCall;
+    listFollow(request: proto_user_apiv1_pb.ListFollowRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.FollowListResponse) => void): grpc.ClientUnaryCall;
+    listFollow(request: proto_user_apiv1_pb.ListFollowRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.FollowListResponse) => void): grpc.ClientUnaryCall;
+    listFollower(request: proto_user_apiv1_pb.ListFollowerRequest, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.FollowerListResponse) => void): grpc.ClientUnaryCall;
+    listFollower(request: proto_user_apiv1_pb.ListFollowerRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.FollowerListResponse) => void): grpc.ClientUnaryCall;
+    listFollower(request: proto_user_apiv1_pb.ListFollowerRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.FollowerListResponse) => void): grpc.ClientUnaryCall;
     getUserProfile(request: proto_user_apiv1_pb.GetUserProfileRequest, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.UserProfileResponse) => void): grpc.ClientUnaryCall;
     getUserProfile(request: proto_user_apiv1_pb.GetUserProfileRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.UserProfileResponse) => void): grpc.ClientUnaryCall;
     getUserProfile(request: proto_user_apiv1_pb.GetUserProfileRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.UserProfileResponse) => void): grpc.ClientUnaryCall;
@@ -328,12 +328,12 @@ export interface IUserServiceClient {
 
 export class UserServiceClient extends grpc.Client implements IUserServiceClient {
     constructor(address: string, credentials: grpc.ChannelCredentials, options?: Partial<grpc.ClientOptions>);
-    public listFollow(request: proto_user_apiv1_pb.ListFollowRequest, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.UserProfileListResponse) => void): grpc.ClientUnaryCall;
-    public listFollow(request: proto_user_apiv1_pb.ListFollowRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.UserProfileListResponse) => void): grpc.ClientUnaryCall;
-    public listFollow(request: proto_user_apiv1_pb.ListFollowRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.UserProfileListResponse) => void): grpc.ClientUnaryCall;
-    public listFollower(request: proto_user_apiv1_pb.ListFollowerRequest, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.UserProfileListResponse) => void): grpc.ClientUnaryCall;
-    public listFollower(request: proto_user_apiv1_pb.ListFollowerRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.UserProfileListResponse) => void): grpc.ClientUnaryCall;
-    public listFollower(request: proto_user_apiv1_pb.ListFollowerRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.UserProfileListResponse) => void): grpc.ClientUnaryCall;
+    public listFollow(request: proto_user_apiv1_pb.ListFollowRequest, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.FollowListResponse) => void): grpc.ClientUnaryCall;
+    public listFollow(request: proto_user_apiv1_pb.ListFollowRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.FollowListResponse) => void): grpc.ClientUnaryCall;
+    public listFollow(request: proto_user_apiv1_pb.ListFollowRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.FollowListResponse) => void): grpc.ClientUnaryCall;
+    public listFollower(request: proto_user_apiv1_pb.ListFollowerRequest, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.FollowerListResponse) => void): grpc.ClientUnaryCall;
+    public listFollower(request: proto_user_apiv1_pb.ListFollowerRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.FollowerListResponse) => void): grpc.ClientUnaryCall;
+    public listFollower(request: proto_user_apiv1_pb.ListFollowerRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.FollowerListResponse) => void): grpc.ClientUnaryCall;
     public getUserProfile(request: proto_user_apiv1_pb.GetUserProfileRequest, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.UserProfileResponse) => void): grpc.ClientUnaryCall;
     public getUserProfile(request: proto_user_apiv1_pb.GetUserProfileRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.UserProfileResponse) => void): grpc.ClientUnaryCall;
     public getUserProfile(request: proto_user_apiv1_pb.GetUserProfileRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.UserProfileResponse) => void): grpc.ClientUnaryCall;

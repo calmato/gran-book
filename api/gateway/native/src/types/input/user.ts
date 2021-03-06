@@ -1,3 +1,15 @@
+export interface IListFollowInput {
+  id: string
+  limit: number
+  offset: number
+}
+
+export interface IListFollowerInput {
+  id: string
+  limit: number
+  offset: number
+}
+
 export interface IGetUserProfileInput {
   id: string
 }

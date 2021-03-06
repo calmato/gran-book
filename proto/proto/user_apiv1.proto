@@ -22,8 +22,8 @@ service AdminService {
 }
 
 service UserService {
-  rpc ListFollow (ListFollowRequest) returns (UserProfileListResponse);
-  rpc ListFollower (ListFollowerRequest) returns (UserProfileListResponse);
+  rpc ListFollow (ListFollowRequest) returns (FollowListResponse);
+  rpc ListFollower (ListFollowerRequest) returns (FollowerListResponse);
   rpc GetUserProfile (GetUserProfileRequest) returns (UserProfileResponse);
   rpc RegisterFollow (RegisterFollowRequest) returns (UserProfileResponse);
   rpc UnregisterFollow (UnregisterFollowRequest) returns (UserProfileResponse);
@@ -217,7 +217,20 @@ message UserProfileResponse {
   int64 follower_count = 8;
 }
 
-message UserProfileListResponse {
+message FollowListResponse {
+  message User {
+    string id = 1;
+    string username = 2;
+    string thumbnail_url = 3;
+    string self_introduction = 4;
+  }
+  repeated User users = 1;
+  int64 limit = 2;
+  int64 offset = 3;
+  int64 total = 4;
+}
+
+message FollowerListResponse {
   message User {
     string id = 1;
     string username = 2;
