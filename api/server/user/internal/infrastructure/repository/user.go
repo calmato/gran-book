@@ -69,10 +69,20 @@ func (r *userRepository) List(ctx context.Context, q *domain.ListQuery) ([]*user
 func (r *userRepository) ListFollow(ctx context.Context, q *domain.ListQuery) ([]*user.Follow, error) {
 	fs := []*user.Follow{}
 
-	sql := r.client.db.Table("relationships").Joins("LEFT JOIN users ON relationships.follow_id = users.id")
+	columns := []string{
+		"relationships.follow_id",
+		"relationships.follower_id",
+		"users.username",
+		"users.thumbnail_url",
+		"users.self_introduction",
+	}
+	sql := r.client.db.
+		Table("relationships").
+		Select(strings.Join(columns, ", ")).
+		Joins("LEFT JOIN users ON relationships.follow_id = users.id")
 	db := r.client.getListQuery(sql, q)
 
-	err := db.Find(&fs).Error
+	err := db.Scan(&fs).Error
 	if err != nil {
 		return nil, exception.ErrorInDatastore.New(err)
 	}
@@ -83,10 +93,20 @@ func (r *userRepository) ListFollow(ctx context.Context, q *domain.ListQuery) ([
 func (r *userRepository) ListFollower(ctx context.Context, q *domain.ListQuery) ([]*user.Follower, error) {
 	fs := []*user.Follower{}
 
-	sql := r.client.db.Table("relationships").Joins("LEFT JOIN users ON relationships.follower_id = users.id")
+	columns := []string{
+		"relationships.follow_id",
+		"relationships.follower_id",
+		"users.username",
+		"users.thumbnail_url",
+		"users.self_introduction",
+	}
+	sql := r.client.db.
+		Table("relationships").
+		Select(strings.Join(columns, ", ")).
+		Joins("LEFT JOIN users ON relationships.follower_id = users.id")
 	db := r.client.getListQuery(sql, q)
 
-	err := db.Find(&fs).Error
+	err := db.Scan(&fs).Error
 	if err != nil {
 		return nil, exception.ErrorInDatastore.New(err)
 	}

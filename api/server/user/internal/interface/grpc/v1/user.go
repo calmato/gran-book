@@ -37,7 +37,7 @@ func (s *UserServer) ListFollow(ctx context.Context, req *pb.ListFollowRequest) 
 	us := make([]*pb.FollowListResponse_User, len(fs))
 	for i, f := range fs {
 		u := &pb.FollowListResponse_User{
-			Id:           f.FollowID,
+			Id:           f.FollowerID,
 			Username:     f.Username,
 			ThumbnailUrl: f.ThumbnailURL,
 		}
@@ -75,7 +75,7 @@ func (s *UserServer) ListFollower(ctx context.Context, req *pb.ListFollowerReque
 	us := make([]*pb.FollowerListResponse_User, len(fs))
 	for i, f := range fs {
 		u := &pb.FollowerListResponse_User{
-			Id:           f.FollowerID,
+			Id:           f.FollowID,
 			Username:     f.Username,
 			ThumbnailUrl: f.ThumbnailURL,
 		}

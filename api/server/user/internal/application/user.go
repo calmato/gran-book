@@ -156,6 +156,10 @@ func (a *userApplication) GetUserProfile(
 	}
 
 	followCount, followerCount, err := a.userService.ListFriendCount(ctx, uid)
+	if err != nil {
+		return nil, nil, err
+	}
+
 	isFollow, isFollower := a.userService.IsFriend(ctx, uid, cuid)
 
 	out := &output.UserProfile{
@@ -187,6 +191,10 @@ func (a *userApplication) RegisterFollow(
 	}
 
 	followCount, followerCount, err := a.userService.ListFriendCount(ctx, uid)
+	if err != nil {
+		return nil, nil, err
+	}
+
 	isFollow, isFollower := a.userService.IsFriend(ctx, uid, cuid)
 
 	out := &output.UserProfile{
@@ -218,6 +226,10 @@ func (a *userApplication) UnregisterFollow(
 	}
 
 	followCount, followerCount, err := a.userService.ListFriendCount(ctx, r.FollowerID)
+	if err != nil {
+		return nil, nil, err
+	}
+
 	isFollow, isFollower := a.userService.IsFriend(ctx, r.FollowerID, r.FollowID)
 
 	out := &output.UserProfile{
