@@ -5,7 +5,9 @@
 package mock_validation
 
 import (
+	input "github.com/calmato/gran-book/api/server/user/internal/application/input"
 	gomock "github.com/golang/mock/gomock"
+	reflect "reflect"
 )
 
 // MockUserRequestValidation is a mock of UserRequestValidation interface
@@ -29,4 +31,32 @@ func NewMockUserRequestValidation(ctrl *gomock.Controller) *MockUserRequestValid
 // EXPECT returns an object that allows the caller to indicate expected use
 func (m *MockUserRequestValidation) EXPECT() *MockUserRequestValidationMockRecorder {
 	return m.recorder
+}
+
+// ListFollow mocks base method
+func (m *MockUserRequestValidation) ListFollow(in *input.ListFollow) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListFollow", in)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// ListFollow indicates an expected call of ListFollow
+func (mr *MockUserRequestValidationMockRecorder) ListFollow(in interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListFollow", reflect.TypeOf((*MockUserRequestValidation)(nil).ListFollow), in)
+}
+
+// ListFollower mocks base method
+func (m *MockUserRequestValidation) ListFollower(in *input.ListFollower) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListFollower", in)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// ListFollower indicates an expected call of ListFollower
+func (mr *MockUserRequestValidationMockRecorder) ListFollower(in interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListFollower", reflect.TypeOf((*MockUserRequestValidation)(nil).ListFollower), in)
 }

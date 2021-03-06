@@ -48,7 +48,7 @@ func (s *userService) ListFriendCount(ctx context.Context, uid string) (int64, i
 	followQuery := &domain.ListQuery{
 		Conditions: []*domain.QueryCondition{
 			{
-				Field:    "follower_id",
+				Field:    "follow_id",
 				Operator: "==",
 				Value:    uid,
 			},
@@ -58,7 +58,7 @@ func (s *userService) ListFriendCount(ctx context.Context, uid string) (int64, i
 	followerQuery := &domain.ListQuery{
 		Conditions: []*domain.QueryCondition{
 			{
-				Field:    "follow_id",
+				Field:    "follower_id",
 				Operator: "==",
 				Value:    uid,
 			},
