@@ -32,6 +32,14 @@ func (s *userService) List(ctx context.Context, q *domain.ListQuery) ([]*user.Us
 	return s.userRepository.List(ctx, q)
 }
 
+func (s *userService) ListFollow(ctx context.Context, q *domain.ListQuery) ([]*user.Follow, error) {
+	return s.userRepository.ListFollow(ctx, q)
+}
+
+func (s *userService) ListFollower(ctx context.Context, q *domain.ListQuery) ([]*user.Follower, error) {
+	return s.userRepository.ListFollower(ctx, q)
+}
+
 func (s *userService) ListCount(ctx context.Context, q *domain.ListQuery) (int64, error) {
 	return s.userRepository.ListCount(ctx, q)
 }

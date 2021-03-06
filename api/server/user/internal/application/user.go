@@ -3,14 +3,18 @@ package application
 import (
 	"context"
 
+	"github.com/calmato/gran-book/api/server/user/internal/application/input"
 	"github.com/calmato/gran-book/api/server/user/internal/application/output"
 	"github.com/calmato/gran-book/api/server/user/internal/application/validation"
+	"github.com/calmato/gran-book/api/server/user/internal/domain"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/user"
 )
 
 // UserApplication - Userアプリケーションのインターフェース
 type UserApplication interface {
+	ListFollow(ctx context.Context, in *input.ListFollow, uid string) ([]*user.Follow, *output.ListQuery, error)
+	ListFollower(ctx context.Context, in *input.ListFollower, uid string) ([]*user.Follower, *output.ListQuery, error)
 	GetUserProfile(ctx context.Context, uid string, cuid string) (*user.User, *output.UserProfile, error)
 	RegisterFollow(ctx context.Context, uid string, cuid string) (*user.User, *output.UserProfile, error)
 	UnregisterFollow(ctx context.Context, id int64) (*user.User, *output.UserProfile, error)
@@ -27,6 +31,120 @@ func NewUserApplication(urv validation.UserRequestValidation, us user.Service) U
 		userRequestValidation: urv,
 		userService:           us,
 	}
+}
+
+func (a *userApplication) ListFollow(
+	ctx context.Context, in *input.ListFollow, uid string,
+) ([]*user.Follow, *output.ListQuery, error) {
+	err := a.userRequestValidation.ListFollow(in)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	q := &domain.ListQuery{
+		Limit:  in.Limit,
+		Offset: in.Offset,
+		Conditions: []*domain.QueryCondition{
+			{
+				Field:    "follow_id",
+				Operator: "==",
+				Value:    uid,
+			},
+		},
+	}
+
+	if in.By != "" {
+		o := &domain.QueryOrder{
+			By:        in.By,
+			Direction: in.Direction,
+		}
+
+		q.Order = o
+	}
+
+	fs, err := a.userService.ListFollow(ctx, q)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	total, _, err := a.userService.ListFriendCount(ctx, uid)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	out := &output.ListQuery{
+		Limit:  q.Limit,
+		Offset: q.Offset,
+		Total:  total,
+	}
+
+	if q.Order != nil {
+		o := &output.QueryOrder{
+			By:        q.Order.By,
+			Direction: q.Order.Direction,
+		}
+
+		out.Order = o
+	}
+
+	return fs, out, nil
+}
+
+func (a *userApplication) ListFollower(
+	ctx context.Context, in *input.ListFollower, uid string,
+) ([]*user.Follower, *output.ListQuery, error) {
+	err := a.userRequestValidation.ListFollower(in)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	q := &domain.ListQuery{
+		Limit:  in.Limit,
+		Offset: in.Offset,
+		Conditions: []*domain.QueryCondition{
+			{
+				Field:    "follower_id",
+				Operator: "==",
+				Value:    uid,
+			},
+		},
+	}
+
+	if in.By != "" {
+		o := &domain.QueryOrder{
+			By:        in.By,
+			Direction: in.Direction,
+		}
+
+		q.Order = o
+	}
+
+	fs, err := a.userService.ListFollower(ctx, q)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	_, total, err := a.userService.ListFriendCount(ctx, uid)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	out := &output.ListQuery{
+		Limit:  q.Limit,
+		Offset: q.Offset,
+		Total:  total,
+	}
+
+	if q.Order != nil {
+		o := &output.QueryOrder{
+			By:        q.Order.By,
+			Direction: q.Order.Direction,
+		}
+
+		out.Order = o
+	}
+
+	return fs, out, nil
 }
 
 func (a *userApplication) GetUserProfile(

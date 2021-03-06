@@ -10,6 +10,8 @@ import (
 type Service interface {
 	Authentication(ctx context.Context) (string, error)
 	List(ctx context.Context, q *domain.ListQuery) ([]*User, error)
+	ListFollow(ctx context.Context, q *domain.ListQuery) ([]*Follow, error)
+	ListFollower(ctx context.Context, q *domain.ListQuery) ([]*Follower, error)
 	ListCount(ctx context.Context, q *domain.ListQuery) (int64, error)
 	ListFriendCount(ctx context.Context, uid string) (int64, int64, error)
 	Show(ctx context.Context, uid string) (*User, error)
