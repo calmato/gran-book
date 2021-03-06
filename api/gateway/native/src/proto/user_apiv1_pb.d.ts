@@ -525,8 +525,8 @@ export namespace RegisterFollowRequest {
 }
 
 export class UnregisterFollowRequest extends jspb.Message { 
-    getId(): number;
-    setId(value: number): UnregisterFollowRequest;
+    getId(): string;
+    setId(value: string): UnregisterFollowRequest;
 
 
     serializeBinary(): Uint8Array;
@@ -541,7 +541,7 @@ export class UnregisterFollowRequest extends jspb.Message {
 
 export namespace UnregisterFollowRequest {
     export type AsObject = {
-        id: number,
+        id: string,
     }
 }
 

@@ -52,23 +52,23 @@ func (s *UserServer) RegisterFollow(
 	return res, nil
 }
 
-// // UnregisterFollow - フォローの解除
-// func (s *UserServer) UnregisterFollow(
-// 	ctx context.Context, req *pb.UnregisterFollowRequest,
-// ) (*pb.UserProfileResponse, error) {
-// 	_, err := s.AuthApplication.Authentication(ctx)
-// 	if err != nil {
-// 		return nil, errorHandling(err)
-// 	}
+// UnregisterFollow - フォローの解除
+func (s *UserServer) UnregisterFollow(
+	ctx context.Context, req *pb.UnregisterFollowRequest,
+) (*pb.UserProfileResponse, error) {
+	cu, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
 
-// 	u, out, err := s.UserApplication.UnregisterFollow(ctx, req.Id)
-// 	if err != nil {
-// 		return nil, errorHandling(err)
-// 	}
+	u, out, err := s.UserApplication.UnregisterFollow(ctx, req.Id, cu.ID)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
 
-// 	res := getUserProfileResponse(u, out)
-// 	return res, nil
-// }
+	res := getUserProfileResponse(u, out)
+	return res, nil
+}
 
 func getUserProfileResponse(u *user.User, out *output.UserProfile) *pb.UserProfileResponse {
 	return &pb.UserProfileResponse{

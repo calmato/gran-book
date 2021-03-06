@@ -17,7 +17,7 @@ type UserApplication interface {
 	ListFollower(ctx context.Context, in *input.ListFollower, uid string) ([]*user.Follower, *output.ListQuery, error)
 	GetUserProfile(ctx context.Context, uid string, cuid string) (*user.User, *output.UserProfile, error)
 	RegisterFollow(ctx context.Context, uid string, cuid string) (*user.User, *output.UserProfile, error)
-	UnregisterFollow(ctx context.Context, id int64) (*user.User, *output.UserProfile, error)
+	UnregisterFollow(ctx context.Context, uid string, cuid string) (*user.User, *output.UserProfile, error)
 }
 
 type userApplication struct {
@@ -199,13 +199,15 @@ func (a *userApplication) RegisterFollow(
 	return u, out, nil
 }
 
-func (a *userApplication) UnregisterFollow(ctx context.Context, id int64) (*user.User, *output.UserProfile, error) {
-	r, err := a.userService.ShowRelationship(ctx, id)
+func (a *userApplication) UnregisterFollow(
+	ctx context.Context, uid string, cuid string,
+) (*user.User, *output.UserProfile, error) {
+	u, err := a.userService.Show(ctx, uid)
 	if err != nil {
 		return nil, nil, exception.NotFound.New(err)
 	}
 
-	u, err := a.userService.Show(ctx, r.FollowerID)
+	r, err := a.userService.ShowRelationshipByUID(ctx, uid, cuid)
 	if err != nil {
 		return nil, nil, exception.NotFound.New(err)
 	}

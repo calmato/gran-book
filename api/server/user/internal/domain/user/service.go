@@ -16,6 +16,7 @@ type Service interface {
 	ListFriendCount(ctx context.Context, uid string) (int64, int64, error)
 	Show(ctx context.Context, uid string) (*User, error)
 	ShowRelationship(ctx context.Context, id int64) (*Relationship, error)
+	ShowRelationshipByUID(ctx context.Context, followID string, followerID string) (*Relationship, error)
 	Create(ctx context.Context, u *User) error
 	CreateRelationship(ctx context.Context, r *Relationship) error
 	Update(ctx context.Context, u *User) error

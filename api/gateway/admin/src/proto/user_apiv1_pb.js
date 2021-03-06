@@ -4020,7 +4020,7 @@ proto.proto.UnregisterFollowRequest.prototype.toObject = function(opt_includeIns
  */
 proto.proto.UnregisterFollowRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    id: jspb.Message.getFieldWithDefault(msg, 1, 0)
+    id: jspb.Message.getFieldWithDefault(msg, 1, "")
   };
 
   if (includeInstance) {
@@ -4058,7 +4058,7 @@ proto.proto.UnregisterFollowRequest.deserializeBinaryFromReader = function(msg, 
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {number} */ (reader.readInt64());
+      var value = /** @type {string} */ (reader.readString());
       msg.setId(value);
       break;
     default:
@@ -4091,8 +4091,8 @@ proto.proto.UnregisterFollowRequest.prototype.serializeBinary = function() {
 proto.proto.UnregisterFollowRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getId();
-  if (f !== 0) {
-    writer.writeInt64(
+  if (f.length > 0) {
+    writer.writeString(
       1,
       f
     );
@@ -4101,20 +4101,20 @@ proto.proto.UnregisterFollowRequest.serializeBinaryToWriter = function(message, 
 
 
 /**
- * optional int64 id = 1;
- * @return {number}
+ * optional string id = 1;
+ * @return {string}
  */
 proto.proto.UnregisterFollowRequest.prototype.getId = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
 
 /**
- * @param {number} value
+ * @param {string} value
  * @return {!proto.proto.UnregisterFollowRequest} returns this
  */
 proto.proto.UnregisterFollowRequest.prototype.setId = function(value) {
-  return jspb.Message.setProto3IntField(this, 1, value);
+  return jspb.Message.setProto3StringField(this, 1, value);
 };
 
 

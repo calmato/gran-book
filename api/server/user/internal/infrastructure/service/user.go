@@ -86,6 +86,17 @@ func (s *userService) ShowRelationship(ctx context.Context, id int64) (*user.Rel
 	return s.userRepository.ShowRelationship(ctx, id)
 }
 
+func (s *userService) ShowRelationshipByUID(
+	ctx context.Context, followID string, followerID string,
+) (*user.Relationship, error) {
+	id, err := s.userRepository.GetRelationshipIDByUID(ctx, followID, followerID)
+	if err != nil {
+		return nil, err
+	}
+
+	return s.userRepository.ShowRelationship(ctx, id)
+}
+
 func (s *userService) Create(ctx context.Context, u *user.User) error {
 	err := s.userDomainValidation.User(ctx, u)
 	if err != nil {
