@@ -30,13 +30,31 @@ type User struct {
 	Followers        []*User   `gorm:"foreignKey:FollowerID;constraint:OnDelete:CASCADE"`
 }
 
-// Follow - Followエンティティ
-type Follow struct {
+// Relationship - Relationshipエンティティ (中間テーブル)
+type Relationship struct {
 	ID         int64     `gorm:"primaryKey;not null;autoIncrement;<-:create"`
 	FollowID   string    `gorm:"not null;uniqueIndex:ui_follows_01;uniqueIndex:ui_follows_02"`
 	FollowerID string    `gorm:"not null;uniqueIndex:ui_follows_01;uniqueIndex:ui_follows_02"`
 	CreatedAt  time.Time `gorm:"not null;<-:create"`
 	UpdatedAt  time.Time `gorm:"not null"`
+}
+
+// Follow - フォローしているUserのエンティティ
+type Follow struct {
+	FollowID         string
+	FollowerID       string
+	Username         string
+	ThumbnailURL     string
+	SelfIntroduction string
+}
+
+// Follower - フォローされているUserのエンティティ
+type Follower struct {
+	FollowID         string
+	FollowerID       string
+	Username         string
+	ThumbnailURL     string
+	SelfIntroduction string
 }
 
 // ユーザ権限

@@ -425,6 +425,9 @@ export namespace UpdateAdminProfileRequest {
 }
 
 export class ListFollowRequest extends jspb.Message { 
+    getId(): string;
+    setId(value: string): ListFollowRequest;
+
     getLimit(): number;
     setLimit(value: number): ListFollowRequest;
 
@@ -444,12 +447,16 @@ export class ListFollowRequest extends jspb.Message {
 
 export namespace ListFollowRequest {
     export type AsObject = {
+        id: string,
         limit: number,
         offset: number,
     }
 }
 
 export class ListFollowerRequest extends jspb.Message { 
+    getId(): string;
+    setId(value: string): ListFollowerRequest;
+
     getLimit(): number;
     setLimit(value: number): ListFollowerRequest;
 
@@ -469,6 +476,7 @@ export class ListFollowerRequest extends jspb.Message {
 
 export namespace ListFollowerRequest {
     export type AsObject = {
+        id: string,
         limit: number,
         offset: number,
     }
@@ -898,35 +906,35 @@ export namespace UserProfileResponse {
     }
 }
 
-export class UserProfileListResponse extends jspb.Message { 
+export class FollowListResponse extends jspb.Message { 
     clearUsersList(): void;
-    getUsersList(): Array<UserProfileListResponse.User>;
-    setUsersList(value: Array<UserProfileListResponse.User>): UserProfileListResponse;
-    addUsers(value?: UserProfileListResponse.User, index?: number): UserProfileListResponse.User;
+    getUsersList(): Array<FollowListResponse.User>;
+    setUsersList(value: Array<FollowListResponse.User>): FollowListResponse;
+    addUsers(value?: FollowListResponse.User, index?: number): FollowListResponse.User;
 
     getLimit(): number;
-    setLimit(value: number): UserProfileListResponse;
+    setLimit(value: number): FollowListResponse;
 
     getOffset(): number;
-    setOffset(value: number): UserProfileListResponse;
+    setOffset(value: number): FollowListResponse;
 
     getTotal(): number;
-    setTotal(value: number): UserProfileListResponse;
+    setTotal(value: number): FollowListResponse;
 
 
     serializeBinary(): Uint8Array;
-    toObject(includeInstance?: boolean): UserProfileListResponse.AsObject;
-    static toObject(includeInstance: boolean, msg: UserProfileListResponse): UserProfileListResponse.AsObject;
+    toObject(includeInstance?: boolean): FollowListResponse.AsObject;
+    static toObject(includeInstance: boolean, msg: FollowListResponse): FollowListResponse.AsObject;
     static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
     static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-    static serializeBinaryToWriter(message: UserProfileListResponse, writer: jspb.BinaryWriter): void;
-    static deserializeBinary(bytes: Uint8Array): UserProfileListResponse;
-    static deserializeBinaryFromReader(message: UserProfileListResponse, reader: jspb.BinaryReader): UserProfileListResponse;
+    static serializeBinaryToWriter(message: FollowListResponse, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): FollowListResponse;
+    static deserializeBinaryFromReader(message: FollowListResponse, reader: jspb.BinaryReader): FollowListResponse;
 }
 
-export namespace UserProfileListResponse {
+export namespace FollowListResponse {
     export type AsObject = {
-        usersList: Array<UserProfileListResponse.User.AsObject>,
+        usersList: Array<FollowListResponse.User.AsObject>,
         limit: number,
         offset: number,
         total: number,
@@ -946,17 +954,75 @@ export namespace UserProfileListResponse {
         getSelfIntroduction(): string;
         setSelfIntroduction(value: string): User;
 
-        getIsFollow(): boolean;
-        setIsFollow(value: boolean): User;
 
-        getIsFollower(): boolean;
-        setIsFollower(value: boolean): User;
+        serializeBinary(): Uint8Array;
+        toObject(includeInstance?: boolean): User.AsObject;
+        static toObject(includeInstance: boolean, msg: User): User.AsObject;
+        static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+        static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+        static serializeBinaryToWriter(message: User, writer: jspb.BinaryWriter): void;
+        static deserializeBinary(bytes: Uint8Array): User;
+        static deserializeBinaryFromReader(message: User, reader: jspb.BinaryReader): User;
+    }
 
-        getFollowCount(): number;
-        setFollowCount(value: number): User;
+    export namespace User {
+        export type AsObject = {
+            id: string,
+            username: string,
+            thumbnailUrl: string,
+            selfIntroduction: string,
+        }
+    }
 
-        getFollowerCount(): number;
-        setFollowerCount(value: number): User;
+}
+
+export class FollowerListResponse extends jspb.Message { 
+    clearUsersList(): void;
+    getUsersList(): Array<FollowerListResponse.User>;
+    setUsersList(value: Array<FollowerListResponse.User>): FollowerListResponse;
+    addUsers(value?: FollowerListResponse.User, index?: number): FollowerListResponse.User;
+
+    getLimit(): number;
+    setLimit(value: number): FollowerListResponse;
+
+    getOffset(): number;
+    setOffset(value: number): FollowerListResponse;
+
+    getTotal(): number;
+    setTotal(value: number): FollowerListResponse;
+
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): FollowerListResponse.AsObject;
+    static toObject(includeInstance: boolean, msg: FollowerListResponse): FollowerListResponse.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: FollowerListResponse, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): FollowerListResponse;
+    static deserializeBinaryFromReader(message: FollowerListResponse, reader: jspb.BinaryReader): FollowerListResponse;
+}
+
+export namespace FollowerListResponse {
+    export type AsObject = {
+        usersList: Array<FollowerListResponse.User.AsObject>,
+        limit: number,
+        offset: number,
+        total: number,
+    }
+
+
+    export class User extends jspb.Message { 
+        getId(): string;
+        setId(value: string): User;
+
+        getUsername(): string;
+        setUsername(value: string): User;
+
+        getThumbnailUrl(): string;
+        setThumbnailUrl(value: string): User;
+
+        getSelfIntroduction(): string;
+        setSelfIntroduction(value: string): User;
 
 
         serializeBinary(): Uint8Array;
@@ -975,10 +1041,6 @@ export namespace UserProfileListResponse {
             username: string,
             thumbnailUrl: string,
             selfIntroduction: string,
-            isFollow: boolean,
-            isFollower: boolean,
-            followCount: number,
-            followerCount: number,
         }
     }
 

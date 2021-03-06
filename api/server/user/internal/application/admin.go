@@ -62,7 +62,12 @@ func (a *adminApplication) List(ctx context.Context, in *input.ListAdmin) ([]*us
 		query.Order = o
 	}
 
-	us, total, err := a.userService.List(ctx, query)
+	us, err := a.userService.List(ctx, query)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	total, err := a.userService.ListCount(ctx, query)
 	if err != nil {
 		return nil, nil, err
 	}

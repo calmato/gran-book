@@ -10,11 +10,6 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
-const (
-	defaultOrderBy        = "id"
-	defaultOrderDirection = "asc"
-)
-
 // Client - DB操作用クライアントの構造体
 type Client struct {
 	db *gorm.DB
@@ -65,14 +60,6 @@ func (c *Client) getListQuery(db *gorm.DB, q *domain.ListQuery) *gorm.DB {
 	// WHERE句の追加
 	for _, c := range q.Conditions {
 		db = setWhere(db, c)
-	}
-
-	// ORDER句の追加
-	if q.Order == nil {
-		q.Order = &domain.QueryOrder{
-			By:        defaultOrderBy,
-			Direction: defaultOrderDirection,
-		}
 	}
 
 	db = setOrder(db, q.Order)

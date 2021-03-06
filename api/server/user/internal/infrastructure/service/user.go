@@ -5,10 +5,8 @@ import (
 	"time"
 
 	"github.com/calmato/gran-book/api/server/user/internal/domain"
-	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/user"
 	"github.com/google/uuid"
-	"golang.org/x/xerrors"
 )
 
 type userService struct {
@@ -27,74 +25,76 @@ func NewUserService(udv user.Validation, ur user.Repository, uu user.Uploader) u
 }
 
 func (s *userService) Authentication(ctx context.Context) (string, error) {
-	uid, err := s.userRepository.Authentication(ctx)
-	if err != nil {
-		return "", err
-	}
-
-	return uid, nil
+	return s.userRepository.Authentication(ctx)
 }
 
-func (s *userService) List(ctx context.Context, q *domain.ListQuery) ([]*user.User, int64, error) {
-	us, err := s.userRepository.List(ctx, q)
-	if err != nil {
-		return nil, 0, err
-	}
-
-	count, err := s.userRepository.ListCount(ctx, q)
-	if err != nil {
-		return nil, 0, err
-	}
-
-	return us, count, nil
+func (s *userService) List(ctx context.Context, q *domain.ListQuery) ([]*user.User, error) {
+	return s.userRepository.List(ctx, q)
 }
 
-func (s *userService) ListFriendsCount(ctx context.Context, u *user.User) (int64, int64, error) {
-	if u == nil {
-		err := xerrors.New("User is nil")
-		return 0, 0, exception.NotFound.New(err)
-	}
+func (s *userService) ListFollow(ctx context.Context, q *domain.ListQuery) ([]*user.Follow, error) {
+	return s.userRepository.ListFollow(ctx, q)
+}
 
-	followsQuery := &domain.ListQuery{
+func (s *userService) ListFollower(ctx context.Context, q *domain.ListQuery) ([]*user.Follower, error) {
+	return s.userRepository.ListFollower(ctx, q)
+}
+
+func (s *userService) ListCount(ctx context.Context, q *domain.ListQuery) (int64, error) {
+	return s.userRepository.ListCount(ctx, q)
+}
+
+func (s *userService) ListFriendCount(ctx context.Context, uid string) (int64, int64, error) {
+	followQuery := &domain.ListQuery{
 		Conditions: []*domain.QueryCondition{
 			{
 				Field:    "follow_id",
 				Operator: "==",
-				Value:    u.ID,
+				Value:    uid,
 			},
 		},
 	}
 
-	followersQuery := &domain.ListQuery{
+	followerQuery := &domain.ListQuery{
 		Conditions: []*domain.QueryCondition{
 			{
 				Field:    "follower_id",
 				Operator: "==",
-				Value:    u.ID,
+				Value:    uid,
 			},
 		},
 	}
 
-	followsCount, err := s.userRepository.ListFollowsCount(ctx, followsQuery)
+	followCount, err := s.userRepository.ListRelationshipCount(ctx, followQuery)
 	if err != nil {
 		return 0, 0, err
 	}
 
-	followersCount, err := s.userRepository.ListFollowersCount(ctx, followersQuery)
+	followerCount, err := s.userRepository.ListRelationshipCount(ctx, followerQuery)
 	if err != nil {
 		return 0, 0, err
 	}
 
-	return followsCount, followersCount, nil
+	return followCount, followerCount, nil
 }
 
 func (s *userService) Show(ctx context.Context, uid string) (*user.User, error) {
-	u, err := s.userRepository.Show(ctx, uid)
+	return s.userRepository.Show(ctx, uid)
+}
+
+func (s *userService) ShowRelationship(ctx context.Context, id int64) (*user.Relationship, error) {
+	return s.userRepository.ShowRelationship(ctx, id)
+}
+
+func (s *userService) ShowRelationshipByUID(
+	ctx context.Context, followID string, followerID string,
+) (*user.Relationship, error) {
+	id, err := s.userRepository.GetRelationshipIDByUID(ctx, followID, followerID)
 	if err != nil {
 		return nil, err
 	}
 
-	return u, nil
+	return s.userRepository.ShowRelationship(ctx, id)
 }
 
 func (s *userService) Create(ctx context.Context, u *user.User) error {
@@ -112,6 +112,20 @@ func (s *userService) Create(ctx context.Context, u *user.User) error {
 	return s.userRepository.Create(ctx, u)
 }
 
+func (s *userService) CreateRelationship(ctx context.Context, r *user.Relationship) error {
+	err := s.userDomainValidation.Relationship(ctx, r)
+	if err != nil {
+		return err
+	}
+
+	current := time.Now()
+
+	r.CreatedAt = current
+	r.UpdatedAt = current
+
+	return s.userRepository.CreateRelationship(ctx, r)
+}
+
 func (s *userService) Update(ctx context.Context, u *user.User) error {
 	err := s.userDomainValidation.User(ctx, u)
 	if err != nil {
@@ -127,68 +141,28 @@ func (s *userService) UpdatePassword(ctx context.Context, uid string, password s
 	return s.userRepository.UpdatePassword(ctx, uid, password)
 }
 
+func (s *userService) DeleteRelationship(ctx context.Context, id int64) error {
+	return s.userRepository.DeleteRelationship(ctx, id)
+}
+
 func (s *userService) UploadThumbnail(ctx context.Context, uid string, thumbnail []byte) (string, error) {
 	return s.userUploader.Thumbnail(ctx, uid, thumbnail)
 }
 
-func (s *userService) IsFriend(ctx context.Context, u *user.User, cuid string) (bool, bool, error) {
+func (s *userService) IsFriend(ctx context.Context, friendID string, uid string) (bool, bool) {
 	isFollow := false
 	isFollower := false
 
-	if u == nil {
-		err := xerrors.New("User is nil")
-		return false, false, exception.NotFound.New(err)
-	}
+	followID, _ := s.userRepository.GetRelationshipIDByUID(ctx, uid, friendID)
+	followerID, _ := s.userRepository.GetRelationshipIDByUID(ctx, friendID, uid)
 
-	followsQuery := &domain.ListQuery{
-		Limit: 1,
-		Conditions: []*domain.QueryCondition{
-			{
-				Field:    "follow_id",
-				Operator: "==",
-				Value:    u.ID,
-			},
-			{
-				Field:    "follower_id",
-				Operator: "==",
-				Value:    cuid,
-			},
-		},
-	}
-
-	followersQuery := &domain.ListQuery{
-		Limit: 1,
-		Conditions: []*domain.QueryCondition{
-			{
-				Field:    "follower_id",
-				Operator: "==",
-				Value:    u.ID,
-			},
-			{
-				Field:    "follow_id",
-				Operator: "==",
-				Value:    cuid,
-			},
-		},
-	}
-
-	follows, err := s.userRepository.ListFollows(ctx, followsQuery)
-	if err != nil {
-		return false, false, err
-	}
-
-	followers, err := s.userRepository.ListFollowers(ctx, followersQuery)
-	if err != nil {
-		return false, false, err
-	}
-
-	if len(follows) > 0 {
-		isFollower = true
-	}
-
-	if len(followers) > 0 {
+	if followID != 0 {
 		isFollow = true
 	}
 
-	return isFollow, isFollower, nil
+	if followerID != 0 {
+		isFollower = true
+	}
+
+	return isFollow, isFollower
 }

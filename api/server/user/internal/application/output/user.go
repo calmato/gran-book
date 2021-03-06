@@ -1,9 +1,9 @@
 package output
 
-// GetUserProfile - ユーザプロフィール取得のレスポンス
-type GetUserProfile struct {
-	IsFollow       bool
-	IsFollower     bool
-	FollowsTotal   int64
-	FollowersTotal int64
+// UserProfile - ユーザプロフィール関連のレスポンス
+type UserProfile struct {
+	IsFollow      bool
+	IsFollower    bool
+	FollowCount   int64
+	FollowerCount int64
 }
