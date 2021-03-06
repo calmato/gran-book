@@ -82,7 +82,8 @@ func TestAdminApplication_List(t *testing.T) {
 		arvm.EXPECT().ListAdmin(tc.Input).Return(nil)
 
 		usm := mock_user.NewMockService(ctrl)
-		usm.EXPECT().List(ctx, gomock.Any()).Return(tc.Expected.Users, tc.Expected.Output.Total, tc.Expected.Error)
+		usm.EXPECT().List(ctx, gomock.Any()).Return(tc.Expected.Users, tc.Expected.Error)
+		usm.EXPECT().ListCount(ctx, gomock.Any()).Return(tc.Expected.Output.Total, tc.Expected.Error)
 
 		t.Run(result, func(t *testing.T) {
 			target := NewAdminApplication(arvm, usm)

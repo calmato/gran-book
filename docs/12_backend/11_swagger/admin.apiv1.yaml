@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Gran Book (Admin)
   description: 管理コンソール用API
-  version: 0.4.1
+  version: 0.5.0
 servers:
   - url: http://localhost:8081
     description: 開発環境
@@ -93,7 +93,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/updateAuthRequest'
+              $ref: '#/components/schemas/updateAuthProfileRequest'
       responses:
         '200':
           description: A successful response.

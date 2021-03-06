@@ -52,21 +52,76 @@ func (r *userRepository) Authentication(ctx context.Context) (string, error) {
 	return fbToken.Subject, nil
 }
 
-func (r *userRepository) List(ctx context.Context, query *domain.ListQuery) ([]*user.User, int64, error) {
+func (r *userRepository) List(ctx context.Context, q *domain.ListQuery) ([]*user.User, error) {
 	us := []*user.User{}
-	db := r.client.getListQuery(query)
+
+	sql := r.client.db
+	db := r.client.getListQuery(sql, q)
 
 	err := db.Find(&us).Error
 	if err != nil {
-		return nil, 0, exception.ErrorInDatastore.New(err)
+		return nil, exception.ErrorInDatastore.New(err)
 	}
 
-	count, err := r.client.getListCount(query, &user.User{})
+	return us, nil
+}
+
+func (r *userRepository) ListFollow(ctx context.Context, q *domain.ListQuery) ([]*user.Follow, error) {
+	fs := []*user.Follow{}
+
+	columns := []string{
+		"relationships.follow_id",
+		"relationships.follower_id",
+		"users.username",
+		"users.thumbnail_url",
+		"users.self_introduction",
+	}
+	sql := r.client.db.
+		Table("relationships").
+		Select(strings.Join(columns, ", ")).
+		Joins("LEFT JOIN users ON relationships.follow_id = users.id")
+	db := r.client.getListQuery(sql, q)
+
+	err := db.Scan(&fs).Error
 	if err != nil {
-		return nil, 0, err
+		return nil, exception.ErrorInDatastore.New(err)
 	}
 
-	return us, count, nil
+	return fs, nil
+}
+
+func (r *userRepository) ListFollower(ctx context.Context, q *domain.ListQuery) ([]*user.Follower, error) {
+	fs := []*user.Follower{}
+
+	columns := []string{
+		"relationships.follow_id",
+		"relationships.follower_id",
+		"users.username",
+		"users.thumbnail_url",
+		"users.self_introduction",
+	}
+	sql := r.client.db.
+		Table("relationships").
+		Select(strings.Join(columns, ", ")).
+		Joins("LEFT JOIN users ON relationships.follower_id = users.id")
+	db := r.client.getListQuery(sql, q)
+
+	err := db.Scan(&fs).Error
+	if err != nil {
+		return nil, exception.ErrorInDatastore.New(err)
+	}
+
+	return fs, nil
+}
+
+func (r *userRepository) ListCount(ctx context.Context, q *domain.ListQuery) (int64, error) {
+	sql := r.client.db.Table("users")
+	return r.client.getListCount(sql, q)
+}
+
+func (r *userRepository) ListRelationshipCount(ctx context.Context, q *domain.ListQuery) (int64, error) {
+	sql := r.client.db.Table("relationships")
+	return r.client.getListCount(sql, q)
 }
 
 func (r *userRepository) Show(ctx context.Context, uid string) (*user.User, error) {
@@ -80,6 +135,17 @@ func (r *userRepository) Show(ctx context.Context, uid string) (*user.User, erro
 	return u, nil
 }
 
+func (r *userRepository) ShowRelationship(ctx context.Context, id int64) (*user.Relationship, error) {
+	rs := &user.Relationship{}
+
+	err := r.client.db.First(rs, "id = ?", id).Error
+	if err != nil {
+		return nil, exception.NotFound.New(err)
+	}
+
+	return rs, nil
+}
+
 func (r *userRepository) Create(ctx context.Context, u *user.User) error {
 	_, err := r.auth.CreateUser(ctx, u.ID, u.Email, u.Password)
 	if err != nil {
@@ -87,6 +153,15 @@ func (r *userRepository) Create(ctx context.Context, u *user.User) error {
 	}
 
 	err = r.client.db.Create(&u).Error
+	if err != nil {
+		return exception.ErrorInDatastore.New(err)
+	}
+
+	return nil
+}
+
+func (r *userRepository) CreateRelationship(ctx context.Context, rs *user.Relationship) error {
+	err := r.client.db.Create(&rs).Error
 	if err != nil {
 		return exception.ErrorInDatastore.New(err)
 	}
@@ -129,6 +204,15 @@ func (r *userRepository) UpdatePassword(ctx context.Context, uid string, passwor
 	return nil
 }
 
+func (r *userRepository) DeleteRelationship(ctx context.Context, id int64) error {
+	err := r.client.db.Delete(&user.Relationship{}, id).Error
+	if err != nil {
+		return exception.ErrorInDatastore.New(err)
+	}
+
+	return nil
+}
+
 func (r *userRepository) GetUIDByEmail(ctx context.Context, email string) (string, error) {
 	uid, err := r.auth.GetUIDByEmail(ctx, email)
 	if err != nil {
@@ -136,6 +220,19 @@ func (r *userRepository) GetUIDByEmail(ctx context.Context, email string) (strin
 	}
 
 	return uid, nil
+}
+
+func (r *userRepository) GetRelationshipIDByUID(
+	ctx context.Context, followID string, followerID string,
+) (int64, error) {
+	rs := &user.Relationship{}
+
+	err := r.client.db.Select("id").First(rs, "follow_id = ? AND follower_id = ?", followID, followerID).Error
+	if err != nil {
+		return 0, exception.NotFound.New(err)
+	}
+
+	return rs.ID, nil
 }
 
 func getToken(ctx context.Context) (string, error) {

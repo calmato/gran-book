@@ -5,14 +5,9 @@ import (
 	"strings"
 
 	"github.com/calmato/gran-book/api/server/user/internal/domain"
+	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
-)
-
-const (
-	defaultLimit          = 100
-	defaultOrderBy        = "id"
-	defaultOrderDirection = "asc"
 )
 
 // Client - DB操作用クライアントの構造体
@@ -57,9 +52,7 @@ func getDBConfig(socket, host, port, database, username, password string) string
 }
 
 // getListQuery - SELECT SQL文作成用メソッド
-func (c *Client) getListQuery(q *domain.ListQuery) *gorm.DB {
-	db := c.db
-
+func (c *Client) getListQuery(db *gorm.DB, q *domain.ListQuery) *gorm.DB {
 	if q == nil {
 		return db
 	}
@@ -69,14 +62,6 @@ func (c *Client) getListQuery(q *domain.ListQuery) *gorm.DB {
 		db = setWhere(db, c)
 	}
 
-	// ORDER句の追加
-	if q.Order == nil {
-		q.Order = &domain.QueryOrder{
-			By:        defaultOrderBy,
-			Direction: defaultOrderDirection,
-		}
-	}
-
 	db = setOrder(db, q.Order)
 	db = setLimit(db, q.Limit)
 	db = setOffset(db, q.Offset)
@@ -84,9 +69,8 @@ func (c *Client) getListQuery(q *domain.ListQuery) *gorm.DB {
 	return db
 }
 
-func (c *Client) getListCount(q *domain.ListQuery, model interface{}) (int64, error) {
+func (c *Client) getListCount(db *gorm.DB, q *domain.ListQuery) (int64, error) {
 	var count int64
-	db := c.db.Model(model)
 
 	if q != nil {
 		// WHERE句の追加
@@ -97,7 +81,7 @@ func (c *Client) getListCount(q *domain.ListQuery, model interface{}) (int64, er
 
 	err := db.Count(&count).Error
 	if err != nil {
-		return 0, err
+		return 0, exception.ErrorInDatastore.New(err)
 	}
 
 	return count, nil
@@ -152,11 +136,11 @@ func setOrder(db *gorm.DB, o *domain.QueryOrder) *gorm.DB {
 }
 
 func setLimit(db *gorm.DB, limit int64) *gorm.DB {
-	if limit == 0 {
-		return db.Limit(defaultLimit)
+	if limit > 0 {
+		return db.Limit(limit)
 	}
 
-	return db.Limit(limit)
+	return db
 }
 
 func setOffset(db *gorm.DB, offset int64) *gorm.DB {

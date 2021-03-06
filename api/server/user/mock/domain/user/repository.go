@@ -51,19 +51,78 @@ func (mr *MockRepositoryMockRecorder) Authentication(ctx interface{}) *gomock.Ca
 }
 
 // List mocks base method
-func (m *MockRepository) List(ctx context.Context, query *domain.ListQuery) ([]*user.User, int64, error) {
+func (m *MockRepository) List(ctx context.Context, q *domain.ListQuery) ([]*user.User, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "List", ctx, query)
+	ret := m.ctrl.Call(m, "List", ctx, q)
 	ret0, _ := ret[0].([]*user.User)
-	ret1, _ := ret[1].(int64)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // List indicates an expected call of List
-func (mr *MockRepositoryMockRecorder) List(ctx, query interface{}) *gomock.Call {
+func (mr *MockRepositoryMockRecorder) List(ctx, q interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockRepository)(nil).List), ctx, query)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockRepository)(nil).List), ctx, q)
+}
+
+// ListFollow mocks base method
+func (m *MockRepository) ListFollow(ctx context.Context, q *domain.ListQuery) ([]*user.Follow, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListFollow", ctx, q)
+	ret0, _ := ret[0].([]*user.Follow)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListFollow indicates an expected call of ListFollow
+func (mr *MockRepositoryMockRecorder) ListFollow(ctx, q interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListFollow", reflect.TypeOf((*MockRepository)(nil).ListFollow), ctx, q)
+}
+
+// ListFollower mocks base method
+func (m *MockRepository) ListFollower(ctx context.Context, q *domain.ListQuery) ([]*user.Follower, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListFollower", ctx, q)
+	ret0, _ := ret[0].([]*user.Follower)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListFollower indicates an expected call of ListFollower
+func (mr *MockRepositoryMockRecorder) ListFollower(ctx, q interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListFollower", reflect.TypeOf((*MockRepository)(nil).ListFollower), ctx, q)
+}
+
+// ListCount mocks base method
+func (m *MockRepository) ListCount(ctx context.Context, q *domain.ListQuery) (int64, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListCount", ctx, q)
+	ret0, _ := ret[0].(int64)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListCount indicates an expected call of ListCount
+func (mr *MockRepositoryMockRecorder) ListCount(ctx, q interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListCount", reflect.TypeOf((*MockRepository)(nil).ListCount), ctx, q)
+}
+
+// ListRelationshipCount mocks base method
+func (m *MockRepository) ListRelationshipCount(ctx context.Context, q *domain.ListQuery) (int64, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListRelationshipCount", ctx, q)
+	ret0, _ := ret[0].(int64)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListRelationshipCount indicates an expected call of ListRelationshipCount
+func (mr *MockRepositoryMockRecorder) ListRelationshipCount(ctx, q interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListRelationshipCount", reflect.TypeOf((*MockRepository)(nil).ListRelationshipCount), ctx, q)
 }
 
 // Show mocks base method
@@ -81,6 +140,21 @@ func (mr *MockRepositoryMockRecorder) Show(ctx, uid interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Show", reflect.TypeOf((*MockRepository)(nil).Show), ctx, uid)
 }
 
+// ShowRelationship mocks base method
+func (m *MockRepository) ShowRelationship(ctx context.Context, id int64) (*user.Relationship, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ShowRelationship", ctx, id)
+	ret0, _ := ret[0].(*user.Relationship)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ShowRelationship indicates an expected call of ShowRelationship
+func (mr *MockRepositoryMockRecorder) ShowRelationship(ctx, id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ShowRelationship", reflect.TypeOf((*MockRepository)(nil).ShowRelationship), ctx, id)
+}
+
 // Create mocks base method
 func (m *MockRepository) Create(ctx context.Context, u *user.User) error {
 	m.ctrl.T.Helper()
@@ -93,6 +167,20 @@ func (m *MockRepository) Create(ctx context.Context, u *user.User) error {
 func (mr *MockRepositoryMockRecorder) Create(ctx, u interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockRepository)(nil).Create), ctx, u)
+}
+
+// CreateRelationship mocks base method
+func (m *MockRepository) CreateRelationship(ctx context.Context, r *user.Relationship) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateRelationship", ctx, r)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CreateRelationship indicates an expected call of CreateRelationship
+func (mr *MockRepositoryMockRecorder) CreateRelationship(ctx, r interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateRelationship", reflect.TypeOf((*MockRepository)(nil).CreateRelationship), ctx, r)
 }
 
 // Update mocks base method
@@ -123,6 +211,20 @@ func (mr *MockRepositoryMockRecorder) UpdatePassword(ctx, uid, password interfac
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdatePassword", reflect.TypeOf((*MockRepository)(nil).UpdatePassword), ctx, uid, password)
 }
 
+// DeleteRelationship mocks base method
+func (m *MockRepository) DeleteRelationship(ctx context.Context, id int64) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteRelationship", ctx, id)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteRelationship indicates an expected call of DeleteRelationship
+func (mr *MockRepositoryMockRecorder) DeleteRelationship(ctx, id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteRelationship", reflect.TypeOf((*MockRepository)(nil).DeleteRelationship), ctx, id)
+}
+
 // GetUIDByEmail mocks base method
 func (m *MockRepository) GetUIDByEmail(ctx context.Context, email string) (string, error) {
 	m.ctrl.T.Helper()
@@ -136,4 +238,19 @@ func (m *MockRepository) GetUIDByEmail(ctx context.Context, email string) (strin
 func (mr *MockRepositoryMockRecorder) GetUIDByEmail(ctx, email interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUIDByEmail", reflect.TypeOf((*MockRepository)(nil).GetUIDByEmail), ctx, email)
+}
+
+// GetRelationshipIDByUID mocks base method
+func (m *MockRepository) GetRelationshipIDByUID(ctx context.Context, followID, followerID string) (int64, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetRelationshipIDByUID", ctx, followID, followerID)
+	ret0, _ := ret[0].(int64)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetRelationshipIDByUID indicates an expected call of GetRelationshipIDByUID
+func (mr *MockRepositoryMockRecorder) GetRelationshipIDByUID(ctx, followID, followerID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRelationshipIDByUID", reflect.TypeOf((*MockRepository)(nil).GetRelationshipIDByUID), ctx, followID, followerID)
 }

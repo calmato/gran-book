@@ -21,6 +21,14 @@ service AdminService {
   rpc UpdateAdminProfile (UpdateAdminProfileRequest) returns (AdminResponse);
 }
 
+service UserService {
+  rpc ListFollow (ListFollowRequest) returns (FollowListResponse);
+  rpc ListFollower (ListFollowerRequest) returns (FollowerListResponse);
+  rpc GetUserProfile (GetUserProfileRequest) returns (UserProfileResponse);
+  rpc RegisterFollow (RegisterFollowRequest) returns (UserProfileResponse);
+  rpc UnregisterFollow (UnregisterFollowRequest) returns (UserProfileResponse);
+}
+
 message EmptyUser {}
 
 message CreateAuthRequest {
@@ -106,6 +114,30 @@ message UpdateAdminProfileRequest {
   string first_name_kana = 7;
 }
 
+message ListFollowRequest {
+  string id = 1;
+  int64 limit = 2;
+  int64 offset = 3;
+}
+
+message ListFollowerRequest {
+  string id = 1;
+  int64 limit = 2;
+  int64 offset = 3;
+}
+
+message GetUserProfileRequest {
+  string id = 1;
+}
+
+message RegisterFollowRequest {
+  string id = 1;
+}
+
+message UnregisterFollowRequest {
+  string id = 1;
+}
+
 message AuthResponse {
   string id = 1;
   string username = 2;
@@ -172,4 +204,41 @@ message AdminListResponse {
   int64 offset = 3;
   int64 total = 4;
   Order order = 5;
+}
+
+message UserProfileResponse {
+  string id = 1;
+  string username = 2;
+  string thumbnail_url = 3;
+  string self_introduction = 4;
+  bool is_follow = 5;
+  bool is_follower = 6;
+  int64 follow_count = 7;
+  int64 follower_count = 8;
+}
+
+message FollowListResponse {
+  message User {
+    string id = 1;
+    string username = 2;
+    string thumbnail_url = 3;
+    string self_introduction = 4;
+  }
+  repeated User users = 1;
+  int64 limit = 2;
+  int64 offset = 3;
+  int64 total = 4;
+}
+
+message FollowerListResponse {
+  message User {
+    string id = 1;
+    string username = 2;
+    string thumbnail_url = 3;
+    string self_introduction = 4;
+  }
+  repeated User users = 1;
+  int64 limit = 2;
+  int64 offset = 3;
+  int64 total = 4;
 }
