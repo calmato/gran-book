@@ -9,12 +9,16 @@ import (
 // Service - Userドメインサービス
 type Service interface {
 	Authentication(ctx context.Context) (string, error)
-	List(ctx context.Context, q *domain.ListQuery) ([]*User, int64, error)
+	List(ctx context.Context, q *domain.ListQuery) ([]*User, error)
+	ListCount(ctx context.Context, q *domain.ListQuery) (int64, error)
+	ListFriendCount(ctx context.Context, uid string) (int64, int64, error)
 	Show(ctx context.Context, uid string) (*User, error)
+	ShowRelationship(ctx context.Context, id int64) (*Relationship, error)
 	Create(ctx context.Context, u *User) error
 	CreateRelationship(ctx context.Context, r *Relationship) error
 	Update(ctx context.Context, u *User) error
 	UpdatePassword(ctx context.Context, uid string, password string) error
 	DeleteRelationship(ctx context.Context, id int64) error
 	UploadThumbnail(ctx context.Context, uid string, thumbnail []byte) (string, error)
+	IsFriend(ctx context.Context, friendID string, uid string) (bool, bool)
 }

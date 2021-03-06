@@ -28,22 +28,54 @@ func (s *userService) Authentication(ctx context.Context) (string, error) {
 	return s.userRepository.Authentication(ctx)
 }
 
-func (s *userService) List(ctx context.Context, q *domain.ListQuery) ([]*user.User, int64, error) {
-	us, err := s.userRepository.List(ctx, q)
-	if err != nil {
-		return nil, 0, err
+func (s *userService) List(ctx context.Context, q *domain.ListQuery) ([]*user.User, error) {
+	return s.userRepository.List(ctx, q)
+}
+
+func (s *userService) ListCount(ctx context.Context, q *domain.ListQuery) (int64, error) {
+	return s.userRepository.ListCount(ctx, q)
+}
+
+func (s *userService) ListFriendCount(ctx context.Context, uid string) (int64, int64, error) {
+	followQuery := &domain.ListQuery{
+		Conditions: []*domain.QueryCondition{
+			{
+				Field:    "follower_id",
+				Operator: "==",
+				Value:    uid,
+			},
+		},
 	}
 
-	count, err := s.userRepository.ListCount(ctx, q)
-	if err != nil {
-		return nil, 0, err
+	followerQuery := &domain.ListQuery{
+		Conditions: []*domain.QueryCondition{
+			{
+				Field:    "follow_id",
+				Operator: "==",
+				Value:    uid,
+			},
+		},
 	}
 
-	return us, count, nil
+	followCount, err := s.userRepository.ListRelationshipCount(ctx, followQuery)
+	if err != nil {
+		return 0, 0, err
+	}
+
+	followerCount, err := s.userRepository.ListRelationshipCount(ctx, followerQuery)
+	if err != nil {
+		return 0, 0, err
+	}
+
+	return followCount, followerCount, nil
 }
 
 func (s *userService) Show(ctx context.Context, uid string) (*user.User, error) {
 	return s.userRepository.Show(ctx, uid)
+}
+
+func (s *userService) ShowRelationship(ctx context.Context, id int64) (*user.Relationship, error) {
+	return s.userRepository.ShowRelationship(ctx, id)
 }
 
 func (s *userService) Create(ctx context.Context, u *user.User) error {
@@ -96,4 +128,22 @@ func (s *userService) DeleteRelationship(ctx context.Context, id int64) error {
 
 func (s *userService) UploadThumbnail(ctx context.Context, uid string, thumbnail []byte) (string, error) {
 	return s.userUploader.Thumbnail(ctx, uid, thumbnail)
+}
+
+func (s *userService) IsFriend(ctx context.Context, friendID string, uid string) (bool, bool) {
+	isFollow := false
+	isFollower := false
+
+	followID, _ := s.userRepository.GetRelationshipIDByUID(ctx, uid, friendID)
+	followerID, _ := s.userRepository.GetRelationshipIDByUID(ctx, friendID, uid)
+
+	if followID != 0 {
+		isFollow = true
+	}
+
+	if followerID != 0 {
+		isFollower = true
+	}
+
+	return isFollow, isFollower
 }
