@@ -6,12 +6,183 @@ import (
 	"testing"
 	"time"
 
+	"github.com/calmato/gran-book/api/server/user/internal/application/input"
 	"github.com/calmato/gran-book/api/server/user/internal/application/output"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/user"
 	mock_validation "github.com/calmato/gran-book/api/server/user/mock/application/validation"
 	mock_user "github.com/calmato/gran-book/api/server/user/mock/domain/user"
 	"github.com/golang/mock/gomock"
 )
+
+func TestUserApplication_ListFollow(t *testing.T) {
+	testCases := map[string]struct {
+		UID      string
+		Input    *input.ListFollow
+		Expected struct {
+			Follows []*user.Follow
+			Output  *output.ListQuery
+			Error   error
+		}
+	}{
+		"ok": {
+			UID: "00000000-0000-0000-0000-000000000000",
+			Input: &input.ListFollow{
+				Limit:  100,
+				Offset: 0,
+			},
+			Expected: struct {
+				Follows []*user.Follow
+				Output  *output.ListQuery
+				Error   error
+			}{
+				Follows: []*user.Follow{
+					{
+						FollowID:         "00000000-0000-0000-0000-000000000000",
+						FollowerID:       "11111111-1111-1111-1111-111111111111",
+						Username:         "test-user",
+						ThumbnailURL:     "",
+						SelfIntroduction: "",
+					},
+				},
+				Output: &output.ListQuery{
+					Limit:  100,
+					Offset: 0,
+					Total:  1,
+				},
+				Error: nil,
+			},
+		},
+	}
+
+	for result, tc := range testCases {
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		var followCount int64
+		var followerCount int64
+
+		if tc.Expected.Output != nil {
+			followCount = tc.Expected.Output.Total
+		}
+
+		urvm := mock_validation.NewMockUserRequestValidation(ctrl)
+		urvm.EXPECT().ListFollow(tc.Input).Return(nil)
+
+		usm := mock_user.NewMockService(ctrl)
+		usm.EXPECT().ListFollow(ctx, gomock.Any()).Return(tc.Expected.Follows, tc.Expected.Error)
+		usm.EXPECT().
+			ListFriendCount(ctx, tc.UID).
+			Return(followCount, followerCount, tc.Expected.Error)
+
+		t.Run(result, func(t *testing.T) {
+			target := NewUserApplication(urvm, usm)
+
+			follows, output, err := target.ListFollow(ctx, tc.Input, tc.UID)
+			if !reflect.DeepEqual(err, tc.Expected.Error) {
+				t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+				return
+			}
+
+			if !reflect.DeepEqual(follows, tc.Expected.Follows) {
+				t.Fatalf("want %#v, but %#v", tc.Expected.Follows, follows)
+				return
+			}
+
+			if !reflect.DeepEqual(output, tc.Expected.Output) {
+				t.Fatalf("want %#v, but %#v", tc.Expected.Output, output)
+				return
+			}
+		})
+	}
+}
+
+func TestUserApplication_ListFollower(t *testing.T) {
+	testCases := map[string]struct {
+		UID      string
+		Input    *input.ListFollower
+		Expected struct {
+			Followers []*user.Follower
+			Output    *output.ListQuery
+			Error     error
+		}
+	}{
+		"ok": {
+			UID: "00000000-0000-0000-0000-000000000000",
+			Input: &input.ListFollower{
+				Limit:  100,
+				Offset: 0,
+			},
+			Expected: struct {
+				Followers []*user.Follower
+				Output    *output.ListQuery
+				Error     error
+			}{
+				Followers: []*user.Follower{
+					{
+						FollowID:         "11111111-1111-1111-1111-111111111111",
+						FollowerID:       "00000000-0000-0000-0000-000000000000",
+						Username:         "test-user",
+						ThumbnailURL:     "",
+						SelfIntroduction: "",
+					},
+				},
+				Output: &output.ListQuery{
+					Limit:  100,
+					Offset: 0,
+					Total:  1,
+				},
+				Error: nil,
+			},
+		},
+	}
+
+	for result, tc := range testCases {
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		var followCount int64
+		var followerCount int64
+
+		if tc.Expected.Output != nil {
+			followerCount = tc.Expected.Output.Total
+		}
+
+		urvm := mock_validation.NewMockUserRequestValidation(ctrl)
+		urvm.EXPECT().ListFollower(tc.Input).Return(nil)
+
+		usm := mock_user.NewMockService(ctrl)
+		usm.EXPECT().ListFollower(ctx, gomock.Any()).Return(tc.Expected.Followers, tc.Expected.Error)
+		usm.EXPECT().
+			ListFriendCount(ctx, tc.UID).
+			Return(followCount, followerCount, tc.Expected.Error)
+
+		t.Run(result, func(t *testing.T) {
+			target := NewUserApplication(urvm, usm)
+
+			followers, output, err := target.ListFollower(ctx, tc.Input, tc.UID)
+			if !reflect.DeepEqual(err, tc.Expected.Error) {
+				t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+				return
+			}
+
+			if !reflect.DeepEqual(followers, tc.Expected.Followers) {
+				t.Fatalf("want %#v, but %#v", tc.Expected.Followers, followers)
+				return
+			}
+
+			if !reflect.DeepEqual(output, tc.Expected.Output) {
+				t.Fatalf("want %#v, but %#v", tc.Expected.Output, output)
+				return
+			}
+		})
+	}
+}
 
 func TestUserApplication_GetUserProfile(t *testing.T) {
 	current := time.Now()
