@@ -5,3 +5,7 @@ export interface IGetUserProfileInput {
 export interface IRegisterFollowInput {
   id: string
 }
+
+export interface IUnregisterFollowInput {
+  id: string
+}

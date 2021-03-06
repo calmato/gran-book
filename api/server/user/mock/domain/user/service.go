@@ -156,6 +156,21 @@ func (mr *MockServiceMockRecorder) ShowRelationship(ctx, id interface{}) *gomock
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ShowRelationship", reflect.TypeOf((*MockService)(nil).ShowRelationship), ctx, id)
 }
 
+// ShowRelationshipByUID mocks base method
+func (m *MockService) ShowRelationshipByUID(ctx context.Context, followID, followerID string) (*user.Relationship, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ShowRelationshipByUID", ctx, followID, followerID)
+	ret0, _ := ret[0].(*user.Relationship)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ShowRelationshipByUID indicates an expected call of ShowRelationshipByUID
+func (mr *MockServiceMockRecorder) ShowRelationshipByUID(ctx, followID, followerID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ShowRelationshipByUID", reflect.TypeOf((*MockService)(nil).ShowRelationshipByUID), ctx, followID, followerID)
+}
+
 // Create mocks base method
 func (m *MockService) Create(ctx context.Context, u *user.User) error {
 	m.ctrl.T.Helper()

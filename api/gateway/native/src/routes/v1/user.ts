@@ -1,7 +1,7 @@
 import express, { NextFunction, Request, Response } from 'express'
-import { getUserProfile, registerFollow } from '~/api'
+import { getUserProfile, registerFollow, unregisterFollow } from '~/api'
 import { GrpcError } from '~/types/exception'
-import { IGetUserProfileInput, IRegisterFollowInput } from '~/types/input'
+import { IGetUserProfileInput, IRegisterFollowInput, IUnregisterFollowInput } from '~/types/input'
 import { IUserProfileOutput } from '~/types/output'
 import { IUserProfileResponse } from '~/types/response'
 
@@ -35,6 +35,24 @@ router.post(
     }
 
     await registerFollow(req, input)
+      .then((output: IUserProfileOutput) => {
+        const response: IUserProfileResponse = setUserProfileResponse(output)
+        res.status(200).json(response)
+      })
+      .catch((err: GrpcError) => next(err))
+  }
+)
+
+router.delete(
+  '/:userId/follow',
+  async (req: Request, res: Response<IUserProfileResponse>, next: NextFunction): Promise<void> => {
+    const { userId } = req.params
+
+    const input: IUnregisterFollowInput = {
+      id: userId || '',
+    }
+
+    await unregisterFollow(req, input)
       .then((output: IUserProfileOutput) => {
         const response: IUserProfileResponse = setUserProfileResponse(output)
         res.status(200).json(response)

@@ -2,8 +2,13 @@ import { Request } from 'express'
 import { userClient } from '~/plugins/grpc'
 import { getGrpcError } from '~/lib/grpc-exception'
 import { getGrpcMetadata } from '~/lib/grpc-metadata'
-import { GetUserProfileRequest, RegisterFollowRequest, UserProfileResponse } from '~/proto/user_apiv1_pb'
-import { IGetUserProfileInput, IRegisterFollowInput } from '~/types/input'
+import {
+  GetUserProfileRequest,
+  RegisterFollowRequest,
+  UnregisterFollowRequest,
+  UserProfileResponse,
+} from '~/proto/user_apiv1_pb'
+import { IGetUserProfileInput, IRegisterFollowInput, IUnregisterFollowInput } from '~/types/input'
 import { IUserProfileOutput } from '~/types/output'
 
 export function getUserProfile(req: Request<any>, input: IGetUserProfileInput): Promise<IUserProfileOutput> {
@@ -33,6 +38,25 @@ export function registerFollow(req: Request<any>, input: IRegisterFollowInput): 
 
   return new Promise((resolve: (res: IUserProfileOutput) => void, reject: (reason: Error) => void) => {
     userClient.registerFollow(request, metadata, (err: any, res: UserProfileResponse) => {
+      if (err) {
+        reject(getGrpcError(err))
+        return
+      }
+
+      const output: IUserProfileOutput = setUserProfileOutput(res)
+      resolve(output)
+    })
+  })
+}
+
+export function unregisterFollow(req: Request<any>, input: IUnregisterFollowInput): Promise<IUserProfileOutput> {
+  const request = new UnregisterFollowRequest()
+  const metadata = getGrpcMetadata(req)
+
+  request.setId(input.id)
+
+  return new Promise((resolve: (res: IUserProfileOutput) => void, reject: (reason: Error) => void) => {
+    userClient.unregisterFollow(request, metadata, (err: any, res: UserProfileResponse) => {
       if (err) {
         reject(getGrpcError(err))
         return
