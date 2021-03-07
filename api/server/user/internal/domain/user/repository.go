@@ -12,6 +12,7 @@ type Repository interface {
 	List(ctx context.Context, q *domain.ListQuery) ([]*User, error)
 	ListFollow(ctx context.Context, q *domain.ListQuery) ([]*Follow, error)
 	ListFollower(ctx context.Context, q *domain.ListQuery) ([]*Follower, error)
+	ListFollowerID(ctx context.Context, q *domain.ListQuery) ([]string, error)
 	ListCount(ctx context.Context, q *domain.ListQuery) (int64, error)
 	ListRelationshipCount(ctx context.Context, q *domain.ListQuery) (int64, error)
 	Show(ctx context.Context, uid string) (*User, error)

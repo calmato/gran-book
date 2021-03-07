@@ -6,6 +6,7 @@ import (
 
 	"github.com/calmato/gran-book/api/server/user/internal/domain"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/user"
+	"github.com/calmato/gran-book/api/server/user/lib/array"
 	"github.com/google/uuid"
 )
 
@@ -32,12 +33,82 @@ func (s *userService) List(ctx context.Context, q *domain.ListQuery) ([]*user.Us
 	return s.userRepository.List(ctx, q)
 }
 
-func (s *userService) ListFollow(ctx context.Context, q *domain.ListQuery) ([]*user.Follow, error) {
-	return s.userRepository.ListFollow(ctx, q)
+func (s *userService) ListFollow(ctx context.Context, q *domain.ListQuery, uid string) ([]*user.Follow, error) {
+	fs, err := s.userRepository.ListFollow(ctx, q)
+	if err != nil {
+		return nil, err
+	}
+
+	vals := make([]string, len(fs))
+	for i, f := range fs {
+		vals[i] = f.FollowerID
+	}
+
+	query := &domain.ListQuery{
+		Conditions: []*domain.QueryCondition{
+			{
+				Field:    "follow_id",
+				Operator: "==",
+				Value:    uid,
+			},
+			{
+				Field:    "follower_id",
+				Operator: "IN",
+				Value:    vals,
+			},
+		},
+	}
+
+	followerIDs, err := s.userRepository.ListFollowerID(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, f := range fs {
+		isFollow, _ := array.Contains(followerIDs, f.FollowerID)
+		f.IsFollow = isFollow
+	}
+
+	return fs, nil
 }
 
-func (s *userService) ListFollower(ctx context.Context, q *domain.ListQuery) ([]*user.Follower, error) {
-	return s.userRepository.ListFollower(ctx, q)
+func (s *userService) ListFollower(ctx context.Context, q *domain.ListQuery, uid string) ([]*user.Follower, error) {
+	fs, err := s.userRepository.ListFollower(ctx, q)
+	if err != nil {
+		return nil, err
+	}
+
+	vals := make([]string, len(fs))
+	for i, f := range fs {
+		vals[i] = f.FollowID
+	}
+
+	query := &domain.ListQuery{
+		Conditions: []*domain.QueryCondition{
+			{
+				Field:    "follow_id",
+				Operator: "==",
+				Value:    uid,
+			},
+			{
+				Field:    "follower_id",
+				Operator: "IN",
+				Value:    vals,
+			},
+		},
+	}
+
+	followerIDs, err := s.userRepository.ListFollowerID(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, f := range fs {
+		isFollow, _ := array.Contains(followerIDs, f.FollowID)
+		f.IsFollow = isFollow
+	}
+
+	return fs, nil
 }
 
 func (s *userService) ListCount(ctx context.Context, q *domain.ListQuery) (int64, error) {
