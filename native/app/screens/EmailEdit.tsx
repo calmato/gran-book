@@ -1,10 +1,10 @@
 import React, { ReactElement, useState, useMemo } from 'react';
-import { StyleSheet, View, Text, Alert } from 'react-native';
+import { StyleSheet, View, Text, Alert, DevSettings } from 'react-native';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import { COLOR } from '~~/constants/theme';
 import MailInput from '~/components/molecules/MailInput';
 import { emailValidation } from '~/lib/validation';
-import { Button, Input } from 'react-native-elements';
+import { Button } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 import { generateErrorMessage } from '~/lib/util/ErrorUtil';
 
@@ -59,13 +59,14 @@ interface Props {
   email: string,
   actions: {
     emailEdit: (email: string) => Promise<void>,
+    signOut: () => Promise<void>,
   },
 }
 
 const EmailEdit = function EmailEdit
 (props: Props): ReactElement {
   const navigation = useNavigation();
-  const { emailEdit } = props.actions;
+  const { emailEdit, signOut } = props.actions;
   const [emailForm, setState] = useState('');
 
   const emailError: boolean = useMemo((): boolean => {
@@ -90,11 +91,14 @@ const EmailEdit = function EmailEdit
   const handleSubmit = React.useCallback(async () => {
     await emailEdit(emailForm)
       .then(() => {
-        navigation.goBack();
+        signOut()
+      })
+      .then(() => {
+        DevSettings.reload()
       })
       .catch((err) => {
         console.log('debug', err);
-        createAlertNotifyEmailEditError(err.code);
+        createAlertNotifyEmailEditError(err.staus);
       });
   }, [emailForm, emailEdit, navigation]);
 

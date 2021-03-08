@@ -4,7 +4,7 @@ import { authSelector } from '~/store/selectors';
 import { Auth } from '~/store/models';
 import EmailEdit from '~/screens/EmailEdit';
 import { useReduxDispatch } from '~/store/modules';
-import { editEmailAsync } from '~/store/usecases';
+import { editEmailAsync, signOutAsync } from '~/store/usecases';
 
 export default function ConnectedEmailEdit(): JSX.Element {
   const auth: Auth.Model = useSelector(authSelector);
@@ -14,6 +14,9 @@ export default function ConnectedEmailEdit(): JSX.Element {
     () => ({
       emailEdit(email: string): Promise<void> {
         return dispatch(editEmailAsync(email));
+      },
+      signOut(): Promise<void> {
+        return dispatch(signOutAsync());
       },
     }), [dispatch],
   );

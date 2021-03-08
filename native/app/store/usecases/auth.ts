@@ -6,7 +6,7 @@ import firebase from '~/lib/firebase';
 import * as LocalStorage from '~/lib/local-storage';
 import { Auth } from '~/store/models';
 import { AppState } from '~/store/modules';
-import { setAuth, setProfile, setEmail } from '~/store/modules/auth';
+import { setAuth, setProfile } from '~/store/modules/auth';
 import { IAuthResponse } from '~/types/response';
 
 interface IAuth {
@@ -46,6 +46,20 @@ export function signInWithEmailAsync(email: string, password: string) {
         throw err;
       });
   };
+}
+
+export function signOutAsync() {
+  return async(dispatch: Dispatch): Promise<void> => {
+    return await firebase
+    .auth()
+    .signOut()
+    .then(async () => {
+      dispatch(setAuth(Auth.initialState));
+    })
+    .catch((err: Error) => {
+      throw err;
+    });
+  }
 }
 
 export function signUpWithEmailAsync(email: string, password: string, passwordConfirmation: string, username: string) {
@@ -194,25 +208,13 @@ function sendEmailVerification(): Promise<void> {
 }
 
 export function editEmailAsync(email: string) {
-  return async (dispatch: Dispatch, getState: () => AppState): Promise<void> => {
+  return async (): Promise<void> => {
     return await axios
       .patch('/v1/auth/email', {
         email
       })
       .then(async (res: AxiosResponse<IAuthResponse>) => {
         console.log('debug', res);
-        const {
-          email,
-        } = res.data;
-
-        const values: Auth.Email = {
-          email,
-        };
-
-        dispatch(setEmail(values));
-
-        const auth: Auth.Model = getState().auth;
-        await LocalStorage.AuthStorage.save(auth);
       })
       .catch((err: Error) => {
         throw err;
