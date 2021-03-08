@@ -25,7 +25,7 @@ func ConvertStrings(items interface{}) ([]string, error) {
 		strs = v
 	default:
 		err := xerrors.Errorf("%v is an unsupported type.", reflect.TypeOf(items))
-		return nil, err
+		return []string{}, err
 	}
 
 	return strs, nil

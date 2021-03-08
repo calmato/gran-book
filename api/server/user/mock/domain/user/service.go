@@ -66,33 +66,33 @@ func (mr *MockServiceMockRecorder) List(ctx, q interface{}) *gomock.Call {
 }
 
 // ListFollow mocks base method
-func (m *MockService) ListFollow(ctx context.Context, q *domain.ListQuery) ([]*user.Follow, error) {
+func (m *MockService) ListFollow(ctx context.Context, q *domain.ListQuery, uid string) ([]*user.Follow, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListFollow", ctx, q)
+	ret := m.ctrl.Call(m, "ListFollow", ctx, q, uid)
 	ret0, _ := ret[0].([]*user.Follow)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // ListFollow indicates an expected call of ListFollow
-func (mr *MockServiceMockRecorder) ListFollow(ctx, q interface{}) *gomock.Call {
+func (mr *MockServiceMockRecorder) ListFollow(ctx, q, uid interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListFollow", reflect.TypeOf((*MockService)(nil).ListFollow), ctx, q)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListFollow", reflect.TypeOf((*MockService)(nil).ListFollow), ctx, q, uid)
 }
 
 // ListFollower mocks base method
-func (m *MockService) ListFollower(ctx context.Context, q *domain.ListQuery) ([]*user.Follower, error) {
+func (m *MockService) ListFollower(ctx context.Context, q *domain.ListQuery, uid string) ([]*user.Follower, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListFollower", ctx, q)
+	ret := m.ctrl.Call(m, "ListFollower", ctx, q, uid)
 	ret0, _ := ret[0].([]*user.Follower)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // ListFollower indicates an expected call of ListFollower
-func (mr *MockServiceMockRecorder) ListFollower(ctx, q interface{}) *gomock.Call {
+func (mr *MockServiceMockRecorder) ListFollower(ctx, q, uid interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListFollower", reflect.TypeOf((*MockService)(nil).ListFollower), ctx, q)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListFollower", reflect.TypeOf((*MockService)(nil).ListFollower), ctx, q, uid)
 }
 
 // ListCount mocks base method
