@@ -215,6 +215,61 @@ export function editEmailAsync(email: string) {
       })
       .then(async (res: AxiosResponse<IAuthResponse>) => {
         console.log('debug', res);
+export function profileEditAsync(username: string, gender: number, thumbnail: string | undefined, selfIntroduction: string) {
+  return async (dispatch: Dispatch, getState: () => AppState): Promise<void> => { 
+    return await axios
+      .patch('/v1/auth/profile', {
+        username,
+        gender,
+        thumbnail,
+        selfIntroduction,
+      })
+      .then(async (res: AxiosResponse<IAuthResponse>) => {
+        console.log('debug', res);
+        const {
+          username,
+          gender,
+          phoneNumber,
+          role,
+          thumbnailUrl,
+          selfIntroduction,
+          lastName,
+          firstName,
+          lastNameKana,
+          firstNameKana,
+          postalCode,
+          prefecture,
+          city,
+          addressLine1,
+          addressLine2,
+          createdAt,
+          updatedAt,
+        } = res.data;
+
+        const values: Auth.ProfileValues = {
+          username,
+          gender,
+          phoneNumber,
+          role,
+          thumbnailUrl,
+          selfIntroduction,
+          lastName,
+          firstName,
+          lastNameKana,
+          firstNameKana,
+          postalCode,
+          prefecture,
+          city,
+          addressLine1,
+          addressLine2,
+          createdAt,
+          updatedAt,
+        };
+
+        dispatch(setProfile(values));
+
+        const auth: Auth.Model = getState().auth;
+        await LocalStorage.AuthStorage.save(auth);
       })
       .catch((err: Error) => {
         throw err;
