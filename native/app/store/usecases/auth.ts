@@ -215,6 +215,14 @@ export function editEmailAsync(email: string) {
       })
       .then(async (res: AxiosResponse<IAuthResponse>) => {
         console.log('debug', res);
+      })
+      .catch((err: Error) => {
+        throw err;
+      });
+  };
+}
+  
+  
 export function profileEditAsync(username: string, gender: number, thumbnail: string | undefined, selfIntroduction: string) {
   return async (dispatch: Dispatch, getState: () => AppState): Promise<void> => { 
     return await axios
