@@ -91,16 +91,16 @@ const EmailEdit = function EmailEdit
   const handleSubmit = React.useCallback(async () => {
     await emailEdit(emailForm)
       .then(() => {
-        signOut()
+        signOut();
       })
       .then(() => {
-        DevSettings.reload()
+        DevSettings.reload();
       })
       .catch((err) => {
         console.log('debug', err);
         createAlertNotifyEmailEditError(err.staus);
       });
-  }, [emailForm, emailEdit, navigation]);
+  }, [emailForm, emailEdit, signOut]);
 
   return (
     <View style={styles.container}>

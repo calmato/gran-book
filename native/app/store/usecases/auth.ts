@@ -51,15 +51,15 @@ export function signInWithEmailAsync(email: string, password: string) {
 export function signOutAsync() {
   return async(dispatch: Dispatch): Promise<void> => {
     return await firebase
-    .auth()
-    .signOut()
-    .then(async () => {
-      dispatch(setAuth(Auth.initialState));
-    })
-    .catch((err: Error) => {
-      throw err;
-    });
-  }
+      .auth()
+      .signOut()
+      .then(async () => {
+        dispatch(setAuth(Auth.initialState));
+      })
+      .catch((err: Error) => {
+        throw err;
+      });
+  };
 }
 
 export function signUpWithEmailAsync(email: string, password: string, passwordConfirmation: string, username: string) {
