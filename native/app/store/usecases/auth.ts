@@ -1,7 +1,7 @@
 import { Dispatch } from 'redux';
 import { AxiosResponse } from 'axios';
 import Firebase from 'firebase';
-import axios from '~/lib/axios';
+import { internal, external} from '~/lib/axios'
 import firebase from '~/lib/firebase';
 import * as LocalStorage from '~/lib/local-storage';
 import { Auth } from '~/store/models';
@@ -50,7 +50,7 @@ export function signInWithEmailAsync(email: string, password: string) {
 
 export function signUpWithEmailAsync(email: string, password: string, passwordConfirmation: string, username: string) {
   return async (): Promise<void> => {
-    return await axios
+    return await internal
       .post('/v1/auth', {
         email,
         password,
@@ -68,7 +68,7 @@ export function signUpWithEmailAsync(email: string, password: string, passwordCo
 
 export function editPasswordAsync(password: string, passwordConfirmation: string) {
   return async (): Promise<void> => {
-    return await axios
+    return await internal
       .patch('/v1/auth/password', {
         password,
         passwordConfirmation,
@@ -82,9 +82,26 @@ export function editPasswordAsync(password: string, passwordConfirmation: string
   };
 }
 
+export function searchAddress(postalCode: string) {
+  return async (): Promise<void> => {
+    return await external
+    .get('https://zipcoda.net/api', {
+      params: {
+        zipcode: postalCode
+      }
+    })
+    .then(function(r) {
+      console.log(r.data)
+    })
+    .catch((err: Error) => {
+      throw err;
+    });
+  }
+}
+
 export function getAuthAsync() {
   return async (dispatch: Dispatch, getState: () => AppState): Promise<void> => {
-    return await axios
+    return await internal
       .get('/v1/auth')
       .then(async (res: AxiosResponse<IAuthResponse>) => {
         const {

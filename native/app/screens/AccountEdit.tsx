@@ -54,15 +54,13 @@ const styles = StyleSheet.create(
 type AccountEditProp = StackNavigationProp<RootStackParamList, 'AccountEdit'>;
 
 interface Props {
-  navigation: AccountEditProp,
   actions: {
-    searchAdress: (postalCode: string) => Promise<void>,
+    searchAddress: (postalCode: string) => Promise<void>,
   },
 }
 
 const AccountEdit = function AccountEdit(props: Props): ReactElement {
-  const searchAdress = props.actions;
-  const navigation = props.navigation;
+  const { searchAddress } = props.actions;
   const [formData, setValue] = useState<AccountEditForm>({
     firstName: '',
     lastName: '',
@@ -85,15 +83,16 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
   }, [postalCheck])
 
   //TODO: ボタンを押した時の処理を追加する
-  const handlePostaSubmit = React.useCallback(async () => {
-    await searchAdress(
+  const handleSearch = React.useCallback(async () => {
+    await searchAddress(
       formData.postalCode
-    );
-    // .then(() => {
-    // })
-    // .catch(() => {
-    // });
-  }, [formData.postalCode]);
+    )
+    .then(function(r) {
+    })
+    .catch((err: Error) => {
+      throw err;
+    });
+  }, [formData.postalCode, searchAddress]);
 
   const handleAccountEditSubmit = React.useCallback(async () => {
     await accountEdit(
@@ -119,7 +118,7 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
     <View>
       <HeaderWithBackButton
         title='発送元・お届け先住所'
-        onPress={() => navigation.goBack()}
+        onPress={() => undefined}
       />
       <Text style={styles.subtitle}>
             名前
@@ -181,9 +180,9 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
           buttonStyle={{width: '100%'}}
           containerStyle={styles.searchButton}
           disabled={!postalCheck}
-          onPress={() => undefined}
+          onPress={handleSearch}
           title='検索'
-          titleStyle={{ color: COLOR.TEXT_TITLE}}
+          titleStyle={{color: COLOR.TEXT_TITLE}}
         />
       </View>
       <View style={styles.prefectureArea}>
