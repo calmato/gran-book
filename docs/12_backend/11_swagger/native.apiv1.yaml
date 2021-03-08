@@ -481,8 +481,8 @@ components:
                 type: string
               thumbnailUrl:
                 type: string
-              selfIntroduction:
-                type: string
+              isFollow:
+                type: boolean
         limit:
           type: integer
           format: int64
@@ -508,6 +508,8 @@ components:
                 type: string
               selfIntroduction:
                 type: string
+              isFollow:
+                type: boolean
         limit:
           type: integer
           format: int64
