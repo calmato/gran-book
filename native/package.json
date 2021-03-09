@@ -7,6 +7,7 @@
     "web": "expo start --web",
     "eject": "expo eject",
     "lint": "eslint --ext .js,.ts,.tsx .",
+    "lint:fix": "yarn lint --fix && prettier --write ./app ./test",
     "test": "jest",
     "generate-test": "./bin/generate-test-file.sh ./app/components ./test/components",
     "generate:page": "./bin/generate-page-files.sh"
