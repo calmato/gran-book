@@ -7,7 +7,7 @@
     :self-introduction="selfIntroduction"
     :phone-number="phoneNumber"
     :email="email"
-    @click="onClick"
+    @click="handleClick"
   />
 </template>
 
@@ -32,7 +32,7 @@ export default defineComponent({
     const phoneNumber = store.getters['auth/getPhoneNumber']
     const email = store.getters['auth/getEmail']
 
-    const onClick = (path: string) => {
+    const handleClick = (path: string) => {
       router.push(path)
     }
 
@@ -44,7 +44,7 @@ export default defineComponent({
       selfIntroduction,
       phoneNumber,
       email,
-      onClick,
+      handleClick,
     }
   },
 })

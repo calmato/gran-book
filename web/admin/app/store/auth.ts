@@ -64,7 +64,7 @@ export default class AuthModule extends VuexModule {
   }
 
   public get getThumbnailUrl(): string {
-    return this.thumbnailUrl ? this.thumbnailUrl : '/thumbnail.png'
+    return this.thumbnailUrl || '/thumbnail.png'
   }
 
   public get getSelfIntroduction(): string {
@@ -135,6 +135,17 @@ export default class AuthModule extends VuexModule {
     this.firstNameKana = auth.firstNameKana
     this.createdAt = auth.createdAt
     this.updatedAt = auth.updatedAt
+  }
+
+  @Action({})
+  public factory(): void {
+    const profile: IAuthProfile = { ...initialState }
+
+    this.setId(initialState.id)
+    this.setEmail(initialState.email)
+    this.setEmailVerified(initialState.emailVerified)
+    this.setToken(initialState.token)
+    this.setProfile(profile)
   }
 
   @Action({ rawError: true })
@@ -312,13 +323,7 @@ export default class AuthModule extends VuexModule {
       .auth()
       .signOut()
       .finally(() => {
-        const profile: IAuthProfile = { ...initialState }
-
-        this.setId(initialState.id)
-        this.setEmail(initialState.email)
-        this.setEmailVerified(initialState.emailVerified)
-        this.setToken(initialState.token)
-        this.setProfile(profile)
+        this.factory()
       })
   }
 }

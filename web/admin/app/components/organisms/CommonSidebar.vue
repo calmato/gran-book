@@ -89,7 +89,7 @@ export default defineComponent({
       { icon: 'mdi-store', text: 'ECサイト管理', to: '/' },
     ]
     const systemItems: ISidebarListItem[] = [
-      { icon: 'mdi-shield-account', text: '管理者管理', to: '/' },
+      { icon: 'mdi-shield-account', text: '管理者管理', to: '/admin' },
       { icon: 'mdi-cog', text: 'システム設定', to: '/system' },
     ]
 

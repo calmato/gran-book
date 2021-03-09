@@ -12,3 +12,8 @@ export interface IFileInput {
   label: string
   rules: object
 }
+
+export interface ISelect {
+  label: string
+  rules: object
+}

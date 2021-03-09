@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Gran Book (Admin)
   description: 管理コンソール用API
-  version: 0.4.1
+  version: 0.5.0
 servers:
   - url: http://localhost:8081
     description: 開発環境
@@ -93,7 +93,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/updateAuthRequest'
+              $ref: '#/components/schemas/updateAuthProfileRequest'
       responses:
         '200':
           description: A successful response.
@@ -108,6 +108,38 @@ paths:
               schema:
                 $ref: '#/components/schemas/errorResponse'
   /v1/admin:
+    get:
+      summary: 管理者一覧
+      tags:
+        - AdminService
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          required: false
+          description: 取得上限数
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          required: false
+          description: 取得開始位置
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/adminListResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
     post:
       summary: 管理者登録
       tags:
@@ -389,6 +421,57 @@ components:
           type: string
         updatedAt:
           type: string
+    adminListResponse:
+      type: object
+      properties:
+        users:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              username:
+                type: string
+              email:
+                type: string
+              phoneNumber:
+                type: string
+              role:
+                type: integer
+                format: int32
+              thumbnailUrl:
+                type: string
+              selfIntroduction:
+                type: string
+              lastName:
+                type: string
+              firstName:
+                type: string
+              lastNameKana:
+                type: string
+              firstNameKana:
+                type: string
+              createdAt:
+                type: string
+              updatedAt:
+                type: string
+        limit:
+          type: integer
+          format: int64
+        offset:
+          type: integer
+          format: int64
+        total:
+          type: integer
+          format: int64
+        order:
+          type: object
+          properties:
+            by:
+              type: string
+            direction:
+              type: string
     # Response - Error
     errorResponse:
       type: object

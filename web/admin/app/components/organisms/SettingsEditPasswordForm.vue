@@ -13,7 +13,7 @@
       :rules="form.options.passwordConfirmation.rules"
       type="password"
     />
-    <v-btn color="primary" class="mt-4 mr-4" @click="onClick">変更する</v-btn>
+    <v-btn :loading="loading" :disabled="loading" color="primary" class="mt-4 mr-4" @click="onClick">変更する</v-btn>
     <v-btn class="mt-4" @click="onClickCancel">キャンセル</v-btn>
   </the-form-group>
 </template>
@@ -34,6 +34,11 @@ export default defineComponent({
     form: {
       type: Object as PropType<IAuthEditPasswordForm>,
       required: true,
+    },
+    loading: {
+      type: Boolean,
+      required: false,
+      default: false,
     },
   },
 

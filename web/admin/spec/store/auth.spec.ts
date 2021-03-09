@@ -1,5 +1,5 @@
-import { store, setSafetyMode } from '~~/spec/helpers/store-helper'
-import { initialiseStores, AuthStore } from '~/store'
+import { setup, setSafetyMode, refresh } from '~~/spec/helpers/store-helper'
+import { AuthStore } from '~/store'
 import {
   IAuthEditEmailForm,
   AuthEditEmailOptions,
@@ -15,7 +15,11 @@ import { ApiError } from '~/types/exception'
 
 describe('store/auth', () => {
   beforeEach(() => {
-    initialiseStores(store)
+    setup()
+  })
+
+  afterEach(() => {
+    refresh()
   })
 
   describe('getters', () => {
