@@ -954,6 +954,9 @@ export namespace FollowListResponse {
         getSelfIntroduction(): string;
         setSelfIntroduction(value: string): User;
 
+        getIsFollow(): boolean;
+        setIsFollow(value: boolean): User;
+
 
         serializeBinary(): Uint8Array;
         toObject(includeInstance?: boolean): User.AsObject;
@@ -971,6 +974,7 @@ export namespace FollowListResponse {
             username: string,
             thumbnailUrl: string,
             selfIntroduction: string,
+            isFollow: boolean,
         }
     }
 
@@ -1024,6 +1028,9 @@ export namespace FollowerListResponse {
         getSelfIntroduction(): string;
         setSelfIntroduction(value: string): User;
 
+        getIsFollow(): boolean;
+        setIsFollow(value: boolean): User;
+
 
         serializeBinary(): Uint8Array;
         toObject(includeInstance?: boolean): User.AsObject;
@@ -1041,6 +1048,7 @@ export namespace FollowerListResponse {
             username: string,
             thumbnailUrl: string,
             selfIntroduction: string,
+            isFollow: boolean,
         }
     }
 

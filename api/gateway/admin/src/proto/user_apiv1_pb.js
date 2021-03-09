@@ -6896,7 +6896,8 @@ proto.proto.FollowListResponse.User.toObject = function(includeInstance, msg) {
     id: jspb.Message.getFieldWithDefault(msg, 1, ""),
     username: jspb.Message.getFieldWithDefault(msg, 2, ""),
     thumbnailUrl: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    selfIntroduction: jspb.Message.getFieldWithDefault(msg, 4, "")
+    selfIntroduction: jspb.Message.getFieldWithDefault(msg, 4, ""),
+    isFollow: jspb.Message.getBooleanFieldWithDefault(msg, 5, false)
   };
 
   if (includeInstance) {
@@ -6948,6 +6949,10 @@ proto.proto.FollowListResponse.User.deserializeBinaryFromReader = function(msg, 
     case 4:
       var value = /** @type {string} */ (reader.readString());
       msg.setSelfIntroduction(value);
+      break;
+    case 5:
+      var value = /** @type {boolean} */ (reader.readBool());
+      msg.setIsFollow(value);
       break;
     default:
       reader.skipField();
@@ -7003,6 +7008,13 @@ proto.proto.FollowListResponse.User.serializeBinaryToWriter = function(message, 
   if (f.length > 0) {
     writer.writeString(
       4,
+      f
+    );
+  }
+  f = message.getIsFollow();
+  if (f) {
+    writer.writeBool(
+      5,
       f
     );
   }
@@ -7078,6 +7090,24 @@ proto.proto.FollowListResponse.User.prototype.getSelfIntroduction = function() {
  */
 proto.proto.FollowListResponse.User.prototype.setSelfIntroduction = function(value) {
   return jspb.Message.setProto3StringField(this, 4, value);
+};
+
+
+/**
+ * optional bool is_follow = 5;
+ * @return {boolean}
+ */
+proto.proto.FollowListResponse.User.prototype.getIsFollow = function() {
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 5, false));
+};
+
+
+/**
+ * @param {boolean} value
+ * @return {!proto.proto.FollowListResponse.User} returns this
+ */
+proto.proto.FollowListResponse.User.prototype.setIsFollow = function(value) {
+  return jspb.Message.setProto3BooleanField(this, 5, value);
 };
 
 
@@ -7366,7 +7396,8 @@ proto.proto.FollowerListResponse.User.toObject = function(includeInstance, msg) 
     id: jspb.Message.getFieldWithDefault(msg, 1, ""),
     username: jspb.Message.getFieldWithDefault(msg, 2, ""),
     thumbnailUrl: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    selfIntroduction: jspb.Message.getFieldWithDefault(msg, 4, "")
+    selfIntroduction: jspb.Message.getFieldWithDefault(msg, 4, ""),
+    isFollow: jspb.Message.getBooleanFieldWithDefault(msg, 5, false)
   };
 
   if (includeInstance) {
@@ -7418,6 +7449,10 @@ proto.proto.FollowerListResponse.User.deserializeBinaryFromReader = function(msg
     case 4:
       var value = /** @type {string} */ (reader.readString());
       msg.setSelfIntroduction(value);
+      break;
+    case 5:
+      var value = /** @type {boolean} */ (reader.readBool());
+      msg.setIsFollow(value);
       break;
     default:
       reader.skipField();
@@ -7473,6 +7508,13 @@ proto.proto.FollowerListResponse.User.serializeBinaryToWriter = function(message
   if (f.length > 0) {
     writer.writeString(
       4,
+      f
+    );
+  }
+  f = message.getIsFollow();
+  if (f) {
+    writer.writeBool(
+      5,
       f
     );
   }
@@ -7548,6 +7590,24 @@ proto.proto.FollowerListResponse.User.prototype.getSelfIntroduction = function()
  */
 proto.proto.FollowerListResponse.User.prototype.setSelfIntroduction = function(value) {
   return jspb.Message.setProto3StringField(this, 4, value);
+};
+
+
+/**
+ * optional bool is_follow = 5;
+ * @return {boolean}
+ */
+proto.proto.FollowerListResponse.User.prototype.getIsFollow = function() {
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 5, false));
+};
+
+
+/**
+ * @param {boolean} value
+ * @return {!proto.proto.FollowerListResponse.User} returns this
+ */
+proto.proto.FollowerListResponse.User.prototype.setIsFollow = function(value) {
+  return jspb.Message.setProto3BooleanField(this, 5, value);
 };
 
 

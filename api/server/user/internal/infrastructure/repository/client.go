@@ -6,6 +6,7 @@ import (
 
 	"github.com/calmato/gran-book/api/server/user/internal/domain"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
+	"github.com/calmato/gran-book/api/server/user/lib/array"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
@@ -104,15 +105,16 @@ func setWhere(db *gorm.DB, c *domain.QueryCondition) *gorm.DB {
 		return db.Where(q, c.Value)
 	case "IN":
 		q := fmt.Sprintf("%s IN ?", c.Field)
-		return db.Where(q, c.Value)
+		vals, _ := array.ConvertStrings(c)
+		return db.Where(q, strings.Join(vals, ", "))
 	case "LIKE":
 		q := fmt.Sprintf("%s LIKE ?", c.Field)
 		n := fmt.Sprintf("%%%s%%", c.Value) // e.g.) あいうえお -> %あいうえお%
 		return db.Where(q, n)
 	case "BETWEEN":
 		q := fmt.Sprintf("%s BETWEEN ? AND ?", c.Field)
-		m, n := convertConditionValues(c)
-		return db.Where(q, m, n)
+		vals, _ := array.ConvertStrings(c)
+		return db.Where(q, vals[0], vals[1])
 	default:
 		return db
 	}
@@ -145,18 +147,4 @@ func setLimit(db *gorm.DB, limit int64) *gorm.DB {
 
 func setOffset(db *gorm.DB, offset int64) *gorm.DB {
 	return db.Offset(offset)
-}
-
-// convertConditionValues - BETWEENのとき、valueが配列になっているため
-func convertConditionValues(q *domain.QueryCondition) (interface{}, interface{}) {
-	switch v := q.Value.(type) {
-	case []int32:
-		return v[0], v[1]
-	case []int64:
-		return v[0], v[1]
-	case []string:
-		return v[0], v[1]
-	default:
-		return v, ""
-	}
 }

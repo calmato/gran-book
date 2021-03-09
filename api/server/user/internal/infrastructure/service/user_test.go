@@ -156,9 +156,10 @@ func TestUserService_List(t *testing.T) {
 func TestUserService_ListFollow(t *testing.T) {
 	testCases := map[string]struct {
 		Query    *domain.ListQuery
+		UID      string
 		Expected struct {
-			Follow []*user.Follow
-			Error  error
+			Follows []*user.Follow
+			Error   error
 		}
 	}{
 		"ok": {
@@ -168,17 +169,19 @@ func TestUserService_ListFollow(t *testing.T) {
 				Order:      nil,
 				Conditions: []*domain.QueryCondition{},
 			},
+			UID: "11111111-1111-1111-1111-111111111111",
 			Expected: struct {
-				Follow []*user.Follow
-				Error  error
+				Follows []*user.Follow
+				Error   error
 			}{
-				Follow: []*user.Follow{
+				Follows: []*user.Follow{
 					{
 						FollowID:         "00000000-0000-0000-0000-000000000000",
 						FollowerID:       "11111111-1111-1111-1111-111111111111",
 						Username:         "test-user",
 						ThumbnailURL:     "",
 						SelfIntroduction: "",
+						IsFollow:         false,
 					},
 				},
 				Error: nil,
@@ -196,21 +199,22 @@ func TestUserService_ListFollow(t *testing.T) {
 		uvm := mock_user.NewMockValidation(ctrl)
 
 		urm := mock_user.NewMockRepository(ctrl)
-		urm.EXPECT().ListFollow(ctx, tc.Query).Return(tc.Expected.Follow, tc.Expected.Error)
+		urm.EXPECT().ListFollow(ctx, tc.Query).Return(tc.Expected.Follows, tc.Expected.Error)
+		urm.EXPECT().ListFollowerID(ctx, gomock.Any()).Return([]string{}, tc.Expected.Error)
 
 		uum := mock_user.NewMockUploader(ctrl)
 
 		t.Run(result, func(t *testing.T) {
 			target := NewUserService(uvm, urm, uum)
 
-			got, err := target.ListFollow(ctx, tc.Query)
+			got, err := target.ListFollow(ctx, tc.Query, tc.UID)
 			if !reflect.DeepEqual(err, tc.Expected.Error) {
 				t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
 				return
 			}
 
-			if !reflect.DeepEqual(got, tc.Expected.Follow) {
-				t.Fatalf("want %#v, but %#v", tc.Expected.Follow, got)
+			if !reflect.DeepEqual(got, tc.Expected.Follows) {
+				t.Fatalf("want %#v, but %#v", tc.Expected.Follows, got)
 				return
 			}
 		})
@@ -220,6 +224,7 @@ func TestUserService_ListFollow(t *testing.T) {
 func TestUserService_ListFollower(t *testing.T) {
 	testCases := map[string]struct {
 		Query    *domain.ListQuery
+		UID      string
 		Expected struct {
 			Follower []*user.Follower
 			Error    error
@@ -232,6 +237,7 @@ func TestUserService_ListFollower(t *testing.T) {
 				Order:      nil,
 				Conditions: []*domain.QueryCondition{},
 			},
+			UID: "00000000-0000-0000-0000-000000000000",
 			Expected: struct {
 				Follower []*user.Follower
 				Error    error
@@ -243,6 +249,7 @@ func TestUserService_ListFollower(t *testing.T) {
 						Username:         "test-user",
 						ThumbnailURL:     "",
 						SelfIntroduction: "",
+						IsFollow:         false,
 					},
 				},
 				Error: nil,
@@ -261,13 +268,14 @@ func TestUserService_ListFollower(t *testing.T) {
 
 		urm := mock_user.NewMockRepository(ctrl)
 		urm.EXPECT().ListFollower(ctx, tc.Query).Return(tc.Expected.Follower, tc.Expected.Error)
+		urm.EXPECT().ListFollowerID(ctx, gomock.Any()).Return([]string{}, tc.Expected.Error)
 
 		uum := mock_user.NewMockUploader(ctrl)
 
 		t.Run(result, func(t *testing.T) {
 			target := NewUserService(uvm, urm, uum)
 
-			got, err := target.ListFollower(ctx, tc.Query)
+			got, err := target.ListFollower(ctx, tc.Query, tc.UID)
 			if !reflect.DeepEqual(err, tc.Expected.Error) {
 				t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
 				return

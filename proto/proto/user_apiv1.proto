@@ -223,6 +223,7 @@ message FollowListResponse {
     string username = 2;
     string thumbnail_url = 3;
     string self_introduction = 4;
+    bool is_follow = 5;
   }
   repeated User users = 1;
   int64 limit = 2;
@@ -236,6 +237,7 @@ message FollowerListResponse {
     string username = 2;
     string thumbnail_url = 3;
     string self_introduction = 4;
+    bool is_follow = 5;
   }
   repeated User users = 1;
   int64 limit = 2;
