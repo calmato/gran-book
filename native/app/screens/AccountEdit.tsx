@@ -16,6 +16,8 @@ const maxNameLength16 = 16;
 const maxNameLength32 = 32;
 const maxNameLength64 = 64;
 
+const re = /^[\u3040-\u309F]+$/;
+
 const styles = StyleSheet.create(
   {
     subtitle: {
@@ -79,8 +81,11 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
   }, [formData.postalCode])
 
   const canSubmit = useMemo((): boolean => {
-    return postalCheck;
-  }, [postalCheck])
+    return formData.firstName.length > 0 &&  formData.lastName.length > 0 && formData.firstNameKana.length > 0  &&
+    formData.lastNameKana.length > 0 && formData.phoneNumber.length > 0 && formData.postalCode.length > 0 &&
+    formData.prefecture !== null && re.test(formData.firstNameKana) && re.test(formData.lastNameKana) && formData.city.length > 0 && formData.addressLine1.length > 0
+  }, [formData.firstName, formData.lastName, formData.firstNameKana, formData.lastNameKana, formData.phoneNumber
+  , formData.postalCode, formData.prefecture, formData.city, formData.addressLine1])
 
   //TODO: ボタンを押した時の処理を追加する
   const handleSearch = React.useCallback(async () => {
@@ -88,6 +93,7 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
       formData.postalCode
     )
     .then(function(r) {
+      console.log(r)
     })
     .catch((err: Error) => {
       throw err;
@@ -186,7 +192,9 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
         />
       </View>
       <View style={styles.prefectureArea}>
-        <PrefecturePicker />
+        <PrefecturePicker
+        onValueChange={(text) => setValue({...formData, prefecture: text})}
+        />
       </View>
       <FullTextInput
         onChangeText={(text) => setValue({...formData, city: text})}
@@ -208,7 +216,7 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
       />
       <Button
         containerStyle={styles.saveButton}
-        disabled={false}
+        disabled={!canSubmit}
         onPress={() => undefined}
         title='保存する'
         titleStyle={{ color: COLOR.TEXT_TITLE}}
