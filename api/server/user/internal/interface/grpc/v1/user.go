@@ -19,7 +19,7 @@ type UserServer struct {
 
 // ListFollow - フォロー一覧取得
 func (s *UserServer) ListFollow(ctx context.Context, req *pb.ListFollowRequest) (*pb.FollowListResponse, error) {
-	_, err := s.AuthApplication.Authentication(ctx)
+	cu, err := s.AuthApplication.Authentication(ctx)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -29,7 +29,7 @@ func (s *UserServer) ListFollow(ctx context.Context, req *pb.ListFollowRequest) 
 		Offset: req.Offset,
 	}
 
-	fs, out, err := s.UserApplication.ListFollow(ctx, in, req.Id)
+	fs, out, err := s.UserApplication.ListFollow(ctx, in, req.Id, cu.ID)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -40,6 +40,7 @@ func (s *UserServer) ListFollow(ctx context.Context, req *pb.ListFollowRequest) 
 			Id:           f.FollowerID,
 			Username:     f.Username,
 			ThumbnailUrl: f.ThumbnailURL,
+			IsFollow:     f.IsFollow,
 		}
 
 		us[i] = u
@@ -57,7 +58,7 @@ func (s *UserServer) ListFollow(ctx context.Context, req *pb.ListFollowRequest) 
 
 // ListFollower - フォロワー一覧取得
 func (s *UserServer) ListFollower(ctx context.Context, req *pb.ListFollowerRequest) (*pb.FollowerListResponse, error) {
-	_, err := s.AuthApplication.Authentication(ctx)
+	cu, err := s.AuthApplication.Authentication(ctx)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -67,7 +68,7 @@ func (s *UserServer) ListFollower(ctx context.Context, req *pb.ListFollowerReque
 		Offset: req.Offset,
 	}
 
-	fs, out, err := s.UserApplication.ListFollower(ctx, in, req.Id)
+	fs, out, err := s.UserApplication.ListFollower(ctx, in, req.Id, cu.ID)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -78,6 +79,7 @@ func (s *UserServer) ListFollower(ctx context.Context, req *pb.ListFollowerReque
 			Id:           f.FollowID,
 			Username:     f.Username,
 			ThumbnailUrl: f.ThumbnailURL,
+			IsFollow:     f.IsFollow,
 		}
 
 		us[i] = u

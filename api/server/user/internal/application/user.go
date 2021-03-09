@@ -13,8 +13,12 @@ import (
 
 // UserApplication - Userアプリケーションのインターフェース
 type UserApplication interface {
-	ListFollow(ctx context.Context, in *input.ListFollow, uid string) ([]*user.Follow, *output.ListQuery, error)
-	ListFollower(ctx context.Context, in *input.ListFollower, uid string) ([]*user.Follower, *output.ListQuery, error)
+	ListFollow(
+		ctx context.Context, in *input.ListFollow, uid string, cuid string,
+	) ([]*user.Follow, *output.ListQuery, error)
+	ListFollower(
+		ctx context.Context, in *input.ListFollower, uid string, cuid string,
+	) ([]*user.Follower, *output.ListQuery, error)
 	GetUserProfile(ctx context.Context, uid string, cuid string) (*user.User, *output.UserProfile, error)
 	RegisterFollow(ctx context.Context, uid string, cuid string) (*user.User, *output.UserProfile, error)
 	UnregisterFollow(ctx context.Context, uid string, cuid string) (*user.User, *output.UserProfile, error)
@@ -34,7 +38,7 @@ func NewUserApplication(urv validation.UserRequestValidation, us user.Service) U
 }
 
 func (a *userApplication) ListFollow(
-	ctx context.Context, in *input.ListFollow, uid string,
+	ctx context.Context, in *input.ListFollow, uid string, cuid string,
 ) ([]*user.Follow, *output.ListQuery, error) {
 	err := a.userRequestValidation.ListFollow(in)
 	if err != nil {
@@ -62,7 +66,7 @@ func (a *userApplication) ListFollow(
 		q.Order = o
 	}
 
-	fs, err := a.userService.ListFollow(ctx, q)
+	fs, err := a.userService.ListFollow(ctx, q, cuid)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -91,7 +95,7 @@ func (a *userApplication) ListFollow(
 }
 
 func (a *userApplication) ListFollower(
-	ctx context.Context, in *input.ListFollower, uid string,
+	ctx context.Context, in *input.ListFollower, uid string, cuid string,
 ) ([]*user.Follower, *output.ListQuery, error) {
 	err := a.userRequestValidation.ListFollower(in)
 	if err != nil {
@@ -119,7 +123,7 @@ func (a *userApplication) ListFollower(
 		q.Order = o
 	}
 
-	fs, err := a.userService.ListFollower(ctx, q)
+	fs, err := a.userService.ListFollower(ctx, q, cuid)
 	if err != nil {
 		return nil, nil, err
 	}

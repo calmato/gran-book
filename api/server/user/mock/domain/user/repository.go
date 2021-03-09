@@ -95,6 +95,21 @@ func (mr *MockRepositoryMockRecorder) ListFollower(ctx, q interface{}) *gomock.C
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListFollower", reflect.TypeOf((*MockRepository)(nil).ListFollower), ctx, q)
 }
 
+// ListFollowerID mocks base method
+func (m *MockRepository) ListFollowerID(ctx context.Context, q *domain.ListQuery) ([]string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListFollowerID", ctx, q)
+	ret0, _ := ret[0].([]string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListFollowerID indicates an expected call of ListFollowerID
+func (mr *MockRepositoryMockRecorder) ListFollowerID(ctx, q interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListFollowerID", reflect.TypeOf((*MockRepository)(nil).ListFollowerID), ctx, q)
+}
+
 // ListCount mocks base method
 func (m *MockRepository) ListCount(ctx context.Context, q *domain.ListQuery) (int64, error) {
 	m.ctrl.T.Helper()

@@ -46,6 +46,7 @@ type Follow struct {
 	Username         string
 	ThumbnailURL     string
 	SelfIntroduction string
+	IsFollow         bool
 }
 
 // Follower - フォローされているUserのエンティティ
@@ -55,6 +56,7 @@ type Follower struct {
 	Username         string
 	ThumbnailURL     string
 	SelfIntroduction string
+	IsFollow         bool
 }
 
 // ユーザ権限

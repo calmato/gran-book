@@ -17,6 +17,7 @@ import (
 func TestUserApplication_ListFollow(t *testing.T) {
 	testCases := map[string]struct {
 		UID      string
+		CUID     string
 		Input    *input.ListFollow
 		Expected struct {
 			Follows []*user.Follow
@@ -25,7 +26,8 @@ func TestUserApplication_ListFollow(t *testing.T) {
 		}
 	}{
 		"ok": {
-			UID: "00000000-0000-0000-0000-000000000000",
+			UID:  "00000000-0000-0000-0000-000000000000",
+			CUID: "11111111-1111-1111-1111-111111111111",
 			Input: &input.ListFollow{
 				Limit:  100,
 				Offset: 0,
@@ -72,7 +74,7 @@ func TestUserApplication_ListFollow(t *testing.T) {
 		urvm.EXPECT().ListFollow(tc.Input).Return(nil)
 
 		usm := mock_user.NewMockService(ctrl)
-		usm.EXPECT().ListFollow(ctx, gomock.Any()).Return(tc.Expected.Follows, tc.Expected.Error)
+		usm.EXPECT().ListFollow(ctx, gomock.Any(), tc.CUID).Return(tc.Expected.Follows, tc.Expected.Error)
 		usm.EXPECT().
 			ListFriendCount(ctx, tc.UID).
 			Return(followCount, followerCount, tc.Expected.Error)
@@ -80,7 +82,7 @@ func TestUserApplication_ListFollow(t *testing.T) {
 		t.Run(result, func(t *testing.T) {
 			target := NewUserApplication(urvm, usm)
 
-			follows, output, err := target.ListFollow(ctx, tc.Input, tc.UID)
+			follows, output, err := target.ListFollow(ctx, tc.Input, tc.UID, tc.CUID)
 			if !reflect.DeepEqual(err, tc.Expected.Error) {
 				t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
 				return
@@ -102,6 +104,7 @@ func TestUserApplication_ListFollow(t *testing.T) {
 func TestUserApplication_ListFollower(t *testing.T) {
 	testCases := map[string]struct {
 		UID      string
+		CUID     string
 		Input    *input.ListFollower
 		Expected struct {
 			Followers []*user.Follower
@@ -110,7 +113,8 @@ func TestUserApplication_ListFollower(t *testing.T) {
 		}
 	}{
 		"ok": {
-			UID: "00000000-0000-0000-0000-000000000000",
+			UID:  "00000000-0000-0000-0000-000000000000",
+			CUID: "11111111-1111-1111-1111-111111111111",
 			Input: &input.ListFollower{
 				Limit:  100,
 				Offset: 0,
@@ -157,7 +161,7 @@ func TestUserApplication_ListFollower(t *testing.T) {
 		urvm.EXPECT().ListFollower(tc.Input).Return(nil)
 
 		usm := mock_user.NewMockService(ctrl)
-		usm.EXPECT().ListFollower(ctx, gomock.Any()).Return(tc.Expected.Followers, tc.Expected.Error)
+		usm.EXPECT().ListFollower(ctx, gomock.Any(), tc.CUID).Return(tc.Expected.Followers, tc.Expected.Error)
 		usm.EXPECT().
 			ListFriendCount(ctx, tc.UID).
 			Return(followCount, followerCount, tc.Expected.Error)
@@ -165,7 +169,7 @@ func TestUserApplication_ListFollower(t *testing.T) {
 		t.Run(result, func(t *testing.T) {
 			target := NewUserApplication(urvm, usm)
 
-			followers, output, err := target.ListFollower(ctx, tc.Input, tc.UID)
+			followers, output, err := target.ListFollower(ctx, tc.Input, tc.UID, tc.CUID)
 			if !reflect.DeepEqual(err, tc.Expected.Error) {
 				t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
 				return
