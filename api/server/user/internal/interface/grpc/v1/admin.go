@@ -49,6 +49,42 @@ func (s *AdminServer) ListAdmin(ctx context.Context, req *pb.ListAdminRequest) (
 	return res, nil
 }
 
+// SearchAdmin - 管理者一覧取得
+func (s *AdminServer) SearchAdmin(ctx context.Context, req *pb.SearchAdminRequest) (*pb.AdminListResponse, error) {
+	cu, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	err = authorization(cu)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	in := &input.SearchAdmin{
+		Limit:  req.Limit,
+		Offset: req.Offset,
+	}
+
+	if req.Order != nil {
+		in.By = req.Order.By
+		in.Direction = req.Order.Direction
+	}
+
+	if req.Search != nil {
+		in.Field = req.Search.Field
+		in.Value = req.Search.Value
+	}
+
+	us, out, err := s.AdminApplication.Search(ctx, in)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	res := getAdminListResponse(us, out)
+	return res, nil
+}
+
 // GetAdmin - 管理者情報取得
 func (s *AdminServer) GetAdmin(ctx context.Context, req *pb.GetAdminRequest) (*pb.AdminResponse, error) {
 	cu, err := s.AuthApplication.Authentication(ctx)
