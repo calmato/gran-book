@@ -48,10 +48,10 @@ const SignIn = function SignIn(props: Props): ReactElement {
     return !(emailError || passwordError);
   }, [emailError, passwordError]);
 
-  const createAlertNotifySignupError = (code: Error) =>
+  const createAlertNotifySignupError = (errorMessage: Error) =>
     Alert.alert(
       'サインインに失敗',
-      `${generateErrorMessage(code.message)}`,
+      `${generateErrorMessage(errorMessage.message)}`,
       [
         {
           text: 'OK',
@@ -70,7 +70,7 @@ const SignIn = function SignIn(props: Props): ReactElement {
       .then(() => {
         setApplicationState(Status.AUTHORIZED);
       })
-      .catch((err) => {
+      .catch((err: Error) => {
         createAlertNotifySignupError(err);
       });
   }, [formData.email, formData.password, signInWithEmail, getAuth, setApplicationState]);

@@ -77,10 +77,10 @@ const EmailEdit = function EmailEdit
     return emailForm === props.email;
   }, [emailForm, props.email]);
 
-  const createAlertNotifyEmailEditError = (code: number) =>
+  const createAlertNotifyEmailEditError = (errorMessage: string) =>
     Alert.alert(
       'メールアドレス変更に失敗',
-      `${generateErrorMessage(code)}`,
+      `${generateErrorMessage(errorMessage)}`,
       [
         {
           text: 'OK',
@@ -96,9 +96,9 @@ const EmailEdit = function EmailEdit
       .then(() => {
         DevSettings.reload();
       })
-      .catch((err) => {
+      .catch((err: Error) => {
         console.log('debug', err);
-        createAlertNotifyEmailEditError(err.staus);
+        createAlertNotifyEmailEditError(err.message);
       });
   }, [emailForm, emailEdit, signOut]);
 

@@ -47,10 +47,10 @@ const PasswordEdit = function PasswordEdit(props: Props): ReactElement {
   }, [passwordError, passwordConfirmationError]);
 
 
-  const createAlertNotifyEditPasswordError= (code: number) =>
+  const createAlertNotifyEditPasswordError= (errorMessage: string) =>
     Alert.alert(
       'パスワードの変更に失敗',
-      `${generateErrorMessage(code)}`,
+      `${generateErrorMessage(errorMessage)}`,
       [
         {
           text: 'OK',
@@ -66,9 +66,9 @@ const PasswordEdit = function PasswordEdit(props: Props): ReactElement {
       .then(() => {
       //  navigation.navigate('', { });
       })
-      .catch((err) => {
+      .catch((err: Error) => {
         console.log('debug', err);
-        createAlertNotifyEditPasswordError(err.code);
+        createAlertNotifyEditPasswordError(err.message);
       });
   }, [formData.password, formData.passwordConfirmation, editPassword]);
 
