@@ -48,6 +48,20 @@ export function signInWithEmailAsync(email: string, password: string) {
   };
 }
 
+export function signOutAsync() {
+  return async(dispatch: Dispatch): Promise<void> => {
+    return await firebase
+      .auth()
+      .signOut()
+      .then(async () => {
+        dispatch(setAuth(Auth.initialState));
+      })
+      .catch((err: Error) => {
+        throw err;
+      });
+  };
+}
+
 export function signUpWithEmailAsync(email: string, password: string, passwordConfirmation: string, username: string) {
   return async (): Promise<void> => {
     return await axios
@@ -193,6 +207,22 @@ function sendEmailVerification(): Promise<void> {
   });
 }
 
+export function editEmailAsync(email: string) {
+  return async (): Promise<void> => {
+    return await axios
+      .patch('/v1/auth/email', {
+        email
+      })
+      .then(async (res: AxiosResponse<IAuthResponse>) => {
+        console.log('debug', res);
+      })
+      .catch((err: Error) => {
+        throw err;
+      });
+  };
+}
+  
+  
 export function profileEditAsync(username: string, gender: number, thumbnail: string | undefined, selfIntroduction: string) {
   return async (dispatch: Dispatch, getState: () => AppState): Promise<void> => { 
     return await axios
@@ -253,5 +283,4 @@ export function profileEditAsync(username: string, gender: number, thumbnail: st
         throw err;
       });
   };
-
 }

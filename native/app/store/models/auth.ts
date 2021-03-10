@@ -75,6 +75,10 @@ export interface ProfileValues {
   updatedAt: string;
 }
 
+export interface Email {
+  email: string;
+}
+
 // Function
 export function factory(): Model {
   return initialState;
@@ -89,6 +93,13 @@ export function setAuth(auth: Model, values: AuthValues): Model {
 
 export function setProfile(auth: Model, values: ProfileValues): Model {
   return {
+    ...auth,
+    ...values,
+  };
+}
+
+export function setEmail(auth: Model, values: Email): Model {
+  return{
     ...auth,
     ...values,
   };

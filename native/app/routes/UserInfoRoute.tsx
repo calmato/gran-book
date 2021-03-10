@@ -4,6 +4,8 @@ import { MyPage } from '~/containers';
 import { OwnProfile } from '~/containers';
 import { UserInfoStackParamList } from '~/types/navigation';
 import AccountSetting from '~/screens/AccoutSetting';
+import { EmailEdit } from '~/containers';
+import { ContactEdit } from '~/containers';
 import { ProfileEdit } from '~/containers';
 
 const UserInfoStack = createStackNavigator<UserInfoStackParamList>();
@@ -18,9 +20,9 @@ const UserInfoRoute = function SettingRoute() {
       <UserInfoStack.Screen name='OwnProfile' component={OwnProfile}/>
       <UserInfoStack.Screen name='AccountSetting' component={AccountSetting}/>
       {/* <UserInfoStack.Screen name='AccountEdit' component={AccountEdit}/> */}
+      <UserInfoStack.Screen name='ContactEdit' component={ContactEdit}/>
+      <UserInfoStack.Screen name='EmailEdit' component={EmailEdit}/>
       <UserInfoStack.Screen name='ProfileEdit' component={ProfileEdit}/>
-      {/* <UserInfoStack.Screen name='ContactEdit' component={ContactEdit}/> */}
-      {/* <UserInfoStack.Screen name='EmailEdit' component={EmailEdit}/> */}
       {/* <UserInfoStack.Screen name='PasswordEmailEdit' componet={PasswordEmailEdit}/> */}
     </UserInfoStack.Navigator>
   );

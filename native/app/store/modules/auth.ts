@@ -37,7 +37,7 @@ export function reset() {
 export type Action =
   | Readonly<ReturnType<typeof setAuth>>
   | Readonly<ReturnType<typeof setProfile>>
-  | Readonly<ReturnType<typeof reset>>;
+  | Readonly<ReturnType<typeof reset>>
 
 // Reducer
 export default function reducer(state: State = createInitialState(), action: Action): Auth.Model {
