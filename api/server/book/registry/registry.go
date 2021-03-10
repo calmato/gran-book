@@ -1,8 +1,8 @@
 package registry
 
 import (
-	"github.com/calmato/gran-book/api/server/user/internal/infrastructure/repository"
-	gcs "github.com/calmato/gran-book/api/server/user/lib/firebase/storage"
+	"github.com/calmato/gran-book/api/server/book/internal/infrastructure/repository"
+	gcs "github.com/calmato/gran-book/api/server/book/lib/firebase/storage"
 )
 
 // Registry - DIコンテナ
