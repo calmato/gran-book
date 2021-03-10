@@ -38,7 +38,7 @@ func newGRPCServer(port, logPath, logLevel string, reg *registry.Registry) (*grp
 		return nil, err
 	}
 
-	// s := grpc.NewServer(opts...)
+	s := grpc.NewServer(opts...)
 	// pb.RegisterBookServiceServer(s, &v1.BookServer{
 	// 	BookApplication: reg.BookApplication,
 	// })
