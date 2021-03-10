@@ -1,5 +1,12 @@
 import express, { Request, Response, NextFunction } from 'express'
-import { createAdmin, listAdmin, searchAdmin, updateAdminPassword, updateAdminProfile, updateAdminRole } from '~/api/admin'
+import {
+  createAdmin,
+  listAdmin,
+  searchAdmin,
+  updateAdminPassword,
+  updateAdminProfile,
+  updateAdminRole,
+} from '~/api/admin'
 import { GrpcError } from '~/types/exception'
 import {
   ICreateAdminInput,
