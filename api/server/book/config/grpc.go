@@ -32,7 +32,7 @@ type grpcServer struct {
 	lis net.Listener
 }
 
-func newGRPCServer(port, logPath, logLevel string, reg *registry.Registry) (*grpcServer, error) {
+func newGRPCServer(port, logPath, logLevel string, _ *registry.Registry) (*grpcServer, error) {
 	opts, err := grpcServerOptions(logPath, logLevel)
 	if err != nil {
 		return nil, err
