@@ -8,8 +8,14 @@ type ListAdmin struct {
 	Direction string `json:"direction" validate:"omitempty,oneof=asc desc"`
 }
 
-// ListAdminOrder - 管理者一覧ソート用の構造体
-type ListAdminOrder struct {
+// SearchAdmin - 管理者検索のリクエスト
+type SearchAdmin struct {
+	Limit     int64  `json:"limit" validate:"gte=0,lte=1000"`
+	Offset    int64  `json:"offset" validate:"gte=0"`
+	By        string `json:"by" validate:"omitempty,oneof=id username email role"`
+	Direction string `json:"direction" validate:"omitempty,oneof=asc desc"`
+	Field     string `json:"field" validate:"required,oneof=username email"`
+	Value     string `json:"value" validate:"required"`
 }
 
 // CreateAdmin - 管理者登録のリクエスト

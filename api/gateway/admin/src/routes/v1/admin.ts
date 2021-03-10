@@ -1,9 +1,17 @@
 import express, { Request, Response, NextFunction } from 'express'
-import { createAdmin, listAdmin, updateAdminPassword, updateAdminProfile, updateAdminRole } from '~/api/admin'
+import {
+  createAdmin,
+  listAdmin,
+  searchAdmin,
+  updateAdminPassword,
+  updateAdminProfile,
+  updateAdminRole,
+} from '~/api/admin'
 import { GrpcError } from '~/types/exception'
 import {
   ICreateAdminInput,
   IListAdminInput,
+  ISearchAdminInput,
   IUpdateAdminPasswordInput,
   IUpdateAdminProfileInput,
   IUpdateAdminRoleInput,
@@ -22,21 +30,39 @@ const router = express.Router()
 router.get(
   '/',
   async (req: Request, res: Response<IAdminListResponse>, next: NextFunction): Promise<void> => {
-    const { limit, offset, by, direction } = req.query
+    const { limit, offset, by, direction, field, value } = req.query
 
-    const input: IListAdminInput = {
-      limit: Number(limit) || 100,
-      offset: Number(offset) || 0,
-      by: by ? String(by) : '',
-      direction: direction ? String(direction) : '',
+    if (field && value) {
+      const input: ISearchAdminInput = {
+        limit: Number(limit) || 100,
+        offset: Number(offset) || 0,
+        by: String(by),
+        direction: String(direction),
+        field: String(field),
+        value: String(value),
+      }
+
+      await searchAdmin(req, input)
+        .then((output: IAdminListOutput) => {
+          const response: IAdminListResponse = setAdminListResponse(output)
+          res.status(200).json(response)
+        })
+        .catch((err: GrpcError) => next(err))
+    } else {
+      const input: IListAdminInput = {
+        limit: Number(limit) || 100,
+        offset: Number(offset) || 0,
+        by: String(by),
+        direction: String(direction),
+      }
+
+      await listAdmin(req, input)
+        .then((output: IAdminListOutput) => {
+          const response: IAdminListResponse = setAdminListResponse(output)
+          res.status(200).json(response)
+        })
+        .catch((err: GrpcError) => next(err))
     }
-
-    await listAdmin(req, input)
-      .then((output: IAdminListOutput) => {
-        const response: IAdminListResponse = setAdminListResponse(output)
-        res.status(200).json(response)
-      })
-      .catch((err: GrpcError) => next(err))
   }
 )
 

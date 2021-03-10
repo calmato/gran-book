@@ -102,6 +102,96 @@ func TestAdminApplication_List(t *testing.T) {
 	}
 }
 
+func TestAdminApplication_Search(t *testing.T) {
+	current := time.Now()
+
+	testCases := map[string]struct {
+		Input    *input.SearchAdmin
+		Expected struct {
+			Users  []*user.User
+			Output *output.ListQuery
+			Error  error
+		}
+	}{
+		"ok": {
+			Input: &input.SearchAdmin{
+				Limit:  100,
+				Offset: 0,
+				Field:  "email",
+				Value:  "test-user@calmato.com",
+			},
+			Expected: struct {
+				Users  []*user.User
+				Output *output.ListQuery
+				Error  error
+			}{
+				Users: []*user.User{
+					{
+						ID:               "00000000-0000-0000-0000-000000000000",
+						Username:         "test-user",
+						Gender:           0,
+						Email:            "test-user@calmato.com",
+						PhoneNumber:      "000-0000-0000",
+						Role:             0,
+						ThumbnailURL:     "",
+						SelfIntroduction: "",
+						LastName:         "テスト",
+						FirstName:        "ユーザ",
+						LastNameKana:     "てすと",
+						FirstNameKana:    "ゆーざ",
+						PostalCode:       "000-0000",
+						Prefecture:       "東京都",
+						City:             "小金井市",
+						AddressLine1:     "貫井北町4-1-1",
+						AddressLine2:     "",
+						InstanceID:       "",
+						Activated:        true,
+						CreatedAt:        current,
+						UpdatedAt:        current,
+					},
+				},
+				Output: &output.ListQuery{
+					Limit:  100,
+					Offset: 0,
+					Total:  1,
+					Order:  nil,
+				},
+				Error: nil,
+			},
+		},
+	}
+
+	for result, tc := range testCases {
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		arvm := mock_validation.NewMockAdminRequestValidation(ctrl)
+		arvm.EXPECT().SearchAdmin(tc.Input).Return(nil)
+
+		usm := mock_user.NewMockService(ctrl)
+		usm.EXPECT().List(ctx, gomock.Any()).Return(tc.Expected.Users, tc.Expected.Error)
+		usm.EXPECT().ListCount(ctx, gomock.Any()).Return(tc.Expected.Output.Total, tc.Expected.Error)
+
+		t.Run(result, func(t *testing.T) {
+			target := NewAdminApplication(arvm, usm)
+
+			users, _, err := target.Search(ctx, tc.Input)
+			if !reflect.DeepEqual(err, tc.Expected.Error) {
+				t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+				return
+			}
+
+			if !reflect.DeepEqual(users, tc.Expected.Users) {
+				t.Fatalf("want %#v, but %#v", tc.Expected.Users, users)
+				return
+			}
+		})
+	}
+}
+
 func TestAdminApplication_Show(t *testing.T) {
 	current := time.Now()
 
