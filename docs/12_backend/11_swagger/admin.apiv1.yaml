@@ -127,6 +127,18 @@ paths:
             type: integer
           required: false
           description: 取得開始位置
+        - in: query
+          name: field
+          schema:
+            type: string
+          required: false
+          description: 検索項目
+        - in: query
+          name: value
+          schema:
+            type: string
+          required: false
+          description: 検索値
       responses:
         '200':
           description: A successful response.
