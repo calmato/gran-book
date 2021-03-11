@@ -21,6 +21,15 @@ export interface Model {
   readonly addressLine2: string;
   readonly createdAt: string;
   readonly updatedAt: string;
+  readonly followCount: number;
+  readonly followerCount: number;
+  readonly rating: number;
+  readonly products: Array<{
+      id:number, 
+      name: string, 
+      thumbnailUrl: string, 
+      authors: Array<{id: number, name: string}>}
+    >;
 }
 
 export const initialState: Model = {
@@ -45,6 +54,10 @@ export const initialState: Model = {
   addressLine2: '',
   createdAt: '',
   updatedAt: '',
+  followCount: 0,
+  followerCount: 0,
+  rating: 0,
+  products: [],
 };
 
 // Input
@@ -75,8 +88,17 @@ export interface ProfileValues {
   updatedAt: string;
 }
 
-export interface Email {
-  email: string;
+export interface OwnOtherProfileValues {
+  id: string;
+  username: string;
+  thumbnailUrl: string;
+  selfIntroduction: string;
+  isFollow: boolean;
+  isFollower: boolean;
+  followCount: 0,
+  followerCount: 0,
+  rating: 0,
+  products: [],
 }
 
 // Function
@@ -98,8 +120,8 @@ export function setProfile(auth: Model, values: ProfileValues): Model {
   };
 }
 
-export function setEmail(auth: Model, values: Email): Model {
-  return{
+export function setOwnProfile(auth: Model, values: OwnOtherProfileValues): Model {
+  return {
     ...auth,
     ...values,
   };
