@@ -14,14 +14,14 @@ type Registry struct {
 
 // NewRegistry - internalディレクトリ配下のファイルを読み込み
 func NewRegistry(db *repository.Client, s *gcs.Storage) *Registry {
-	auth := authInjection(db, s)
+	auth := authInjection()
 
 	return &Registry{
 		AuthApplication: auth,
 	}
 }
 
-func authInjection(db *repository.Client, s *gcs.Storage) application.AuthApplication {
+func authInjection() application.AuthApplication {
 	ar := repository.NewAuthRepository()
 	as := service.NewAuthService(ar)
 
