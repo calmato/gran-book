@@ -33,6 +33,34 @@ func (m *MockAdminRequestValidation) EXPECT() *MockAdminRequestValidationMockRec
 	return m.recorder
 }
 
+// ListAdmin mocks base method
+func (m *MockAdminRequestValidation) ListAdmin(in *input.ListAdmin) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListAdmin", in)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// ListAdmin indicates an expected call of ListAdmin
+func (mr *MockAdminRequestValidationMockRecorder) ListAdmin(in interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAdmin", reflect.TypeOf((*MockAdminRequestValidation)(nil).ListAdmin), in)
+}
+
+// SearchAdmin mocks base method
+func (m *MockAdminRequestValidation) SearchAdmin(in *input.SearchAdmin) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SearchAdmin", in)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// SearchAdmin indicates an expected call of SearchAdmin
+func (mr *MockAdminRequestValidationMockRecorder) SearchAdmin(in interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchAdmin", reflect.TypeOf((*MockAdminRequestValidation)(nil).SearchAdmin), in)
+}
+
 // CreateAdmin mocks base method
 func (m *MockAdminRequestValidation) CreateAdmin(in *input.CreateAdmin) error {
 	m.ctrl.T.Helper()

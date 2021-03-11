@@ -1,3 +1,4 @@
+import * as AdminStore from './admin'
 import * as AuthStore from './auth'
 
 const err = {
@@ -14,9 +15,12 @@ const err = {
 
 export default {
   get: {
+    ...AdminStore.get,
     ...AuthStore.get,
   },
-  post: {},
+  post: {
+    ...AdminStore.post,
+  },
   patch: {
     ...AuthStore.patch,
   },

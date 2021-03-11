@@ -1,11 +1,12 @@
 <template>
-  <settings-edit-password :form="form" @click="handleSubmit" @cancel="handleCancel" />
+  <settings-edit-password :form="form" :loading="loading" @click="handleSubmit" @cancel="handleCancel" />
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, SetupContext } from '@nuxtjs/composition-api'
+import { defineComponent, computed, reactive, SetupContext } from '@nuxtjs/composition-api'
 import { AuthStore, CommonStore } from '~/store'
 import { IAuthEditPasswordForm, AuthEditPasswordOptions, ISignInForm } from '~/types/forms'
+import { PromiseState } from '~/types/store'
 import SettingsEditPassword from '~/components/templates/SettingsEditPassword.vue'
 
 export default defineComponent({
@@ -27,7 +28,13 @@ export default defineComponent({
       },
     })
 
+    const loading = computed((): boolean => {
+      const status = store.getters['common/getPromiseState']
+      return status === PromiseState.LOADING
+    })
+
     const handleSubmit = async () => {
+      CommonStore.startConnection()
       await AuthStore.updatePassword(form)
         .then(async () => {
           const formData: ISignInForm = {
@@ -43,6 +50,9 @@ export default defineComponent({
         .catch((err: Error) => {
           CommonStore.showErrorInSnackbar(err)
         })
+        .finally(() => {
+          CommonStore.endConnection()
+        })
     }
 
     const handleCancel = () => {
@@ -51,6 +61,7 @@ export default defineComponent({
 
     return {
       form,
+      loading,
       handleSubmit,
       handleCancel,
     }

@@ -4,6 +4,17 @@
 var grpc = require('@grpc/grpc-js');
 var proto_user_apiv1_pb = require('../proto/user_apiv1_pb.js');
 
+function serialize_proto_AdminListResponse(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.AdminListResponse)) {
+    throw new Error('Expected argument of type proto.AdminListResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_AdminListResponse(buffer_arg) {
+  return proto_user_apiv1_pb.AdminListResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_proto_AdminResponse(arg) {
   if (!(arg instanceof proto_user_apiv1_pb.AdminResponse)) {
     throw new Error('Expected argument of type proto.AdminResponse');
@@ -57,6 +68,116 @@ function serialize_proto_EmptyUser(arg) {
 
 function deserialize_proto_EmptyUser(buffer_arg) {
   return proto_user_apiv1_pb.EmptyUser.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_proto_FollowListResponse(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.FollowListResponse)) {
+    throw new Error('Expected argument of type proto.FollowListResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_FollowListResponse(buffer_arg) {
+  return proto_user_apiv1_pb.FollowListResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_proto_FollowerListResponse(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.FollowerListResponse)) {
+    throw new Error('Expected argument of type proto.FollowerListResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_FollowerListResponse(buffer_arg) {
+  return proto_user_apiv1_pb.FollowerListResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_proto_GetAdminRequest(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.GetAdminRequest)) {
+    throw new Error('Expected argument of type proto.GetAdminRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_GetAdminRequest(buffer_arg) {
+  return proto_user_apiv1_pb.GetAdminRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_proto_GetUserProfileRequest(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.GetUserProfileRequest)) {
+    throw new Error('Expected argument of type proto.GetUserProfileRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_GetUserProfileRequest(buffer_arg) {
+  return proto_user_apiv1_pb.GetUserProfileRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_proto_ListAdminRequest(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.ListAdminRequest)) {
+    throw new Error('Expected argument of type proto.ListAdminRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_ListAdminRequest(buffer_arg) {
+  return proto_user_apiv1_pb.ListAdminRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_proto_ListFollowRequest(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.ListFollowRequest)) {
+    throw new Error('Expected argument of type proto.ListFollowRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_ListFollowRequest(buffer_arg) {
+  return proto_user_apiv1_pb.ListFollowRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_proto_ListFollowerRequest(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.ListFollowerRequest)) {
+    throw new Error('Expected argument of type proto.ListFollowerRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_ListFollowerRequest(buffer_arg) {
+  return proto_user_apiv1_pb.ListFollowerRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_proto_RegisterFollowRequest(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.RegisterFollowRequest)) {
+    throw new Error('Expected argument of type proto.RegisterFollowRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_RegisterFollowRequest(buffer_arg) {
+  return proto_user_apiv1_pb.RegisterFollowRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_proto_SearchAdminRequest(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.SearchAdminRequest)) {
+    throw new Error('Expected argument of type proto.SearchAdminRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_SearchAdminRequest(buffer_arg) {
+  return proto_user_apiv1_pb.SearchAdminRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_proto_UnregisterFollowRequest(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.UnregisterFollowRequest)) {
+    throw new Error('Expected argument of type proto.UnregisterFollowRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_UnregisterFollowRequest(buffer_arg) {
+  return proto_user_apiv1_pb.UnregisterFollowRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 function serialize_proto_UpdateAdminPasswordRequest(arg) {
@@ -136,6 +257,17 @@ function deserialize_proto_UpdateAuthProfileRequest(buffer_arg) {
   return proto_user_apiv1_pb.UpdateAuthProfileRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_proto_UserProfileResponse(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.UserProfileResponse)) {
+    throw new Error('Expected argument of type proto.UserProfileResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_UserProfileResponse(buffer_arg) {
+  return proto_user_apiv1_pb.UserProfileResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 
 var AuthServiceService = exports.AuthServiceService = {
   getAuth: {
@@ -208,6 +340,39 @@ var AuthServiceService = exports.AuthServiceService = {
 
 exports.AuthServiceClient = grpc.makeGenericClientConstructor(AuthServiceService);
 var AdminServiceService = exports.AdminServiceService = {
+  listAdmin: {
+    path: '/proto.AdminService/ListAdmin',
+    requestStream: false,
+    responseStream: false,
+    requestType: proto_user_apiv1_pb.ListAdminRequest,
+    responseType: proto_user_apiv1_pb.AdminListResponse,
+    requestSerialize: serialize_proto_ListAdminRequest,
+    requestDeserialize: deserialize_proto_ListAdminRequest,
+    responseSerialize: serialize_proto_AdminListResponse,
+    responseDeserialize: deserialize_proto_AdminListResponse,
+  },
+  searchAdmin: {
+    path: '/proto.AdminService/SearchAdmin',
+    requestStream: false,
+    responseStream: false,
+    requestType: proto_user_apiv1_pb.SearchAdminRequest,
+    responseType: proto_user_apiv1_pb.AdminListResponse,
+    requestSerialize: serialize_proto_SearchAdminRequest,
+    requestDeserialize: deserialize_proto_SearchAdminRequest,
+    responseSerialize: serialize_proto_AdminListResponse,
+    responseDeserialize: deserialize_proto_AdminListResponse,
+  },
+  getAdmin: {
+    path: '/proto.AdminService/GetAdmin',
+    requestStream: false,
+    responseStream: false,
+    requestType: proto_user_apiv1_pb.GetAdminRequest,
+    responseType: proto_user_apiv1_pb.AdminResponse,
+    requestSerialize: serialize_proto_GetAdminRequest,
+    requestDeserialize: deserialize_proto_GetAdminRequest,
+    responseSerialize: serialize_proto_AdminResponse,
+    responseDeserialize: deserialize_proto_AdminResponse,
+  },
   createAdmin: {
     path: '/proto.AdminService/CreateAdmin',
     requestStream: false,
@@ -255,3 +420,62 @@ var AdminServiceService = exports.AdminServiceService = {
 };
 
 exports.AdminServiceClient = grpc.makeGenericClientConstructor(AdminServiceService);
+var UserServiceService = exports.UserServiceService = {
+  listFollow: {
+    path: '/proto.UserService/ListFollow',
+    requestStream: false,
+    responseStream: false,
+    requestType: proto_user_apiv1_pb.ListFollowRequest,
+    responseType: proto_user_apiv1_pb.FollowListResponse,
+    requestSerialize: serialize_proto_ListFollowRequest,
+    requestDeserialize: deserialize_proto_ListFollowRequest,
+    responseSerialize: serialize_proto_FollowListResponse,
+    responseDeserialize: deserialize_proto_FollowListResponse,
+  },
+  listFollower: {
+    path: '/proto.UserService/ListFollower',
+    requestStream: false,
+    responseStream: false,
+    requestType: proto_user_apiv1_pb.ListFollowerRequest,
+    responseType: proto_user_apiv1_pb.FollowerListResponse,
+    requestSerialize: serialize_proto_ListFollowerRequest,
+    requestDeserialize: deserialize_proto_ListFollowerRequest,
+    responseSerialize: serialize_proto_FollowerListResponse,
+    responseDeserialize: deserialize_proto_FollowerListResponse,
+  },
+  getUserProfile: {
+    path: '/proto.UserService/GetUserProfile',
+    requestStream: false,
+    responseStream: false,
+    requestType: proto_user_apiv1_pb.GetUserProfileRequest,
+    responseType: proto_user_apiv1_pb.UserProfileResponse,
+    requestSerialize: serialize_proto_GetUserProfileRequest,
+    requestDeserialize: deserialize_proto_GetUserProfileRequest,
+    responseSerialize: serialize_proto_UserProfileResponse,
+    responseDeserialize: deserialize_proto_UserProfileResponse,
+  },
+  registerFollow: {
+    path: '/proto.UserService/RegisterFollow',
+    requestStream: false,
+    responseStream: false,
+    requestType: proto_user_apiv1_pb.RegisterFollowRequest,
+    responseType: proto_user_apiv1_pb.UserProfileResponse,
+    requestSerialize: serialize_proto_RegisterFollowRequest,
+    requestDeserialize: deserialize_proto_RegisterFollowRequest,
+    responseSerialize: serialize_proto_UserProfileResponse,
+    responseDeserialize: deserialize_proto_UserProfileResponse,
+  },
+  unregisterFollow: {
+    path: '/proto.UserService/UnregisterFollow',
+    requestStream: false,
+    responseStream: false,
+    requestType: proto_user_apiv1_pb.UnregisterFollowRequest,
+    responseType: proto_user_apiv1_pb.UserProfileResponse,
+    requestSerialize: serialize_proto_UnregisterFollowRequest,
+    requestDeserialize: deserialize_proto_UnregisterFollowRequest,
+    responseSerialize: serialize_proto_UserProfileResponse,
+    responseDeserialize: deserialize_proto_UserProfileResponse,
+  },
+};
+
+exports.UserServiceClient = grpc.makeGenericClientConstructor(UserServiceService);
