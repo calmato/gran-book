@@ -33,6 +33,7 @@ func (s *bookService) Create(ctx context.Context, b *book.Book) error {
 
 	if b.Publisher != nil {
 		s.CreatePublisher(ctx, b.Publisher)
+		b.PublisherID = b.Publisher.ID
 	}
 
 	for _, a := range b.Authors {
