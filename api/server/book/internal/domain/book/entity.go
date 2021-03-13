@@ -54,3 +54,21 @@ type Bookshelf struct {
 	CreatedAt  time.Time `gorm:"not null;<-:create"`
 	UpdatedAt  time.Time `gorm:"not null"`
 }
+
+// BookAuthor - 中間テーブル用
+type BookAuthor struct {
+	ID        int64     `gorm:"primaryKey;not null;autoIncrement;<-:create"`
+	BookID    int64     `gorm:"not null;uniqueIndex:ui_authors_books_01;uniqueIndex:ui_authors_books_02"`
+	AuthorID  int64     `gorm:"not null;uniqueIndex:ui_authors_books_01;uniqueIndex:ui_authors_books_02"`
+	CreatedAt time.Time `gorm:"not null;<-:create"`
+	UpdatedAt time.Time `gorm:"not null"`
+}
+
+// BookCategory - 中間テーブル用
+type BookCategory struct {
+	ID         int64     `gorm:"primaryKey;not null;autoIncrement;<-:create"`
+	BookID     int64     `gorm:"not null;uniqueIndex:ui_books_categories_01;uniqueIndex:ui_books_categories_02"`
+	CategoryID int64     `gorm:"not null;uniqueIndex:ui_books_categories_01;uniqueIndex:ui_books_categories_02"`
+	CreatedAt  time.Time `gorm:"not null;<-:create"`
+	UpdatedAt  time.Time `gorm:"not null"`
+}

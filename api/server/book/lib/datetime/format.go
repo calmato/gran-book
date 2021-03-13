@@ -26,3 +26,9 @@ func StringToTime(str string) time.Time {
 	t, _ := time.ParseInLocation(timeFormat, str, time.Local)
 	return t.Local()
 }
+
+// StringToDate - String型 -> Time型
+func StringToDate(str string) time.Time {
+	t, _ := time.ParseInLocation(dateFormat, str, time.Local)
+	return t.Local()
+}

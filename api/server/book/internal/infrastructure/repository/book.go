@@ -5,6 +5,7 @@ import (
 
 	"github.com/calmato/gran-book/api/server/book/internal/domain/book"
 	"github.com/calmato/gran-book/api/server/book/internal/domain/exception"
+	"gorm.io/gorm/clause"
 )
 
 type bookRepository struct {
@@ -19,17 +20,29 @@ func NewBookRepository(c *Client) book.Repository {
 }
 
 func (r *bookRepository) Create(ctx context.Context, b *book.Book) error {
-	err := r.client.db.Create(&b).Error
+	err := r.client.db.Omit(clause.Associations).Create(&b).Error
 	if err != nil {
 		return exception.ErrorInDatastore.New(err)
 	}
 
-	if len(b.Authors) > 0 {
-		r.client.db.Model(&b).Association("authors_books").Append(&b.Authors)
+	for _, a := range b.Authors {
+		ba := &book.BookAuthor{
+			BookID:    b.ID,
+			AuthorID:  a.ID,
+			CreatedAt: b.CreatedAt,
+			UpdatedAt: b.UpdatedAt,
+		}
+		r.client.db.Table("authors_books").Create(&ba)
 	}
 
-	if len(b.Categories) > 0 {
-		r.client.db.Model(&b).Association("books_categories").Append(&b.Categories)
+	for _, c := range b.Categories {
+		bc := &book.BookCategory{
+			BookID:     b.ID,
+			CategoryID: c.ID,
+			CreatedAt:  b.CreatedAt,
+			UpdatedAt:  b.UpdatedAt,
+		}
+		r.client.db.Table("books_categories").Create(&bc)
 	}
 
 	return nil

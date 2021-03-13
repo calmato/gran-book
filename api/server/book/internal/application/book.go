@@ -26,6 +26,7 @@ func NewBookApplication(brv validation.BookRequestValidation, bs book.Service) B
 		bookService:           bs,
 	}
 }
+
 func (a *bookApplication) Create(ctx context.Context, in *input.CreateBook) (*book.Book, error) {
 	err := a.bookRequestValidation.CreateBook(in)
 	if err != nil {
@@ -60,7 +61,7 @@ func (a *bookApplication) Create(ctx context.Context, in *input.CreateBook) (*bo
 		Isbn:         in.Isbn,
 		ThumbnailURL: in.ThumbnailURL,
 		Version:      in.Version,
-		PublishedOn:  datetime.StringToTime(in.PublishedOn),
+		PublishedOn:  datetime.StringToDate(in.PublishedOn),
 		Publisher:    p,
 		Authors:      as,
 		Categories:   cs,

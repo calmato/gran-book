@@ -3,8 +3,9 @@ package repository
 import (
 	"fmt"
 
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 // Client - DB操作用クライアントの構造体
@@ -14,12 +15,13 @@ type Client struct {
 
 // NewDBClient - DBクライアントの生成
 func NewDBClient(socket, host, port, database, username, password string) (*Client, error) {
-	db, err := gorm.Open("mysql", getDBConfig(socket, host, port, database, username, password))
+	dsn := getDBConfig(socket, host, port, database, username, password)
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Info),
+	})
 	if err != nil {
 		return &Client{}, err
 	}
-
-	db.LogMode(true)
 
 	return &Client{db}, nil
 }
