@@ -6,18 +6,19 @@ import (
 	"github.com/calmato/gran-book/api/server/book/internal/application"
 	"github.com/calmato/gran-book/api/server/book/internal/application/input"
 	"github.com/calmato/gran-book/api/server/book/internal/domain/book"
+	"github.com/calmato/gran-book/api/server/book/lib/datetime"
 	pb "github.com/calmato/gran-book/api/server/book/proto"
 )
 
-// BookService - Bookインターフェースの構造体
-type BookService struct {
+// BookServer - Bookインターフェースの構造体
+type BookServer struct {
 	pb.UnimplementedBookServiceServer
 	AuthApplication application.AuthApplication
 	BookApplication application.BookApplication
 }
 
 // CreateBook - 書籍登録
-func (s *BookService) CreateBook(ctx context.Context, req *pb.CreateBookRequest) (*pb.BookResponse, error) {
+func (s *BookServer) CreateBook(ctx context.Context, req *pb.CreateBookRequest) (*pb.BookResponse, error) {
 	_, err := s.AuthApplication.Authentication(ctx)
 	if err != nil {
 		return nil, errorHandling(err)
@@ -25,7 +26,7 @@ func (s *BookService) CreateBook(ctx context.Context, req *pb.CreateBookRequest)
 
 	as := make([]*input.CreateBookAuthor, len(req.Authors))
 	for i, v := range req.Authors {
-		a := input.CreateBookAuthor{
+		a := &input.CreateBookAuthor{
 			Name: v.Name,
 		}
 
@@ -91,9 +92,9 @@ func getBookResponse(b *book.Book) *pb.BookResponse {
 		Isbn:         b.Isbn,
 		ThumbnailUrl: b.ThumbnailURL,
 		Version:      b.Version,
-		PublishedOn:  b.PublishedOn,
-		CreatedAt:    b.CreatedAt,
-		UpdatedAt:    b.UpdatedAt,
+		PublishedOn:  datetime.DateToString(b.PublishedOn),
+		CreatedAt:    datetime.TimeToString(b.CreatedAt),
+		UpdatedAt:    datetime.TimeToString(b.UpdatedAt),
 		Authors:      as,
 		Categories:   cs,
 	}
