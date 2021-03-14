@@ -2,8 +2,8 @@ package domain
 
 // ListQuery - 一覧取得時のクエリ用構造体
 type ListQuery struct {
-	Limit      int64
-	Offset     int64
+	Limit      int
+	Offset     int
 	Order      *QueryOrder
 	Conditions []*QueryCondition
 }

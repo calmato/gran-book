@@ -4,8 +4,8 @@ import "time"
 
 // Book - 書籍エンティティ
 type Book struct {
-	ID           int64        `gorm:"primaryKey;not null;<-:create"`
-	PublisherID  int64        `gorm:"not null;uniqueIndex:ui_books_01;uniqueIndex:ui_books_02"`
+	ID           int          `gorm:"primaryKey;not null;<-:create"`
+	PublisherID  int          `gorm:"not null;uniqueIndex:ui_books_01;uniqueIndex:ui_books_02"`
 	Title        string       `gorm:"size:32;not null;uniqueIndex:ui_books_01;uniqueIndex:ui_books_02"`
 	Description  string       `gorm:"size:1000;not null"`
 	Isbn         string       `gorm:"size:16;not null"`
@@ -22,7 +22,7 @@ type Book struct {
 
 // Publisher - 出版社エンティティ
 type Publisher struct {
-	ID        int64     `gorm:"primaryKey;not null;autoIncrement;<-:create"`
+	ID        int       `gorm:"primaryKey;not null;autoIncrement;<-:create"`
 	Name      string    `gorm:"size:32;not null;unique"`
 	CreatedAt time.Time `gorm:"not null;<-:create"`
 	UpdatedAt time.Time `gorm:"not null"`
@@ -30,7 +30,7 @@ type Publisher struct {
 
 // Author - 著者エンティティ
 type Author struct {
-	ID        int64     `gorm:"primaryKey;not null;autoIncrement;<-:create"`
+	ID        int       `gorm:"primaryKey;not null;autoIncrement;<-:create"`
 	Name      string    `gorm:"size:32;not null;unique"`
 	CreatedAt time.Time `gorm:"not null;<-:create"`
 	UpdatedAt time.Time `gorm:"not null"`
@@ -38,7 +38,7 @@ type Author struct {
 
 // Category - 書籍カテゴリエンティティ
 type Category struct {
-	ID        int64     `gorm:"primaryKey;not null;autoIncrement;<-:create"`
+	ID        int       `gorm:"primaryKey;not null;autoIncrement;<-:create"`
 	Name      string    `gorm:"size:32;not null;unique"`
 	CreatedAt time.Time `gorm:"not null;<-:create"`
 	UpdatedAt time.Time `gorm:"not null"`
@@ -46,10 +46,10 @@ type Category struct {
 
 // Bookshelf - 本棚エンティティ
 type Bookshelf struct {
-	ID         int64     `gorm:"primaryKey;not null;autoIncrement;<-:create"`
-	BookID     int64     `gorm:"not null;uniqueIndex:ui_bookshelfs_01;uniqueIndex:ui_bookshelfs_02"`
+	ID         int       `gorm:"primaryKey;not null;autoIncrement;<-:create"`
+	BookID     int       `gorm:"not null;uniqueIndex:ui_bookshelfs_01;uniqueIndex:ui_bookshelfs_02"`
 	UserID     string    `gorm:"not null;uniqueIndex:ui_bookshelfs_01;uniqueIndex:ui_bookshelfs_02"`
-	Status     int32     `gorm:"not null;default:0"`
+	Status     int       `gorm:"not null;default:0"`
 	Impression string    `gorm:"size:1000;default:''"`
 	CreatedAt  time.Time `gorm:"not null;<-:create"`
 	UpdatedAt  time.Time `gorm:"not null"`
@@ -57,18 +57,18 @@ type Bookshelf struct {
 
 // BookAuthor - 中間テーブル用
 type BookAuthor struct {
-	ID        int64     `gorm:"primaryKey;not null;autoIncrement;<-:create"`
-	BookID    int64     `gorm:"not null;uniqueIndex:ui_authors_books_01;uniqueIndex:ui_authors_books_02"`
-	AuthorID  int64     `gorm:"not null;uniqueIndex:ui_authors_books_01;uniqueIndex:ui_authors_books_02"`
+	ID        int       `gorm:"primaryKey;not null;autoIncrement;<-:create"`
+	BookID    int       `gorm:"not null;uniqueIndex:ui_authors_books_01;uniqueIndex:ui_authors_books_02"`
+	AuthorID  int       `gorm:"not null;uniqueIndex:ui_authors_books_01;uniqueIndex:ui_authors_books_02"`
 	CreatedAt time.Time `gorm:"not null;<-:create"`
 	UpdatedAt time.Time `gorm:"not null"`
 }
 
 // BookCategory - 中間テーブル用
 type BookCategory struct {
-	ID         int64     `gorm:"primaryKey;not null;autoIncrement;<-:create"`
-	BookID     int64     `gorm:"not null;uniqueIndex:ui_books_categories_01;uniqueIndex:ui_books_categories_02"`
-	CategoryID int64     `gorm:"not null;uniqueIndex:ui_books_categories_01;uniqueIndex:ui_books_categories_02"`
+	ID         int       `gorm:"primaryKey;not null;autoIncrement;<-:create"`
+	BookID     int       `gorm:"not null;uniqueIndex:ui_books_categories_01;uniqueIndex:ui_books_categories_02"`
+	CategoryID int       `gorm:"not null;uniqueIndex:ui_books_categories_01;uniqueIndex:ui_books_categories_02"`
 	CreatedAt  time.Time `gorm:"not null;<-:create"`
 	UpdatedAt  time.Time `gorm:"not null"`
 }

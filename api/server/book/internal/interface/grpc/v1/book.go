@@ -67,7 +67,7 @@ func getBookResponse(b *book.Book) *pb.BookResponse {
 	as := make([]*pb.BookResponse_Author, len(b.Authors))
 	for i, v := range b.Authors {
 		a := &pb.BookResponse_Author{
-			Id:   v.ID,
+			Id:   int64(v.ID),
 			Name: v.Name,
 		}
 
@@ -77,7 +77,7 @@ func getBookResponse(b *book.Book) *pb.BookResponse {
 	cs := make([]*pb.BookResponse_Category, len(b.Categories))
 	for i, v := range b.Categories {
 		c := &pb.BookResponse_Category{
-			Id:   v.ID,
+			Id:   int64(v.ID),
 			Name: v.Name,
 		}
 
@@ -85,8 +85,8 @@ func getBookResponse(b *book.Book) *pb.BookResponse {
 	}
 
 	return &pb.BookResponse{
-		Id:           b.ID,
-		PublisherId:  b.PublisherID,
+		Id:           int64(b.ID),
+		PublisherId:  int64(b.PublisherID),
 		Title:        b.Title,
 		Description:  b.Description,
 		Isbn:         b.Isbn,
