@@ -111,11 +111,11 @@ func (s *userService) ListFollower(ctx context.Context, q *domain.ListQuery, uid
 	return fs, nil
 }
 
-func (s *userService) ListCount(ctx context.Context, q *domain.ListQuery) (int64, error) {
+func (s *userService) ListCount(ctx context.Context, q *domain.ListQuery) (int, error) {
 	return s.userRepository.ListCount(ctx, q)
 }
 
-func (s *userService) ListFriendCount(ctx context.Context, uid string) (int64, int64, error) {
+func (s *userService) ListFriendCount(ctx context.Context, uid string) (int, int, error) {
 	followQuery := &domain.ListQuery{
 		Conditions: []*domain.QueryCondition{
 			{
@@ -153,7 +153,7 @@ func (s *userService) Show(ctx context.Context, uid string) (*user.User, error) 
 	return s.userRepository.Show(ctx, uid)
 }
 
-func (s *userService) ShowRelationship(ctx context.Context, id int64) (*user.Relationship, error) {
+func (s *userService) ShowRelationship(ctx context.Context, id int) (*user.Relationship, error) {
 	return s.userRepository.ShowRelationship(ctx, id)
 }
 
@@ -212,7 +212,7 @@ func (s *userService) UpdatePassword(ctx context.Context, uid string, password s
 	return s.userRepository.UpdatePassword(ctx, uid, password)
 }
 
-func (s *userService) DeleteRelationship(ctx context.Context, id int64) error {
+func (s *userService) DeleteRelationship(ctx context.Context, id int) error {
 	return s.userRepository.DeleteRelationship(ctx, id)
 }
 

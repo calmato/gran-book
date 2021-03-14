@@ -72,7 +72,7 @@ func (c *Client) getListQuery(db *gorm.DB, q *domain.ListQuery) *gorm.DB {
 	return db
 }
 
-func (c *Client) getListCount(db *gorm.DB, q *domain.ListQuery) (int64, error) {
+func (c *Client) getListCount(db *gorm.DB, q *domain.ListQuery) (int, error) {
 	var count int64
 
 	if q != nil {
@@ -87,7 +87,7 @@ func (c *Client) getListCount(db *gorm.DB, q *domain.ListQuery) (int64, error) {
 		return 0, exception.ErrorInDatastore.New(err)
 	}
 
-	return count, nil
+	return int(count), nil
 }
 
 func setWhere(db *gorm.DB, c *domain.QueryCondition) *gorm.DB {
@@ -139,14 +139,14 @@ func setOrder(db *gorm.DB, o *domain.QueryOrder) *gorm.DB {
 	}
 }
 
-func setLimit(db *gorm.DB, limit int64) *gorm.DB {
+func setLimit(db *gorm.DB, limit int) *gorm.DB {
 	if limit > 0 {
-		return db.Limit(int(limit))
+		return db.Limit(limit)
 	}
 
 	return db
 }
 
-func setOffset(db *gorm.DB, offset int64) *gorm.DB {
-	return db.Offset(int(offset))
+func setOffset(db *gorm.DB, offset int) *gorm.DB {
+	return db.Offset(offset)
 }
