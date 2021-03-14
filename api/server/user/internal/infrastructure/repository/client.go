@@ -7,8 +7,9 @@ import (
 	"github.com/calmato/gran-book/api/server/user/internal/domain"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
 	"github.com/calmato/gran-book/api/server/user/lib/array"
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 // Client - DB操作用クライアントの構造体
@@ -18,12 +19,13 @@ type Client struct {
 
 // NewDBClient - DBクライアントの生成
 func NewDBClient(socket, host, port, database, username, password string) (*Client, error) {
-	db, err := gorm.Open("mysql", getDBConfig(socket, host, port, database, username, password))
+	dsn := getDBConfig(socket, host, port, database, username, password)
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Info),
+	})
 	if err != nil {
 		return &Client{}, err
 	}
-
-	db.LogMode(true)
 
 	return &Client{db}, nil
 }
@@ -139,12 +141,12 @@ func setOrder(db *gorm.DB, o *domain.QueryOrder) *gorm.DB {
 
 func setLimit(db *gorm.DB, limit int64) *gorm.DB {
 	if limit > 0 {
-		return db.Limit(limit)
+		return db.Limit(int(limit))
 	}
 
 	return db
 }
 
 func setOffset(db *gorm.DB, offset int64) *gorm.DB {
-	return db.Offset(offset)
+	return db.Offset(int(offset))
 }
