@@ -32,16 +32,16 @@ func (s *bookService) Create(ctx context.Context, b *book.Book) error {
 	b.UpdatedAt = current
 
 	if b.Publisher != nil {
-		s.CreatePublisher(ctx, b.Publisher)
+		_ = s.CreatePublisher(ctx, b.Publisher)
 		b.PublisherID = b.Publisher.ID
 	}
 
 	for _, a := range b.Authors {
-		s.CreateAuthor(ctx, a)
+		_ = s.CreateAuthor(ctx, a)
 	}
 
 	for _, c := range b.Categories {
-		s.CreateCategory(ctx, c)
+		_ = s.CreateCategory(ctx, c)
 	}
 
 	return s.bookRepository.Create(ctx, b)
