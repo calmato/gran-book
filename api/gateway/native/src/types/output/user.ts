@@ -10,6 +10,7 @@ export interface IFollowListOutputUser {
   username: string
   thumbnailUrl: string
   selfIntroduction: string
+  isFollow: boolean
 }
 
 export interface IFollowerListOutput {
@@ -24,6 +25,7 @@ export interface IFollowerListOutputUser {
   username: string
   thumbnailUrl: string
   selfIntroduction: string
+  isFollow: boolean
 }
 
 export interface IUserProfileOutput {
