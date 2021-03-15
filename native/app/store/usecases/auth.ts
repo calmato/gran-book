@@ -1,7 +1,7 @@
 import { Dispatch } from 'redux';
 import { AxiosResponse } from 'axios';
 import Firebase from 'firebase';
-import { internal, external} from '~/lib/axios'
+import { internal, external} from '~/lib/axios';
 import firebase from '~/lib/firebase';
 import * as LocalStorage from '~/lib/local-storage';
 import { Auth } from '~/store/models';
@@ -83,20 +83,20 @@ export function editPasswordAsync(password: string, passwordConfirmation: string
 }
 
 export function searchAddress(postalCode: string) {
-  return async (): Promise<void> => {
+  return async (): Promise<string> => {
     return await external
-    .get('https://zipcoda.net/api', {
-      params: {
-        zipcode: postalCode
-      }
-    })
-    .then(function(r) {
-      console.log(r.data)
-    })
-    .catch((err: Error) => {
-      throw err;
-    });
-  }
+      .get('https://zipcoda.net/api', {
+        params: {
+          zipcode: postalCode
+        }
+      })
+      .then(function(r) {
+        return r.data;
+      })
+      .catch((err: Error) => {
+        throw err;
+      });
+  };
 }
 
 export function getAuthAsync() {

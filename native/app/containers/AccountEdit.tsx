@@ -7,7 +7,7 @@ export default function SearchAddress(): JSX.Element {
   const dispatch = useReduxDispatch();
   const actions = React.useMemo(
     () => ({
-      searchAddress(postalCode: string): Promise<void> {
+      searchAddress(postalCode: string): Promise<string> {
         return dispatch(searchAddress(postalCode));
       },
     }), [dispatch],

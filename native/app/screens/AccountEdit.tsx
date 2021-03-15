@@ -57,7 +57,7 @@ type AccountEditProp = StackNavigationProp<RootStackParamList, 'AccountEdit'>;
 
 interface Props {
   actions: {
-    searchAddress: (postalCode: string) => Promise<void>,
+    searchAddress: (postalCode: string) => Promise<string>,
   },
 }
 
@@ -78,27 +78,35 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
 
   const postalCheck: boolean = useMemo((): boolean => {
     return formData.postalCode.length == 7;
-  }, [formData.postalCode])
+  }, [formData.postalCode]);
 
   const canSubmit = useMemo((): boolean => {
     return formData.firstName.length > 0 &&  formData.lastName.length > 0 && formData.firstNameKana.length > 0  &&
     formData.lastNameKana.length > 0 && formData.phoneNumber.length > 0 && formData.postalCode.length > 0 &&
-    formData.prefecture !== null && re.test(formData.firstNameKana) && re.test(formData.lastNameKana) && formData.city.length > 0 && formData.addressLine1.length > 0
+    formData.prefecture !== undefined && re.test(formData.firstNameKana) && re.test(formData.lastNameKana) && formData.city.length > 0 && formData.addressLine1.length > 0;
   }, [formData.firstName, formData.lastName, formData.firstNameKana, formData.lastNameKana, formData.phoneNumber
-  , formData.postalCode, formData.prefecture, formData.city, formData.addressLine1])
+    , formData.postalCode, formData.prefecture, formData.city, formData.addressLine1]);
 
   //TODO: ボタンを押した時の処理を追加する
-  const handleSearch = React.useCallback(async () => {
-    await searchAddress(
-      formData.postalCode
-    )
-    .then(function(r) {
-      console.log(r)
-    })
-    .catch((err: Error) => {
-      throw err;
-    });
-  }, [formData.postalCode, searchAddress]);
+  const handleSearch = React.useCallback(() => {
+    (async () =>
+    {
+      const address = await searchAddress(formData.postalCode);
+      const jsonAddress = JSON.stringify(address);
+      const parseAddress = JSON.parse(jsonAddress);
+      if(parseAddress.status == '200') {
+        setValue({
+          ...formData,
+          prefecture: parseAddress.items[0].components[0],
+          city: parseAddress.items[0].components[1],
+          addressLine1: parseAddress.items[0].components[2],
+        });
+        console.log(formData.firstName);
+      } else {
+        throw 'Failed to get address';
+      }
+    }) ();
+  }, [formData, searchAddress]);
 
   const handleAccountEditSubmit = React.useCallback(async () => {
     await accountEdit(
@@ -193,7 +201,8 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
       </View>
       <View style={styles.prefectureArea}>
         <PrefecturePicker
-        onValueChange={(text) => setValue({...formData, prefecture: text})}
+          onValueChange={(text) => setValue({...formData, prefecture: text})}
+          value={formData.prefecture}
         />
       </View>
       <FullTextInput
