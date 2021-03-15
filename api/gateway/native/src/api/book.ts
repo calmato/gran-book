@@ -4,7 +4,7 @@ import { getGrpcMetadata } from '~/lib/grpc-metadata'
 import { bookClient } from '~/plugins/grpc'
 import { BookResponse, CreateBookRequest } from '~/proto/book_apiv1_pb'
 import { ICreateBookInput } from '~/types/input'
-import { IBookOutput, IBookOutputAuthor, IBookOutputCategory } from '~/types/output'
+import { IBookOutput, IBookOutputAuthor, IBookOutputCategory, IBookOutputPublisher } from '~/types/output'
 
 export function createBook(req: Request<any>, input: ICreateBookInput): Promise<IBookOutput> {
   const request = new CreateBookRequest()
@@ -47,6 +47,11 @@ export function createBook(req: Request<any>, input: ICreateBookInput): Promise<
 }
 
 function setBookOutput(res: BookResponse): IBookOutput {
+  const publisher: IBookOutputPublisher = {
+    id: res.getPublisher()?.getId() || 0,
+    name: res.getPublisher()?.getName() || '',
+  }
+
   const authors: IBookOutputAuthor[] = res.getAuthorsList().map((author: BookResponse.Author) => {
     return { id: author.getId(), name: author.getName() }
   })
@@ -57,7 +62,6 @@ function setBookOutput(res: BookResponse): IBookOutput {
 
   const output: IBookOutput = {
     id: res.getId(),
-    publisherId: res.getPublisherId(),
     title: res.getTitle(),
     description: res.getDescription(),
     isbn: res.getIsbn(),
@@ -66,6 +70,7 @@ function setBookOutput(res: BookResponse): IBookOutput {
     publishedOn: res.getPublishedOn(),
     createdAt: res.getCreatedAt(),
     updatedAt: res.getUpdatedAt(),
+    publisher,
     authors,
     categories,
   }

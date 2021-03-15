@@ -4,7 +4,7 @@ import { ICreateBookRequest } from '~/types/request'
 import { ICreateBookInput } from '~/types/input'
 import { GrpcError } from '~/types/exception'
 import { IBookOutput, IBookOutputAuthor, IBookOutputCategory } from '~/types/output'
-import { IBookResponse, IBookResponseAuthor, IBookResponseCategory } from '~/types/response'
+import { IBookResponse } from '~/types/response'
 
 const router = express.Router()
 
@@ -53,27 +53,29 @@ router.post(
 )
 
 function setBookResponse(output: IBookOutput): IBookResponse {
-  const authors: IBookResponseAuthor[] = output.authors.map((author: IBookOutputAuthor) => {
-    return { id: author.id, name: author.name }
+  const publisher: string = output.publisher?.name || ''
+
+  const authors: string[] = output.authors.map((author: IBookOutputAuthor) => {
+    return author.name
   })
 
-  const categories: IBookResponseCategory[] = output.categories.map((category: IBookOutputCategory) => {
-    return { id: category.id, name: category.name }
+  const categories: string[] = output.categories.map((category: IBookOutputCategory) => {
+    return category.name
   })
 
   const response: IBookResponse = {
     id: output.id,
-    publisherId: output.publisherId,
     title: output.title,
     description: output.description,
     isbn: output.isbn,
     thumbnailUrl: output.thumbnailUrl,
     version: output.version,
     publishedOn: output.publishedOn,
-    createdAt: output.createdAt,
-    updatedAt: output.updatedAt,
+    publisher,
     authors,
     categories,
+    createdAt: output.createdAt,
+    updatedAt: output.updatedAt,
   }
 
   return response

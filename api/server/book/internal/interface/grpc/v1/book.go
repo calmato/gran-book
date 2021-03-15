@@ -64,6 +64,12 @@ func (s *BookServer) CreateBook(ctx context.Context, req *pb.CreateBookRequest) 
 }
 
 func getBookResponse(b *book.Book) *pb.BookResponse {
+	p := &pb.BookResponse_Publisher{}
+	if b.Publisher != nil {
+		p.Id = int64(b.Publisher.ID)
+		p.Name = b.Publisher.Name
+	}
+
 	as := make([]*pb.BookResponse_Author, len(b.Authors))
 	for i, v := range b.Authors {
 		a := &pb.BookResponse_Author{
@@ -86,16 +92,16 @@ func getBookResponse(b *book.Book) *pb.BookResponse {
 
 	return &pb.BookResponse{
 		Id:           int64(b.ID),
-		PublisherId:  int64(b.PublisherID),
 		Title:        b.Title,
 		Description:  b.Description,
 		Isbn:         b.Isbn,
 		ThumbnailUrl: b.ThumbnailURL,
 		Version:      b.Version,
 		PublishedOn:  datetime.DateToString(b.PublishedOn),
-		CreatedAt:    datetime.TimeToString(b.CreatedAt),
-		UpdatedAt:    datetime.TimeToString(b.UpdatedAt),
+		Publisher:    p,
 		Authors:      as,
 		Categories:   cs,
+		CreatedAt:    datetime.TimeToString(b.CreatedAt),
+		UpdatedAt:    datetime.TimeToString(b.UpdatedAt),
 	}
 }

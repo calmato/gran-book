@@ -111,9 +111,6 @@ export class BookResponse extends jspb.Message {
     getId(): number;
     setId(value: number): BookResponse;
 
-    getPublisherId(): number;
-    setPublisherId(value: number): BookResponse;
-
     getTitle(): string;
     setTitle(value: string): BookResponse;
 
@@ -132,11 +129,11 @@ export class BookResponse extends jspb.Message {
     getPublishedOn(): string;
     setPublishedOn(value: string): BookResponse;
 
-    getCreatedAt(): string;
-    setCreatedAt(value: string): BookResponse;
 
-    getUpdatedAt(): string;
-    setUpdatedAt(value: string): BookResponse;
+    hasPublisher(): boolean;
+    clearPublisher(): void;
+    getPublisher(): BookResponse.Publisher | undefined;
+    setPublisher(value?: BookResponse.Publisher): BookResponse;
 
     clearAuthorsList(): void;
     getAuthorsList(): Array<BookResponse.Author>;
@@ -147,6 +144,12 @@ export class BookResponse extends jspb.Message {
     getCategoriesList(): Array<BookResponse.Category>;
     setCategoriesList(value: Array<BookResponse.Category>): BookResponse;
     addCategories(value?: BookResponse.Category, index?: number): BookResponse.Category;
+
+    getCreatedAt(): string;
+    setCreatedAt(value: string): BookResponse;
+
+    getUpdatedAt(): string;
+    setUpdatedAt(value: string): BookResponse;
 
 
     serializeBinary(): Uint8Array;
@@ -162,17 +165,17 @@ export class BookResponse extends jspb.Message {
 export namespace BookResponse {
     export type AsObject = {
         id: number,
-        publisherId: number,
         title: string,
         description: string,
         isbn: string,
         thumbnailUrl: string,
         version: string,
         publishedOn: string,
-        createdAt: string,
-        updatedAt: string,
+        publisher?: BookResponse.Publisher.AsObject,
         authorsList: Array<BookResponse.Author.AsObject>,
         categoriesList: Array<BookResponse.Category.AsObject>,
+        createdAt: string,
+        updatedAt: string,
     }
 
 
@@ -220,6 +223,31 @@ export namespace BookResponse {
     }
 
     export namespace Category {
+        export type AsObject = {
+            id: number,
+            name: string,
+        }
+    }
+
+    export class Publisher extends jspb.Message { 
+        getId(): number;
+        setId(value: number): Publisher;
+
+        getName(): string;
+        setName(value: string): Publisher;
+
+
+        serializeBinary(): Uint8Array;
+        toObject(includeInstance?: boolean): Publisher.AsObject;
+        static toObject(includeInstance: boolean, msg: Publisher): Publisher.AsObject;
+        static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+        static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+        static serializeBinaryToWriter(message: Publisher, writer: jspb.BinaryWriter): void;
+        static deserializeBinary(bytes: Uint8Array): Publisher;
+        static deserializeBinaryFromReader(message: Publisher, reader: jspb.BinaryReader): Publisher;
+    }
+
+    export namespace Publisher {
         export type AsObject = {
             id: number,
             name: string,

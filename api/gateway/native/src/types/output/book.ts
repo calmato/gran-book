@@ -1,16 +1,21 @@
 export interface IBookOutput {
   id: number
-  publisherId: number
   title: string
   description: string
   isbn: string
   thumbnailUrl: string
   version: string
   publishedOn: string
-  createdAt: string
-  updatedAt: string
+  publisher: IBookOutputPublisher
   authors: Array<IBookOutputAuthor>
   categories: Array<IBookOutputCategory>
+  createdAt: string
+  updatedAt: string
+}
+
+export interface IBookOutputPublisher {
+  id: number
+  name: string
 }
 
 export interface IBookOutputAuthor {
