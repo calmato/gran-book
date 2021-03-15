@@ -25,8 +25,8 @@ func (s *UserServer) ListFollow(ctx context.Context, req *pb.ListFollowRequest) 
 	}
 
 	in := &input.ListFollow{
-		Limit:  req.Limit,
-		Offset: req.Offset,
+		Limit:  int(req.Limit),
+		Offset: int(req.Offset),
 	}
 
 	fs, out, err := s.UserApplication.ListFollow(ctx, in, req.Id, cu.ID)
@@ -48,9 +48,9 @@ func (s *UserServer) ListFollow(ctx context.Context, req *pb.ListFollowRequest) 
 
 	res := &pb.FollowListResponse{
 		Users:  us,
-		Limit:  out.Limit,
-		Offset: out.Offset,
-		Total:  out.Total,
+		Limit:  int64(out.Limit),
+		Offset: int64(out.Offset),
+		Total:  int64(out.Total),
 	}
 
 	return res, nil
@@ -64,8 +64,8 @@ func (s *UserServer) ListFollower(ctx context.Context, req *pb.ListFollowerReque
 	}
 
 	in := &input.ListFollower{
-		Limit:  req.Limit,
-		Offset: req.Offset,
+		Limit:  int(req.Limit),
+		Offset: int(req.Offset),
 	}
 
 	fs, out, err := s.UserApplication.ListFollower(ctx, in, req.Id, cu.ID)
@@ -87,9 +87,9 @@ func (s *UserServer) ListFollower(ctx context.Context, req *pb.ListFollowerReque
 
 	res := &pb.FollowerListResponse{
 		Users:  us,
-		Limit:  out.Limit,
-		Offset: out.Offset,
-		Total:  out.Total,
+		Limit:  int64(out.Limit),
+		Offset: int64(out.Offset),
+		Total:  int64(out.Total),
 	}
 
 	return res, nil
@@ -157,7 +157,7 @@ func getUserProfileResponse(u *user.User, out *output.UserProfile) *pb.UserProfi
 		SelfIntroduction: u.SelfIntroduction,
 		IsFollow:         out.IsFollow,
 		IsFollower:       out.IsFollower,
-		FollowCount:      out.FollowCount,
-		FollowerCount:    out.FollowerCount,
+		FollowCount:      int64(out.FollowCount),
+		FollowerCount:    int64(out.FollowerCount),
 	}
 }

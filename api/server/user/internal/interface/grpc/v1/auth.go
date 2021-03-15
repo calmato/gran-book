@@ -99,7 +99,7 @@ func (s *AuthServer) UpdateAuthProfile(
 
 	in := &input.UpdateAuthProfile{
 		Username:         req.Username,
-		Gender:           req.Gender,
+		Gender:           int(req.Gender),
 		Thumbnail:        req.Thumbnail,
 		SelfIntroduction: req.SelfIntroduction,
 	}
@@ -148,10 +148,10 @@ func getAuthResponse(u *user.User) *pb.AuthResponse {
 	return &pb.AuthResponse{
 		Id:               u.ID,
 		Username:         u.Username,
-		Gender:           u.Gender,
+		Gender:           int32(u.Gender),
 		Email:            u.Email,
 		PhoneNumber:      u.PhoneNumber,
-		Role:             u.Role,
+		Role:             int32(u.Role),
 		ThumbnailUrl:     u.ThumbnailURL,
 		SelfIntroduction: u.SelfIntroduction,
 		LastName:         u.LastName,

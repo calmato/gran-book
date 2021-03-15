@@ -7,8 +7,8 @@ import (
 	"net"
 	"strings"
 
-	// v1 "github.com/calmato/gran-book/api/server/book/internal/interface/grpc/v1"
-	// pb "github.com/calmato/gran-book/api/server/book/proto"
+	v1 "github.com/calmato/gran-book/api/server/book/internal/interface/grpc/v1"
+	pb "github.com/calmato/gran-book/api/server/book/proto"
 	"github.com/calmato/gran-book/api/server/book/registry"
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
@@ -32,16 +32,17 @@ type grpcServer struct {
 	lis net.Listener
 }
 
-func newGRPCServer(port, logPath, logLevel string, _ *registry.Registry) (*grpcServer, error) {
+func newGRPCServer(port, logPath, logLevel string, reg *registry.Registry) (*grpcServer, error) {
 	opts, err := grpcServerOptions(logPath, logLevel)
 	if err != nil {
 		return nil, err
 	}
 
 	s := grpc.NewServer(opts...)
-	// pb.RegisterBookServiceServer(s, &v1.BookServer{
-	// 	BookApplication: reg.BookApplication,
-	// })
+	pb.RegisterBookServiceServer(s, &v1.BookServer{
+		AuthApplication: reg.AuthApplication,
+		BookApplication: reg.BookApplication,
+	})
 
 	grpc_prometheus.Register(s)
 	grpc_prometheus.EnableHandlingTimeHistogram()

@@ -7,8 +7,9 @@ import (
 	"github.com/calmato/gran-book/api/server/user/internal/domain"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
 	"github.com/calmato/gran-book/api/server/user/lib/array"
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 // Client - DB操作用クライアントの構造体
@@ -18,12 +19,13 @@ type Client struct {
 
 // NewDBClient - DBクライアントの生成
 func NewDBClient(socket, host, port, database, username, password string) (*Client, error) {
-	db, err := gorm.Open("mysql", getDBConfig(socket, host, port, database, username, password))
+	dsn := getDBConfig(socket, host, port, database, username, password)
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Info),
+	})
 	if err != nil {
 		return &Client{}, err
 	}
-
-	db.LogMode(true)
 
 	return &Client{db}, nil
 }
@@ -70,7 +72,7 @@ func (c *Client) getListQuery(db *gorm.DB, q *domain.ListQuery) *gorm.DB {
 	return db
 }
 
-func (c *Client) getListCount(db *gorm.DB, q *domain.ListQuery) (int64, error) {
+func (c *Client) getListCount(db *gorm.DB, q *domain.ListQuery) (int, error) {
 	var count int64
 
 	if q != nil {
@@ -85,7 +87,7 @@ func (c *Client) getListCount(db *gorm.DB, q *domain.ListQuery) (int64, error) {
 		return 0, exception.ErrorInDatastore.New(err)
 	}
 
-	return count, nil
+	return int(count), nil
 }
 
 func setWhere(db *gorm.DB, c *domain.QueryCondition) *gorm.DB {
@@ -137,7 +139,7 @@ func setOrder(db *gorm.DB, o *domain.QueryOrder) *gorm.DB {
 	}
 }
 
-func setLimit(db *gorm.DB, limit int64) *gorm.DB {
+func setLimit(db *gorm.DB, limit int) *gorm.DB {
 	if limit > 0 {
 		return db.Limit(limit)
 	}
@@ -145,6 +147,6 @@ func setLimit(db *gorm.DB, limit int64) *gorm.DB {
 	return db
 }
 
-func setOffset(db *gorm.DB, offset int64) *gorm.DB {
+func setOffset(db *gorm.DB, offset int) *gorm.DB {
 	return db.Offset(offset)
 }

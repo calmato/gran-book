@@ -6,10 +6,10 @@ import "time"
 type User struct {
 	ID               string    `gorm:"primaryKey;not null;<-:create"`
 	Username         string    `gorm:"size:32;not null"`
-	Gender           int32     `gorm:"not null;default:0"`
+	Gender           int       `gorm:"not null;default:0"`
 	Email            string    `gorm:"size:256"`
 	PhoneNumber      string    `gorm:"size:16"`
-	Role             int32     `gorm:"not null;default:0"`
+	Role             int       `gorm:"not null;default:0"`
 	Password         string    `gorm:"-"`
 	ThumbnailURL     string    `gorm:""`
 	SelfIntroduction string    `gorm:"size:256"`
@@ -32,7 +32,7 @@ type User struct {
 
 // Relationship - Relationshipエンティティ (中間テーブル)
 type Relationship struct {
-	ID         int64     `gorm:"primaryKey;not null;autoIncrement;<-:create"`
+	ID         int       `gorm:"primaryKey;not null;autoIncrement;<-:create"`
 	FollowID   string    `gorm:"not null;uniqueIndex:ui_follows_01;uniqueIndex:ui_follows_02"`
 	FollowerID string    `gorm:"not null;uniqueIndex:ui_follows_01;uniqueIndex:ui_follows_02"`
 	CreatedAt  time.Time `gorm:"not null;<-:create"`
@@ -61,7 +61,7 @@ type Follower struct {
 
 // ユーザ権限
 const (
-	UserRole int32 = iota
+	UserRole int = iota
 	AdminRole
 	DeveloperRole
 	OperatorRole
