@@ -1,4 +1,4 @@
-package service
+package validation
 
 import (
 	"context"
@@ -7,11 +7,10 @@ import (
 	"time"
 
 	"github.com/calmato/gran-book/api/server/book/internal/domain/book"
-	mock_book "github.com/calmato/gran-book/api/server/book/mock/domain/book"
 	"github.com/golang/mock/gomock"
 )
 
-func TestBookService_Create(t *testing.T) {
+func TestBookService_Book(t *testing.T) {
 	testCases := map[string]struct {
 		Book     *book.Book
 		Expected error
@@ -51,30 +50,10 @@ func TestBookService_Create(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
-			bvm := mock_book.NewMockValidation(ctrl)
-			bvm.EXPECT().Book(ctx, tc.Book).Return(nil)
-			bvm.EXPECT().Publisher(ctx, tc.Book.Publisher).Return(nil)
-			for _, a := range tc.Book.Authors {
-				bvm.EXPECT().Author(ctx, a).Return(nil)
-			}
-			for _, c := range tc.Book.Categories {
-				bvm.EXPECT().Category(ctx, c).Return(nil)
-			}
-
-			brm := mock_book.NewMockRepository(ctrl)
-			brm.EXPECT().Create(ctx, tc.Book).Return(tc.Expected)
-			brm.EXPECT().CreatePublisher(ctx, tc.Book.Publisher).Return(tc.Expected)
-			for _, a := range tc.Book.Authors {
-				brm.EXPECT().CreateAuthor(ctx, a).Return(tc.Expected)
-			}
-			for _, c := range tc.Book.Categories {
-				brm.EXPECT().CreateCategory(ctx, c).Return(tc.Expected)
-			}
-
 			t.Run(result, func(t *testing.T) {
-				target := NewBookService(bvm, brm)
+				target := NewBookDomainValidation()
 
-				err := target.Create(ctx, tc.Book)
+				err := target.Book(ctx, tc.Book)
 				if !reflect.DeepEqual(err, tc.Expected) {
 					t.Fatalf("want %#v, but %#v", tc.Expected, err)
 					return
@@ -84,7 +63,7 @@ func TestBookService_Create(t *testing.T) {
 	}
 }
 
-func TestBookService_CreateAuthor(t *testing.T) {
+func TestBookService_Author(t *testing.T) {
 	testCases := map[string]struct {
 		Author   *book.Author
 		Expected error
@@ -108,16 +87,10 @@ func TestBookService_CreateAuthor(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
-			bvm := mock_book.NewMockValidation(ctrl)
-			bvm.EXPECT().Author(ctx, tc.Author).Return(nil)
-
-			brm := mock_book.NewMockRepository(ctrl)
-			brm.EXPECT().CreateAuthor(ctx, tc.Author).Return(tc.Expected)
-
 			t.Run(result, func(t *testing.T) {
-				target := NewBookService(bvm, brm)
+				target := NewBookDomainValidation()
 
-				err := target.CreateAuthor(ctx, tc.Author)
+				err := target.Author(ctx, tc.Author)
 				if !reflect.DeepEqual(err, tc.Expected) {
 					t.Fatalf("want %#v, but %#v", tc.Expected, err)
 					return
@@ -127,7 +100,7 @@ func TestBookService_CreateAuthor(t *testing.T) {
 	}
 }
 
-func TestBookService_CreateBookshelf(t *testing.T) {
+func TestBookService_Bookshelf(t *testing.T) {
 	testCases := map[string]struct {
 		Bookshelf *book.Bookshelf
 		Expected  error
@@ -154,16 +127,10 @@ func TestBookService_CreateBookshelf(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
-			bvm := mock_book.NewMockValidation(ctrl)
-			bvm.EXPECT().Bookshelf(ctx, tc.Bookshelf).Return(nil)
-
-			brm := mock_book.NewMockRepository(ctrl)
-			brm.EXPECT().CreateBookshelf(ctx, tc.Bookshelf).Return(tc.Expected)
-
 			t.Run(result, func(t *testing.T) {
-				target := NewBookService(bvm, brm)
+				target := NewBookDomainValidation()
 
-				err := target.CreateBookshelf(ctx, tc.Bookshelf)
+				err := target.Bookshelf(ctx, tc.Bookshelf)
 				if !reflect.DeepEqual(err, tc.Expected) {
 					t.Fatalf("want %#v, but %#v", tc.Expected, err)
 					return
@@ -173,7 +140,7 @@ func TestBookService_CreateBookshelf(t *testing.T) {
 	}
 }
 
-func TestBookService_CreateCategory(t *testing.T) {
+func TestBookService_Category(t *testing.T) {
 	testCases := map[string]struct {
 		Category *book.Category
 		Expected error
@@ -197,16 +164,10 @@ func TestBookService_CreateCategory(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
-			bvm := mock_book.NewMockValidation(ctrl)
-			bvm.EXPECT().Category(ctx, tc.Category).Return(nil)
-
-			brm := mock_book.NewMockRepository(ctrl)
-			brm.EXPECT().CreateCategory(ctx, tc.Category).Return(tc.Expected)
-
 			t.Run(result, func(t *testing.T) {
-				target := NewBookService(bvm, brm)
+				target := NewBookDomainValidation()
 
-				err := target.CreateCategory(ctx, tc.Category)
+				err := target.Category(ctx, tc.Category)
 				if !reflect.DeepEqual(err, tc.Expected) {
 					t.Fatalf("want %#v, but %#v", tc.Expected, err)
 					return
@@ -216,7 +177,7 @@ func TestBookService_CreateCategory(t *testing.T) {
 	}
 }
 
-func TestBookService_CreatePublisher(t *testing.T) {
+func TestBookService_Publisher(t *testing.T) {
 	testCases := map[string]struct {
 		Publisher *book.Publisher
 		Expected  error
@@ -240,16 +201,10 @@ func TestBookService_CreatePublisher(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
-			bvm := mock_book.NewMockValidation(ctrl)
-			bvm.EXPECT().Publisher(ctx, tc.Publisher).Return(nil)
-
-			brm := mock_book.NewMockRepository(ctrl)
-			brm.EXPECT().CreatePublisher(ctx, tc.Publisher).Return(tc.Expected)
-
 			t.Run(result, func(t *testing.T) {
-				target := NewBookService(bvm, brm)
+				target := NewBookDomainValidation()
 
-				err := target.CreatePublisher(ctx, tc.Publisher)
+				err := target.Publisher(ctx, tc.Publisher)
 				if !reflect.DeepEqual(err, tc.Expected) {
 					t.Fatalf("want %#v, but %#v", tc.Expected, err)
 					return
