@@ -400,6 +400,8 @@ components:
           type: string
         firstNameKana:
           type: string
+        phoneNumber:
+          type: string
         postalCode:
           type: string
         prefecture:
