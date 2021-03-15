@@ -31,8 +31,8 @@ func (s *AdminServer) ListAdmin(ctx context.Context, req *pb.ListAdminRequest) (
 	}
 
 	in := &input.ListAdmin{
-		Limit:  req.Limit,
-		Offset: req.Offset,
+		Limit:  int(req.Limit),
+		Offset: int(req.Offset),
 	}
 
 	if req.Order != nil {
@@ -62,8 +62,8 @@ func (s *AdminServer) SearchAdmin(ctx context.Context, req *pb.SearchAdminReques
 	}
 
 	in := &input.SearchAdmin{
-		Limit:  req.Limit,
-		Offset: req.Offset,
+		Limit:  int(req.Limit),
+		Offset: int(req.Offset),
 	}
 
 	if req.Order != nil {
@@ -128,7 +128,7 @@ func (s *AdminServer) CreateAdmin(ctx context.Context, req *pb.CreateAdminReques
 		Email:                req.Email,
 		Password:             req.Password,
 		PasswordConfirmation: req.PasswordConfirmation,
-		Role:                 req.Role,
+		Role:                 int(req.Role),
 		LastName:             req.LastName,
 		FirstName:            req.FirstName,
 		LastNameKana:         req.LastNameKana,
@@ -162,7 +162,7 @@ func (s *AdminServer) UpdateAdminRole(ctx context.Context, req *pb.UpdateAdminRo
 	}
 
 	in := &input.UpdateAdminRole{
-		Role: req.Role,
+		Role: int(req.Role),
 	}
 
 	u, err := s.AdminApplication.UpdateRole(ctx, in, req.Id)
@@ -250,7 +250,7 @@ func getAdminResponse(u *user.User) *pb.AdminResponse {
 		Username:         u.Username,
 		Email:            u.Email,
 		PhoneNumber:      u.PhoneNumber,
-		Role:             u.Role,
+		Role:             int32(u.Role),
 		ThumbnailUrl:     u.ThumbnailURL,
 		SelfIntroduction: u.SelfIntroduction,
 		LastName:         u.LastName,
@@ -271,7 +271,7 @@ func getAdminListResponse(us []*user.User, out *output.ListQuery) *pb.AdminListR
 			Username:         u.Username,
 			Email:            u.Email,
 			PhoneNumber:      u.PhoneNumber,
-			Role:             u.Role,
+			Role:             int32(u.Role),
 			ThumbnailUrl:     u.ThumbnailURL,
 			SelfIntroduction: u.SelfIntroduction,
 			LastName:         u.LastName,
@@ -288,9 +288,9 @@ func getAdminListResponse(us []*user.User, out *output.ListQuery) *pb.AdminListR
 
 	res := &pb.AdminListResponse{
 		Users:  users,
-		Limit:  out.Limit,
-		Offset: out.Offset,
-		Total:  out.Total,
+		Limit:  int64(out.Limit),
+		Offset: int64(out.Offset),
+		Total:  int64(out.Total),
 	}
 
 	if out.Order != nil {

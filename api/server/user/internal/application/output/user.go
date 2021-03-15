@@ -4,6 +4,6 @@ package output
 type UserProfile struct {
 	IsFollow      bool
 	IsFollower    bool
-	FollowCount   int64
-	FollowerCount int64
+	FollowCount   int
+	FollowerCount int
 }

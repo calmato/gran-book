@@ -128,12 +128,12 @@ func (r *userRepository) ListFollowerID(ctx context.Context, q *domain.ListQuery
 	return followerIDs, nil
 }
 
-func (r *userRepository) ListCount(ctx context.Context, q *domain.ListQuery) (int64, error) {
+func (r *userRepository) ListCount(ctx context.Context, q *domain.ListQuery) (int, error) {
 	sql := r.client.db.Table("users")
 	return r.client.getListCount(sql, q)
 }
 
-func (r *userRepository) ListRelationshipCount(ctx context.Context, q *domain.ListQuery) (int64, error) {
+func (r *userRepository) ListRelationshipCount(ctx context.Context, q *domain.ListQuery) (int, error) {
 	sql := r.client.db.Table("relationships")
 	return r.client.getListCount(sql, q)
 }
@@ -149,7 +149,7 @@ func (r *userRepository) Show(ctx context.Context, uid string) (*user.User, erro
 	return u, nil
 }
 
-func (r *userRepository) ShowRelationship(ctx context.Context, id int64) (*user.Relationship, error) {
+func (r *userRepository) ShowRelationship(ctx context.Context, id int) (*user.Relationship, error) {
 	rs := &user.Relationship{}
 
 	err := r.client.db.First(rs, "id = ?", id).Error
@@ -218,7 +218,7 @@ func (r *userRepository) UpdatePassword(ctx context.Context, uid string, passwor
 	return nil
 }
 
-func (r *userRepository) DeleteRelationship(ctx context.Context, id int64) error {
+func (r *userRepository) DeleteRelationship(ctx context.Context, id int) error {
 	err := r.client.db.Delete(&user.Relationship{}, id).Error
 	if err != nil {
 		return exception.ErrorInDatastore.New(err)
@@ -238,7 +238,7 @@ func (r *userRepository) GetUIDByEmail(ctx context.Context, email string) (strin
 
 func (r *userRepository) GetRelationshipIDByUID(
 	ctx context.Context, followID string, followerID string,
-) (int64, error) {
+) (int, error) {
 	rs := &user.Relationship{}
 
 	err := r.client.db.Select("id").First(rs, "follow_id = ? AND follower_id = ?", followID, followerID).Error
