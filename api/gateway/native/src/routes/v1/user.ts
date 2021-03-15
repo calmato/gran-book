@@ -46,6 +46,7 @@ router.get(
               username: user.username,
               thumbnailUrl: user.thumbnailUrl,
               selfIntroduction: user.selfIntroduction,
+              isFollow: user.isFollow
             }
           }
         )
@@ -120,6 +121,7 @@ router.get(
               username: user.username,
               thumbnailUrl: user.thumbnailUrl,
               selfIntroduction: user.selfIntroduction,
+              isFollow: user.isFollow,
             }
           }
         )
