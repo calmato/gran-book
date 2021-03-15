@@ -59,15 +59,20 @@ interface Props {
   actions: {
     searchAddress: (postalCode: string) => Promise<string>,
   },
+  save: {
+    accountEdit: (lastName, firstName, lastNameKana, firstNameKana, phoneNumber,
+      postalCode, prefecture, city, addressLine1, addressLine2) => Promise<void>
+  },
 }
 
 const AccountEdit = function AccountEdit(props: Props): ReactElement {
   const { searchAddress } = props.actions;
+  const { accountEdit } = props.save;
   const [formData, setValue] = useState<AccountEditForm>({
-    firstName: '',
     lastName: '',
-    firstNameKana: '',
+    firstName: '',
     lastNameKana: '',
+    firstNameKana: '',
     phoneNumber: '',
     postalCode: '',
     prefecture: '',
@@ -110,10 +115,10 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
 
   const handleAccountEditSubmit = React.useCallback(async () => {
     await accountEdit(
-      formData.firstName,
       formData.lastName,
-      formData.firstNameKana,
+      formData.firstName,
       formData.lastNameKana,
+      formData.firstNameKana,
       formData.phoneNumber,
       formData.postalCode,
       formData.prefecture,
@@ -125,8 +130,7 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
     // })
     // .catch(() => {
     // });
-  }, [formData.firstName, formData.lastName, formData.firstNameKana, formData.lastNameKana, formData.phoneNumber,
-    formData.postalCode, formData.prefecture, formData.city, formData.addressLine1, formData.addressLine2]);
+  }, [formData, AccountEdit]);
 
   return (
     <View>
@@ -139,14 +143,14 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
       </Text>
       <View style={styles.halfInputRow}>
         <HalfTextInput
-          onChangeText={(text) => setValue({...formData, firstName: text})}
-          value={formData.firstName}
+          onChangeText={(text) => setValue({...formData, lastName: text})}
+          value={formData.lastName}
           placeholder='田中'
           length={maxNameLength16}
         />
         <HalfTextInput
-          onChangeText={(text) => setValue({...formData, lastName: text})}
-          value={formData.lastName}
+          onChangeText={(text) => setValue({...formData, firstName: text})}
+          value={formData.firstName}
           placeholder='太郎'
           length={maxNameLength16}
         />
@@ -156,14 +160,14 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
       </Text>
       <View style={styles.halfInputRow}>
         <HalfTextInput
-          onChangeText={(text) => setValue({...formData, firstNameKana: text})}
-          value={formData.firstNameKana}
+          onChangeText={(text) => setValue({...formData, lastNameKana: text})}
+          value={formData.lastNameKana}
           placeholder='たなか'
           length={maxNameLength16}
         />
         <HalfTextInput
-          onChangeText={(text) => setValue({...formData, lastNameKana: text})}
-          value={formData.lastNameKana}
+          onChangeText={(text) => setValue({...formData, firstNameKana: text})}
+          value={formData.firstNameKana}
           placeholder='たろう'
           length={maxNameLength16}
         />
