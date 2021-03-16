@@ -10,7 +10,7 @@ func TestConvertStrings(t *testing.T) {
 		Input    interface{}
 		Expected []string
 	}{
-		"ok_[]int32": {
+		"ok_[]int": {
 			Input:    []int{1, 2, 3},
 			Expected: []string{"1", "2", "3"},
 		},
