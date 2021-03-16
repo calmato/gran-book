@@ -107,7 +107,7 @@ func setWhere(db *gorm.DB, c *domain.QueryCondition) *gorm.DB {
 		return db.Where(q, c.Value)
 	case "IN":
 		q := fmt.Sprintf("%s IN ?", c.Field)
-		vals, _ := array.ConvertStrings(c)
+		vals, _ := array.ConvertStrings(c.Value)
 		return db.Where(q, strings.Join(vals, ", "))
 	case "LIKE":
 		q := fmt.Sprintf("%s LIKE ?", c.Field)
@@ -115,7 +115,11 @@ func setWhere(db *gorm.DB, c *domain.QueryCondition) *gorm.DB {
 		return db.Where(q, n)
 	case "BETWEEN":
 		q := fmt.Sprintf("%s BETWEEN ? AND ?", c.Field)
-		vals, _ := array.ConvertStrings(c)
+		vals, err := array.ConvertStrings(c.Value)
+		if err != nil {
+			return db
+		}
+
 		return db.Where(q, vals[0], vals[1])
 	default:
 		return db

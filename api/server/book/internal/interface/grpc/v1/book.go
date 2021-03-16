@@ -25,31 +25,31 @@ func (s *BookServer) CreateBook(ctx context.Context, req *pb.CreateBookRequest) 
 	}
 
 	as := make([]*input.CreateBookAuthor, len(req.Authors))
-	for i, v := range req.Authors {
+	for i, v := range req.GetAuthors() {
 		a := &input.CreateBookAuthor{
-			Name: v.Name,
+			Name: v.GetName(),
 		}
 
 		as[i] = a
 	}
 
 	cs := make([]*input.CreateBookCategory, len(req.Categories))
-	for i, v := range req.Categories {
+	for i, v := range req.GetCategories() {
 		c := &input.CreateBookCategory{
-			Name: v.Name,
+			Name: v.GetName(),
 		}
 
 		cs[i] = c
 	}
 
 	in := &input.CreateBook{
-		Title:        req.Title,
-		Description:  req.Description,
-		Isbn:         req.Isbn,
-		ThumbnailURL: req.ThumbnailUrl,
-		Version:      req.Version,
-		Publisher:    req.Publisher,
-		PublishedOn:  req.PublishedOn,
+		Title:        req.GetTitle(),
+		Description:  req.GetDescription(),
+		Isbn:         req.GetIsbn(),
+		ThumbnailURL: req.GetThumbnailUrl(),
+		Version:      req.GetVersion(),
+		Publisher:    req.GetPublisher(),
+		PublishedOn:  req.GetPublishedOn(),
 		Authors:      as,
 		Categories:   cs,
 	}

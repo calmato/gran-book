@@ -30,16 +30,16 @@ const router = express.Router()
 router.get(
   '/',
   async (req: Request, res: Response<IAdminListResponse>, next: NextFunction): Promise<void> => {
-    const { limit, offset, by, direction, field, value } = req.query
+    const { limit, offset, by, direction, field, value } = req.query as { [key: string]: string }
 
     if (field && value) {
       const input: ISearchAdminInput = {
-        limit: Number(limit) || 100,
-        offset: Number(offset) || 0,
-        by: String(by),
-        direction: String(direction),
-        field: String(field),
-        value: String(value),
+        limit: limit ? Number(limit) : 100,
+        offset: offset ? Number(offset) : 0,
+        by: by || '',
+        direction: direction || '',
+        field: field || '',
+        value: value || '',
       }
 
       await searchAdmin(req, input)
@@ -50,10 +50,10 @@ router.get(
         .catch((err: GrpcError) => next(err))
     } else {
       const input: IListAdminInput = {
-        limit: Number(limit) || 100,
-        offset: Number(offset) || 0,
-        by: String(by),
-        direction: String(direction),
+        limit: limit ? Number(limit) : 100,
+        offset: offset ? Number(offset) : 0,
+        by: by || '',
+        direction: direction || '',
       }
 
       await listAdmin(req, input)
