@@ -31,13 +31,13 @@ func (s *AdminServer) ListAdmin(ctx context.Context, req *pb.ListAdminRequest) (
 	}
 
 	in := &input.ListAdmin{
-		Limit:  int(req.Limit),
-		Offset: int(req.Offset),
+		Limit:  int(req.GetLimit()),
+		Offset: int(req.GetOffset()),
 	}
 
-	if req.Order != nil {
-		in.By = req.Order.By
-		in.Direction = req.Order.Direction
+	if o := req.GetOrder(); o != nil {
+		in.By = o.GetBy()
+		in.Direction = o.GetDirection()
 	}
 
 	us, out, err := s.AdminApplication.List(ctx, in)
@@ -62,18 +62,18 @@ func (s *AdminServer) SearchAdmin(ctx context.Context, req *pb.SearchAdminReques
 	}
 
 	in := &input.SearchAdmin{
-		Limit:  int(req.Limit),
-		Offset: int(req.Offset),
+		Limit:  int(req.GetLimit()),
+		Offset: int(req.GetOffset()),
 	}
 
-	if req.Order != nil {
-		in.By = req.Order.By
-		in.Direction = req.Order.Direction
+	if o := req.GetOrder(); o != nil {
+		in.By = o.GetBy()
+		in.Direction = o.GetDirection()
 	}
 
-	if req.Search != nil {
-		in.Field = req.Search.Field
-		in.Value = req.Search.Value
+	if s := req.GetSearch(); s != nil {
+		in.Field = s.GetField()
+		in.Value = s.GetValue()
 	}
 
 	us, out, err := s.AdminApplication.Search(ctx, in)
@@ -97,7 +97,7 @@ func (s *AdminServer) GetAdmin(ctx context.Context, req *pb.GetAdminRequest) (*p
 		return nil, errorHandling(err)
 	}
 
-	u, err := s.AdminApplication.Show(ctx, req.Id)
+	u, err := s.AdminApplication.Show(ctx, req.GetId())
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -124,15 +124,15 @@ func (s *AdminServer) CreateAdmin(ctx context.Context, req *pb.CreateAdminReques
 	}
 
 	in := &input.CreateAdmin{
-		Username:             req.Username,
-		Email:                req.Email,
-		Password:             req.Password,
-		PasswordConfirmation: req.PasswordConfirmation,
-		Role:                 int(req.Role),
-		LastName:             req.LastName,
-		FirstName:            req.FirstName,
-		LastNameKana:         req.LastNameKana,
-		FirstNameKana:        req.FirstNameKana,
+		Username:             req.GetUsername(),
+		Email:                req.GetEmail(),
+		Password:             req.GetPassword(),
+		PasswordConfirmation: req.GetPasswordConfirmation(),
+		Role:                 int(req.GetRole()),
+		LastName:             req.GetLastName(),
+		FirstName:            req.GetFirstName(),
+		LastNameKana:         req.GetLastNameKana(),
+		FirstNameKana:        req.GetFirstNameKana(),
 	}
 
 	u, err := s.AdminApplication.Create(ctx, in)
@@ -156,7 +156,7 @@ func (s *AdminServer) UpdateAdminRole(ctx context.Context, req *pb.UpdateAdminRo
 		return nil, errorHandling(err)
 	}
 
-	err = hasAdminRole(cu, req.Id)
+	err = hasAdminRole(cu, req.GetId())
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -165,7 +165,7 @@ func (s *AdminServer) UpdateAdminRole(ctx context.Context, req *pb.UpdateAdminRo
 		Role: int(req.Role),
 	}
 
-	u, err := s.AdminApplication.UpdateRole(ctx, in, req.Id)
+	u, err := s.AdminApplication.UpdateRole(ctx, in, req.GetId())
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -188,17 +188,17 @@ func (s *AdminServer) UpdateAdminPassword(
 		return nil, errorHandling(err)
 	}
 
-	err = hasAdminRole(cu, req.Id)
+	err = hasAdminRole(cu, req.GetId())
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
 	in := &input.UpdateAdminPassword{
-		Password:             req.Password,
-		PasswordConfirmation: req.PasswordConfirmation,
+		Password:             req.GetPassword(),
+		PasswordConfirmation: req.GetPasswordConfirmation(),
 	}
 
-	u, err := s.AdminApplication.UpdatePassword(ctx, in, req.Id)
+	u, err := s.AdminApplication.UpdatePassword(ctx, in, req.GetId())
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -221,21 +221,21 @@ func (s *AdminServer) UpdateAdminProfile(
 		return nil, errorHandling(err)
 	}
 
-	err = hasAdminRole(cu, req.Id)
+	err = hasAdminRole(cu, req.GetId())
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
 	in := &input.UpdateAdminProfile{
-		Username:      req.Username,
-		Email:         req.Email,
-		LastName:      req.LastName,
-		FirstName:     req.FirstName,
-		LastNameKana:  req.LastNameKana,
-		FirstNameKana: req.FirstNameKana,
+		Username:      req.GetUsername(),
+		Email:         req.GetEmail(),
+		LastName:      req.GetLastName(),
+		FirstName:     req.GetFirstName(),
+		LastNameKana:  req.GetLastNameKana(),
+		FirstNameKana: req.GetFirstNameKana(),
 	}
 
-	u, err := s.AdminApplication.UpdateProfile(ctx, in, req.Id)
+	u, err := s.AdminApplication.UpdateProfile(ctx, in, req.GetId())
 	if err != nil {
 		return nil, errorHandling(err)
 	}

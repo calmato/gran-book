@@ -10,6 +10,10 @@ func TestConvertStrings(t *testing.T) {
 		Input    interface{}
 		Expected []string
 	}{
+		"ok_[]int": {
+			Input:    []int{1, 2, 3},
+			Expected: []string{"1", "2", "3"},
+		},
 		"ok_[]int32": {
 			Input:    []int32{1, 2, 3},
 			Expected: []string{"1", "2", "3"},
@@ -23,7 +27,7 @@ func TestConvertStrings(t *testing.T) {
 			Expected: []string{"1", "2", "3"},
 		},
 		"ng_other_type": {
-			Input:    []int{1, 2, 3},
+			Input:    []float64{1.0, 2.0, 3.0},
 			Expected: []string{},
 		},
 	}

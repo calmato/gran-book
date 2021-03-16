@@ -10,7 +10,13 @@ import (
 // ConvertStrings - 文字列型の配列に変換
 func ConvertStrings(items interface{}) ([]string, error) {
 	strs := []string{}
+
 	switch v := items.(type) {
+	case []int:
+		for _, item := range v {
+			str := strconv.Itoa(item)
+			strs = append(strs, str)
+		}
 	case []int32:
 		for _, item := range v {
 			str := strconv.Itoa(int(item))
