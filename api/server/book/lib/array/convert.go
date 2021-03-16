@@ -11,6 +11,11 @@ import (
 func ConvertStrings(items interface{}) ([]string, error) {
 	strs := []string{}
 	switch v := items.(type) {
+	case []int:
+		for _, item := range v {
+			str := strconv.Itoa(item)
+			strs = append(strs, str)
+		}
 	case []int32:
 		for _, item := range v {
 			str := strconv.Itoa(int(item))
