@@ -1,14 +1,17 @@
 import React from 'react';
 import { useReduxDispatch } from '~/store/modules';
-import { searchAddress } from '~/store/usecases';
+import { editAccountAsync } from '~/store/usecases';
 import AccountEdit from '~/screens/AccountEdit';
+import { AccountEditForm } from '~/types/forms';
 
-export default function SearchAddress(): JSX.Element {
+export default function AccountSave(): JSX.Element {
   const dispatch = useReduxDispatch();
   const actions = React.useMemo(
     () => ({
-      searchAddress(postalCode: string): Promise<string> {
-        return dispatch(searchAddress(postalCode));
+      accountEdit(formData: AccountEditForm) : Promise<void> {
+        return dispatch(editAccountAsync(
+          formData
+        ));
       },
     }), [dispatch],
   );

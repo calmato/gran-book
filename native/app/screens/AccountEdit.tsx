@@ -1,8 +1,7 @@
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '~/types/navigation';
 import React, { ReactElement, useState, useMemo } from 'react';
-import { StyleSheet, View, Text, TextInput } from 'react-native';
+import { StyleSheet, View, Text, TextInput, Alert } from 'react-native';
 import { COLOR } from '~~/constants/theme';
+import { external} from '~/lib/axios';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import { Button } from 'react-native-elements';
 import HalfTextInput from '~/components/molecules/HalfTextInput';
@@ -10,6 +9,7 @@ import NumberTextInput from '~/components/molecules/NumberTextInput';
 import FullTextInput from '~/components/molecules/FullTextInput';
 import PrefecturePicker from '~/components/molecules/PrefecturePicker';
 import { AccountEditForm } from '~/types/forms';
+import { generateErrorMessage } from '~/lib/util/ErrorUtil';
 
 const maxNameLength7 = 7;
 const maxNameLength16 = 16;
@@ -53,21 +53,29 @@ const styles = StyleSheet.create(
     }
   });
 
-type AccountEditProp = StackNavigationProp<RootStackParamList, 'AccountEdit'>;
-
 interface Props {
   actions: {
-    searchAddress: (postalCode: string) => Promise<string>,
-  },
-  save: {
-    accountEdit: (lastName, firstName, lastNameKana, firstNameKana, phoneNumber,
-      postalCode, prefecture, city, addressLine1, addressLine2) => Promise<void>
+    accountEdit: (formData: AccountEditForm) => Promise<void>,
   },
 }
 
+async function searchAddress(postalCode: string) {
+  return external
+    .get('https://zipcoda.net/api', {
+      params: {
+        zipcode: postalCode
+      }
+    })
+    .then(function(r) {
+      return r.data;
+    })
+    .catch((err: Error) => {
+      throw err;
+    });
+}
+
 const AccountEdit = function AccountEdit(props: Props): ReactElement {
-  const { searchAddress } = props.actions;
-  const { accountEdit } = props.save;
+  const { accountEdit } = props.actions;
   const [formData, setValue] = useState<AccountEditForm>({
     lastName: '',
     firstName: '',
@@ -92,10 +100,20 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
   }, [formData.firstName, formData.lastName, formData.firstNameKana, formData.lastNameKana, formData.phoneNumber
     , formData.postalCode, formData.prefecture, formData.city, formData.addressLine1]);
 
-  //TODO: ボタンを押した時の処理を追加する
+  const createAlertNotifyEditPasswordError= (code: number) =>
+    Alert.alert(
+      'アカウントの編集に失敗',
+      `${generateErrorMessage(code)}`,
+      [
+        {
+          text: 'OK',
+        }
+      ],
+    );
+
+  //TODO: アドレス検索時の処理
   const handleSearch = React.useCallback(() => {
-    (async () =>
-    {
+    (async () => {
       const address = await searchAddress(formData.postalCode);
       const jsonAddress = JSON.stringify(address);
       const parseAddress = JSON.parse(jsonAddress);
@@ -106,31 +124,24 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
           city: parseAddress.items[0].components[1],
           addressLine1: parseAddress.items[0].components[2],
         });
-        console.log(formData.firstName);
       } else {
         throw 'Failed to get address';
       }
     }) ();
-  }, [formData, searchAddress]);
+  }, [formData]);
 
   const handleAccountEditSubmit = React.useCallback(async () => {
     await accountEdit(
-      formData.lastName,
-      formData.firstName,
-      formData.lastNameKana,
-      formData.firstNameKana,
-      formData.phoneNumber,
-      formData.postalCode,
-      formData.prefecture,
-      formData.city,
-      formData.addressLine1,
-      formData.addressLine2
-    );
-    // .then(() => {
-    // })
-    // .catch(() => {
-    // });
-  }, [formData, AccountEdit]);
+      formData
+    )
+      .then(() => {
+      //  navigation.navigate('', { });
+      })
+      .catch((err) => {
+        console.log('debug', err);
+        createAlertNotifyEditPasswordError(err.code);
+      });
+  }, [formData, accountEdit]);
 
   return (
     <View>
@@ -230,7 +241,7 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
       <Button
         containerStyle={styles.saveButton}
         disabled={!canSubmit}
-        onPress={() => undefined}
+        onPress={handleAccountEditSubmit}
         title='保存する'
         titleStyle={{ color: COLOR.TEXT_TITLE}}
       />

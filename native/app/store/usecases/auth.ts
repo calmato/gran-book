@@ -8,6 +8,7 @@ import { Auth } from '~/store/models';
 import { AppState } from '~/store/modules';
 import { setAuth, setProfile } from '~/store/modules/auth';
 import { IAuthResponse } from '~/types/response';
+import { AccountEditForm } from '~/types/forms';
 
 interface IAuth {
   user: Firebase.User
@@ -82,16 +83,15 @@ export function editPasswordAsync(password: string, passwordConfirmation: string
   };
 }
 
-export function searchAddress(postalCode: string) {
-  return async (): Promise<string> => {
-    return await external
-      .get('https://zipcoda.net/api', {
-        params: {
-          zipcode: postalCode
-        }
+export function editAccountAsync(formData: AccountEditForm) {
+  return async (): Promise<void> => {
+    console.log('test');
+    return await internal
+      .patch('/v1/auth/address', {
+        formData
       })
-      .then(function(r) {
-        return r.data;
+      .then(async (res: AxiosResponse<IAuthResponse>) => {
+        console.log('debug', res);
       })
       .catch((err: Error) => {
         throw err;
