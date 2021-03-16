@@ -111,7 +111,6 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
       ],
     );
 
-  //TODO: アドレス検索時の処理
   const handleSearch = React.useCallback(() => {
     (async () => {
       const address = await searchAddress(formData.postalCode);
