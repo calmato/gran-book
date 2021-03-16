@@ -1,11 +1,12 @@
 <template>
-  <settings-edit-profile :form="form" @click="handleSubmit" @cancel="handleCancel" />
+  <settings-edit-profile :form="form" :loading="loading" @click="handleSubmit" @cancel="handleCancel" />
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, SetupContext } from '@nuxtjs/composition-api'
+import { defineComponent, computed, reactive, SetupContext } from '@nuxtjs/composition-api'
 import { AuthStore, CommonStore } from '~/store'
 import { IAuthEditProfileForm, AuthEditProfileOptions } from '~/types/forms'
+import { PromiseState } from '~/types/store'
 import SettingsEditProfile from '~/components/templates/SettingsEditProfile.vue'
 
 export default defineComponent({
@@ -33,7 +34,13 @@ export default defineComponent({
       },
     })
 
+    const loading = computed((): boolean => {
+      const status = store.getters['common/getPromiseState']
+      return status === PromiseState.LOADING
+    })
+
     const handleSubmit = async () => {
+      CommonStore.startConnection()
       await AuthStore.updateProfile(form)
         .then(() => {
           CommonStore.showSnackbar({ color: 'info', message: 'プロフィールを変更しました。' })
@@ -41,6 +48,9 @@ export default defineComponent({
         })
         .catch((err: Error) => {
           CommonStore.showErrorInSnackbar(err)
+        })
+        .finally(() => {
+          CommonStore.endConnection()
         })
     }
 
@@ -50,6 +60,7 @@ export default defineComponent({
 
     return {
       form,
+      loading,
       handleSubmit,
       handleCancel,
     }

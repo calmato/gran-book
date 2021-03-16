@@ -5,11 +5,10 @@ import (
 
 	"github.com/calmato/gran-book/api/server/user/internal/application"
 	"github.com/calmato/gran-book/api/server/user/internal/application/input"
-	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
+	"github.com/calmato/gran-book/api/server/user/internal/application/output"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/user"
 	"github.com/calmato/gran-book/api/server/user/lib/datetime"
 	pb "github.com/calmato/gran-book/api/server/user/proto"
-	"golang.org/x/xerrors"
 )
 
 // AdminServer - Authインターフェースの構造体
@@ -19,9 +18,102 @@ type AdminServer struct {
 	AdminApplication application.AdminApplication
 }
 
+// ListAdmin - 管理者一覧取得
+func (s *AdminServer) ListAdmin(ctx context.Context, req *pb.ListAdminRequest) (*pb.AdminListResponse, error) {
+	cu, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	err = authorization(cu)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	in := &input.ListAdmin{
+		Limit:  req.Limit,
+		Offset: req.Offset,
+	}
+
+	if req.Order != nil {
+		in.By = req.Order.By
+		in.Direction = req.Order.Direction
+	}
+
+	us, out, err := s.AdminApplication.List(ctx, in)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	res := getAdminListResponse(us, out)
+	return res, nil
+}
+
+// SearchAdmin - 管理者一覧取得
+func (s *AdminServer) SearchAdmin(ctx context.Context, req *pb.SearchAdminRequest) (*pb.AdminListResponse, error) {
+	cu, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	err = authorization(cu)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	in := &input.SearchAdmin{
+		Limit:  req.Limit,
+		Offset: req.Offset,
+	}
+
+	if req.Order != nil {
+		in.By = req.Order.By
+		in.Direction = req.Order.Direction
+	}
+
+	if req.Search != nil {
+		in.Field = req.Search.Field
+		in.Value = req.Search.Value
+	}
+
+	us, out, err := s.AdminApplication.Search(ctx, in)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	res := getAdminListResponse(us, out)
+	return res, nil
+}
+
+// GetAdmin - 管理者情報取得
+func (s *AdminServer) GetAdmin(ctx context.Context, req *pb.GetAdminRequest) (*pb.AdminResponse, error) {
+	cu, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	err = authorization(cu)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	u, err := s.AdminApplication.Show(ctx, req.Id)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	res := getAdminResponse(u)
+	return res, nil
+}
+
 // CreateAdmin - 管理者登録
 func (s *AdminServer) CreateAdmin(ctx context.Context, req *pb.CreateAdminRequest) (*pb.AdminResponse, error) {
 	cu, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	err = authorization(cu)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -59,6 +151,11 @@ func (s *AdminServer) UpdateAdminRole(ctx context.Context, req *pb.UpdateAdminRo
 		return nil, errorHandling(err)
 	}
 
+	err = authorization(cu)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
 	err = hasAdminRole(cu, req.Id)
 	if err != nil {
 		return nil, errorHandling(err)
@@ -82,6 +179,11 @@ func (s *AdminServer) UpdateAdminPassword(
 	ctx context.Context, req *pb.UpdateAdminPasswordRequest,
 ) (*pb.AdminResponse, error) {
 	cu, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	err = authorization(cu)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -114,6 +216,11 @@ func (s *AdminServer) UpdateAdminProfile(
 		return nil, errorHandling(err)
 	}
 
+	err = authorization(cu)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
 	err = hasAdminRole(cu, req.Id)
 	if err != nil {
 		return nil, errorHandling(err)
@@ -137,20 +244,6 @@ func (s *AdminServer) UpdateAdminProfile(
 	return res, nil
 }
 
-func hasAdminRole(u *user.User, uid string) error {
-	if u == nil || u.ID == uid {
-		err := xerrors.New("This ID belongs to the current user")
-		return exception.Forbidden.New(err)
-	}
-
-	if u.Role != user.AdminRole {
-		err := xerrors.New("This account doesn't have administrator privileges")
-		return exception.Forbidden.New(err)
-	}
-
-	return nil
-}
-
 func getAdminResponse(u *user.User) *pb.AdminResponse {
 	return &pb.AdminResponse{
 		Id:               u.ID,
@@ -168,4 +261,46 @@ func getAdminResponse(u *user.User) *pb.AdminResponse {
 		CreatedAt:        datetime.TimeToString(u.CreatedAt),
 		UpdatedAt:        datetime.TimeToString(u.UpdatedAt),
 	}
+}
+
+func getAdminListResponse(us []*user.User, out *output.ListQuery) *pb.AdminListResponse {
+	users := make([]*pb.AdminListResponse_User, len(us))
+	for i, u := range us {
+		user := &pb.AdminListResponse_User{
+			Id:               u.ID,
+			Username:         u.Username,
+			Email:            u.Email,
+			PhoneNumber:      u.PhoneNumber,
+			Role:             u.Role,
+			ThumbnailUrl:     u.ThumbnailURL,
+			SelfIntroduction: u.SelfIntroduction,
+			LastName:         u.LastName,
+			FirstName:        u.FirstName,
+			LastNameKana:     u.LastNameKana,
+			FirstNameKana:    u.FirstNameKana,
+			Activated:        u.Activated,
+			CreatedAt:        datetime.TimeToString(u.CreatedAt),
+			UpdatedAt:        datetime.TimeToString(u.UpdatedAt),
+		}
+
+		users[i] = user
+	}
+
+	res := &pb.AdminListResponse{
+		Users:  users,
+		Limit:  out.Limit,
+		Offset: out.Offset,
+		Total:  out.Total,
+	}
+
+	if out.Order != nil {
+		order := &pb.AdminListResponse_Order{
+			By:        out.Order.By,
+			Direction: out.Order.Direction,
+		}
+
+		res.Order = order
+	}
+
+	return res
 }

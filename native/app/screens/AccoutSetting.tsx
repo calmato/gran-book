@@ -2,7 +2,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React, { ReactElement, useState } from 'react';
 import { Switch } from 'react-native';
 import { ListItem } from 'react-native-elements';
-import { RootStackParamList } from '~/types/navigation';
+import { RootStackParamList, UserInfoStackParamList } from '~/types/navigation';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import { StyleSheet, View, Text, SafeAreaView, ScrollView } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -26,25 +26,8 @@ const styles = StyleSheet.create({
 });
 
 const version = '1.00';
-const accountSettingList = [
-  {
-    title: 'プロフィール'
-  },
-  {
-    title: '発送元・お届け先住所'
-  },
-  {
-    title: 'クレジットコード一覧'
-  },
-  {
-    title: 'メールアドレス・パスワード'
-  },
-  {
-    title: 'サインアウト'
-  }
-];
 
-type AccountSettingProp= StackNavigationProp<RootStackParamList, 'SignInSelect'>;
+type AccountSettingProp= StackNavigationProp<UserInfoStackParamList, 'AccountSetting'>;
 
 interface Props {
   navigation: AccountSettingProp
@@ -59,6 +42,29 @@ const AccountSetting  = function AccountSetting(props: Props): ReactElement {
   const toggleSwitchInformation = () => setIsEnabledInformation(previousState => !previousState);
   const toggleSwitchImpressions = () => setIsEnabledImpressions(previousState => !previousState);
 
+  const accountSettingList = [
+    {
+      title: 'プロフィール',
+      onClicked: undefined,
+    },
+    {
+      title: '発送元・お届け先住所',
+      onClicked: undefined,
+    },
+    {
+      title: 'クレジットコード一覧',
+      onClicked: undefined,
+    },
+    {
+      title: 'メールアドレス・パスワード',
+      onClicked: () => navigation.navigate('ContactEdit'),
+    },
+    {
+      title: 'サインアウト',
+      onClicked: undefined,
+    }
+  ];
+
   return (
     <View>
       <HeaderWithBackButton
@@ -72,7 +78,7 @@ const AccountSetting  = function AccountSetting(props: Props): ReactElement {
           <View>
             {
               accountSettingList.map((item, i) => (
-                <ListItem key={i} bottomDivider>
+                <ListItem key={i} bottomDivider onPress={item.onClicked}>
                   <ListItem.Content>
                     <Text style={styles.textStyle}>{item.title}</Text>
                   </ListItem.Content>

@@ -8,6 +8,8 @@ import (
 
 // AdminRequestValidation - Admin関連のリクエストバリデータ
 type AdminRequestValidation interface {
+	ListAdmin(in *input.ListAdmin) error
+	SearchAdmin(in *input.SearchAdmin) error
 	CreateAdmin(in *input.CreateAdmin) error
 	UpdateAdminRole(in *input.UpdateAdminRole) error
 	UpdateAdminPassword(in *input.UpdateAdminPassword) error
@@ -25,6 +27,26 @@ func NewAdminRequestValidation() AdminRequestValidation {
 	return &adminRequestValidation{
 		validator: rv,
 	}
+}
+
+func (v *adminRequestValidation) ListAdmin(in *input.ListAdmin) error {
+	ves := v.validator.Run(in)
+	if len(ves) == 0 {
+		return nil
+	}
+
+	err := xerrors.New("Failed to ListAdmin for RequestValidation")
+	return exception.InvalidRequestValidation.New(err, ves...)
+}
+
+func (v *adminRequestValidation) SearchAdmin(in *input.SearchAdmin) error {
+	ves := v.validator.Run(in)
+	if len(ves) == 0 {
+		return nil
+	}
+
+	err := xerrors.New("Failed to SearchAdmin for RequestValidation")
+	return exception.InvalidRequestValidation.New(err, ves...)
 }
 
 func (v *adminRequestValidation) CreateAdmin(in *input.CreateAdmin) error {

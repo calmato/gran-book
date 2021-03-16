@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  bio: {
+  selfIntroduction: {
     backgroundColor: COLOR.BACKGROUND_WHITE,
     color: COLOR.TEXT_DEFAULT,
     marginTop: 10,
@@ -32,7 +32,7 @@ const userInfo =
   saleNum: 3,
   followerNum: 1,
   followNum: 1,
-  bio: 'たくさん買うぞー。',
+  selfIntroduction: 'たくさん買うぞー。',
 };
 
 const OtherProfile = function OtherProfile(): ReactElement {
@@ -54,7 +54,7 @@ const OtherProfile = function OtherProfile(): ReactElement {
         buttonTitle={'フォローする'}
         handleClick={() => undefined}
       />
-      <Text style={styles.bio}>{userInfo.bio}</Text>
+      <Text style={styles.selfIntroduction}>{userInfo.selfIntroduction}</Text>
       <Text style={styles.title}>出品リスト</Text>
     </View>
   );

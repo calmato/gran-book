@@ -1,11 +1,12 @@
 import { Action, Module, Mutation, VuexModule } from 'vuex-module-decorators'
 import { MESSAGE } from '~/constants/error'
 import { ApiError } from '~/types/exception'
-import { ICommonState, ISnackbar } from '~/types/store'
+import { ICommonState, ISnackbar, PromiseState } from '~/types/store'
 
 const initialState: ICommonState = {
   snackbarColor: 'info',
   snackbarMessage: '',
+  promiseState: PromiseState.NONE,
 }
 
 @Module({
@@ -16,6 +17,7 @@ const initialState: ICommonState = {
 export default class CommonModule extends VuexModule {
   private snackbarColor: string = initialState.snackbarColor
   private snackbarMessage: string = initialState.snackbarMessage
+  private promiseState: PromiseState = initialState.promiseState
 
   public get getSnackbarColor(): string {
     return this.snackbarColor
@@ -23,6 +25,10 @@ export default class CommonModule extends VuexModule {
 
   public get getSnackbarMessage(): string {
     return this.snackbarMessage
+  }
+
+  public get getPromiseState(): PromiseState {
+    return this.promiseState
   }
 
   @Mutation
@@ -33,6 +39,18 @@ export default class CommonModule extends VuexModule {
   @Mutation
   private setSnackbarMessage(message: string): void {
     this.snackbarMessage = message
+  }
+
+  @Mutation
+  private setPromiseState(promiseState: PromiseState): void {
+    this.promiseState = promiseState
+  }
+
+  @Action({})
+  public factory(): void {
+    this.setSnackbarColor(initialState.snackbarColor)
+    this.setSnackbarMessage(initialState.snackbarMessage)
+    this.setPromiseState(initialState.promiseState)
   }
 
   @Action({ rawError: true })
@@ -62,6 +80,16 @@ export default class CommonModule extends VuexModule {
   public hiddenSnackbar(): void {
     this.setSnackbarColor(initialState.snackbarColor)
     this.setSnackbarMessage(initialState.snackbarMessage)
+  }
+
+  @Action({ rawError: true })
+  public startConnection(): void {
+    this.setPromiseState(PromiseState.LOADING)
+  }
+
+  @Action({ rawError: true })
+  public endConnection(): void {
+    this.setPromiseState(PromiseState.NONE)
   }
 }
 

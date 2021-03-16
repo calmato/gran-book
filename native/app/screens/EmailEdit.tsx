@@ -1,10 +1,12 @@
 import React, { ReactElement, useState, useMemo } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, Alert, DevSettings } from 'react-native';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import { COLOR } from '~~/constants/theme';
 import MailInput from '~/components/molecules/MailInput';
 import { emailValidation } from '~/lib/validation';
-import { Button, Input } from 'react-native-elements';
+import { Button } from 'react-native-elements';
+import { useNavigation } from '@react-navigation/native';
+import { generateErrorMessage } from '~/lib/util/ErrorUtil';
 
 const styles = StyleSheet.create({
   container:{
@@ -54,21 +56,57 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  email: string
+  email: string,
+  actions: {
+    emailEdit: (email: string) => Promise<void>,
+    signOut: () => Promise<void>,
+  },
 }
 
 const EmailEdit = function EmailEdit
 (props: Props): ReactElement {
+  const navigation = useNavigation();
+  const { emailEdit, signOut } = props.actions;
   const [emailForm, setState] = useState('');
 
   const emailError: boolean = useMemo((): boolean => {
     return !emailValidation(emailForm);
   }, [emailForm]);
+
+  const emailSameError: boolean = useMemo((): boolean => {
+    return emailForm === props.email;
+  }, [emailForm, props.email]);
+
+  const createAlertNotifyEmailEditError = (code: number) =>
+    Alert.alert(
+      'メールアドレス変更に失敗',
+      `${generateErrorMessage(code)}`,
+      [
+        {
+          text: 'OK',
+        }
+      ],
+    );
+
+  const handleSubmit = React.useCallback(async () => {
+    await emailEdit(emailForm)
+      .then(() => {
+        signOut();
+      })
+      .then(() => {
+        DevSettings.reload();
+      })
+      .catch((err) => {
+        console.log('debug', err);
+        createAlertNotifyEmailEditError(err.staus);
+      });
+  }, [emailForm, emailEdit, signOut]);
+
   return (
     <View style={styles.container}>
       <HeaderWithBackButton 
         title='メールアドレスの変更' 
-        onPress={()=>undefined}
+        onPress={()=>navigation.goBack()}
       />
       <Text style={styles.textCard}>新しいメールアドレスを入力してください。{'\n'}確認メールが送信されます。</Text>
       <Text style={styles.subtitle}>現在のメールアドレス</Text>
@@ -78,9 +116,9 @@ const EmailEdit = function EmailEdit
         onChangeText={(text) => setState(text)}
         value={emailForm}
         hasError={emailError}
-        sameEmailError={emailForm === 'A@f'}
+        sameEmailError={emailSameError}
       />
-      <Button containerStyle={styles.buttonStyle} disabled={emailError} onPress={undefined} title='変更する' titleStyle={styles.buttonTitleStyle}/>
+      <Button containerStyle={styles.buttonStyle} disabled={emailError || emailSameError} onPress={() => handleSubmit()} title='変更する' titleStyle={styles.buttonTitleStyle}/>
     </View>
   );
 };

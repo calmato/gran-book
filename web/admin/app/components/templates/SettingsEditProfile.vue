@@ -6,7 +6,12 @@
           <v-card class="pa-4">
             <v-card-title>プロフィール変更</v-card-title>
             <v-card-text>
-              <settings-edit-profile-form :form="form" @click="onClickSubmitButton" @cancel="onClickCancelButton" />
+              <settings-edit-profile-form
+                :form="form"
+                :loading="loading"
+                @click="onClickSubmitButton"
+                @cancel="onClickCancelButton"
+              />
             </v-card-text>
           </v-card>
         </v-col>
@@ -29,6 +34,11 @@ export default defineComponent({
     form: {
       type: Object as PropType<IAuthEditProfileForm>,
       required: true,
+    },
+    loading: {
+      type: Boolean,
+      required: false,
+      default: false,
     },
   },
 

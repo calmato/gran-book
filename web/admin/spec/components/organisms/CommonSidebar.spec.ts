@@ -101,7 +101,7 @@ describe('components/ogranisms/CommonSidebar', () => {
 
       it('systemItems', () => {
         expect(wrapper.vm.systemItems).toEqual([
-          { icon: 'mdi-shield-account', text: '管理者管理', to: '/' },
+          { icon: 'mdi-shield-account', text: '管理者管理', to: '/admin' },
           { icon: 'mdi-cog', text: 'システム設定', to: '/system' },
         ])
       })

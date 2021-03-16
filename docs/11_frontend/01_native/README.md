@@ -10,6 +10,10 @@
 * フレームワーク: React Native
 * [ディレクトリ構成](./directories.md)
 
+## Architecture
+
+![アーキテクチャ](./architecture.jpeg)
+
 ## Libraries
 
 ### Application

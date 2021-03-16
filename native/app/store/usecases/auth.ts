@@ -49,6 +49,20 @@ export function signInWithEmailAsync(email: string, password: string) {
   };
 }
 
+export function signOutAsync() {
+  return async(dispatch: Dispatch): Promise<void> => {
+    return await firebase
+      .auth()
+      .signOut()
+      .then(async () => {
+        dispatch(setAuth(Auth.initialState));
+      })
+      .catch((err: Error) => {
+        throw err;
+      });
+  };
+}
+
 export function signUpWithEmailAsync(email: string, password: string, passwordConfirmation: string, username: string) {
   return async (): Promise<void> => {
     return await internal
@@ -208,4 +222,82 @@ function sendEmailVerification(): Promise<void> {
         reject(err);
       });
   });
+}
+
+export function editEmailAsync(email: string) {
+  return async (): Promise<void> => {
+    return await axios
+      .patch('/v1/auth/email', {
+        email
+      })
+      .then(async (res: AxiosResponse<IAuthResponse>) => {
+        console.log('debug', res);
+      })
+      .catch((err: Error) => {
+        throw err;
+      });
+  };
+}
+  
+  
+export function profileEditAsync(username: string, gender: number, thumbnail: string | undefined, selfIntroduction: string) {
+  return async (dispatch: Dispatch, getState: () => AppState): Promise<void> => { 
+    return await axios
+      .patch('/v1/auth/profile', {
+        username,
+        gender,
+        thumbnail,
+        selfIntroduction,
+      })
+      .then(async (res: AxiosResponse<IAuthResponse>) => {
+        console.log('debug', res);
+        const {
+          username,
+          gender,
+          phoneNumber,
+          role,
+          thumbnailUrl,
+          selfIntroduction,
+          lastName,
+          firstName,
+          lastNameKana,
+          firstNameKana,
+          postalCode,
+          prefecture,
+          city,
+          addressLine1,
+          addressLine2,
+          createdAt,
+          updatedAt,
+        } = res.data;
+
+        const values: Auth.ProfileValues = {
+          username,
+          gender,
+          phoneNumber,
+          role,
+          thumbnailUrl,
+          selfIntroduction,
+          lastName,
+          firstName,
+          lastNameKana,
+          firstNameKana,
+          postalCode,
+          prefecture,
+          city,
+          addressLine1,
+          addressLine2,
+          createdAt,
+          updatedAt,
+        };
+
+        dispatch(setProfile(values));
+
+        const auth: Auth.Model = getState().auth;
+        await LocalStorage.AuthStorage.save(auth);
+      })
+      .catch((err: Error) => {
+        throw err;
+      });
+  };
 }
