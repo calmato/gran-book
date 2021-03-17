@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { ReactElement, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { RefreshControl, StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
 import BookList from '~/components/molecules/BookList';
@@ -80,7 +80,16 @@ const OwnProfile = function OwnProfile( props : Props): ReactElement {
         title="プロフィール"
         onPress={()=>navigation.goBack()}
       />
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={false}
+            onRefresh={
+              () => getOwnProfile(props.id)
+            } 
+          />
+        }
+      >
         <ProfileViewGroup
           name={userInfo.username}
           avatarUrl={props.thumbnailUrl}
