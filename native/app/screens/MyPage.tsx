@@ -35,8 +35,8 @@ const MyPage = function MyPage(props: Props): ReactElement {
   const { auth } = props;
   // TODO: 型定義
   const avatar = {
-    name: auth?.username || 'hamachans',
-    thumbnailUrl: auth?.thumbnailUrl || 'https://pbs.twimg.com/profile_images/1312909954148253696/Utr-sa_Y_400x400.jpg',
+    name: auth?.username,
+    thumbnailUrl: auth?.thumbnailUrl,
   };
 
   return (
