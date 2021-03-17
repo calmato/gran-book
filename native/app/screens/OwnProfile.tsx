@@ -65,15 +65,15 @@ const OwnProfile = function OwnProfile( props : Props): ReactElement {
   const { getOwnProfile } = props.actions;
 
   const handleGetOwnProfile = () => {
-    setIsLoading(true)
+    setIsLoading(true);
     getOwnProfile(props.id)
-    .then(() => {
-      setIsLoading(false)
-    })
-    .catch((err) => {
-      console.log('debug', err);
-    });
-  }
+      .then(() => {
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.log('debug', err);
+      });
+  };
 
   // OwnProfileをGetするとAuthを書き換えるので再レンダリングされる
   // =>またゲットが呼ばれるの無限ループになるので、
