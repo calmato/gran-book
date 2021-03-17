@@ -4,6 +4,7 @@ PROTOC_GEN_TS_PATH=$(shell which protoc-gen-ts)
 ADMIN_GATEWAY_PATH='./../api/gateway/admin/src'
 NATIVE_GATEWAY_PATH='./../api/gateway/native/src'
 USER_API_PATH='./../api/server/user'
+BOOK_API_PATH='./../api/server/book'
 
 ##################################################
 # For Configuration
@@ -25,6 +26,7 @@ generate:
 	$(MAKE) generate-admin-gateway
 	$(MAKE) generate-native-gateway
 	$(MAKE) generate-user-api
+	$(MAKE) generate-book-api
 
 generate-admin-gateway:
 	protoc -I . \
@@ -51,3 +53,11 @@ generate-user-api:
 		--go-grpc_out ${USER_API_PATH} \
 		--go-grpc_opt paths=source_relative \
 		./proto/user_apiv1.proto
+
+generate-book-api:
+	protoc -I . \
+		--go_out ${BOOK_API_PATH} \
+		--go_opt paths=source_relative \
+		--go-grpc_out ${BOOK_API_PATH} \
+		--go-grpc_opt paths=source_relative \
+		./proto/book_apiv1.proto

@@ -2,16 +2,16 @@ package input
 
 // ListAdmin - 管理者一覧のリクエスト
 type ListAdmin struct {
-	Limit     int64  `json:"limit" validate:"gte=0,lte=1000"`
-	Offset    int64  `json:"offset" validate:"gte=0"`
+	Limit     int    `json:"limit" validate:"gte=0,lte=1000"`
+	Offset    int    `json:"offset" validate:"gte=0"`
 	By        string `json:"by" validate:"omitempty,oneof=id username email role"`
 	Direction string `json:"direction" validate:"omitempty,oneof=asc desc"`
 }
 
 // SearchAdmin - 管理者検索のリクエスト
 type SearchAdmin struct {
-	Limit     int64  `json:"limit" validate:"gte=0,lte=1000"`
-	Offset    int64  `json:"offset" validate:"gte=0"`
+	Limit     int    `json:"limit" validate:"gte=0,lte=1000"`
+	Offset    int    `json:"offset" validate:"gte=0"`
 	By        string `json:"by" validate:"omitempty,oneof=id username email role"`
 	Direction string `json:"direction" validate:"omitempty,oneof=asc desc"`
 	Field     string `json:"field" validate:"required,oneof=username email"`
@@ -24,7 +24,7 @@ type CreateAdmin struct {
 	Email                string `json:"email" validate:"required,email,max=256"`
 	Password             string `json:"password" validate:"required,password,min=6,max=32"`
 	PasswordConfirmation string `json:"passwordConfirmation" validate:"required,eqfield=Password"`
-	Role                 int32  `json:"role" validate:"gte=1,lte=3"`
+	Role                 int    `json:"role" validate:"gte=1,lte=3"`
 	LastName             string `json:"lastName" validate:"required,max=16"`
 	FirstName            string `json:"firstName" validate:"required,max=16"`
 	LastNameKana         string `json:"lastNameKana" validate:"required,hiragana,max=32"`
@@ -33,7 +33,7 @@ type CreateAdmin struct {
 
 // UpdateAdminRole - 管理者権限変更のリクエスト
 type UpdateAdminRole struct {
-	Role int32 `json:"role" validate:"gte=1,lte=3"`
+	Role int `json:"role" validate:"gte=1,lte=3"`
 }
 
 // UpdateAdminPassword - 管理者パスワード変更のリクエスト

@@ -63,8 +63,8 @@ func TestUserApplication_ListFollow(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		var followCount int64
-		var followerCount int64
+		var followCount int
+		var followerCount int
 
 		if tc.Expected.Output != nil {
 			followCount = tc.Expected.Output.Total
@@ -150,8 +150,8 @@ func TestUserApplication_ListFollower(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		var followCount int64
-		var followerCount int64
+		var followCount int
+		var followerCount int
 
 		if tc.Expected.Output != nil {
 			followerCount = tc.Expected.Output.Total
