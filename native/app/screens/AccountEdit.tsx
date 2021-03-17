@@ -1,20 +1,22 @@
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '~/types/navigation';
-import React, { ReactElement, useState } from 'react';
-import { StyleSheet, View, Text, TextInput } from 'react-native';
+import React, { ReactElement, useState, useMemo } from 'react';
+import { StyleSheet, View, Text, TextInput, Alert } from 'react-native';
 import { COLOR } from '~~/constants/theme';
+import { external} from '~/lib/axios';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
-import { AccountEditForm } from '~/types/forms';
 import { Button } from 'react-native-elements';
 import HalfTextInput from '~/components/molecules/HalfTextInput';
 import NumberTextInput from '~/components/molecules/NumberTextInput';
 import FullTextInput from '~/components/molecules/FullTextInput';
 import PrefecturePicker from '~/components/molecules/PrefecturePicker';
+import { AccountEditForm } from '~/types/forms';
+import { generateErrorMessage } from '~/lib/util/ErrorUtil';
 
 const maxNameLength7 = 7;
 const maxNameLength16 = 16;
 const maxNameLength32 = 32;
 const maxNameLength64 = 64;
+
+const re = /^[\u3040-\u309F]+$/;
 
 const styles = StyleSheet.create(
   {
@@ -42,7 +44,6 @@ const styles = StyleSheet.create(
     },
     searchButton: {
       flex: 1,
-      borderRadius: 10,
       backgroundColor: COLOR.PRIMARY,
     },
     saveButton: {
@@ -52,23 +53,34 @@ const styles = StyleSheet.create(
     }
   });
 
-type AccountEditProp = StackNavigationProp<RootStackParamList, 'AccountEdit'>;
-
 interface Props {
-  navigation: AccountEditProp,
   actions: {
-    searchAdress: (postalCode: string) => Promise<void>,
+    accountEdit: (formData: AccountEditForm) => Promise<void>,
   },
 }
 
+async function searchAddress(postalCode: string) {
+  return external
+    .get('https://zipcoda.net/api', {
+      params: {
+        zipcode: postalCode
+      }
+    })
+    .then(function(r) {
+      return r.data;
+    })
+    .catch((err: Error) => {
+      throw err;
+    });
+}
+
 const AccountEdit = function AccountEdit(props: Props): ReactElement {
-  const searchAdress = props.actions;
-  const navigation = props.navigation;
+  const { accountEdit } = props.actions;
   const [formData, setValue] = useState<AccountEditForm>({
-    firstName: '',
     lastName: '',
-    firstNameKana: '',
+    firstName: '',
     lastNameKana: '',
+    firstNameKana: '',
     phoneNumber: '',
     postalCode: '',
     prefecture: '',
@@ -77,56 +89,78 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
     addressLine2: '',
   });
 
-  //TODO: ボタンを押した時の処理を追加する
-  const handlePostaSubmit = React.useCallback(async () => {
-    await searchAdress(
-      formData.postalCode
-    );
-    // .then(() => {
-    // })
-    // .catch(() => {
-    // });
+  const postalCheck: boolean = useMemo((): boolean => {
+    return formData.postalCode.length == 7;
   }, [formData.postalCode]);
+
+  const canSubmit = useMemo((): boolean => {
+    return formData.firstName.length > 0 &&  formData.lastName.length > 0 && formData.firstNameKana.length > 0  &&
+    formData.lastNameKana.length > 0 && formData.phoneNumber.length > 0 && formData.postalCode.length > 0 &&
+    formData.prefecture !== undefined && re.test(formData.firstNameKana) && re.test(formData.lastNameKana) && formData.city.length > 0 && formData.addressLine1.length > 0;
+  }, [formData.firstName, formData.lastName, formData.firstNameKana, formData.lastNameKana, formData.phoneNumber
+    , formData.postalCode, formData.prefecture, formData.city, formData.addressLine1]);
+
+  const createAlertNotifyEditPasswordError= (code: number) =>
+    Alert.alert(
+      'アカウントの編集に失敗',
+      `${generateErrorMessage(code)}`,
+      [
+        {
+          text: 'OK',
+        }
+      ],
+    );
+
+  const handleSearch = React.useCallback(() => {
+    (async () => {
+      const address = await searchAddress(formData.postalCode);
+      const jsonAddress = JSON.stringify(address);
+      const parseAddress = JSON.parse(jsonAddress);
+      if(parseAddress.status == '200') {
+        setValue({
+          ...formData,
+          prefecture: parseAddress.items[0].components[0],
+          city: parseAddress.items[0].components[1],
+          addressLine1: parseAddress.items[0].components[2],
+        });
+      } else {
+        throw 'Failed to get address';
+      }
+    }) ();
+  }, [formData]);
 
   const handleAccountEditSubmit = React.useCallback(async () => {
     await accountEdit(
-      formData.firstName,
-      formData.lastName,
-      formData.firstNameKana,
-      formData.lastNameKana,
-      formData.phoneNumber,
-      formData.postalCode,
-      formData.prefecture,
-      formData.city,
-      formData.addressLine1,
-      formData.addressLine2
-    );
-    // .then(() => {
-    // })
-    // .catch(() => {
-    // });
-  }, [formData.firstName, formData.lastName, formData.firstNameKana, formData.lastNameKana, formData.phoneNumber,
-    formData.postalCode, formData.prefecture, formData.city, formData.addressLine1, formData.addressLine2]);
+      formData
+    )
+      .then(() => {
+      //  navigation.navigate('', { });
+      })
+      .catch((err) => {
+        console.log('debug', err);
+        createAlertNotifyEditPasswordError(err.code);
+      });
+  }, [formData, accountEdit]);
 
   return (
     <View>
       <HeaderWithBackButton
         title='発送元・お届け先住所'
-        onPress={() => navigation.goBack()}
+        onPress={() => undefined}
       />
       <Text style={styles.subtitle}>
             名前
       </Text>
       <View style={styles.halfInputRow}>
         <HalfTextInput
-          onChangeText={(text) => setValue({...formData, firstName: text})}
-          value={formData.firstName}
+          onChangeText={(text) => setValue({...formData, lastName: text})}
+          value={formData.lastName}
           placeholder='田中'
           length={maxNameLength16}
         />
         <HalfTextInput
-          onChangeText={(text) => setValue({...formData, lastName: text})}
-          value={formData.lastName}
+          onChangeText={(text) => setValue({...formData, firstName: text})}
+          value={formData.firstName}
           placeholder='太郎'
           length={maxNameLength16}
         />
@@ -136,14 +170,14 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
       </Text>
       <View style={styles.halfInputRow}>
         <HalfTextInput
-          onChangeText={(text) => setValue({...formData, firstNameKana: text})}
-          value={formData.firstNameKana}
+          onChangeText={(text) => setValue({...formData, lastNameKana: text})}
+          value={formData.lastNameKana}
           placeholder='たなか'
           length={maxNameLength16}
         />
         <HalfTextInput
-          onChangeText={(text) => setValue({...formData, lastNameKana: text})}
-          value={formData.lastNameKana}
+          onChangeText={(text) => setValue({...formData, firstNameKana: text})}
+          value={formData.firstNameKana}
           placeholder='たろう'
           length={maxNameLength16}
         />
@@ -173,14 +207,17 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
         <Button
           buttonStyle={{width: '100%'}}
           containerStyle={styles.searchButton}
-          disabled={false}
-          onPress={() => undefined}
+          disabled={!postalCheck}
+          onPress={handleSearch}
           title='検索'
-          titleStyle={{ color: COLOR.TEXT_TITLE}}
+          titleStyle={{color: COLOR.TEXT_TITLE}}
         />
       </View>
       <View style={styles.prefectureArea}>
-        <PrefecturePicker />
+        <PrefecturePicker
+          onValueChange={(text) => setValue({...formData, prefecture: text})}
+          value={formData.prefecture}
+        />
       </View>
       <FullTextInput
         onChangeText={(text) => setValue({...formData, city: text})}
@@ -202,8 +239,8 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
       />
       <Button
         containerStyle={styles.saveButton}
-        disabled={false}
-        onPress={() => undefined}
+        disabled={!canSubmit}
+        onPress={handleAccountEditSubmit}
         title='保存する'
         titleStyle={{ color: COLOR.TEXT_TITLE}}
       />
