@@ -18,9 +18,9 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  saleNum: number
-  followerNum: number
-  followNum: number
+  saleCount: number
+  followerCount: number
+  followCount: number
 }
 
 const ProfileFollowFollwer = function ProfileFollowFollwer(props: Props): ReactElement {
@@ -28,17 +28,17 @@ const ProfileFollowFollwer = function ProfileFollowFollwer(props: Props): ReactE
     <View style={styles.container}>
       <ProfileNumberOfThings
         name={'出品数'}
-        numberOfThings={props.saleNum}
+        numberOfThings={props.saleCount}
       />
       <View style={styles.divider}/>
       <ProfileNumberOfThings
         name={'フォロワー'}
-        numberOfThings={props.followerNum}
+        numberOfThings={props.followerCount}
       />
       <View style={styles.divider}/>
       <ProfileNumberOfThings
         name={'フォロー中'}
-        numberOfThings={props.followNum}
+        numberOfThings={props.followCount}
       />
     </View>
   );

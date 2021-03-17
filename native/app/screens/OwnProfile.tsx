@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-elements';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
@@ -25,23 +25,44 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
+  id: string,
   username: string, 
   selfIntroduction: string, 
   thumbnailUrl: string | undefined, 
-  gender: number
+  gender: number,
+  followCount: number,
+  followerCount: number,
+  rating: number,
+  actions: { getOwnProfile: (id: string) => Promise<void>, },
 }
 
 const OwnProfile = function OwnProfile( props : Props): ReactElement {
   // TODO 出品数・フォロワー数・フォロー数・星レート・レビュー数を実装
   const userInfo = 
-{
-  rating: 2.4,
-  reviewNum: 20,
-  saleNum: 3,
-  followerNum: 20,
-  followNum: 5,
-};
+  {
+    username: props.username, 
+    selfIntroduction: props.selfIntroduction, 
+    thumbnailUrl: props.thumbnailUrl, 
+    gender: props.gender,
+    followCount: props.followCount,
+    followerCount: props.followerCount,
+    rating: props.rating,
+    reviewCount: 20,
+    saleCount: 3,
+  };
   const navigation = useNavigation();
+
+  const [hasGottonProfile, setHasGottonProfile] = useState(false);
+  const { getOwnProfile } = props.actions;
+
+  // OwnProfileをGetするとAuthを書き換えるので再レンダリングされる
+  // =>またゲットが呼ばれるの無限ループになるので、
+  // Booleanを入れて制御。他にいい案あれば募集
+  if(!hasGottonProfile){
+    setHasGottonProfile(true);
+    getOwnProfile(props.id)
+  }
+
   return (
     <View style={styles.container}>
       <HeaderWithBackButton
@@ -49,13 +70,13 @@ const OwnProfile = function OwnProfile( props : Props): ReactElement {
         onPress={()=>navigation.goBack()}
       />
       <ProfileViewGroup
-        name={props.username}
+        name={userInfo.username}
         avatarUrl={props.thumbnailUrl}
-        rating={userInfo.rating}
-        reviewNum={userInfo.reviewNum}
-        saleNum={userInfo.saleNum}
-        followerNum={userInfo.followerNum}
-        followNum={userInfo.followNum}
+        rating={props.rating}
+        reviewCount={userInfo.reviewCount}
+        saleCount={userInfo.saleCount}
+        followerCount={props.followerCount}
+        followCount={props.followCount}
         buttonTitle={'プロフィールを編集'}
         handleClick={() => navigation.navigate('ProfileEdit')}
       />
