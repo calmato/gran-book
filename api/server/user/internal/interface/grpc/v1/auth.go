@@ -30,10 +30,10 @@ func (s *AuthServer) GetAuth(ctx context.Context, req *pb.EmptyUser) (*pb.AuthRe
 // CreateAuth - ユーザ登録
 func (s *AuthServer) CreateAuth(ctx context.Context, req *pb.CreateAuthRequest) (*pb.AuthResponse, error) {
 	in := &input.CreateAuth{
-		Username:             req.Username,
-		Email:                req.Email,
-		Password:             req.Password,
-		PasswordConfirmation: req.PasswordConfirmation,
+		Username:             req.GetUsername(),
+		Email:                req.GetEmail(),
+		Password:             req.GetPassword(),
+		PasswordConfirmation: req.GetPasswordConfirmation(),
 	}
 
 	u, err := s.AuthApplication.Create(ctx, in)
@@ -53,7 +53,7 @@ func (s *AuthServer) UpdateAuthEmail(ctx context.Context, req *pb.UpdateAuthEmai
 	}
 
 	in := &input.UpdateAuthEmail{
-		Email: req.Email,
+		Email: req.GetEmail(),
 	}
 
 	err = s.AuthApplication.UpdateEmail(ctx, in, u)
@@ -75,8 +75,8 @@ func (s *AuthServer) UpdateAuthPassword(
 	}
 
 	in := &input.UpdateAuthPassword{
-		Password:             req.Password,
-		PasswordConfirmation: req.PasswordConfirmation,
+		Password:             req.GetPassword(),
+		PasswordConfirmation: req.GetPasswordConfirmation(),
 	}
 
 	err = s.AuthApplication.UpdatePassword(ctx, in, u)
@@ -98,10 +98,10 @@ func (s *AuthServer) UpdateAuthProfile(
 	}
 
 	in := &input.UpdateAuthProfile{
-		Username:         req.Username,
-		Gender:           req.Gender,
-		Thumbnail:        req.Thumbnail,
-		SelfIntroduction: req.SelfIntroduction,
+		Username:         req.GetUsername(),
+		Gender:           int(req.GetGender()),
+		Thumbnail:        req.GetThumbnail(),
+		SelfIntroduction: req.GetSelfIntroduction(),
 	}
 
 	err = s.AuthApplication.UpdateProfile(ctx, in, u)
@@ -123,16 +123,16 @@ func (s *AuthServer) UpdateAuthAddress(
 	}
 
 	in := &input.UpdateAuthAddress{
-		LastName:      req.LastName,
-		FirstName:     req.FirstName,
-		LastNameKana:  req.LastNameKana,
-		FirstNameKana: req.FirstNameKana,
-		PhoneNumber:   req.PhoneNumber,
-		PostalCode:    req.PostalCode,
-		Prefecture:    req.Prefecture,
-		City:          req.City,
-		AddressLine1:  req.AddressLine1,
-		AddressLine2:  req.AddressLine2,
+		LastName:      req.GetLastName(),
+		FirstName:     req.GetFirstName(),
+		LastNameKana:  req.GetLastNameKana(),
+		FirstNameKana: req.GetFirstNameKana(),
+		PhoneNumber:   req.GetPhoneNumber(),
+		PostalCode:    req.GetPostalCode(),
+		Prefecture:    req.GetPrefecture(),
+		City:          req.GetCity(),
+		AddressLine1:  req.GetAddressLine1(),
+		AddressLine2:  req.GetAddressLine2(),
 	}
 
 	err = s.AuthApplication.UpdateAddress(ctx, in, u)
@@ -148,10 +148,10 @@ func getAuthResponse(u *user.User) *pb.AuthResponse {
 	return &pb.AuthResponse{
 		Id:               u.ID,
 		Username:         u.Username,
-		Gender:           u.Gender,
+		Gender:           int32(u.Gender),
 		Email:            u.Email,
 		PhoneNumber:      u.PhoneNumber,
-		Role:             u.Role,
+		Role:             int32(u.Role),
 		ThumbnailUrl:     u.ThumbnailURL,
 		SelfIntroduction: u.SelfIntroduction,
 		LastName:         u.LastName,

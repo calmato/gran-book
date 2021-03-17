@@ -10,6 +10,7 @@ export interface IFollowListResponseUser {
   username: string
   thumbnailUrl: string
   selfIntroduction: string
+  isFollow: boolean
 }
 
 export interface IFollowerListResponse {
@@ -24,6 +25,7 @@ export interface IFollowerListResponseUser {
   username: string
   thumbnailUrl: string
   selfIntroduction: string
+  isFollow: boolean
 }
 
 export interface IUserProfileResponse {
@@ -44,10 +46,5 @@ export interface IUserProfileResponseProduct {
   id: number
   name: string
   thumbnail: string
-  authors: Array<IUserProfileResponseAuthor>
-}
-
-export interface IUserProfileResponseAuthor {
-  id: number
-  name: string
+  authors: Array<string>
 }

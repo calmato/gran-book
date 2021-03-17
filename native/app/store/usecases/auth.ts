@@ -1,13 +1,14 @@
 import { Dispatch } from 'redux';
 import { AxiosResponse } from 'axios';
 import Firebase from 'firebase';
-import axios from '~/lib/axios';
+import { internal, external} from '~/lib/axios';
 import firebase from '~/lib/firebase';
 import * as LocalStorage from '~/lib/local-storage';
 import { Auth } from '~/store/models';
 import { AppState } from '~/store/modules';
 import { setAuth, setProfile } from '~/store/modules/auth';
 import { IAuthResponse } from '~/types/response';
+import { AccountEditForm } from '~/types/forms';
 
 interface IAuth {
   user: Firebase.User
@@ -48,9 +49,23 @@ export function signInWithEmailAsync(email: string, password: string) {
   };
 }
 
+export function signOutAsync() {
+  return async(dispatch: Dispatch): Promise<void> => {
+    return await firebase
+      .auth()
+      .signOut()
+      .then(async () => {
+        dispatch(setAuth(Auth.initialState));
+      })
+      .catch((err: Error) => {
+        throw err;
+      });
+  };
+}
+
 export function signUpWithEmailAsync(email: string, password: string, passwordConfirmation: string, username: string) {
   return async (): Promise<void> => {
-    return await axios
+    return await internal
       .post('/v1/auth', {
         email,
         password,
@@ -68,7 +83,7 @@ export function signUpWithEmailAsync(email: string, password: string, passwordCo
 
 export function editPasswordAsync(password: string, passwordConfirmation: string) {
   return async (): Promise<void> => {
-    return await axios
+    return await internal
       .patch('/v1/auth/password', {
         password,
         passwordConfirmation,
@@ -82,9 +97,25 @@ export function editPasswordAsync(password: string, passwordConfirmation: string
   };
 }
 
+export function editAccountAsync(formData: AccountEditForm) {
+  return async (): Promise<void> => {
+    console.log('test');
+    return await internal
+      .patch('/v1/auth/address', {
+        formData
+      })
+      .then(async (res: AxiosResponse<IAuthResponse>) => {
+        console.log('debug', res);
+      })
+      .catch((err: Error) => {
+        throw err;
+      });
+  };
+}
+
 export function getAuthAsync() {
   return async (dispatch: Dispatch, getState: () => AppState): Promise<void> => {
-    return await axios
+    return await internal
       .get('/v1/auth')
       .then(async (res: AxiosResponse<IAuthResponse>) => {
         const {
@@ -193,6 +224,22 @@ function sendEmailVerification(): Promise<void> {
   });
 }
 
+export function editEmailAsync(email: string) {
+  return async (): Promise<void> => {
+    return await axios
+      .patch('/v1/auth/email', {
+        email
+      })
+      .then(async (res: AxiosResponse<IAuthResponse>) => {
+        console.log('debug', res);
+      })
+      .catch((err: Error) => {
+        throw err;
+      });
+  };
+}
+  
+  
 export function profileEditAsync(username: string, gender: number, thumbnail: string | undefined, selfIntroduction: string) {
   return async (dispatch: Dispatch, getState: () => AppState): Promise<void> => { 
     return await axios
@@ -253,5 +300,4 @@ export function profileEditAsync(username: string, gender: number, thumbnail: st
         throw err;
       });
   };
-
 }

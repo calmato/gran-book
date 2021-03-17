@@ -293,7 +293,7 @@ func TestUserService_ListCount(t *testing.T) {
 	testCases := map[string]struct {
 		Query    *domain.ListQuery
 		Expected struct {
-			Count int64
+			Count int
 			Error error
 		}
 	}{
@@ -305,7 +305,7 @@ func TestUserService_ListCount(t *testing.T) {
 				Conditions: []*domain.QueryCondition{},
 			},
 			Expected: struct {
-				Count int64
+				Count int
 				Error error
 			}{
 				Count: 1,
@@ -349,16 +349,16 @@ func TestUserService_ListFriendCount(t *testing.T) {
 	testCases := map[string]struct {
 		UID      string
 		Expected struct {
-			FollowCount   int64
-			FollowerCount int64
+			FollowCount   int
+			FollowerCount int
 			Error         error
 		}
 	}{
 		"ok": {
 			UID: "00000000-0000-0000-0000-000000000000",
 			Expected: struct {
-				FollowCount   int64
-				FollowerCount int64
+				FollowCount   int
+				FollowerCount int
 				Error         error
 			}{
 				FollowCount:   1,
@@ -514,7 +514,7 @@ func TestUserService_ShowRelationship(t *testing.T) {
 	current := time.Now()
 
 	testCases := map[string]struct {
-		ID       int64
+		ID       int
 		Expected struct {
 			Relationship *user.Relationship
 			Error        error
@@ -627,7 +627,7 @@ func TestUserService_ShowRelationshipByUID(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		var fid int64
+		var fid int
 		if tc.Expected.Relationship != nil {
 			fid = tc.Expected.Relationship.ID
 		}
@@ -896,7 +896,7 @@ func TestUserService_UpdatePassword(t *testing.T) {
 
 func TestUserService_DeleteRelationship(t *testing.T) {
 	testCases := map[string]struct {
-		ID       int64
+		ID       int
 		Expected error
 	}{
 		"ok": {
@@ -1013,8 +1013,8 @@ func TestUserService_IsFriend(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		var followID int64
-		var followerID int64
+		var followID int
+		var followerID int
 
 		if tc.Expected.IsFollow {
 			followID = 1

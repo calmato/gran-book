@@ -65,7 +65,7 @@ func (v *userDomainValidation) uniqueCheckEmail(ctx context.Context, id string, 
 }
 
 func (v *userDomainValidation) uniqueCheckRelationship(
-	ctx context.Context, id int64, followID string, followerID string,
+	ctx context.Context, id int, followID string, followerID string,
 ) error {
 	if followID == "" || followerID == "" {
 		return nil

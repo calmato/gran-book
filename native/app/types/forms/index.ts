@@ -30,3 +30,16 @@ export type PasswordEditForm = {
   password: string,
   passwordConfirmation: string,
 }
+
+export type AccountEditForm = {
+    firstName: string,
+    lastName: string,
+    firstNameKana: string,
+    lastNameKana: string,
+    phoneNumber: string,
+    postalCode: string,
+    prefecture: string,
+    city: string,
+    addressLine1: string,
+    addressLine2: string,
+}

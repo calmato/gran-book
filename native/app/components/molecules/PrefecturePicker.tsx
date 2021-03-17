@@ -2,18 +2,24 @@ import React, { ReactElement } from 'react';
 import { StyleSheet, View } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 
+interface Props {
+  onValueChange: (value: string) => string | void | undefined
+  value: string | undefined,
+}
+
 const styles = StyleSheet.create({
   prefectureArea: {
     width: '100%'
   }
 });
 
-const PrefecturePicker = function PrefecturePicker(props: any): ReactElement {
+const PrefecturePicker = function PrefecturePicker(props: Props): ReactElement {
   const label = '都道府県を選択してください';
   return (
     <View style={styles.prefectureArea}>
       <RNPickerSelect
-        onValueChange={(value) => console.log(value)}
+        onValueChange={(value) => props.onValueChange(value)}
+        value={props.value}
         items={[
           { label: '北海道', value: '北海道' },
           { label: '青森県', value: '青森県' },

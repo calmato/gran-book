@@ -41,6 +41,8 @@ spec:
           value: '8080'
         - name: USER_API_URL
           value: 'user-api.default.svc.cluster.local:8080'
+        - name: BOOK_API_URL
+          value: 'book-api.default.svc.cluster.local:8080'
         - name: FIREBASE_PROJECT_ID
           valueFrom:
             secretKeyRef:

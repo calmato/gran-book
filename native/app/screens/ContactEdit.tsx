@@ -1,11 +1,10 @@
-import { StackNavigationProp } from '@react-navigation/stack';
 import React, { ReactElement } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
-import { RootStackParamList } from '~/types/navigation';
 import { COLOR } from '~~/constants/theme';
 import { ListItem } from 'react-native-elements';
 import { MaterialIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 const styles = StyleSheet.create({
   subtitle: {
@@ -29,15 +28,13 @@ const styles = StyleSheet.create({
   },
 });
 
-type ContactEditProp = StackNavigationProp<RootStackParamList, 'ContactEdit'>;
-
 interface Props {
-  navigation: ContactEditProp
+  email: string
 }
 
 const ContactEdit = function ContactEdit(props: Props): ReactElement {
-  const navigation = props.navigation;
-  const statusDefault = 'メールアドレス未登録';
+  const navigation = useNavigation();
+  const statusDefault = props.email ? props.email : 'メールアドレス未登録';
   return (
     <View>
       <HeaderWithBackButton
@@ -46,7 +43,11 @@ const ContactEdit = function ContactEdit(props: Props): ReactElement {
       />
       <Text style={styles.subtitle}>現在のメールアドレス</Text>
       <Text style={styles.mailStatus}>{statusDefault}</Text>
-      <ListItem style={{ marginTop: 5 }} bottomDivider >
+      <ListItem 
+        style={{ marginTop: 5 }} 
+        bottomDivider 
+        onPress={()=>navigation.navigate('EmailEdit')}
+      >
         <ListItem.Content>
           <Text style={styles.textStyle}>メールアドレスの変更</Text>
         </ListItem.Content>
