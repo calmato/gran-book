@@ -61,17 +61,26 @@ const OwnProfile = function OwnProfile( props : Props): ReactElement {
   const navigation = useNavigation();
 
   const [hasGottonProfile, setHasGottonProfile] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { getOwnProfile } = props.actions;
+
+  const handleGetOwnProfile = () => {
+    setIsLoading(true)
+    getOwnProfile(props.id)
+    .then(() => {
+      setIsLoading(false)
+    })
+    .catch((err) => {
+      console.log('debug', err);
+    });
+  }
 
   // OwnProfileをGetするとAuthを書き換えるので再レンダリングされる
   // =>またゲットが呼ばれるの無限ループになるので、
   // Booleanを入れて制御。他にいい案あれば募集
   if(!hasGottonProfile){
     setHasGottonProfile(true);
-    getOwnProfile(props.id)
-      .catch((err) => {
-        console.log('debug', err);
-      });
+    handleGetOwnProfile();
   }
 
   return (
@@ -83,10 +92,8 @@ const OwnProfile = function OwnProfile( props : Props): ReactElement {
       <ScrollView
         refreshControl={
           <RefreshControl
-            refreshing={false}
-            onRefresh={
-              () => getOwnProfile(props.id)
-            } 
+            refreshing={isLoading}
+            onRefresh={() => handleGetOwnProfile()} 
           />
         }
       >
