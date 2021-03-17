@@ -69,9 +69,9 @@ const OwnProfile = function OwnProfile( props : Props): ReactElement {
   if(!hasGottonProfile){
     setHasGottonProfile(true);
     getOwnProfile(props.id)
-    .catch((err) => {
-      console.log('debug', err);
-    });
+      .catch((err) => {
+        console.log('debug', err);
+      });
   }
 
   return (

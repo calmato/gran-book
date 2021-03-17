@@ -286,7 +286,7 @@ export function profileEditAsync(username: string, gender: number, thumbnail: st
 
 export function getOwnProfileAsync(id: string) {
   return async (dispatch: Dispatch): Promise<void> => {
-    console.log('http','getOwnProfile')
+    console.log('http','getOwnProfile');
     return await axios
       .get(`/v1/users/${id}/profile`)
       .then(async (res: AxiosResponse<IOwnOtherProfileResponse>) => {
@@ -318,11 +318,11 @@ export function getOwnProfileAsync(id: string) {
           products,
         };
 
-        dispatch(setOwnProfile(values))
+        dispatch(setOwnProfile(values));
 
       })
       .catch((err: Error) => {
-        console.log(err)
+        console.log(err);
         throw err;
       });
   };

@@ -13,7 +13,7 @@ export default function ConnectedOwnProfile(): JSX.Element {
   const actions = React.useMemo(
     () => ({
       getOwnProfile(id: string): Promise<void> {
-        return dispatch(getOwnProfileAsync(id))
+        return dispatch(getOwnProfileAsync(id));
       },
     }), [dispatch],
   );
