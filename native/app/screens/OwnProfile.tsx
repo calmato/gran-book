@@ -2,6 +2,8 @@ import { useNavigation } from '@react-navigation/native';
 import React, { ReactElement, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-elements';
+import { ScrollView } from 'react-native-gesture-handler';
+import BookList from '~/components/molecules/BookList';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import ProfileViewGroup from '~/components/organisms/ProfileViewGroup';
 import { COLOR } from '~~/constants/theme';
@@ -34,11 +36,16 @@ interface Props {
   followerCount: number,
   reviewCount: number,
   rating: number,
+  products: Array<
+    {id:number, 
+    name: string, 
+    thumbnailUrl: string, 
+    authors: Array<string>
+    }>,
   actions: { getOwnProfile: (id: string) => Promise<void>, },
 }
 
 const OwnProfile = function OwnProfile( props : Props): ReactElement {
-  // TODO 出品数・フォロワー数・フォロー数・星レート・レビュー数を実装
   const userInfo = 
   {
     username: props.username, 
@@ -49,7 +56,7 @@ const OwnProfile = function OwnProfile( props : Props): ReactElement {
     followerCount: props.followerCount,
     rating: props.rating,
     reviewCount: props.reviewCount,
-    saleCount: 3,
+    saleCount: props.products.length,
   };
   const navigation = useNavigation();
 
@@ -73,19 +80,22 @@ const OwnProfile = function OwnProfile( props : Props): ReactElement {
         title="プロフィール"
         onPress={()=>navigation.goBack()}
       />
-      <ProfileViewGroup
-        name={userInfo.username}
-        avatarUrl={props.thumbnailUrl}
-        rating={props.rating}
-        reviewCount={userInfo.reviewCount}
-        saleCount={userInfo.saleCount}
-        followerCount={props.followerCount}
-        followCount={props.followCount}
-        buttonTitle={'プロフィールを編集'}
-        handleClick={() => navigation.navigate('ProfileEdit')}
-      />
-      <Text style={styles.selfIntroduction}>{props.selfIntroduction}</Text>
-      <Text style={styles.title}>出品リスト</Text>
+      <ScrollView>
+        <ProfileViewGroup
+          name={userInfo.username}
+          avatarUrl={props.thumbnailUrl}
+          rating={props.rating}
+          reviewCount={userInfo.reviewCount}
+          saleCount={userInfo.saleCount}
+          followerCount={props.followerCount}
+          followCount={props.followCount}
+          buttonTitle={'プロフィールを編集'}
+          handleClick={() => navigation.navigate('ProfileEdit')}
+        />
+        <Text style={styles.selfIntroduction}>{props.selfIntroduction}</Text>
+        <Text style={styles.title}>出品リスト</Text>
+        <BookList />
+      </ScrollView>
     </View>
   );
 };

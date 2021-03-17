@@ -29,8 +29,8 @@ export interface Model {
       id:number, 
       name: string, 
       thumbnailUrl: string, 
-      authors: Array<{id: number, name: string}>}
-    >;
+      authors: Array<string>
+    }>;
 }
 
 export const initialState: Model = {
@@ -101,7 +101,12 @@ export interface OwnOtherProfileValues {
   followerCount: 0,
   reviewCount: 0,
   rating: 0,
-  products: [],
+  products: [{
+    id: number,
+    name: string,
+    thumbnailUrl: string,
+    authors: [string]
+  }],
 }
 
 // Function
