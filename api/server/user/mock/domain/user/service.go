@@ -96,10 +96,10 @@ func (mr *MockServiceMockRecorder) ListFollower(ctx, q, uid interface{}) *gomock
 }
 
 // ListCount mocks base method
-func (m *MockService) ListCount(ctx context.Context, q *domain.ListQuery) (int64, error) {
+func (m *MockService) ListCount(ctx context.Context, q *domain.ListQuery) (int, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListCount", ctx, q)
-	ret0, _ := ret[0].(int64)
+	ret0, _ := ret[0].(int)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -111,11 +111,11 @@ func (mr *MockServiceMockRecorder) ListCount(ctx, q interface{}) *gomock.Call {
 }
 
 // ListFriendCount mocks base method
-func (m *MockService) ListFriendCount(ctx context.Context, uid string) (int64, int64, error) {
+func (m *MockService) ListFriendCount(ctx context.Context, uid string) (int, int, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListFriendCount", ctx, uid)
-	ret0, _ := ret[0].(int64)
-	ret1, _ := ret[1].(int64)
+	ret0, _ := ret[0].(int)
+	ret1, _ := ret[1].(int)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
 }
@@ -142,7 +142,7 @@ func (mr *MockServiceMockRecorder) Show(ctx, uid interface{}) *gomock.Call {
 }
 
 // ShowRelationship mocks base method
-func (m *MockService) ShowRelationship(ctx context.Context, id int64) (*user.Relationship, error) {
+func (m *MockService) ShowRelationship(ctx context.Context, id int) (*user.Relationship, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ShowRelationship", ctx, id)
 	ret0, _ := ret[0].(*user.Relationship)
@@ -228,7 +228,7 @@ func (mr *MockServiceMockRecorder) UpdatePassword(ctx, uid, password interface{}
 }
 
 // DeleteRelationship mocks base method
-func (m *MockService) DeleteRelationship(ctx context.Context, id int64) error {
+func (m *MockService) DeleteRelationship(ctx context.Context, id int) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteRelationship", ctx, id)
 	ret0, _ := ret[0].(error)

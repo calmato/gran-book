@@ -49,7 +49,7 @@ func (a *adminApplication) List(ctx context.Context, in *input.ListAdmin) ([]*us
 			{
 				Field:    "role",
 				Operator: "BETWEEN",
-				Value:    []int64{1, 3},
+				Value:    []int{1, 3},
 			},
 		},
 	}
@@ -104,7 +104,7 @@ func (a *adminApplication) Search(ctx context.Context, in *input.SearchAdmin) ([
 			{
 				Field:    "role",
 				Operator: "BETWEEN",
-				Value:    []int64{1, 3},
+				Value:    []int{1, 3},
 			},
 			{
 				Field:    in.Field,

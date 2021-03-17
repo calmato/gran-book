@@ -111,10 +111,10 @@ func (mr *MockRepositoryMockRecorder) ListFollowerID(ctx, q interface{}) *gomock
 }
 
 // ListCount mocks base method
-func (m *MockRepository) ListCount(ctx context.Context, q *domain.ListQuery) (int64, error) {
+func (m *MockRepository) ListCount(ctx context.Context, q *domain.ListQuery) (int, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListCount", ctx, q)
-	ret0, _ := ret[0].(int64)
+	ret0, _ := ret[0].(int)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -126,10 +126,10 @@ func (mr *MockRepositoryMockRecorder) ListCount(ctx, q interface{}) *gomock.Call
 }
 
 // ListRelationshipCount mocks base method
-func (m *MockRepository) ListRelationshipCount(ctx context.Context, q *domain.ListQuery) (int64, error) {
+func (m *MockRepository) ListRelationshipCount(ctx context.Context, q *domain.ListQuery) (int, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListRelationshipCount", ctx, q)
-	ret0, _ := ret[0].(int64)
+	ret0, _ := ret[0].(int)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -156,7 +156,7 @@ func (mr *MockRepositoryMockRecorder) Show(ctx, uid interface{}) *gomock.Call {
 }
 
 // ShowRelationship mocks base method
-func (m *MockRepository) ShowRelationship(ctx context.Context, id int64) (*user.Relationship, error) {
+func (m *MockRepository) ShowRelationship(ctx context.Context, id int) (*user.Relationship, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ShowRelationship", ctx, id)
 	ret0, _ := ret[0].(*user.Relationship)
@@ -227,7 +227,7 @@ func (mr *MockRepositoryMockRecorder) UpdatePassword(ctx, uid, password interfac
 }
 
 // DeleteRelationship mocks base method
-func (m *MockRepository) DeleteRelationship(ctx context.Context, id int64) error {
+func (m *MockRepository) DeleteRelationship(ctx context.Context, id int) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteRelationship", ctx, id)
 	ret0, _ := ret[0].(error)
@@ -256,10 +256,10 @@ func (mr *MockRepositoryMockRecorder) GetUIDByEmail(ctx, email interface{}) *gom
 }
 
 // GetRelationshipIDByUID mocks base method
-func (m *MockRepository) GetRelationshipIDByUID(ctx context.Context, followID, followerID string) (int64, error) {
+func (m *MockRepository) GetRelationshipIDByUID(ctx context.Context, followID, followerID string) (int, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetRelationshipIDByUID", ctx, followID, followerID)
-	ret0, _ := ret[0].(int64)
+	ret0, _ := ret[0].(int)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

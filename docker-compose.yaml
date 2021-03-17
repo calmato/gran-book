@@ -113,6 +113,34 @@ services:
     depends_on:
       - mysql
 
+  book_api:
+    container_name: gran_book_book_api
+    build:
+      context: ./infra/docker/api/server/book
+      dockerfile: Dockerfile_development
+    working_dir: /go/src/github.com/calmato/gran-book/api/server/book
+    volumes:
+      - ./api/server/book:/go/src/github.com/calmato/gran-book/api/server/book:cached
+      - ./tmp/data/go/pkg/mod:/go/pkg/mod:delegated
+      - ./tmp/logs/book_api:/var/log/api:delegated
+    environment:
+      - PORT=8080
+      - LOG_PATH=/var/log/api
+      - LOG_LEVEL=${LOG_LEVEL}
+      - DB_HOST=${MYSQL_HOST}
+      - DB_PORT=${MYSQL_PORT}
+      - DB_USERNAME=${MYSQL_USERNAME}
+      - DB_PASSWORD=${MYSQL_PASSWORD}
+      - DB_DATABASE=${MYSQL_BOOK_DATABASE}
+      - GCP_SERVICE_KEY_JSON=${GCP_SERVICE_KEY_JSON}
+      - GCP_STORAGE_BUCKET_NAME=${GCP_STORAGE_BUCKET_NAME}
+    networks:
+      - api
+      - monitoring
+    command: realize start
+    depends_on:
+      - mysql
+
   # Database
   mysql:
     container_name: gran_book_mysql
@@ -166,6 +194,7 @@ services:
     working_dir: /go/src/github.com/calmato/gran-book/proto
     volumes:
       - ./proto:/go/src/github.com/calmato/gran-book/proto:cached
+      - ./api/server/book:/go/src/github.com/calmato/gran-book/api/server/book:cached
       - ./api/server/user:/go/src/github.com/calmato/gran-book/api/server/user:cached
       - ./api/gateway/admin:/go/src/github.com/calmato/gran-book/api/gateway/admin:cached
       - ./api/gateway/native:/go/src/github.com/calmato/gran-book/api/gateway/native:cached

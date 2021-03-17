@@ -49,6 +49,7 @@ export function listFollow(req: Request<any>, input: IListFollowInput): Promise<
             username: user.getUsername(),
             thumbnailUrl: user.getThumbnailUrl(),
             selfIntroduction: user.getSelfIntroduction(),
+            isFollow: user.getIsFollow(),
           }
         }
       )
@@ -87,6 +88,7 @@ export function listFollower(req: Request<any>, input: IListFollowerInput): Prom
             username: user.getUsername(),
             thumbnailUrl: user.getThumbnailUrl(),
             selfIntroduction: user.getSelfIntroduction(),
+            isFollow: user.getIsFollow(),
           }
         }
       )
