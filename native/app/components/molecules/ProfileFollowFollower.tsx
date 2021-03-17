@@ -18,28 +18,19 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  saleNum: number
-  followerNum: number
-  followNum: number
+  saleNum: number;
+  followerNum: number;
+  followNum: number;
 }
 
 const ProfileFollowFollwer = function ProfileFollowFollwer(props: Props): ReactElement {
   return (
     <View style={styles.container}>
-      <ProfileNumberOfThings
-        name={'出品数'}
-        numberOfThings={props.saleNum}
-      />
-      <View style={styles.divider}/>
-      <ProfileNumberOfThings
-        name={'フォロワー'}
-        numberOfThings={props.followerNum}
-      />
-      <View style={styles.divider}/>
-      <ProfileNumberOfThings
-        name={'フォロー中'}
-        numberOfThings={props.followNum}
-      />
+      <ProfileNumberOfThings name={'出品数'} numberOfThings={props.saleNum} />
+      <View style={styles.divider} />
+      <ProfileNumberOfThings name={'フォロワー'} numberOfThings={props.followerNum} />
+      <View style={styles.divider} />
+      <ProfileNumberOfThings name={'フォロー中'} numberOfThings={props.followNum} />
     </View>
   );
 };

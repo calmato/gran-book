@@ -16,14 +16,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-  }
+  },
 });
 
 interface Props {
   actions: {
-    signInWithEmail: (email: string, password: string) => Promise<void>,
-    getAuth: () => Promise<void>,
-  },
+    signInWithEmail: (email: string, password: string) => Promise<void>;
+    getAuth: () => Promise<void>;
+  };
 }
 
 const SignIn = function SignIn(props: Props): ReactElement {
@@ -33,7 +33,7 @@ const SignIn = function SignIn(props: Props): ReactElement {
 
   const [formData, setValue] = useState<SignInForm>({
     email: '',
-    password: ''
+    password: '',
   });
 
   const passwordError: boolean = useMemo((): boolean => {
@@ -44,26 +44,19 @@ const SignIn = function SignIn(props: Props): ReactElement {
     return !emailValidation(formData.email);
   }, [formData.email]);
 
-  const canSubmit = useMemo(():boolean => {
+  const canSubmit = useMemo((): boolean => {
     return !(emailError || passwordError);
   }, [emailError, passwordError]);
 
   const createAlertNotifySignupError = (code: number) =>
-    Alert.alert(
-      'サインインに失敗',
-      `${generateErrorMessage(code)}`,
-      [
-        {
-          text: 'OK',
-        }
-      ],
-    );
+    Alert.alert('サインインに失敗', `${generateErrorMessage(code)}`, [
+      {
+        text: 'OK',
+      },
+    ]);
 
   const handleSubmit = React.useCallback(async () => {
-    await signInWithEmail(
-      formData.email,
-      formData.password,
-    )
+    await signInWithEmail(formData.email, formData.password)
       .then(() => {
         return getAuth();
       })
@@ -77,31 +70,22 @@ const SignIn = function SignIn(props: Props): ReactElement {
 
   return (
     <View style={styles.container}>
-      <HeaderWithBackButton
-        title='サインイン'
-        onPress={() => navigation.goBack()}
-      />
+      <HeaderWithBackButton title="サインイン" onPress={() => navigation.goBack()} />
       <MailInput
-        onChangeText={(text) => setValue({ ...formData, email: text})}
+        onChangeText={(text) => setValue({ ...formData, email: text })}
         hasError={emailError}
         value={formData?.email}
         sameEmailError={false}
       />
       <PasswordInput
-        onChangeText={(text) => setValue({...formData, password: text})}
+        onChangeText={(text) => setValue({ ...formData, password: text })}
         value={formData.password}
         placeholder="パスワード"
         errorMessage="パスワードは6文字以上32文字以下でなければいけません．"
         hasError={passwordError}
       />
-      <Button
-        disabled={!canSubmit}
-        onPress={handleSubmit}
-        title="サインイン"
-      />
-      <ForgotPasswordButton
-        onPress={() => navigation.navigate('PasswordReset')}
-      />
+      <Button disabled={!canSubmit} onPress={handleSubmit} title="サインイン" />
+      <ForgotPasswordButton onPress={() => navigation.navigate('PasswordReset')} />
     </View>
   );
 };

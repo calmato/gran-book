@@ -3,14 +3,14 @@ import { StyleSheet, View } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 
 interface Props {
-  onValueChange: (value: string) => string | void | undefined
-  value: string | undefined,
+  onValueChange: (value: string) => string | void | undefined;
+  value: string | undefined;
 }
 
 const styles = StyleSheet.create({
   prefectureArea: {
-    width: '100%'
-  }
+    width: '100%',
+  },
 });
 
 const PrefecturePicker = function PrefecturePicker(props: Props): ReactElement {

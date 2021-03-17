@@ -15,7 +15,7 @@ const Stack = createStackNavigator<RootStackParamList>();
 
 function OnboadingRoute(): ReactElement {
   return (
-    <Stack.Navigator mode='modal' screenOptions={{ headerShown: false }}>
+    <Stack.Navigator mode="modal" screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Onboarding" component={Onboarding} />
       <Stack.Screen name="SignInSelect" component={AuthRoute} />
     </Stack.Navigator>
@@ -25,10 +25,10 @@ function OnboadingRoute(): ReactElement {
 // アプリ起動時、認証情報によってページ遷移
 function SwitchingStatus(status: UiContext.Status): ReactElement {
   switch (status) {
-  case UiContext.Status.AUTHORIZED:
-    return ServiceRoute();
-  default:
-    return OnboadingRoute();
+    case UiContext.Status.AUTHORIZED:
+      return ServiceRoute();
+    default:
+      return OnboadingRoute();
   }
 }
 
@@ -45,16 +45,13 @@ export default function MainRoute(): ReactElement {
     return result;
   };
 
-  return (
-    isReady ? (
-      <NavigationContainer>
-        {SwitchingStatus(uiContext.applicationState)}
-      </NavigationContainer>
-    ) : (
-      <AppLoading
-        startAsync={_cacheResourcesAsync}
-        onFinish={() => setReady(true)}
-        onError={console.warn}
-      />
-    ));
+  return isReady ? (
+    <NavigationContainer>{SwitchingStatus(uiContext.applicationState)}</NavigationContainer>
+  ) : (
+    <AppLoading
+      startAsync={_cacheResourcesAsync}
+      onFinish={() => setReady(true)}
+      onError={console.warn}
+    />
+  );
 }

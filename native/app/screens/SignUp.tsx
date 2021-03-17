@@ -24,8 +24,13 @@ const styles = StyleSheet.create({
 
 interface Props {
   actions: {
-    signUpWithEmail: (email: string, password: string, passwordConfirmation: string, username: string) => Promise<void>,
-  },
+    signUpWithEmail: (
+      email: string,
+      password: string,
+      passwordConfirmation: string,
+      username: string,
+    ) => Promise<void>;
+  };
 }
 
 const SignUp = function SignUp(props: Props): ReactElement {
@@ -48,24 +53,20 @@ const SignUp = function SignUp(props: Props): ReactElement {
     return formData.password.length < 6;
   }, [formData.password]);
 
-  const passwordConfirmationError: boolean = useMemo(():boolean => {
+  const passwordConfirmationError: boolean = useMemo((): boolean => {
     return formData.password !== formData.passwordConfirmation;
   }, [formData.password, formData.passwordConfirmation]);
 
-  const canSubmit = useMemo(():boolean => {
+  const canSubmit = useMemo((): boolean => {
     return !emailError && !passwordError && !passwordConfirmationError && formData.agreement;
   }, [emailError, passwordError, passwordConfirmationError, formData.agreement]);
 
   const createAlertNotifySignupError = (code: number) =>
-    Alert.alert(
-      'ユーザー登録に失敗',
-      `${generateErrorMessage(code)}`,
-      [
-        {
-          text: 'OK',
-        }
-      ],
-    );
+    Alert.alert('ユーザー登録に失敗', `${generateErrorMessage(code)}`, [
+      {
+        text: 'OK',
+      },
+    ]);
 
   const handleSubmit = React.useCallback(async () => {
     await signUpWithEmail(
@@ -81,49 +82,51 @@ const SignUp = function SignUp(props: Props): ReactElement {
         console.log('debug', err);
         createAlertNotifySignupError(err.code);
       });
-  }, [formData.email, formData.password, formData.passwordConfirmation, formData.username, signUpWithEmail, navigation]);
+  }, [
+    formData.email,
+    formData.password,
+    formData.passwordConfirmation,
+    formData.username,
+    signUpWithEmail,
+    navigation,
+  ]);
 
   return (
-    <View style={styles.container} >
-      <HeaderWithBackButton
-        title="ユーザー登録"
-        onPress={() => navigation.goBack()}
-      />
+    <View style={styles.container}>
+      <HeaderWithBackButton title="ユーザー登録" onPress={() => navigation.goBack()} />
       <MailInput
-        onChangeText={(text) => setValue({ ...formData, email: text})}
+        onChangeText={(text) => setValue({ ...formData, email: text })}
         hasError={emailError}
         value={formData?.email}
         sameEmailError={false}
       />
       <PasswordInput
-        onChangeText={(text) => setValue({...formData, password: text})}
+        onChangeText={(text) => setValue({ ...formData, password: text })}
         value={formData.password}
         placeholder="パスワード"
         errorMessage="パスワードは6文字以上でなければいけません．"
         hasError={passwordError}
       />
       <PasswordInput
-        onChangeText={(text) => setValue({...formData, passwordConfirmation: text})}
+        onChangeText={(text) => setValue({ ...formData, passwordConfirmation: text })}
         value={formData.passwordConfirmation}
         placeholder="パスワード(確認用)"
         errorMessage="パスワードが一致しません．"
         hasError={passwordConfirmationError}
       />
       <Input
-        leftIcon={
-          <Ionicons name="md-person" size={24} color={colors.grey0} />
-        }
-        onChangeText={(text) => setValue({...formData, username: text})}
+        leftIcon={<Ionicons name="md-person" size={24} color={colors.grey0} />}
+        onChangeText={(text) => setValue({ ...formData, username: text })}
         value={formData.username}
         placeholder="ニックネーム"
       />
       <CheckBox
         styles={styles.checkBox}
-        onPress={() => setValue({...formData, agreement: !formData.agreement})}
+        onPress={() => setValue({ ...formData, agreement: !formData.agreement })}
         checked={formData.agreement}
         title="利用規約に同意しました．"
       />
-      <Button disabled={!canSubmit} onPress={handleSubmit} title="登録する"/>
+      <Button disabled={!canSubmit} onPress={handleSubmit} title="登録する" />
     </View>
   );
 };

@@ -12,20 +12,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-  }
+  },
 });
 
-type PasswordResetProp = StackNavigationProp<AuthStackParamList, 'PasswordReset'>
+type PasswordResetProp = StackNavigationProp<AuthStackParamList, 'PasswordReset'>;
 
-interface Props{
-  navigation: PasswordResetProp,
+interface Props {
+  navigation: PasswordResetProp;
 }
 
 const PasswordReset = function PasswordReset(props: Props): ReactElement {
   const navigation = props.navigation;
 
   const [formData, setValue] = useState<PasswordResetForm>({
-    email: ''
+    email: '',
   });
 
   const emailError: boolean = useMemo((): boolean => {
@@ -38,20 +38,17 @@ const PasswordReset = function PasswordReset(props: Props): ReactElement {
 
   return (
     <View style={styles.container}>
-      <HeaderWithBackButton
-        title='パスワードリセット'
-        onPress={() => navigation.goBack()}
-      />
+      <HeaderWithBackButton title="パスワードリセット" onPress={() => navigation.goBack()} />
       <MailInput
-        onChangeText={(text) => setValue({ ...formData, email: text})}
+        onChangeText={(text) => setValue({ ...formData, email: text })}
         hasError={emailError}
         value={formData?.email}
         sameEmailError={false}
       />
       <Button
         disabled={hasError}
-        onPress={() => navigation.navigate('SignUpCheckEmail', {email: formData.email})}
-        title='メールを送信する'
+        onPress={() => navigation.navigate('SignUpCheckEmail', { email: formData.email })}
+        title="メールを送信する"
       />
     </View>
   );

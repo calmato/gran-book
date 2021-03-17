@@ -11,7 +11,7 @@ configure({ adapter: new Adapter() });
 
 describe('<SearchIcon />', () => {
   it('has default props', () => {
-    const wrapper = shallow(<SearchIcon/>);
+    const wrapper = shallow(<SearchIcon />);
     const icon = wrapper.find(Ionicons).get(0);
     expect(icon.props.name).toEqual('md-search');
     expect(icon.props.size).toEqual(18);

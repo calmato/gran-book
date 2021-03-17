@@ -8,10 +8,16 @@ export default function ConnectedSignUp(): JSX.Element {
 
   const actions = React.useMemo(
     () => ({
-      signUpWithEmail(email: string, password: string, passwordConfirmation: string, username: string): Promise<void> {
+      signUpWithEmail(
+        email: string,
+        password: string,
+        passwordConfirmation: string,
+        username: string,
+      ): Promise<void> {
         return dispatch(signUpWithEmailAsync(email, password, passwordConfirmation, username));
       },
-    }), [dispatch],
+    }),
+    [dispatch],
   );
 
   return <SignUp actions={actions} />;

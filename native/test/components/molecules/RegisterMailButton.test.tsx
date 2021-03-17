@@ -12,22 +12,20 @@ configure({ adapter: new Adapter() });
 
 describe('<RegisterMailButton />', () => {
   it('has default props', () => {
-    const wrapper = shallow(<RegisterMailButton
-      onPress={() => console.log('test')}
-    />);
+    const wrapper = shallow(<RegisterMailButton onPress={() => console.log('test')} />);
 
     const color = colors.grey0;
 
     const buttonStyle: ViewStyle = {
       borderColor: color,
       backgroundColor: '#00000000',
-      ...SOCIAL_BUTTON
+      ...SOCIAL_BUTTON,
     };
     const iconStyle: ViewStyle = {
-      marginRight: 10
+      marginRight: 10,
     };
     const fontStyle: TextStyle = {
-      color: color
+      color: color,
     };
 
     const button = wrapper.find(Button).get(0);
@@ -38,7 +36,7 @@ describe('<RegisterMailButton />', () => {
     expect(button.props.type).toEqual('outline');
 
     const icon = button.props.icon;
-    
+
     expect(icon.props.name).toEqual('md-mail');
     expect(icon.props.size).toEqual(24);
     expect(icon.props.color).toEqual(color);
