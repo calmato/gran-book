@@ -26,6 +26,7 @@ export default function ConnectedOwnProfile(): JSX.Element {
     gender={auth.gender}
     followCount={auth.followCount}
     followerCount={auth.followerCount}
+    reviewCount={auth.reviewCount}
     rating={auth.rating}
     actions={actions}
   />;

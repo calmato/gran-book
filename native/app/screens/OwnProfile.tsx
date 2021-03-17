@@ -32,6 +32,7 @@ interface Props {
   gender: number,
   followCount: number,
   followerCount: number,
+  reviewCount: number,
   rating: number,
   actions: { getOwnProfile: (id: string) => Promise<void>, },
 }
@@ -47,7 +48,7 @@ const OwnProfile = function OwnProfile( props : Props): ReactElement {
     followCount: props.followCount,
     followerCount: props.followerCount,
     rating: props.rating,
-    reviewCount: 20,
+    reviewCount: props.reviewCount,
     saleCount: 3,
   };
   const navigation = useNavigation();
@@ -61,6 +62,9 @@ const OwnProfile = function OwnProfile( props : Props): ReactElement {
   if(!hasGottonProfile){
     setHasGottonProfile(true);
     getOwnProfile(props.id)
+    .catch((err) => {
+      console.log('debug', err);
+    });
   }
 
   return (

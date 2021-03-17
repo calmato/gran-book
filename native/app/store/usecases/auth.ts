@@ -299,6 +299,7 @@ export function getOwnProfileAsync(id: string) {
           isFollower,
           followCount,
           followerCount,
+          reviewCount,
           rating,
           products,
         } = res.data;
@@ -312,6 +313,7 @@ export function getOwnProfileAsync(id: string) {
           isFollower,
           followCount,
           followerCount,
+          reviewCount,
           rating,
           products,
         };

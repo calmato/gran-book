@@ -23,6 +23,7 @@ export interface Model {
   readonly updatedAt: string;
   readonly followCount: number;
   readonly followerCount: number;
+  readonly reviewCount: number;
   readonly rating: number;
   readonly products: Array<{
       id:number, 
@@ -56,6 +57,7 @@ export const initialState: Model = {
   updatedAt: '',
   followCount: 0,
   followerCount: 0,
+  reviewCount: 0,
   rating: 0,
   products: [],
 };
@@ -97,6 +99,7 @@ export interface OwnOtherProfileValues {
   isFollower: boolean;
   followCount: 0,
   followerCount: 0,
+  reviewCount: 0,
   rating: 0,
   products: [],
 }
