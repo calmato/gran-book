@@ -16,7 +16,7 @@ describe('<TwitterButton />', () => {
 
     const buttonStyle: ViewStyle = {
       backgroundColor: COLOR.TWITTER,
-      ...SOCIAL_BUTTON
+      ...SOCIAL_BUTTON,
     };
     const iconStyle: ViewStyle = {
       marginRight: 10,
@@ -28,7 +28,7 @@ describe('<TwitterButton />', () => {
     expect(button.props.buttonStyle).toEqual(buttonStyle);
 
     const icon = button.props.icon;
-    
+
     expect(icon.props.name).toEqual('logo-twitter');
     expect(icon.props.size).toEqual(24);
     expect(icon.props.color).toEqual('white');

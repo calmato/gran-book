@@ -11,13 +11,12 @@ const HomeTabRoute = function HomeTabRoute(): ReactElement {
   return (
     <HomeTabStack.Navigator
       screenOptions={{
-        headerShown: false
+        headerShown: false,
       }}
-      initialRouteName='Home'
-    >
-      <HomeTabStack.Screen name='Home' component={Home} />
-      <HomeTabStack.Screen name='SearchResult' component={SearchResult} />
-      <HomeTabStack.Screen name='SearchResultBookShow' component={BookShow} />
+      initialRouteName="Home">
+      <HomeTabStack.Screen name="Home" component={Home} />
+      <HomeTabStack.Screen name="SearchResult" component={SearchResult} />
+      <HomeTabStack.Screen name="SearchResultBookShow" component={BookShow} />
     </HomeTabStack.Navigator>
   );
 };

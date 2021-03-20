@@ -8,12 +8,11 @@ export default function AccountSave(): JSX.Element {
   const dispatch = useReduxDispatch();
   const actions = React.useMemo(
     () => ({
-      accountEdit(formData: AccountEditForm) : Promise<void> {
-        return dispatch(editAccountAsync(
-          formData
-        ));
+      accountEdit(formData: AccountEditForm): Promise<void> {
+        return dispatch(editAccountAsync(formData));
       },
-    }), [dispatch],
+    }),
+    [dispatch],
   );
 
   return <AccountEdit actions={actions} />;

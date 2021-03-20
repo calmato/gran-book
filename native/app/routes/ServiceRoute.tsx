@@ -13,7 +13,7 @@ import UserInfoRoute from '~/routes/UserInfoRoute';
 const styles = StyleSheet.create({
   labelStyle: {
     fontWeight: 'bold',
-  }
+  },
 });
 
 function TabBarIcon(name: string, focused: boolean, size: number) {
@@ -21,24 +21,24 @@ function TabBarIcon(name: string, focused: boolean, size: number) {
   let iconName: any;
 
   switch (name) {
-  case 'ホーム':
-    iconName = 'home';
-    break;
-  case 'マイページ':
-    iconName = 'account';
-    break;
-  case '本棚':
-    iconName= 'bookshelf';
-    break;
-  case '本を出品':
-    iconName = 'plus-circle-outline';
-    break;
-  case '本を買う':
-    iconName = 'cart';
-    break;
-  default:
-    iconName = 'home';
-    break;
+    case 'ホーム':
+      iconName = 'home';
+      break;
+    case 'マイページ':
+      iconName = 'account';
+      break;
+    case '本棚':
+      iconName = 'bookshelf';
+      break;
+    case '本を出品':
+      iconName = 'plus-circle-outline';
+      break;
+    case '本を買う':
+      iconName = 'cart';
+      break;
+    default:
+      iconName = 'home';
+      break;
   }
 
   const color = focused ? COLOR.PRIMARY : COLOR.TEXT_GRAY;
@@ -58,9 +58,8 @@ const ServiceRoute = function ServiceRoute(): ReactElement {
       })}
       tabBarOptions={{
         activeTintColor: COLOR.TEXT_TITLE,
-        labelStyle: styles.labelStyle
-      }}
-    >
+        labelStyle: styles.labelStyle,
+      }}>
       <Tab.Screen name="ホーム" component={HomeTabRoute} />
       <Tab.Screen name="本棚" component={Bookshelf} />
       <Tab.Screen name="本を出品" component={Sale} />

@@ -7,31 +7,25 @@ import { COLOR, SOCIAL_BUTTON } from '~~/constants/theme';
 const styles = StyleSheet.create({
   buttonStyle: {
     backgroundColor: COLOR.TWITTER,
-    ...SOCIAL_BUTTON
+    ...SOCIAL_BUTTON,
   },
   iconStyle: {
-    marginRight: 10
-  }
+    marginRight: 10,
+  },
 });
 
 interface Props {
-  style?: ViewStyle
+  style?: ViewStyle;
 }
 
 const TwitterButton = function TwitterButton(props: Props): ReactElement {
   return (
     <Button
-      icon={
-        <Ionicons
-          name="logo-twitter"
-          size={24}
-          color="white"
-          style={styles.iconStyle}
-        />
-      }
+      icon={<Ionicons name="logo-twitter" size={24} color="white" style={styles.iconStyle} />}
       buttonStyle={styles.buttonStyle}
       containerStyle={props.style}
-      title="Twitterでサインイン" />
+      title="Twitterでサインイン"
+    />
   );
 };
 

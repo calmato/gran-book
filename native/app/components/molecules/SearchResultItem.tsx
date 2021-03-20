@@ -23,42 +23,31 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  book: Partial<ISearchResultItem>,
-  onPress: () => void,
+  book: Partial<ISearchResultItem>;
+  onPress: () => void;
 }
 
 const SearchResultItem = function SearchResultItem(props: Props): ReactElement {
   const book = props.book;
 
   return (
-    <ListItem
-      bottomDivider
-      onPress={props.onPress}
-    >
+    <ListItem bottomDivider onPress={props.onPress}>
       <Image
         source={
-          book.volumeInfo?.imageLinks?.smallThumbnail?
-            { uri: book.volumeInfo?.imageLinks?.smallThumbnail }
-            :
-            require('assets/logo.png')
+          book.volumeInfo?.imageLinks?.smallThumbnail
+            ? { uri: book.volumeInfo?.imageLinks?.smallThumbnail }
+            : require('assets/logo.png')
         }
         style={styles.bookCoverStyle}
         width={80}
         height={120}
       />
       <ListItem.Content>
-        <ListItem.Title
-          style={styles.bookTitle}
-          allowFontScaling
-        >
+        <ListItem.Title style={styles.bookTitle} allowFontScaling>
           {book.volumeInfo?.title}
         </ListItem.Title>
-        <ListItem.Subtitle
-          style={styles.authors}
-        >
-          {
-            book.volumeInfo?.authors? book.volumeInfo?.authors.join(' ') : '著者情報がありません'
-          }
+        <ListItem.Subtitle style={styles.authors}>
+          {book.volumeInfo?.authors ? book.volumeInfo?.authors.join(' ') : '著者情報がありません'}
         </ListItem.Subtitle>
       </ListItem.Content>
     </ListItem>

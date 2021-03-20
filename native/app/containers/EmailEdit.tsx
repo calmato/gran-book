@@ -18,8 +18,9 @@ export default function ConnectedEmailEdit(): JSX.Element {
       signOut(): Promise<void> {
         return dispatch(signOutAsync());
       },
-    }), [dispatch],
+    }),
+    [dispatch],
   );
 
-  return <EmailEdit email={auth.email} actions={actions}/>;
+  return <EmailEdit email={auth.email} actions={actions} />;
 }

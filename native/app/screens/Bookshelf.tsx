@@ -6,7 +6,7 @@ import HeaderText from '~/components/atoms/HeaderText';
 const Bookshelf = function Bookshelf(): ReactElement {
   return (
     <View>
-      <Header centerComponent={<HeaderText title="Gran Book"/>} />
+      <Header centerComponent={<HeaderText title="Gran Book" />} />
       <Text>本棚画面</Text>
     </View>
   );
