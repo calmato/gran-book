@@ -20,6 +20,16 @@ func NewBookService(bdv book.Validation, br book.Repository) book.Service {
 	}
 }
 
+func (s *bookService) ShowByIsbn(ctx context.Context, isbn string) (*book.Book, error) {
+	return s.bookRepository.ShowByIsbn(ctx, isbn)
+}
+
+func (s *bookService) ShowByTitleAndPublisher(
+	ctx context.Context, title string, publisher string,
+) (*book.Book, error) {
+	return s.bookRepository.ShowByTitleAndPublisher(ctx, title, publisher)
+}
+
 func (s *bookService) Create(ctx context.Context, b *book.Book) error {
 	err := s.bookDomainValidation.Book(ctx, b)
 	if err != nil {
@@ -101,4 +111,30 @@ func (s *bookService) CreatePublisher(ctx context.Context, p *book.Publisher) er
 	p.UpdatedAt = current
 
 	return s.bookRepository.CreatePublisher(ctx, p)
+}
+
+func (s *bookService) Update(ctx context.Context, b *book.Book) error {
+	err := s.bookDomainValidation.Book(ctx, b)
+	if err != nil {
+		return err
+	}
+
+	current := time.Now()
+
+	b.UpdatedAt = current
+
+	if b.Publisher != nil {
+		_ = s.CreatePublisher(ctx, b.Publisher)
+		b.PublisherID = b.Publisher.ID
+	}
+
+	for _, a := range b.Authors {
+		_ = s.CreateAuthor(ctx, a)
+	}
+
+	for _, c := range b.Categories {
+		_ = s.CreateCategory(ctx, c)
+	}
+
+	return s.bookRepository.Update(ctx, b)
 }
