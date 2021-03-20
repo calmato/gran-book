@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { ReactElement, useMemo, useState } from 'react';
-import { StyleSheet, View, Alert } from 'react-native';
+import { StyleSheet, View, Alert, ScrollView } from 'react-native';
 import { Button, Input } from 'react-native-elements';
 import ChangeIconGroup from '~/components/organisms/ChangeIconGroup';
 import ChangeNickname from '~/components/organisms/ChangeNickname';
@@ -8,6 +8,7 @@ import GenderRadioGroup from '~/components/organisms/GenderRadioGroup';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import { ProfileEditForm } from '~/types/forms';
 import { generateErrorMessage } from '~/lib/util/ErrorUtil';
+import { ImagePicker } from 'expo';
 
 const styles = StyleSheet.create({
   selfIntroduction: {
@@ -17,14 +18,15 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 20,
+    marginBottom: 20,
     alignSelf: 'center',
   },
 });
 
 interface Props {
-  username: string, 
-  selfIntroduction: string | '', 
-  thumbnailUrl: string | undefined, 
+  username: string,
+  selfIntroduction: string | '',
+  thumbnailUrl: string | undefined,
   gender: number,
   actions: {
     profileEdit: (username: string, gender: number, thumbnail: string | undefined, selfIntroduction: string) => Promise<void>,
@@ -59,6 +61,22 @@ const ProfileEdit = function ProfileEdit(props: Props): ReactElement {
     }
   };
 
+  const [image, setImage] = useState(null);
+  const pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.cancelled) {
+      setImage(result.uri);
+    }
+  };
+
   const createAlertNotifyProfileEditError = (code: number) =>
     Alert.alert(
       'ユーザー登録に失敗',
@@ -88,37 +106,41 @@ const ProfileEdit = function ProfileEdit(props: Props): ReactElement {
 
   return (
     <View>
-      <HeaderWithBackButton 
-        title='プロフィール編集'
-        onPress={()=>navigation.goBack()}
-      />
-      <ChangeIconGroup
-        avatarUrl={userInfo.avatar}
-        handleOnClicked={()=>undefined}
-      />
-      <ChangeNickname
-        value={userInfo.name}
-        handelOnChangeText={(text)=>setValue({...userInfo, name: text})}
-      />
-      <Input
-        style={styles.selfIntroduction}
-        placeholder={'自己紹介を入力してください'}
-        multiline={true}
-        maxLength={256}
-        onChangeText={(text)=>setValue({...userInfo, selfIntroduction: text})}
-        value={userInfo.selfIntroduction}
-      />
-      <GenderRadioGroup
-        handleOnChange={(value)=>handleGenderChange(value)}
-        data={[{label:'男性'}, {label:'女性'}, {label:'未選択'}]}
-        title={'性別'}
-        initial={(userInfo.gender === 0) ? 3 : userInfo.gender}
-      />
-      <Button
-        title={'保存する'}
-        onPress={handleSubmit}
-        containerStyle={styles.button} 
-      />
+      <ScrollView
+        stickyHeaderIndices={[0]}
+      >
+        <HeaderWithBackButton
+          title='プロフィール編集'
+          onPress={()=>navigation.goBack()}
+        />
+        <ChangeIconGroup
+          avatarUrl={userInfo.avatar}
+          handleOnClicked={pickImage}
+        />
+        <ChangeNickname
+          value={userInfo.name}
+          handelOnChangeText={(text)=>setValue({...userInfo, name: text})}
+        />
+        <Input
+          style={styles.selfIntroduction}
+          placeholder={'自己紹介を入力してください'}
+          multiline={true}
+          maxLength={256}
+          onChangeText={(text)=>setValue({...userInfo, selfIntroduction: text})}
+          value={userInfo.selfIntroduction}
+        />
+        <GenderRadioGroup
+          handleOnChange={(value)=>handleGenderChange(value)}
+          data={[{label:'男性'}, {label:'女性'}, {label:'未選択'}]}
+          title={'性別'}
+          initial={(userInfo.gender === 0) ? 3 : userInfo.gender}
+        />
+        <Button
+          title={'保存する'}
+          onPress={handleSubmit}
+          containerStyle={styles.button}
+        />
+      </ScrollView>
     </View>
   );
 };
