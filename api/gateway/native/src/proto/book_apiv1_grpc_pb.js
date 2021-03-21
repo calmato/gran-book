@@ -26,6 +26,17 @@ function deserialize_proto_BookResponse(buffer_arg) {
   return proto_book_apiv1_pb.BookResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_proto_CreateAndUpdateBooksRequest(arg) {
+  if (!(arg instanceof proto_book_apiv1_pb.CreateAndUpdateBooksRequest)) {
+    throw new Error('Expected argument of type proto.CreateAndUpdateBooksRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_CreateAndUpdateBooksRequest(buffer_arg) {
+  return proto_book_apiv1_pb.CreateAndUpdateBooksRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_proto_CreateBookRequest(arg) {
   if (!(arg instanceof proto_book_apiv1_pb.CreateBookRequest)) {
     throw new Error('Expected argument of type proto.CreateBookRequest');
@@ -35,17 +46,6 @@ function serialize_proto_CreateBookRequest(arg) {
 
 function deserialize_proto_CreateBookRequest(buffer_arg) {
   return proto_book_apiv1_pb.CreateBookRequest.deserializeBinary(new Uint8Array(buffer_arg));
-}
-
-function serialize_proto_CreateMultipleBooksRequest(arg) {
-  if (!(arg instanceof proto_book_apiv1_pb.CreateMultipleBooksRequest)) {
-    throw new Error('Expected argument of type proto.CreateMultipleBooksRequest');
-  }
-  return Buffer.from(arg.serializeBinary());
-}
-
-function deserialize_proto_CreateMultipleBooksRequest(buffer_arg) {
-  return proto_book_apiv1_pb.CreateMultipleBooksRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 
@@ -61,14 +61,14 @@ var BookServiceService = exports.BookServiceService = {
     responseSerialize: serialize_proto_BookResponse,
     responseDeserialize: deserialize_proto_BookResponse,
   },
-  createMultipleBooks: {
-    path: '/proto.BookService/CreateMultipleBooks',
+  createAndUpdateBooks: {
+    path: '/proto.BookService/CreateAndUpdateBooks',
     requestStream: false,
     responseStream: false,
-    requestType: proto_book_apiv1_pb.CreateMultipleBooksRequest,
+    requestType: proto_book_apiv1_pb.CreateAndUpdateBooksRequest,
     responseType: proto_book_apiv1_pb.BookListResponse,
-    requestSerialize: serialize_proto_CreateMultipleBooksRequest,
-    requestDeserialize: deserialize_proto_CreateMultipleBooksRequest,
+    requestSerialize: serialize_proto_CreateAndUpdateBooksRequest,
+    requestDeserialize: deserialize_proto_CreateAndUpdateBooksRequest,
     responseSerialize: serialize_proto_BookListResponse,
     responseDeserialize: deserialize_proto_BookListResponse,
   },

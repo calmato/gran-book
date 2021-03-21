@@ -5,7 +5,7 @@ option go_package = "github.com/calmato/gran-book/proto";
 
 service BookService {
   rpc CreateBook (CreateBookRequest) returns (BookResponse);
-  rpc CreateMultipleBooks (CreateMultipleBooksRequest) returns (BookListResponse);
+  rpc CreateAndUpdateBooks (CreateAndUpdateBooksRequest) returns (BookListResponse);
 }
 
 message CreateBookRequest {
@@ -26,7 +26,7 @@ message CreateBookRequest {
   repeated Category categories = 9;
 }
 
-message CreateMultipleBooksRequest {
+message CreateAndUpdateBooksRequest {
   message Author {
     string name = 1;
   }

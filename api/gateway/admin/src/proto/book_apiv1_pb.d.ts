@@ -107,26 +107,26 @@ export namespace CreateBookRequest {
 
 }
 
-export class CreateMultipleBooksRequest extends jspb.Message { 
+export class CreateAndUpdateBooksRequest extends jspb.Message { 
     clearItemsList(): void;
-    getItemsList(): Array<CreateMultipleBooksRequest.Item>;
-    setItemsList(value: Array<CreateMultipleBooksRequest.Item>): CreateMultipleBooksRequest;
-    addItems(value?: CreateMultipleBooksRequest.Item, index?: number): CreateMultipleBooksRequest.Item;
+    getItemsList(): Array<CreateAndUpdateBooksRequest.Item>;
+    setItemsList(value: Array<CreateAndUpdateBooksRequest.Item>): CreateAndUpdateBooksRequest;
+    addItems(value?: CreateAndUpdateBooksRequest.Item, index?: number): CreateAndUpdateBooksRequest.Item;
 
 
     serializeBinary(): Uint8Array;
-    toObject(includeInstance?: boolean): CreateMultipleBooksRequest.AsObject;
-    static toObject(includeInstance: boolean, msg: CreateMultipleBooksRequest): CreateMultipleBooksRequest.AsObject;
+    toObject(includeInstance?: boolean): CreateAndUpdateBooksRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: CreateAndUpdateBooksRequest): CreateAndUpdateBooksRequest.AsObject;
     static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
     static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-    static serializeBinaryToWriter(message: CreateMultipleBooksRequest, writer: jspb.BinaryWriter): void;
-    static deserializeBinary(bytes: Uint8Array): CreateMultipleBooksRequest;
-    static deserializeBinaryFromReader(message: CreateMultipleBooksRequest, reader: jspb.BinaryReader): CreateMultipleBooksRequest;
+    static serializeBinaryToWriter(message: CreateAndUpdateBooksRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): CreateAndUpdateBooksRequest;
+    static deserializeBinaryFromReader(message: CreateAndUpdateBooksRequest, reader: jspb.BinaryReader): CreateAndUpdateBooksRequest;
 }
 
-export namespace CreateMultipleBooksRequest {
+export namespace CreateAndUpdateBooksRequest {
     export type AsObject = {
-        itemsList: Array<CreateMultipleBooksRequest.Item.AsObject>,
+        itemsList: Array<CreateAndUpdateBooksRequest.Item.AsObject>,
     }
 
 
@@ -195,14 +195,14 @@ export namespace CreateMultipleBooksRequest {
         setPublishedOn(value: string): Item;
 
         clearAuthorsList(): void;
-        getAuthorsList(): Array<CreateMultipleBooksRequest.Author>;
-        setAuthorsList(value: Array<CreateMultipleBooksRequest.Author>): Item;
-        addAuthors(value?: CreateMultipleBooksRequest.Author, index?: number): CreateMultipleBooksRequest.Author;
+        getAuthorsList(): Array<CreateAndUpdateBooksRequest.Author>;
+        setAuthorsList(value: Array<CreateAndUpdateBooksRequest.Author>): Item;
+        addAuthors(value?: CreateAndUpdateBooksRequest.Author, index?: number): CreateAndUpdateBooksRequest.Author;
 
         clearCategoriesList(): void;
-        getCategoriesList(): Array<CreateMultipleBooksRequest.Category>;
-        setCategoriesList(value: Array<CreateMultipleBooksRequest.Category>): Item;
-        addCategories(value?: CreateMultipleBooksRequest.Category, index?: number): CreateMultipleBooksRequest.Category;
+        getCategoriesList(): Array<CreateAndUpdateBooksRequest.Category>;
+        setCategoriesList(value: Array<CreateAndUpdateBooksRequest.Category>): Item;
+        addCategories(value?: CreateAndUpdateBooksRequest.Category, index?: number): CreateAndUpdateBooksRequest.Category;
 
 
         serializeBinary(): Uint8Array;
@@ -224,8 +224,8 @@ export namespace CreateMultipleBooksRequest {
             version: string,
             publisher: string,
             publishedOn: string,
-            authorsList: Array<CreateMultipleBooksRequest.Author.AsObject>,
-            categoriesList: Array<CreateMultipleBooksRequest.Category.AsObject>,
+            authorsList: Array<CreateAndUpdateBooksRequest.Author.AsObject>,
+            categoriesList: Array<CreateAndUpdateBooksRequest.Category.AsObject>,
         }
     }
 
