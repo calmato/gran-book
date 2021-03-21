@@ -11,6 +11,8 @@ type Service interface {
 	CreateCategory(ctx context.Context, b *Category) error
 	CreatePublisher(ctx context.Context, b *Publisher) error
 	Update(ctx context.Context, b *Book) error
+	MultipleCreate(ctx context.Context, bs []*Book) error
+	MultipleUpdate(ctx context.Context, bs []*Book) error
 	Validation(ctx context.Context, b *Book) error
 	ValidationAuthor(ctx context.Context, a *Author) error
 	ValidationCategory(ctx context.Context, c *Category) error

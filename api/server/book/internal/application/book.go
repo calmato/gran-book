@@ -126,8 +126,18 @@ func (a *bookApplication) MultipleCreateAndUpdate(
 		bs = append(bs, b)
 	}
 
-	// TODO: 一括登録
-	// TODO: 一括更新
+	err = a.bookService.MultipleCreate(ctx, nonCreatedBooks)
+	if err != nil {
+		return nil, err
+	}
+
+	err = a.bookService.MultipleUpdate(ctx, updateRequiredBooks)
+	if err != nil {
+		return nil, err
+	}
+
+	bs = append(bs, nonCreatedBooks...)
+	bs = append(bs, updateRequiredBooks...)
 
 	return bs, nil
 }
