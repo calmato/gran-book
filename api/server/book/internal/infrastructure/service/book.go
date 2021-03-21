@@ -62,19 +62,7 @@ func (s *bookService) Create(ctx context.Context, b *book.Book) error {
 	b.CreatedAt = current
 	b.UpdatedAt = current
 
-	if b.Publisher != nil {
-		_ = s.CreatePublisher(ctx, b.Publisher)
-		b.PublisherID = b.Publisher.ID
-	}
-
-	for _, a := range b.Authors {
-		_ = s.CreateAuthor(ctx, a)
-	}
-
-	for _, c := range b.Categories {
-		_ = s.CreateCategory(ctx, c)
-	}
-
+	s.associate(ctx, b)
 	return s.bookRepository.Create(ctx, b)
 }
 
@@ -119,20 +107,33 @@ func (s *bookService) Update(ctx context.Context, b *book.Book) error {
 
 	b.UpdatedAt = current
 
-	if b.Publisher != nil {
-		_ = s.CreatePublisher(ctx, b.Publisher)
-		b.PublisherID = b.Publisher.ID
-	}
-
-	for _, a := range b.Authors {
-		_ = s.CreateAuthor(ctx, a)
-	}
-
-	for _, c := range b.Categories {
-		_ = s.CreateCategory(ctx, c)
-	}
-
+	s.associate(ctx, b)
 	return s.bookRepository.Update(ctx, b)
+}
+
+func (s *bookService) MultipleCreate(ctx context.Context, bs []*book.Book) error {
+	current := time.Now()
+
+	for _, b := range bs {
+		b.CreatedAt = current
+		b.UpdatedAt = current
+
+		s.associate(ctx, b)
+	}
+
+	return s.bookRepository.MultipleCreate(ctx, bs)
+}
+
+func (s *bookService) MultipleUpdate(ctx context.Context, bs []*book.Book) error {
+	current := time.Now()
+
+	for _, b := range bs {
+		b.UpdatedAt = current
+
+		s.associate(ctx, b)
+	}
+
+	return s.bookRepository.MultipleUpdate(ctx, bs)
 }
 
 func (s *bookService) Validation(ctx context.Context, b *book.Book) error {
@@ -149,4 +150,19 @@ func (s *bookService) ValidationCategory(ctx context.Context, c *book.Category) 
 
 func (s *bookService) ValidationPublisher(ctx context.Context, p *book.Publisher) error {
 	return s.bookDomainValidation.Publisher(ctx, p)
+}
+
+func (s *bookService) associate(ctx context.Context, b *book.Book) {
+	if b.Publisher != nil {
+		_ = s.CreatePublisher(ctx, b.Publisher)
+		b.PublisherID = b.Publisher.ID
+	}
+
+	for _, a := range b.Authors {
+		_ = s.CreateAuthor(ctx, a)
+	}
+
+	for _, c := range b.Categories {
+		_ = s.CreateCategory(ctx, c)
+	}
 }

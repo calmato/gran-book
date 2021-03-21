@@ -12,6 +12,8 @@ import (
 // BookApplication - Bookアプリケーションのインターフェース
 type BookApplication interface {
 	Create(ctx context.Context, in *input.BookItem) (*book.Book, error)
+	Update(ctx context.Context, in *input.BookItem) (*book.Book, error)
+	MultipleCreateAndUpdate(ctx context.Context, in *input.CreateAndUpdateBooks) ([]*book.Book, error)
 }
 
 type bookApplication struct {
@@ -121,11 +123,11 @@ func (a *bookApplication) MultipleCreateAndUpdate(
 			continue
 		}
 
-		// TODO: 一括登録
-		// TODO: 一括更新
-
 		bs = append(bs, b)
 	}
+
+	// TODO: 一括登録
+	// TODO: 一括更新
 
 	return bs, nil
 }

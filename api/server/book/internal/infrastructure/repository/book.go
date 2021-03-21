@@ -120,13 +120,7 @@ func (r *bookRepository) Create(ctx context.Context, b *book.Book) error {
 		return exception.ErrorInDatastore.New(err)
 	}
 
-	err = associateAuthor(tx, b)
-	if err != nil {
-		tx.Rollback()
-		return err
-	}
-
-	err = associateCategory(tx, b)
+	err = associate(tx, b)
 	if err != nil {
 		tx.Rollback()
 		return err
@@ -189,13 +183,7 @@ func (r *bookRepository) Update(ctx context.Context, b *book.Book) error {
 		return exception.ErrorInDatastore.New(err)
 	}
 
-	err = associateAuthor(tx, b)
-	if err != nil {
-		tx.Rollback()
-		return err
-	}
-
-	err = associateCategory(tx, b)
+	err = associate(tx, b)
 	if err != nil {
 		tx.Rollback()
 		return err
@@ -205,10 +193,75 @@ func (r *bookRepository) Update(ctx context.Context, b *book.Book) error {
 }
 
 func (r *bookRepository) MultipleCreate(ctx context.Context, bs []*book.Book) error {
-	return nil
+	tx := r.client.db.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	err := tx.Error
+	if err != nil {
+		return err
+	}
+
+	for _, b := range bs {
+		err = tx.Omit(clause.Associations).Create(&b).Error
+		if err != nil {
+			tx.Rollback()
+			return exception.ErrorInDatastore.New(err)
+		}
+
+		err = associate(tx, b)
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
+	}
+
+	return tx.Commit().Error
 }
 
 func (r *bookRepository) MultipleUpdate(ctx context.Context, bs []*book.Book) error {
+	tx := r.client.db.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	err := tx.Error
+	if err != nil {
+		return err
+	}
+
+	for _, b := range bs {
+		err = r.client.db.Omit(clause.Associations).Save(&b).Error
+		if err != nil {
+			return exception.ErrorInDatastore.New(err)
+		}
+
+		err = associate(tx, b)
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
+	}
+
+	return tx.Commit().Error
+}
+
+func associate(tx *gorm.DB, b *book.Book) error {
+	err := associateAuthor(tx, b)
+	if err != nil {
+		return err
+	}
+
+	err = associateCategory(tx, b)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
