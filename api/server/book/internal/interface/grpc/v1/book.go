@@ -24,25 +24,25 @@ func (s *BookServer) CreateBook(ctx context.Context, req *pb.CreateBookRequest) 
 		return nil, errorHandling(err)
 	}
 
-	as := make([]*input.CreateBookAuthor, len(req.Authors))
+	as := make([]*input.BookAuthor, len(req.Authors))
 	for i, v := range req.GetAuthors() {
-		a := &input.CreateBookAuthor{
+		a := &input.BookAuthor{
 			Name: v.GetName(),
 		}
 
 		as[i] = a
 	}
 
-	cs := make([]*input.CreateBookCategory, len(req.Categories))
+	cs := make([]*input.BookCategory, len(req.Categories))
 	for i, v := range req.GetCategories() {
-		c := &input.CreateBookCategory{
+		c := &input.BookCategory{
 			Name: v.GetName(),
 		}
 
 		cs[i] = c
 	}
 
-	in := &input.CreateBook{
+	in := &input.BookItem{
 		Title:        req.GetTitle(),
 		Description:  req.GetDescription(),
 		Isbn:         req.GetIsbn(),

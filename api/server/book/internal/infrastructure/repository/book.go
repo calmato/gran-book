@@ -2,10 +2,11 @@ package repository
 
 import (
 	"context"
+	"strings"
 
-	"github.com/calmato/gran-book/api/server/book/internal/domain"
 	"github.com/calmato/gran-book/api/server/book/internal/domain/book"
 	"github.com/calmato/gran-book/api/server/book/internal/domain/exception"
+	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
@@ -31,31 +32,107 @@ func (r *bookRepository) ShowByIsbn(ctx context.Context, isbn string) (*book.Boo
 	return b, nil
 }
 
-func (r *bookRepository) ShowByTitleAndPublisher(
-	ctx context.Context, title string, publisher string,
-) (*book.Book, error) {
-	b := &book.Book{}
+func (r *bookRepository) ShowPublisherByBookID(ctx context.Context, bookID int) (*book.Publisher, error) {
+	p := &book.Publisher{}
 
-	sql := r.client.db.Table("books").Joins("LEFT JOIN publishers ON publishers.id = books.publisher_id")
+	columns := []string{
+		"publishers.id",
+		"publishers.name",
+		"publishers.created_at",
+		"publishers.updated_at",
+	}
+	sql := r.client.db.
+		Table("publishers").
+		Select(strings.Join(columns, ", ")).
+		Joins("LEFT JOIN books ON publisher.id = books.publisher_id").
+		Where("books.id = ?", bookID)
 
-	err := sql.First(b, "books.title = ? AND publishers.name = ?", title, publisher).Error
+	err := sql.First(&p).Error
 	if err != nil {
-		return nil, exception.NotFound.New(err)
+		return nil, exception.ErrorInDatastore.New(err)
 	}
 
-	return b, nil
+	return nil, err
+}
+
+func (r *bookRepository) ShowAuthorsByBookID(ctx context.Context, bookID int) ([]*book.Author, error) {
+	as := []*book.Author{}
+
+	columns := []string{
+		"authors.id",
+		"authors.name",
+		"authors.created_at",
+		"authors.updated_at",
+	}
+	sql := r.client.db.
+		Table("authors").
+		Select(strings.Join(columns, ", ")).
+		Joins("LEFT JOIN authors_books ON authors_books.author_id = authors.id").
+		Where("authors_books.book_id = ?", bookID)
+
+	err := sql.Scan(&as).Error
+	if err != nil {
+		return nil, exception.ErrorInDatastore.New(err)
+	}
+
+	return nil, err
+}
+
+func (r *bookRepository) ShowCategoriesByBookID(ctx context.Context, bookID int) ([]*book.Category, error) {
+	cs := []*book.Category{}
+
+	columns := []string{
+		"categories.id",
+		"categories.name",
+		"categories.created_at",
+		"categories.updated_at",
+	}
+	sql := r.client.db.
+		Table("categories").
+		Select(strings.Join(columns, ", ")).
+		Joins("LEFT JOIN books_categories ON books_categories.category_id = categories.id").
+		Where("books_categories.book_id = ?", bookID)
+
+	err := sql.Scan(&cs).Error
+	if err != nil {
+		return nil, exception.ErrorInDatastore.New(err)
+	}
+
+	return nil, err
 }
 
 func (r *bookRepository) Create(ctx context.Context, b *book.Book) error {
-	err := r.client.db.Omit(clause.Associations).Create(&b).Error
+	tx := r.client.db.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	err := tx.Error
 	if err != nil {
+		return err
+	}
+
+	err = tx.Omit(clause.Associations).Create(&b).Error
+	if err != nil {
+		tx.Rollback()
 		return exception.ErrorInDatastore.New(err)
 	}
 
-	_ = r.AssociateAuthor(ctx, b)
-	_ = r.AssociateCategory(ctx, b)
+	err = associateAuthor(tx, b)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
 
-	return nil
+	err = associateCategory(tx, b)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return tx.Commit().Error
 }
 
 func (r *bookRepository) CreateAuthor(ctx context.Context, a *book.Author) error {
@@ -95,31 +172,51 @@ func (r *bookRepository) CreatePublisher(ctx context.Context, p *book.Publisher)
 }
 
 func (r *bookRepository) Update(ctx context.Context, b *book.Book) error {
-	err := r.client.db.Omit(clause.Associations).Save(&b).Error
+	tx := r.client.db.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	err := tx.Error
+	if err != nil {
+		return err
+	}
+
+	err = r.client.db.Omit(clause.Associations).Save(&b).Error
 	if err != nil {
 		return exception.ErrorInDatastore.New(err)
 	}
 
-	_ = r.AssociateAuthor(ctx, b)
-	_ = r.AssociateCategory(ctx, b)
+	err = associateAuthor(tx, b)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
 
+	err = associateCategory(tx, b)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return tx.Commit().Error
+}
+
+func (r *bookRepository) MultipleCreate(ctx context.Context, bs []*book.Book) error {
 	return nil
 }
 
-func (r *bookRepository) AssociateAuthor(ctx context.Context, b *book.Book) error {
+func (r *bookRepository) MultipleUpdate(ctx context.Context, bs []*book.Book) error {
+	return nil
+}
+
+func associateAuthor(tx *gorm.DB, b *book.Book) error {
 	beforeAuthorIDs := []int{}
-	q := &domain.ListQuery{
-		Conditions: []*domain.QueryCondition{{
-			Field:    "book_id",
-			Operator: "==",
-			Value:    b.ID,
-		}},
-	}
 
 	// 既存の関連レコード取得
-	sql := r.client.db.Table("authors_books").Select("author_id")
-	db := r.client.getListQuery(sql, q)
-
+	db := tx.Table("authors_books").Select("author_id").Where("book_id = ?", b.ID)
 	err := db.Scan(&beforeAuthorIDs).Error
 	if err != nil {
 		return exception.ErrorInDatastore.New(err)
@@ -134,8 +231,8 @@ func (r *bookRepository) AssociateAuthor(ctx context.Context, b *book.Book) erro
 	// 不要なもの削除
 	for _, authorID := range beforeAuthorIDs {
 		if !isContain(authorID, currentAuthorIDs) {
-			stmt := "DELETE FROM authors_books WHERE book_id = ? AND author_id = ?"
-			err := r.client.db.Exec(stmt, b.ID, authorID).Error
+			sql := "DELETE FROM authors_books WHERE book_id = ? AND author_id = ?"
+			err := tx.Exec(sql, b.ID, authorID).Error
 			if err != nil {
 				return exception.ErrorInDatastore.New(err)
 			}
@@ -155,7 +252,7 @@ func (r *bookRepository) AssociateAuthor(ctx context.Context, b *book.Book) erro
 			UpdatedAt: b.UpdatedAt,
 		}
 
-		err := r.client.db.Table("authors_books").Create(&ba).Error
+		err := tx.Table("authors_books").Create(&ba).Error
 		if err != nil {
 			return exception.ErrorInDatastore.New(err)
 		}
@@ -164,20 +261,11 @@ func (r *bookRepository) AssociateAuthor(ctx context.Context, b *book.Book) erro
 	return nil
 }
 
-func (r *bookRepository) AssociateCategory(ctx context.Context, b *book.Book) error {
+func associateCategory(tx *gorm.DB, b *book.Book) error {
 	beforeCategoryIDs := []int{}
-	q := &domain.ListQuery{
-		Conditions: []*domain.QueryCondition{{
-			Field:    "book_id",
-			Operator: "==",
-			Value:    b.ID,
-		}},
-	}
 
 	// 既存の関連レコード取得
-	sql := r.client.db.Table("books_categories").Select("category_id")
-	db := r.client.getListQuery(sql, q)
-
+	db := tx.Table("books_categories").Select("category_id").Where("book_id = ?", b.ID)
 	err := db.Scan(&beforeCategoryIDs).Error
 	if err != nil {
 		return exception.ErrorInDatastore.New(err)
@@ -192,8 +280,8 @@ func (r *bookRepository) AssociateCategory(ctx context.Context, b *book.Book) er
 	// 不要なもの削除
 	for _, categoryID := range beforeCategoryIDs {
 		if !isContain(categoryID, currentCategoryIDs) {
-			stmt := "DELETE FROM books_categories WHERE book_id = ? AND category_id = ?"
-			err := r.client.db.Exec(stmt, b.ID, categoryID).Error
+			sql := "DELETE FROM books_categories WHERE book_id = ? AND category_id = ?"
+			err := tx.Exec(sql, b.ID, categoryID).Error
 			if err != nil {
 				return exception.ErrorInDatastore.New(err)
 			}
@@ -213,7 +301,7 @@ func (r *bookRepository) AssociateCategory(ctx context.Context, b *book.Book) er
 			UpdatedAt:  b.UpdatedAt,
 		}
 
-		err := r.client.db.Table("books_categories").Create(&bc).Error
+		err := tx.Table("books_categories").Create(&bc).Error
 		if err != nil {
 			return exception.ErrorInDatastore.New(err)
 		}

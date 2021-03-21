@@ -35,7 +35,7 @@ router.post(
       publishedOn: publishedDate,
     }
 
-    if (industryIdentifiers.length > 0) {
+    if (industryIdentifiers?.length > 0) {
       input.isbn = industryIdentifiers[0].identifier
     }
 

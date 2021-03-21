@@ -10,14 +10,14 @@ export function createBook(req: Request<any>, input: ICreateBookInput): Promise<
   const request = new CreateBookRequest()
   const metadata = getGrpcMetadata(req)
 
-  const authors: CreateBookRequest.Author[] = input.authors.map((author: string) => {
+  const authors: CreateBookRequest.Author[] = input.authors?.map((author: string) => {
     const item = new CreateBookRequest.Author()
     item.setName(author)
 
     return item
   })
 
-  const categories: CreateBookRequest.Category[] = input.categories.map((category: string) => {
+  const categories: CreateBookRequest.Category[] = input.categories?.map((category: string) => {
     const item = new CreateBookRequest.Category()
     item.setName(category)
 
