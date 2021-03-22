@@ -11,7 +11,7 @@ type Book struct {
 	Isbn         string       `gorm:"size:16;not null"`
 	ThumbnailURL string       `gorm:""`
 	Version      string       `gorm:"size:64"`
-	PublishedOn  time.Time    `gorm:"not null"`
+	PublishedOn  time.Time    `gorm:""`
 	CreatedAt    time.Time    `gorm:"not null;<-:create"`
 	UpdatedAt    time.Time    `gorm:"not null"`
 	Publisher    *Publisher   `gorm:"foreignKey:PublisherID;constraint:OnDelete:SET NULL"`

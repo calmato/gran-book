@@ -114,10 +114,18 @@ func (r *bookRepository) Create(ctx context.Context, b *book.Book) error {
 		return err
 	}
 
-	err = tx.Omit(clause.Associations).Create(&b).Error
-	if err != nil {
-		tx.Rollback()
-		return exception.ErrorInDatastore.New(err)
+	if b.PublishedOn.IsZero() {
+		err = tx.Omit(clause.Associations, "published_on").Create(&b).Error
+		if err != nil {
+			tx.Rollback()
+			return exception.ErrorInDatastore.New(err)
+		}
+	} else {
+		err = tx.Omit(clause.Associations).Create(&b).Error
+		if err != nil {
+			tx.Rollback()
+			return exception.ErrorInDatastore.New(err)
+		}
 	}
 
 	err = associate(tx, b)
@@ -206,10 +214,18 @@ func (r *bookRepository) MultipleCreate(ctx context.Context, bs []*book.Book) er
 	}
 
 	for _, b := range bs {
-		err = tx.Omit(clause.Associations).Create(&b).Error
-		if err != nil {
-			tx.Rollback()
-			return exception.ErrorInDatastore.New(err)
+		if b.PublishedOn.IsZero() {
+			err = tx.Omit(clause.Associations, "published_on").Create(&b).Error
+			if err != nil {
+				tx.Rollback()
+				return exception.ErrorInDatastore.New(err)
+			}
+		} else {
+			err = tx.Omit(clause.Associations).Create(&b).Error
+			if err != nil {
+				tx.Rollback()
+				return exception.ErrorInDatastore.New(err)
+			}
 		}
 
 		err = associate(tx, b)

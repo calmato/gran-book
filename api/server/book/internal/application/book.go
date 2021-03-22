@@ -2,6 +2,7 @@ package application
 
 import (
 	"context"
+	"log"
 
 	"github.com/calmato/gran-book/api/server/book/internal/application/input"
 	"github.com/calmato/gran-book/api/server/book/internal/application/validation"
@@ -191,6 +192,8 @@ func (a *bookApplication) initializeBook(ctx context.Context, in *input.BookItem
 		Authors:      as,
 		Categories:   cs,
 	}
+
+	log.Printf("debug: %s -> %v\n", b.Title, b.PublishedOn)
 
 	err = a.bookService.Validation(ctx, b)
 	if err != nil {

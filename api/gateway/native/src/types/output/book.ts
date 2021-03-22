@@ -13,6 +13,10 @@ export interface IBookOutput {
   updatedAt: string
 }
 
+export interface IBookListOutput {
+  items: Array<IBookOutput>
+}
+
 export interface IBookOutputPublisher {
   id: number
   name: string
