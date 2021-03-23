@@ -215,13 +215,13 @@ func (r *bookRepository) MultipleCreate(ctx context.Context, bs []*book.Book) er
 
 	for _, b := range bs {
 		if b.PublishedOn.IsZero() {
-			err = tx.Omit(clause.Associations, "published_on").Create(&b).Error
+			err = tx.Omit(clause.Associations, "published_on").Create(b).Error
 			if err != nil {
 				tx.Rollback()
 				return exception.ErrorInDatastore.New(err)
 			}
 		} else {
-			err = tx.Omit(clause.Associations).Create(&b).Error
+			err = tx.Omit(clause.Associations).Create(b).Error
 			if err != nil {
 				tx.Rollback()
 				return exception.ErrorInDatastore.New(err)
@@ -252,7 +252,7 @@ func (r *bookRepository) MultipleUpdate(ctx context.Context, bs []*book.Book) er
 	}
 
 	for _, b := range bs {
-		err = r.client.db.Omit(clause.Associations).Save(&b).Error
+		err = r.client.db.Omit(clause.Associations).Save(b).Error
 		if err != nil {
 			return exception.ErrorInDatastore.New(err)
 		}

@@ -4,7 +4,13 @@ import { getGrpcMetadata } from '~/lib/grpc-metadata'
 import { bookClient } from '~/plugins/grpc'
 import { BookListResponse, BookResponse, CreateAndUpdateBooksRequest, CreateBookRequest } from '~/proto/book_apiv1_pb'
 import { IBookItemInput, ICreateAndUpdateBooksInput } from '~/types/input'
-import { IBookListOutput, IBookOutput, IBookOutputAuthor, IBookOutputCategory, IBookOutputPublisher } from '~/types/output'
+import {
+  IBookListOutput,
+  IBookOutput,
+  IBookOutputAuthor,
+  IBookOutputCategory,
+  IBookOutputPublisher,
+} from '~/types/output'
 
 export function createBook(req: Request<any>, input: IBookItemInput): Promise<IBookOutput> {
   const request = new CreateBookRequest()
