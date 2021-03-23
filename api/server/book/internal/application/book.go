@@ -2,7 +2,6 @@ package application
 
 import (
 	"context"
-	"log"
 
 	"github.com/calmato/gran-book/api/server/book/internal/application/input"
 	"github.com/calmato/gran-book/api/server/book/internal/application/validation"
@@ -106,7 +105,7 @@ func (a *bookApplication) MultipleCreateAndUpdate(
 		}
 
 		// 既存データとバージョンが異なっている場合のみ更新
-		if b.Version != v.Version && b.Publisher.Name != v.Publisher {
+		if b.Version != v.Version {
 			newBook, err := a.initializeBook(ctx, v)
 			if err != nil {
 				return nil, err
@@ -192,8 +191,6 @@ func (a *bookApplication) initializeBook(ctx context.Context, in *input.BookItem
 		Authors:      as,
 		Categories:   cs,
 	}
-
-	log.Printf("debug: %s -> %v\n", b.Title, b.PublishedOn)
 
 	err = a.bookService.Validation(ctx, b)
 	if err != nil {

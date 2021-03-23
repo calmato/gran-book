@@ -34,6 +34,66 @@ func (m *MockRepository) EXPECT() *MockRepositoryMockRecorder {
 	return m.recorder
 }
 
+// ShowByIsbn mocks base method
+func (m *MockRepository) ShowByIsbn(ctx context.Context, isbn string) (*book.Book, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ShowByIsbn", ctx, isbn)
+	ret0, _ := ret[0].(*book.Book)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ShowByIsbn indicates an expected call of ShowByIsbn
+func (mr *MockRepositoryMockRecorder) ShowByIsbn(ctx, isbn interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ShowByIsbn", reflect.TypeOf((*MockRepository)(nil).ShowByIsbn), ctx, isbn)
+}
+
+// ShowPublisherByBookID mocks base method
+func (m *MockRepository) ShowPublisherByBookID(ctx context.Context, bookID int) (*book.Publisher, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ShowPublisherByBookID", ctx, bookID)
+	ret0, _ := ret[0].(*book.Publisher)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ShowPublisherByBookID indicates an expected call of ShowPublisherByBookID
+func (mr *MockRepositoryMockRecorder) ShowPublisherByBookID(ctx, bookID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ShowPublisherByBookID", reflect.TypeOf((*MockRepository)(nil).ShowPublisherByBookID), ctx, bookID)
+}
+
+// ShowAuthorsByBookID mocks base method
+func (m *MockRepository) ShowAuthorsByBookID(ctx context.Context, bookID int) ([]*book.Author, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ShowAuthorsByBookID", ctx, bookID)
+	ret0, _ := ret[0].([]*book.Author)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ShowAuthorsByBookID indicates an expected call of ShowAuthorsByBookID
+func (mr *MockRepositoryMockRecorder) ShowAuthorsByBookID(ctx, bookID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ShowAuthorsByBookID", reflect.TypeOf((*MockRepository)(nil).ShowAuthorsByBookID), ctx, bookID)
+}
+
+// ShowCategoriesByBookID mocks base method
+func (m *MockRepository) ShowCategoriesByBookID(ctx context.Context, bookID int) ([]*book.Category, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ShowCategoriesByBookID", ctx, bookID)
+	ret0, _ := ret[0].([]*book.Category)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ShowCategoriesByBookID indicates an expected call of ShowCategoriesByBookID
+func (mr *MockRepositoryMockRecorder) ShowCategoriesByBookID(ctx, bookID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ShowCategoriesByBookID", reflect.TypeOf((*MockRepository)(nil).ShowCategoriesByBookID), ctx, bookID)
+}
+
 // Create mocks base method
 func (m *MockRepository) Create(ctx context.Context, b *book.Book) error {
 	m.ctrl.T.Helper()
@@ -102,4 +162,46 @@ func (m *MockRepository) CreatePublisher(ctx context.Context, p *book.Publisher)
 func (mr *MockRepositoryMockRecorder) CreatePublisher(ctx, p interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreatePublisher", reflect.TypeOf((*MockRepository)(nil).CreatePublisher), ctx, p)
+}
+
+// Update mocks base method
+func (m *MockRepository) Update(ctx context.Context, b *book.Book) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Update", ctx, b)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Update indicates an expected call of Update
+func (mr *MockRepositoryMockRecorder) Update(ctx, b interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockRepository)(nil).Update), ctx, b)
+}
+
+// MultipleCreate mocks base method
+func (m *MockRepository) MultipleCreate(ctx context.Context, bs []*book.Book) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "MultipleCreate", ctx, bs)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// MultipleCreate indicates an expected call of MultipleCreate
+func (mr *MockRepositoryMockRecorder) MultipleCreate(ctx, bs interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MultipleCreate", reflect.TypeOf((*MockRepository)(nil).MultipleCreate), ctx, bs)
+}
+
+// MultipleUpdate mocks base method
+func (m *MockRepository) MultipleUpdate(ctx context.Context, bs []*book.Book) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "MultipleUpdate", ctx, bs)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// MultipleUpdate indicates an expected call of MultipleUpdate
+func (mr *MockRepositoryMockRecorder) MultipleUpdate(ctx, bs interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MultipleUpdate", reflect.TypeOf((*MockRepository)(nil).MultipleUpdate), ctx, bs)
 }

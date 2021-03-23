@@ -9,13 +9,13 @@ type BookItem struct {
 	Version      string          `json:"version"`
 	Publisher    string          `json:"publisher" validate:"max=32"`
 	PublishedOn  string          `json:"publishedOn"`
-	Authors      []*BookAuthor   `json:"authors"`
-	Categories   []*BookCategory `json:"categories"`
+	Authors      []*BookAuthor   `json:"authors" validate:"dive"`
+	Categories   []*BookCategory `json:"categories" validate:"dive"`
 }
 
 // CreateAndUpdateBooks - 書籍一括登録/更新のリクエスト
 type CreateAndUpdateBooks struct {
-	Books []*BookItem `json:"books"`
+	Books []*BookItem `json:"books" validate:"dive"`
 }
 
 type BookAuthor struct {
