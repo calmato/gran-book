@@ -44,7 +44,7 @@ func (r *bookRepository) ShowPublisherByBookID(ctx context.Context, bookID int) 
 	sql := r.client.db.
 		Table("publishers").
 		Select(strings.Join(columns, ", ")).
-		Joins("LEFT JOIN books ON publisher.id = books.publisher_id").
+		Joins("LEFT JOIN books ON publishers.id = books.publisher_id").
 		Where("books.id = ?", bookID)
 
 	err := sql.First(&p).Error
@@ -52,7 +52,7 @@ func (r *bookRepository) ShowPublisherByBookID(ctx context.Context, bookID int) 
 		return nil, exception.ErrorInDatastore.New(err)
 	}
 
-	return nil, err
+	return p, nil
 }
 
 func (r *bookRepository) ShowAuthorsByBookID(ctx context.Context, bookID int) ([]*book.Author, error) {
@@ -75,7 +75,7 @@ func (r *bookRepository) ShowAuthorsByBookID(ctx context.Context, bookID int) ([
 		return nil, exception.ErrorInDatastore.New(err)
 	}
 
-	return nil, err
+	return as, nil
 }
 
 func (r *bookRepository) ShowCategoriesByBookID(ctx context.Context, bookID int) ([]*book.Category, error) {
@@ -98,7 +98,7 @@ func (r *bookRepository) ShowCategoriesByBookID(ctx context.Context, bookID int)
 		return nil, exception.ErrorInDatastore.New(err)
 	}
 
-	return nil, err
+	return cs, nil
 }
 
 func (r *bookRepository) Create(ctx context.Context, b *book.Book) error {
@@ -109,26 +109,25 @@ func (r *bookRepository) Create(ctx context.Context, b *book.Book) error {
 		}
 	}()
 
-	err := tx.Error
-	if err != nil {
+	if err := tx.Error; err != nil {
 		return err
 	}
 
 	if b.PublishedOn.IsZero() {
-		err = tx.Omit(clause.Associations, "published_on").Create(&b).Error
+		err := tx.Omit(clause.Associations, "published_on").Create(&b).Error
 		if err != nil {
 			tx.Rollback()
 			return exception.ErrorInDatastore.New(err)
 		}
 	} else {
-		err = tx.Omit(clause.Associations).Create(&b).Error
+		err := tx.Omit(clause.Associations).Create(&b).Error
 		if err != nil {
 			tx.Rollback()
 			return exception.ErrorInDatastore.New(err)
 		}
 	}
 
-	err = associate(tx, b)
+	err := associate(tx, b)
 	if err != nil {
 		tx.Rollback()
 		return err

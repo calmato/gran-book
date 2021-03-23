@@ -143,15 +143,6 @@ func (a *bookApplication) MultipleCreateAndUpdate(
 }
 
 func (a *bookApplication) initializeBook(ctx context.Context, in *input.BookItem) (*book.Book, error) {
-	p := &book.Publisher{
-		Name: in.Publisher,
-	}
-
-	err := a.bookService.ValidationPublisher(ctx, p)
-	if err != nil {
-		return nil, err
-	}
-
 	as := make([]*book.Author, len(in.Authors))
 	for i, v := range in.Authors {
 		author := &book.Author{
@@ -187,12 +178,24 @@ func (a *bookApplication) initializeBook(ctx context.Context, in *input.BookItem
 		ThumbnailURL: in.ThumbnailURL,
 		Version:      in.Version,
 		PublishedOn:  datetime.StringToDate(in.PublishedOn),
-		Publisher:    p,
 		Authors:      as,
 		Categories:   cs,
 	}
 
-	err = a.bookService.Validation(ctx, b)
+	if in.Publisher != "" {
+		p := &book.Publisher{
+			Name: in.Publisher,
+		}
+
+		err := a.bookService.ValidationPublisher(ctx, p)
+		if err != nil {
+			return nil, err
+		}
+
+		b.Publisher = p
+	}
+
+	err := a.bookService.Validation(ctx, b)
 	if err != nil {
 		return nil, err
 	}

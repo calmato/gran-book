@@ -34,8 +34,8 @@ router.post(
         isbn: '',
         thumbnailURL: '',
         version: contentVersion,
-        publisher: publisher,
         publishedOn: publishedDate,
+        publisher,
       }
 
       if (industryIdentifiers?.length > 0) {

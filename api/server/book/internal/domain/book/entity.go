@@ -20,6 +20,7 @@ type Book struct {
 	Categories   []*Category  `gorm:"many2many:books_categories"`
 }
 
+// TODO: 出版社テーブルはなくす!!
 // Publisher - 出版社エンティティ
 type Publisher struct {
 	ID        int       `gorm:"primaryKey;not null;autoIncrement;<-:create"`
