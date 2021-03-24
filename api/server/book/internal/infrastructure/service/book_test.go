@@ -29,22 +29,16 @@ func TestBookService_ShowByIsbn(t *testing.T) {
 			}{
 				Book: &book.Book{
 					ID:           1,
-					PublisherID:  1,
 					Title:        "テスト書籍",
 					Description:  "本の説明",
 					Isbn:         "978-1-234-56789-7",
 					ThumbnailURL: "",
 					Version:      "0.0.1",
+					Publisher:    "テスト出版社",
 					PublishedOn:  time.Date(2020, 1, 1, 0, 0, 0, 0, time.Local),
 					CreatedAt:    current,
 					UpdatedAt:    current,
-					Publisher: &book.Publisher{
-						ID:        1,
-						Name:      "テスト出版社",
-						CreatedAt: current,
-						UpdatedAt: current,
-					},
-					Bookshelfs: []*book.Bookshelf{},
+					Bookshelves:  []*book.Bookshelf{},
 					Authors: []*book.Author{{
 						ID:        1,
 						Name:      "テスト著者",
@@ -75,7 +69,6 @@ func TestBookService_ShowByIsbn(t *testing.T) {
 
 			brm := mock_book.NewMockRepository(ctrl)
 			brm.EXPECT().ShowByIsbn(ctx, tc.Isbn).Return(tc.Expected.Book, tc.Expected.Error)
-			brm.EXPECT().ShowPublisherByBookID(ctx, tc.Expected.Book.ID).Return(tc.Expected.Book.Publisher, nil)
 			brm.EXPECT().ShowAuthorsByBookID(ctx, tc.Expected.Book.ID).Return(tc.Expected.Book.Authors, nil)
 			brm.EXPECT().ShowCategoriesByBookID(ctx, tc.Expected.Book.ID).Return(tc.Expected.Book.Categories, nil)
 
@@ -105,19 +98,16 @@ func TestBookService_Create(t *testing.T) {
 		"ok": {
 			Book: &book.Book{
 				ID:           0,
-				PublisherID:  0,
 				Title:        "テスト",
 				Description:  "",
 				Isbn:         "",
 				ThumbnailURL: "",
 				Version:      "0.0.1",
+				Publisher:    "テスト出版社",
 				PublishedOn:  time.Date(2020, 1, 1, 0, 0, 0, 0, time.Local),
 				CreatedAt:    time.Time{},
 				UpdatedAt:    time.Time{},
-				Publisher: &book.Publisher{
-					Name: "テスト出版社",
-				},
-				Bookshelfs: []*book.Bookshelf{},
+				Bookshelves:  []*book.Bookshelf{},
 				Authors: []*book.Author{{
 					Name: "テスト著者",
 				}},
@@ -141,7 +131,6 @@ func TestBookService_Create(t *testing.T) {
 
 			brm := mock_book.NewMockRepository(ctrl)
 			brm.EXPECT().Create(ctx, tc.Book).Return(tc.Expected)
-			brm.EXPECT().CreatePublisher(ctx, tc.Book.Publisher).Return(tc.Expected)
 			for _, a := range tc.Book.Authors {
 				brm.EXPECT().CreateAuthor(ctx, a).Return(tc.Expected)
 			}
@@ -291,48 +280,6 @@ func TestBookService_CreateCategory(t *testing.T) {
 	}
 }
 
-func TestBookService_CreatePublisher(t *testing.T) {
-	testCases := map[string]struct {
-		Publisher *book.Publisher
-		Expected  error
-	}{
-		"ok": {
-			Publisher: &book.Publisher{
-				ID:        0,
-				Name:      "テスト出版社",
-				CreatedAt: time.Time{},
-				UpdatedAt: time.Time{},
-			},
-			Expected: nil,
-		},
-	}
-
-	for result, tc := range testCases {
-		t.Run(result, func(t *testing.T) {
-			ctx, cancel := context.WithCancel(context.Background())
-			defer cancel()
-
-			ctrl := gomock.NewController(t)
-			defer ctrl.Finish()
-
-			bvm := mock_book.NewMockValidation(ctrl)
-
-			brm := mock_book.NewMockRepository(ctrl)
-			brm.EXPECT().CreatePublisher(ctx, tc.Publisher).Return(tc.Expected)
-
-			t.Run(result, func(t *testing.T) {
-				target := NewBookService(bvm, brm)
-
-				err := target.CreatePublisher(ctx, tc.Publisher)
-				if !reflect.DeepEqual(err, tc.Expected) {
-					t.Fatalf("want %#v, but %#v", tc.Expected, err)
-					return
-				}
-			})
-		})
-	}
-}
-
 func TestBookService_Update(t *testing.T) {
 	current := time.Now()
 
@@ -343,22 +290,16 @@ func TestBookService_Update(t *testing.T) {
 		"ok": {
 			Book: &book.Book{
 				ID:           1,
-				PublisherID:  1,
 				Title:        "テスト書籍",
 				Description:  "本の説明",
 				Isbn:         "978-1-234-56789-7",
 				ThumbnailURL: "",
 				Version:      "0.0.1",
+				Publisher:    "テスト出版社",
 				PublishedOn:  time.Date(2020, 1, 1, 0, 0, 0, 0, time.Local),
 				CreatedAt:    current,
 				UpdatedAt:    current,
-				Publisher: &book.Publisher{
-					ID:        1,
-					Name:      "テスト出版社",
-					CreatedAt: current,
-					UpdatedAt: current,
-				},
-				Bookshelfs: []*book.Bookshelf{},
+				Bookshelves:  []*book.Bookshelf{},
 				Authors: []*book.Author{{
 					ID:        1,
 					Name:      "テスト著者",
@@ -388,7 +329,6 @@ func TestBookService_Update(t *testing.T) {
 
 			brm := mock_book.NewMockRepository(ctrl)
 			brm.EXPECT().Update(ctx, tc.Book).Return(tc.Expected)
-			brm.EXPECT().CreatePublisher(ctx, tc.Book.Publisher).Return(tc.Expected)
 			for _, a := range tc.Book.Authors {
 				brm.EXPECT().CreateAuthor(ctx, a).Return(tc.Expected)
 			}
@@ -418,19 +358,16 @@ func TestBookService_MultipleCreate(t *testing.T) {
 			Books: []*book.Book{
 				{
 					ID:           0,
-					PublisherID:  0,
 					Title:        "テスト",
 					Description:  "",
 					Isbn:         "",
 					ThumbnailURL: "",
 					Version:      "0.0.1",
+					Publisher:    "テスト出版社",
 					PublishedOn:  time.Date(2020, 1, 1, 0, 0, 0, 0, time.Local),
 					CreatedAt:    time.Time{},
 					UpdatedAt:    time.Time{},
-					Publisher: &book.Publisher{
-						Name: "テスト出版社",
-					},
-					Bookshelfs: []*book.Bookshelf{},
+					Bookshelves:  []*book.Bookshelf{},
 					Authors: []*book.Author{{
 						Name: "テスト著者",
 					}},
@@ -456,7 +393,6 @@ func TestBookService_MultipleCreate(t *testing.T) {
 			brm := mock_book.NewMockRepository(ctrl)
 			brm.EXPECT().MultipleCreate(ctx, tc.Books).Return(tc.Expected)
 			for _, b := range tc.Books {
-				brm.EXPECT().CreatePublisher(ctx, b.Publisher).Return(tc.Expected)
 				for _, a := range b.Authors {
 					brm.EXPECT().CreateAuthor(ctx, a).Return(tc.Expected)
 				}
@@ -489,22 +425,16 @@ func TestBookService_MultipleUpdate(t *testing.T) {
 			Books: []*book.Book{
 				{
 					ID:           1,
-					PublisherID:  1,
 					Title:        "テスト書籍",
 					Description:  "本の説明",
 					Isbn:         "978-1-234-56789-7",
 					ThumbnailURL: "",
 					Version:      "0.0.1",
+					Publisher:    "テスト出版社",
 					PublishedOn:  time.Date(2020, 1, 1, 0, 0, 0, 0, time.Local),
 					CreatedAt:    current,
 					UpdatedAt:    current,
-					Publisher: &book.Publisher{
-						ID:        1,
-						Name:      "テスト出版社",
-						CreatedAt: current,
-						UpdatedAt: current,
-					},
-					Bookshelfs: []*book.Bookshelf{},
+					Bookshelves:  []*book.Bookshelf{},
 					Authors: []*book.Author{{
 						ID:        1,
 						Name:      "テスト著者",
@@ -536,7 +466,6 @@ func TestBookService_MultipleUpdate(t *testing.T) {
 			brm := mock_book.NewMockRepository(ctrl)
 			brm.EXPECT().MultipleUpdate(ctx, tc.Books).Return(tc.Expected)
 			for _, b := range tc.Books {
-				brm.EXPECT().CreatePublisher(ctx, b.Publisher).Return(tc.Expected)
 				for _, a := range b.Authors {
 					brm.EXPECT().CreateAuthor(ctx, a).Return(tc.Expected)
 				}
@@ -566,19 +495,16 @@ func TestBookService_Validation(t *testing.T) {
 		"ok": {
 			Book: &book.Book{
 				ID:           0,
-				PublisherID:  0,
 				Title:        "テスト",
 				Description:  "",
 				Isbn:         "",
 				ThumbnailURL: "",
 				Version:      "0.0.1",
+				Publisher:    "テスト出版社",
 				PublishedOn:  time.Date(2020, 1, 1, 0, 0, 0, 0, time.Local),
 				CreatedAt:    time.Time{},
 				UpdatedAt:    time.Time{},
-				Publisher: &book.Publisher{
-					Name: "テスト出版社",
-				},
-				Bookshelfs: []*book.Bookshelf{},
+				Bookshelves:  []*book.Bookshelf{},
 				Authors: []*book.Author{{
 					Name: "テスト著者",
 				}},
@@ -685,45 +611,6 @@ func TestBookService_ValidationCategory(t *testing.T) {
 				target := NewBookService(bvm, brm)
 
 				err := target.ValidationCategory(ctx, tc.Category)
-				if !reflect.DeepEqual(err, tc.Expected) {
-					t.Fatalf("want %#v, but %#v", tc.Expected, err)
-					return
-				}
-			})
-		})
-	}
-}
-
-func TestBookService_ValidationPublisher(t *testing.T) {
-	testCases := map[string]struct {
-		Publisher *book.Publisher
-		Expected  error
-	}{
-		"ok": {
-			Publisher: &book.Publisher{
-				Name: "テスト出版社",
-			},
-			Expected: nil,
-		},
-	}
-
-	for result, tc := range testCases {
-		t.Run(result, func(t *testing.T) {
-			ctx, cancel := context.WithCancel(context.Background())
-			defer cancel()
-
-			ctrl := gomock.NewController(t)
-			defer ctrl.Finish()
-
-			bvm := mock_book.NewMockValidation(ctrl)
-			bvm.EXPECT().Publisher(ctx, tc.Publisher).Return(tc.Expected)
-
-			brm := mock_book.NewMockRepository(ctrl)
-
-			t.Run(result, func(t *testing.T) {
-				target := NewBookService(bvm, brm)
-
-				err := target.ValidationPublisher(ctx, tc.Publisher)
 				if !reflect.DeepEqual(err, tc.Expected) {
 					t.Fatalf("want %#v, but %#v", tc.Expected, err)
 					return

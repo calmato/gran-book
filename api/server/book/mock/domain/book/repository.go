@@ -49,21 +49,6 @@ func (mr *MockRepositoryMockRecorder) ShowByIsbn(ctx, isbn interface{}) *gomock.
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ShowByIsbn", reflect.TypeOf((*MockRepository)(nil).ShowByIsbn), ctx, isbn)
 }
 
-// ShowPublisherByBookID mocks base method
-func (m *MockRepository) ShowPublisherByBookID(ctx context.Context, bookID int) (*book.Publisher, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ShowPublisherByBookID", ctx, bookID)
-	ret0, _ := ret[0].(*book.Publisher)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// ShowPublisherByBookID indicates an expected call of ShowPublisherByBookID
-func (mr *MockRepositoryMockRecorder) ShowPublisherByBookID(ctx, bookID interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ShowPublisherByBookID", reflect.TypeOf((*MockRepository)(nil).ShowPublisherByBookID), ctx, bookID)
-}
-
 // ShowAuthorsByBookID mocks base method
 func (m *MockRepository) ShowAuthorsByBookID(ctx context.Context, bookID int) ([]*book.Author, error) {
 	m.ctrl.T.Helper()
@@ -148,20 +133,6 @@ func (m *MockRepository) CreateCategory(ctx context.Context, c *book.Category) e
 func (mr *MockRepositoryMockRecorder) CreateCategory(ctx, c interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateCategory", reflect.TypeOf((*MockRepository)(nil).CreateCategory), ctx, c)
-}
-
-// CreatePublisher mocks base method
-func (m *MockRepository) CreatePublisher(ctx context.Context, p *book.Publisher) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreatePublisher", ctx, p)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// CreatePublisher indicates an expected call of CreatePublisher
-func (mr *MockRepositoryMockRecorder) CreatePublisher(ctx, p interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreatePublisher", reflect.TypeOf((*MockRepository)(nil).CreatePublisher), ctx, p)
 }
 
 // Update mocks base method

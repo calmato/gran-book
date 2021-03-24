@@ -30,12 +30,8 @@ func TestBookApplication_Create(t *testing.T) {
 				Version:      "1.5.4.0.preview.3",
 				Publisher:    "テスト出版社",
 				PublishedOn:  "2021-01-01",
-				Authors: []*input.BookAuthor{{
-					Name: "テスト著者",
-				}},
-				Categories: []*input.BookCategory{{
-					Name: "Comics & Graphic Novels",
-				}},
+				Authors:      []string{"テスト著者"},
+				Categories:   []string{"Comics & Graphic Novels"},
 			},
 			Expected: struct {
 				Book  *book.Book
@@ -48,9 +44,7 @@ func TestBookApplication_Create(t *testing.T) {
 					ThumbnailURL: "",
 					Version:      "1.5.4.0.preview.3",
 					PublishedOn:  datetime.StringToDate("2021-01-01"),
-					Publisher: &book.Publisher{
-						Name: "テスト出版社",
-					},
+					Publisher:    "テスト出版社",
 					Authors: []*book.Author{{
 						Name: "テスト著者",
 					}},
@@ -78,7 +72,6 @@ func TestBookApplication_Create(t *testing.T) {
 		bsm.EXPECT().Validation(ctx, gomock.Any()).Return(tc.Expected.Error)
 		bsm.EXPECT().ValidationAuthor(ctx, gomock.Any()).Return(tc.Expected.Error)
 		bsm.EXPECT().ValidationCategory(ctx, gomock.Any()).Return(tc.Expected.Error)
-		bsm.EXPECT().ValidationPublisher(ctx, gomock.Any()).Return(tc.Expected.Error)
 
 		t.Run(result, func(t *testing.T) {
 			target := NewBookApplication(brv, bsm)
@@ -114,12 +107,8 @@ func TestBookApplication_Update(t *testing.T) {
 				Version:      "1.5.4.0.preview.3",
 				Publisher:    "テスト出版社",
 				PublishedOn:  "2021-01-01",
-				Authors: []*input.BookAuthor{{
-					Name: "テスト著者",
-				}},
-				Categories: []*input.BookCategory{{
-					Name: "Comics & Graphic Novels",
-				}},
+				Authors:      []string{"テスト著者"},
+				Categories:   []string{"Comics & Graphic Novels"},
 			},
 			Expected: struct {
 				Book  *book.Book
@@ -131,10 +120,8 @@ func TestBookApplication_Update(t *testing.T) {
 					Isbn:         "08881516881516315501",
 					ThumbnailURL: "",
 					Version:      "1.5.4.0.preview.3",
+					Publisher:    "テスト出版社",
 					PublishedOn:  datetime.StringToDate("2021-01-01"),
-					Publisher: &book.Publisher{
-						Name: "テスト出版社",
-					},
 					Authors: []*book.Author{{
 						Name: "テスト著者",
 					}},
@@ -163,7 +150,6 @@ func TestBookApplication_Update(t *testing.T) {
 		bsm.EXPECT().Validation(ctx, gomock.Any()).Return(tc.Expected.Error)
 		bsm.EXPECT().ValidationAuthor(ctx, gomock.Any()).Return(tc.Expected.Error)
 		bsm.EXPECT().ValidationCategory(ctx, gomock.Any()).Return(tc.Expected.Error)
-		bsm.EXPECT().ValidationPublisher(ctx, gomock.Any()).Return(tc.Expected.Error)
 
 		t.Run(result, func(t *testing.T) {
 			target := NewBookApplication(brv, bsm)
@@ -201,12 +187,8 @@ func TestBookApplication_MultipleCreateAndUpdate(t *testing.T) {
 						Version:      "1.5.5.0.preview.3",
 						Publisher:    "テスト出版社",
 						PublishedOn:  "2021-01-01",
-						Authors: []*input.BookAuthor{{
-							Name: "テスト著者",
-						}},
-						Categories: []*input.BookCategory{{
-							Name: "Comics & Graphic Novels",
-						}},
+						Authors:      []string{"テスト著者"},
+						Categories:   []string{"Comics & Graphic Novels"},
 					},
 				},
 			},
@@ -221,10 +203,8 @@ func TestBookApplication_MultipleCreateAndUpdate(t *testing.T) {
 						Isbn:         "08881516881516315501",
 						ThumbnailURL: "",
 						Version:      "1.5.4.0.preview.3",
+						Publisher:    "テスト出版社",
 						PublishedOn:  datetime.StringToDate("2021-01-01"),
-						Publisher: &book.Publisher{
-							Name: "テスト出版社",
-						},
 						Authors: []*book.Author{{
 							Name: "テスト著者",
 						}},
@@ -257,7 +237,6 @@ func TestBookApplication_MultipleCreateAndUpdate(t *testing.T) {
 		bsm.EXPECT().Validation(ctx, gomock.Any()).Return(tc.Expected.Error)
 		bsm.EXPECT().ValidationAuthor(ctx, gomock.Any()).Return(tc.Expected.Error)
 		bsm.EXPECT().ValidationCategory(ctx, gomock.Any()).Return(tc.Expected.Error)
-		bsm.EXPECT().ValidationPublisher(ctx, gomock.Any()).Return(tc.Expected.Error)
 
 		t.Run(result, func(t *testing.T) {
 			target := NewBookApplication(brv, bsm)
