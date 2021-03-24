@@ -12,3 +12,7 @@ export interface IBookResponse {
   createdAt: string
   updatedAt: string
 }
+
+export interface IBookListResponse {
+  books: Array<IBookResponse>
+}

@@ -18,7 +18,7 @@ func TestBookService_Book(t *testing.T) {
 		"ok": {
 			Book: &book.Book{
 				ID:           0,
-				PublisherID:  0,
+				Publisher:    "テスト出版社",
 				Title:        "テスト",
 				Description:  "",
 				Isbn:         "",
@@ -27,10 +27,7 @@ func TestBookService_Book(t *testing.T) {
 				PublishedOn:  time.Date(2020, 1, 1, 0, 0, 0, 0, time.Local),
 				CreatedAt:    time.Time{},
 				UpdatedAt:    time.Time{},
-				Publisher: &book.Publisher{
-					Name: "テスト出版社",
-				},
-				Bookshelfs: []*book.Bookshelf{},
+				Bookshelves:  []*book.Bookshelf{},
 				Authors: []*book.Author{{
 					Name: "テスト著者",
 				}},
@@ -168,43 +165,6 @@ func TestBookService_Category(t *testing.T) {
 				target := NewBookDomainValidation()
 
 				err := target.Category(ctx, tc.Category)
-				if !reflect.DeepEqual(err, tc.Expected) {
-					t.Fatalf("want %#v, but %#v", tc.Expected, err)
-					return
-				}
-			})
-		})
-	}
-}
-
-func TestBookService_Publisher(t *testing.T) {
-	testCases := map[string]struct {
-		Publisher *book.Publisher
-		Expected  error
-	}{
-		"ok": {
-			Publisher: &book.Publisher{
-				ID:        0,
-				Name:      "テスト出版社",
-				CreatedAt: time.Time{},
-				UpdatedAt: time.Time{},
-			},
-			Expected: nil,
-		},
-	}
-
-	for result, tc := range testCases {
-		t.Run(result, func(t *testing.T) {
-			ctx, cancel := context.WithCancel(context.Background())
-			defer cancel()
-
-			ctrl := gomock.NewController(t)
-			defer ctrl.Finish()
-
-			t.Run(result, func(t *testing.T) {
-				target := NewBookDomainValidation()
-
-				err := target.Publisher(ctx, tc.Publisher)
 				if !reflect.DeepEqual(err, tc.Expected) {
 					t.Fatalf("want %#v, but %#v", tc.Expected, err)
 					return
