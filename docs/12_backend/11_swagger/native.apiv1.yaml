@@ -325,7 +325,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/createBookRequest'
+              $ref: '#/components/schemas/createAndUpdateBooksRequest'
       responses:
         '200':
           description: A successful response.
