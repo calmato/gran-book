@@ -1,51 +1,61 @@
 import express, { NextFunction, Request, Response } from 'express'
-import { createBook } from '~/api'
-import { ICreateBookRequest } from '~/types/request'
-import { ICreateBookInput } from '~/types/input'
+import { createAndUpdateBooks } from '~/api'
+import { IBookItem, ICreateAndUpdateBooksRequest } from '~/types/request'
+import { IBookItemInput, ICreateAndUpdateBooksInput } from '~/types/input'
 import { GrpcError } from '~/types/exception'
-import { IBookOutput, IBookOutputAuthor, IBookOutputCategory } from '~/types/output'
-import { IBookResponse } from '~/types/response'
+import { IBookListOutput, IBookOutput } from '~/types/output'
+import { IBookListResponse, IBookResponse } from '~/types/response'
 
 const router = express.Router()
 
 router.post(
   '/',
-  async (req: Request, res: Response<IBookResponse>, next: NextFunction): Promise<void> => {
-    const {
-      title,
-      authors,
-      publisher,
-      publishedDate,
-      description,
-      industryIdentifiers,
-      categories,
-      contentVersion,
-      imageLinks,
-    } = req.body as ICreateBookRequest
+  async (req: Request, res: Response<IBookListResponse>, next: NextFunction): Promise<void> => {
+    const { items } = req.body as ICreateAndUpdateBooksRequest
 
-    const input: ICreateBookInput = {
-      title,
-      description,
-      authors,
-      categories,
-      isbn: '',
-      thumbnailURL: '',
-      version: contentVersion,
-      publisher: publisher,
-      publishedOn: publishedDate,
+    const itemInputs: IBookItemInput[] = items?.map((item: IBookItem) => {
+      const {
+        title,
+        authors,
+        publisher,
+        publishedDate,
+        description,
+        industryIdentifiers,
+        categories,
+        contentVersion,
+        imageLinks,
+      } = item?.volumeInfo
+
+      const input: IBookItemInput = {
+        title,
+        description,
+        authors,
+        categories,
+        isbn: '',
+        thumbnailURL: '',
+        version: contentVersion,
+        publishedOn: publishedDate,
+        publisher,
+      }
+
+      if (industryIdentifiers?.length > 0) {
+        input.isbn = industryIdentifiers[0].identifier
+      }
+
+      if (imageLinks) {
+        input.thumbnailURL = imageLinks.thumbnail || imageLinks.smallThumbnail || ''
+      }
+
+      return input
+    })
+
+    const input: ICreateAndUpdateBooksInput = {
+      items: itemInputs,
     }
 
-    if (industryIdentifiers.length > 0) {
-      input.isbn = industryIdentifiers[0].identifier
-    }
-
-    if (imageLinks) {
-      input.thumbnailURL = imageLinks.thumbnail || imageLinks.smallThumbnail || ''
-    }
-
-    await createBook(req, input)
-      .then((output: IBookOutput) => {
-        const response: IBookResponse = setBookResponse(output)
+    await createAndUpdateBooks(req, input)
+      .then((output: IBookListOutput) => {
+        const response: IBookListResponse = setBookListResponse(output)
         res.status(200).json(response)
       })
       .catch((err: GrpcError) => next(err))
@@ -53,16 +63,6 @@ router.post(
 )
 
 function setBookResponse(output: IBookOutput): IBookResponse {
-  const publisher: string = output.publisher?.name || ''
-
-  const authors: string[] = output.authors.map((author: IBookOutputAuthor) => {
-    return author.name
-  })
-
-  const categories: string[] = output.categories.map((category: IBookOutputCategory) => {
-    return category.name
-  })
-
   const response: IBookResponse = {
     id: output.id,
     title: output.title,
@@ -70,12 +70,24 @@ function setBookResponse(output: IBookOutput): IBookResponse {
     isbn: output.isbn,
     thumbnailUrl: output.thumbnailUrl,
     version: output.version,
+    publisher: output.publisher,
     publishedOn: output.publishedOn,
-    publisher,
-    authors,
-    categories,
+    authors: output.authors,
+    categories: output.categories,
     createdAt: output.createdAt,
     updatedAt: output.updatedAt,
+  }
+
+  return response
+}
+
+function setBookListResponse(output: IBookListOutput): IBookListResponse {
+  const books: IBookResponse[] = output.books?.map((item: IBookOutput) => {
+    return setBookResponse(item)
+  })
+
+  const response: IBookListResponse = {
+    books,
   }
 
   return response

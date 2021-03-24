@@ -24,25 +24,7 @@ func (s *BookServer) CreateBook(ctx context.Context, req *pb.CreateBookRequest) 
 		return nil, errorHandling(err)
 	}
 
-	as := make([]*input.CreateBookAuthor, len(req.Authors))
-	for i, v := range req.GetAuthors() {
-		a := &input.CreateBookAuthor{
-			Name: v.GetName(),
-		}
-
-		as[i] = a
-	}
-
-	cs := make([]*input.CreateBookCategory, len(req.Categories))
-	for i, v := range req.GetCategories() {
-		c := &input.CreateBookCategory{
-			Name: v.GetName(),
-		}
-
-		cs[i] = c
-	}
-
-	in := &input.CreateBook{
+	in := &input.BookItem{
 		Title:        req.GetTitle(),
 		Description:  req.GetDescription(),
 		Isbn:         req.GetIsbn(),
@@ -50,8 +32,8 @@ func (s *BookServer) CreateBook(ctx context.Context, req *pb.CreateBookRequest) 
 		Version:      req.GetVersion(),
 		Publisher:    req.GetPublisher(),
 		PublishedOn:  req.GetPublishedOn(),
-		Authors:      as,
-		Categories:   cs,
+		Authors:      req.GetAuthors(),
+		Categories:   req.GetCategories(),
 	}
 
 	b, err := s.BookApplication.Create(ctx, in)
@@ -63,31 +45,53 @@ func (s *BookServer) CreateBook(ctx context.Context, req *pb.CreateBookRequest) 
 	return res, nil
 }
 
+func (s *BookServer) CreateAndUpdateBooks(
+	ctx context.Context, req *pb.CreateAndUpdateBooksRequest,
+) (*pb.BookListResponse, error) {
+	_, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	books := make([]*input.BookItem, len(req.GetBooks()))
+	for i, item := range req.GetBooks() {
+		bookItem := &input.BookItem{
+			Title:        item.GetTitle(),
+			Description:  item.GetDescription(),
+			Isbn:         item.GetIsbn(),
+			ThumbnailURL: item.GetThumbnailUrl(),
+			Version:      item.GetVersion(),
+			Publisher:    item.GetPublisher(),
+			PublishedOn:  item.GetPublishedOn(),
+			Authors:      item.GetAuthors(),
+			Categories:   item.GetCategories(),
+		}
+
+		books[i] = bookItem
+	}
+
+	in := &input.CreateAndUpdateBooks{
+		Books: books,
+	}
+
+	bs, err := s.BookApplication.MultipleCreateAndUpdate(ctx, in)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	res := getBookListResponse(bs)
+	return res, nil
+}
+
 func getBookResponse(b *book.Book) *pb.BookResponse {
-	p := &pb.BookResponse_Publisher{}
-	if b.Publisher != nil {
-		p.Id = int64(b.Publisher.ID)
-		p.Name = b.Publisher.Name
-	}
-
-	as := make([]*pb.BookResponse_Author, len(b.Authors))
+	as := make([]string, len(b.Authors))
 	for i, v := range b.Authors {
-		a := &pb.BookResponse_Author{
-			Id:   int64(v.ID),
-			Name: v.Name,
-		}
-
-		as[i] = a
+		as[i] = v.Name
 	}
 
-	cs := make([]*pb.BookResponse_Category, len(b.Categories))
+	cs := make([]string, len(b.Categories))
 	for i, v := range b.Categories {
-		c := &pb.BookResponse_Category{
-			Id:   int64(v.ID),
-			Name: v.Name,
-		}
-
-		cs[i] = c
+		cs[i] = v.Name
 	}
 
 	return &pb.BookResponse{
@@ -97,11 +101,47 @@ func getBookResponse(b *book.Book) *pb.BookResponse {
 		Isbn:         b.Isbn,
 		ThumbnailUrl: b.ThumbnailURL,
 		Version:      b.Version,
+		Publisher:    b.Publisher,
 		PublishedOn:  datetime.DateToString(b.PublishedOn),
-		Publisher:    p,
 		Authors:      as,
 		Categories:   cs,
 		CreatedAt:    datetime.TimeToString(b.CreatedAt),
 		UpdatedAt:    datetime.TimeToString(b.UpdatedAt),
+	}
+}
+
+func getBookListResponse(bs []*book.Book) *pb.BookListResponse {
+	books := make([]*pb.BookListResponse_Book, len(bs))
+	for i, b := range bs {
+		as := make([]string, len(b.Authors))
+		for i, v := range b.Authors {
+			as[i] = v.Name
+		}
+
+		cs := make([]string, len(b.Categories))
+		for i, v := range b.Categories {
+			cs[i] = v.Name
+		}
+
+		item := &pb.BookListResponse_Book{
+			Id:           int64(b.ID),
+			Title:        b.Title,
+			Description:  b.Description,
+			Isbn:         b.Isbn,
+			ThumbnailUrl: b.ThumbnailURL,
+			Version:      b.Version,
+			Publisher:    b.Publisher,
+			PublishedOn:  datetime.DateToString(b.PublishedOn),
+			Authors:      as,
+			Categories:   cs,
+			CreatedAt:    datetime.TimeToString(b.CreatedAt),
+			UpdatedAt:    datetime.TimeToString(b.UpdatedAt),
+		}
+
+		books[i] = item
+	}
+
+	return &pb.BookListResponse{
+		Books: books,
 	}
 }

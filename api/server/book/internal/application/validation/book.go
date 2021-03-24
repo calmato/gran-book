@@ -8,7 +8,8 @@ import (
 
 // BookRequestValidation - Book関連のリクエストバリデータ
 type BookRequestValidation interface {
-	CreateBook(in *input.CreateBook) error
+	BookItem(in *input.BookItem) error
+	CreateAndUpdateBooks(in *input.CreateAndUpdateBooks) error
 }
 
 type bookRequestValidation struct {
@@ -24,12 +25,22 @@ func NewBookRequestValidation() BookRequestValidation {
 	}
 }
 
-func (v *bookRequestValidation) CreateBook(in *input.CreateBook) error {
+func (v *bookRequestValidation) BookItem(in *input.BookItem) error {
 	ves := v.validator.Run(in)
 	if len(ves) == 0 {
 		return nil
 	}
 
-	err := xerrors.New("Failed to CreateBook for RequestValidation")
+	err := xerrors.New("Failed to BookItem for RequestValidation")
+	return exception.InvalidRequestValidation.New(err, ves...)
+}
+
+func (v *bookRequestValidation) CreateAndUpdateBooks(in *input.CreateAndUpdateBooks) error {
+	ves := v.validator.Run(in)
+	if len(ves) == 0 {
+		return nil
+	}
+
+	err := xerrors.New("Failed to CreateAndUpdateBooks for RequestValidation")
 	return exception.InvalidRequestValidation.New(err, ves...)
 }

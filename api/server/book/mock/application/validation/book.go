@@ -33,16 +33,30 @@ func (m *MockBookRequestValidation) EXPECT() *MockBookRequestValidationMockRecor
 	return m.recorder
 }
 
-// CreateBook mocks base method
-func (m *MockBookRequestValidation) CreateBook(in *input.CreateBook) error {
+// BookItem mocks base method
+func (m *MockBookRequestValidation) BookItem(in *input.BookItem) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateBook", in)
+	ret := m.ctrl.Call(m, "BookItem", in)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// CreateBook indicates an expected call of CreateBook
-func (mr *MockBookRequestValidationMockRecorder) CreateBook(in interface{}) *gomock.Call {
+// BookItem indicates an expected call of BookItem
+func (mr *MockBookRequestValidationMockRecorder) BookItem(in interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateBook", reflect.TypeOf((*MockBookRequestValidation)(nil).CreateBook), in)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BookItem", reflect.TypeOf((*MockBookRequestValidation)(nil).BookItem), in)
+}
+
+// CreateAndUpdateBooks mocks base method
+func (m *MockBookRequestValidation) CreateAndUpdateBooks(in *input.CreateAndUpdateBooks) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateAndUpdateBooks", in)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CreateAndUpdateBooks indicates an expected call of CreateAndUpdateBooks
+func (mr *MockBookRequestValidationMockRecorder) CreateAndUpdateBooks(in interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAndUpdateBooks", reflect.TypeOf((*MockBookRequestValidation)(nil).CreateAndUpdateBooks), in)
 }

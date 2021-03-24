@@ -89,17 +89,3 @@ func (mr *MockValidationMockRecorder) Category(ctx, b interface{}) *gomock.Call 
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Category", reflect.TypeOf((*MockValidation)(nil).Category), ctx, b)
 }
-
-// Publisher mocks base method
-func (m *MockValidation) Publisher(ctx context.Context, b *book.Publisher) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Publisher", ctx, b)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// Publisher indicates an expected call of Publisher
-func (mr *MockValidationMockRecorder) Publisher(ctx, b interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Publisher", reflect.TypeOf((*MockValidation)(nil).Publisher), ctx, b)
-}
