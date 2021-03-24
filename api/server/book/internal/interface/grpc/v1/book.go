@@ -24,24 +24,6 @@ func (s *BookServer) CreateBook(ctx context.Context, req *pb.CreateBookRequest) 
 		return nil, errorHandling(err)
 	}
 
-	as := make([]*input.BookAuthor, len(req.Authors))
-	for i, v := range req.GetAuthors() {
-		a := &input.BookAuthor{
-			Name: v.GetName(),
-		}
-
-		as[i] = a
-	}
-
-	cs := make([]*input.BookCategory, len(req.Categories))
-	for i, v := range req.GetCategories() {
-		c := &input.BookCategory{
-			Name: v.GetName(),
-		}
-
-		cs[i] = c
-	}
-
 	in := &input.BookItem{
 		Title:        req.GetTitle(),
 		Description:  req.GetDescription(),
@@ -50,8 +32,8 @@ func (s *BookServer) CreateBook(ctx context.Context, req *pb.CreateBookRequest) 
 		Version:      req.GetVersion(),
 		Publisher:    req.GetPublisher(),
 		PublishedOn:  req.GetPublishedOn(),
-		Authors:      as,
-		Categories:   cs,
+		Authors:      req.GetAuthors(),
+		Categories:   req.GetCategories(),
 	}
 
 	b, err := s.BookApplication.Create(ctx, in)
@@ -71,26 +53,8 @@ func (s *BookServer) CreateAndUpdateBooks(
 		return nil, errorHandling(err)
 	}
 
-	books := make([]*input.BookItem, len(req.GetItems()))
-	for i, item := range req.GetItems() {
-		as := make([]*input.BookAuthor, len(item.GetAuthors()))
-		for j, v := range item.GetAuthors() {
-			a := &input.BookAuthor{
-				Name: v.GetName(),
-			}
-
-			as[j] = a
-		}
-
-		cs := make([]*input.BookCategory, len(item.GetCategories()))
-		for j, v := range item.GetCategories() {
-			c := &input.BookCategory{
-				Name: v.GetName(),
-			}
-
-			cs[j] = c
-		}
-
+	books := make([]*input.BookItem, len(req.GetBooks()))
+	for i, item := range req.GetBooks() {
 		bookItem := &input.BookItem{
 			Title:        item.GetTitle(),
 			Description:  item.GetDescription(),
@@ -99,8 +63,8 @@ func (s *BookServer) CreateAndUpdateBooks(
 			Version:      item.GetVersion(),
 			Publisher:    item.GetPublisher(),
 			PublishedOn:  item.GetPublishedOn(),
-			Authors:      as,
-			Categories:   cs,
+			Authors:      item.GetAuthors(),
+			Categories:   item.GetCategories(),
 		}
 
 		books[i] = bookItem
@@ -120,24 +84,14 @@ func (s *BookServer) CreateAndUpdateBooks(
 }
 
 func getBookResponse(b *book.Book) *pb.BookResponse {
-	as := make([]*pb.BookResponse_Author, len(b.Authors))
+	as := make([]string, len(b.Authors))
 	for i, v := range b.Authors {
-		a := &pb.BookResponse_Author{
-			Id:   int64(v.ID),
-			Name: v.Name,
-		}
-
-		as[i] = a
+		as[i] = v.Name
 	}
 
-	cs := make([]*pb.BookResponse_Category, len(b.Categories))
+	cs := make([]string, len(b.Categories))
 	for i, v := range b.Categories {
-		c := &pb.BookResponse_Category{
-			Id:   int64(v.ID),
-			Name: v.Name,
-		}
-
-		cs[i] = c
+		cs[i] = v.Name
 	}
 
 	return &pb.BookResponse{
@@ -148,7 +102,7 @@ func getBookResponse(b *book.Book) *pb.BookResponse {
 		ThumbnailUrl: b.ThumbnailURL,
 		Version:      b.Version,
 		Publisher:    b.Publisher,
-		PublishedOn:  datetime.DateToString(*b.PublishedOn),
+		PublishedOn:  datetime.DateToString(b.PublishedOn),
 		Authors:      as,
 		Categories:   cs,
 		CreatedAt:    datetime.TimeToString(b.CreatedAt),
@@ -157,29 +111,19 @@ func getBookResponse(b *book.Book) *pb.BookResponse {
 }
 
 func getBookListResponse(bs []*book.Book) *pb.BookListResponse {
-	items := make([]*pb.BookListResponse_Item, len(bs))
+	books := make([]*pb.BookListResponse_Book, len(bs))
 	for i, b := range bs {
-		as := make([]*pb.BookListResponse_Author, len(b.Authors))
+		as := make([]string, len(b.Authors))
 		for i, v := range b.Authors {
-			a := &pb.BookListResponse_Author{
-				Id:   int64(v.ID),
-				Name: v.Name,
-			}
-
-			as[i] = a
+			as[i] = v.Name
 		}
 
-		cs := make([]*pb.BookListResponse_Category, len(b.Categories))
+		cs := make([]string, len(b.Categories))
 		for i, v := range b.Categories {
-			c := &pb.BookListResponse_Category{
-				Id:   int64(v.ID),
-				Name: v.Name,
-			}
-
-			cs[i] = c
+			cs[i] = v.Name
 		}
 
-		item := &pb.BookListResponse_Item{
+		item := &pb.BookListResponse_Book{
 			Id:           int64(b.ID),
 			Title:        b.Title,
 			Description:  b.Description,
@@ -187,17 +131,17 @@ func getBookListResponse(bs []*book.Book) *pb.BookListResponse {
 			ThumbnailUrl: b.ThumbnailURL,
 			Version:      b.Version,
 			Publisher:    b.Publisher,
-			PublishedOn:  datetime.DateToString(*b.PublishedOn),
+			PublishedOn:  datetime.DateToString(b.PublishedOn),
 			Authors:      as,
 			Categories:   cs,
 			CreatedAt:    datetime.TimeToString(b.CreatedAt),
 			UpdatedAt:    datetime.TimeToString(b.UpdatedAt),
 		}
 
-		items[i] = item
+		books[i] = item
 	}
 
 	return &pb.BookListResponse{
-		Items: items,
+		Books: books,
 	}
 }

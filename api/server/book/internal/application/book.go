@@ -2,7 +2,6 @@ package application
 
 import (
 	"context"
-	"time"
 
 	"github.com/calmato/gran-book/api/server/book/internal/application/input"
 	"github.com/calmato/gran-book/api/server/book/internal/application/validation"
@@ -134,15 +133,10 @@ func (a *bookApplication) MultipleCreateAndUpdate(
 }
 
 func (a *bookApplication) initializeBook(ctx context.Context, in *input.BookItem) (*book.Book, error) {
-	var publishedOn time.Time
-	if in.PublishedOn != "" {
-		publishedOn = datetime.StringToDate(in.PublishedOn)
-	}
-
 	as := make([]*book.Author, len(in.Authors))
 	for i, v := range in.Authors {
 		author := &book.Author{
-			Name: v.Name,
+			Name: v,
 		}
 
 		err := a.bookService.ValidationAuthor(ctx, author)
@@ -156,7 +150,7 @@ func (a *bookApplication) initializeBook(ctx context.Context, in *input.BookItem
 	cs := make([]*book.Category, len(in.Categories))
 	for i, v := range in.Categories {
 		c := &book.Category{
-			Name: v.Name,
+			Name: v,
 		}
 
 		err := a.bookService.ValidationCategory(ctx, c)
@@ -174,7 +168,7 @@ func (a *bookApplication) initializeBook(ctx context.Context, in *input.BookItem
 		ThumbnailURL: in.ThumbnailURL,
 		Version:      in.Version,
 		Publisher:    in.Publisher,
-		PublishedOn:  &publishedOn,
+		PublishedOn:  datetime.StringToDate(in.PublishedOn),
 		Authors:      as,
 		Categories:   cs,
 	}

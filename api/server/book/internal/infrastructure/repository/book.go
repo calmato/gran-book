@@ -148,17 +148,25 @@ func (r *bookRepository) Update(ctx context.Context, b *book.Book) error {
 		}
 	}()
 
-	err := tx.Error
-	if err != nil {
+	if err := tx.Error; err != nil {
 		return err
 	}
 
-	err = r.client.db.Omit(clause.Associations).Save(&b).Error
-	if err != nil {
-		return exception.ErrorInDatastore.New(err)
+	if b.PublishedOn.IsZero() {
+		err := tx.Omit(clause.Associations, "published_on").Save(&b).Error
+		if err != nil {
+			tx.Rollback()
+			return exception.ErrorInDatastore.New(err)
+		}
+	} else {
+		err := tx.Omit(clause.Associations).Save(&b).Error
+		if err != nil {
+			tx.Rollback()
+			return exception.ErrorInDatastore.New(err)
+		}
 	}
 
-	err = associate(tx, b)
+	err := associate(tx, b)
 	if err != nil {
 		tx.Rollback()
 		return err
@@ -175,27 +183,26 @@ func (r *bookRepository) MultipleCreate(ctx context.Context, bs []*book.Book) er
 		}
 	}()
 
-	err := tx.Error
-	if err != nil {
+	if err := tx.Error; err != nil {
 		return err
 	}
 
 	for _, b := range bs {
 		if b.PublishedOn.IsZero() {
-			err = tx.Omit(clause.Associations, "published_on").Create(b).Error
+			err := tx.Omit(clause.Associations, "published_on").Create(b).Error
 			if err != nil {
 				tx.Rollback()
 				return exception.ErrorInDatastore.New(err)
 			}
 		} else {
-			err = tx.Omit(clause.Associations).Create(b).Error
+			err := tx.Omit(clause.Associations).Create(b).Error
 			if err != nil {
 				tx.Rollback()
 				return exception.ErrorInDatastore.New(err)
 			}
 		}
 
-		err = associate(tx, b)
+		err := associate(tx, b)
 		if err != nil {
 			tx.Rollback()
 			return err
@@ -213,18 +220,26 @@ func (r *bookRepository) MultipleUpdate(ctx context.Context, bs []*book.Book) er
 		}
 	}()
 
-	err := tx.Error
-	if err != nil {
+	if err := tx.Error; err != nil {
 		return err
 	}
 
 	for _, b := range bs {
-		err = r.client.db.Omit(clause.Associations).Save(b).Error
-		if err != nil {
-			return exception.ErrorInDatastore.New(err)
+		if b.PublishedOn.IsZero() {
+			err := tx.Omit(clause.Associations, "published_on").Save(b).Error
+			if err != nil {
+				tx.Rollback()
+				return exception.ErrorInDatastore.New(err)
+			}
+		} else {
+			err := tx.Omit(clause.Associations).Save(b).Error
+			if err != nil {
+				tx.Rollback()
+				return exception.ErrorInDatastore.New(err)
+			}
 		}
 
-		err = associate(tx, b)
+		err := associate(tx, b)
 		if err != nil {
 			tx.Rollback()
 			return err
@@ -284,7 +299,7 @@ func associateAuthor(tx *gorm.DB, b *book.Book) error {
 		ba := &book.BookAuthor{
 			BookID:    b.ID,
 			AuthorID:  a.ID,
-			CreatedAt: b.CreatedAt,
+			CreatedAt: b.UpdatedAt,
 			UpdatedAt: b.UpdatedAt,
 		}
 
@@ -333,7 +348,7 @@ func associateCategory(tx *gorm.DB, b *book.Book) error {
 		bc := &book.BookCategory{
 			BookID:     b.ID,
 			CategoryID: c.ID,
-			CreatedAt:  b.CreatedAt,
+			CreatedAt:  b.UpdatedAt,
 			UpdatedAt:  b.UpdatedAt,
 		}
 

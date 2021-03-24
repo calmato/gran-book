@@ -3,7 +3,7 @@ import { createAndUpdateBooks } from '~/api'
 import { IBookItem, ICreateAndUpdateBooksRequest } from '~/types/request'
 import { IBookItemInput, ICreateAndUpdateBooksInput } from '~/types/input'
 import { GrpcError } from '~/types/exception'
-import { IBookListOutput, IBookOutput, IBookOutputAuthor, IBookOutputCategory } from '~/types/output'
+import { IBookListOutput, IBookOutput } from '~/types/output'
 import { IBookListResponse, IBookResponse } from '~/types/response'
 
 const router = express.Router()
@@ -63,16 +63,6 @@ router.post(
 )
 
 function setBookResponse(output: IBookOutput): IBookResponse {
-  const publisher: string = output.publisher?.name || ''
-
-  const authors: string[] = output.authors.map((author: IBookOutputAuthor) => {
-    return author.name
-  })
-
-  const categories: string[] = output.categories.map((category: IBookOutputCategory) => {
-    return category.name
-  })
-
   const response: IBookResponse = {
     id: output.id,
     title: output.title,
@@ -80,10 +70,10 @@ function setBookResponse(output: IBookOutput): IBookResponse {
     isbn: output.isbn,
     thumbnailUrl: output.thumbnailUrl,
     version: output.version,
+    publisher: output.publisher,
     publishedOn: output.publishedOn,
-    publisher,
-    authors,
-    categories,
+    authors: output.authors,
+    categories: output.categories,
     createdAt: output.createdAt,
     updatedAt: output.updatedAt,
   }
@@ -92,7 +82,7 @@ function setBookResponse(output: IBookOutput): IBookResponse {
 }
 
 function setBookListResponse(output: IBookListOutput): IBookListResponse {
-  const books: IBookResponse[] = output.items?.map((item: IBookOutput) => {
+  const books: IBookResponse[] = output.books?.map((item: IBookOutput) => {
     return setBookResponse(item)
   })
 
