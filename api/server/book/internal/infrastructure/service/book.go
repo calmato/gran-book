@@ -33,16 +33,6 @@ func (s *bookService) ShowByIsbn(ctx context.Context, isbn string) (*book.Book, 
 		return nil, exception.NotFound.New(err)
 	}
 
-	if b.PublisherID != 0 {
-		p, err := s.bookRepository.ShowPublisherByBookID(ctx, b.ID)
-		if err != nil {
-			return nil, err
-		}
-
-		b.PublisherID = p.ID
-		b.Publisher = p
-	}
-
 	as, err := s.bookRepository.ShowAuthorsByBookID(ctx, b.ID)
 	if err != nil {
 		return nil, err
@@ -96,15 +86,6 @@ func (s *bookService) CreateCategory(ctx context.Context, c *book.Category) erro
 	return s.bookRepository.CreateCategory(ctx, c)
 }
 
-func (s *bookService) CreatePublisher(ctx context.Context, p *book.Publisher) error {
-	current := time.Now()
-
-	p.CreatedAt = current
-	p.UpdatedAt = current
-
-	return s.bookRepository.CreatePublisher(ctx, p)
-}
-
 func (s *bookService) Update(ctx context.Context, b *book.Book) error {
 	current := time.Now()
 
@@ -151,16 +132,7 @@ func (s *bookService) ValidationCategory(ctx context.Context, c *book.Category) 
 	return s.bookDomainValidation.Category(ctx, c)
 }
 
-func (s *bookService) ValidationPublisher(ctx context.Context, p *book.Publisher) error {
-	return s.bookDomainValidation.Publisher(ctx, p)
-}
-
 func (s *bookService) associate(ctx context.Context, b *book.Book) {
-	if b.Publisher != nil {
-		_ = s.CreatePublisher(ctx, b.Publisher)
-		b.PublisherID = b.Publisher.ID
-	}
-
 	for _, a := range b.Authors {
 		_ = s.CreateAuthor(ctx, a)
 	}

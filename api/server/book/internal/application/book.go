@@ -2,6 +2,7 @@ package application
 
 import (
 	"context"
+	"time"
 
 	"github.com/calmato/gran-book/api/server/book/internal/application/input"
 	"github.com/calmato/gran-book/api/server/book/internal/application/validation"
@@ -64,11 +65,6 @@ func (a *bookApplication) Update(ctx context.Context, in *input.BookItem) (*book
 		return nil, err
 	}
 
-	if newBook.Publisher != nil {
-		b.PublisherID = newBook.Publisher.ID
-		b.Publisher = newBook.Publisher
-	}
-
 	b.Authors = newBook.Authors
 	b.Categories = newBook.Categories
 
@@ -111,11 +107,6 @@ func (a *bookApplication) MultipleCreateAndUpdate(
 				return nil, err
 			}
 
-			if newBook.Publisher != nil {
-				b.PublisherID = newBook.Publisher.ID
-				b.Publisher = newBook.Publisher
-			}
-
 			b.Authors = newBook.Authors
 			b.Categories = newBook.Categories
 
@@ -143,6 +134,11 @@ func (a *bookApplication) MultipleCreateAndUpdate(
 }
 
 func (a *bookApplication) initializeBook(ctx context.Context, in *input.BookItem) (*book.Book, error) {
+	var publishedOn time.Time
+	if in.PublishedOn != "" {
+		publishedOn = datetime.StringToDate(in.PublishedOn)
+	}
+
 	as := make([]*book.Author, len(in.Authors))
 	for i, v := range in.Authors {
 		author := &book.Author{
@@ -177,22 +173,10 @@ func (a *bookApplication) initializeBook(ctx context.Context, in *input.BookItem
 		Isbn:         in.Isbn,
 		ThumbnailURL: in.ThumbnailURL,
 		Version:      in.Version,
-		PublishedOn:  datetime.StringToDate(in.PublishedOn),
+		Publisher:    in.Publisher,
+		PublishedOn:  &publishedOn,
 		Authors:      as,
 		Categories:   cs,
-	}
-
-	if in.Publisher != "" {
-		p := &book.Publisher{
-			Name: in.Publisher,
-		}
-
-		err := a.bookService.ValidationPublisher(ctx, p)
-		if err != nil {
-			return nil, err
-		}
-
-		b.Publisher = p
 	}
 
 	err := a.bookService.Validation(ctx, b)

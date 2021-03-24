@@ -120,12 +120,6 @@ func (s *BookServer) CreateAndUpdateBooks(
 }
 
 func getBookResponse(b *book.Book) *pb.BookResponse {
-	p := &pb.BookResponse_Publisher{}
-	if b.Publisher != nil {
-		p.Id = int64(b.Publisher.ID)
-		p.Name = b.Publisher.Name
-	}
-
 	as := make([]*pb.BookResponse_Author, len(b.Authors))
 	for i, v := range b.Authors {
 		a := &pb.BookResponse_Author{
@@ -153,8 +147,8 @@ func getBookResponse(b *book.Book) *pb.BookResponse {
 		Isbn:         b.Isbn,
 		ThumbnailUrl: b.ThumbnailURL,
 		Version:      b.Version,
-		PublishedOn:  datetime.DateToString(b.PublishedOn),
-		Publisher:    p,
+		Publisher:    b.Publisher,
+		PublishedOn:  datetime.DateToString(*b.PublishedOn),
 		Authors:      as,
 		Categories:   cs,
 		CreatedAt:    datetime.TimeToString(b.CreatedAt),
@@ -165,12 +159,6 @@ func getBookResponse(b *book.Book) *pb.BookResponse {
 func getBookListResponse(bs []*book.Book) *pb.BookListResponse {
 	items := make([]*pb.BookListResponse_Item, len(bs))
 	for i, b := range bs {
-		p := &pb.BookListResponse_Publisher{}
-		if b.Publisher != nil {
-			p.Id = int64(b.Publisher.ID)
-			p.Name = b.Publisher.Name
-		}
-
 		as := make([]*pb.BookListResponse_Author, len(b.Authors))
 		for i, v := range b.Authors {
 			a := &pb.BookListResponse_Author{
@@ -198,8 +186,8 @@ func getBookListResponse(bs []*book.Book) *pb.BookListResponse {
 			Isbn:         b.Isbn,
 			ThumbnailUrl: b.ThumbnailURL,
 			Version:      b.Version,
-			PublishedOn:  datetime.DateToString(b.PublishedOn),
-			Publisher:    p,
+			Publisher:    b.Publisher,
+			PublishedOn:  datetime.DateToString(*b.PublishedOn),
 			Authors:      as,
 			Categories:   cs,
 			CreatedAt:    datetime.TimeToString(b.CreatedAt),

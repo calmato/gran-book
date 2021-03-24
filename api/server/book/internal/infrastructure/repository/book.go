@@ -32,29 +32,6 @@ func (r *bookRepository) ShowByIsbn(ctx context.Context, isbn string) (*book.Boo
 	return b, nil
 }
 
-func (r *bookRepository) ShowPublisherByBookID(ctx context.Context, bookID int) (*book.Publisher, error) {
-	p := &book.Publisher{}
-
-	columns := []string{
-		"publishers.id",
-		"publishers.name",
-		"publishers.created_at",
-		"publishers.updated_at",
-	}
-	sql := r.client.db.
-		Table("publishers").
-		Select(strings.Join(columns, ", ")).
-		Joins("LEFT JOIN books ON publishers.id = books.publisher_id").
-		Where("books.id = ?", bookID)
-
-	err := sql.First(&p).Error
-	if err != nil {
-		return nil, exception.ErrorInDatastore.New(err)
-	}
-
-	return p, nil
-}
-
 func (r *bookRepository) ShowAuthorsByBookID(ctx context.Context, bookID int) ([]*book.Author, error) {
 	as := []*book.Author{}
 
@@ -156,15 +133,6 @@ func (r *bookRepository) CreateBookshelf(ctx context.Context, b *book.Bookshelf)
 
 func (r *bookRepository) CreateCategory(ctx context.Context, c *book.Category) error {
 	err := r.client.db.Table("categories").Where("name = ?", c.Name).FirstOrCreate(&c).Error
-	if err != nil {
-		return exception.ErrorInDatastore.New(err)
-	}
-
-	return nil
-}
-
-func (r *bookRepository) CreatePublisher(ctx context.Context, p *book.Publisher) error {
-	err := r.client.db.Table("publishers").Where("name = ?", p.Name).FirstOrCreate(&p).Error
 	if err != nil {
 		return exception.ErrorInDatastore.New(err)
 	}
