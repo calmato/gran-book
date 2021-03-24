@@ -7,13 +7,12 @@ import BackIcon from '@/components/atoms/BackIcon';
 import { colors } from 'react-native-elements';
 
 describe('<BackIcon />', () => {
-
   let render: ShallowRenderer.ShallowRenderer;
 
   beforeEach(() => {
     render = ShallowRenderer.createRenderer();
   });
-  
+
   it('has default props', () => {
     render.render(<BackIcon />);
     const got = render.getRenderOutput();

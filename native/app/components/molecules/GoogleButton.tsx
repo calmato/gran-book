@@ -9,35 +9,31 @@ const color = 'rgba(0,0,0,0.54)';
 const styles = StyleSheet.create({
   buttonStyle: {
     backgroundColor: COLOR.GOOGLE,
-    ...SOCIAL_BUTTON
+    ...SOCIAL_BUTTON,
   },
   iconStyle: {
     marginRight: 10,
-    width:24,
-    height:24,
+    width: 24,
+    height: 24,
   },
   fontStyle: {
     color: color,
-  }
+  },
 });
 
 interface Props {
-  style?: ViewStyle
+  style?: ViewStyle;
 }
 
 const GoogleButton = function GoogleButton(props: Props): ReactElement {
   return (
     <Button
-      icon={
-        <Image
-          source={google}
-          style={styles.iconStyle}
-        />
-      }
+      icon={<Image source={google} style={styles.iconStyle} />}
       buttonStyle={styles.buttonStyle}
       titleStyle={styles.fontStyle}
       containerStyle={props.style}
-      title="Googleでサインイン" />
+      title="Googleでサインイン"
+    />
   );
 };
 

@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
   authorStyle: {
     color: COLOR.TEXT_GRAY,
     fontSize: 8,
-  }
+  },
 });
 
 const imageProps: Partial<ImageProps> = {
@@ -30,17 +30,17 @@ const imageProps: Partial<ImageProps> = {
 };
 
 interface Props {
-  title: string,
-  author: string,
-  image: ImageURISource,
-  width: number,
-  height: number,
-  onPress?: () => undefined | void,
-  style?: ViewStyle,
+  title: string;
+  author: string;
+  image: ImageURISource;
+  width: number;
+  height: number;
+  onPress?: () => undefined | void;
+  style?: ViewStyle;
 }
 
 const Book = function Book(props: Props): ReactElement {
-  const {title, author, image, width, height, style} = props;
+  const { title, author, image, width, height, style } = props;
 
   return (
     <View style={style}>
@@ -54,12 +54,8 @@ const Book = function Book(props: Props): ReactElement {
         width={width}
         height={height}
         titleNumberOfLines={2}
-        onPress={props.onPress}
-      >
-        <Text
-          style={styles.authorStyle}
-          numberOfLines={1}
-        >
+        onPress={props.onPress}>
+        <Text style={styles.authorStyle} numberOfLines={1}>
           {author}
         </Text>
       </Tile>

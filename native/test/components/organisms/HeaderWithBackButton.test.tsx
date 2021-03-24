@@ -11,9 +11,6 @@ describe('<HeaderWithBackButton />', () => {
   it('has default props', () => {
     // TODO
     const title = 'test';
-    const wrapper = shallow(<HeaderWithBackButton
-      title={title}
-      onPress={jest.fn()}
-    />);
+    const wrapper = shallow(<HeaderWithBackButton title={title} onPress={jest.fn()} />);
   });
 });

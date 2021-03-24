@@ -14,7 +14,8 @@ export default function ConnectedSignIn(): JSX.Element {
       getAuth(): Promise<void> {
         return dispatch(getAuthAsync());
       },
-    }), [dispatch],
+    }),
+    [dispatch],
   );
 
   return <SignIn actions={actions} />;

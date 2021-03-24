@@ -12,20 +12,20 @@ const styles = StyleSheet.create({
   reviewContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingTop:10,
-    paddingBottom:10,
+    paddingTop: 10,
+    paddingBottom: 10,
   },
   reviewRate: {
-    paddingStart:10,
-    paddingEnd:10,
+    paddingStart: 10,
+    paddingEnd: 10,
     color: COLOR.TEXT_DEFAULT,
   },
-  icon:{
-    paddingStart:30,
+  icon: {
+    paddingStart: 30,
   },
   button: {
-    height:35,
-    alignSelf:'flex-end',
+    height: 35,
+    alignSelf: 'flex-end',
   },
   buttonTitle: {
     color: COLOR.TEXT_TITLE,
@@ -33,32 +33,32 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  name: string
-  avatarUrl: string | undefined
-  rating: number
-  reviewNum: number
-  buttonTitle: string
-  handleClick: () => void
+  name: string;
+  avatarUrl: string | undefined;
+  rating: number;
+  reviewNum: number;
+  buttonTitle: string;
+  handleClick: () => void;
 }
 
 const ProfileBasicInfoGroup = function ProfileBasicInfoGroup(props: Props): ReactElement {
   return (
     <ListItem style={styles.container}>
-      <Avatar source={{uri: props.avatarUrl}} rounded size='medium'/>
+      <Avatar source={{ uri: props.avatarUrl }} rounded size="medium" />
       <ListItem.Content>
         <ListItem.Title>{props.name}</ListItem.Title>
         <View style={styles.reviewContainer}>
-          <Rating 
-            fractions={1}
-            readonly={true}
-            startingValue={props.rating}
-            imageSize={20}
-          />
+          <Rating fractions={1} readonly={true} startingValue={props.rating} imageSize={20} />
           <Text style={styles.reviewRate}>{props.rating}</Text>
           <Text>({props.reviewNum}件)</Text>
-          <MaterialIcons name="keyboard-arrow-right" size={24} color="black" style={styles.icon}/>
+          <MaterialIcons name="keyboard-arrow-right" size={24} color="black" style={styles.icon} />
         </View>
-        <Button title={props.buttonTitle} buttonStyle={styles.button} titleStyle={styles.buttonTitle} onPress={props.handleClick}/>
+        <Button
+          title={props.buttonTitle}
+          buttonStyle={styles.button}
+          titleStyle={styles.buttonTitle}
+          onPress={props.handleClick}
+        />
       </ListItem.Content>
     </ListItem>
   );

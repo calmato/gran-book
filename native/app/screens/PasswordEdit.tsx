@@ -23,8 +23,8 @@ const styles = StyleSheet.create({
 
 interface Props {
   actions: {
-    editPassword: (password: string, passwordConfirmation: string) => Promise<void>,
-  },
+    editPassword: (password: string, passwordConfirmation: string) => Promise<void>;
+  };
 }
 
 const PasswordEdit = function PasswordEdit(props: Props): ReactElement {
@@ -38,33 +38,25 @@ const PasswordEdit = function PasswordEdit(props: Props): ReactElement {
     return formData.password.length < 6;
   }, [formData.password]);
 
-  const passwordConfirmationError: boolean = useMemo(():boolean => {
+  const passwordConfirmationError: boolean = useMemo((): boolean => {
     return formData.password !== formData.passwordConfirmation;
   }, [formData.password, formData.passwordConfirmation]);
 
-  const canSubmit = useMemo(():boolean => {
+  const canSubmit = useMemo((): boolean => {
     return !passwordError && !passwordConfirmationError;
   }, [passwordError, passwordConfirmationError]);
 
-
-  const createAlertNotifyEditPasswordError= (code: number) =>
-    Alert.alert(
-      'パスワードの変更に失敗',
-      `${generateErrorMessage(code)}`,
-      [
-        {
-          text: 'OK',
-        }
-      ],
-    );
+  const createAlertNotifyEditPasswordError = (code: number) =>
+    Alert.alert('パスワードの変更に失敗', `${generateErrorMessage(code)}`, [
+      {
+        text: 'OK',
+      },
+    ]);
 
   const handleSubmit = React.useCallback(async () => {
-    await editPassword(
-      formData.password,
-      formData.passwordConfirmation,
-    )
+    await editPassword(formData.password, formData.passwordConfirmation)
       .then(() => {
-      //  navigation.navigate('', { });
+        //  navigation.navigate('', { });
       })
       .catch((err) => {
         console.log('debug', err);
@@ -72,23 +64,19 @@ const PasswordEdit = function PasswordEdit(props: Props): ReactElement {
       });
   }, [formData.password, formData.passwordConfirmation, editPassword]);
 
-
   return (
     <View>
-      <HeaderWithBackButton
-        title='パスワードの変更'
-        onPress={() => undefined}
-      />
+      <HeaderWithBackButton title="パスワードの変更" onPress={() => undefined} />
       <Text style={styles.subtilte}>新しいパスワード</Text>
       <PasswordInput
-        onChangeText={(text) => setValue({...formData, password: text})}
+        onChangeText={(text) => setValue({ ...formData, password: text })}
         value={formData.password}
         placeholder="新しいパスワード"
         errorMessage="パスワードは6文字以上でなければいけません．"
         hasError={passwordError}
       />
       <PasswordInput
-        onChangeText={(text) => setValue({...formData, passwordConfirmation: text})}
+        onChangeText={(text) => setValue({ ...formData, passwordConfirmation: text })}
         value={formData.passwordConfirmation}
         placeholder="新しいパスワード(確認用)"
         errorMessage="パスワードが一致しません．"
@@ -98,8 +86,9 @@ const PasswordEdit = function PasswordEdit(props: Props): ReactElement {
         containerStyle={styles.buttonStyle}
         disabled={!canSubmit}
         onPress={handleSubmit}
-        titleStyle={{ color: COLOR.TEXT_TITLE}}
-        title="変更する"/>
+        titleStyle={{ color: COLOR.TEXT_TITLE }}
+        title="変更する"
+      />
     </View>
   );
 };

@@ -21,33 +21,29 @@ const styles = StyleSheet.create({
   title: {
     color: COLOR.TEXT_TITLE,
     padding: 10,
-  }
+  },
 });
 
 interface Props {
-  username: string, 
-  selfIntroduction: string, 
-  thumbnailUrl: string | undefined, 
-  gender: number
+  username: string;
+  selfIntroduction: string;
+  thumbnailUrl: string | undefined;
+  gender: number;
 }
 
-const OwnProfile = function OwnProfile( props : Props): ReactElement {
+const OwnProfile = function OwnProfile(props: Props): ReactElement {
   // TODO 出品数・フォロワー数・フォロー数・星レート・レビュー数を実装
-  const userInfo = 
-{
-  rating: 2.4,
-  reviewNum: 20,
-  saleNum: 3,
-  followerNum: 20,
-  followNum: 5,
-};
+  const userInfo = {
+    rating: 2.4,
+    reviewNum: 20,
+    saleNum: 3,
+    followerNum: 20,
+    followNum: 5,
+  };
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
-      <HeaderWithBackButton
-        title="プロフィール"
-        onPress={()=>navigation.goBack()}
-      />
+      <HeaderWithBackButton title="プロフィール" onPress={() => navigation.goBack()} />
       <ProfileViewGroup
         name={props.username}
         avatarUrl={props.thumbnailUrl}

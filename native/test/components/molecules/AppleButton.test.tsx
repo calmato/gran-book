@@ -28,7 +28,7 @@ describe('<AppleButton />', () => {
     expect(button.props.buttonStyle).toEqual(buttonStyle);
 
     const icon = button.props.icon;
-    
+
     expect(icon.props.name).toEqual('logo-apple');
     expect(icon.props.size).toEqual(24);
     expect(icon.props.color).toEqual('white');

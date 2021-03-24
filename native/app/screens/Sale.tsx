@@ -6,7 +6,7 @@ import HeaderText from '~/components/atoms/HeaderText';
 const Sale = function Sale(): ReactElement {
   return (
     <View>
-      <Header centerComponent={<HeaderText title="Gran Book"/>} />
+      <Header centerComponent={<HeaderText title="Gran Book" />} />
       <Text>出品画面</Text>
     </View>
   );

@@ -10,14 +10,14 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   number: {
-    paddingBottom:10,
+    paddingBottom: 10,
     color: COLOR.TEXT_DEFAULT,
   },
 });
 
 interface Props {
-  name: string
-  numberOfThings: number
+  name: string;
+  numberOfThings: number;
 }
 
 const ProfileNumberOfThings = function ProfileNumberOfThings(props: Props): ReactElement {

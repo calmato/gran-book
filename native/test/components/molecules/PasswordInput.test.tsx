@@ -15,11 +15,13 @@ describe('<PasswordInput />', () => {
     const maxLength = 32;
     const color = colors.grey0;
 
-    const wrapper = shallow(<PasswordInput
-      placeholder={placeholder}
-      value={value}
-      onChangeText={() => console.log('test')}
-    />);
+    const wrapper = shallow(
+      <PasswordInput
+        placeholder={placeholder}
+        value={value}
+        onChangeText={() => console.log('test')}
+      />,
+    );
 
     const input = wrapper.find(Input).get(0);
     expect(input.props.placeholder).toEqual(placeholder);

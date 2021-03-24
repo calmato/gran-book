@@ -23,8 +23,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const userInfo = 
-{
+const userInfo = {
   name: 'にしくん',
   avatarUrl: 'https://pbs.twimg.com/profile_images/1312909954148253696/Utr-sa_Y_400x400.jpg',
   rating: 4.8,
@@ -36,13 +35,9 @@ const userInfo =
 };
 
 const OtherProfile = function OtherProfile(): ReactElement {
-  
   return (
     <View style={styles.container}>
-      <HeaderWithBackButton
-        title="プロフィール"
-        onPress={()=>undefined}
-      />
+      <HeaderWithBackButton title="プロフィール" onPress={() => undefined} />
       <ProfileViewGroup
         name={userInfo.name}
         avatarUrl={userInfo.avatarUrl}

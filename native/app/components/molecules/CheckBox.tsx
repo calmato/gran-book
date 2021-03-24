@@ -14,10 +14,10 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  styles?: ViewStyle,
-  title: string,
-  checked: boolean,
-  onPress: () => void | undefined,
+  styles?: ViewStyle;
+  title: string;
+  checked: boolean;
+  onPress: () => void | undefined;
 }
 
 const CheckBox = function CheckBox(props: Props): ReactElement {
@@ -28,7 +28,7 @@ const CheckBox = function CheckBox(props: Props): ReactElement {
           name="md-checkbox"
           size={24}
           style={styles.icon}
-          color={ props.checked? colors.primary : colors.grey0 }
+          color={props.checked ? colors.primary : colors.grey0}
         />
       </TouchableOpacity>
       <Text style={styles.text}>{props.title}</Text>

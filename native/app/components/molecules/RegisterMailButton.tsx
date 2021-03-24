@@ -10,32 +10,25 @@ const styles = StyleSheet.create({
   buttonStyle: {
     borderColor: color,
     backgroundColor: '#00000000',
-    ...SOCIAL_BUTTON
+    ...SOCIAL_BUTTON,
   },
   iconStyle: {
-    marginRight: 10
+    marginRight: 10,
   },
   fontStyle: {
-    color: color
-  }
+    color: color,
+  },
 });
 
 interface Props {
-  style?: ViewStyle,
-  onPress: () => void,
+  style?: ViewStyle;
+  onPress: () => void;
 }
 
 const RegisterMailButton = function RegisterMailButton(props: Props): ReactElement {
   return (
     <Button
-      icon={
-        <Ionicons
-          name="md-mail"
-          size={24}
-          color={color}
-          style={styles.iconStyle}
-        />
-      }
+      icon={<Ionicons name="md-mail" size={24} color={color} style={styles.iconStyle} />}
       containerStyle={props.style}
       buttonStyle={styles.buttonStyle}
       titleStyle={styles.fontStyle}

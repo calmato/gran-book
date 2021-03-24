@@ -10,38 +10,33 @@ import { searchBook } from '~/lib/GoogleBooksAPI';
 import { HomeTabStackPramList } from '~/types/navigation';
 
 interface Props {
-  navigation?: StackNavigationProp<HomeTabStackPramList, 'Home'>
+  navigation?: StackNavigationProp<HomeTabStackPramList, 'Home'>;
 }
 
 const Home = function Home(props: Props): ReactElement {
-
   const navigation = props.navigation;
-  const [ keyword, setValue] = useState('');
+  const [keyword, setValue] = useState('');
 
   const onSubmitEditingCallback = useCallback(() => {
     (async () => {
-      if(keyword !== '') {
+      if (keyword !== '') {
         const res = await searchBook(keyword);
-        if(res) navigation?.navigate('SearchResult', {keyword, results: res});
+        if (res) navigation?.navigate('SearchResult', { keyword, results: res });
       }
     })();
-  }, [keyword, navigation]
-  );
+  }, [keyword, navigation]);
 
-  const cancelCallback = useCallback(
-    () => {
-      return setValue('');
-    }, [setValue]
-  );
+  const cancelCallback = useCallback(() => {
+    return setValue('');
+  }, [setValue]);
 
   return (
     <View>
-      <Header centerComponent={<HeaderText title="Gran Book"/>} />
+      <Header centerComponent={<HeaderText title="Gran Book" />} />
       <ScrollView
         stickyHeaderIndices={[0]}
         keyboardShouldPersistTaps="handled"
-        style={{ marginBottom: 'auto' }}
-      >
+        style={{ marginBottom: 'auto' }}>
         <SearchBar
           onCancel={cancelCallback}
           keyword={keyword}

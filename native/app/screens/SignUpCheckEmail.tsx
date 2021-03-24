@@ -7,8 +7,8 @@ import { Button, Card, Text, colors } from 'react-native-elements';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import { AuthStackParamList } from '~/types/navigation';
 
-type SignUpCheckEmailProp = StackNavigationProp<AuthStackParamList, 'SignUpCheckEmail'>
-type SignUpCheckEmailRouteProp = RouteProp<AuthStackParamList, 'SignUpCheckEmail'>
+type SignUpCheckEmailProp = StackNavigationProp<AuthStackParamList, 'SignUpCheckEmail'>;
+type SignUpCheckEmailRouteProp = RouteProp<AuthStackParamList, 'SignUpCheckEmail'>;
 
 const styles = StyleSheet.create({
   container: {
@@ -18,21 +18,20 @@ const styles = StyleSheet.create({
   card: {
     textAlign: 'center',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   cardText: {
     textAlign: 'center',
     margin: 20,
-  }
+  },
 });
 
 interface Props {
-  route: SignUpCheckEmailRouteProp,
-  navigation: SignUpCheckEmailProp
+  route: SignUpCheckEmailRouteProp;
+  navigation: SignUpCheckEmailProp;
 }
 
 const SignUpCheckEmail = function SignUpCheckEmail(props: Props): ReactElement {
-
   const email = props.route.params.email;
   const navigation = props.navigation;
 

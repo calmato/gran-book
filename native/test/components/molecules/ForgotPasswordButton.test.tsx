@@ -9,8 +9,6 @@ configure({ adapter: new Adapter() });
 
 describe('<ForgotPasswordButton />', () => {
   it('has default props', () => {
-    const wrapper = shallow(<ForgotPasswordButton
-      onPress={()=>console.log('test')}
-    />);
+    const wrapper = shallow(<ForgotPasswordButton onPress={() => console.log('test')} />);
   });
 });

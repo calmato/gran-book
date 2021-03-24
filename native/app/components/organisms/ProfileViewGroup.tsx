@@ -4,18 +4,18 @@ import ProfileBasicInfoGroup from '../molecules/ProfileBasicInfoGroup';
 import ProfileFollowFollwer from '~/components/molecules/ProfileFollowFollower';
 
 interface Props {
-  name: string
-  avatarUrl: string | undefined
-  rating: number
-  reviewNum: number
-  saleNum: number
-  followerNum: number
-  followNum: number
-  buttonTitle: string
-  handleClick: () => void
+  name: string;
+  avatarUrl: string | undefined;
+  rating: number;
+  reviewNum: number;
+  saleNum: number;
+  followerNum: number;
+  followNum: number;
+  buttonTitle: string;
+  handleClick: () => void;
 }
 
-const ProfileViewGroup = function ProfileViewGroup(props:Props): ReactElement {
+const ProfileViewGroup = function ProfileViewGroup(props: Props): ReactElement {
   return (
     <View>
       <ProfileBasicInfoGroup

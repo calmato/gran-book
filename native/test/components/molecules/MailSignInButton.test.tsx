@@ -12,9 +12,7 @@ configure({ adapter: new Adapter() });
 
 describe('<MailSignInButton />', () => {
   it('has default props', () => {
-    const wrapper = shallow(<MailSignInButton
-      onPress={()=>console.log('test')}
-    />);
+    const wrapper = shallow(<MailSignInButton onPress={() => console.log('test')} />);
 
     const buttonStyle: ViewStyle = {
       ...SOCIAL_BUTTON,
@@ -29,7 +27,7 @@ describe('<MailSignInButton />', () => {
     expect(button.props.buttonStyle).toEqual(buttonStyle);
 
     const icon = button.props.icon;
-    
+
     expect(icon.props.name).toEqual('md-mail');
     expect(icon.props.size).toEqual(24);
     expect(icon.props.color).toEqual('white');

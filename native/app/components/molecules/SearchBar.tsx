@@ -11,15 +11,14 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  keyword: string,
-  placeholder?: string,
-  onChangeText: (t: string) => void,
-  onSubmitEditing: () => void,
-  onCancel?: () => void,
+  keyword: string;
+  placeholder?: string;
+  onChangeText: (t: string) => void;
+  onSubmitEditing: () => void;
+  onCancel?: () => void;
 }
 
 const SearchBar = function SearchBar(props: Props): ReactElement {
-
   const platform = Platform.OS === 'ios' ? 'ios' : 'android';
 
   return (
@@ -42,8 +41,8 @@ const SearchBar = function SearchBar(props: Props): ReactElement {
   );
 };
 
-SearchBar.defaultProps={
-  placeholder: 'キーワード'
+SearchBar.defaultProps = {
+  placeholder: 'キーワード',
 };
 
 export default SearchBar;
