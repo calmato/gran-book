@@ -1,5 +1,5 @@
 import { Dispatch } from 'redux';
-import axios from '~/lib/axios';
+import { internal } from '~/lib/axios';
 import { AxiosResponse } from 'axios';
 import { IOwnOtherProfileResponse } from '~/types/response';
 import { User } from '~/store/models';
@@ -8,7 +8,7 @@ import { setUser } from '~/store/modules/user';
 export function getOwnProfileAsync(id: string) {
   return async (dispatch: Dispatch): Promise<void> => {
     console.log('http', 'getOwnProfile');
-    return await axios
+    return await internal
       .get(`/v1/users/${id}/profile`)
       .then(async (res: AxiosResponse<IOwnOtherProfileResponse>) => {
         const {

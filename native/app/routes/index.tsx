@@ -40,7 +40,7 @@ export default function MainRoute(): ReactElement {
   const _cacheResourcesAsync = async () => {
     const result = await retrieve();
     if (result !== null) {
-      setApplicationState(Status.AUTHORIZED);
+      // setApplicationState(Status.AUTHORIZED);
     }
     return result;
   };

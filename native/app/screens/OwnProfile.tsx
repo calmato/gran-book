@@ -27,22 +27,27 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  id: string;
   username: string;
   selfIntroduction: string;
   thumbnailUrl: string | undefined;
   gender: number;
-  actions: any;
+  rating: number;
+  reviewCount: number;
+  saleCount: number;
+  followerCount: number;
+  followCount: number;
+  actions: {
+    getOwnProfile: () => Promise<void>;
+  };
 }
 
 const OwnProfile = function OwnProfile(props: Props): ReactElement {
-  // TODO 出品数・フォロワー数・フォロー数・星レート・レビュー数を実装
   const userInfo = {
-    rating: 2.4,
-    reviewCount: 20,
-    saleCount: 3,
-    followerCount: 20,
-    followCount: 5,
+    rating: props.rating,
+    reviewCount: props.reviewCount,
+    saleCount: props.saleCount,
+    followerCount: props.followCount,
+    followCount: props.followCount,
   };
   const navigation = useNavigation();
 
@@ -52,7 +57,7 @@ const OwnProfile = function OwnProfile(props: Props): ReactElement {
 
   const handleGetOwnProfile = () => {
     setIsLoading(true);
-    getOwnProfile(props.id)
+    getOwnProfile()
       .then(() => {
         setIsLoading(false);
       })
@@ -61,30 +66,31 @@ const OwnProfile = function OwnProfile(props: Props): ReactElement {
       });
   };
 
-  // OwnProfileをGetするとAuthを書き換えるので再レンダリングされる
-  // =>またゲットが呼ばれるの無限ループになるので、
-  // Booleanを入れて制御。他にいい案あれば募集
   if (!hasGottonProfile) {
     setHasGottonProfile(true);
     handleGetOwnProfile();
   }
-
+  console.log('debug', 'render');
   return (
     <View style={styles.container}>
       <HeaderWithBackButton title="プロフィール" onPress={() => navigation.goBack()} />
-      <ProfileViewGroup
-        name={props.username}
-        avatarUrl={props.thumbnailUrl}
-        rating={userInfo.rating}
-        reviewCount={userInfo.reviewCount}
-        saleCount={userInfo.saleCount}
-        followerCount={userInfo.followerCount}
-        followCount={userInfo.followCount}
-        buttonTitle={'プロフィールを編集'}
-        handleClick={() => navigation.navigate('ProfileEdit')}
-      />
-      <Text style={styles.selfIntroduction}>{props.selfIntroduction}</Text>
-      <Text style={styles.title}>出品リスト</Text>
+      <ScrollView
+        refreshControl={<RefreshControl refreshing={isLoading} onRefresh={handleGetOwnProfile} />}>
+        <ProfileViewGroup
+          name={props.username}
+          avatarUrl={props.thumbnailUrl}
+          rating={userInfo.rating}
+          reviewCount={userInfo.reviewCount}
+          saleCount={userInfo.saleCount}
+          followerCount={userInfo.followerCount}
+          followCount={userInfo.followCount}
+          buttonTitle={'プロフィールを編集'}
+          handleClick={() => navigation.navigate('ProfileEdit')}
+        />
+        <Text style={styles.selfIntroduction}>{props.selfIntroduction}</Text>
+        <Text style={styles.title}>出品リスト</Text>
+        <BookList />
+      </ScrollView>
     </View>
   );
 };
