@@ -22,8 +22,8 @@ export default function ConnectedOwnProfile(): JSX.Element {
 
   return (
     <OwnProfile
-      username={auth.username}
-      selfIntroduction={auth.selfIntroduction}
+      username={user.username}
+      selfIntroduction={user.selfIntroduction}
       thumbnailUrl={user.thumbnailUrl}
       gender={auth.gender}
       rating={user.rating}
