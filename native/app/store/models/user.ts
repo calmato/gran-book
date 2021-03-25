@@ -14,7 +14,7 @@ export interface Model {
 
 export interface product {
   readonly id: number,
-  readonly namme: string,
+  readonly name: string,
   readonly thumbnailUrl: string,
   readonly authors: Array<string>,
 }

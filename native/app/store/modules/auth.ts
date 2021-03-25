@@ -36,7 +36,7 @@ export function reset() {
 }
 
 export type Action =
-  | Readonly<ReturnType<typeof setAuth>>
+  Readonly<ReturnType<typeof setAuth>>
   | Readonly<ReturnType<typeof setProfile>>
   | Readonly<ReturnType<typeof reset>>
 
@@ -49,8 +49,6 @@ export default function reducer(state: State = createInitialState(), action: Act
     return Auth.setAuth(state, payload.auth);
   case SET_PROFILE:
     return Auth.setProfile(state, payload.auth);
-  case SET_OWN_PROFILE:
-    return Auth.setOwnProfile(state, payload.auth);
   case RESET:
     return Auth.factory();
   default:

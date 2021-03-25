@@ -6,8 +6,8 @@ import firebase from '~/lib/firebase';
 import * as LocalStorage from '~/lib/local-storage';
 import { Auth } from '~/store/models';
 import { AppState } from '~/store/modules';
-import { setAuth, setProfile, setOwnProfile } from '~/store/modules/auth';
-import { IAuthResponse, IOwnOtherProfileResponse } from '~/types/response';
+import { setAuth, setProfile } from '~/store/modules/auth';
+import { IAuthResponse } from '~/types/response';
 
 interface IAuth {
   user: Firebase.User
@@ -279,50 +279,6 @@ export function profileEditAsync(username: string, gender: number, thumbnail: st
         await LocalStorage.AuthStorage.save(auth);
       })
       .catch((err: Error) => {
-        throw err;
-      });
-  };
-}
-
-export function getOwnProfileAsync(id: string) {
-  return async (dispatch: Dispatch): Promise<void> => {
-    console.log('http','getOwnProfile');
-    return await axios
-      .get(`/v1/users/${id}/profile`)
-      .then(async (res: AxiosResponse<IOwnOtherProfileResponse>) => {
-        const {
-          id,
-          username,
-          thumbnailUrl,
-          selfIntroduction,
-          isFollow,
-          isFollower,
-          followCount,
-          followerCount,
-          reviewCount,
-          rating,
-          products,
-        } = res.data;
-
-        const values: Auth.OwnOtherProfileValues = {
-          id,
-          username,
-          thumbnailUrl,
-          selfIntroduction,
-          isFollow,
-          isFollower,
-          followCount,
-          followerCount,
-          reviewCount,
-          rating,
-          products,
-        };
-
-        dispatch(setOwnProfile(values));
-
-      })
-      .catch((err: Error) => {
-        console.log(err);
         throw err;
       });
   };
