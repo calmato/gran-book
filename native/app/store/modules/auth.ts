@@ -28,13 +28,6 @@ export function setProfile(auth: Auth.ProfileValues) {
   };
 }
 
-export function setOwnProfile(auth: Auth.OwnOtherProfileValues) {
-  return {
-    type: SET_OWN_PROFILE,
-    payload: { auth },
-  };
-}
-
 export function reset() {
   return {
     type: RESET,
@@ -45,7 +38,6 @@ export function reset() {
 export type Action =
   | Readonly<ReturnType<typeof setAuth>>
   | Readonly<ReturnType<typeof setProfile>>
-  | Readonly<ReturnType<typeof setOwnProfile>>
   | Readonly<ReturnType<typeof reset>>
 
 // Reducer
