@@ -13,10 +13,10 @@ export interface Model {
 }
 
 export interface product {
-  readonly id: number,
-  readonly name: string,
-  readonly thumbnailUrl: string,
-  readonly authors: Array<string>,
+  readonly id: number;
+  readonly name: string;
+  readonly thumbnailUrl: string;
+  readonly authors: Array<string>;
 }
 
 export const initialState: Model = {
@@ -31,7 +31,7 @@ export const initialState: Model = {
   reviewCount: 0,
   rating: 0,
   products: [],
-}
+};
 
 export interface UserValues {
   id: string;

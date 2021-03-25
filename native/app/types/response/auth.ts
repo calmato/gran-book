@@ -27,14 +27,16 @@ export interface IOwnOtherProfileResponse {
   selfIntroduction: string;
   isFollow: boolean;
   isFollower: boolean;
-  followCount: 0,
-  followerCount: 0,
-  reviewCount: 0,
-  rating: 0,
-  products: [{
-    id: number,
-    name: string,
-    thumbnailUrl: string,
-    authors: [string]
-  }],
+  followCount: 0;
+  followerCount: 0;
+  reviewCount: 0;
+  rating: 0;
+  products: [
+    {
+      id: number;
+      name: string;
+      thumbnailUrl: string;
+      authors: [string];
+    },
+  ];
 }

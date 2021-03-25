@@ -36,7 +36,7 @@ export function reset() {
 }
 
 export type Action =
-  Readonly<ReturnType<typeof setAuth>>
+  | Readonly<ReturnType<typeof setAuth>>
   | Readonly<ReturnType<typeof setProfile>>
   | Readonly<ReturnType<typeof reset>>;
 

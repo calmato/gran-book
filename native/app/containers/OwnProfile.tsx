@@ -10,10 +10,12 @@ export default function ConnectedOwnProfile(): JSX.Element {
 
   return (
     <OwnProfile
+      id={auth.id}
       username={auth.username}
       selfIntroduction={auth.selfIntroduction}
       thumbnailUrl={auth.thumbnailUrl}
       gender={auth.gender}
+      actions={undefined}
     />
   );
 }

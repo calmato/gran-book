@@ -1,4 +1,4 @@
-import { User } from "../models";
+import { User } from '../models';
 
 export function createInitialState(): User.Model {
   return User.factory();
@@ -12,7 +12,7 @@ export const RESET = 'gran-book/user/RESET';
 export function setUser(user: User.UserValues) {
   return {
     type: SET_USER,
-    payload: {user},
+    payload: { user },
   };
 }
 
@@ -23,9 +23,7 @@ export function reset() {
   };
 }
 
-export type Action = 
-  Readonly<ReturnType<typeof setUser>>
-  | Readonly<ReturnType<typeof reset>>
+export type Action = Readonly<ReturnType<typeof setUser>> | Readonly<ReturnType<typeof reset>>;
 
 export default function reducer(state: State = createInitialState(), action: Action): User.Model {
   const { payload } = action;

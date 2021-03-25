@@ -27,20 +27,22 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
+  id: string;
   username: string;
   selfIntroduction: string;
   thumbnailUrl: string | undefined;
   gender: number;
+  actions: any;
 }
 
 const OwnProfile = function OwnProfile(props: Props): ReactElement {
   // TODO 出品数・フォロワー数・フォロー数・星レート・レビュー数を実装
   const userInfo = {
     rating: 2.4,
-    reviewNum: 20,
-    saleNum: 3,
-    followerNum: 20,
-    followNum: 5,
+    reviewCount: 20,
+    saleCount: 3,
+    followerCount: 20,
+    followCount: 5,
   };
   const navigation = useNavigation();
 
@@ -62,7 +64,7 @@ const OwnProfile = function OwnProfile(props: Props): ReactElement {
   // OwnProfileをGetするとAuthを書き換えるので再レンダリングされる
   // =>またゲットが呼ばれるの無限ループになるので、
   // Booleanを入れて制御。他にいい案あれば募集
-  if(!hasGottonProfile){
+  if (!hasGottonProfile) {
     setHasGottonProfile(true);
     handleGetOwnProfile();
   }
@@ -74,10 +76,10 @@ const OwnProfile = function OwnProfile(props: Props): ReactElement {
         name={props.username}
         avatarUrl={props.thumbnailUrl}
         rating={userInfo.rating}
-        reviewNum={userInfo.reviewNum}
-        saleNum={userInfo.saleNum}
-        followerNum={userInfo.followerNum}
-        followNum={userInfo.followNum}
+        reviewCount={userInfo.reviewCount}
+        saleCount={userInfo.saleCount}
+        followerCount={userInfo.followerCount}
+        followCount={userInfo.followCount}
         buttonTitle={'プロフィールを編集'}
         handleClick={() => navigation.navigate('ProfileEdit')}
       />
