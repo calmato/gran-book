@@ -21,16 +21,6 @@ export interface Model {
   readonly addressLine2: string;
   readonly createdAt: string;
   readonly updatedAt: string;
-  readonly followCount: number;
-  readonly followerCount: number;
-  readonly reviewCount: number;
-  readonly rating: number;
-  readonly products: Array<{
-      id:number, 
-      name: string, 
-      thumbnailUrl: string, 
-      authors: Array<string>
-    }>;
 }
 
 export const initialState: Model = {
@@ -55,11 +45,6 @@ export const initialState: Model = {
   addressLine2: '',
   createdAt: '',
   updatedAt: '',
-  followCount: 0,
-  followerCount: 0,
-  reviewCount: 0,
-  rating: 0,
-  products: [],
 };
 
 // Input
@@ -90,25 +75,6 @@ export interface ProfileValues {
   updatedAt: string;
 }
 
-export interface OwnOtherProfileValues {
-  id: string;
-  username: string;
-  thumbnailUrl: string;
-  selfIntroduction: string;
-  isFollow: boolean;
-  isFollower: boolean;
-  followCount: 0,
-  followerCount: 0,
-  reviewCount: 0,
-  rating: 0,
-  products: [{
-    id: number,
-    name: string,
-    thumbnailUrl: string,
-    authors: [string]
-  }],
-}
-
 // Function
 export function factory(): Model {
   return initialState;
@@ -122,13 +88,6 @@ export function setAuth(auth: Model, values: AuthValues): Model {
 }
 
 export function setProfile(auth: Model, values: ProfileValues): Model {
-  return {
-    ...auth,
-    ...values,
-  };
-}
-
-export function setOwnProfile(auth: Model, values: OwnOtherProfileValues): Model {
   return {
     ...auth,
     ...values,
