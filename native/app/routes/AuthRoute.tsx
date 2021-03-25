@@ -12,11 +12,10 @@ const AuthRoute = function AuthRoute(): ReactElement {
   return (
     <AuthStack.Navigator
       screenOptions={{
-        headerShown: false
+        headerShown: false,
       }}
-      initialRouteName="SignInSelect"
-    >
-      <AuthStack.Screen name="SignInSelect" component={SignInSelect}/>
+      initialRouteName="SignInSelect">
+      <AuthStack.Screen name="SignInSelect" component={SignInSelect} />
       <AuthStack.Screen name="SignUp" component={SignUp} />
       <AuthStack.Screen name="SignUpCheckEmail" component={SignUpCheckEmail} />
       <AuthStack.Screen name="SignIn" component={SignIn} />

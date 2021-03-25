@@ -19,8 +19,8 @@ const styles = StyleSheet.create({
     paddingStart: 10,
   },
   radioButton: {
-    flex:8,
-    flexDirection: 'row', 
+    flex: 8,
+    flexDirection: 'row',
     marginStart: 10,
     marginBottom: 10,
   },
@@ -31,16 +31,16 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  handleOnChange: (value: string) => void,
-  data: Array<RadioGroupForm>,
-  title: string,
-  initial: number,
+  handleOnChange: (value: string) => void;
+  data: Array<RadioGroupForm>;
+  title: string;
+  initial: number;
 }
 
 const GenderRadioGroup = function GenderRadioGroup(props: Props): ReactElement {
   return (
     <View style={styles.container}>
-      <Text style={[styles.text, {flex: 1}]}>{props.title}</Text>
+      <Text style={[styles.text, { flex: 1 }]}>{props.title}</Text>
       <RadioButtonRN
         style={styles.radioButton}
         boxStyle={styles.box}

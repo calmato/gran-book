@@ -63,6 +63,11 @@ func (rv *requestValidator) Run(i interface{}) []*exception.ValidationError {
 		errorFieldName := errorField.Tag.Get("json")
 		errorMessage := ""
 
+		// TODO: ネストしてるとこ、うまくjsonタグの値が取れないため
+		if errorFieldName == "" {
+			errorFieldName = v.Field()
+		}
+
 		switch v.Tag() {
 		case exception.EqFieldTag:
 			eqField, _ := rt.FieldByName(v.Param())

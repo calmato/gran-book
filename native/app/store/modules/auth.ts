@@ -38,20 +38,20 @@ export function reset() {
 export type Action =
   Readonly<ReturnType<typeof setAuth>>
   | Readonly<ReturnType<typeof setProfile>>
-  | Readonly<ReturnType<typeof reset>>
+  | Readonly<ReturnType<typeof reset>>;
 
 // Reducer
 export default function reducer(state: State = createInitialState(), action: Action): Auth.Model {
   const { payload } = action;
 
   switch (action.type) {
-  case SET_AUTH:
-    return Auth.setAuth(state, payload.auth);
-  case SET_PROFILE:
-    return Auth.setProfile(state, payload.auth);
-  case RESET:
-    return Auth.factory();
-  default:
-    return state;
+    case SET_AUTH:
+      return Auth.setAuth(state, payload.auth);
+    case SET_PROFILE:
+      return Auth.setProfile(state, payload.auth);
+    case RESET:
+      return Auth.factory();
+    default:
+      return state;
   }
 }

@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  auth: Auth.Model
+  auth: Auth.Model;
 }
 
 const MyPage = function MyPage(props: Props): ReactElement {
@@ -35,19 +35,24 @@ const MyPage = function MyPage(props: Props): ReactElement {
   const { auth } = props;
   // TODO: 型定義
   const avatar = {
+<<<<<<< HEAD
     name: auth?.username,
     thumbnailUrl: auth?.thumbnailUrl,
+=======
+    name: auth?.username || 'hamachans',
+    thumbnailUrl:
+      auth?.thumbnailUrl ||
+      'https://pbs.twimg.com/profile_images/1312909954148253696/Utr-sa_Y_400x400.jpg',
+>>>>>>> fc0b2170fad08c1b446d3c150504d17c888b8733
   };
 
   return (
     <View>
-      <ScrollView
-        stickyHeaderIndices={[0]}
-      >
-        <Header centerComponent={<HeaderText title="マイページ"/>} />
+      <ScrollView stickyHeaderIndices={[0]}>
+        <Header centerComponent={<HeaderText title="マイページ" />} />
         <View>
-          <ListItem bottomDivider onPress={()=>navigation.navigate('OwnProfile')}>
-            <Avatar source={{uri: avatar.thumbnailUrl}} rounded/>
+          <ListItem bottomDivider onPress={() => navigation.navigate('OwnProfile')}>
+            <Avatar source={{ uri: avatar.thumbnailUrl }} rounded />
             <ListItem.Content>
               <ListItem.Title>{avatar.name}</ListItem.Title>
             </ListItem.Content>
@@ -159,7 +164,7 @@ const MyPage = function MyPage(props: Props): ReactElement {
             </ListItem.Content>
             <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
           </ListItem>
-          <ListItem key={15} bottomDivider onPress={()=>navigation.navigate('AccountSetting')}>
+          <ListItem key={15} bottomDivider onPress={() => navigation.navigate('AccountSetting')}>
             <ListItem.Content>
               <ListItem.Title>{'設定'}</ListItem.Title>
             </ListItem.Content>

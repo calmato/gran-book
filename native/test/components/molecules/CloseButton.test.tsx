@@ -23,12 +23,8 @@ describe('<CloseButton />', () => {
     const size = 24;
 
     const wrapper = shallow(
-      <CloseButton
-        size={size}
-        color={colors.black}
-        onPress={() => console.log('test')
-        }
-      />);
+      <CloseButton size={size} color={colors.black} onPress={() => console.log('test')} />,
+    );
 
     const closeIcon = wrapper.find(CloseIcon).get(0);
 

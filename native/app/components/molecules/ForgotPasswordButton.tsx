@@ -5,33 +5,28 @@ import { Button } from 'react-native-elements';
 
 const styles = StyleSheet.create({
   buttonStyle: {
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
   },
   titleStyle: {
     fontWeight: 'normal',
     fontSize: 14,
-    color: 'black'
+    color: 'black',
   },
   iconStyle: {
-    marginLeft: 10
+    marginLeft: 10,
   },
 });
 
 interface Props {
-  style?: ViewStyle,
-  onPress: () => void,
+  style?: ViewStyle;
+  onPress: () => void;
 }
 
-const ForgotPasswordButton = function ForgotPasswordButton(props:Props): ReactElement{
+const ForgotPasswordButton = function ForgotPasswordButton(props: Props): ReactElement {
   return (
     <Button
       icon={
-        <Ionicons
-          name="chevron-forward-outline"
-          size={24}
-          color="black"
-          style={styles.iconStyle}
-        />
+        <Ionicons name="chevron-forward-outline" size={24} color="black" style={styles.iconStyle} />
       }
       buttonStyle={styles.buttonStyle}
       iconRight={true}

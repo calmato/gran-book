@@ -11,18 +11,21 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  avatarUrl: string | undefined,
-  handleOnClicked: () => void,
+  avatarUrl: string | undefined;
+  handleOnClicked: () => void;
 }
 
 const ChangeIconGroup = function ChangeIconGroup(props: Props): ReactElement {
   return (
-    <ListItem style={{alignItems:'flex-start'}} Component={TouchableOpacity} onPress={()=>props.handleOnClicked}>
-      <Avatar source={{uri: props.avatarUrl}} rounded size='medium'/>
+    <ListItem
+      style={{ alignItems: 'flex-start' }}
+      Component={TouchableOpacity}
+      onPress={() => props.handleOnClicked}>
+      <Avatar source={{ uri: props.avatarUrl }} rounded size="medium" />
       <ListItem.Content>
         <Text style={styles.text}>アイコン変更</Text>
       </ListItem.Content>
-      <MaterialIcons name="keyboard-arrow-right" size={24} color="black"/>
+      <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
     </ListItem>
   );
 };

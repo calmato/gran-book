@@ -2,11 +2,11 @@ import React, { ReactElement } from 'react';
 import { StyleSheet, TextInput } from 'react-native';
 import { COLOR } from '~~/constants/theme';
 
-interface Props{
-  placeholder: string,
-  value: string | undefined,
-  length: number | undefined,
-  onChangeText: (value: string) => void | undefined,
+interface Props {
+  placeholder: string;
+  value: string | undefined;
+  length: number | undefined;
+  onChangeText: (value: string) => void | undefined;
 }
 
 const styles = StyleSheet.create({
@@ -19,7 +19,6 @@ const styles = StyleSheet.create({
 });
 
 const HalfTextInput = function HalfInput(props: Props): ReactElement {
-
   return (
     <TextInput
       style={styles.halfTextInput}

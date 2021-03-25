@@ -50,7 +50,7 @@ func getDBConfig(socket, host, port, database, username, password string) string
 	}
 }
 
-// // getListQuery - SELECT SQL文作成用メソッド
+// getListQuery - SELECT SQL文作成用メソッド
 // func (c *Client) getListQuery(db *gorm.DB, q *domain.ListQuery) *gorm.DB {
 // 	if q == nil {
 // 		return db

@@ -7,8 +7,8 @@ import SearchResultItem from '~/components/molecules/SearchResultItem';
 const styles = StyleSheet.create({});
 
 interface Props {
-  results: ISearchResponse,
-  onPress: (item: Partial<ISearchResultItem>) => void,
+  results: ISearchResponse;
+  onPress: (item: Partial<ISearchResultItem>) => void;
 }
 
 const SearchResultItemList = function SearchResultItemList(props: Props): ReactElement {
@@ -16,15 +16,9 @@ const SearchResultItemList = function SearchResultItemList(props: Props): ReactE
 
   return (
     <View>
-      {
-        results.items.map((item) => (
-          <SearchResultItem
-            key={item.id}
-            book={item}
-            onPress={() => props.onPress(item)}
-          />
-        ))
-      }
+      {results.items.map((item) => (
+        <SearchResultItem key={item.id} book={item} onPress={() => props.onPress(item)} />
+      ))}
     </View>
   );
 };

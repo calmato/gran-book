@@ -315,7 +315,7 @@ paths:
                 $ref: '#/components/schemas/errorResponse'
   /v1/books:
     post:
-      summary: 書籍登録
+      summary: 書籍一括登録・更新
       tags:
         - BookService
       security:
@@ -325,7 +325,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/createBookRequest'
+              $ref: '#/components/schemas/createAndUpdateBooksRequest'
       responses:
         '200':
           description: A successful response.
@@ -412,43 +412,48 @@ components:
           type: string
         addressLine2:
           type: string
-    createBookRequest:
+    createAndUpdateBooksRequest:
       type: object
       properties:
-        title:
-          type: string
-        authors:
-          type: array
-          items:
-            type: string
-        publisher:
-          type: string
-        publishedDate:
-          type: string
-        description:
-          type: string
-        industryIdentifiers:
+        items:
           type: array
           items:
             type: object
             properties:
-              type:
+              title:
                 type: string
-              identifier:
+              authors:
+                type: array
+                items:
+                  type: string
+              publisher:
                 type: string
-        categories:
-          type: array
-          items:
-            type: string
-        contentVersion:
-          type: string
-        imageLinks:
-          type: object
-          properties:
-            smallThumbnail:
-              type: string
-            thumbnail:
-              type: string
+              publishedDate:
+                type: string
+              description:
+                type: string
+              industryIdentifiers:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                    identifier:
+                      type: string
+              categories:
+                type: array
+                items:
+                  type: string
+              contentVersion:
+                type: string
+              imageLinks:
+                type: object
+                properties:
+                  smallThumbnail:
+                    type: string
+                  thumbnail:
+                    type: string
     # Response
     authResponse:
       type: object
@@ -585,38 +590,43 @@ components:
         total:
           type: integer
           format: int64
-    bookResponse:
+    bookListResponse:
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
-        title:
-          type: string
-        description:
-          type: string
-        isbn:
-          type: string
-        thumbnailUrl:
-          type: string
-        version:
-          type: string
-        publishedOn:
-          type: string
-        publisher:
-          type: string
-        authors:
+        books:
           type: array
           items:
-            type: string
-        categories:
-          type: array
-          items:
-            type: string
-        createdAt:
-          type: string
-        updatedAt:
-          type: string
+            type: object
+            properties:
+              id:
+                type: integer
+                format: int64
+              title:
+                type: string
+              description:
+                type: string
+              isbn:
+                type: string
+              thumbnailUrl:
+                type: string
+              version:
+                type: string
+              publishedOn:
+                type: string
+              publisher:
+                type: string
+              authors:
+                type: array
+                items:
+                  type: string
+              categories:
+                type: array
+                items:
+                  type: string
+              createdAt:
+                type: string
+              updatedAt:
+                type: string
     errorResponse:
       type: object
       properties:

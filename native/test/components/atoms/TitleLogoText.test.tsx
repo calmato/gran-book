@@ -10,7 +10,6 @@ import { Text } from 'react-native-elements';
 configure({ adapter: new Adapter() });
 
 describe('<TitleLogoText />', () => {
-
   it('has default props', () => {
     const text = 'test';
     const wrapper = shallow(<TitleLogoText text={text} />);
