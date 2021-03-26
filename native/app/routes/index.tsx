@@ -38,7 +38,8 @@ export default function MainRoute(): ReactElement {
 
   useEffect(() => {
     async function prepare() {
-      await actions.authentication()
+      await actions
+        .authentication()
         .then(() => {
           return actions.getAuth();
         })
@@ -60,14 +61,10 @@ export default function MainRoute(): ReactElement {
       },
       getAuth(): Promise<void> {
         return dispatch(getAuthAsync());
-      }
+      },
     }),
     [dispatch],
   );
 
-  return (
-    <NavigationContainer>
-      {SwitchingStatus(uiContext.applicationState)}
-    </NavigationContainer>
-  );
+  return <NavigationContainer>{SwitchingStatus(uiContext.applicationState)}</NavigationContainer>;
 }
