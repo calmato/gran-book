@@ -26,6 +26,17 @@ function deserialize_proto_BookResponse(buffer_arg) {
   return proto_book_apiv1_pb.BookResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_proto_BookshelfResponse(arg) {
+  if (!(arg instanceof proto_book_apiv1_pb.BookshelfResponse)) {
+    throw new Error('Expected argument of type proto.BookshelfResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_BookshelfResponse(buffer_arg) {
+  return proto_book_apiv1_pb.BookshelfResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_proto_CreateAndUpdateBooksRequest(arg) {
   if (!(arg instanceof proto_book_apiv1_pb.CreateAndUpdateBooksRequest)) {
     throw new Error('Expected argument of type proto.CreateAndUpdateBooksRequest');
@@ -46,6 +57,17 @@ function serialize_proto_CreateBookRequest(arg) {
 
 function deserialize_proto_CreateBookRequest(buffer_arg) {
   return proto_book_apiv1_pb.CreateBookRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_proto_RegisterBookshelfRequest(arg) {
+  if (!(arg instanceof proto_book_apiv1_pb.RegisterBookshelfRequest)) {
+    throw new Error('Expected argument of type proto.RegisterBookshelfRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_RegisterBookshelfRequest(buffer_arg) {
+  return proto_book_apiv1_pb.RegisterBookshelfRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 
@@ -71,6 +93,17 @@ var BookServiceService = exports.BookServiceService = {
     requestDeserialize: deserialize_proto_CreateAndUpdateBooksRequest,
     responseSerialize: serialize_proto_BookListResponse,
     responseDeserialize: deserialize_proto_BookListResponse,
+  },
+  registerBookshelf: {
+    path: '/proto.BookService/RegisterBookshelf',
+    requestStream: false,
+    responseStream: false,
+    requestType: proto_book_apiv1_pb.RegisterBookshelfRequest,
+    responseType: proto_book_apiv1_pb.BookshelfResponse,
+    requestSerialize: serialize_proto_RegisterBookshelfRequest,
+    requestDeserialize: deserialize_proto_RegisterBookshelfRequest,
+    responseSerialize: serialize_proto_BookshelfResponse,
+    responseDeserialize: deserialize_proto_BookshelfResponse,
   },
 };
 
