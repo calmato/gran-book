@@ -3,10 +3,10 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { MyPage } from '~/containers';
 import { OwnProfile } from '~/containers';
 import { UserInfoStackParamList } from '~/types/navigation';
-import AccountSetting from '~/screens/AccoutSetting';
 import { EmailEdit } from '~/containers';
 import { ContactEdit } from '~/containers';
 import { ProfileEdit } from '~/containers';
+import { AccountSetting } from '~/containers';
 
 const UserInfoStack = createStackNavigator<UserInfoStackParamList>();
 
