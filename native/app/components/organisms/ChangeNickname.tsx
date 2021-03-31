@@ -25,8 +25,8 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  value: string,
-  handelOnChangeText: (text) => void,
+  value: string;
+  handelOnChangeText: (text) => void;
 }
 
 const ChangeNickname = function ChangeNickname(props: Props): ReactElement {
@@ -36,11 +36,20 @@ const ChangeNickname = function ChangeNickname(props: Props): ReactElement {
       <TextInput
         style={styles.input}
         maxLength={32}
+<<<<<<< HEAD
         textAlign='right'
         multiline={true}
         value={props.value}
         onChangeText={(text)=>props.handelOnChangeText(text)}
         placeholder={'ニックネームを入力してください'}
+=======
+        textAlign="right"
+        multiline={true}
+        value={props.value}
+        onChangeText={(text) => props.handelOnChangeText(text)}
+        placeholder={'ニックネームを入力してください'}
+        placeholderTextColor={COLOR.TEXT_ALERT}
+>>>>>>> fc0b2170fad08c1b446d3c150504d17c888b8733
       />
     </View>
   );

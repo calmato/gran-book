@@ -5,6 +5,8 @@ import (
 	"time"
 
 	"github.com/calmato/gran-book/api/server/book/internal/domain/book"
+	"github.com/calmato/gran-book/api/server/book/internal/domain/exception"
+	"golang.org/x/xerrors"
 )
 
 type bookService struct {
@@ -20,39 +22,44 @@ func NewBookService(bdv book.Validation, br book.Repository) book.Service {
 	}
 }
 
-func (s *bookService) Create(ctx context.Context, b *book.Book) error {
-	err := s.bookDomainValidation.Book(ctx, b)
+func (s *bookService) ShowByIsbn(ctx context.Context, isbn string) (*book.Book, error) {
+	b, err := s.bookRepository.ShowByIsbn(ctx, isbn)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
+	if b == nil || b.ID == 0 {
+		err := xerrors.New("Book is nil.")
+		return nil, exception.NotFound.New(err)
+	}
+
+	as, err := s.bookRepository.ShowAuthorsByBookID(ctx, b.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	cs, err := s.bookRepository.ShowCategoriesByBookID(ctx, b.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	b.Authors = as
+	b.Categories = cs
+
+	return b, nil
+}
+
+func (s *bookService) Create(ctx context.Context, b *book.Book) error {
 	current := time.Now()
 
 	b.CreatedAt = current
 	b.UpdatedAt = current
 
-	if b.Publisher != nil {
-		_ = s.CreatePublisher(ctx, b.Publisher)
-		b.PublisherID = b.Publisher.ID
-	}
-
-	for _, a := range b.Authors {
-		_ = s.CreateAuthor(ctx, a)
-	}
-
-	for _, c := range b.Categories {
-		_ = s.CreateCategory(ctx, c)
-	}
-
+	s.associate(ctx, b)
 	return s.bookRepository.Create(ctx, b)
 }
 
 func (s *bookService) CreateAuthor(ctx context.Context, a *book.Author) error {
-	err := s.bookDomainValidation.Author(ctx, a)
-	if err != nil {
-		return err
-	}
-
 	current := time.Now()
 
 	a.CreatedAt = current
@@ -62,11 +69,6 @@ func (s *bookService) CreateAuthor(ctx context.Context, a *book.Author) error {
 }
 
 func (s *bookService) CreateBookshelf(ctx context.Context, b *book.Bookshelf) error {
-	err := s.bookDomainValidation.Bookshelf(ctx, b)
-	if err != nil {
-		return err
-	}
-
 	current := time.Now()
 
 	b.CreatedAt = current
@@ -76,11 +78,6 @@ func (s *bookService) CreateBookshelf(ctx context.Context, b *book.Bookshelf) er
 }
 
 func (s *bookService) CreateCategory(ctx context.Context, c *book.Category) error {
-	err := s.bookDomainValidation.Category(ctx, c)
-	if err != nil {
-		return err
-	}
-
 	current := time.Now()
 
 	c.CreatedAt = current
@@ -89,16 +86,58 @@ func (s *bookService) CreateCategory(ctx context.Context, c *book.Category) erro
 	return s.bookRepository.CreateCategory(ctx, c)
 }
 
-func (s *bookService) CreatePublisher(ctx context.Context, p *book.Publisher) error {
-	err := s.bookDomainValidation.Publisher(ctx, p)
-	if err != nil {
-		return err
-	}
-
+func (s *bookService) Update(ctx context.Context, b *book.Book) error {
 	current := time.Now()
 
-	p.CreatedAt = current
-	p.UpdatedAt = current
+	b.UpdatedAt = current
 
-	return s.bookRepository.CreatePublisher(ctx, p)
+	s.associate(ctx, b)
+	return s.bookRepository.Update(ctx, b)
+}
+
+func (s *bookService) MultipleCreate(ctx context.Context, bs []*book.Book) error {
+	current := time.Now()
+
+	for _, b := range bs {
+		b.CreatedAt = current
+		b.UpdatedAt = current
+
+		s.associate(ctx, b)
+	}
+
+	return s.bookRepository.MultipleCreate(ctx, bs)
+}
+
+func (s *bookService) MultipleUpdate(ctx context.Context, bs []*book.Book) error {
+	current := time.Now()
+
+	for _, b := range bs {
+		b.UpdatedAt = current
+
+		s.associate(ctx, b)
+	}
+
+	return s.bookRepository.MultipleUpdate(ctx, bs)
+}
+
+func (s *bookService) Validation(ctx context.Context, b *book.Book) error {
+	return s.bookDomainValidation.Book(ctx, b)
+}
+
+func (s *bookService) ValidationAuthor(ctx context.Context, a *book.Author) error {
+	return s.bookDomainValidation.Author(ctx, a)
+}
+
+func (s *bookService) ValidationCategory(ctx context.Context, c *book.Category) error {
+	return s.bookDomainValidation.Category(ctx, c)
+}
+
+func (s *bookService) associate(ctx context.Context, b *book.Book) {
+	for _, a := range b.Authors {
+		_ = s.CreateAuthor(ctx, a)
+	}
+
+	for _, c := range b.Categories {
+		_ = s.CreateCategory(ctx, c)
+	}
 }

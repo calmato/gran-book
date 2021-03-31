@@ -8,5 +8,4 @@ type Validation interface {
 	Author(ctx context.Context, b *Author) error
 	Bookshelf(ctx context.Context, b *Bookshelf) error
 	Category(ctx context.Context, b *Category) error
-	Publisher(ctx context.Context, b *Publisher) error
 }

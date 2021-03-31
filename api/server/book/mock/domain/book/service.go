@@ -34,6 +34,21 @@ func (m *MockService) EXPECT() *MockServiceMockRecorder {
 	return m.recorder
 }
 
+// ShowByIsbn mocks base method
+func (m *MockService) ShowByIsbn(ctx context.Context, isbn string) (*book.Book, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ShowByIsbn", ctx, isbn)
+	ret0, _ := ret[0].(*book.Book)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ShowByIsbn indicates an expected call of ShowByIsbn
+func (mr *MockServiceMockRecorder) ShowByIsbn(ctx, isbn interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ShowByIsbn", reflect.TypeOf((*MockService)(nil).ShowByIsbn), ctx, isbn)
+}
+
 // Create mocks base method
 func (m *MockService) Create(ctx context.Context, b *book.Book) error {
 	m.ctrl.T.Helper()
@@ -90,16 +105,86 @@ func (mr *MockServiceMockRecorder) CreateCategory(ctx, b interface{}) *gomock.Ca
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateCategory", reflect.TypeOf((*MockService)(nil).CreateCategory), ctx, b)
 }
 
-// CreatePublisher mocks base method
-func (m *MockService) CreatePublisher(ctx context.Context, b *book.Publisher) error {
+// Update mocks base method
+func (m *MockService) Update(ctx context.Context, b *book.Book) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreatePublisher", ctx, b)
+	ret := m.ctrl.Call(m, "Update", ctx, b)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// CreatePublisher indicates an expected call of CreatePublisher
-func (mr *MockServiceMockRecorder) CreatePublisher(ctx, b interface{}) *gomock.Call {
+// Update indicates an expected call of Update
+func (mr *MockServiceMockRecorder) Update(ctx, b interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreatePublisher", reflect.TypeOf((*MockService)(nil).CreatePublisher), ctx, b)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockService)(nil).Update), ctx, b)
+}
+
+// MultipleCreate mocks base method
+func (m *MockService) MultipleCreate(ctx context.Context, bs []*book.Book) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "MultipleCreate", ctx, bs)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// MultipleCreate indicates an expected call of MultipleCreate
+func (mr *MockServiceMockRecorder) MultipleCreate(ctx, bs interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MultipleCreate", reflect.TypeOf((*MockService)(nil).MultipleCreate), ctx, bs)
+}
+
+// MultipleUpdate mocks base method
+func (m *MockService) MultipleUpdate(ctx context.Context, bs []*book.Book) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "MultipleUpdate", ctx, bs)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// MultipleUpdate indicates an expected call of MultipleUpdate
+func (mr *MockServiceMockRecorder) MultipleUpdate(ctx, bs interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MultipleUpdate", reflect.TypeOf((*MockService)(nil).MultipleUpdate), ctx, bs)
+}
+
+// Validation mocks base method
+func (m *MockService) Validation(ctx context.Context, b *book.Book) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Validation", ctx, b)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Validation indicates an expected call of Validation
+func (mr *MockServiceMockRecorder) Validation(ctx, b interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Validation", reflect.TypeOf((*MockService)(nil).Validation), ctx, b)
+}
+
+// ValidationAuthor mocks base method
+func (m *MockService) ValidationAuthor(ctx context.Context, a *book.Author) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ValidationAuthor", ctx, a)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// ValidationAuthor indicates an expected call of ValidationAuthor
+func (mr *MockServiceMockRecorder) ValidationAuthor(ctx, a interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ValidationAuthor", reflect.TypeOf((*MockService)(nil).ValidationAuthor), ctx, a)
+}
+
+// ValidationCategory mocks base method
+func (m *MockService) ValidationCategory(ctx context.Context, c *book.Category) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ValidationCategory", ctx, c)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// ValidationCategory indicates an expected call of ValidationCategory
+func (mr *MockServiceMockRecorder) ValidationCategory(ctx, c interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ValidationCategory", reflect.TypeOf((*MockService)(nil).ValidationCategory), ctx, c)
 }

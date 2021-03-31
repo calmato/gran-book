@@ -99,7 +99,7 @@ export function setProfile(auth: Model, values: ProfileValues): Model {
 }
 
 export function setEmail(auth: Model, values: Email): Model {
-  return{
+  return {
     ...auth,
     ...values,
   };

@@ -27,20 +27,20 @@ const styles = StyleSheet.create({
 
 const version = '1.00';
 
-type AccountSettingProp= StackNavigationProp<UserInfoStackParamList, 'AccountSetting'>;
+type AccountSettingProp = StackNavigationProp<UserInfoStackParamList, 'AccountSetting'>;
 
 interface Props {
-  navigation: AccountSettingProp
+  navigation: AccountSettingProp;
 }
 
-const AccountSetting  = function AccountSetting(props: Props): ReactElement {
+const AccountSetting = function AccountSetting(props: Props): ReactElement {
   const navigation = props.navigation;
   const [isEnabledBook, setIsEnabledBook] = useState(false);
   const [isEnabledInformation, setIsEnabledInformation] = useState(false);
   const [isEnabledImpressions, setIsEnabledImpressions] = useState(false);
-  const toggleSwitchBook = () => setIsEnabledBook(previousState => !previousState);
-  const toggleSwitchInformation = () => setIsEnabledInformation(previousState => !previousState);
-  const toggleSwitchImpressions = () => setIsEnabledImpressions(previousState => !previousState);
+  const toggleSwitchBook = () => setIsEnabledBook((previousState) => !previousState);
+  const toggleSwitchInformation = () => setIsEnabledInformation((previousState) => !previousState);
+  const toggleSwitchImpressions = () => setIsEnabledImpressions((previousState) => !previousState);
 
   const accountSettingList = [
     {
@@ -62,30 +62,24 @@ const AccountSetting  = function AccountSetting(props: Props): ReactElement {
     {
       title: 'サインアウト',
       onClicked: undefined,
-    }
+    },
   ];
 
   return (
     <View>
-      <HeaderWithBackButton
-        title='アカウント'
-        onPress={() => navigation.goBack()}
-      />
+      <HeaderWithBackButton title="アカウント" onPress={() => navigation.goBack()} />
       <SafeAreaView>
         <ScrollView>
-
           <Text style={styles.subtilte}>アカウント設定</Text>
           <View>
-            {
-              accountSettingList.map((item, i) => (
-                <ListItem key={i} bottomDivider onPress={item.onClicked}>
-                  <ListItem.Content>
-                    <Text style={styles.textStyle}>{item.title}</Text>
-                  </ListItem.Content>
-                  <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
-                </ListItem>
-              ))
-            }
+            {accountSettingList.map((item, i) => (
+              <ListItem key={i} bottomDivider onPress={item.onClicked}>
+                <ListItem.Content>
+                  <Text style={styles.textStyle}>{item.title}</Text>
+                </ListItem.Content>
+                <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
+              </ListItem>
+            ))}
           </View>
           <Text style={styles.subtilte}>プッシュ通知設定</Text>
           <ListItem key={6} bottomDivider>
@@ -102,7 +96,7 @@ const AccountSetting  = function AccountSetting(props: Props): ReactElement {
             <Switch
               trackColor={{ false: COLOR.GREY, true: COLOR.TEXT_SUCCESS }}
               thumbColor={COLOR.BACKGROUND_WHITE}
-              ios_backgroundColor= {COLOR.TEXT_GRAY}
+              ios_backgroundColor={COLOR.TEXT_GRAY}
               onValueChange={toggleSwitchBook}
               value={isEnabledBook}
             />
@@ -114,7 +108,7 @@ const AccountSetting  = function AccountSetting(props: Props): ReactElement {
             <Switch
               trackColor={{ false: COLOR.GREY, true: COLOR.TEXT_SUCCESS }}
               thumbColor={COLOR.BACKGROUND_WHITE}
-              ios_backgroundColor= {COLOR.TEXT_GRAY}
+              ios_backgroundColor={COLOR.TEXT_GRAY}
               onValueChange={toggleSwitchInformation}
               value={isEnabledInformation}
             />
@@ -126,7 +120,7 @@ const AccountSetting  = function AccountSetting(props: Props): ReactElement {
             <Switch
               trackColor={{ false: COLOR.GREY, true: COLOR.TEXT_SUCCESS }}
               thumbColor={COLOR.BACKGROUND_WHITE}
-              ios_backgroundColor= {COLOR.TEXT_GRAY}
+              ios_backgroundColor={COLOR.TEXT_GRAY}
               onValueChange={toggleSwitchImpressions}
               value={isEnabledImpressions}
             />

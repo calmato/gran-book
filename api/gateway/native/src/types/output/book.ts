@@ -5,25 +5,14 @@ export interface IBookOutput {
   isbn: string
   thumbnailUrl: string
   version: string
+  publisher: string
   publishedOn: string
-  publisher: IBookOutputPublisher
-  authors: Array<IBookOutputAuthor>
-  categories: Array<IBookOutputCategory>
+  authors: Array<string>
+  categories: Array<string>
   createdAt: string
   updatedAt: string
 }
 
-export interface IBookOutputPublisher {
-  id: number
-  name: string
-}
-
-export interface IBookOutputAuthor {
-  id: number
-  name: string
-}
-
-export interface IBookOutputCategory {
-  id: number
-  name: string
+export interface IBookListOutput {
+  books: Array<IBookOutput>
 }

@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'right',
     color: COLOR.TEXT_DEFAULT,
-    backgroundColor: COLOR.BACKGROUND_WHITE
+    backgroundColor: COLOR.BACKGROUND_WHITE,
   },
   textStyle: {
     fontSize: 16,
@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  email: string
+  email: string;
 }
 
 const ContactEdit = function ContactEdit(props: Props): ReactElement {
@@ -38,23 +38,22 @@ const ContactEdit = function ContactEdit(props: Props): ReactElement {
   return (
     <View>
       <HeaderWithBackButton
-        title='メールアドレス・パスワード設定'
+        title="メールアドレス・パスワード設定"
         onPress={() => navigation.goBack()}
       />
       <Text style={styles.subtitle}>現在のメールアドレス</Text>
       <Text style={styles.mailStatus}>{statusDefault}</Text>
-      <ListItem 
-        style={{ marginTop: 5 }} 
-        bottomDivider 
-        onPress={()=>navigation.navigate('EmailEdit')}
-      >
+      <ListItem
+        style={{ marginTop: 5 }}
+        bottomDivider
+        onPress={() => navigation.navigate('EmailEdit')}>
         <ListItem.Content>
           <Text style={styles.textStyle}>メールアドレスの変更</Text>
         </ListItem.Content>
         <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
       </ListItem>
       <Text style={styles.subtitle}>パスワード</Text>
-      <ListItem style={{ marginTop: 5 }} bottomDivider >
+      <ListItem style={{ marginTop: 5 }} bottomDivider>
         <ListItem.Content>
           <Text style={styles.textStyle}>パスワードの変更</Text>
         </ListItem.Content>

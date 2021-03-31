@@ -18,16 +18,16 @@ const styles = StyleSheet.create({
   },
 });
 
-interface Props{
-  date: Date,
-  handleSetDate: (date: Date) => void,
-  isDateUnknown: boolean,
-  handleIsDateUnknown: (isDateUnknown: boolean) => void,
+interface Props {
+  date: Date;
+  handleSetDate: (date: Date) => void;
+  isDateUnknown: boolean;
+  handleIsDateUnknown: (isDateUnknown: boolean) => void;
 }
 
 const ReadDate = function ReadDate(props: Props): ReactElement {
   const toggleSwitch = () => props.handleIsDateUnknown(!props.isDateUnknown);
-  
+
   const [show, setShow] = useState(false);
   const handleChangeDate = (_event, selectedDate) => {
     const currentDate = selectedDate;
@@ -38,19 +38,20 @@ const ReadDate = function ReadDate(props: Props): ReactElement {
     setShow(true);
   };
 
-  return(
+  return (
     <View style={styles.containerStyle}>
       <ListItem bottomDivider>
         <ListItem.Content>
           <Text style={styles.textStyle}>読んだ日</Text>
         </ListItem.Content>
-        {
-          !props.isDateUnknown &&      
-          <TouchableOpacity style={{flexDirection:'row', alignItems:'center'}} onPress={showDatepicker}>
-            <Text style={[styles.textStyle]}>{`${dayjs(props.date).format('YYYY/MM/DD')}`}</Text> 
+        {!props.isDateUnknown && (
+          <TouchableOpacity
+            style={{ flexDirection: 'row', alignItems: 'center' }}
+            onPress={showDatepicker}>
+            <Text style={[styles.textStyle]}>{`${dayjs(props.date).format('YYYY/MM/DD')}`}</Text>
             <MaterialIcons name="keyboard-arrow-right" size={24} color={COLOR.GREY} />
           </TouchableOpacity>
-        }
+        )}
       </ListItem>
       <ListItem>
         <ListItem.Content>
@@ -59,18 +60,14 @@ const ReadDate = function ReadDate(props: Props): ReactElement {
         <Switch
           trackColor={{ false: COLOR.GREY, true: COLOR.TEXT_SUCCESS }}
           thumbColor={COLOR.BACKGROUND_WHITE}
-          ios_backgroundColor= {COLOR.TEXT_GRAY}
+          ios_backgroundColor={COLOR.TEXT_GRAY}
           onValueChange={toggleSwitch}
           value={props.isDateUnknown}
         />
       </ListItem>
-      {
-        !props.isDateUnknown && show && (
-          <DefaultDataPicker
-            date={props.date}
-            onChange={handleChangeDate}
-          />
-        )}
+      {!props.isDateUnknown && show && (
+        <DefaultDataPicker date={props.date} onChange={handleChangeDate} />
+      )}
     </View>
   );
 };

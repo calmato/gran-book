@@ -5,27 +5,18 @@ import "time"
 // Book - 書籍エンティティ
 type Book struct {
 	ID           int          `gorm:"primaryKey;not null;<-:create"`
-	PublisherID  int          `gorm:"not null;uniqueIndex:ui_books_01;uniqueIndex:ui_books_02"`
-	Title        string       `gorm:"size:32;not null;uniqueIndex:ui_books_01;uniqueIndex:ui_books_02"`
-	Description  string       `gorm:"size:1000;not null"`
+	Title        string       `gorm:"size:64;not null;uniqueIndex:ui_books_01;uniqueIndex:ui_books_02"`
+	Description  string       `gorm:"size:2000"`
 	Isbn         string       `gorm:"size:16;not null"`
 	ThumbnailURL string       `gorm:""`
-	Version      string       `gorm:"size:64"`
-	PublishedOn  time.Time    `gorm:"not null"`
+	Version      string       `gorm:"size:64:not null"`
+	Publisher    string       `gorm:"size:32"`
+	PublishedOn  time.Time    `gorm:""`
 	CreatedAt    time.Time    `gorm:"not null;<-:create"`
 	UpdatedAt    time.Time    `gorm:"not null"`
-	Publisher    *Publisher   `gorm:"foreignKey:PublisherID;constraint:OnDelete:SET NULL"`
-	Bookshelfs   []*Bookshelf `gorm:"foreignKey:BookID;constraint:OnDelete:CASCADE"`
+	Bookshelves  []*Bookshelf `gorm:"foreignKey:BookID;constraint:OnDelete:CASCADE"`
 	Authors      []*Author    `gorm:"many2many:authors_books"`
 	Categories   []*Category  `gorm:"many2many:books_categories"`
-}
-
-// Publisher - 出版社エンティティ
-type Publisher struct {
-	ID        int       `gorm:"primaryKey;not null;autoIncrement;<-:create"`
-	Name      string    `gorm:"size:32;not null;unique"`
-	CreatedAt time.Time `gorm:"not null;<-:create"`
-	UpdatedAt time.Time `gorm:"not null"`
 }
 
 // Author - 著者エンティティ

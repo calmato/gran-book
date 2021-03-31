@@ -11,7 +11,8 @@ export default function ConnectedPasswordEdit(): JSX.Element {
       editPassword(password: string, passwordConfirmation: string): Promise<void> {
         return dispatch(editPasswordAsync(password, passwordConfirmation));
       },
-    }), [dispatch],
+    }),
+    [dispatch],
   );
 
   return <PasswordEdit actions={actions} />;

@@ -5,7 +5,7 @@ import * as AuthState from './auth';
 import { Auth } from '~/store/models';
 
 interface InitialState {
-  auth: Auth.Model
+  auth: Auth.Model;
 }
 
 export function createInitialState(): InitialState {

@@ -12,7 +12,12 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
+<<<<<<< HEAD
   avatarUrl: string | undefined,
+=======
+  avatarUrl: string | undefined;
+  handleOnClicked: () => void;
+>>>>>>> fc0b2170fad08c1b446d3c150504d17c888b8733
 }
 
 const state = {
@@ -52,12 +57,20 @@ const ChangeIconGroup = function ChangeIconGroup(props: Props): ReactElement {
   };
 
   return (
+<<<<<<< HEAD
     <ListItem style={{alignItems:'flex-start'}} Component={TouchableOpacity} onPress={pickImage}>
       <Avatar source={{uri: state.iconState ? state.iconUri : props.avatarUrl}} rounded size='medium'/>
+=======
+    <ListItem
+      style={{ alignItems: 'flex-start' }}
+      Component={TouchableOpacity}
+      onPress={() => props.handleOnClicked}>
+      <Avatar source={{ uri: props.avatarUrl }} rounded size="medium" />
+>>>>>>> fc0b2170fad08c1b446d3c150504d17c888b8733
       <ListItem.Content>
         <Text style={styles.text}>アイコン変更</Text>
       </ListItem.Content>
-      <MaterialIcons name="keyboard-arrow-right" size={24} color="black"/>
+      <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
     </ListItem>
   );
 };

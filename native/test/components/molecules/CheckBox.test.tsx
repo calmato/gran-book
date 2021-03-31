@@ -19,7 +19,9 @@ describe('<CheckBox />', () => {
       alignItems: 'center',
     };
 
-    const wrapper = shallow(<CheckBox title={title} checked={checked} onPress={() => console.log('test')} />);
+    const wrapper = shallow(
+      <CheckBox title={title} checked={checked} onPress={() => console.log('test')} />,
+    );
 
     const view = wrapper.find(View).get(0);
     const icon = wrapper.find(Ionicons).get(0);

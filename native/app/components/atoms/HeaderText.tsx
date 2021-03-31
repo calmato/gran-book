@@ -9,18 +9,20 @@ const styles = StyleSheet.create({
     color: COLOR.TEXT_TITLE,
   },
   layout: {
-    justifyContent: 'center'
-  }
+    justifyContent: 'center',
+  },
 });
 
 interface Props {
-  title: string
+  title: string;
 }
 
 const HeaderText = function HeaderText(props: Props): ReactElement {
   return (
     <View style={styles.layout}>
-      <Text style={styles.textStyle} numberOfLines={1}>{props.title}</Text>
+      <Text style={styles.textStyle} numberOfLines={1}>
+        {props.title}
+      </Text>
     </View>
   );
 };

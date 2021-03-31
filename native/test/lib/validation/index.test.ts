@@ -2,7 +2,6 @@ import 'jest';
 import { emailValidation } from '~/lib/validation';
 
 describe('emailValidation', () => {
-
   it('return true when valid email', () => {
     const validEmail = 'sample@test.com';
     const got = emailValidation(validEmail);

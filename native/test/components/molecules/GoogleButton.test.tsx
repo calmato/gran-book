@@ -24,8 +24,8 @@ describe('<GoogleButton />', () => {
     };
     const iconStyle: ViewStyle = {
       marginRight: 10,
-      width:24,
-      height:24,
+      width: 24,
+      height: 24,
     };
 
     const button = wrapper.find(Button).get(0);
@@ -35,7 +35,7 @@ describe('<GoogleButton />', () => {
     expect(button.props.titleStyle).toEqual(fontStyle);
 
     const icon = button.props.icon;
-    
+
     expect(icon.props.source).toEqual(google);
     expect(icon.props.style).toEqual(iconStyle);
   });

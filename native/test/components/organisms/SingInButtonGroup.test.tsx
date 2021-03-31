@@ -10,9 +10,8 @@ configure({ adapter: new Adapter() });
 describe('<SingInButtonGroup />', () => {
   it('has default props', () => {
     // TODO
-    const wrapper = shallow(<SignInButtonGroup
-      handleRegisterWithMail={jest.fn()}
-      handleSignInWithMail={jest.fn()}
-    />);
+    const wrapper = shallow(
+      <SignInButtonGroup handleRegisterWithMail={jest.fn()} handleSignInWithMail={jest.fn()} />,
+    );
   });
 });

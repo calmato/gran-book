@@ -13,11 +13,11 @@ const styles = StyleSheet.create({
   childStyle: {
     marginTop: 4,
     marginLeft: 4,
-  }
+  },
 });
 
 interface Props {
-  books?: Array<any>
+  books?: Array<any>;
 }
 
 const bookList = booksSampleData;
@@ -28,20 +28,18 @@ const BookList = function BookList(props: Props): ReactElement {
 
   return (
     <View style={styles.containerStyle}>
-      {
-        bookList.map((book: any, i: number) => (
-          <Book
-            style={styles.childStyle}
-            title={book.title}
-            image={book.image}
-            author={book.author}
-            height={250}
-            width={width/rowItem - 5}
-            onPress={()=>console.log(book.title)}
-            key={i}
-          />
-        ))
-      }
+      {bookList.map((book: any, i: number) => (
+        <Book
+          style={styles.childStyle}
+          title={book.title}
+          image={book.image}
+          author={book.author}
+          height={250}
+          width={width / rowItem - 5}
+          onPress={() => console.log(book.title)}
+          key={i}
+        />
+      ))}
     </View>
   );
 };
