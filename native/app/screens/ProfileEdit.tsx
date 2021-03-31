@@ -27,13 +27,18 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  username: string,
-  selfIntroduction: string | '',
-  thumbnailUrl: string | undefined,
-  gender: number,
+  username: string;
+  selfIntroduction: string | '';
+  thumbnailUrl: string | undefined;
+  gender: number;
   actions: {
-    profileEdit: (username: string, gender: number, thumbnail: string | undefined, selfIntroduction: string) => Promise<void>,
-  },
+    profileEdit: (
+      username: string,
+      gender: number,
+      thumbnail: string | undefined,
+      selfIntroduction: string,
+    ) => Promise<void>;
+  };
 }
 let imageEncode64: string | undefined = '';
 
@@ -45,22 +50,22 @@ const ProfileEdit = function ProfileEdit(props: Props): ReactElement {
     gender: props.gender,
   });
   const navigation = useNavigation();
-  const{ profileEdit } = props.actions;
+  const { profileEdit } = props.actions;
 
   const nameError: boolean = useMemo((): boolean => {
-    return (userInfo.name === '');
+    return userInfo.name === '';
   }, [userInfo.name]);
 
   const handleGenderChange = (value: string) => {
     switch (value) {
       case '男性':
-        setValue({...userInfo, gender: 1});
+        setValue({ ...userInfo, gender: 1 });
         break;
       case '女性':
-        setValue({...userInfo, gender: 2});
+        setValue({ ...userInfo, gender: 2 });
         break;
       default:
-        setValue({...userInfo, gender: 0});
+        setValue({ ...userInfo, gender: 0 });
         break;
     }
   };
@@ -76,28 +81,19 @@ const ProfileEdit = function ProfileEdit(props: Props): ReactElement {
 
     if (!result.cancelled) {
       imageEncode64 = result ? result.base64 : '';
-      setValue({...userInfo, avatar: result.uri});
+      setValue({ ...userInfo, avatar: result.uri });
     }
   };
 
   const createAlertNotifyProfileEditError = (code: number) =>
-    Alert.alert(
-      'ユーザー登録に失敗',
-      `${generateErrorMessage(code)}`,
-      [
-        {
-          text: 'OK',
-        }
-      ],
-    );
+    Alert.alert('ユーザー登録に失敗', `${generateErrorMessage(code)}`, [
+      {
+        text: 'OK',
+      },
+    ]);
 
   const handleSubmit = React.useCallback(async () => {
-    await profileEdit(
-      userInfo.name,
-      userInfo.gender,
-      imageEncode64,
-      userInfo.selfIntroduction,
-    )
+    await profileEdit(userInfo.name, userInfo.gender, imageEncode64, userInfo.selfIntroduction)
       .then(() => {
         navigation.navigate('OwnProfile');
       })
@@ -109,43 +105,37 @@ const ProfileEdit = function ProfileEdit(props: Props): ReactElement {
 
   return (
     <View>
-      <ScrollView
-        stickyHeaderIndices={[0]}
-      >
-        <HeaderWithBackButton
-          title='プロフィール編集'
-          onPress={()=>navigation.goBack()}
-        />
-        <ListItem style={{alignItems:'flex-start'}} Component={TouchableOpacity} onPress={pickImage}>
-          <Avatar source={{uri: userInfo.avatar}} rounded size='medium'/>
+      <ScrollView stickyHeaderIndices={[0]}>
+        <HeaderWithBackButton title="プロフィール編集" onPress={() => navigation.goBack()} />
+        <ListItem
+          style={{ alignItems: 'flex-start' }}
+          Component={TouchableOpacity}
+          onPress={pickImage}>
+          <Avatar source={{ uri: userInfo.avatar }} rounded size="medium" />
           <ListItem.Content>
             <Text style={styles.text}>アイコン変更</Text>
           </ListItem.Content>
-          <MaterialIcons name="keyboard-arrow-right" size={24} color="black"/>
+          <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
         </ListItem>
         <ChangeNickname
           value={userInfo.name}
-          handelOnChangeText={(text)=>setValue({...userInfo, name: text})}
+          handelOnChangeText={(text) => setValue({ ...userInfo, name: text })}
         />
         <Input
           style={styles.selfIntroduction}
           placeholder={'自己紹介を入力してください'}
           multiline={true}
           maxLength={256}
-          onChangeText={(text)=>setValue({...userInfo, selfIntroduction: text})}
+          onChangeText={(text) => setValue({ ...userInfo, selfIntroduction: text })}
           value={userInfo.selfIntroduction}
         />
         <GenderRadioGroup
-          handleOnChange={(value)=>handleGenderChange(value)}
-          data={[{label:'男性'}, {label:'女性'}, {label:'未選択'}]}
+          handleOnChange={(value) => handleGenderChange(value)}
+          data={[{ label: '男性' }, { label: '女性' }, { label: '未選択' }]}
           title={'性別'}
-          initial={(userInfo.gender === 0) ? 3 : userInfo.gender}
+          initial={userInfo.gender === 0 ? 3 : userInfo.gender}
         />
-        <Button
-          title={'保存する'}
-          onPress={handleSubmit}
-          containerStyle={styles.button}
-        />
+        <Button title={'保存する'} onPress={handleSubmit} containerStyle={styles.button} />
       </ScrollView>
     </View>
   );

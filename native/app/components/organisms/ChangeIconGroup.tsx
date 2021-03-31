@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  avatarUrl: string | undefined,
+  avatarUrl: string | undefined;
 }
 
 const state = {
@@ -52,8 +52,12 @@ const ChangeIconGroup = function ChangeIconGroup(props: Props): ReactElement {
   };
 
   return (
-    <ListItem style={{alignItems:'flex-start'}} Component={TouchableOpacity} onPress={pickImage}>
-      <Avatar source={{uri: state.iconState ? state.iconUri : props.avatarUrl}} rounded size='medium'/>
+    <ListItem style={{ alignItems: 'flex-start' }} Component={TouchableOpacity} onPress={pickImage}>
+      <Avatar
+        source={{ uri: state.iconState ? state.iconUri : props.avatarUrl }}
+        rounded
+        size="medium"
+      />
       <ListItem.Content>
         <Text style={styles.text}>アイコン変更</Text>
       </ListItem.Content>

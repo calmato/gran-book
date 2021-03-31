@@ -242,8 +242,12 @@ export function editEmailAsync(email: string) {
   };
 }
 
-
-export function profileEditAsync(username: string, gender: number, thumbnail: string | undefined, selfIntroduction: string) {
+export function profileEditAsync(
+  username: string,
+  gender: number,
+  thumbnail: string | undefined,
+  selfIntroduction: string,
+) {
   return async (dispatch: Dispatch, getState: () => AppState): Promise<void> => {
     return await internal
       .patch('/v1/auth/profile', {

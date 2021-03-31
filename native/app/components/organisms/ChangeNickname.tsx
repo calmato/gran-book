@@ -36,10 +36,10 @@ const ChangeNickname = function ChangeNickname(props: Props): ReactElement {
       <TextInput
         style={styles.input}
         maxLength={32}
-        textAlign='right'
+        textAlign="right"
         multiline={true}
         value={props.value}
-        onChangeText={(text)=>props.handelOnChangeText(text)}
+        onChangeText={(text) => props.handelOnChangeText(text)}
         placeholder={'ニックネームを入力してください'}
       />
     </View>
