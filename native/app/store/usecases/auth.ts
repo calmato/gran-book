@@ -242,21 +242,10 @@ export function editEmailAsync(email: string) {
   };
 }
 
-<<<<<<< HEAD
 
 export function profileEditAsync(username: string, gender: number, thumbnail: string | undefined, selfIntroduction: string) {
   return async (dispatch: Dispatch, getState: () => AppState): Promise<void> => {
     return await internal
-=======
-export function profileEditAsync(
-  username: string,
-  gender: number,
-  thumbnail: string | undefined,
-  selfIntroduction: string,
-) {
-  return async (dispatch: Dispatch, getState: () => AppState): Promise<void> => {
-    return await axios
->>>>>>> fc0b2170fad08c1b446d3c150504d17c888b8733
       .patch('/v1/auth/profile', {
         username,
         gender,
