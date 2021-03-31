@@ -1,14 +1,14 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { ReactElement, useMemo, useState } from 'react';
-import { StyleSheet, View, Alert, ScrollView } from 'react-native';
-import { Button, Input } from 'react-native-elements';
-import ChangeIconGroup from '~/components/organisms/ChangeIconGroup';
+import { StyleSheet, View, Alert, ScrollView, Text, TouchableOpacity } from 'react-native';
+import { Avatar, Button, Input, ListItem } from 'react-native-elements';
 import ChangeNickname from '~/components/organisms/ChangeNickname';
 import GenderRadioGroup from '~/components/organisms/GenderRadioGroup';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import { ProfileEditForm } from '~/types/forms';
 import { generateErrorMessage } from '~/lib/util/ErrorUtil';
-import { ImagePicker } from 'expo';
+import * as ImagePicker from 'expo-image-picker';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const styles = StyleSheet.create({
   selfIntroduction: {
@@ -21,6 +21,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     alignSelf: 'center',
   },
+  text: {
+    fontSize: 16,
+  },
 });
 
 interface Props {
@@ -32,6 +35,7 @@ interface Props {
     profileEdit: (username: string, gender: number, thumbnail: string | undefined, selfIntroduction: string) => Promise<void>,
   },
 }
+let imageEncode64: string | undefined = '';
 
 const ProfileEdit = function ProfileEdit(props: Props): ReactElement {
   const [userInfo, setValue] = useState<ProfileEditForm>({
@@ -61,19 +65,18 @@ const ProfileEdit = function ProfileEdit(props: Props): ReactElement {
     }
   };
 
-  const [image, setImage] = useState(null);
   const pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
+      base64: true,
       aspect: [4, 3],
       quality: 1,
     });
 
-    console.log(result);
-
     if (!result.cancelled) {
-      setImage(result.uri);
+      imageEncode64 = result ? result.base64 : '';
+      setValue({...userInfo, avatar: result.uri});
     }
   };
 
@@ -92,17 +95,18 @@ const ProfileEdit = function ProfileEdit(props: Props): ReactElement {
     await profileEdit(
       userInfo.name,
       userInfo.gender,
-      userInfo.avatar,
+      imageEncode64,
       userInfo.selfIntroduction,
     )
       .then(() => {
+        console.log(userInfo.avatar);
         navigation.navigate('OwnProfile');
       })
       .catch((err) => {
         console.log('debug', err);
         createAlertNotifyProfileEditError(err.code);
       });
-  }, [userInfo.name, userInfo.gender, userInfo.avatar, userInfo.selfIntroduction, profileEdit, navigation]);
+  }, [userInfo, profileEdit, navigation]);
 
   return (
     <View>
@@ -113,10 +117,13 @@ const ProfileEdit = function ProfileEdit(props: Props): ReactElement {
           title='プロフィール編集'
           onPress={()=>navigation.goBack()}
         />
-        <ChangeIconGroup
-          avatarUrl={userInfo.avatar}
-          handleOnClicked={pickImage}
-        />
+        <ListItem style={{alignItems:'flex-start'}} Component={TouchableOpacity} onPress={pickImage}>
+          <Avatar source={{uri: userInfo.avatar}} rounded size='medium'/>
+          <ListItem.Content>
+            <Text style={styles.text}>アイコン変更</Text>
+          </ListItem.Content>
+          <MaterialIcons name="keyboard-arrow-right" size={24} color="black"/>
+        </ListItem>
         <ChangeNickname
           value={userInfo.name}
           handelOnChangeText={(text)=>setValue({...userInfo, name: text})}
