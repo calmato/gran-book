@@ -14,6 +14,7 @@ type BookApplication interface {
 	Create(ctx context.Context, in *input.BookItem) (*book.Book, error)
 	CreateBookshelf(ctx context.Context, in *input.CreateBookshelf) (*book.Bookshelf, error)
 	Update(ctx context.Context, in *input.BookItem) (*book.Book, error)
+	UpdateBookshelf(ctx context.Context, in *input.UpdateBookshelf) (*book.Bookshelf, error)
 	MultipleCreateAndUpdate(ctx context.Context, in *input.CreateAndUpdateBooks) ([]*book.Book, error)
 }
 
@@ -101,6 +102,40 @@ func (a *bookApplication) Update(ctx context.Context, in *input.BookItem) (*book
 	b.Categories = newBook.Categories
 
 	err = a.bookService.Update(ctx, b)
+	if err != nil {
+		return nil, err
+	}
+
+	return b, nil
+}
+
+func (a *bookApplication) UpdateBookshelf(ctx context.Context, in *input.UpdateBookshelf) (*book.Bookshelf, error) {
+	err := a.bookRequestValidation.UpdateBookshelf(in)
+	if err != nil {
+		return nil, err
+	}
+
+	b, err := a.bookService.ShowBookshelfByUserIDAndBookID(ctx, in.UserID, in.BookID)
+	if err != nil {
+		return nil, err
+	}
+
+	b.BookID = in.BookID
+	b.UserID = in.UserID
+	b.Status = in.Status
+	b.ReadOn = datetime.StringToDate(in.ReadOn)
+
+	// TODO: statusにenumの使用
+	if b.Status == 1 {
+		b.Impression = in.Impression
+	}
+
+	err = a.bookService.ValidationBookshelf(ctx, b)
+	if err != nil {
+		return nil, err
+	}
+
+	err = a.bookService.UpdateBookshelf(ctx, b)
 	if err != nil {
 		return nil, err
 	}
