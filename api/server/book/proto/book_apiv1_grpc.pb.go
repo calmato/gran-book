@@ -19,7 +19,11 @@ const _ = grpc.SupportPackageIsVersion7
 type BookServiceClient interface {
 	CreateBook(ctx context.Context, in *CreateBookRequest, opts ...grpc.CallOption) (*BookResponse, error)
 	CreateAndUpdateBooks(ctx context.Context, in *CreateAndUpdateBooksRequest, opts ...grpc.CallOption) (*BookListResponse, error)
-	RegisterBookshelf(ctx context.Context, in *RegisterBookshelfRequest, opts ...grpc.CallOption) (*BookshelfResponse, error)
+	ReadBookshelf(ctx context.Context, in *ReadBookshelfRequest, opts ...grpc.CallOption) (*BookshelfResponse, error)
+	ReadingBookshelf(ctx context.Context, in *ReadingBookshelfRequest, opts ...grpc.CallOption) (*BookshelfResponse, error)
+	StackBookshelf(ctx context.Context, in *StackBookshelfRequest, opts ...grpc.CallOption) (*BookshelfResponse, error)
+	WantBookshelf(ctx context.Context, in *WantBookshelfRequest, opts ...grpc.CallOption) (*BookshelfResponse, error)
+	ReleaseBookshelf(ctx context.Context, in *ReleaseBookshelfRequest, opts ...grpc.CallOption) (*BookshelfResponse, error)
 }
 
 type bookServiceClient struct {
@@ -48,9 +52,45 @@ func (c *bookServiceClient) CreateAndUpdateBooks(ctx context.Context, in *Create
 	return out, nil
 }
 
-func (c *bookServiceClient) RegisterBookshelf(ctx context.Context, in *RegisterBookshelfRequest, opts ...grpc.CallOption) (*BookshelfResponse, error) {
+func (c *bookServiceClient) ReadBookshelf(ctx context.Context, in *ReadBookshelfRequest, opts ...grpc.CallOption) (*BookshelfResponse, error) {
 	out := new(BookshelfResponse)
-	err := c.cc.Invoke(ctx, "/proto.BookService/RegisterBookshelf", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/proto.BookService/ReadBookshelf", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *bookServiceClient) ReadingBookshelf(ctx context.Context, in *ReadingBookshelfRequest, opts ...grpc.CallOption) (*BookshelfResponse, error) {
+	out := new(BookshelfResponse)
+	err := c.cc.Invoke(ctx, "/proto.BookService/ReadingBookshelf", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *bookServiceClient) StackBookshelf(ctx context.Context, in *StackBookshelfRequest, opts ...grpc.CallOption) (*BookshelfResponse, error) {
+	out := new(BookshelfResponse)
+	err := c.cc.Invoke(ctx, "/proto.BookService/StackBookshelf", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *bookServiceClient) WantBookshelf(ctx context.Context, in *WantBookshelfRequest, opts ...grpc.CallOption) (*BookshelfResponse, error) {
+	out := new(BookshelfResponse)
+	err := c.cc.Invoke(ctx, "/proto.BookService/WantBookshelf", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *bookServiceClient) ReleaseBookshelf(ctx context.Context, in *ReleaseBookshelfRequest, opts ...grpc.CallOption) (*BookshelfResponse, error) {
+	out := new(BookshelfResponse)
+	err := c.cc.Invoke(ctx, "/proto.BookService/ReleaseBookshelf", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -63,7 +103,11 @@ func (c *bookServiceClient) RegisterBookshelf(ctx context.Context, in *RegisterB
 type BookServiceServer interface {
 	CreateBook(context.Context, *CreateBookRequest) (*BookResponse, error)
 	CreateAndUpdateBooks(context.Context, *CreateAndUpdateBooksRequest) (*BookListResponse, error)
-	RegisterBookshelf(context.Context, *RegisterBookshelfRequest) (*BookshelfResponse, error)
+	ReadBookshelf(context.Context, *ReadBookshelfRequest) (*BookshelfResponse, error)
+	ReadingBookshelf(context.Context, *ReadingBookshelfRequest) (*BookshelfResponse, error)
+	StackBookshelf(context.Context, *StackBookshelfRequest) (*BookshelfResponse, error)
+	WantBookshelf(context.Context, *WantBookshelfRequest) (*BookshelfResponse, error)
+	ReleaseBookshelf(context.Context, *ReleaseBookshelfRequest) (*BookshelfResponse, error)
 	mustEmbedUnimplementedBookServiceServer()
 }
 
@@ -77,8 +121,20 @@ func (UnimplementedBookServiceServer) CreateBook(context.Context, *CreateBookReq
 func (UnimplementedBookServiceServer) CreateAndUpdateBooks(context.Context, *CreateAndUpdateBooksRequest) (*BookListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateAndUpdateBooks not implemented")
 }
-func (UnimplementedBookServiceServer) RegisterBookshelf(context.Context, *RegisterBookshelfRequest) (*BookshelfResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RegisterBookshelf not implemented")
+func (UnimplementedBookServiceServer) ReadBookshelf(context.Context, *ReadBookshelfRequest) (*BookshelfResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ReadBookshelf not implemented")
+}
+func (UnimplementedBookServiceServer) ReadingBookshelf(context.Context, *ReadingBookshelfRequest) (*BookshelfResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ReadingBookshelf not implemented")
+}
+func (UnimplementedBookServiceServer) StackBookshelf(context.Context, *StackBookshelfRequest) (*BookshelfResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method StackBookshelf not implemented")
+}
+func (UnimplementedBookServiceServer) WantBookshelf(context.Context, *WantBookshelfRequest) (*BookshelfResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method WantBookshelf not implemented")
+}
+func (UnimplementedBookServiceServer) ReleaseBookshelf(context.Context, *ReleaseBookshelfRequest) (*BookshelfResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ReleaseBookshelf not implemented")
 }
 func (UnimplementedBookServiceServer) mustEmbedUnimplementedBookServiceServer() {}
 
@@ -129,20 +185,92 @@ func _BookService_CreateAndUpdateBooks_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
-func _BookService_RegisterBookshelf_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RegisterBookshelfRequest)
+func _BookService_ReadBookshelf_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ReadBookshelfRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BookServiceServer).RegisterBookshelf(ctx, in)
+		return srv.(BookServiceServer).ReadBookshelf(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/proto.BookService/RegisterBookshelf",
+		FullMethod: "/proto.BookService/ReadBookshelf",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BookServiceServer).RegisterBookshelf(ctx, req.(*RegisterBookshelfRequest))
+		return srv.(BookServiceServer).ReadBookshelf(ctx, req.(*ReadBookshelfRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BookService_ReadingBookshelf_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ReadingBookshelfRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BookServiceServer).ReadingBookshelf(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.BookService/ReadingBookshelf",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BookServiceServer).ReadingBookshelf(ctx, req.(*ReadingBookshelfRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BookService_StackBookshelf_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(StackBookshelfRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BookServiceServer).StackBookshelf(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.BookService/StackBookshelf",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BookServiceServer).StackBookshelf(ctx, req.(*StackBookshelfRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BookService_WantBookshelf_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(WantBookshelfRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BookServiceServer).WantBookshelf(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.BookService/WantBookshelf",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BookServiceServer).WantBookshelf(ctx, req.(*WantBookshelfRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BookService_ReleaseBookshelf_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ReleaseBookshelfRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BookServiceServer).ReleaseBookshelf(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.BookService/ReleaseBookshelf",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BookServiceServer).ReleaseBookshelf(ctx, req.(*ReleaseBookshelfRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -160,8 +288,24 @@ var _BookService_serviceDesc = grpc.ServiceDesc{
 			Handler:    _BookService_CreateAndUpdateBooks_Handler,
 		},
 		{
-			MethodName: "RegisterBookshelf",
-			Handler:    _BookService_RegisterBookshelf_Handler,
+			MethodName: "ReadBookshelf",
+			Handler:    _BookService_ReadBookshelf_Handler,
+		},
+		{
+			MethodName: "ReadingBookshelf",
+			Handler:    _BookService_ReadingBookshelf_Handler,
+		},
+		{
+			MethodName: "StackBookshelf",
+			Handler:    _BookService_StackBookshelf_Handler,
+		},
+		{
+			MethodName: "WantBookshelf",
+			Handler:    _BookService_WantBookshelf_Handler,
+		},
+		{
+			MethodName: "ReleaseBookshelf",
+			Handler:    _BookService_ReleaseBookshelf_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

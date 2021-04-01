@@ -49,6 +49,12 @@ func (s *bookService) ShowByIsbn(ctx context.Context, isbn string) (*book.Book, 
 	return b, nil
 }
 
+func (s *bookService) ShowBookshelfByUserIDAndBookID(
+	ctx context.Context, userID string, bookID int,
+) (*book.Bookshelf, error) {
+	return s.ShowBookshelfByUserIDAndBookID(ctx, userID, bookID)
+}
+
 func (s *bookService) Create(ctx context.Context, b *book.Book) error {
 	current := time.Now()
 
@@ -93,6 +99,14 @@ func (s *bookService) Update(ctx context.Context, b *book.Book) error {
 
 	s.associate(ctx, b)
 	return s.bookRepository.Update(ctx, b)
+}
+
+func (s *bookService) UpdateBookshelf(ctx context.Context, b *book.Bookshelf) error {
+	current := time.Now()
+
+	b.UpdatedAt = current
+
+	return s.bookRepository.UpdateBookshelf(ctx, b)
 }
 
 func (s *bookService) MultipleCreate(ctx context.Context, bs []*book.Book) error {

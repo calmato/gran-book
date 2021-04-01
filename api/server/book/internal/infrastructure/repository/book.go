@@ -6,6 +6,7 @@ import (
 
 	"github.com/calmato/gran-book/api/server/book/internal/domain/book"
 	"github.com/calmato/gran-book/api/server/book/internal/domain/exception"
+	"golang.org/x/xerrors"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
@@ -53,6 +54,19 @@ func (r *bookRepository) ShowAuthorsByBookID(ctx context.Context, bookID int) ([
 	}
 
 	return as, nil
+}
+
+func (r *bookRepository) ShowBookshelfByUserIDAndBookID(
+	ctx context.Context, userID string, bookID int,
+) (*book.Bookshelf, error) {
+	b := &book.Bookshelf{}
+
+	err := r.client.db.First(b, "user_id = ? AND book_id = ?", userID, bookID).Error
+	if err != nil {
+		return nil, exception.NotFound.New(err)
+	}
+
+	return b, nil
 }
 
 func (r *bookRepository) ShowCategoriesByBookID(ctx context.Context, bookID int) ([]*book.Category, error) {
@@ -123,9 +137,21 @@ func (r *bookRepository) CreateAuthor(ctx context.Context, a *book.Author) error
 }
 
 func (r *bookRepository) CreateBookshelf(ctx context.Context, b *book.Bookshelf) error {
-	err := r.client.db.Create(&b).Error
-	if err != nil {
-		return exception.ErrorInDatastore.New(err)
+	if b == nil {
+		err := xerrors.New("Bookshelf is nil.")
+		return exception.InvalidRequestValidation.New(err)
+	}
+
+	if b.ReadOn.IsZero() {
+		err := r.client.db.Omit("read_on").Create(&b).Error
+		if err != nil {
+			return exception.ErrorInDatastore.New(err)
+		}
+	} else {
+		err := r.client.db.Create(&b).Error
+		if err != nil {
+			return exception.ErrorInDatastore.New(err)
+		}
 	}
 
 	return nil
@@ -173,6 +199,27 @@ func (r *bookRepository) Update(ctx context.Context, b *book.Book) error {
 	}
 
 	return tx.Commit().Error
+}
+
+func (r *bookRepository) UpdateBookshelf(ctx context.Context, b *book.Bookshelf) error {
+	if b == nil {
+		err := xerrors.New("Bookshelf is nil.")
+		return exception.NotFound.New(err)
+	}
+
+	if b.ReadOn.IsZero() {
+		err := r.client.db.Omit("read_on").Save(&b).Error
+		if err != nil {
+			return exception.ErrorInDatastore.New(err)
+		}
+	} else {
+		err := r.client.db.Save(&b).Error
+		if err != nil {
+			return exception.ErrorInDatastore.New(err)
+		}
+	}
+
+	return nil
 }
 
 func (r *bookRepository) MultipleCreate(ctx context.Context, bs []*book.Book) error {
