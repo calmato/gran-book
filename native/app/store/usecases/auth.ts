@@ -15,6 +15,35 @@ interface IAuth {
   token: string;
 }
 
+export function authenticationAsync() {
+  return async (dispatch: Dispatch): Promise<void> => {
+    return await onAuthStateChanged()
+      .then(async (res: IAuth) => {
+        const { user, token } = res;
+        const values: Auth.AuthValues = {
+          id: user.uid,
+          email: user.email || undefined,
+          emailVerified: user.emailVerified,
+          token,
+        };
+
+        const model: Auth.Model = {
+          ...Auth.initialState,
+          id: values.id,
+          token: values.token,
+          email: values.email || '',
+          emailVerified: values.emailVerified || false,
+        };
+
+        dispatch(setAuth(values));
+        await LocalStorage.AuthStorage.save(model);
+      })
+      .catch((err: Error) => {
+        throw err;
+      });
+  };
+}
+
 export function signInWithEmailAsync(email: string, password: string) {
   return async (dispatch: Dispatch): Promise<void> => {
     return await firebase

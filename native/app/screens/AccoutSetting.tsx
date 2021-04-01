@@ -7,6 +7,9 @@ import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import { StyleSheet, View, Text, SafeAreaView, ScrollView } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { COLOR } from '~~/constants/theme';
+import { useNavigation } from '@react-navigation/core';
+import { UiContext } from '~/lib/context';
+import { Status } from '~/lib/context/ui';
 const styles = StyleSheet.create({
   subtilte: {
     marginTop: 12,
@@ -27,14 +30,16 @@ const styles = StyleSheet.create({
 
 const version = '1.00';
 
-type AccountSettingProp = StackNavigationProp<UserInfoStackParamList, 'AccountSetting'>;
-
 interface Props {
-  navigation: AccountSettingProp;
+  actions: {
+    signOut: () => Promise<void>;
+  };
 }
 
 const AccountSetting = function AccountSetting(props: Props): ReactElement {
-  const navigation = props.navigation;
+  const { signOut } = props.actions;
+  const navigation = useNavigation();
+  const { setApplicationState } = React.useContext(UiContext);
   const [isEnabledBook, setIsEnabledBook] = useState(false);
   const [isEnabledInformation, setIsEnabledInformation] = useState(false);
   const [isEnabledImpressions, setIsEnabledImpressions] = useState(false);
@@ -61,9 +66,15 @@ const AccountSetting = function AccountSetting(props: Props): ReactElement {
     },
     {
       title: 'サインアウト',
-      onClicked: undefined,
+      onClicked: () => handleSignOut(),
     },
   ];
+
+  const handleSignOut = React.useCallback(() => {
+    signOut().finally(() => {
+      setApplicationState(Status.UN_AUTHORIZED);
+    });
+  }, [signOut, setApplicationState]);
 
   return (
     <View>
