@@ -22,6 +22,17 @@ func NewBookRepository(c *Client) book.Repository {
 	}
 }
 
+func (r *bookRepository) Show(ctx context.Context, bookID int) (*book.Book, error) {
+	b := &book.Book{}
+
+	err := r.client.db.First(b, "id = ?", bookID).Error
+	if err != nil {
+		return nil, exception.NotFound.New(err)
+	}
+
+	return b, nil
+}
+
 func (r *bookRepository) ShowByIsbn(ctx context.Context, isbn string) (*book.Book, error) {
 	b := &book.Book{}
 

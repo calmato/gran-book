@@ -55,11 +55,10 @@ func (a *bookApplication) CreateBookshelf(ctx context.Context, in *input.CreateB
 		return nil, err
 	}
 
-	// TODO: 書籍の存在性確認
-	// _, err = a.bookService.Show(ctx, in.BookID)
-	// if err != nil {
-	// 	return nil, err
-	// }
+	_, err = a.bookService.Show(ctx, in.BookID)
+	if err != nil {
+		return nil, err
+	}
 
 	b := &book.Bookshelf{
 		BookID:     in.BookID,
@@ -69,11 +68,10 @@ func (a *bookApplication) CreateBookshelf(ctx context.Context, in *input.CreateB
 		ReadOn:     datetime.StringToDate(in.ReadOn),
 	}
 
-	// TODO: 本棚エンティティのドメインバリデーションチェック
-	// err = a.bookService.ValidationBookshelf()
-	// if err != nil {
-	// 	return nil, err
-	// }
+	err = a.bookService.ValidationBookshelf(ctx, b)
+	if err != nil {
+		return nil, err
+	}
 
 	err = a.bookService.CreateBookshelf(ctx, b)
 	if err != nil {
