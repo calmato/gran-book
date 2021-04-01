@@ -204,6 +204,13 @@ func TestBookRequestValidation_BookItem(t *testing.T) {
 	}
 }
 
+func TestBookRequestValidation_CreateBookshelf(t *testing.T) {
+	testCases := map[string]struct {
+		Input    *input.CreateBookshelf
+		Expected bool
+	}{}
+}
+
 func TestBookRequestValidation_CreateAndUpdateBooks(t *testing.T) {
 	testCases := map[string]struct {
 		Input    *input.CreateAndUpdateBooks
