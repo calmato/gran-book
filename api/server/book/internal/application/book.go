@@ -12,6 +12,7 @@ import (
 // BookApplication - Bookアプリケーションのインターフェース
 type BookApplication interface {
 	Create(ctx context.Context, in *input.BookItem) (*book.Book, error)
+	CreateBookshelf(ctx context.Context, in *input.CreateBookshelf) (*book.Bookshelf, error)
 	Update(ctx context.Context, in *input.BookItem) (*book.Book, error)
 	MultipleCreateAndUpdate(ctx context.Context, in *input.CreateAndUpdateBooks) ([]*book.Book, error)
 }
@@ -41,6 +42,40 @@ func (a *bookApplication) Create(ctx context.Context, in *input.BookItem) (*book
 	}
 
 	err = a.bookService.Create(ctx, b)
+	if err != nil {
+		return nil, err
+	}
+
+	return b, nil
+}
+
+func (a *bookApplication) CreateBookshelf(ctx context.Context, in *input.CreateBookshelf) (*book.Bookshelf, error) {
+	err := a.bookRequestValidation.CreateBookshelf(in)
+	if err != nil {
+		return nil, err
+	}
+
+	// TODO: 書籍の存在性確認
+	// _, err = a.bookService.Show(ctx, in.BookID)
+	// if err != nil {
+	// 	return nil, err
+	// }
+
+	b := &book.Bookshelf{
+		BookID:     in.BookID,
+		UserID:     in.UserID,
+		Status:     in.Status,
+		Impression: in.Impression,
+		ReadOn:     datetime.StringToDate(in.ReadOn),
+	}
+
+	// TODO: 本棚エンティティのドメインバリデーションチェック
+	// err = a.bookService.ValidationBookshelf()
+	// if err != nil {
+	// 	return nil, err
+	// }
+
+	err = a.bookService.CreateBookshelf(ctx, b)
 	if err != nil {
 		return nil, err
 	}
