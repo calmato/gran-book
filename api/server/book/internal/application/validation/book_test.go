@@ -208,7 +208,196 @@ func TestBookRequestValidation_CreateBookshelf(t *testing.T) {
 	testCases := map[string]struct {
 		Input    *input.CreateBookshelf
 		Expected bool
-	}{}
+	}{
+		"ok": {
+			Input: &input.CreateBookshelf{
+				UserID:     "00000000-0000-0000-0000-000000000000",
+				BookID:     1,
+				Status:     1,
+				Impression: "感想です",
+				ReadOn:     "2020-01-01",
+			},
+			Expected: true,
+		},
+		"ng_userId_required": {
+			Input: &input.CreateBookshelf{
+				UserID:     "",
+				BookID:     1,
+				Status:     1,
+				Impression: "感想です",
+				ReadOn:     "2020-01-01",
+			},
+			Expected: false,
+		},
+		"ng_bookId_required": {
+			Input: &input.CreateBookshelf{
+				UserID:     "00000000-0000-0000-0000-000000000000",
+				BookID:     0,
+				Status:     1,
+				Impression: "感想です",
+				ReadOn:     "2020-01-01",
+			},
+			Expected: false,
+		},
+		"ng_bookId_greater_than_equal": {
+			Input: &input.CreateBookshelf{
+				UserID:     "00000000-0000-0000-0000-000000000000",
+				BookID:     0,
+				Status:     1,
+				Impression: "感想です",
+				ReadOn:     "2020-01-01",
+			},
+			Expected: false,
+		},
+		"ng_status_greater_than_equal": {
+			Input: &input.CreateBookshelf{
+				UserID:     "00000000-0000-0000-0000-000000000000",
+				BookID:     1,
+				Status:     -1,
+				Impression: "感想です",
+				ReadOn:     "2020-01-01",
+			},
+			Expected: false,
+		},
+		"ng_status_less_than_equal": {
+			Input: &input.CreateBookshelf{
+				UserID:     "00000000-0000-0000-0000-000000000000",
+				BookID:     1,
+				Status:     6,
+				Impression: "感想です",
+				ReadOn:     "2020-01-01",
+			},
+			Expected: false,
+		},
+		"ng_impression_max": {
+			Input: &input.CreateBookshelf{
+				UserID:     "00000000-0000-0000-0000-000000000000",
+				BookID:     1,
+				Status:     1,
+				Impression: strings.Repeat("x", 1001),
+				ReadOn:     "2020-01-01",
+			},
+			Expected: false,
+		},
+	}
+
+	for result, tc := range testCases {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		t.Run(result, func(t *testing.T) {
+			target := NewBookRequestValidation()
+
+			got := target.CreateBookshelf(tc.Input)
+			if tc.Expected {
+				if got != nil {
+					t.Fatalf("Incorrect result: %#v", got)
+				}
+			} else {
+				if got == nil {
+					t.Fatalf("Incorrect result: result is nil")
+				}
+			}
+		})
+	}
+}
+
+func TestBookRequestValidation_UpdateBookshelf(t *testing.T) {
+	testCases := map[string]struct {
+		Input    *input.UpdateBookshelf
+		Expected bool
+	}{
+		"ok": {
+			Input: &input.UpdateBookshelf{
+				UserID:     "00000000-0000-0000-0000-000000000000",
+				BookID:     1,
+				Status:     1,
+				Impression: "感想です",
+				ReadOn:     "2020-01-01",
+			},
+			Expected: true,
+		},
+		"ng_userId_required": {
+			Input: &input.UpdateBookshelf{
+				UserID:     "",
+				BookID:     1,
+				Status:     1,
+				Impression: "感想です",
+				ReadOn:     "2020-01-01",
+			},
+			Expected: false,
+		},
+		"ng_bookId_required": {
+			Input: &input.UpdateBookshelf{
+				UserID:     "00000000-0000-0000-0000-000000000000",
+				BookID:     0,
+				Status:     1,
+				Impression: "感想です",
+				ReadOn:     "2020-01-01",
+			},
+			Expected: false,
+		},
+		"ng_bookId_greater_than_equal": {
+			Input: &input.UpdateBookshelf{
+				UserID:     "00000000-0000-0000-0000-000000000000",
+				BookID:     0,
+				Status:     1,
+				Impression: "感想です",
+				ReadOn:     "2020-01-01",
+			},
+			Expected: false,
+		},
+		"ng_status_greater_than_equal": {
+			Input: &input.UpdateBookshelf{
+				UserID:     "00000000-0000-0000-0000-000000000000",
+				BookID:     1,
+				Status:     -1,
+				Impression: "感想です",
+				ReadOn:     "2020-01-01",
+			},
+			Expected: false,
+		},
+		"ng_status_less_than_equal": {
+			Input: &input.UpdateBookshelf{
+				UserID:     "00000000-0000-0000-0000-000000000000",
+				BookID:     1,
+				Status:     6,
+				Impression: "感想です",
+				ReadOn:     "2020-01-01",
+			},
+			Expected: false,
+		},
+		"ng_impression_max": {
+			Input: &input.UpdateBookshelf{
+				UserID:     "00000000-0000-0000-0000-000000000000",
+				BookID:     1,
+				Status:     1,
+				Impression: strings.Repeat("x", 1001),
+				ReadOn:     "2020-01-01",
+			},
+			Expected: false,
+		},
+	}
+
+	for result, tc := range testCases {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		t.Run(result, func(t *testing.T) {
+			target := NewBookRequestValidation()
+
+			got := target.UpdateBookshelf(tc.Input)
+			if tc.Expected {
+				if got != nil {
+					t.Fatalf("Incorrect result: %#v", got)
+				}
+			} else {
+				if got == nil {
+					t.Fatalf("Incorrect result: result is nil")
+				}
+			}
+		})
+	}
 }
 
 func TestBookRequestValidation_CreateAndUpdateBooks(t *testing.T) {

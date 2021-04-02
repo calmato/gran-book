@@ -90,6 +90,70 @@ func TestBookApplication_Create(t *testing.T) {
 	}
 }
 
+func TestBookApplication_CreateBookshelf(t *testing.T) {
+	testCases := map[string]struct {
+		Input    *input.CreateBookshelf
+		Expected struct {
+			Bookshelf *book.Bookshelf
+			Error     error
+		}
+	}{
+		"ok": {
+			Input: &input.CreateBookshelf{
+				UserID:     "00000000-0000-0000-0000-000000000000",
+				BookID:     1,
+				Status:     1,
+				Impression: "感想です",
+				ReadOn:     "2020-01-01",
+			},
+			Expected: struct {
+				Bookshelf *book.Bookshelf
+				Error     error
+			}{
+				Bookshelf: &book.Bookshelf{
+					UserID:     "00000000-0000-0000-0000-000000000000",
+					BookID:     1,
+					Status:     1,
+					Impression: "感想です",
+					ReadOn:     datetime.StringToDate("2020-01-01"),
+				},
+				Error: nil,
+			},
+		},
+	}
+
+	for result, tc := range testCases {
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		brv := mock_validation.NewMockBookRequestValidation(ctrl)
+		brv.EXPECT().CreateBookshelf(tc.Input).Return(nil)
+
+		bsm := mock_book.NewMockService(ctrl)
+		bsm.EXPECT().Show(ctx, tc.Input.BookID).Return(nil, tc.Expected.Error)
+		bsm.EXPECT().CreateBookshelf(ctx, gomock.Any()).Return(tc.Expected.Error)
+		bsm.EXPECT().ValidationBookshelf(ctx, gomock.Any()).Return(tc.Expected.Error)
+
+		t.Run(result, func(t *testing.T) {
+			target := NewBookApplication(brv, bsm)
+
+			got, err := target.CreateBookshelf(ctx, tc.Input)
+			if !reflect.DeepEqual(err, tc.Expected.Error) {
+				t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+				return
+			}
+
+			if !reflect.DeepEqual(got, tc.Expected.Bookshelf) {
+				t.Fatalf("want %#v, but %#v", tc.Expected.Bookshelf, got)
+				return
+			}
+		})
+	}
+}
+
 func TestBookApplication_Update(t *testing.T) {
 	testCases := map[string]struct {
 		Input    *input.BookItem
@@ -162,6 +226,72 @@ func TestBookApplication_Update(t *testing.T) {
 
 			if !reflect.DeepEqual(got, tc.Expected.Book) {
 				t.Fatalf("want %#v, but %#v", tc.Expected.Book, got)
+				return
+			}
+		})
+	}
+}
+
+func TestBookApplication_UpdateBookshelf(t *testing.T) {
+	testCases := map[string]struct {
+		Input    *input.UpdateBookshelf
+		Expected struct {
+			Bookshelf *book.Bookshelf
+			Error     error
+		}
+	}{
+		"ok": {
+			Input: &input.UpdateBookshelf{
+				UserID:     "00000000-0000-0000-0000-000000000000",
+				BookID:     1,
+				Status:     1,
+				Impression: "感想です",
+				ReadOn:     "2020-01-01",
+			},
+			Expected: struct {
+				Bookshelf *book.Bookshelf
+				Error     error
+			}{
+				Bookshelf: &book.Bookshelf{
+					UserID:     "00000000-0000-0000-0000-000000000000",
+					BookID:     1,
+					Status:     1,
+					Impression: "感想です",
+					ReadOn:     datetime.StringToDate("2020-01-01"),
+				},
+				Error: nil,
+			},
+		},
+	}
+
+	for result, tc := range testCases {
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		brv := mock_validation.NewMockBookRequestValidation(ctrl)
+		brv.EXPECT().UpdateBookshelf(tc.Input).Return(nil)
+
+		bsm := mock_book.NewMockService(ctrl)
+		bsm.EXPECT().
+			ShowBookshelfByUserIDAndBookID(ctx, tc.Input.UserID, tc.Input.BookID).
+			Return(tc.Expected.Bookshelf, tc.Expected.Error)
+		bsm.EXPECT().UpdateBookshelf(ctx, tc.Expected.Bookshelf).Return(tc.Expected.Error)
+		bsm.EXPECT().ValidationBookshelf(ctx, tc.Expected.Bookshelf).Return(tc.Expected.Error)
+
+		t.Run(result, func(t *testing.T) {
+			target := NewBookApplication(brv, bsm)
+
+			got, err := target.UpdateBookshelf(ctx, tc.Input)
+			if !reflect.DeepEqual(err, tc.Expected.Error) {
+				t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+				return
+			}
+
+			if !reflect.DeepEqual(got, tc.Expected.Bookshelf) {
+				t.Fatalf("want %#v, but %#v", tc.Expected.Bookshelf, got)
 				return
 			}
 		})

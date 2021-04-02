@@ -683,7 +683,7 @@ func TestBookService_ValidationBookshelf(t *testing.T) {
 			t.Run(result, func(t *testing.T) {
 				target := NewBookService(bvm, brm)
 
-				err := target.CreateBookshelf(ctx, tc.Bookshelf)
+				err := target.ValidationBookshelf(ctx, tc.Bookshelf)
 				if !reflect.DeepEqual(err, tc.Expected) {
 					t.Fatalf("want %#v, but %#v", tc.Expected, err)
 					return
