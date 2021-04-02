@@ -125,8 +125,7 @@ func (a *bookApplication) UpdateBookshelf(ctx context.Context, in *input.UpdateB
 	b.Status = in.Status
 	b.ReadOn = datetime.StringToDate(in.ReadOn)
 
-	// TODO: statusにenumの使用
-	if b.Status == 1 {
+	if b.Status == book.ReadStatus {
 		b.Impression = in.Impression
 	}
 
