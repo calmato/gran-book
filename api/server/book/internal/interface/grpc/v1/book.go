@@ -78,6 +78,90 @@ func (s *BookServer) ReadBookshelf(ctx context.Context, req *pb.ReadBookshelfReq
 	return res, nil
 }
 
+func (s *BookServer) ReadingBookshelf(ctx context.Context, req *pb.ReadingBookshelfRequest) (*pb.BookshelfResponse, error) {
+	cuid, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	in := &input.Bookshelf{
+		UserID: cuid,
+		BookID: int(req.GetBookId()),
+		Status: book.ReadingStatus,
+	}
+
+	b, bs, err := s.BookApplication.CreateOrUpdateBookshelf(ctx, in)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	res := getBookshelfResponse(b, bs)
+	return res, nil
+}
+
+func (s *BookServer) StackBookshelf(ctx context.Context, req *pb.StackBookshelfRequest) (*pb.BookshelfResponse, error) {
+	cuid, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	in := &input.Bookshelf{
+		UserID: cuid,
+		BookID: int(req.GetBookId()),
+		Status: book.StackStatus,
+	}
+
+	b, bs, err := s.BookApplication.CreateOrUpdateBookshelf(ctx, in)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	res := getBookshelfResponse(b, bs)
+	return res, nil
+}
+
+func (s *BookServer) WantBookshelf(ctx context.Context, req *pb.WantBookshelfRequest) (*pb.BookshelfResponse, error) {
+	cuid, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	in := &input.Bookshelf{
+		UserID: cuid,
+		BookID: int(req.GetBookId()),
+		Status: book.WantStatus,
+	}
+
+	b, bs, err := s.BookApplication.CreateOrUpdateBookshelf(ctx, in)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	res := getBookshelfResponse(b, bs)
+	return res, nil
+}
+
+func (s *BookServer) ReleaseBookshelf(ctx context.Context, req *pb.ReleaseBookshelfRequest) (*pb.BookshelfResponse, error) {
+	cuid, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	in := &input.Bookshelf{
+		UserID: cuid,
+		BookID: int(req.GetBookId()),
+		Status: book.ReleaseStatus,
+	}
+
+	b, bs, err := s.BookApplication.CreateOrUpdateBookshelf(ctx, in)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	res := getBookshelfResponse(b, bs)
+	return res, nil
+}
+
 func getBookListResponse(bs []*book.Book) *pb.BookListResponse {
 	books := make([]*pb.BookListResponse_Book, len(bs))
 	for i, b := range bs {
