@@ -16,6 +16,7 @@ type BookApplication interface {
 	Update(ctx context.Context, in *input.BookItem) (*book.Book, error)
 	UpdateBookshelf(ctx context.Context, in *input.UpdateBookshelf) (*book.Bookshelf, error)
 	MultipleCreateAndUpdate(ctx context.Context, in *input.CreateAndUpdateBooks) ([]*book.Book, error)
+	CreateOrUpdateBookshelf(ctx context.Context, in *input.Bookshelf) (*book.Bookshelf, error)
 }
 
 type bookApplication struct {
@@ -197,6 +198,48 @@ func (a *bookApplication) MultipleCreateAndUpdate(
 	bs = append(bs, updateRequiredBooks...)
 
 	return bs, nil
+}
+
+func (a *bookApplication) CreateOrUpdateBookshelf(ctx context.Context, in *input.Bookshelf) (*book.Bookshelf, error) {
+	err := a.bookRequestValidation.Bookshelf(in)
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = a.bookService.Show(ctx, in.BookID)
+	if err != nil {
+		return nil, err
+	}
+
+	b, _ := a.bookService.ShowBookshelfByUserIDAndBookID(ctx, in.UserID, in.BookID)
+
+	b.BookID = in.BookID
+	b.UserID = in.UserID
+	b.Status = in.Status
+	b.ReadOn = datetime.StringToDate(in.ReadOn)
+
+	if b.Status == book.ReadStatus {
+		b.Impression = in.Impression
+	}
+
+	err = a.bookService.ValidationBookshelf(ctx, b)
+	if err != nil {
+		return nil, err
+	}
+
+	if b.ID == 0 {
+		err = a.bookService.CreateBookshelf(ctx, b)
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		err = a.bookService.UpdateBookshelf(ctx, b)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return b, nil
 }
 
 func (a *bookApplication) initializeBook(ctx context.Context, in *input.BookItem) (*book.Book, error) {
