@@ -17,34 +17,6 @@ type BookServer struct {
 	BookApplication application.BookApplication
 }
 
-// CreateBook - 書籍登録
-func (s *BookServer) CreateBook(ctx context.Context, req *pb.CreateBookRequest) (*pb.BookResponse, error) {
-	_, err := s.AuthApplication.Authentication(ctx)
-	if err != nil {
-		return nil, errorHandling(err)
-	}
-
-	in := &input.BookItem{
-		Title:        req.GetTitle(),
-		Description:  req.GetDescription(),
-		Isbn:         req.GetIsbn(),
-		ThumbnailURL: req.GetThumbnailUrl(),
-		Version:      req.GetVersion(),
-		Publisher:    req.GetPublisher(),
-		PublishedOn:  req.GetPublishedOn(),
-		Authors:      req.GetAuthors(),
-		Categories:   req.GetCategories(),
-	}
-
-	b, err := s.BookApplication.Create(ctx, in)
-	if err != nil {
-		return nil, errorHandling(err)
-	}
-
-	res := getBookResponse(b)
-	return res, nil
-}
-
 func (s *BookServer) CreateAndUpdateBooks(
 	ctx context.Context, req *pb.CreateAndUpdateBooksRequest,
 ) (*pb.BookListResponse, error) {
@@ -53,21 +25,21 @@ func (s *BookServer) CreateAndUpdateBooks(
 		return nil, errorHandling(err)
 	}
 
-	books := make([]*input.BookItem, len(req.GetBooks()))
-	for i, item := range req.GetBooks() {
-		bookItem := &input.BookItem{
-			Title:        item.GetTitle(),
-			Description:  item.GetDescription(),
-			Isbn:         item.GetIsbn(),
-			ThumbnailURL: item.GetThumbnailUrl(),
-			Version:      item.GetVersion(),
-			Publisher:    item.GetPublisher(),
-			PublishedOn:  item.GetPublishedOn(),
-			Authors:      item.GetAuthors(),
-			Categories:   item.GetCategories(),
+	books := make([]*input.Book, len(req.GetBooks()))
+	for i, v := range req.GetBooks() {
+		b := &input.Book{
+			Title:        v.GetTitle(),
+			Description:  v.GetDescription(),
+			Isbn:         v.GetIsbn(),
+			ThumbnailURL: v.GetThumbnailUrl(),
+			Version:      v.GetVersion(),
+			Publisher:    v.GetPublisher(),
+			PublishedOn:  v.GetPublishedOn(),
+			Authors:      v.GetAuthors(),
+			Categories:   v.GetCategories(),
 		}
 
-		books[i] = bookItem
+		books[i] = b
 	}
 
 	in := &input.CreateAndUpdateBooks{
@@ -81,33 +53,6 @@ func (s *BookServer) CreateAndUpdateBooks(
 
 	res := getBookListResponse(bs)
 	return res, nil
-}
-
-func getBookResponse(b *book.Book) *pb.BookResponse {
-	as := make([]string, len(b.Authors))
-	for i, v := range b.Authors {
-		as[i] = v.Name
-	}
-
-	cs := make([]string, len(b.Categories))
-	for i, v := range b.Categories {
-		cs[i] = v.Name
-	}
-
-	return &pb.BookResponse{
-		Id:           int64(b.ID),
-		Title:        b.Title,
-		Description:  b.Description,
-		Isbn:         b.Isbn,
-		ThumbnailUrl: b.ThumbnailURL,
-		Version:      b.Version,
-		Publisher:    b.Publisher,
-		PublishedOn:  datetime.DateToString(b.PublishedOn),
-		Authors:      as,
-		Categories:   cs,
-		CreatedAt:    datetime.TimeToString(b.CreatedAt),
-		UpdatedAt:    datetime.TimeToString(b.UpdatedAt),
-	}
 }
 
 func getBookListResponse(bs []*book.Book) *pb.BookListResponse {

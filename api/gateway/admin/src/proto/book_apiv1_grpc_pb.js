@@ -15,17 +15,6 @@ function deserialize_proto_BookListResponse(buffer_arg) {
   return proto_book_apiv1_pb.BookListResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
-function serialize_proto_BookResponse(arg) {
-  if (!(arg instanceof proto_book_apiv1_pb.BookResponse)) {
-    throw new Error('Expected argument of type proto.BookResponse');
-  }
-  return Buffer.from(arg.serializeBinary());
-}
-
-function deserialize_proto_BookResponse(buffer_arg) {
-  return proto_book_apiv1_pb.BookResponse.deserializeBinary(new Uint8Array(buffer_arg));
-}
-
 function serialize_proto_BookshelfResponse(arg) {
   if (!(arg instanceof proto_book_apiv1_pb.BookshelfResponse)) {
     throw new Error('Expected argument of type proto.BookshelfResponse');
@@ -46,17 +35,6 @@ function serialize_proto_CreateAndUpdateBooksRequest(arg) {
 
 function deserialize_proto_CreateAndUpdateBooksRequest(buffer_arg) {
   return proto_book_apiv1_pb.CreateAndUpdateBooksRequest.deserializeBinary(new Uint8Array(buffer_arg));
-}
-
-function serialize_proto_CreateBookRequest(arg) {
-  if (!(arg instanceof proto_book_apiv1_pb.CreateBookRequest)) {
-    throw new Error('Expected argument of type proto.CreateBookRequest');
-  }
-  return Buffer.from(arg.serializeBinary());
-}
-
-function deserialize_proto_CreateBookRequest(buffer_arg) {
-  return proto_book_apiv1_pb.CreateBookRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 function serialize_proto_ReadBookshelfRequest(arg) {
@@ -116,17 +94,6 @@ function deserialize_proto_WantBookshelfRequest(buffer_arg) {
 
 
 var BookServiceService = exports.BookServiceService = {
-  createBook: {
-    path: '/proto.BookService/CreateBook',
-    requestStream: false,
-    responseStream: false,
-    requestType: proto_book_apiv1_pb.CreateBookRequest,
-    responseType: proto_book_apiv1_pb.BookResponse,
-    requestSerialize: serialize_proto_CreateBookRequest,
-    requestDeserialize: deserialize_proto_CreateBookRequest,
-    responseSerialize: serialize_proto_BookResponse,
-    responseDeserialize: deserialize_proto_BookResponse,
-  },
   createAndUpdateBooks: {
     path: '/proto.BookService/CreateAndUpdateBooks',
     requestStream: false,

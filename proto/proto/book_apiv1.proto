@@ -4,25 +4,12 @@ package proto;
 option go_package = "github.com/calmato/gran-book/proto";
 
 service BookService {
-  rpc CreateBook (CreateBookRequest) returns (BookResponse);
   rpc CreateAndUpdateBooks (CreateAndUpdateBooksRequest) returns (BookListResponse);
   rpc ReadBookshelf (ReadBookshelfRequest) returns (BookshelfResponse);
   rpc ReadingBookshelf (ReadingBookshelfRequest) returns (BookshelfResponse);
   rpc StackBookshelf (StackBookshelfRequest) returns (BookshelfResponse);
   rpc WantBookshelf (WantBookshelfRequest) returns (BookshelfResponse);
   rpc ReleaseBookshelf (ReleaseBookshelfRequest) returns (BookshelfResponse);
-}
-
-message CreateBookRequest {
-  string title = 1;
-  string description = 2;
-  string isbn = 3;
-  string thumbnail_url = 4;
-  string version = 5;
-  string publisher = 6;
-  string published_on = 7;
-  repeated string authors = 8;
-  repeated string categories = 9;
 }
 
 message CreateAndUpdateBooksRequest {
@@ -60,21 +47,6 @@ message WantBookshelfRequest {
 
 message ReleaseBookshelfRequest {
   int64 book_id = 1;
-}
-
-message BookResponse {
-  int64 id = 1;
-  string title = 2;
-  string description = 3;
-  string isbn = 4;
-  string thumbnail_url = 5;
-  string version = 6;
-  string publisher = 7;
-  string published_on = 8;
-  repeated string authors = 9;
-  repeated string categories = 10;
-  string created_at = 11;
-  string updated_at = 12;
 }
 
 message BookListResponse {
