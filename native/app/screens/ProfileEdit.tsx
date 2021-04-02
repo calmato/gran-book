@@ -79,7 +79,7 @@ const ProfileEdit = function ProfileEdit(props: Props): ReactElement {
       quality: 1,
     });
 
-    if(result != undefined && result != null) {
+    if(result !== undefined && result !== null) {
       if (!result.cancelled) {
         imageEncode64 = result ? result.base64 : '';
         setValue({ ...userInfo, avatar: result.uri });
