@@ -12,7 +12,7 @@ import (
 // BookApplication - Bookアプリケーションのインターフェース
 type BookApplication interface {
 	MultipleCreateAndUpdate(ctx context.Context, in *input.CreateAndUpdateBooks) ([]*book.Book, error)
-	CreateOrUpdateBookshelf(ctx context.Context, in *input.Bookshelf) (*book.Bookshelf, error)
+	CreateOrUpdateBookshelf(ctx context.Context, in *input.Bookshelf) (*book.Book, *book.Bookshelf, error)
 }
 
 type bookApplication struct {
@@ -85,61 +85,51 @@ func (a *bookApplication) MultipleCreateAndUpdate(
 	return bs, nil
 }
 
-func (a *bookApplication) CreateOrUpdateBookshelf(ctx context.Context, in *input.Bookshelf) (*book.Bookshelf, error) {
+func (a *bookApplication) CreateOrUpdateBookshelf(
+	ctx context.Context, in *input.Bookshelf,
+) (*book.Book, *book.Bookshelf, error) {
 	err := a.bookRequestValidation.Bookshelf(in)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	_, err = a.bookService.Show(ctx, in.BookID)
+	b, err := a.bookService.Show(ctx, in.BookID)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	b, _ := a.bookService.ShowBookshelfByUserIDAndBookID(ctx, in.UserID, in.BookID)
+	bs, _ := a.bookService.ShowBookshelfByUserIDAndBookID(ctx, in.UserID, in.BookID)
+	if bs == nil {
+		bs = &book.Bookshelf{}
+	}
 
-	if b == nil {
-		b := &book.Bookshelf{
-			BookID:     in.BookID,
-			UserID:     in.UserID,
-			Status:     in.Status,
-			Impression: in.Impression,
-			ReadOn:     datetime.StringToDate(in.ReadOn),
-		}
+	bs.BookID = in.BookID
+	bs.UserID = in.UserID
+	bs.Status = in.Status
+	bs.ReadOn = datetime.StringToDate(in.ReadOn)
 
-		err = a.bookService.ValidationBookshelf(ctx, b)
+	if bs.Status == book.ReadStatus {
+		bs.Impression = in.Impression
+	}
+
+	err = a.bookService.ValidationBookshelf(ctx, bs)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	if bs.ID == 0 {
+		err = a.bookService.CreateBookshelf(ctx, bs)
 		if err != nil {
-			return nil, err
+			return nil, nil, err
 		}
-
-		err = a.bookService.CreateBookshelf(ctx, b)
-		if err != nil {
-			return nil, err
-		}
-
-		return b, nil
 	} else {
-		b.BookID = in.BookID
-		b.UserID = in.UserID
-		b.Status = in.Status
-		b.ReadOn = datetime.StringToDate(in.ReadOn)
-
-		if b.Status == book.ReadStatus {
-			b.Impression = in.Impression
-		}
-
-		err = a.bookService.ValidationBookshelf(ctx, b)
+		err = a.bookService.UpdateBookshelf(ctx, bs)
 		if err != nil {
-			return nil, err
+			return nil, nil, err
 		}
-
-		err = a.bookService.UpdateBookshelf(ctx, b)
-		if err != nil {
-			return nil, err
-		}
-
-		return b, nil
 	}
+
+	return b, bs, nil
 }
 
 func (a *bookApplication) initializeBook(ctx context.Context, in *input.Book) (*book.Book, error) {

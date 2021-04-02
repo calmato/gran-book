@@ -108,6 +108,7 @@ func TestBookApplication_CreateOrUpdateBookshelf(t *testing.T) {
 		Input    *input.Bookshelf
 		Action   string
 		Expected struct {
+			Book      *book.Book
 			Bookshelf *book.Bookshelf
 			Error     error
 		}
@@ -122,9 +123,25 @@ func TestBookApplication_CreateOrUpdateBookshelf(t *testing.T) {
 			},
 			Action: "create",
 			Expected: struct {
+				Book      *book.Book
 				Bookshelf *book.Bookshelf
 				Error     error
 			}{
+				Book: &book.Book{
+					Title:        "テスト書籍",
+					Description:  "書籍の説明",
+					Isbn:         "08881516881516315501",
+					ThumbnailURL: "",
+					Version:      "1.5.4.0.preview.3",
+					Publisher:    "テスト出版社",
+					PublishedOn:  datetime.StringToDate("2021-01-01"),
+					Authors: []*book.Author{{
+						Name: "テスト著者",
+					}},
+					Categories: []*book.Category{{
+						Name: "Comics & Graphic Novels",
+					}},
+				},
 				Bookshelf: &book.Bookshelf{
 					UserID:     "00000000-0000-0000-0000-000000000000",
 					BookID:     1,
@@ -145,9 +162,25 @@ func TestBookApplication_CreateOrUpdateBookshelf(t *testing.T) {
 			},
 			Action: "update",
 			Expected: struct {
+				Book      *book.Book
 				Bookshelf *book.Bookshelf
 				Error     error
 			}{
+				Book: &book.Book{
+					Title:        "テスト書籍",
+					Description:  "書籍の説明",
+					Isbn:         "08881516881516315501",
+					ThumbnailURL: "",
+					Version:      "1.5.4.0.preview.3",
+					Publisher:    "テスト出版社",
+					PublishedOn:  datetime.StringToDate("2021-01-01"),
+					Authors: []*book.Author{{
+						Name: "テスト著者",
+					}},
+					Categories: []*book.Category{{
+						Name: "Comics & Graphic Novels",
+					}},
+				},
 				Bookshelf: &book.Bookshelf{
 					ID:         1,
 					UserID:     "00000000-0000-0000-0000-000000000000",
@@ -174,7 +207,7 @@ func TestBookApplication_CreateOrUpdateBookshelf(t *testing.T) {
 		brv.EXPECT().Bookshelf(tc.Input).Return(nil)
 
 		bsm := mock_book.NewMockService(ctrl)
-		bsm.EXPECT().Show(ctx, tc.Input.BookID).Return(nil, tc.Expected.Error)
+		bsm.EXPECT().Show(ctx, tc.Input.BookID).Return(tc.Expected.Book, tc.Expected.Error)
 		bsm.EXPECT().ValidationBookshelf(ctx, gomock.Any()).Return(tc.Expected.Error)
 
 		switch tc.Action {
@@ -193,14 +226,19 @@ func TestBookApplication_CreateOrUpdateBookshelf(t *testing.T) {
 		t.Run(result, func(t *testing.T) {
 			target := NewBookApplication(brv, bsm)
 
-			got, err := target.CreateOrUpdateBookshelf(ctx, tc.Input)
+			b, bs, err := target.CreateOrUpdateBookshelf(ctx, tc.Input)
 			if !reflect.DeepEqual(err, tc.Expected.Error) {
 				t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
 				return
 			}
 
-			if !reflect.DeepEqual(got, tc.Expected.Bookshelf) {
-				t.Fatalf("want %#v, but %#v", tc.Expected.Bookshelf, got)
+			if !reflect.DeepEqual(b, tc.Expected.Book) {
+				t.Fatalf("want %#v, but %#v", tc.Expected.Book, b)
+				return
+			}
+
+			if !reflect.DeepEqual(bs, tc.Expected.Bookshelf) {
+				t.Fatalf("want %#v, but %#v", tc.Expected.Bookshelf, bs)
 				return
 			}
 		})
