@@ -41,7 +41,6 @@ const ChangeNickname = function ChangeNickname(props: Props): ReactElement {
         value={props.value}
         onChangeText={(text) => props.handelOnChangeText(text)}
         placeholder={'ニックネームを入力してください'}
-        placeholderTextColor={COLOR.TEXT_ALERT}
       />
     </View>
   );

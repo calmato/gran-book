@@ -258,7 +258,7 @@ function sendEmailVerification(): Promise<void> {
 
 export function editEmailAsync(email: string) {
   return async (): Promise<void> => {
-    return await external
+    return await internal
       .patch('/v1/auth/email', {
         email,
       })
@@ -278,7 +278,7 @@ export function profileEditAsync(
   selfIntroduction: string,
 ) {
   return async (dispatch: Dispatch, getState: () => AppState): Promise<void> => {
-    return await external
+    return await internal
       .patch('/v1/auth/profile', {
         username,
         gender,
