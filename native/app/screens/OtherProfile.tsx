@@ -42,10 +42,10 @@ const OtherProfile = function OtherProfile(): ReactElement {
         name={userInfo.name}
         avatarUrl={userInfo.avatarUrl}
         rating={userInfo.rating}
-        reviewNum={userInfo.reviewNum}
-        saleNum={userInfo.saleNum}
-        followerNum={userInfo.followerNum}
-        followNum={userInfo.followNum}
+        reviewCount={userInfo.reviewNum}
+        saleCount={userInfo.saleNum}
+        followerCount={userInfo.followerNum}
+        followCount={userInfo.followNum}
         buttonTitle={'フォローする'}
         handleClick={() => undefined}
       />

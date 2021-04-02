@@ -19,3 +19,24 @@ export interface IAuthResponse {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface IOwnOtherProfileResponse {
+  id: string;
+  username: string;
+  thumbnailUrl: string;
+  selfIntroduction: string;
+  isFollow: boolean;
+  isFollower: boolean;
+  followCount: 0;
+  followerCount: 0;
+  reviewCount: 0;
+  rating: 0;
+  products: [
+    {
+      id: number;
+      name: string;
+      thumbnailUrl: string;
+      authors: [string];
+    },
+  ];
+}

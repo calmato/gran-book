@@ -10,6 +10,7 @@ export type State = ReturnType<typeof createInitialState>;
 // Actions
 export const SET_AUTH = 'gran-book/auth/SET_AUTH';
 export const SET_PROFILE = 'gran-book/auth/SET_PROFILE';
+export const SET_OWN_PROFILE = 'gran-book/auth/SET_OWN_PROFILE';
 export const RESET = 'gran-book/auth/RESET';
 
 // Action Creattors

@@ -2,15 +2,18 @@ import { useDispatch } from 'react-redux';
 import { combineReducers, Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import * as AuthState from './auth';
-import { Auth } from '~/store/models';
+import * as UserState from './user';
+import { Auth, User } from '~/store/models';
 
 interface InitialState {
   auth: Auth.Model;
+  user: User.Model;
 }
 
 export function createInitialState(): InitialState {
   return {
     auth: AuthState.createInitialState(),
+    user: UserState.createInitialState(),
   };
 }
 
@@ -18,6 +21,7 @@ export type AppState = Readonly<ReturnType<typeof createInitialState>>;
 
 export default combineReducers<AppState>({
   auth: AuthState.default,
+  user: UserState.default,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
