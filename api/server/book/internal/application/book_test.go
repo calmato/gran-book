@@ -276,7 +276,11 @@ func TestBookApplication_UpdateBookshelf(t *testing.T) {
 		brv.EXPECT().UpdateBookshelf(tc.Input).Return(nil)
 
 		bsm := mock_book.NewMockService(ctrl)
+		bsm.EXPECT().
+			ShowBookshelfByUserIDAndBookID(ctx, tc.Input.UserID, tc.Input.BookID).
+			Return(tc.Expected.Bookshelf, tc.Expected.Error)
 		bsm.EXPECT().ValidationBookshelf(ctx, tc.Expected.Bookshelf).Return(tc.Expected.Error)
+		bsm.EXPECT().UpdateBookshelf(ctx, tc.Expected.Bookshelf).Return(tc.Expected.Error)
 
 		t.Run(result, func(t *testing.T) {
 			target := NewBookApplication(brv, bsm)

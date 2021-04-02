@@ -47,6 +47,20 @@ func (mr *MockBookRequestValidationMockRecorder) BookItem(in interface{}) *gomoc
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BookItem", reflect.TypeOf((*MockBookRequestValidation)(nil).BookItem), in)
 }
 
+// Bookshelf mocks base method
+func (m *MockBookRequestValidation) Bookshelf(in *input.Bookshelf) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Bookshelf", in)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Bookshelf indicates an expected call of Bookshelf
+func (mr *MockBookRequestValidationMockRecorder) Bookshelf(in interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Bookshelf", reflect.TypeOf((*MockBookRequestValidation)(nil).Bookshelf), in)
+}
+
 // CreateBookshelf mocks base method
 func (m *MockBookRequestValidation) CreateBookshelf(in *input.CreateBookshelf) error {
 	m.ctrl.T.Helper()
