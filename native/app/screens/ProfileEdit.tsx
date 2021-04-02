@@ -79,9 +79,11 @@ const ProfileEdit = function ProfileEdit(props: Props): ReactElement {
       quality: 1,
     });
 
-    if (!result.cancelled) {
-      imageEncode64 = result ? result.base64 : '';
-      setValue({ ...userInfo, avatar: result.uri });
+    if(result != undefined && result != null) {
+      if (!result.cancelled) {
+        imageEncode64 = result ? result.base64 : '';
+        setValue({ ...userInfo, avatar: result.uri });
+      }
     }
   };
 
@@ -98,7 +100,6 @@ const ProfileEdit = function ProfileEdit(props: Props): ReactElement {
         navigation.navigate('OwnProfile');
       })
       .catch((err) => {
-        console.log('debug', err);
         createAlertNotifyProfileEditError(err.code);
       });
   }, [userInfo, profileEdit, navigation]);
