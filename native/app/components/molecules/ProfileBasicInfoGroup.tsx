@@ -36,7 +36,7 @@ interface Props {
   name: string;
   avatarUrl: string | undefined;
   rating: number;
-  reviewNum: number;
+  reviewCount: number;
   buttonTitle: string;
   handleClick: () => void;
 }
@@ -50,7 +50,7 @@ const ProfileBasicInfoGroup = function ProfileBasicInfoGroup(props: Props): Reac
         <View style={styles.reviewContainer}>
           <Rating fractions={1} readonly={true} startingValue={props.rating} imageSize={20} />
           <Text style={styles.reviewRate}>{props.rating}</Text>
-          <Text>({props.reviewNum}件)</Text>
+          <Text>({props.reviewCount}件)</Text>
           <MaterialIcons name="keyboard-arrow-right" size={24} color="black" style={styles.icon} />
         </View>
         <Button

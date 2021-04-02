@@ -7,10 +7,10 @@ interface Props {
   name: string;
   avatarUrl: string | undefined;
   rating: number;
-  reviewNum: number;
-  saleNum: number;
-  followerNum: number;
-  followNum: number;
+  reviewCount: number;
+  saleCount: number;
+  followerCount: number;
+  followCount: number;
   buttonTitle: string;
   handleClick: () => void;
 }
@@ -22,14 +22,14 @@ const ProfileViewGroup = function ProfileViewGroup(props: Props): ReactElement {
         name={props.name}
         avatarUrl={props.avatarUrl}
         rating={props.rating}
-        reviewNum={props.reviewNum}
+        reviewCount={props.reviewCount}
         buttonTitle={props.buttonTitle}
         handleClick={props.handleClick}
       />
       <ProfileFollowFollwer
-        saleNum={props.saleNum}
-        followerNum={props.followerNum}
-        followNum={props.followNum}
+        saleCount={props.saleCount}
+        followerCount={props.followerCount}
+        followCount={props.followCount}
       />
     </View>
   );
