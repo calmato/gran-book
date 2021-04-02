@@ -9,6 +9,7 @@ import (
 // BookRequestValidation - Book関連のリクエストバリデータ
 type BookRequestValidation interface {
 	BookItem(in *input.BookItem) error
+	Bookshelf(in *input.Bookshelf) error
 	CreateBookshelf(in *input.CreateBookshelf) error
 	UpdateBookshelf(in *input.UpdateBookshelf) error
 	CreateAndUpdateBooks(in *input.CreateAndUpdateBooks) error
@@ -34,6 +35,16 @@ func (v *bookRequestValidation) BookItem(in *input.BookItem) error {
 	}
 
 	err := xerrors.New("Failed to BookItem for RequestValidation")
+	return exception.InvalidRequestValidation.New(err, ves...)
+}
+
+func (v *bookRequestValidation) Bookshelf(in *input.Bookshelf) error {
+	ves := v.validator.Run(in)
+	if len(ves) == 0 {
+		return nil
+	}
+
+	err := xerrors.New("Failed to Bookshelf for RequestValidation")
 	return exception.InvalidRequestValidation.New(err, ves...)
 }
 

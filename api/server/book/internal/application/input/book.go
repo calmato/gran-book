@@ -13,6 +13,15 @@ type BookItem struct {
 	Categories   []string `json:"categories" validate:"dive,required,max=32"`
 }
 
+// Bookshelf - 本棚への書籍登録/更新のリクエスト
+type Bookshelf struct {
+	UserID     string `json:"userId" validate:"required"`
+	BookID     int    `json:"bookId" validate:"required,gte=1"`
+	Status     int    `json:"status" validate:"required,gte=0,lte=5"`
+	Impression string `json:"impression" validate:"omitempty,max=1000"`
+	ReadOn     string `json:"readOn" validate:"omitempty"`
+}
+
 // CreateBookshelf - 本棚への書籍登録のリクエスト
 type CreateBookshelf struct {
 	UserID     string `json:"userId" validate:"required"`
