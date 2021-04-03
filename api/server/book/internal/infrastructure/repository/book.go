@@ -80,29 +80,6 @@ func (r *bookRepository) ShowBookshelfByUserIDAndBookID(
 	return b, nil
 }
 
-func (r *bookRepository) ShowCategoriesByBookID(ctx context.Context, bookID int) ([]*book.Category, error) {
-	cs := []*book.Category{}
-
-	columns := []string{
-		"categories.id",
-		"categories.name",
-		"categories.created_at",
-		"categories.updated_at",
-	}
-	sql := r.client.db.
-		Table("categories").
-		Select(strings.Join(columns, ", ")).
-		Joins("LEFT JOIN books_categories ON books_categories.category_id = categories.id").
-		Where("books_categories.book_id = ?", bookID)
-
-	err := sql.Scan(&cs).Error
-	if err != nil {
-		return nil, exception.ErrorInDatastore.New(err)
-	}
-
-	return cs, nil
-}
-
 func (r *bookRepository) Create(ctx context.Context, b *book.Book) error {
 	tx := r.client.db.Begin()
 	defer func() {
@@ -163,15 +140,6 @@ func (r *bookRepository) CreateBookshelf(ctx context.Context, b *book.Bookshelf)
 		if err != nil {
 			return exception.ErrorInDatastore.New(err)
 		}
-	}
-
-	return nil
-}
-
-func (r *bookRepository) CreateCategory(ctx context.Context, c *book.Category) error {
-	err := r.client.db.Table("categories").Where("name = ?", c.Name).FirstOrCreate(&c).Error
-	if err != nil {
-		return exception.ErrorInDatastore.New(err)
 	}
 
 	return nil
@@ -313,11 +281,6 @@ func associate(tx *gorm.DB, b *book.Book) error {
 		return err
 	}
 
-	err = associateCategory(tx, b)
-	if err != nil {
-		return err
-	}
-
 	return nil
 }
 
@@ -362,55 +325,6 @@ func associateAuthor(tx *gorm.DB, b *book.Book) error {
 		}
 
 		err := tx.Table("authors_books").Create(&ba).Error
-		if err != nil {
-			return exception.ErrorInDatastore.New(err)
-		}
-	}
-
-	return nil
-}
-
-func associateCategory(tx *gorm.DB, b *book.Book) error {
-	beforeCategoryIDs := []int{}
-
-	// 既存の関連レコード取得
-	db := tx.Table("books_categories").Select("category_id").Where("book_id = ?", b.ID)
-	err := db.Scan(&beforeCategoryIDs).Error
-	if err != nil {
-		return exception.ErrorInDatastore.New(err)
-	}
-
-	// 現在のCategoryID一覧の作成
-	currentCategoryIDs := make([]int, len(b.Categories))
-	for i, a := range b.Categories {
-		currentCategoryIDs[i] = a.ID
-	}
-
-	// 不要なもの削除
-	for _, categoryID := range beforeCategoryIDs {
-		if !isContain(categoryID, currentCategoryIDs) {
-			sql := "DELETE FROM books_categories WHERE book_id = ? AND category_id = ?"
-			err := tx.Exec(sql, b.ID, categoryID).Error
-			if err != nil {
-				return exception.ErrorInDatastore.New(err)
-			}
-		}
-	}
-
-	// 既存レコードとしてない場合、新たに関連レコードの作成
-	for _, c := range b.Categories {
-		if isContain(c.ID, beforeCategoryIDs) {
-			continue
-		}
-
-		bc := &book.BookCategory{
-			BookID:     b.ID,
-			CategoryID: c.ID,
-			CreatedAt:  b.UpdatedAt,
-			UpdatedAt:  b.UpdatedAt,
-		}
-
-		err := tx.Table("books_categories").Create(&bc).Error
 		if err != nil {
 			return exception.ErrorInDatastore.New(err)
 		}

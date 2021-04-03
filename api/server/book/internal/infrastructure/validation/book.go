@@ -24,7 +24,3 @@ func (v *bookDomainValidation) Author(ctx context.Context, a *book.Author) error
 func (v *bookDomainValidation) Bookshelf(ctx context.Context, b *book.Bookshelf) error {
 	return nil
 }
-
-func (v *bookDomainValidation) Category(ctx context.Context, b *book.Category) error {
-	return nil
-}

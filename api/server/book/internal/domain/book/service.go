@@ -10,7 +10,6 @@ type Service interface {
 	Create(ctx context.Context, b *Book) error
 	CreateAuthor(ctx context.Context, b *Author) error
 	CreateBookshelf(ctx context.Context, b *Bookshelf) error
-	CreateCategory(ctx context.Context, b *Category) error
 	Update(ctx context.Context, b *Book) error
 	UpdateBookshelf(ctx context.Context, b *Bookshelf) error
 	MultipleCreate(ctx context.Context, bs []*Book) error
@@ -18,5 +17,4 @@ type Service interface {
 	Validation(ctx context.Context, b *Book) error
 	ValidationAuthor(ctx context.Context, a *Author) error
 	ValidationBookshelf(ctx context.Context, b *Bookshelf) error
-	ValidationCategory(ctx context.Context, c *Category) error
 }

@@ -23,7 +23,24 @@ func NewBookService(bdv book.Validation, br book.Repository) book.Service {
 }
 
 func (s *bookService) Show(ctx context.Context, bookID int) (*book.Book, error) {
-	return s.bookRepository.Show(ctx, bookID) // TODO: いったんカテゴリとかは取得しない
+	b, err := s.bookRepository.Show(ctx, bookID)
+	if err != nil {
+		return nil, err
+	}
+
+	if b == nil || b.ID == 0 {
+		err := xerrors.New("Book is nil.")
+		return nil, exception.NotFound.New(err)
+	}
+
+	as, err := s.bookRepository.ShowAuthorsByBookID(ctx, b.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	b.Authors = as
+
+	return b, nil
 }
 
 func (s *bookService) ShowByIsbn(ctx context.Context, isbn string) (*book.Book, error) {
@@ -42,13 +59,7 @@ func (s *bookService) ShowByIsbn(ctx context.Context, isbn string) (*book.Book, 
 		return nil, err
 	}
 
-	cs, err := s.bookRepository.ShowCategoriesByBookID(ctx, b.ID)
-	if err != nil {
-		return nil, err
-	}
-
 	b.Authors = as
-	b.Categories = cs
 
 	return b, nil
 }
@@ -85,15 +96,6 @@ func (s *bookService) CreateBookshelf(ctx context.Context, b *book.Bookshelf) er
 	b.UpdatedAt = current
 
 	return s.bookRepository.CreateBookshelf(ctx, b)
-}
-
-func (s *bookService) CreateCategory(ctx context.Context, c *book.Category) error {
-	current := time.Now()
-
-	c.CreatedAt = current
-	c.UpdatedAt = current
-
-	return s.bookRepository.CreateCategory(ctx, c)
 }
 
 func (s *bookService) Update(ctx context.Context, b *book.Book) error {
@@ -150,16 +152,8 @@ func (s *bookService) ValidationBookshelf(ctx context.Context, b *book.Bookshelf
 	return s.bookDomainValidation.Bookshelf(ctx, b)
 }
 
-func (s *bookService) ValidationCategory(ctx context.Context, c *book.Category) error {
-	return s.bookDomainValidation.Category(ctx, c)
-}
-
 func (s *bookService) associate(ctx context.Context, b *book.Book) {
 	for _, a := range b.Authors {
 		_ = s.CreateAuthor(ctx, a)
-	}
-
-	for _, c := range b.Categories {
-		_ = s.CreateCategory(ctx, c)
 	}
 }
