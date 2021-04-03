@@ -7,6 +7,7 @@ import MailInput from '~/components/molecules/MailInput';
 import { PasswordResetForm } from '~/types/forms';
 import { emailValidation } from '~/lib/validation';
 import { Button } from 'react-native-elements';
+import { authenticationAsync, sendPasswordResetEmail } from '~/store/usecases';
 
 const styles = StyleSheet.create({
   container: {
@@ -28,6 +29,9 @@ const PasswordReset = function PasswordReset(props: Props): ReactElement {
     email: '',
   });
 
+  const resetRequest = async () => {
+    sendPasswordResetEmail(formData.email);
+  };
   const emailError: boolean = useMemo((): boolean => {
     return !emailValidation(formData.email);
   }, [formData.email]);
@@ -47,7 +51,7 @@ const PasswordReset = function PasswordReset(props: Props): ReactElement {
       />
       <Button
         disabled={hasError}
-        onPress={() => navigation.navigate('SignUpCheckEmail', { email: formData.email })}
+        onPress={(resetRequest)}
         title="メールを送信する"
       />
     </View>
