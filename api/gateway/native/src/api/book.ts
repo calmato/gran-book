@@ -2,35 +2,9 @@ import { Request } from 'express'
 import { getGrpcError } from '~/lib/grpc-exception'
 import { getGrpcMetadata } from '~/lib/grpc-metadata'
 import { bookClient } from '~/plugins/grpc'
-import { BookListResponse, BookResponse, CreateAndUpdateBooksRequest, CreateBookRequest } from '~/proto/book_apiv1_pb'
+import { BookListResponse, CreateAndUpdateBooksRequest } from '~/proto/book_apiv1_pb'
 import { IBookItemInput, ICreateAndUpdateBooksInput } from '~/types/input'
 import { IBookListOutput, IBookOutput } from '~/types/output'
-
-export function createBook(req: Request<any>, input: IBookItemInput): Promise<IBookOutput> {
-  const request = new CreateBookRequest()
-  const metadata = getGrpcMetadata(req)
-
-  request.setTitle(input.title)
-  request.setDescription(input.description)
-  request.setIsbn(input.isbn)
-  request.setThumbnailUrl(input.thumbnailURL)
-  request.setVersion(input.version)
-  request.setPublisher(input.publisher)
-  request.setPublishedOn(input.publishedOn)
-  request.setAuthorsList(input.authors)
-  request.setCategoriesList(input.categories)
-
-  return new Promise((resolve: (output: IBookOutput) => void, reject: (reason: Error) => void) => {
-    bookClient.createBook(request, metadata, (err: any, res: BookResponse) => {
-      if (err) {
-        reject(getGrpcError(err))
-        return
-      }
-
-      resolve(setBookOutput(res))
-    })
-  })
-}
 
 export function createAndUpdateBooks(req: Request<any>, input: ICreateAndUpdateBooksInput): Promise<IBookListOutput> {
   const request = new CreateAndUpdateBooksRequest()
@@ -64,25 +38,6 @@ export function createAndUpdateBooks(req: Request<any>, input: ICreateAndUpdateB
       resolve(setBookListOutput(res))
     })
   })
-}
-
-function setBookOutput(res: BookResponse): IBookOutput {
-  const output: IBookOutput = {
-    id: res.getId(),
-    title: res.getTitle(),
-    description: res.getDescription(),
-    isbn: res.getIsbn(),
-    thumbnailUrl: res.getThumbnailUrl(),
-    version: res.getVersion(),
-    publisher: res.getPublisher(),
-    publishedOn: res.getPublishedOn(),
-    authors: res.getAuthorsList(),
-    categories: res.getCategoriesList(),
-    createdAt: res.getCreatedAt(),
-    updatedAt: res.getUpdatedAt(),
-  }
-
-  return output
 }
 
 function setBookListOutput(res: BookListResponse): IBookListOutput {
