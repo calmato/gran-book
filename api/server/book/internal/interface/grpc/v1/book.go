@@ -55,7 +55,9 @@ func (s *BookServer) CreateAndUpdateBooks(
 	return res, nil
 }
 
-func (s *BookServer) ReadBookshelf(ctx context.Context, req *pb.ReadBookshelfRequest) (*pb.BookshelfResponse, error) {
+func (s *BookServer) ReadBookshelf(
+	ctx context.Context, req *pb.ReadBookshelfRequest,
+) (*pb.BookshelfResponse, error) {
 	cuid, err := s.AuthApplication.Authentication(ctx)
 	if err != nil {
 		return nil, errorHandling(err)
@@ -78,7 +80,9 @@ func (s *BookServer) ReadBookshelf(ctx context.Context, req *pb.ReadBookshelfReq
 	return res, nil
 }
 
-func (s *BookServer) ReadingBookshelf(ctx context.Context, req *pb.ReadingBookshelfRequest) (*pb.BookshelfResponse, error) {
+func (s *BookServer) ReadingBookshelf(
+	ctx context.Context, req *pb.ReadingBookshelfRequest,
+) (*pb.BookshelfResponse, error) {
 	cuid, err := s.AuthApplication.Authentication(ctx)
 	if err != nil {
 		return nil, errorHandling(err)
@@ -99,7 +103,9 @@ func (s *BookServer) ReadingBookshelf(ctx context.Context, req *pb.ReadingBooksh
 	return res, nil
 }
 
-func (s *BookServer) StackBookshelf(ctx context.Context, req *pb.StackBookshelfRequest) (*pb.BookshelfResponse, error) {
+func (s *BookServer) StackBookshelf(
+	ctx context.Context, req *pb.StackBookshelfRequest,
+) (*pb.BookshelfResponse, error) {
 	cuid, err := s.AuthApplication.Authentication(ctx)
 	if err != nil {
 		return nil, errorHandling(err)
@@ -120,7 +126,9 @@ func (s *BookServer) StackBookshelf(ctx context.Context, req *pb.StackBookshelfR
 	return res, nil
 }
 
-func (s *BookServer) WantBookshelf(ctx context.Context, req *pb.WantBookshelfRequest) (*pb.BookshelfResponse, error) {
+func (s *BookServer) WantBookshelf(
+	ctx context.Context, req *pb.WantBookshelfRequest,
+) (*pb.BookshelfResponse, error) {
 	cuid, err := s.AuthApplication.Authentication(ctx)
 	if err != nil {
 		return nil, errorHandling(err)
@@ -141,7 +149,9 @@ func (s *BookServer) WantBookshelf(ctx context.Context, req *pb.WantBookshelfReq
 	return res, nil
 }
 
-func (s *BookServer) ReleaseBookshelf(ctx context.Context, req *pb.ReleaseBookshelfRequest) (*pb.BookshelfResponse, error) {
+func (s *BookServer) ReleaseBookshelf(
+	ctx context.Context, req *pb.ReleaseBookshelfRequest,
+) (*pb.BookshelfResponse, error) {
 	cuid, err := s.AuthApplication.Authentication(ctx)
 	if err != nil {
 		return nil, errorHandling(err)
