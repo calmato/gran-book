@@ -56,7 +56,7 @@ func (s *bookService) ShowByIsbn(ctx context.Context, isbn string) (*book.Book, 
 func (s *bookService) ShowBookshelfByUserIDAndBookID(
 	ctx context.Context, userID string, bookID int,
 ) (*book.Bookshelf, error) {
-	return s.ShowBookshelfByUserIDAndBookID(ctx, userID, bookID)
+	return s.bookRepository.ShowBookshelfByUserIDAndBookID(ctx, userID, bookID)
 }
 
 func (s *bookService) Create(ctx context.Context, b *book.Book) error {
