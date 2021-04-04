@@ -9,7 +9,6 @@ import Bookshelf from '~/screens/Bookshelf';
 import Sale from '~/screens/Sale';
 import HomeTabRoute from '~/routes/HomeTabRoute';
 import UserInfoRoute from '~/routes/UserInfoRoute';
-import { MessagesScreen } from '~/screens/Messages';
 
 const styles = StyleSheet.create({
   labelStyle: {
