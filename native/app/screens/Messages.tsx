@@ -4,7 +4,7 @@ import { StatusBar as ExpoStatusBar } from 'expo-status-bar';
 import firebase from 'firebase';
 import { getMessageDocRef } from '~/lib/firebase';
 import { Message } from '../types/message/index';
-import { COLOR } from '~~/constants/theme'
+import { COLOR } from '~~/constants/theme';
 
 export const MessagesScreen = () => {
   const [text, setText] = useState<string>('');
@@ -40,7 +40,11 @@ export const MessagesScreen = () => {
           autoCorrect={false}
           returnKeyType="done"
         />
-        <Button title="send" onPress={() => { }} />
+        <Button
+          title="send"
+          onPress={() => {
+            sendMessage(text);
+          }} />
       </View>
     </SafeAreaView >
   );
