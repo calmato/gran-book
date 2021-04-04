@@ -2,7 +2,10 @@
   "compilerOptions": {
     "target": "es2018",
     "module": "esnext",
-    "lib": ["dom", "esnext"],
+    "lib": [
+      "dom",
+      "esnext"
+    ],
     "allowJs": true,
     "jsx": "react-native",
     "noEmit": true,
@@ -13,13 +16,26 @@
     "moduleResolution": "node",
     "baseUrl": "./",
     "paths": {
-      "~/*": ["./app/*"],
-      "~~/*": ["./*"],
-      "@/*": ["./app/*"],
-      "@@/*": ["./*"],
-      "tests": ["test/*"],
+      "~/*": [
+        "./app/*"
+      ],
+      "~~/*": [
+        "./*"
+      ],
+      "@/*": [
+        "./app/*"
+      ],
+      "@@/*": [
+        "./*"
+      ],
+      "tests": [
+        "test/*"
+      ],
     },
-    "typeRoots": ["@types", "node_modules/@types"],
+    "typeRoots": [
+      "@types",
+      "node_modules/@types"
+    ],
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "skipLibCheck": true,

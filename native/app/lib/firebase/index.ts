@@ -1,5 +1,6 @@
 import firebase from 'firebase/app';
 import 'firebase/auth';
+import 'firebase/firestore';
 
 const config = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -8,10 +9,14 @@ const config = {
   projectId: process.env.FIREBASE_PROJECT_ID,
   storageBucket: `${process.env.FIREBASE_PROJECT_ID}.appspot.com`,
   messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+  appID: 'YOUR_APP_ID'
 };
 
 if (!firebase.apps.length) {
   firebase.initializeApp(config);
 }
 
+export const getMessageDocRef = async () => {
+  return await firebase.firestore().collection('messages').doc();
+};
 export default firebase;

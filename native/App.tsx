@@ -6,6 +6,7 @@ import { UiContext } from '~/lib/context';
 import { createApplicationInitialState } from '~/lib/context/ui';
 import store from '~/store';
 import MainRoute from '~/routes';
+import { MessagesScreen } from '~/screens/Messages';
 
 const App = function App(): ReactElement {
   const [applicationState, setApplicationState] = React.useState(createApplicationInitialState());
@@ -19,6 +20,8 @@ const App = function App(): ReactElement {
       </ThemeProvider>
     </Provider>
   );
+
+  return <MessagesScreen />
 };
 
 export default App;
