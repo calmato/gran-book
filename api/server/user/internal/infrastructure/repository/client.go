@@ -61,8 +61,8 @@ func (c *Client) getListQuery(db *gorm.DB, q *domain.ListQuery) *gorm.DB {
 	}
 
 	// WHERE句の追加
-	for _, c := range q.Conditions {
-		db = setWhere(db, c)
+	for _, v := range q.Conditions {
+		db = setWhere(db, v)
 	}
 
 	db = setOrder(db, q.Order)
@@ -77,8 +77,8 @@ func (c *Client) getListCount(db *gorm.DB, q *domain.ListQuery) (int, error) {
 
 	if q != nil {
 		// WHERE句の追加
-		for _, c := range q.Conditions {
-			db = setWhere(db, c)
+		for _, v := range q.Conditions {
+			db = setWhere(db, v)
 		}
 	}
 
