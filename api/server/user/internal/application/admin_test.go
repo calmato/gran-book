@@ -316,6 +316,7 @@ func TestAdminApplication_Create(t *testing.T) {
 		arvm.EXPECT().CreateAdmin(tc.Input).Return(nil)
 
 		usm := mock_user.NewMockService(ctrl)
+		usm.EXPECT().Validation(ctx, gomock.Any()).Return(tc.Expected.Error)
 		usm.EXPECT().Create(ctx, gomock.Any()).Return(tc.Expected.Error)
 
 		t.Run(result, func(t *testing.T) {
@@ -373,6 +374,7 @@ func TestAdminApplication_UpdateRole(t *testing.T) {
 		arvm.EXPECT().UpdateAdminRole(tc.Input).Return(nil)
 
 		usm := mock_user.NewMockService(ctrl)
+		usm.EXPECT().Validation(ctx, gomock.Any()).Return(tc.Expected.Error)
 		usm.EXPECT().Show(ctx, tc.ID).Return(tc.Expected.User, tc.Expected.Error)
 		usm.EXPECT().Update(ctx, tc.Expected.User).Return(tc.Expected.Error)
 
@@ -500,6 +502,7 @@ func TestAdminApplication_UpdateProfile(t *testing.T) {
 		arvm.EXPECT().UpdateAdminProfile(tc.Input).Return(nil)
 
 		usm := mock_user.NewMockService(ctrl)
+		usm.EXPECT().Validation(ctx, gomock.Any()).Return(tc.Expected.Error)
 		usm.EXPECT().Show(ctx, tc.ID).Return(tc.Expected.User, tc.Expected.Error)
 		usm.EXPECT().Update(ctx, tc.Expected.User).Return(tc.Expected.Error)
 
