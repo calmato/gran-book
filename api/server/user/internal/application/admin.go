@@ -179,6 +179,11 @@ func (a *adminApplication) Create(ctx context.Context, in *input.CreateAdmin) (*
 		Activated:     true,
 	}
 
+	err = a.userService.Validation(ctx, u)
+	if err != nil {
+		return nil, err
+	}
+
 	err = a.userService.Create(ctx, u)
 	if err != nil {
 		return nil, err
@@ -199,6 +204,11 @@ func (a *adminApplication) UpdateRole(ctx context.Context, in *input.UpdateAdmin
 	}
 
 	u.Role = in.Role
+
+	err = a.userService.Validation(ctx, u)
+	if err != nil {
+		return nil, err
+	}
 
 	err = a.userService.Update(ctx, u)
 	if err != nil {
@@ -248,6 +258,11 @@ func (a *adminApplication) UpdateProfile(
 	u.FirstName = in.FirstName
 	u.LastNameKana = in.LastNameKana
 	u.FirstNameKana = in.FirstNameKana
+
+	err = a.userService.Validation(ctx, u)
+	if err != nil {
+		return nil, err
+	}
 
 	err = a.userService.Update(ctx, u)
 	if err != nil {
