@@ -54,7 +54,7 @@ func (s *bookService) ShowByIsbn(ctx context.Context, isbn string) (*book.Book, 
 		return nil, exception.NotFound.New(err)
 	}
 
-	as, err := s.bookRepository.ShowAuthorsByBookID(ctx, b.ID)
+	as, err := s.bookRepository.ShowAuthorByBookID(ctx, b.ID)
 	if err != nil {
 		return nil, err
 	}

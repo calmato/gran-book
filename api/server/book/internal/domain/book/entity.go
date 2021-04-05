@@ -4,27 +4,28 @@ import "time"
 
 // Book - 書籍エンティティ
 type Book struct {
-	ID             int          `gorm:"primaryKey;not null;<-:create"`
-	Title          string       `gorm:"size:64;not null;uniqueIndex:ui_books_01;uniqueIndex:ui_books_02"`
-	TitleKana      string       `gorm:"size:128"`
-	Description    string       `gorm:"size:2000"`
-	Isbn           string       `gorm:"size:16;not null"`
-	Publisher      string       `gorm:"size:64;not null"`
-	PublishedOn    time.Time    `gorm:"not null"`
-	ThumbnailURL   string       `gorm:""`
-	RakutenURL     string       `gorm:""`
-	RakutenGenreID string       `gorm:""`
-	CreatedAt      time.Time    `gorm:"not null;<-:create"`
-	UpdatedAt      time.Time    `gorm:"not null"`
-	Authors        []*Author    `gorm:"many2many:authors_books"`
-	Bookshelves    []*Bookshelf `gorm:"foreignKey:BookID;constraint:OnDelete:CASCADE"`
-	Reviews        []*Review    `gorm:"foreignKey:BookID;constraint:OnDelete:CASCADE"`
+	ID             int        `gorm:"primaryKey;not null;<-:create"`
+	Title          string     `gorm:"size:64;not null;uniqueIndex:ui_books_01;uniqueIndex:ui_books_02"`
+	TitleKana      string     `gorm:"size:128"`
+	Description    string     `gorm:"size:2000"`
+	Isbn           string     `gorm:"size:16;not null"`
+	Publisher      string     `gorm:"size:64;not null"`
+	PublishedOn    time.Time  `gorm:"not null"`
+	ThumbnailURL   string     `gorm:""`
+	RakutenURL     string     `gorm:""`
+	RakutenGenreID string     `gorm:""`
+	CreatedAt      time.Time  `gorm:"not null;<-:create"`
+	UpdatedAt      time.Time  `gorm:"not null"`
+	Authors        []*Author  `gorm:"many2many:authors_books"`
+	Bookshelf      *Bookshelf `gorm:"foreignKey:BookID;constraint:OnDelete:CASCADE"`
+	Reviews        []*Review  `gorm:"foreignKey:BookID;constraint:OnDelete:CASCADE"`
 }
 
 // Author - 著者エンティティ
 type Author struct {
 	ID        int       `gorm:"primaryKey;not null;autoIncrement;<-:create"`
 	Name      string    `gorm:"size:32;not null;unique"`
+	NamaKana  string    `gorm:"size:64;not null"`
 	CreatedAt time.Time `gorm:"not null;<-:create"`
 	UpdatedAt time.Time `gorm:"not null"`
 }

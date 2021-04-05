@@ -44,7 +44,7 @@ func (r *bookRepository) ShowByIsbn(ctx context.Context, isbn string) (*book.Boo
 	return b, nil
 }
 
-func (r *bookRepository) ShowAuthorsByBookID(ctx context.Context, bookID int) ([]*book.Author, error) {
+func (r *bookRepository) ShowAuthorByBookID(ctx context.Context, bookID int) ([]*book.Author, error) {
 	as := []*book.Author{}
 
 	columns := []string{
