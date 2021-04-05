@@ -45,6 +45,9 @@ spec:
           readOnly: true
         - name: nginx-conf
           mountPath: /etc/nginx/conf.d
+        env:
+        - name: TZ
+          value: 'Asia/Tokyo'
       volumes:
       - name: tls-certs
         secret:

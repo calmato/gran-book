@@ -25,6 +25,8 @@ data:
       ssl_certificate            /etc/tls/cert.pem;
       ssl_certificate_key        /etc/tls/privkey.pem;
 
+      client_max_body_size 10M;
+
       location / {
         set $upsteam http://native-gateway.default.svc.cluster.local:8080;
 
@@ -45,5 +47,10 @@ data:
         proxy_set_header X-Forwarded-Proto $scheme;
 
         rewrite /admin/(.*)$ /$1 break;
+      }
+
+      location /health {
+        access_log off;
+        return     200;
       }
     }
