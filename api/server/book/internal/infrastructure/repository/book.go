@@ -264,6 +264,41 @@ func (r *bookRepository) MultipleUpdate(ctx context.Context, bs []*book.Book) er
 	return tx.Commit().Error
 }
 
+func (r *bookRepository) GetIDByIsbn(ctx context.Context, isbn string) (int, error) {
+	b := &book.Book{}
+
+	err := r.client.db.Select("id").First(b, "isbn = ?", isbn).Error
+	if err != nil {
+		return 0, exception.NotFound.New(err)
+	}
+
+	return b.ID, nil
+}
+
+func (r *bookRepository) GetAuthorIDByName(ctx context.Context, name string) (int, error) {
+	a := &book.Author{}
+
+	err := r.client.db.Select("id").First(a, "name = ?", name).Error
+	if err != nil {
+		return 0, exception.NotFound.New(err)
+	}
+
+	return a.ID, nil
+}
+
+func (r *bookRepository) GetBookshelfIDByUserIDAndBookID(
+	ctx context.Context, userID string, bookID int,
+) (int, error) {
+	b := &book.Bookshelf{}
+
+	err := r.client.db.Select("id").First(b, "user_id = ? AND book_id = ?", userID, bookID).Error
+	if err != nil {
+		return 0, exception.NotFound.New(err)
+	}
+
+	return b.ID, nil
+}
+
 func associate(tx *gorm.DB, b *book.Book) error {
 	err := associateAuthor(tx, b)
 	if err != nil {

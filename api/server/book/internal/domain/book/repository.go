@@ -15,4 +15,6 @@ type Repository interface {
 	UpdateBookshelf(ctx context.Context, b *Bookshelf) error
 	MultipleCreate(ctx context.Context, bs []*Book) error
 	MultipleUpdate(ctx context.Context, bs []*Book) error
+	GetIDByIsbn(ctx context.Context, isbn string) (int, error)
+	GetBookshelfIDByUserIDAndBookID(ctx context.Context, userID string, bookID int) (int, error)
 }
