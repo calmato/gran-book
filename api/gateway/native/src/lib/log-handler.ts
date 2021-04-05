@@ -18,8 +18,6 @@ function logFilter(body: any): any {
 }
 
 export function accessLogHandler(req: Request, _: Response, next: NextFunction): void {
-  console.log('debug', req)
-
   const logs: any = {
     direction: 'request',
     path: req.path,
