@@ -33,7 +33,7 @@ func (s *bookService) Show(ctx context.Context, bookID int) (*book.Book, error) 
 		return nil, exception.NotFound.New(err)
 	}
 
-	as, err := s.bookRepository.ShowAuthorsByBookID(ctx, b.ID)
+	as, err := s.bookRepository.ListAuthorByBookID(ctx, b.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -54,7 +54,7 @@ func (s *bookService) ShowByIsbn(ctx context.Context, isbn string) (*book.Book, 
 		return nil, exception.NotFound.New(err)
 	}
 
-	as, err := s.bookRepository.ShowAuthorByBookID(ctx, b.ID)
+	as, err := s.bookRepository.ListAuthorByBookID(ctx, b.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -71,6 +71,11 @@ func (s *bookService) ShowBookshelfByUserIDAndBookID(
 }
 
 func (s *bookService) Create(ctx context.Context, b *book.Book) error {
+	err := s.associate(ctx, b)
+	if err != nil {
+		return err
+	}
+
 	current := time.Now()
 
 	b.CreatedAt = current
@@ -78,15 +83,6 @@ func (s *bookService) Create(ctx context.Context, b *book.Book) error {
 
 	s.associate(ctx, b)
 	return s.bookRepository.Create(ctx, b)
-}
-
-func (s *bookService) CreateAuthor(ctx context.Context, a *book.Author) error {
-	current := time.Now()
-
-	a.CreatedAt = current
-	a.UpdatedAt = current
-
-	return s.bookRepository.CreateAuthor(ctx, a)
 }
 
 func (s *bookService) CreateBookshelf(ctx context.Context, b *book.Bookshelf) error {
@@ -99,11 +95,15 @@ func (s *bookService) CreateBookshelf(ctx context.Context, b *book.Bookshelf) er
 }
 
 func (s *bookService) Update(ctx context.Context, b *book.Book) error {
+	err := s.associate(ctx, b)
+	if err != nil {
+		return err
+	}
+
 	current := time.Now()
 
 	b.UpdatedAt = current
 
-	s.associate(ctx, b)
 	return s.bookRepository.Update(ctx, b)
 }
 
@@ -119,10 +119,13 @@ func (s *bookService) MultipleCreate(ctx context.Context, bs []*book.Book) error
 	current := time.Now()
 
 	for _, b := range bs {
+		err := s.associate(ctx, b)
+		if err != nil {
+			return err
+		}
+
 		b.CreatedAt = current
 		b.UpdatedAt = current
-
-		s.associate(ctx, b)
 	}
 
 	return s.bookRepository.MultipleCreate(ctx, bs)
@@ -132,9 +135,12 @@ func (s *bookService) MultipleUpdate(ctx context.Context, bs []*book.Book) error
 	current := time.Now()
 
 	for _, b := range bs {
-		b.UpdatedAt = current
+		err := s.associate(ctx, b)
+		if err != nil {
+			return err
+		}
 
-		s.associate(ctx, b)
+		b.UpdatedAt = current
 	}
 
 	return s.bookRepository.MultipleUpdate(ctx, bs)
@@ -152,8 +158,18 @@ func (s *bookService) ValidationBookshelf(ctx context.Context, b *book.Bookshelf
 	return s.bookDomainValidation.Bookshelf(ctx, b)
 }
 
-func (s *bookService) associate(ctx context.Context, b *book.Book) {
+func (s *bookService) associate(ctx context.Context, b *book.Book) error {
+	current := time.Now()
+
 	for _, a := range b.Authors {
-		_ = s.CreateAuthor(ctx, a)
+		a.CreatedAt = current
+		a.UpdatedAt = current
+
+		err := s.bookRepository.ShowOrCreateAuthor(ctx, a)
+		if err != nil {
+			return err
+		}
 	}
+
+	return nil
 }

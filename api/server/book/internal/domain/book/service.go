@@ -8,7 +8,6 @@ type Service interface {
 	ShowByIsbn(ctx context.Context, isbn string) (*Book, error)
 	ShowBookshelfByUserIDAndBookID(ctx context.Context, userID string, bookID int) (*Bookshelf, error)
 	Create(ctx context.Context, b *Book) error
-	CreateAuthor(ctx context.Context, b *Author) error
 	CreateBookshelf(ctx context.Context, b *Bookshelf) error
 	Update(ctx context.Context, b *Book) error
 	UpdateBookshelf(ctx context.Context, b *Bookshelf) error

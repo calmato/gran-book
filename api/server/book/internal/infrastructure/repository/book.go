@@ -6,7 +6,6 @@ import (
 
 	"github.com/calmato/gran-book/api/server/book/internal/domain/book"
 	"github.com/calmato/gran-book/api/server/book/internal/domain/exception"
-	"golang.org/x/xerrors"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
@@ -20,6 +19,29 @@ func NewBookRepository(c *Client) book.Repository {
 	return &bookRepository{
 		client: c,
 	}
+}
+
+func (r *bookRepository) ListAuthorByBookID(ctx context.Context, bookID int) ([]*book.Author, error) {
+	as := []*book.Author{}
+
+	columns := []string{
+		"authors.id",
+		"authors.name",
+		"authors.created_at",
+		"authors.updated_at",
+	}
+	sql := r.client.db.
+		Table("authors").
+		Select(strings.Join(columns, ", ")).
+		Joins("LEFT JOIN authors_books ON authors_books.author_id = authors.id").
+		Where("authors_books.book_id = ?", bookID)
+
+	err := sql.Scan(&as).Error
+	if err != nil {
+		return nil, exception.ErrorInDatastore.New(err)
+	}
+
+	return as, nil
 }
 
 func (r *bookRepository) Show(ctx context.Context, bookID int) (*book.Book, error) {
@@ -44,29 +66,6 @@ func (r *bookRepository) ShowByIsbn(ctx context.Context, isbn string) (*book.Boo
 	return b, nil
 }
 
-func (r *bookRepository) ShowAuthorByBookID(ctx context.Context, bookID int) ([]*book.Author, error) {
-	as := []*book.Author{}
-
-	columns := []string{
-		"authors.id",
-		"authors.name",
-		"authors.created_at",
-		"authors.updated_at",
-	}
-	sql := r.client.db.
-		Table("authors").
-		Select(strings.Join(columns, ", ")).
-		Joins("LEFT JOIN authors_books ON authors_books.author_id = authors.id").
-		Where("authors_books.book_id = ?", bookID)
-
-	err := sql.Scan(&as).Error
-	if err != nil {
-		return nil, exception.ErrorInDatastore.New(err)
-	}
-
-	return as, nil
-}
-
 func (r *bookRepository) ShowBookshelfByUserIDAndBookID(
 	ctx context.Context, userID string, bookID int,
 ) (*book.Bookshelf, error) {
@@ -78,6 +77,15 @@ func (r *bookRepository) ShowBookshelfByUserIDAndBookID(
 	}
 
 	return b, nil
+}
+
+func (r *bookRepository) ShowOrCreateAuthor(ctx context.Context, a *book.Author) error {
+	err := r.client.db.Table("authors").Where("name = ?", a.Name).FirstOrCreate(&a).Error
+	if err != nil {
+		return exception.ErrorInDatastore.New(err)
+	}
+
+	return nil
 }
 
 func (r *bookRepository) Create(ctx context.Context, b *book.Book) error {
@@ -115,21 +123,7 @@ func (r *bookRepository) Create(ctx context.Context, b *book.Book) error {
 	return tx.Commit().Error
 }
 
-func (r *bookRepository) CreateAuthor(ctx context.Context, a *book.Author) error {
-	err := r.client.db.Table("authors").Where("name = ?", a.Name).FirstOrCreate(&a).Error
-	if err != nil {
-		return exception.ErrorInDatastore.New(err)
-	}
-
-	return nil
-}
-
 func (r *bookRepository) CreateBookshelf(ctx context.Context, b *book.Bookshelf) error {
-	if b == nil {
-		err := xerrors.New("Bookshelf is nil.")
-		return exception.InvalidRequestValidation.New(err)
-	}
-
 	if b.ReadOn.IsZero() {
 		err := r.client.db.Omit("read_on").Create(&b).Error
 		if err != nil {
@@ -181,11 +175,6 @@ func (r *bookRepository) Update(ctx context.Context, b *book.Book) error {
 }
 
 func (r *bookRepository) UpdateBookshelf(ctx context.Context, b *book.Bookshelf) error {
-	if b == nil {
-		err := xerrors.New("Bookshelf is nil.")
-		return exception.NotFound.New(err)
-	}
-
 	if b.ReadOn.IsZero() {
 		err := r.client.db.Omit("read_on").Save(&b).Error
 		if err != nil {
