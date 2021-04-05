@@ -13,7 +13,7 @@ import (
 type BookApplication interface {
 	Show(ctx context.Context, isbn string) (*book.Book, error)
 	Create(ctx context.Context, in *input.Book) (*book.Book, error)
-	// Update(ctx context.Context, in *input.Book) (*book.Book, error)
+	Update(ctx context.Context, in *input.Book) (*book.Book, error)
 	CreateOrUpdateBookshelf(ctx context.Context, in *input.Bookshelf) (*book.Book, *book.Bookshelf, error)
 }
 
@@ -73,6 +73,56 @@ func (a *bookApplication) Create(ctx context.Context, in *input.Book) (*book.Boo
 	}
 
 	err = a.bookService.Create(ctx, b)
+	if err != nil {
+		return nil, err
+	}
+
+	return b, nil
+}
+
+func (a *bookApplication) Update(ctx context.Context, in *input.Book) (*book.Book, error) {
+	err := a.bookRequestValidation.Book(in)
+	if err != nil {
+		return nil, err
+	}
+
+	b, err := a.bookService.ShowByIsbn(ctx, in.Isbn)
+	if err != nil {
+		return nil, err
+	}
+
+	as := make([]*book.Author, len(in.Authors))
+	for i, v := range in.Authors {
+		author := &book.Author{
+			Name:     v.Name,
+			NamaKana: v.NameKana,
+		}
+
+		err = a.bookService.ValidationAuthor(ctx, author)
+		if err != nil {
+			return nil, err
+		}
+
+		as[i] = author
+	}
+
+	b.Title = in.Title
+	b.TitleKana = in.TitleKana
+	b.Description = in.Description
+	b.Isbn = in.Isbn
+	b.Publisher = in.Publisher
+	b.PublishedOn = datetime.StringToDate(in.PublishedOn)
+	b.ThumbnailURL = in.ThumbnailURL
+	b.RakutenURL = in.RakutenURL
+	b.RakutenGenreID = in.RakutenGenreID
+	b.Authors = as
+
+	err = a.bookService.Validation(ctx, b)
+	if err != nil {
+		return nil, err
+	}
+
+	err = a.bookService.Update(ctx, b)
 	if err != nil {
 		return nil, err
 	}
