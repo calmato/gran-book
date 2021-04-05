@@ -38,13 +38,15 @@ const PasswordReset = function PasswordReset(props: Props): ReactElement {
     ]);
 
   const resetRequest = async () => {
-    try {
-      sendPasswordResetEmail(formData.email);
-      navigation.navigate('SignUpCheckEmail', { email: formData.email });
-    } catch (err) {
-      createAlertNotifyProfileEditError(err.code);
-    }
+    await sendPasswordResetEmail(formData.email)
+      .then((): void => {
+        navigation.navigate('SignUpCheckEmail', { email: formData.email });
+      })
+      .catch((err): void => {
+        throw createAlertNotifyProfileEditError(err);
+      });
   };
+
   const emailError: boolean = useMemo((): boolean => {
     return !emailValidation(formData.email);
   }, [formData.email]);
