@@ -93,7 +93,9 @@ router.patch(
 router.patch(
   '/profile',
   async (req: Request<IUpdateAuthProfileRequest>, res: Response<IAuthResponse>, next: NextFunction): Promise<void> => {
+    console.log('debug', 1)
     const { username, gender, thumbnail, selfIntroduction } = req.body as IUpdateAuthProfileRequest
+    console.log('debug', 2, { username, thumbnail })
 
     const input: IUpdateAuthProfileInput = {
       username,
@@ -101,6 +103,8 @@ router.patch(
       thumbnail,
       selfIntroduction,
     }
+
+    console.log('debug', 3, input)
 
     await updateAuthProfile(req, input)
       .then((output: IAuthOutput) => {
