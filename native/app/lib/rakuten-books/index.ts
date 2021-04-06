@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { IErrorResponse, ISearchResponse } from '~/types/response/external/rakuten-books';
 
 const baseUrl = 'https://app.rakuten.co.jp/services/api/BooksBook/Search';
