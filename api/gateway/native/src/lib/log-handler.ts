@@ -31,6 +31,7 @@ export function accessLogHandler(req: Request, _: Response, next: NextFunction):
 
     logger.default.info(JSON.stringify(logs))
     logger.access.info(JSON.stringify(logs))
+    console.log('debug: request', 'passed')
   } catch (err) {
     console.log('debug: request', err)
   }
