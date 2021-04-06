@@ -18,23 +18,18 @@ function logFilter(body: any): any {
 }
 
 export function accessLogHandler(req: Request, _: Response, next: NextFunction): void {
-  try {
-    const logs: any = {
-      direction: 'request',
-      path: req.path,
-      method: req.method,
-      remoteIp: req.ip,
-      requestHeader: logFilter(req.headers),
-      requestQuery: logFilter(req.query),
-      requestBody: logFilter(req.body),
-    }
-
-    logger.default.info(JSON.stringify(logs))
-    logger.access.info(JSON.stringify(logs))
-    console.log('debug: request', 'passed')
-  } catch (err) {
-    console.log('debug: request', err)
+  const logs: any = {
+    direction: 'request',
+    path: req.path,
+    method: req.method,
+    remoteIp: req.ip,
+    requestHeader: logFilter(req.headers),
+    requestQuery: logFilter(req.query),
+    requestBody: logFilter(req.body),
   }
+
+  logger.default.info(JSON.stringify(logs))
+  logger.access.info(JSON.stringify(logs))
   next()
 }
 

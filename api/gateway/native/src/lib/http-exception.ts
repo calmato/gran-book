@@ -52,8 +52,6 @@ export function serverError(details: Array<any>): HttpError {
 }
 
 export function getHttpError(err: Error): HttpError {
-  console.log('debug: response', 'getHttpError', err)
-
   if (err instanceof GrpcError) {
     const status: number = convertStatusGrpcToHttp(err.status)
     const details: Array<any> = err.details || []
@@ -75,6 +73,6 @@ export function getHttpError(err: Error): HttpError {
   } else if (err instanceof HttpError) {
     return err
   } else {
-    return serverError([])
+    return serverError([err.message])
   }
 }
