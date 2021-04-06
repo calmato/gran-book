@@ -50,6 +50,8 @@ jobs:
 
       - name: Test
         run: yarn test
+        env:
+          RAKUTEN_BOOKS_APPLICATION_ID: ${{ secrets.RAKUTEN_BOOKS_APPLICATION_ID }}
 
       # - name: Use Expo ${{ matrix.expo }}
       #   uses: expo/expo-github-action@v5
