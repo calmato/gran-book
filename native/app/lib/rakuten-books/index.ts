@@ -1,21 +1,22 @@
-import axios from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
+import { IErrorResponse, ISearchResponse } from '~/types/response/external/rakuten-books';
 
 const baseUrl = 'https://app.rakuten.co.jp/services/api/BooksBook/Search';
 const version = '20170404';
 const format = 'json';
 const formatVersion = 2;
-const applicationId = '1053511986137691200';
+const hits = 30;
 
+const applicationId = process.env.RAKUTEN_BOOKS_APPLICATION_ID;
 
-export async function searchBook(param: string) {
-  const url = `${baseUrl}/${version}?format=${format}&title=${encodeURI(param)}&formatVersion=${formatVersion}&applicationId=${applicationId}`;
+export async function searchBookByTitle(title: string, page = 1) {
+  const url = `${baseUrl}/${version}?format=${format}&title=${encodeURI(title)}&formatVersion=${formatVersion}&applicationId=${applicationId}&page=${page}&hits=${hits}`;
 
   return axios.get(url)
-    .then((res) => {
-      console.log(res.data);
+    .then((res: AxiosResponse<ISearchResponse>) => {
       return res;
     })
-    .catch((err) => {
-      return err;
+    .catch((err: AxiosResponse<IErrorResponse>) => {
+      return Promise.reject(err);
     });
 }
