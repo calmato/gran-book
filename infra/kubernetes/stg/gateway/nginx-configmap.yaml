@@ -7,6 +7,10 @@ data:
   default.conf: |
     resolver kube-dns.kube-system.svc.cluster.local valid=60s ipv6=off;
 
+    client_max_body_size    30M;
+    client_body_buffer_size 30M;
+    proxy_request_buffering off;
+
     server {
       listen            80;
       server_name       0.0.0.0;
@@ -24,8 +28,6 @@ data:
       ssl_prefer_server_ciphers  on;
       ssl_certificate            /etc/tls/cert.pem;
       ssl_certificate_key        /etc/tls/privkey.pem;
-
-      client_max_body_size 10M;
 
       location / {
         set $upsteam http://native-gateway.default.svc.cluster.local:8080;
