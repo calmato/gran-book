@@ -5,7 +5,7 @@ import { Request, Response, NextFunction } from 'express'
 import logger from '~/plugins/logger'
 import { HttpError } from '~/types/exception'
 
-const filterWords: string[] = ['password', 'passwordConfirmation', 'authorization']
+const filterWords: string[] = ['password', 'passwordConfirmation', 'authorization', 'thumbnail']
 
 function logFilter(body: any): any {
   const obj: typeof body[keyof string] = {}
