@@ -514,6 +514,9 @@ export class BookshelfResponse extends jspb.Message {
     getStatus(): number;
     setStatus(value: number): BookshelfResponse;
 
+    getImpression(): string;
+    setImpression(value: string): BookshelfResponse;
+
     getReadOn(): string;
     setReadOn(value: string): BookshelfResponse;
 
@@ -540,6 +543,7 @@ export namespace BookshelfResponse {
         bookId: number,
         userId: string,
         status: number,
+        impression: string,
         readOn: string,
         createdAt: string,
         updatedAt: string,

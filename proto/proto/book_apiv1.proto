@@ -80,7 +80,7 @@ message BookResponse {
     string name_kana = 2;
   }
   message Review {
-    int32 id = 1;
+    int64 id = 1;
     string user_id = 2;
     int32 score = 3;
     string impression = 4;
@@ -116,7 +116,8 @@ message BookshelfResponse {
   int64 book_id = 2;
   string user_id = 3;
   int32 status = 4;
-  string read_on = 5;
-  string created_at = 6;
-  string updated_at = 7;
+  string impression = 5;
+  string read_on = 6;
+  string created_at = 7;
+  string updated_at = 8;
 }
