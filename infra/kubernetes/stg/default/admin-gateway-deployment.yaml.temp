@@ -24,7 +24,7 @@ spec:
         resources:
           limits:
             cpu: 200m
-            memory: 512Mi
+            memory: 256Mi
         ports:
         - name: default
           containerPort: 8080
