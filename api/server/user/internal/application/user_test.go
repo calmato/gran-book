@@ -352,6 +352,7 @@ func TestUserApplication_RegisterFollow(t *testing.T) {
 
 		usm := mock_user.NewMockService(ctrl)
 		usm.EXPECT().Show(ctx, tc.UID).Return(tc.Expected.User, tc.Expected.Error)
+		usm.EXPECT().ValidationRelationship(ctx, r).Return(tc.Expected.Error)
 		usm.EXPECT().CreateRelationship(ctx, r).Return(tc.Expected.Error)
 		usm.EXPECT().
 			ListFriendCount(ctx, tc.UID).
