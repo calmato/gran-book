@@ -73,6 +73,6 @@ export function getHttpError(err: Error): HttpError {
   } else if (err instanceof HttpError) {
     return err
   } else {
-    return serverError([])
+    return serverError([err.message])
   }
 }
