@@ -76,7 +76,7 @@ func (s *bookService) Create(ctx context.Context, b *book.Book) error {
 		return err
 	}
 
-	current := time.Now()
+	current := time.Now().Local()
 
 	b.CreatedAt = current
 	b.UpdatedAt = current
@@ -86,7 +86,7 @@ func (s *bookService) Create(ctx context.Context, b *book.Book) error {
 }
 
 func (s *bookService) CreateBookshelf(ctx context.Context, b *book.Bookshelf) error {
-	current := time.Now()
+	current := time.Now().Local()
 
 	b.CreatedAt = current
 	b.UpdatedAt = current
@@ -100,7 +100,7 @@ func (s *bookService) Update(ctx context.Context, b *book.Book) error {
 		return err
 	}
 
-	current := time.Now()
+	current := time.Now().Local()
 
 	b.UpdatedAt = current
 
@@ -108,7 +108,7 @@ func (s *bookService) Update(ctx context.Context, b *book.Book) error {
 }
 
 func (s *bookService) UpdateBookshelf(ctx context.Context, b *book.Bookshelf) error {
-	current := time.Now()
+	current := time.Now().Local()
 
 	b.UpdatedAt = current
 
@@ -116,7 +116,7 @@ func (s *bookService) UpdateBookshelf(ctx context.Context, b *book.Bookshelf) er
 }
 
 func (s *bookService) MultipleCreate(ctx context.Context, bs []*book.Book) error {
-	current := time.Now()
+	current := time.Now().Local()
 
 	for _, b := range bs {
 		err := s.associate(ctx, b)
@@ -132,7 +132,7 @@ func (s *bookService) MultipleCreate(ctx context.Context, bs []*book.Book) error
 }
 
 func (s *bookService) MultipleUpdate(ctx context.Context, bs []*book.Book) error {
-	current := time.Now()
+	current := time.Now().Local()
 
 	for _, b := range bs {
 		err := s.associate(ctx, b)
@@ -159,7 +159,7 @@ func (s *bookService) ValidationBookshelf(ctx context.Context, b *book.Bookshelf
 }
 
 func (s *bookService) associate(ctx context.Context, b *book.Book) error {
-	current := time.Now()
+	current := time.Now().Local()
 
 	for _, a := range b.Authors {
 		a.CreatedAt = current
