@@ -37,7 +37,7 @@ func authInjection() application.AuthApplication {
 
 func bookInjection(db *repository.Client) application.BookApplication {
 	br := repository.NewBookRepository(db)
-	bdv := dv.NewBookDomainValidation()
+	bdv := dv.NewBookDomainValidation(br)
 	bs := service.NewBookService(bdv, br)
 	brv := rv.NewBookRequestValidation()
 
