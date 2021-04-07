@@ -34,6 +34,21 @@ func (m *MockRepository) EXPECT() *MockRepositoryMockRecorder {
 	return m.recorder
 }
 
+// Show mocks base method
+func (m *MockRepository) Show(ctx context.Context, bookID int) (*book.Book, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Show", ctx, bookID)
+	ret0, _ := ret[0].(*book.Book)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Show indicates an expected call of Show
+func (mr *MockRepositoryMockRecorder) Show(ctx, bookID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Show", reflect.TypeOf((*MockRepository)(nil).Show), ctx, bookID)
+}
+
 // ShowByIsbn mocks base method
 func (m *MockRepository) ShowByIsbn(ctx context.Context, isbn string) (*book.Book, error) {
 	m.ctrl.T.Helper()
@@ -62,6 +77,21 @@ func (m *MockRepository) ShowAuthorsByBookID(ctx context.Context, bookID int) ([
 func (mr *MockRepositoryMockRecorder) ShowAuthorsByBookID(ctx, bookID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ShowAuthorsByBookID", reflect.TypeOf((*MockRepository)(nil).ShowAuthorsByBookID), ctx, bookID)
+}
+
+// ShowBookshelfByUserIDAndBookID mocks base method
+func (m *MockRepository) ShowBookshelfByUserIDAndBookID(ctx context.Context, userID string, bookID int) (*book.Bookshelf, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ShowBookshelfByUserIDAndBookID", ctx, userID, bookID)
+	ret0, _ := ret[0].(*book.Bookshelf)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ShowBookshelfByUserIDAndBookID indicates an expected call of ShowBookshelfByUserIDAndBookID
+func (mr *MockRepositoryMockRecorder) ShowBookshelfByUserIDAndBookID(ctx, userID, bookID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ShowBookshelfByUserIDAndBookID", reflect.TypeOf((*MockRepository)(nil).ShowBookshelfByUserIDAndBookID), ctx, userID, bookID)
 }
 
 // ShowCategoriesByBookID mocks base method
@@ -147,6 +177,20 @@ func (m *MockRepository) Update(ctx context.Context, b *book.Book) error {
 func (mr *MockRepositoryMockRecorder) Update(ctx, b interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockRepository)(nil).Update), ctx, b)
+}
+
+// UpdateBookshelf mocks base method
+func (m *MockRepository) UpdateBookshelf(ctx context.Context, b *book.Bookshelf) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateBookshelf", ctx, b)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpdateBookshelf indicates an expected call of UpdateBookshelf
+func (mr *MockRepositoryMockRecorder) UpdateBookshelf(ctx, b interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateBookshelf", reflect.TypeOf((*MockRepository)(nil).UpdateBookshelf), ctx, b)
 }
 
 // MultipleCreate mocks base method

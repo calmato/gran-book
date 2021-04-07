@@ -42,6 +42,7 @@ type Bookshelf struct {
 	UserID     string    `gorm:"not null;uniqueIndex:ui_bookshelfs_01;uniqueIndex:ui_bookshelfs_02"`
 	Status     int       `gorm:"not null;default:0"`
 	Impression string    `gorm:"size:1000;default:''"`
+	ReadOn     time.Time `gorm:""`
 	CreatedAt  time.Time `gorm:"not null;<-:create"`
 	UpdatedAt  time.Time `gorm:"not null"`
 }
@@ -63,3 +64,13 @@ type BookCategory struct {
 	CreatedAt  time.Time `gorm:"not null;<-:create"`
 	UpdatedAt  time.Time `gorm:"not null"`
 }
+
+// 本棚に保存している書籍のステータス
+const (
+	NoneStatus    int = iota // 未登録
+	ReadStatus               // 読んだ本
+	ReadingStatus            // 読んでいる本
+	StackStatus              // 積読本
+	WantStatus               // 欲しい本
+	ReleaseStatus            // 手放したい本
+)

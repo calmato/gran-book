@@ -22,6 +22,10 @@ func NewBookService(bdv book.Validation, br book.Repository) book.Service {
 	}
 }
 
+func (s *bookService) Show(ctx context.Context, bookID int) (*book.Book, error) {
+	return s.bookRepository.Show(ctx, bookID) // TODO: いったんカテゴリとかは取得しない
+}
+
 func (s *bookService) ShowByIsbn(ctx context.Context, isbn string) (*book.Book, error) {
 	b, err := s.bookRepository.ShowByIsbn(ctx, isbn)
 	if err != nil {
@@ -47,6 +51,12 @@ func (s *bookService) ShowByIsbn(ctx context.Context, isbn string) (*book.Book, 
 	b.Categories = cs
 
 	return b, nil
+}
+
+func (s *bookService) ShowBookshelfByUserIDAndBookID(
+	ctx context.Context, userID string, bookID int,
+) (*book.Bookshelf, error) {
+	return s.bookRepository.ShowBookshelfByUserIDAndBookID(ctx, userID, bookID)
 }
 
 func (s *bookService) Create(ctx context.Context, b *book.Book) error {
@@ -95,6 +105,14 @@ func (s *bookService) Update(ctx context.Context, b *book.Book) error {
 	return s.bookRepository.Update(ctx, b)
 }
 
+func (s *bookService) UpdateBookshelf(ctx context.Context, b *book.Bookshelf) error {
+	current := time.Now()
+
+	b.UpdatedAt = current
+
+	return s.bookRepository.UpdateBookshelf(ctx, b)
+}
+
 func (s *bookService) MultipleCreate(ctx context.Context, bs []*book.Book) error {
 	current := time.Now()
 
@@ -126,6 +144,10 @@ func (s *bookService) Validation(ctx context.Context, b *book.Book) error {
 
 func (s *bookService) ValidationAuthor(ctx context.Context, a *book.Author) error {
 	return s.bookDomainValidation.Author(ctx, a)
+}
+
+func (s *bookService) ValidationBookshelf(ctx context.Context, b *book.Bookshelf) error {
+	return s.bookDomainValidation.Bookshelf(ctx, b)
 }
 
 func (s *bookService) ValidationCategory(ctx context.Context, c *book.Category) error {
