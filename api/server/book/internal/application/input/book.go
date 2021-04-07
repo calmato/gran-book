@@ -27,8 +27,3 @@ type Bookshelf struct {
 	Status int    `json:"status" validate:"required,gte=0,lte=5"`
 	ReadOn string `json:"readOn" validate:"omitempty"`
 }
-
-// CreateAndUpdateBooks - 書籍一括登録/更新のリクエスト
-type CreateAndUpdateBooks struct {
-	Books []*Book `json:"books" validate:"omitempty,dive"`
-}

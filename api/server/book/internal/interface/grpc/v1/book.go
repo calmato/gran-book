@@ -47,7 +47,7 @@ func (s *BookServer) ReadBookshelf(
 		ReadOn: req.GetReadOn(),
 	}
 
-	_, bs, err := s.BookApplication.CreateOrUpdateBookshelf(ctx, in)
+	bs, err := s.BookApplication.CreateOrUpdateBookshelf(ctx, in)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -70,7 +70,7 @@ func (s *BookServer) ReadingBookshelf(
 		Status: book.ReadingStatus,
 	}
 
-	_, bs, err := s.BookApplication.CreateOrUpdateBookshelf(ctx, in)
+	bs, err := s.BookApplication.CreateOrUpdateBookshelf(ctx, in)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -93,7 +93,7 @@ func (s *BookServer) StackBookshelf(
 		Status: book.StackStatus,
 	}
 
-	_, bs, err := s.BookApplication.CreateOrUpdateBookshelf(ctx, in)
+	bs, err := s.BookApplication.CreateOrUpdateBookshelf(ctx, in)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -116,7 +116,7 @@ func (s *BookServer) WantBookshelf(
 		Status: book.WantStatus,
 	}
 
-	_, bs, err := s.BookApplication.CreateOrUpdateBookshelf(ctx, in) // TODO: refactor
+	bs, err := s.BookApplication.CreateOrUpdateBookshelf(ctx, in)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -139,7 +139,7 @@ func (s *BookServer) ReleaseBookshelf(
 		Status: book.ReleaseStatus,
 	}
 
-	_, bs, err := s.BookApplication.CreateOrUpdateBookshelf(ctx, in) // TODO: refactor
+	bs, err := s.BookApplication.CreateOrUpdateBookshelf(ctx, in)
 	if err != nil {
 		return nil, errorHandling(err)
 	}

@@ -10,7 +10,6 @@ import (
 type BookRequestValidation interface {
 	Book(in *input.Book) error
 	Bookshelf(in *input.Bookshelf) error
-	CreateAndUpdateBooks(in *input.CreateAndUpdateBooks) error
 }
 
 type bookRequestValidation struct {
@@ -43,15 +42,5 @@ func (v *bookRequestValidation) Bookshelf(in *input.Bookshelf) error {
 	}
 
 	err := xerrors.New("Failed to Bookshelf for RequestValidation")
-	return exception.InvalidRequestValidation.New(err, ves...)
-}
-
-func (v *bookRequestValidation) CreateAndUpdateBooks(in *input.CreateAndUpdateBooks) error {
-	ves := v.validator.Run(in)
-	if len(ves) == 0 {
-		return nil
-	}
-
-	err := xerrors.New("Failed to CreateAndUpdateBooks for RequestValidation")
 	return exception.InvalidRequestValidation.New(err, ves...)
 }
