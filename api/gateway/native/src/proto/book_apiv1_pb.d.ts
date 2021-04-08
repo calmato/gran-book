@@ -52,8 +52,8 @@ export class CreateBookRequest extends jspb.Message {
     getRakutenUrl(): string;
     setRakutenUrl(value: string): CreateBookRequest;
 
-    getRakutenGenreUrl(): string;
-    setRakutenGenreUrl(value: string): CreateBookRequest;
+    getRakutenGenreId(): string;
+    setRakutenGenreId(value: string): CreateBookRequest;
 
     clearAuthorsList(): void;
     getAuthorsList(): Array<CreateBookRequest.Author>;
@@ -81,7 +81,7 @@ export namespace CreateBookRequest {
         publisherOn: string,
         thumbnailUrl: string,
         rakutenUrl: string,
-        rakutenGenreUrl: string,
+        rakutenGenreId: string,
         authorsList: Array<CreateBookRequest.Author.AsObject>,
     }
 
@@ -138,8 +138,8 @@ export class UpdateBookRequest extends jspb.Message {
     getRakutenUrl(): string;
     setRakutenUrl(value: string): UpdateBookRequest;
 
-    getRakutenGenreUrl(): string;
-    setRakutenGenreUrl(value: string): UpdateBookRequest;
+    getRakutenGenreId(): string;
+    setRakutenGenreId(value: string): UpdateBookRequest;
 
     clearAuthorsList(): void;
     getAuthorsList(): Array<UpdateBookRequest.Author>;
@@ -167,7 +167,7 @@ export namespace UpdateBookRequest {
         publisherOn: string,
         thumbnailUrl: string,
         rakutenUrl: string,
-        rakutenGenreUrl: string,
+        rakutenGenreId: string,
         authorsList: Array<UpdateBookRequest.Author.AsObject>,
     }
 

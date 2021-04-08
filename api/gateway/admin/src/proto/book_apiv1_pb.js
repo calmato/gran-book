@@ -521,7 +521,7 @@ proto.proto.CreateBookRequest.toObject = function(includeInstance, msg) {
     publisherOn: jspb.Message.getFieldWithDefault(msg, 6, ""),
     thumbnailUrl: jspb.Message.getFieldWithDefault(msg, 7, ""),
     rakutenUrl: jspb.Message.getFieldWithDefault(msg, 8, ""),
-    rakutenGenreUrl: jspb.Message.getFieldWithDefault(msg, 9, ""),
+    rakutenGenreId: jspb.Message.getFieldWithDefault(msg, 9, ""),
     authorsList: jspb.Message.toObjectList(msg.getAuthorsList(),
     proto.proto.CreateBookRequest.Author.toObject, includeInstance)
   };
@@ -594,7 +594,7 @@ proto.proto.CreateBookRequest.deserializeBinaryFromReader = function(msg, reader
       break;
     case 9:
       var value = /** @type {string} */ (reader.readString());
-      msg.setRakutenGenreUrl(value);
+      msg.setRakutenGenreId(value);
       break;
     case 10:
       var value = new proto.proto.CreateBookRequest.Author;
@@ -686,7 +686,7 @@ proto.proto.CreateBookRequest.serializeBinaryToWriter = function(message, writer
       f
     );
   }
-  f = message.getRakutenGenreUrl();
+  f = message.getRakutenGenreId();
   if (f.length > 0) {
     writer.writeString(
       9,
@@ -1009,10 +1009,10 @@ proto.proto.CreateBookRequest.prototype.setRakutenUrl = function(value) {
 
 
 /**
- * optional string rakuten_genre_url = 9;
+ * optional string rakuten_genre_id = 9;
  * @return {string}
  */
-proto.proto.CreateBookRequest.prototype.getRakutenGenreUrl = function() {
+proto.proto.CreateBookRequest.prototype.getRakutenGenreId = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 9, ""));
 };
 
@@ -1021,7 +1021,7 @@ proto.proto.CreateBookRequest.prototype.getRakutenGenreUrl = function() {
  * @param {string} value
  * @return {!proto.proto.CreateBookRequest} returns this
  */
-proto.proto.CreateBookRequest.prototype.setRakutenGenreUrl = function(value) {
+proto.proto.CreateBookRequest.prototype.setRakutenGenreId = function(value) {
   return jspb.Message.setProto3StringField(this, 9, value);
 };
 
@@ -1111,7 +1111,7 @@ proto.proto.UpdateBookRequest.toObject = function(includeInstance, msg) {
     publisherOn: jspb.Message.getFieldWithDefault(msg, 6, ""),
     thumbnailUrl: jspb.Message.getFieldWithDefault(msg, 7, ""),
     rakutenUrl: jspb.Message.getFieldWithDefault(msg, 8, ""),
-    rakutenGenreUrl: jspb.Message.getFieldWithDefault(msg, 9, ""),
+    rakutenGenreId: jspb.Message.getFieldWithDefault(msg, 9, ""),
     authorsList: jspb.Message.toObjectList(msg.getAuthorsList(),
     proto.proto.UpdateBookRequest.Author.toObject, includeInstance)
   };
@@ -1184,7 +1184,7 @@ proto.proto.UpdateBookRequest.deserializeBinaryFromReader = function(msg, reader
       break;
     case 9:
       var value = /** @type {string} */ (reader.readString());
-      msg.setRakutenGenreUrl(value);
+      msg.setRakutenGenreId(value);
       break;
     case 10:
       var value = new proto.proto.UpdateBookRequest.Author;
@@ -1276,7 +1276,7 @@ proto.proto.UpdateBookRequest.serializeBinaryToWriter = function(message, writer
       f
     );
   }
-  f = message.getRakutenGenreUrl();
+  f = message.getRakutenGenreId();
   if (f.length > 0) {
     writer.writeString(
       9,
@@ -1599,10 +1599,10 @@ proto.proto.UpdateBookRequest.prototype.setRakutenUrl = function(value) {
 
 
 /**
- * optional string rakuten_genre_url = 9;
+ * optional string rakuten_genre_id = 9;
  * @return {string}
  */
-proto.proto.UpdateBookRequest.prototype.getRakutenGenreUrl = function() {
+proto.proto.UpdateBookRequest.prototype.getRakutenGenreId = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 9, ""));
 };
 
@@ -1611,7 +1611,7 @@ proto.proto.UpdateBookRequest.prototype.getRakutenGenreUrl = function() {
  * @param {string} value
  * @return {!proto.proto.UpdateBookRequest} returns this
  */
-proto.proto.UpdateBookRequest.prototype.setRakutenGenreUrl = function(value) {
+proto.proto.UpdateBookRequest.prototype.setRakutenGenreId = function(value) {
   return jspb.Message.setProto3StringField(this, 9, value);
 };
 
