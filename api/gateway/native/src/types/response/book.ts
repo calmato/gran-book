@@ -1,18 +1,54 @@
 export interface IBookResponse {
   id: number
   title: string
+  titleKana: string
   description: string
   isbn: string
-  thumbnailUrl: string
-  version: string
-  publishedOn: string
   publisher: string
-  authors: Array<string>
-  categories: Array<string>
+  publishedOn: string
+  thumbnailUrl: string
+  rakutenUrl: string
+  rakutenGenreId: string
+  author: string
+  authorKana: string
+  createdAt: string
+  updatedAt: string
+  bookshelf: IBookResponseBookshelf
+  reviews: Array<IBookResponseReview>
+}
+
+export interface IBookResponseBookshelf {
+  id: number
+  bookId: number
+  userId: string
+  status: number
+  readOn: string
   createdAt: string
   updatedAt: string
 }
 
-export interface IBookListResponse {
-  books: Array<IBookResponse>
+export interface IBookResponseReview {
+  id: number
+  score: number
+  impression: string
+  createdAt: string
+  updatedAt: string
+  user: IBookResponseReview
+}
+
+export interface IBookResponseUser {
+  id: string
+  username: string
+  thumbnailUrl: string
+}
+
+export interface IBookshelfResponse {
+  id: number
+  bookId: number
+  userId: string
+  status: number
+  impression: string
+  readOn: string
+  createdAt: string
+  updatedAt: string
 }
