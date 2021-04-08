@@ -44,7 +44,7 @@ func (a *bookApplication) Create(ctx context.Context, in *input.Book) (*book.Boo
 	for i, v := range in.Authors {
 		author := &book.Author{
 			Name:     v.Name,
-			NamaKana: v.NameKana,
+			NameKana: v.NameKana,
 		}
 
 		err = a.bookService.ValidationAuthor(ctx, author)
@@ -65,6 +65,7 @@ func (a *bookApplication) Create(ctx context.Context, in *input.Book) (*book.Boo
 		ThumbnailURL:   in.ThumbnailURL,
 		RakutenURL:     in.RakutenURL,
 		RakutenGenreID: in.RakutenGenreID,
+		Authors:        as,
 	}
 
 	err = a.bookService.Validation(ctx, b)
@@ -95,7 +96,7 @@ func (a *bookApplication) Update(ctx context.Context, in *input.Book) (*book.Boo
 	for i, v := range in.Authors {
 		author := &book.Author{
 			Name:     v.Name,
-			NamaKana: v.NameKana,
+			NameKana: v.NameKana,
 		}
 
 		err = a.bookService.ValidationAuthor(ctx, author)

@@ -27,6 +27,11 @@ func NewBookRequestValidation() BookRequestValidation {
 
 func (v *bookRequestValidation) Book(in *input.Book) error {
 	ves := v.validator.Run(in)
+
+	for _, a := range in.Authors {
+		ves = append(ves, v.validator.Run(a)...) // fieldにprefix足す
+	}
+
 	if len(ves) == 0 {
 		return nil
 	}

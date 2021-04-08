@@ -7,6 +7,8 @@ import (
 	"time"
 
 	"github.com/calmato/gran-book/api/server/book/internal/domain/book"
+	"github.com/calmato/gran-book/api/server/book/lib/datetime"
+	mock_book "github.com/calmato/gran-book/api/server/book/mock/domain/book"
 	"github.com/golang/mock/gomock"
 )
 
@@ -18,22 +20,18 @@ func TestBookService_Book(t *testing.T) {
 		"ok": {
 			Book: &book.Book{
 				ID:           0,
-				Publisher:    "テスト出版社",
-				Title:        "テスト",
-				Description:  "",
-				Isbn:         "",
-				ThumbnailURL: "",
-				Version:      "0.0.1",
+				Title:        "テスト書籍",
+				TitleKana:    "てすとしょせき",
+				Description:  "本の説明です",
+				Isbn:         "1234567890123",
+				Publisher:    "テスト著者",
 				PublishedOn:  time.Date(2020, 1, 1, 0, 0, 0, 0, time.Local),
+				ThumbnailURL: "",
 				CreatedAt:    time.Time{},
 				UpdatedAt:    time.Time{},
-				Bookshelves:  []*book.Bookshelf{},
-				Authors: []*book.Author{{
-					Name: "テスト著者",
-				}},
-				Categories: []*book.Category{{
-					Name: "コミック",
-				}},
+				Authors:      []*book.Author{},
+				Reviews:      []*book.Review{},
+				Bookshelf:    &book.Bookshelf{},
 			},
 			Expected: nil,
 		},
@@ -47,8 +45,11 @@ func TestBookService_Book(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
+			bvm := mock_book.NewMockRepository(ctrl)
+			bvm.EXPECT().GetIDByIsbn(ctx, tc.Book.Isbn).Return(tc.Book.ID, nil)
+
 			t.Run(result, func(t *testing.T) {
-				target := NewBookDomainValidation()
+				target := NewBookDomainValidation(bvm)
 
 				err := target.Book(ctx, tc.Book)
 				if !reflect.DeepEqual(err, tc.Expected) {
@@ -69,6 +70,7 @@ func TestBookService_Author(t *testing.T) {
 			Author: &book.Author{
 				ID:        0,
 				Name:      "テスト著者",
+				NameKana:  "てすとちょしゃ",
 				CreatedAt: time.Time{},
 				UpdatedAt: time.Time{},
 			},
@@ -84,8 +86,10 @@ func TestBookService_Author(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
+			bvm := mock_book.NewMockRepository(ctrl)
+
 			t.Run(result, func(t *testing.T) {
-				target := NewBookDomainValidation()
+				target := NewBookDomainValidation(bvm)
 
 				err := target.Author(ctx, tc.Author)
 				if !reflect.DeepEqual(err, tc.Expected) {
@@ -104,48 +108,11 @@ func TestBookService_Bookshelf(t *testing.T) {
 	}{
 		"ok": {
 			Bookshelf: &book.Bookshelf{
-				ID:         0,
-				BookID:     1,
-				UserID:     "00000000-0000-0000-0000-000000000000",
-				Status:     5,
-				Impression: "感想です",
-				CreatedAt:  time.Time{},
-				UpdatedAt:  time.Time{},
-			},
-			Expected: nil,
-		},
-	}
-
-	for result, tc := range testCases {
-		t.Run(result, func(t *testing.T) {
-			ctx, cancel := context.WithCancel(context.Background())
-			defer cancel()
-
-			ctrl := gomock.NewController(t)
-			defer ctrl.Finish()
-
-			t.Run(result, func(t *testing.T) {
-				target := NewBookDomainValidation()
-
-				err := target.Bookshelf(ctx, tc.Bookshelf)
-				if !reflect.DeepEqual(err, tc.Expected) {
-					t.Fatalf("want %#v, but %#v", tc.Expected, err)
-					return
-				}
-			})
-		})
-	}
-}
-
-func TestBookService_Category(t *testing.T) {
-	testCases := map[string]struct {
-		Category *book.Category
-		Expected error
-	}{
-		"ok": {
-			Category: &book.Category{
 				ID:        0,
-				Name:      "テストカテゴリ",
+				BookID:    1,
+				UserID:    "00000000-0000-0000-0000-000000000000",
+				Status:    5,
+				ReadOn:    datetime.StringToDate("2020-01-01"),
 				CreatedAt: time.Time{},
 				UpdatedAt: time.Time{},
 			},
@@ -161,10 +128,15 @@ func TestBookService_Category(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
-			t.Run(result, func(t *testing.T) {
-				target := NewBookDomainValidation()
+			bvm := mock_book.NewMockRepository(ctrl)
+			bvm.EXPECT().
+				GetBookshelfIDByUserIDAndBookID(ctx, tc.Bookshelf.UserID, tc.Bookshelf.BookID).
+				Return(tc.Bookshelf.ID, nil)
 
-				err := target.Category(ctx, tc.Category)
+			t.Run(result, func(t *testing.T) {
+				target := NewBookDomainValidation(bvm)
+
+				err := target.Bookshelf(ctx, tc.Bookshelf)
 				if !reflect.DeepEqual(err, tc.Expected) {
 					t.Fatalf("want %#v, but %#v", tc.Expected, err)
 					return

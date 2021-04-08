@@ -3,7 +3,7 @@ package input
 // Book - 書籍登録/更新のリクエスト
 type Book struct {
 	Title          string        `json:"title" validate:"required,max=64"`
-	TitleKana      string        `json:"titleKana" vlidate:"required,max=128"`
+	TitleKana      string        `json:"titleKana" validate:"required,max=128"`
 	Description    string        `json:"description" validate:"omitempty,max=2000"`
 	Isbn           string        `json:"isbn" validate:"required,max=16"`
 	Publisher      string        `json:"publisher" validate:"required,max=32"`

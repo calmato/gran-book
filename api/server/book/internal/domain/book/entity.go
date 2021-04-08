@@ -25,7 +25,7 @@ type Book struct {
 type Author struct {
 	ID        int       `gorm:"primaryKey;not null;autoIncrement;<-:create"`
 	Name      string    `gorm:"size:32;not null;unique"`
-	NamaKana  string    `gorm:"size:64;not null"`
+	NameKana  string    `gorm:"size:64;not null"`
 	CreatedAt time.Time `gorm:"not null;<-:create"`
 	UpdatedAt time.Time `gorm:"not null"`
 }
