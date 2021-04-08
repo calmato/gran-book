@@ -229,7 +229,7 @@ func getBookResponse(b *book.Book) *pb.BookResponse {
 	for i, v := range b.Authors {
 		a := &pb.BookResponse_Author{
 			Name:     v.Name,
-			NameKana: v.NamaKana,
+			NameKana: v.NameKana,
 		}
 
 		as[i] = a
