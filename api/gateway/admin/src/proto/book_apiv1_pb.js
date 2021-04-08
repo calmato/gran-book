@@ -518,7 +518,7 @@ proto.proto.CreateBookRequest.toObject = function(includeInstance, msg) {
     description: jspb.Message.getFieldWithDefault(msg, 3, ""),
     isbn: jspb.Message.getFieldWithDefault(msg, 4, ""),
     publisher: jspb.Message.getFieldWithDefault(msg, 5, ""),
-    publisherOn: jspb.Message.getFieldWithDefault(msg, 6, ""),
+    publishedOn: jspb.Message.getFieldWithDefault(msg, 6, ""),
     thumbnailUrl: jspb.Message.getFieldWithDefault(msg, 7, ""),
     rakutenUrl: jspb.Message.getFieldWithDefault(msg, 8, ""),
     rakutenGenreId: jspb.Message.getFieldWithDefault(msg, 9, ""),
@@ -582,7 +582,7 @@ proto.proto.CreateBookRequest.deserializeBinaryFromReader = function(msg, reader
       break;
     case 6:
       var value = /** @type {string} */ (reader.readString());
-      msg.setPublisherOn(value);
+      msg.setPublishedOn(value);
       break;
     case 7:
       var value = /** @type {string} */ (reader.readString());
@@ -665,7 +665,7 @@ proto.proto.CreateBookRequest.serializeBinaryToWriter = function(message, writer
       f
     );
   }
-  f = message.getPublisherOn();
+  f = message.getPublishedOn();
   if (f.length > 0) {
     writer.writeString(
       6,
@@ -955,10 +955,10 @@ proto.proto.CreateBookRequest.prototype.setPublisher = function(value) {
 
 
 /**
- * optional string publisher_on = 6;
+ * optional string published_on = 6;
  * @return {string}
  */
-proto.proto.CreateBookRequest.prototype.getPublisherOn = function() {
+proto.proto.CreateBookRequest.prototype.getPublishedOn = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 6, ""));
 };
 
@@ -967,7 +967,7 @@ proto.proto.CreateBookRequest.prototype.getPublisherOn = function() {
  * @param {string} value
  * @return {!proto.proto.CreateBookRequest} returns this
  */
-proto.proto.CreateBookRequest.prototype.setPublisherOn = function(value) {
+proto.proto.CreateBookRequest.prototype.setPublishedOn = function(value) {
   return jspb.Message.setProto3StringField(this, 6, value);
 };
 
@@ -1108,7 +1108,7 @@ proto.proto.UpdateBookRequest.toObject = function(includeInstance, msg) {
     description: jspb.Message.getFieldWithDefault(msg, 3, ""),
     isbn: jspb.Message.getFieldWithDefault(msg, 4, ""),
     publisher: jspb.Message.getFieldWithDefault(msg, 5, ""),
-    publisherOn: jspb.Message.getFieldWithDefault(msg, 6, ""),
+    publishedOn: jspb.Message.getFieldWithDefault(msg, 6, ""),
     thumbnailUrl: jspb.Message.getFieldWithDefault(msg, 7, ""),
     rakutenUrl: jspb.Message.getFieldWithDefault(msg, 8, ""),
     rakutenGenreId: jspb.Message.getFieldWithDefault(msg, 9, ""),
@@ -1172,7 +1172,7 @@ proto.proto.UpdateBookRequest.deserializeBinaryFromReader = function(msg, reader
       break;
     case 6:
       var value = /** @type {string} */ (reader.readString());
-      msg.setPublisherOn(value);
+      msg.setPublishedOn(value);
       break;
     case 7:
       var value = /** @type {string} */ (reader.readString());
@@ -1255,7 +1255,7 @@ proto.proto.UpdateBookRequest.serializeBinaryToWriter = function(message, writer
       f
     );
   }
-  f = message.getPublisherOn();
+  f = message.getPublishedOn();
   if (f.length > 0) {
     writer.writeString(
       6,
@@ -1545,10 +1545,10 @@ proto.proto.UpdateBookRequest.prototype.setPublisher = function(value) {
 
 
 /**
- * optional string publisher_on = 6;
+ * optional string published_on = 6;
  * @return {string}
  */
-proto.proto.UpdateBookRequest.prototype.getPublisherOn = function() {
+proto.proto.UpdateBookRequest.prototype.getPublishedOn = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 6, ""));
 };
 
@@ -1557,7 +1557,7 @@ proto.proto.UpdateBookRequest.prototype.getPublisherOn = function() {
  * @param {string} value
  * @return {!proto.proto.UpdateBookRequest} returns this
  */
-proto.proto.UpdateBookRequest.prototype.setPublisherOn = function(value) {
+proto.proto.UpdateBookRequest.prototype.setPublishedOn = function(value) {
   return jspb.Message.setProto3StringField(this, 6, value);
 };
 
