@@ -12,7 +12,7 @@ export interface ICreateBookInput {
   thumbnailUrl: string
   rakutenUrl: string
   rakutenGenreId: string
-  authors: Array<IBookAuthorInput>
+  authors: Array<IBookInputAuthor>
 }
 
 export interface IUpdateBookInput {
@@ -25,10 +25,10 @@ export interface IUpdateBookInput {
   thumbnailUrl: string
   rakutenUrl: string
   rakutenGenreId: string
-  authors: Array<IBookAuthorInput>
+  authors: Array<IBookInputAuthor>
 }
 
-export interface IBookAuthorInput {
+export interface IBookInputAuthor {
   name: string
   nameKana: string
 }

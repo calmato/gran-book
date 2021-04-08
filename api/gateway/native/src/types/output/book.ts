@@ -11,17 +11,17 @@ export interface IBookOutput {
   rakutenGenreId: string
   createdAt: string
   updatedAt: string
-  bookshelf: IBookBookshelfOutput
-  authors: Array<IBookAuthorOutput>
-  reviews: Array<IBookBookshelfOutput>
+  bookshelf: IBookOutputBookshelf
+  authors: Array<IBookOutputAuthor>
+  reviews: Array<IBookOutputReview>
 }
 
-export interface IBookAuthorOutput {
+export interface IBookOutputAuthor {
   name: string
   nameKana: string
 }
 
-export interface IBookReviewOutput {
+export interface IBookOutputReview {
   id: number
   userId: string
   score: number
@@ -30,7 +30,7 @@ export interface IBookReviewOutput {
   updatedAt: string
 }
 
-export interface IBookBookshelfOutput {
+export interface IBookOutputBookshelf {
   id: number
   status: number
   readOn: string
