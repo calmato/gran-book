@@ -32,6 +32,82 @@ func (s *BookServer) ShowBook(ctx context.Context, req *pb.ShowBookRequest) (*pb
 	return res, nil
 }
 
+func (s *BookServer) CreateBook(ctx context.Context, req *pb.CreateBookRequest) (*pb.BookResponse, error) {
+	_, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	as := make([]*input.BookAuthor, len(req.GetAuthors()))
+	for i, v := range req.GetAuthors() {
+		a := &input.BookAuthor{
+			Name:     v.GetName(),
+			NameKana: v.GetNameKana(),
+		}
+
+		as[i] = a
+	}
+
+	in := &input.Book{
+		Title:          req.GetTitle(),
+		TitleKana:      req.GetTitleKana(),
+		Description:    req.GetDescription(),
+		Isbn:           req.GetIsbn(),
+		Publisher:      req.GetPublisher(),
+		PublishedOn:    req.GetPublisherOn(),
+		ThumbnailURL:   req.GetThumbnailUrl(),
+		RakutenURL:     req.GetRakutenUrl(),
+		RakutenGenreID: req.GetRakutenGenreId(),
+		Authors:        as,
+	}
+
+	b, err := s.BookApplication.Create(ctx, in)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	res := getBookResponse(b)
+	return res, nil
+}
+
+func (s *BookServer) UpdateBook(ctx context.Context, req *pb.UpdateBookRequest) (*pb.BookResponse, error) {
+	_, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	as := make([]*input.BookAuthor, len(req.GetAuthors()))
+	for i, v := range req.GetAuthors() {
+		a := &input.BookAuthor{
+			Name:     v.GetName(),
+			NameKana: v.GetNameKana(),
+		}
+
+		as[i] = a
+	}
+
+	in := &input.Book{
+		Title:          req.GetTitle(),
+		TitleKana:      req.GetTitleKana(),
+		Description:    req.GetDescription(),
+		Isbn:           req.GetIsbn(),
+		Publisher:      req.GetPublisher(),
+		PublishedOn:    req.GetPublisherOn(),
+		ThumbnailURL:   req.GetThumbnailUrl(),
+		RakutenURL:     req.GetRakutenUrl(),
+		RakutenGenreID: req.GetRakutenGenreId(),
+		Authors:        as,
+	}
+
+	b, err := s.BookApplication.Update(ctx, in)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	res := getBookResponse(b)
+	return res, nil
+}
+
 func (s *BookServer) ReadBookshelf(
 	ctx context.Context, req *pb.ReadBookshelfRequest,
 ) (*pb.BookshelfResponse, error) {
