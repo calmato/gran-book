@@ -1,10 +1,35 @@
 import express, { NextFunction, Request, Response } from 'express'
-import { createBook, getUserProfile, showBook, updateBook } from '~/api'
+import {
+  createBook,
+  getUserProfile,
+  readBookshelf,
+  readingBookshelf,
+  releaseBookshelf,
+  showBook,
+  stackBookshelf,
+  updateBook,
+  wantBookshelf,
+} from '~/api'
 import { GrpcError } from '~/types/exception'
-import { IBookInputAuthor, ICreateBookInput, IShowBookInput, IUpdateBookInput } from '~/types/input'
-import { IBookOutput, IBookOutputAuthor, IBookOutputReview } from '~/types/output'
-import { ICreateBookRequest, IUpdateBookRequest } from '~/types/request'
-import { IBookResponse, IBookResponseBookshelf, IBookResponseReview, IBookResponseUser } from '~/types/response'
+import {
+  IBookInputAuthor,
+  ICreateBookInput,
+  IReadBookshelfInput,
+  IReadingBookshelfInput,
+  IReleaseBookshelfInput,
+  IShowBookInput,
+  IStackBookshelfInput,
+  IUpdateBookInput,
+} from '~/types/input'
+import { IBookOutput, IBookOutputAuthor, IBookOutputReview, IBookshelfOutput } from '~/types/output'
+import { ICreateBookRequest, IReadBookshelfRequest, IUpdateBookRequest } from '~/types/request'
+import {
+  IBookResponse,
+  IBookResponseBookshelf,
+  IBookResponseReview,
+  IBookResponseUser,
+  IBookshelfResponse,
+} from '~/types/response'
 
 const router = express.Router()
 
@@ -135,6 +160,99 @@ router.patch(
   }
 )
 
+router.post(
+  '/:bookId/read',
+  async (req: Request, res: Response<IBookshelfResponse>, next: NextFunction): Promise<void> => {
+    const { bookId } = req.params
+    const { readOn, impression } = req.body as IReadBookshelfRequest
+
+    const input: IReadBookshelfInput = {
+      bookId: Number(bookId) || 0,
+      impression,
+      readOn,
+    }
+
+    await readBookshelf(req, input)
+      .then((output: IBookshelfOutput) => {
+        const response: IBookshelfResponse = setBookshelfResponse(output)
+        res.status(200).json(response)
+      })
+      .catch((err: GrpcError) => next(err))
+  }
+)
+
+router.post(
+  '/:bookId/reading',
+  async (req: Request, res: Response<IBookshelfResponse>, next: NextFunction): Promise<void> => {
+    const { bookId } = req.params
+
+    const input: IReadingBookshelfInput = {
+      bookId: Number(bookId) || 0,
+    }
+
+    await readingBookshelf(req, input)
+      .then((output: IBookshelfOutput) => {
+        const response: IBookshelfResponse = setBookshelfResponse(output)
+        res.status(200).json(response)
+      })
+      .catch((err: GrpcError) => next(err))
+  }
+)
+
+router.post(
+  '/:bookId/stack',
+  async (req: Request, res: Response<IBookshelfResponse>, next: NextFunction): Promise<void> => {
+    const { bookId } = req.params
+
+    const input: IStackBookshelfInput = {
+      bookId: Number(bookId) || 0,
+    }
+
+    await stackBookshelf(req, input)
+      .then((output: IBookshelfOutput) => {
+        const response: IBookshelfResponse = setBookshelfResponse(output)
+        res.status(200).json(response)
+      })
+      .catch((err: GrpcError) => next(err))
+  }
+)
+
+router.post(
+  '/:bookId/want',
+  async (req: Request, res: Response<IBookshelfResponse>, next: NextFunction): Promise<void> => {
+    const { bookId } = req.params
+
+    const input: IReadingBookshelfInput = {
+      bookId: Number(bookId) || 0,
+    }
+
+    await wantBookshelf(req, input)
+      .then((output: IBookshelfOutput) => {
+        const response: IBookshelfResponse = setBookshelfResponse(output)
+        res.status(200).json(response)
+      })
+      .catch((err: GrpcError) => next(err))
+  }
+)
+
+router.post(
+  '/:bookId/release',
+  async (req: Request, res: Response<IBookshelfResponse>, next: NextFunction): Promise<void> => {
+    const { bookId } = req.params
+
+    const input: IReleaseBookshelfInput = {
+      bookId: Number(bookId) || 0,
+    }
+
+    await releaseBookshelf(req, input)
+      .then((output: IBookshelfOutput) => {
+        const response: IBookshelfResponse = setBookshelfResponse(output)
+        res.status(200).json(response)
+      })
+      .catch((err: GrpcError) => next(err))
+  }
+)
+
 function setBookResponse(bookOutput: IBookOutput): IBookResponse {
   const bookshelf: IBookResponseBookshelf = {
     id: bookOutput.bookshelf?.id,
@@ -188,6 +306,21 @@ function setBookResponse(bookOutput: IBookOutput): IBookResponse {
     updatedAt: bookOutput.updatedAt,
     bookshelf,
     reviews,
+  }
+
+  return response
+}
+
+function setBookshelfResponse(output: IBookshelfOutput): IBookshelfResponse {
+  const response: IBookshelfResponse = {
+    id: output.id,
+    bookId: output.bookId,
+    userId: output.userId,
+    status: output.status,
+    impression: output.impression,
+    readOn: output.readOn,
+    createdAt: output.createdAt,
+    updatedAt: output.updatedAt,
   }
 
   return response
