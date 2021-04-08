@@ -17,41 +17,94 @@ type BookServer struct {
 	BookApplication application.BookApplication
 }
 
-func (s *BookServer) CreateAndUpdateBooks(
-	ctx context.Context, req *pb.CreateAndUpdateBooksRequest,
-) (*pb.BookListResponse, error) {
+func (s *BookServer) ShowBook(ctx context.Context, req *pb.ShowBookRequest) (*pb.BookResponse, error) {
 	_, err := s.AuthApplication.Authentication(ctx)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
-	books := make([]*input.Book, len(req.GetBooks()))
-	for i, v := range req.GetBooks() {
-		b := &input.Book{
-			Title:        v.GetTitle(),
-			Description:  v.GetDescription(),
-			Isbn:         v.GetIsbn(),
-			ThumbnailURL: v.GetThumbnailUrl(),
-			Version:      v.GetVersion(),
-			Publisher:    v.GetPublisher(),
-			PublishedOn:  v.GetPublishedOn(),
-			Authors:      v.GetAuthors(),
-			Categories:   v.GetCategories(),
-		}
-
-		books[i] = b
-	}
-
-	in := &input.CreateAndUpdateBooks{
-		Books: books,
-	}
-
-	bs, err := s.BookApplication.MultipleCreateAndUpdate(ctx, in)
+	b, err := s.BookApplication.Show(ctx, req.GetIsbn())
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
-	res := getBookListResponse(bs)
+	res := getBookResponse(b)
+	return res, nil
+}
+
+func (s *BookServer) CreateBook(ctx context.Context, req *pb.CreateBookRequest) (*pb.BookResponse, error) {
+	_, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	as := make([]*input.BookAuthor, len(req.GetAuthors()))
+	for i, v := range req.GetAuthors() {
+		a := &input.BookAuthor{
+			Name:     v.GetName(),
+			NameKana: v.GetNameKana(),
+		}
+
+		as[i] = a
+	}
+
+	in := &input.Book{
+		Title:          req.GetTitle(),
+		TitleKana:      req.GetTitleKana(),
+		Description:    req.GetDescription(),
+		Isbn:           req.GetIsbn(),
+		Publisher:      req.GetPublisher(),
+		PublishedOn:    req.GetPublishedOn(),
+		ThumbnailURL:   req.GetThumbnailUrl(),
+		RakutenURL:     req.GetRakutenUrl(),
+		RakutenGenreID: req.GetRakutenGenreId(),
+		Authors:        as,
+	}
+
+	b, err := s.BookApplication.Create(ctx, in)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	res := getBookResponse(b)
+	return res, nil
+}
+
+func (s *BookServer) UpdateBook(ctx context.Context, req *pb.UpdateBookRequest) (*pb.BookResponse, error) {
+	_, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	as := make([]*input.BookAuthor, len(req.GetAuthors()))
+	for i, v := range req.GetAuthors() {
+		a := &input.BookAuthor{
+			Name:     v.GetName(),
+			NameKana: v.GetNameKana(),
+		}
+
+		as[i] = a
+	}
+
+	in := &input.Book{
+		Title:          req.GetTitle(),
+		TitleKana:      req.GetTitleKana(),
+		Description:    req.GetDescription(),
+		Isbn:           req.GetIsbn(),
+		Publisher:      req.GetPublisher(),
+		PublishedOn:    req.GetPublishedOn(),
+		ThumbnailURL:   req.GetThumbnailUrl(),
+		RakutenURL:     req.GetRakutenUrl(),
+		RakutenGenreID: req.GetRakutenGenreId(),
+		Authors:        as,
+	}
+
+	b, err := s.BookApplication.Update(ctx, in)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	res := getBookResponse(b)
 	return res, nil
 }
 
@@ -64,19 +117,18 @@ func (s *BookServer) ReadBookshelf(
 	}
 
 	in := &input.Bookshelf{
-		UserID:     cuid,
-		BookID:     int(req.GetBookId()),
-		Status:     book.ReadStatus,
-		Impression: req.GetImpression(),
-		ReadOn:     req.GetReadOn(),
+		UserID: cuid,
+		BookID: int(req.GetBookId()),
+		Status: book.ReadStatus,
+		ReadOn: req.GetReadOn(),
 	}
 
-	b, bs, err := s.BookApplication.CreateOrUpdateBookshelf(ctx, in)
+	bs, err := s.BookApplication.CreateOrUpdateBookshelf(ctx, in)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
-	res := getBookshelfResponse(b, bs)
+	res := getBookshelfResponse(bs)
 	return res, nil
 }
 
@@ -94,12 +146,12 @@ func (s *BookServer) ReadingBookshelf(
 		Status: book.ReadingStatus,
 	}
 
-	b, bs, err := s.BookApplication.CreateOrUpdateBookshelf(ctx, in)
+	bs, err := s.BookApplication.CreateOrUpdateBookshelf(ctx, in)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
-	res := getBookshelfResponse(b, bs)
+	res := getBookshelfResponse(bs)
 	return res, nil
 }
 
@@ -117,12 +169,12 @@ func (s *BookServer) StackBookshelf(
 		Status: book.StackStatus,
 	}
 
-	b, bs, err := s.BookApplication.CreateOrUpdateBookshelf(ctx, in)
+	bs, err := s.BookApplication.CreateOrUpdateBookshelf(ctx, in)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
-	res := getBookshelfResponse(b, bs)
+	res := getBookshelfResponse(bs)
 	return res, nil
 }
 
@@ -140,12 +192,12 @@ func (s *BookServer) WantBookshelf(
 		Status: book.WantStatus,
 	}
 
-	b, bs, err := s.BookApplication.CreateOrUpdateBookshelf(ctx, in)
+	bs, err := s.BookApplication.CreateOrUpdateBookshelf(ctx, in)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
-	res := getBookshelfResponse(b, bs)
+	res := getBookshelfResponse(bs)
 	return res, nil
 }
 
@@ -163,83 +215,76 @@ func (s *BookServer) ReleaseBookshelf(
 		Status: book.ReleaseStatus,
 	}
 
-	b, bs, err := s.BookApplication.CreateOrUpdateBookshelf(ctx, in)
+	bs, err := s.BookApplication.CreateOrUpdateBookshelf(ctx, in)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
-	res := getBookshelfResponse(b, bs)
+	res := getBookshelfResponse(bs)
 	return res, nil
 }
 
-func getBookListResponse(bs []*book.Book) *pb.BookListResponse {
-	books := make([]*pb.BookListResponse_Book, len(bs))
-	for i, b := range bs {
-		as := make([]string, len(b.Authors))
-		for i, v := range b.Authors {
-			as[i] = v.Name
+func getBookResponse(b *book.Book) *pb.BookResponse {
+	as := make([]*pb.BookResponse_Author, len(b.Authors))
+	for i, v := range b.Authors {
+		a := &pb.BookResponse_Author{
+			Name:     v.Name,
+			NameKana: v.NameKana,
 		}
 
-		cs := make([]string, len(b.Categories))
-		for i, v := range b.Categories {
-			cs[i] = v.Name
-		}
-
-		item := &pb.BookListResponse_Book{
-			Id:           int64(b.ID),
-			Title:        b.Title,
-			Description:  b.Description,
-			Isbn:         b.Isbn,
-			ThumbnailUrl: b.ThumbnailURL,
-			Version:      b.Version,
-			Publisher:    b.Publisher,
-			PublishedOn:  datetime.DateToString(b.PublishedOn),
-			Authors:      as,
-			Categories:   cs,
-			CreatedAt:    datetime.TimeToString(b.CreatedAt),
-			UpdatedAt:    datetime.TimeToString(b.UpdatedAt),
-		}
-
-		books[i] = item
+		as[i] = a
 	}
 
-	return &pb.BookListResponse{
-		Books: books,
+	rs := make([]*pb.BookResponse_Review, len(b.Reviews))
+	for i, v := range b.Reviews {
+		r := &pb.BookResponse_Review{
+			Id:         int64(v.ID),
+			UserId:     v.UserID,
+			Score:      int32(v.Score),
+			Impression: v.Impression,
+			CreatedAt:  datetime.TimeToString(v.CreatedAt),
+			UpdatedAt:  datetime.TimeToString(v.UpdatedAt),
+		}
+
+		rs[i] = r
+	}
+
+	bs := &pb.BookResponse_Bookshelf{}
+	if b.Bookshelf != nil {
+		bs.Id = int64(b.Bookshelf.ID)
+		bs.Status = int32(b.Bookshelf.Status)
+		bs.ReadOn = datetime.DateToString(b.Bookshelf.ReadOn)
+		bs.CreatedAt = datetime.TimeToString(b.Bookshelf.CreatedAt)
+		bs.UpdatedAt = datetime.TimeToString(b.Bookshelf.UpdatedAt)
+	}
+
+	return &pb.BookResponse{
+		Id:             int64(b.ID),
+		Title:          b.Title,
+		TitleKana:      b.TitleKana,
+		Description:    b.Description,
+		Isbn:           b.Isbn,
+		Publisher:      b.Publisher,
+		PublishedOn:    datetime.DateToString(b.PublishedOn),
+		ThumbnailUrl:   b.ThumbnailURL,
+		RakutenUrl:     b.RakutenURL,
+		RakutenGenreId: b.RakutenGenreID,
+		CreatedAt:      datetime.TimeToString(b.CreatedAt),
+		UpdatedAt:      datetime.TimeToString(b.UpdatedAt),
+		Authors:        as,
+		Reviews:        rs,
+		Bookshelf:      bs,
 	}
 }
 
-func getBookshelfResponse(book *book.Book, bookshelf *book.Bookshelf) *pb.BookshelfResponse {
-	as := make([]string, len(book.Authors))
-	for i, v := range book.Authors {
-		as[i] = v.Name
-	}
-
-	cs := make([]string, len(book.Categories))
-	for i, v := range book.Categories {
-		cs[i] = v.Name
-	}
-
-	b := &pb.BookshelfResponse_Book{
-		Title:        book.Title,
-		Description:  book.Description,
-		Isbn:         book.Isbn,
-		ThumbnailUrl: book.ThumbnailURL,
-		Version:      book.Version,
-		Publisher:    book.Publisher,
-		PublishedOn:  datetime.DateToString(book.PublishedOn),
-		Authors:      as,
-		Categories:   cs,
-	}
-
+func getBookshelfResponse(bs *book.Bookshelf) *pb.BookshelfResponse {
 	return &pb.BookshelfResponse{
-		Id:         int64(bookshelf.ID),
-		BookId:     int64(bookshelf.BookID),
-		UserId:     bookshelf.UserID,
-		Status:     int32(bookshelf.Status),
-		Impression: bookshelf.Impression,
-		ReadOn:     datetime.DateToString(bookshelf.ReadOn),
-		CreatedAt:  datetime.TimeToString(bookshelf.CreatedAt),
-		UpdatedAt:  datetime.TimeToString(bookshelf.UpdatedAt),
-		Book:       b,
+		Id:        int64(bs.ID),
+		BookId:    int64(bs.BookID),
+		UserId:    bs.UserID,
+		Status:    int32(bs.Status),
+		ReadOn:    datetime.DateToString(bs.ReadOn),
+		CreatedAt: datetime.TimeToString(bs.CreatedAt),
+		UpdatedAt: datetime.TimeToString(bs.UpdatedAt),
 	}
 }

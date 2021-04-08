@@ -75,17 +75,3 @@ func (mr *MockValidationMockRecorder) Bookshelf(ctx, b interface{}) *gomock.Call
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Bookshelf", reflect.TypeOf((*MockValidation)(nil).Bookshelf), ctx, b)
 }
-
-// Category mocks base method
-func (m *MockValidation) Category(ctx context.Context, b *book.Category) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Category", ctx, b)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// Category indicates an expected call of Category
-func (mr *MockValidationMockRecorder) Category(ctx, b interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Category", reflect.TypeOf((*MockValidation)(nil).Category), ctx, b)
-}

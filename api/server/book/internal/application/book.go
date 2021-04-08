@@ -11,8 +11,10 @@ import (
 
 // BookApplication - Bookアプリケーションのインターフェース
 type BookApplication interface {
-	MultipleCreateAndUpdate(ctx context.Context, in *input.CreateAndUpdateBooks) ([]*book.Book, error)
-	CreateOrUpdateBookshelf(ctx context.Context, in *input.Bookshelf) (*book.Book, *book.Bookshelf, error)
+	Show(ctx context.Context, isbn string) (*book.Book, error)
+	Create(ctx context.Context, in *input.Book) (*book.Book, error)
+	Update(ctx context.Context, in *input.Book) (*book.Book, error)
+	CreateOrUpdateBookshelf(ctx context.Context, in *input.Bookshelf) (*book.Bookshelf, error)
 }
 
 type bookApplication struct {
@@ -28,118 +30,24 @@ func NewBookApplication(brv validation.BookRequestValidation, bs book.Service) B
 	}
 }
 
-func (a *bookApplication) MultipleCreateAndUpdate(
-	ctx context.Context, in *input.CreateAndUpdateBooks,
-) ([]*book.Book, error) {
-	err := a.bookRequestValidation.CreateAndUpdateBooks(in)
-	if err != nil {
-		return nil, err
-	}
-
-	bs := []*book.Book{}
-	nonCreatedBooks := []*book.Book{}
-	updateRequiredBooks := []*book.Book{}
-
-	for _, v := range in.Books {
-		b, _ := a.bookService.ShowByIsbn(ctx, v.Isbn)
-		if b == nil {
-			b, err := a.initializeBook(ctx, v)
-			if err != nil {
-				return nil, err
-			}
-
-			nonCreatedBooks = append(nonCreatedBooks, b)
-			continue
-		}
-
-		// 既存データとバージョンが異なっている場合のみ更新
-		if b.Version != v.Version {
-			newBook, err := a.initializeBook(ctx, v)
-			if err != nil {
-				return nil, err
-			}
-
-			b.Authors = newBook.Authors
-			b.Categories = newBook.Categories
-
-			updateRequiredBooks = append(updateRequiredBooks, b)
-			continue
-		}
-
-		bs = append(bs, b)
-	}
-
-	err = a.bookService.MultipleCreate(ctx, nonCreatedBooks)
-	if err != nil {
-		return nil, err
-	}
-
-	err = a.bookService.MultipleUpdate(ctx, updateRequiredBooks)
-	if err != nil {
-		return nil, err
-	}
-
-	bs = append(bs, nonCreatedBooks...)
-	bs = append(bs, updateRequiredBooks...)
-
-	return bs, nil
+func (a *bookApplication) Show(ctx context.Context, isbn string) (*book.Book, error) {
+	return a.bookService.ShowByIsbn(ctx, isbn)
 }
 
-func (a *bookApplication) CreateOrUpdateBookshelf(
-	ctx context.Context, in *input.Bookshelf,
-) (*book.Book, *book.Bookshelf, error) {
-	err := a.bookRequestValidation.Bookshelf(in)
+func (a *bookApplication) Create(ctx context.Context, in *input.Book) (*book.Book, error) {
+	err := a.bookRequestValidation.Book(in)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
-	b, err := a.bookService.Show(ctx, in.BookID)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	bs, _ := a.bookService.ShowBookshelfByUserIDAndBookID(ctx, in.UserID, in.BookID)
-	if bs == nil {
-		bs = &book.Bookshelf{}
-	}
-
-	bs.BookID = in.BookID
-	bs.UserID = in.UserID
-	bs.Status = in.Status
-	bs.ReadOn = datetime.StringToDate(in.ReadOn)
-
-	if bs.Status == book.ReadStatus {
-		bs.Impression = in.Impression
-	}
-
-	err = a.bookService.ValidationBookshelf(ctx, bs)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	if bs.ID == 0 {
-		err = a.bookService.CreateBookshelf(ctx, bs)
-		if err != nil {
-			return nil, nil, err
-		}
-	} else {
-		err = a.bookService.UpdateBookshelf(ctx, bs)
-		if err != nil {
-			return nil, nil, err
-		}
-	}
-
-	return b, bs, nil
-}
-
-func (a *bookApplication) initializeBook(ctx context.Context, in *input.Book) (*book.Book, error) {
 	as := make([]*book.Author, len(in.Authors))
 	for i, v := range in.Authors {
 		author := &book.Author{
-			Name: v,
+			Name:     v.Name,
+			NameKana: v.NameKana,
 		}
 
-		err := a.bookService.ValidationAuthor(ctx, author)
+		err = a.bookService.ValidationAuthor(ctx, author)
 		if err != nil {
 			return nil, err
 		}
@@ -147,36 +55,121 @@ func (a *bookApplication) initializeBook(ctx context.Context, in *input.Book) (*
 		as[i] = author
 	}
 
-	cs := make([]*book.Category, len(in.Categories))
-	for i, v := range in.Categories {
-		c := &book.Category{
-			Name: v,
-		}
-
-		err := a.bookService.ValidationCategory(ctx, c)
-		if err != nil {
-			return nil, err
-		}
-
-		cs[i] = c
-	}
-
 	b := &book.Book{
-		Title:        in.Title,
-		Description:  in.Description,
-		Isbn:         in.Isbn,
-		ThumbnailURL: in.ThumbnailURL,
-		Version:      in.Version,
-		Publisher:    in.Publisher,
-		PublishedOn:  datetime.StringToDate(in.PublishedOn),
-		Authors:      as,
-		Categories:   cs,
+		Title:          in.Title,
+		TitleKana:      in.TitleKana,
+		Description:    in.Description,
+		Isbn:           in.Isbn,
+		Publisher:      in.Publisher,
+		PublishedOn:    datetime.StringToDate(in.PublishedOn),
+		ThumbnailURL:   in.ThumbnailURL,
+		RakutenURL:     in.RakutenURL,
+		RakutenGenreID: in.RakutenGenreID,
+		Authors:        as,
 	}
 
-	err := a.bookService.Validation(ctx, b)
+	err = a.bookService.Validation(ctx, b)
+	if err != nil {
+		return nil, err
+	}
+
+	err = a.bookService.Create(ctx, b)
 	if err != nil {
 		return nil, err
 	}
 
 	return b, nil
+}
+
+func (a *bookApplication) Update(ctx context.Context, in *input.Book) (*book.Book, error) {
+	err := a.bookRequestValidation.Book(in)
+	if err != nil {
+		return nil, err
+	}
+
+	b, err := a.bookService.ShowByIsbn(ctx, in.Isbn)
+	if err != nil {
+		return nil, err
+	}
+
+	as := make([]*book.Author, len(in.Authors))
+	for i, v := range in.Authors {
+		author := &book.Author{
+			Name:     v.Name,
+			NameKana: v.NameKana,
+		}
+
+		err = a.bookService.ValidationAuthor(ctx, author)
+		if err != nil {
+			return nil, err
+		}
+
+		as[i] = author
+	}
+
+	b.Title = in.Title
+	b.TitleKana = in.TitleKana
+	b.Description = in.Description
+	b.Isbn = in.Isbn
+	b.Publisher = in.Publisher
+	b.PublishedOn = datetime.StringToDate(in.PublishedOn)
+	b.ThumbnailURL = in.ThumbnailURL
+	b.RakutenURL = in.RakutenURL
+	b.RakutenGenreID = in.RakutenGenreID
+	b.Authors = as
+
+	err = a.bookService.Validation(ctx, b)
+	if err != nil {
+		return nil, err
+	}
+
+	err = a.bookService.Update(ctx, b)
+	if err != nil {
+		return nil, err
+	}
+
+	return b, nil
+}
+
+func (a *bookApplication) CreateOrUpdateBookshelf(
+	ctx context.Context, in *input.Bookshelf,
+) (*book.Bookshelf, error) {
+	err := a.bookRequestValidation.Bookshelf(in)
+	if err != nil {
+		return nil, err
+	}
+
+	b, err := a.bookService.Show(ctx, in.BookID)
+	if err != nil {
+		return nil, err
+	}
+
+	bs, _ := a.bookService.ShowBookshelfByUserIDAndBookID(ctx, in.UserID, b.ID)
+	if bs == nil {
+		bs = &book.Bookshelf{}
+	}
+
+	bs.BookID = b.ID
+	bs.UserID = in.UserID
+	bs.Status = in.Status
+	bs.ReadOn = datetime.StringToDate(in.ReadOn)
+
+	err = a.bookService.ValidationBookshelf(ctx, bs)
+	if err != nil {
+		return nil, err
+	}
+
+	if bs.ID == 0 {
+		err = a.bookService.CreateBookshelf(ctx, bs)
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		err = a.bookService.UpdateBookshelf(ctx, bs)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return bs, nil
 }

@@ -169,7 +169,7 @@ func (s *userService) ShowRelationshipByUID(
 }
 
 func (s *userService) Create(ctx context.Context, u *user.User) error {
-	current := time.Now()
+	current := time.Now().Local()
 
 	u.ID = uuid.New().String()
 	u.CreatedAt = current
@@ -179,7 +179,7 @@ func (s *userService) Create(ctx context.Context, u *user.User) error {
 }
 
 func (s *userService) CreateRelationship(ctx context.Context, r *user.Relationship) error {
-	current := time.Now()
+	current := time.Now().Local()
 
 	r.CreatedAt = current
 	r.UpdatedAt = current
@@ -188,7 +188,7 @@ func (s *userService) CreateRelationship(ctx context.Context, r *user.Relationsh
 }
 
 func (s *userService) Update(ctx context.Context, u *user.User) error {
-	u.UpdatedAt = time.Now()
+	u.UpdatedAt = time.Now().Local()
 
 	return s.userRepository.Update(ctx, u)
 }

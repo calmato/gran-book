@@ -1,93 +1,332 @@
 import express, { NextFunction, Request, Response } from 'express'
-import { createAndUpdateBooks } from '~/api'
-import { IBookItem, ICreateAndUpdateBooksRequest } from '~/types/request'
-import { IBookItemInput, ICreateAndUpdateBooksInput } from '~/types/input'
+import {
+  createBook,
+  getUserProfile,
+  readBookshelf,
+  readingBookshelf,
+  releaseBookshelf,
+  showBook,
+  stackBookshelf,
+  updateBook,
+  wantBookshelf,
+} from '~/api'
 import { GrpcError } from '~/types/exception'
-import { IBookListOutput, IBookOutput } from '~/types/output'
-import { IBookListResponse, IBookResponse } from '~/types/response'
+import {
+  IBookInputAuthor,
+  ICreateBookInput,
+  IReadBookshelfInput,
+  IReadingBookshelfInput,
+  IReleaseBookshelfInput,
+  IShowBookInput,
+  IStackBookshelfInput,
+  IUpdateBookInput,
+} from '~/types/input'
+import { IBookOutput, IBookOutputAuthor, IBookOutputReview, IBookshelfOutput } from '~/types/output'
+import { ICreateBookRequest, IReadBookshelfRequest, IUpdateBookRequest } from '~/types/request'
+import {
+  IBookResponse,
+  IBookResponseBookshelf,
+  IBookResponseReview,
+  IBookResponseUser,
+  IBookshelfResponse,
+} from '~/types/response'
 
 const router = express.Router()
 
-router.post(
-  '/',
-  async (req: Request, res: Response<IBookListResponse>, next: NextFunction): Promise<void> => {
-    const { items } = req.body as ICreateAndUpdateBooksRequest
+router.get(
+  '/:isbn',
+  async (req: Request, res: Response<IBookResponse>, next: NextFunction): Promise<void> => {
+    const { isbn } = req.params
 
-    const itemInputs: IBookItemInput[] = items?.map((item: IBookItem) => {
-      const {
-        title,
-        authors,
-        publisher,
-        publishedDate,
-        description,
-        industryIdentifiers,
-        categories,
-        contentVersion,
-        imageLinks,
-      } = item?.volumeInfo
-
-      const input: IBookItemInput = {
-        title,
-        description,
-        authors,
-        categories,
-        isbn: '',
-        thumbnailURL: '',
-        version: contentVersion,
-        publishedOn: publishedDate,
-        publisher,
-      }
-
-      if (industryIdentifiers?.length > 0) {
-        input.isbn = industryIdentifiers[0].identifier
-      }
-
-      if (imageLinks) {
-        input.thumbnailURL = imageLinks.thumbnail || imageLinks.smallThumbnail || ''
-      }
-
-      return input
-    })
-
-    const input: ICreateAndUpdateBooksInput = {
-      items: itemInputs,
+    const input: IShowBookInput = {
+      isbn,
     }
 
-    await createAndUpdateBooks(req, input)
-      .then((output: IBookListOutput) => {
-        const response: IBookListResponse = setBookListResponse(output)
+    await showBook(req, input)
+      .then((output: IBookOutput) => {
+        // TODO: User情報の取得
+        const response: IBookResponse = setBookResponse(output)
         res.status(200).json(response)
       })
       .catch((err: GrpcError) => next(err))
   }
 )
 
-function setBookResponse(output: IBookOutput): IBookResponse {
+router.post(
+  '/',
+  async (req: Request, res: Response<IBookResponse>, next: NextFunction): Promise<void> => {
+    const {
+      title,
+      titleKana,
+      itemCaption,
+      isbn,
+      publisherName,
+      salesDate,
+      largeImageUrl,
+      mediumImageUrl,
+      smallImageUrl,
+      itemUrl,
+      booksGenreId,
+      author,
+      authorKana,
+    } = req.body as ICreateBookRequest
+
+    const authorNames: string[] = author.split('/')
+    const authorNameKanas: string[] = authorKana.split('/')
+
+    // 出版日のフォーマット: 2020年01月01日頃 -> 2020-01-01
+    const publishedOn: string = salesDate?.replace(/[年月]/g, '-').replace(/[日頃]/g, '') || ''
+
+    const authors: IBookInputAuthor[] = authorNames.map((val: string, i: number) => {
+      const item: IBookInputAuthor = {
+        name: val,
+        nameKana: authorNameKanas[i],
+      }
+
+      return item
+    })
+
+    const input: ICreateBookInput = {
+      title,
+      titleKana,
+      description: itemCaption,
+      isbn,
+      publisher: publisherName,
+      publishedOn,
+      thumbnailUrl: mediumImageUrl || smallImageUrl || largeImageUrl,
+      rakutenUrl: itemUrl,
+      rakutenGenreId: booksGenreId,
+      authors,
+    }
+
+    await createBook(req, input)
+      .then((output: IBookOutput) => {
+        // TODO: User情報の取得
+        const response: IBookResponse = setBookResponse(output)
+        res.status(200).json(response)
+      })
+      .catch((err: GrpcError) => next(err))
+  }
+)
+
+router.patch(
+  '/',
+  async (req: Request, res: Response<IBookResponse>, next: NextFunction): Promise<void> => {
+    const {
+      title,
+      titleKana,
+      itemCaption,
+      isbn,
+      publisherName,
+      salesDate,
+      largeImageUrl,
+      mediumImageUrl,
+      smallImageUrl,
+      itemUrl,
+      booksGenreId,
+      author,
+      authorKana,
+    } = req.body as IUpdateBookRequest
+
+    const authorNames: string[] = author.split('/')
+    const authorNameKanas: string[] = authorKana.split('/')
+
+    // 出版日のフォーマット: 2020年01月01日頃 -> 2020-01-01
+    const publishedOn: string = salesDate?.replace(/[年月]/g, '-').replace(/[日頃]/g, '') || ''
+
+    const authors: IBookInputAuthor[] = authorNames.map((val: string, i: number) => {
+      const item: IBookInputAuthor = {
+        name: val,
+        nameKana: authorNameKanas[i],
+      }
+
+      return item
+    })
+
+    const input: IUpdateBookInput = {
+      title,
+      titleKana,
+      description: itemCaption,
+      isbn,
+      publisher: publisherName,
+      publishedOn,
+      thumbnailUrl: mediumImageUrl || smallImageUrl || largeImageUrl,
+      rakutenUrl: itemUrl,
+      rakutenGenreId: booksGenreId,
+      authors,
+    }
+
+    await updateBook(req, input)
+      .then((output: IBookOutput) => {
+        // TODO: User情報の取得
+        const response: IBookResponse = setBookResponse(output)
+        res.status(200).json(response)
+      })
+      .catch((err: GrpcError) => next(err))
+  }
+)
+
+router.post(
+  '/:bookId/read',
+  async (req: Request, res: Response<IBookshelfResponse>, next: NextFunction): Promise<void> => {
+    const { bookId } = req.params
+    const { readOn, impression } = req.body as IReadBookshelfRequest
+
+    const input: IReadBookshelfInput = {
+      bookId: Number(bookId) || 0,
+      impression,
+      readOn,
+    }
+
+    await readBookshelf(req, input)
+      .then((output: IBookshelfOutput) => {
+        const response: IBookshelfResponse = setBookshelfResponse(output)
+        res.status(200).json(response)
+      })
+      .catch((err: GrpcError) => next(err))
+  }
+)
+
+router.post(
+  '/:bookId/reading',
+  async (req: Request, res: Response<IBookshelfResponse>, next: NextFunction): Promise<void> => {
+    const { bookId } = req.params
+
+    const input: IReadingBookshelfInput = {
+      bookId: Number(bookId) || 0,
+    }
+
+    await readingBookshelf(req, input)
+      .then((output: IBookshelfOutput) => {
+        const response: IBookshelfResponse = setBookshelfResponse(output)
+        res.status(200).json(response)
+      })
+      .catch((err: GrpcError) => next(err))
+  }
+)
+
+router.post(
+  '/:bookId/stack',
+  async (req: Request, res: Response<IBookshelfResponse>, next: NextFunction): Promise<void> => {
+    const { bookId } = req.params
+
+    const input: IStackBookshelfInput = {
+      bookId: Number(bookId) || 0,
+    }
+
+    await stackBookshelf(req, input)
+      .then((output: IBookshelfOutput) => {
+        const response: IBookshelfResponse = setBookshelfResponse(output)
+        res.status(200).json(response)
+      })
+      .catch((err: GrpcError) => next(err))
+  }
+)
+
+router.post(
+  '/:bookId/want',
+  async (req: Request, res: Response<IBookshelfResponse>, next: NextFunction): Promise<void> => {
+    const { bookId } = req.params
+
+    const input: IReadingBookshelfInput = {
+      bookId: Number(bookId) || 0,
+    }
+
+    await wantBookshelf(req, input)
+      .then((output: IBookshelfOutput) => {
+        const response: IBookshelfResponse = setBookshelfResponse(output)
+        res.status(200).json(response)
+      })
+      .catch((err: GrpcError) => next(err))
+  }
+)
+
+router.post(
+  '/:bookId/release',
+  async (req: Request, res: Response<IBookshelfResponse>, next: NextFunction): Promise<void> => {
+    const { bookId } = req.params
+
+    const input: IReleaseBookshelfInput = {
+      bookId: Number(bookId) || 0,
+    }
+
+    await releaseBookshelf(req, input)
+      .then((output: IBookshelfOutput) => {
+        const response: IBookshelfResponse = setBookshelfResponse(output)
+        res.status(200).json(response)
+      })
+      .catch((err: GrpcError) => next(err))
+  }
+)
+
+function setBookResponse(bookOutput: IBookOutput): IBookResponse {
+  const bookshelf: IBookResponseBookshelf = {
+    id: bookOutput.bookshelf?.id,
+    status: bookOutput.bookshelf?.status,
+    readOn: bookOutput.bookshelf?.readOn,
+    createdAt: bookOutput.bookshelf?.createdAt,
+    updatedAt: bookOutput.bookshelf?.updatedAt,
+  }
+
+  const reviews: IBookResponseReview[] = bookOutput.reviews.map((item: IBookOutputReview) => {
+    const user: IBookResponseUser = {
+      id: '',
+      username: '',
+      thumbnailUrl: '',
+    }
+
+    const review: IBookResponseReview = {
+      id: item.id,
+      score: item.score,
+      impression: item.impression,
+      createdAt: item.createdAt,
+      updatedAt: item.updatedAt,
+      user,
+    }
+
+    return review
+  })
+
+  const authorNames: string[] = bookOutput.authors.map((item: IBookOutputAuthor) => {
+    return item.name
+  })
+
+  const authorNameKanas: string[] = bookOutput.authors.map((item: IBookOutputAuthor) => {
+    return item.nameKana
+  })
+
   const response: IBookResponse = {
-    id: output.id,
-    title: output.title,
-    description: output.description,
-    isbn: output.isbn,
-    thumbnailUrl: output.thumbnailUrl,
-    version: output.version,
-    publisher: output.publisher,
-    publishedOn: output.publishedOn,
-    authors: output.authors,
-    categories: output.categories,
-    createdAt: output.createdAt,
-    updatedAt: output.updatedAt,
+    id: bookOutput.id,
+    title: bookOutput.title,
+    titleKana: bookOutput.titleKana,
+    description: bookOutput.description,
+    isbn: bookOutput.isbn,
+    publisher: bookOutput.publisher,
+    publishedOn: bookOutput.publishedOn,
+    thumbnailUrl: bookOutput.thumbnailUrl,
+    rakutenUrl: bookOutput.rakutenUrl,
+    rakutenGenreId: bookOutput.rakutenGenreId,
+    author: authorNames.join('/'),
+    authorKana: authorNameKanas.join('/'),
+    createdAt: bookOutput.createdAt,
+    updatedAt: bookOutput.updatedAt,
+    bookshelf,
+    reviews,
   }
 
   return response
 }
 
-function setBookListResponse(output: IBookListOutput): IBookListResponse {
-  const books: IBookResponse[] = output.books?.map((item: IBookOutput) => {
-    return setBookResponse(item)
-  })
-
-  const response: IBookListResponse = {
-    books,
+function setBookshelfResponse(output: IBookshelfOutput): IBookshelfResponse {
+  const response: IBookshelfResponse = {
+    id: output.id,
+    bookId: output.bookId,
+    userId: output.userId,
+    status: output.status,
+    impression: output.impression,
+    readOn: output.readOn,
+    createdAt: output.createdAt,
+    updatedAt: output.updatedAt,
   }
 
   return response

@@ -12,7 +12,7 @@ import (
 
 // RequestValidator - リクエストバリデーションインターフェース
 type RequestValidator interface {
-	Run(i interface{}) []*exception.ValidationError
+	Run(i interface{}, prefix string) []*exception.ValidationError
 }
 
 type requestValidator struct {
@@ -47,7 +47,7 @@ var (
 )
 
 // Run - バリデーションの実行
-func (rv *requestValidator) Run(i interface{}) []*exception.ValidationError {
+func (rv *requestValidator) Run(i interface{}, prefix string) []*exception.ValidationError {
 	err := rv.validate.Struct(i)
 	if err == nil {
 		return []*exception.ValidationError{}
@@ -60,13 +60,8 @@ func (rv *requestValidator) Run(i interface{}) []*exception.ValidationError {
 
 	for i, v := range errors {
 		errorField, _ := rt.FieldByName(v.Field())
-		errorFieldName := errorField.Tag.Get("json")
+		errorFieldName := fmt.Sprintf("%s%s", prefix, errorField.Tag.Get("json"))
 		errorMessage := ""
-
-		// TODO: ネストしてるとこ、うまくjsonタグの値が取れないため
-		if errorFieldName == "" {
-			errorFieldName = v.Field()
-		}
 
 		switch v.Tag() {
 		case exception.EqFieldTag:

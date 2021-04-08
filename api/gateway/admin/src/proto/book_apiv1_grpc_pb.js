@@ -4,15 +4,15 @@
 var grpc = require('@grpc/grpc-js');
 var proto_book_apiv1_pb = require('../proto/book_apiv1_pb.js');
 
-function serialize_proto_BookListResponse(arg) {
-  if (!(arg instanceof proto_book_apiv1_pb.BookListResponse)) {
-    throw new Error('Expected argument of type proto.BookListResponse');
+function serialize_proto_BookResponse(arg) {
+  if (!(arg instanceof proto_book_apiv1_pb.BookResponse)) {
+    throw new Error('Expected argument of type proto.BookResponse');
   }
   return Buffer.from(arg.serializeBinary());
 }
 
-function deserialize_proto_BookListResponse(buffer_arg) {
-  return proto_book_apiv1_pb.BookListResponse.deserializeBinary(new Uint8Array(buffer_arg));
+function deserialize_proto_BookResponse(buffer_arg) {
+  return proto_book_apiv1_pb.BookResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 function serialize_proto_BookshelfResponse(arg) {
@@ -26,15 +26,15 @@ function deserialize_proto_BookshelfResponse(buffer_arg) {
   return proto_book_apiv1_pb.BookshelfResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
-function serialize_proto_CreateAndUpdateBooksRequest(arg) {
-  if (!(arg instanceof proto_book_apiv1_pb.CreateAndUpdateBooksRequest)) {
-    throw new Error('Expected argument of type proto.CreateAndUpdateBooksRequest');
+function serialize_proto_CreateBookRequest(arg) {
+  if (!(arg instanceof proto_book_apiv1_pb.CreateBookRequest)) {
+    throw new Error('Expected argument of type proto.CreateBookRequest');
   }
   return Buffer.from(arg.serializeBinary());
 }
 
-function deserialize_proto_CreateAndUpdateBooksRequest(buffer_arg) {
-  return proto_book_apiv1_pb.CreateAndUpdateBooksRequest.deserializeBinary(new Uint8Array(buffer_arg));
+function deserialize_proto_CreateBookRequest(buffer_arg) {
+  return proto_book_apiv1_pb.CreateBookRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 function serialize_proto_ReadBookshelfRequest(arg) {
@@ -70,6 +70,17 @@ function deserialize_proto_ReleaseBookshelfRequest(buffer_arg) {
   return proto_book_apiv1_pb.ReleaseBookshelfRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_proto_ShowBookRequest(arg) {
+  if (!(arg instanceof proto_book_apiv1_pb.ShowBookRequest)) {
+    throw new Error('Expected argument of type proto.ShowBookRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_ShowBookRequest(buffer_arg) {
+  return proto_book_apiv1_pb.ShowBookRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_proto_StackBookshelfRequest(arg) {
   if (!(arg instanceof proto_book_apiv1_pb.StackBookshelfRequest)) {
     throw new Error('Expected argument of type proto.StackBookshelfRequest');
@@ -79,6 +90,17 @@ function serialize_proto_StackBookshelfRequest(arg) {
 
 function deserialize_proto_StackBookshelfRequest(buffer_arg) {
   return proto_book_apiv1_pb.StackBookshelfRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_proto_UpdateBookRequest(arg) {
+  if (!(arg instanceof proto_book_apiv1_pb.UpdateBookRequest)) {
+    throw new Error('Expected argument of type proto.UpdateBookRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_UpdateBookRequest(buffer_arg) {
+  return proto_book_apiv1_pb.UpdateBookRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 function serialize_proto_WantBookshelfRequest(arg) {
@@ -94,16 +116,38 @@ function deserialize_proto_WantBookshelfRequest(buffer_arg) {
 
 
 var BookServiceService = exports.BookServiceService = {
-  createAndUpdateBooks: {
-    path: '/proto.BookService/CreateAndUpdateBooks',
+  showBook: {
+    path: '/proto.BookService/ShowBook',
     requestStream: false,
     responseStream: false,
-    requestType: proto_book_apiv1_pb.CreateAndUpdateBooksRequest,
-    responseType: proto_book_apiv1_pb.BookListResponse,
-    requestSerialize: serialize_proto_CreateAndUpdateBooksRequest,
-    requestDeserialize: deserialize_proto_CreateAndUpdateBooksRequest,
-    responseSerialize: serialize_proto_BookListResponse,
-    responseDeserialize: deserialize_proto_BookListResponse,
+    requestType: proto_book_apiv1_pb.ShowBookRequest,
+    responseType: proto_book_apiv1_pb.BookResponse,
+    requestSerialize: serialize_proto_ShowBookRequest,
+    requestDeserialize: deserialize_proto_ShowBookRequest,
+    responseSerialize: serialize_proto_BookResponse,
+    responseDeserialize: deserialize_proto_BookResponse,
+  },
+  createBook: {
+    path: '/proto.BookService/CreateBook',
+    requestStream: false,
+    responseStream: false,
+    requestType: proto_book_apiv1_pb.CreateBookRequest,
+    responseType: proto_book_apiv1_pb.BookResponse,
+    requestSerialize: serialize_proto_CreateBookRequest,
+    requestDeserialize: deserialize_proto_CreateBookRequest,
+    responseSerialize: serialize_proto_BookResponse,
+    responseDeserialize: deserialize_proto_BookResponse,
+  },
+  updateBook: {
+    path: '/proto.BookService/UpdateBook',
+    requestStream: false,
+    responseStream: false,
+    requestType: proto_book_apiv1_pb.UpdateBookRequest,
+    responseType: proto_book_apiv1_pb.BookResponse,
+    requestSerialize: serialize_proto_UpdateBookRequest,
+    requestDeserialize: deserialize_proto_UpdateBookRequest,
+    responseSerialize: serialize_proto_BookResponse,
+    responseDeserialize: deserialize_proto_BookResponse,
   },
   readBookshelf: {
     path: '/proto.BookService/ReadBookshelf',
