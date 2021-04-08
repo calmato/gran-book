@@ -60,17 +60,3 @@ func (mr *MockBookRequestValidationMockRecorder) Bookshelf(in interface{}) *gomo
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Bookshelf", reflect.TypeOf((*MockBookRequestValidation)(nil).Bookshelf), in)
 }
-
-// CreateAndUpdateBooks mocks base method
-func (m *MockBookRequestValidation) CreateAndUpdateBooks(in *input.CreateAndUpdateBooks) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateAndUpdateBooks", in)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// CreateAndUpdateBooks indicates an expected call of CreateAndUpdateBooks
-func (mr *MockBookRequestValidationMockRecorder) CreateAndUpdateBooks(in interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAndUpdateBooks", reflect.TypeOf((*MockBookRequestValidation)(nil).CreateAndUpdateBooks), in)
-}

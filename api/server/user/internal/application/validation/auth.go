@@ -29,7 +29,7 @@ func NewAuthRequestValidation() AuthRequestValidation {
 }
 
 func (v *authRequestValidation) CreateAuth(in *input.CreateAuth) error {
-	ves := v.validator.Run(in)
+	ves := v.validator.Run(in, "")
 	if len(ves) == 0 {
 		return nil
 	}
@@ -39,7 +39,7 @@ func (v *authRequestValidation) CreateAuth(in *input.CreateAuth) error {
 }
 
 func (v *authRequestValidation) UpdateAuthEmail(in *input.UpdateAuthEmail) error {
-	ves := v.validator.Run(in)
+	ves := v.validator.Run(in, "")
 	if len(ves) == 0 {
 		return nil
 	}
@@ -49,7 +49,7 @@ func (v *authRequestValidation) UpdateAuthEmail(in *input.UpdateAuthEmail) error
 }
 
 func (v *authRequestValidation) UpdateAuthPassword(in *input.UpdateAuthPassword) error {
-	ves := v.validator.Run(in)
+	ves := v.validator.Run(in, "")
 	if len(ves) == 0 {
 		return nil
 	}
@@ -59,7 +59,7 @@ func (v *authRequestValidation) UpdateAuthPassword(in *input.UpdateAuthPassword)
 }
 
 func (v *authRequestValidation) UpdateAuthProfile(in *input.UpdateAuthProfile) error {
-	ves := v.validator.Run(in)
+	ves := v.validator.Run(in, "")
 	if len(ves) == 0 {
 		return nil
 	}
@@ -69,7 +69,7 @@ func (v *authRequestValidation) UpdateAuthProfile(in *input.UpdateAuthProfile) e
 }
 
 func (v *authRequestValidation) UpdateAuthAddress(in *input.UpdateAuthAddress) error {
-	ves := v.validator.Run(in)
+	ves := v.validator.Run(in, "")
 	if len(ves) == 0 {
 		return nil
 	}

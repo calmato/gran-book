@@ -12,8 +12,6 @@ import (
 )
 
 func TestBookService_Show(t *testing.T) {
-	current := time.Now()
-
 	testCases := map[string]struct {
 		BookID   int
 		Expected struct {
@@ -30,17 +28,17 @@ func TestBookService_Show(t *testing.T) {
 				Book: &book.Book{
 					ID:           1,
 					Title:        "テスト書籍",
-					Description:  "本の説明",
-					Isbn:         "978-1-234-56789-7",
-					ThumbnailURL: "",
-					Version:      "0.0.1",
-					Publisher:    "テスト出版社",
+					TitleKana:    "てすとしょせき",
+					Description:  "本の説明です",
+					Isbn:         "1234567890123",
+					Publisher:    "テスト著者",
 					PublishedOn:  time.Date(2020, 1, 1, 0, 0, 0, 0, time.Local),
-					CreatedAt:    current,
-					UpdatedAt:    current,
-					Bookshelves:  []*book.Bookshelf{},
+					ThumbnailURL: "",
+					CreatedAt:    time.Time{},
+					UpdatedAt:    time.Time{},
 					Authors:      []*book.Author{},
-					Categories:   []*book.Category{},
+					Reviews:      []*book.Review{},
+					Bookshelf:    &book.Bookshelf{},
 				},
 				Error: nil,
 			},
@@ -59,6 +57,7 @@ func TestBookService_Show(t *testing.T) {
 
 			brm := mock_book.NewMockRepository(ctrl)
 			brm.EXPECT().Show(ctx, tc.BookID).Return(tc.Expected.Book, tc.Expected.Error)
+			brm.EXPECT().ListAuthorByBookID(ctx, tc.Expected.Book.ID).Return(tc.Expected.Book.Authors, nil)
 
 			t.Run(result, func(t *testing.T) {
 				target := NewBookService(bvm, brm)
@@ -79,8 +78,6 @@ func TestBookService_Show(t *testing.T) {
 }
 
 func TestBookService_ShowByIsbn(t *testing.T) {
-	current := time.Now()
-
 	testCases := map[string]struct {
 		Isbn     string
 		Expected struct {
@@ -97,27 +94,17 @@ func TestBookService_ShowByIsbn(t *testing.T) {
 				Book: &book.Book{
 					ID:           1,
 					Title:        "テスト書籍",
-					Description:  "本の説明",
-					Isbn:         "978-1-234-56789-7",
-					ThumbnailURL: "",
-					Version:      "0.0.1",
-					Publisher:    "テスト出版社",
+					TitleKana:    "てすとしょせき",
+					Description:  "本の説明です",
+					Isbn:         "1234567890123",
+					Publisher:    "テスト著者",
 					PublishedOn:  time.Date(2020, 1, 1, 0, 0, 0, 0, time.Local),
-					CreatedAt:    current,
-					UpdatedAt:    current,
-					Bookshelves:  []*book.Bookshelf{},
-					Authors: []*book.Author{{
-						ID:        1,
-						Name:      "テスト著者",
-						CreatedAt: current,
-						UpdatedAt: current,
-					}},
-					Categories: []*book.Category{{
-						ID:        1,
-						Name:      "コミック",
-						CreatedAt: current,
-						UpdatedAt: current,
-					}},
+					ThumbnailURL: "",
+					CreatedAt:    time.Time{},
+					UpdatedAt:    time.Time{},
+					Authors:      []*book.Author{},
+					Reviews:      []*book.Review{},
+					Bookshelf:    &book.Bookshelf{},
 				},
 				Error: nil,
 			},
@@ -136,8 +123,7 @@ func TestBookService_ShowByIsbn(t *testing.T) {
 
 			brm := mock_book.NewMockRepository(ctrl)
 			brm.EXPECT().ShowByIsbn(ctx, tc.Isbn).Return(tc.Expected.Book, tc.Expected.Error)
-			brm.EXPECT().ShowAuthorsByBookID(ctx, tc.Expected.Book.ID).Return(tc.Expected.Book.Authors, nil)
-			brm.EXPECT().ShowCategoriesByBookID(ctx, tc.Expected.Book.ID).Return(tc.Expected.Book.Categories, nil)
+			brm.EXPECT().ListAuthorByBookID(ctx, tc.Expected.Book.ID).Return(tc.Expected.Book.Authors, nil)
 
 			t.Run(result, func(t *testing.T) {
 				target := NewBookService(bvm, brm)
@@ -157,6 +143,68 @@ func TestBookService_ShowByIsbn(t *testing.T) {
 	}
 }
 
+func TestBookService_ShowBookshelfByUserIDAndBookID(t *testing.T) {
+	testCases := map[string]struct {
+		UserID   string
+		BookID   int
+		Expected struct {
+			Bookshelf *book.Bookshelf
+			Error     error
+		}
+	}{
+		"ok": {
+			UserID: "00000000-0000-0000-0000-000000000000",
+			BookID: 1,
+			Expected: struct {
+				Bookshelf *book.Bookshelf
+				Error     error
+			}{
+				Bookshelf: &book.Bookshelf{
+					ID:        0,
+					BookID:    1,
+					UserID:    "00000000-0000-0000-0000-000000000000",
+					Status:    5,
+					CreatedAt: time.Time{},
+					UpdatedAt: time.Time{},
+				},
+				Error: nil,
+			},
+		},
+	}
+
+	for result, tc := range testCases {
+		t.Run(result, func(t *testing.T) {
+			ctx, cancel := context.WithCancel(context.Background())
+			defer cancel()
+
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			bvm := mock_book.NewMockValidation(ctrl)
+
+			brm := mock_book.NewMockRepository(ctrl)
+			brm.EXPECT().
+				ShowBookshelfByUserIDAndBookID(ctx, tc.UserID, tc.BookID).
+				Return(tc.Expected.Bookshelf, tc.Expected.Error)
+
+			t.Run(result, func(t *testing.T) {
+				target := NewBookService(bvm, brm)
+
+				got, err := target.ShowBookshelfByUserIDAndBookID(ctx, tc.UserID, tc.BookID)
+				if !reflect.DeepEqual(err, tc.Expected.Error) {
+					t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+					return
+				}
+
+				if !reflect.DeepEqual(got, tc.Expected.Bookshelf) {
+					t.Fatalf("want %#v, but %#v", tc.Expected.Bookshelf, got)
+					return
+				}
+			})
+		})
+	}
+}
+
 func TestBookService_Create(t *testing.T) {
 	testCases := map[string]struct {
 		Book     *book.Book
@@ -164,23 +212,16 @@ func TestBookService_Create(t *testing.T) {
 	}{
 		"ok": {
 			Book: &book.Book{
-				ID:           0,
-				Title:        "テスト",
-				Description:  "",
-				Isbn:         "",
-				ThumbnailURL: "",
-				Version:      "0.0.1",
-				Publisher:    "テスト出版社",
+				Title:        "テスト書籍",
+				TitleKana:    "てすとしょせき",
+				Description:  "本の説明です",
+				Isbn:         "1234567890123",
+				Publisher:    "テスト著者",
 				PublishedOn:  time.Date(2020, 1, 1, 0, 0, 0, 0, time.Local),
-				CreatedAt:    time.Time{},
-				UpdatedAt:    time.Time{},
-				Bookshelves:  []*book.Bookshelf{},
-				Authors: []*book.Author{{
-					Name: "テスト著者",
-				}},
-				Categories: []*book.Category{{
-					Name: "コミック",
-				}},
+				ThumbnailURL: "",
+				Authors:      []*book.Author{},
+				Reviews:      []*book.Review{},
+				Bookshelf:    &book.Bookshelf{},
 			},
 			Expected: nil,
 		},
@@ -199,10 +240,7 @@ func TestBookService_Create(t *testing.T) {
 			brm := mock_book.NewMockRepository(ctrl)
 			brm.EXPECT().Create(ctx, tc.Book).Return(tc.Expected)
 			for _, a := range tc.Book.Authors {
-				brm.EXPECT().CreateAuthor(ctx, a).Return(tc.Expected)
-			}
-			for _, c := range tc.Book.Categories {
-				brm.EXPECT().CreateCategory(ctx, c).Return(tc.Expected)
+				brm.EXPECT().ShowOrCreateAuthor(ctx, a).Return(tc.Expected)
 			}
 
 			t.Run(result, func(t *testing.T) {
@@ -213,46 +251,14 @@ func TestBookService_Create(t *testing.T) {
 					t.Fatalf("want %#v, but %#v", tc.Expected, err)
 					return
 				}
-			})
-		})
-	}
-}
 
-func TestBookService_CreateAuthor(t *testing.T) {
-	testCases := map[string]struct {
-		Author   *book.Author
-		Expected error
-	}{
-		"ok": {
-			Author: &book.Author{
-				ID:        0,
-				Name:      "テスト著者",
-				CreatedAt: time.Time{},
-				UpdatedAt: time.Time{},
-			},
-			Expected: nil,
-		},
-	}
+				if tc.Book.CreatedAt.IsZero() {
+					t.Fatal("CreatedAt must be not null")
+					return
+				}
 
-	for result, tc := range testCases {
-		t.Run(result, func(t *testing.T) {
-			ctx, cancel := context.WithCancel(context.Background())
-			defer cancel()
-
-			ctrl := gomock.NewController(t)
-			defer ctrl.Finish()
-
-			bvm := mock_book.NewMockValidation(ctrl)
-
-			brm := mock_book.NewMockRepository(ctrl)
-			brm.EXPECT().CreateAuthor(ctx, tc.Author).Return(tc.Expected)
-
-			t.Run(result, func(t *testing.T) {
-				target := NewBookService(bvm, brm)
-
-				err := target.CreateAuthor(ctx, tc.Author)
-				if !reflect.DeepEqual(err, tc.Expected) {
-					t.Fatalf("want %#v, but %#v", tc.Expected, err)
+				if tc.Book.UpdatedAt.IsZero() {
+					t.Fatal("UpdatedAt must be not null")
 					return
 				}
 			})
@@ -267,13 +273,9 @@ func TestBookService_CreateBookshelf(t *testing.T) {
 	}{
 		"ok": {
 			Bookshelf: &book.Bookshelf{
-				ID:         0,
-				BookID:     1,
-				UserID:     "00000000-0000-0000-0000-000000000000",
-				Status:     5,
-				Impression: "感想です",
-				CreatedAt:  time.Time{},
-				UpdatedAt:  time.Time{},
+				BookID: 1,
+				UserID: "00000000-0000-0000-0000-000000000000",
+				Status: 5,
 			},
 			Expected: nil,
 		},
@@ -300,46 +302,14 @@ func TestBookService_CreateBookshelf(t *testing.T) {
 					t.Fatalf("want %#v, but %#v", tc.Expected, err)
 					return
 				}
-			})
-		})
-	}
-}
 
-func TestBookService_CreateCategory(t *testing.T) {
-	testCases := map[string]struct {
-		Category *book.Category
-		Expected error
-	}{
-		"ok": {
-			Category: &book.Category{
-				ID:        0,
-				Name:      "テストカテゴリ",
-				CreatedAt: time.Time{},
-				UpdatedAt: time.Time{},
-			},
-			Expected: nil,
-		},
-	}
+				if tc.Bookshelf.CreatedAt.IsZero() {
+					t.Fatal("CreatedAt must be not null")
+					return
+				}
 
-	for result, tc := range testCases {
-		t.Run(result, func(t *testing.T) {
-			ctx, cancel := context.WithCancel(context.Background())
-			defer cancel()
-
-			ctrl := gomock.NewController(t)
-			defer ctrl.Finish()
-
-			bvm := mock_book.NewMockValidation(ctrl)
-
-			brm := mock_book.NewMockRepository(ctrl)
-			brm.EXPECT().CreateCategory(ctx, tc.Category).Return(tc.Expected)
-
-			t.Run(result, func(t *testing.T) {
-				target := NewBookService(bvm, brm)
-
-				err := target.CreateCategory(ctx, tc.Category)
-				if !reflect.DeepEqual(err, tc.Expected) {
-					t.Fatalf("want %#v, but %#v", tc.Expected, err)
+				if tc.Bookshelf.UpdatedAt.IsZero() {
+					t.Fatal("UpdatedAt must be not null")
 					return
 				}
 			})
@@ -348,8 +318,6 @@ func TestBookService_CreateCategory(t *testing.T) {
 }
 
 func TestBookService_Update(t *testing.T) {
-	current := time.Now()
-
 	testCases := map[string]struct {
 		Book     *book.Book
 		Expected error
@@ -361,23 +329,14 @@ func TestBookService_Update(t *testing.T) {
 				Description:  "本の説明",
 				Isbn:         "978-1-234-56789-7",
 				ThumbnailURL: "",
-				Version:      "0.0.1",
 				Publisher:    "テスト出版社",
 				PublishedOn:  time.Date(2020, 1, 1, 0, 0, 0, 0, time.Local),
-				CreatedAt:    current,
-				UpdatedAt:    current,
-				Bookshelves:  []*book.Bookshelf{},
+				Bookshelf:    &book.Bookshelf{},
+				Reviews:      []*book.Review{},
 				Authors: []*book.Author{{
-					ID:        1,
-					Name:      "テスト著者",
-					CreatedAt: current,
-					UpdatedAt: current,
-				}},
-				Categories: []*book.Category{{
-					ID:        1,
-					Name:      "コミック",
-					CreatedAt: current,
-					UpdatedAt: current,
+					ID:       1,
+					Name:     "テスト著者",
+					NameKana: "てすとちょしゃ",
 				}},
 			},
 			Expected: nil,
@@ -397,10 +356,7 @@ func TestBookService_Update(t *testing.T) {
 			brm := mock_book.NewMockRepository(ctrl)
 			brm.EXPECT().Update(ctx, tc.Book).Return(tc.Expected)
 			for _, a := range tc.Book.Authors {
-				brm.EXPECT().CreateAuthor(ctx, a).Return(tc.Expected)
-			}
-			for _, c := range tc.Book.Categories {
-				brm.EXPECT().CreateCategory(ctx, c).Return(tc.Expected)
+				brm.EXPECT().ShowOrCreateAuthor(ctx, a).Return(tc.Expected)
 			}
 
 			t.Run(result, func(t *testing.T) {
@@ -409,6 +365,58 @@ func TestBookService_Update(t *testing.T) {
 				err := target.Update(ctx, tc.Book)
 				if !reflect.DeepEqual(err, tc.Expected) {
 					t.Fatalf("want %#v, but %#v", tc.Expected, err)
+					return
+				}
+
+				if tc.Book.UpdatedAt.IsZero() {
+					t.Fatal("UpdatedAt must be not null")
+					return
+				}
+			})
+		})
+	}
+}
+
+func TestBookService_UpdateBookshelf(t *testing.T) {
+	testCases := map[string]struct {
+		Bookshelf *book.Bookshelf
+		Expected  error
+	}{
+		"ok": {
+			Bookshelf: &book.Bookshelf{
+				ID:     1,
+				BookID: 1,
+				UserID: "00000000-0000-0000-0000-000000000000",
+				Status: 5,
+			},
+			Expected: nil,
+		},
+	}
+
+	for result, tc := range testCases {
+		t.Run(result, func(t *testing.T) {
+			ctx, cancel := context.WithCancel(context.Background())
+			defer cancel()
+
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			bvm := mock_book.NewMockValidation(ctrl)
+
+			brm := mock_book.NewMockRepository(ctrl)
+			brm.EXPECT().UpdateBookshelf(ctx, tc.Bookshelf).Return(tc.Expected)
+
+			t.Run(result, func(t *testing.T) {
+				target := NewBookService(bvm, brm)
+
+				err := target.UpdateBookshelf(ctx, tc.Bookshelf)
+				if !reflect.DeepEqual(err, tc.Expected) {
+					t.Fatalf("want %#v, but %#v", tc.Expected, err)
+					return
+				}
+
+				if tc.Bookshelf.UpdatedAt.IsZero() {
+					t.Fatal("UpdatedAt must be not null")
 					return
 				}
 			})
@@ -424,23 +432,16 @@ func TestBookService_MultipleCreate(t *testing.T) {
 		"ok": {
 			Books: []*book.Book{
 				{
-					ID:           0,
-					Title:        "テスト",
-					Description:  "",
-					Isbn:         "",
-					ThumbnailURL: "",
-					Version:      "0.0.1",
-					Publisher:    "テスト出版社",
+					Title:        "テスト書籍",
+					TitleKana:    "てすとしょせき",
+					Description:  "本の説明です",
+					Isbn:         "1234567890123",
+					Publisher:    "テスト著者",
 					PublishedOn:  time.Date(2020, 1, 1, 0, 0, 0, 0, time.Local),
-					CreatedAt:    time.Time{},
-					UpdatedAt:    time.Time{},
-					Bookshelves:  []*book.Bookshelf{},
-					Authors: []*book.Author{{
-						Name: "テスト著者",
-					}},
-					Categories: []*book.Category{{
-						Name: "コミック",
-					}},
+					ThumbnailURL: "",
+					Authors:      []*book.Author{},
+					Reviews:      []*book.Review{},
+					Bookshelf:    &book.Bookshelf{},
 				},
 			},
 			Expected: nil,
@@ -461,10 +462,7 @@ func TestBookService_MultipleCreate(t *testing.T) {
 			brm.EXPECT().MultipleCreate(ctx, tc.Books).Return(tc.Expected)
 			for _, b := range tc.Books {
 				for _, a := range b.Authors {
-					brm.EXPECT().CreateAuthor(ctx, a).Return(tc.Expected)
-				}
-				for _, c := range b.Categories {
-					brm.EXPECT().CreateCategory(ctx, c).Return(tc.Expected)
+					brm.EXPECT().ShowOrCreateAuthor(ctx, a).Return(tc.Expected)
 				}
 			}
 
@@ -475,6 +473,18 @@ func TestBookService_MultipleCreate(t *testing.T) {
 				if !reflect.DeepEqual(err, tc.Expected) {
 					t.Fatalf("want %#v, but %#v", tc.Expected, err)
 					return
+				}
+
+				for _, v := range tc.Books {
+					if v.CreatedAt.IsZero() {
+						t.Fatal("CreatedAt must be not null")
+						return
+					}
+
+					if v.UpdatedAt.IsZero() {
+						t.Fatal("UpdatedAt must be not null")
+						return
+					}
 				}
 			})
 		})
@@ -496,21 +506,16 @@ func TestBookService_MultipleUpdate(t *testing.T) {
 					Description:  "本の説明",
 					Isbn:         "978-1-234-56789-7",
 					ThumbnailURL: "",
-					Version:      "0.0.1",
 					Publisher:    "テスト出版社",
 					PublishedOn:  time.Date(2020, 1, 1, 0, 0, 0, 0, time.Local),
 					CreatedAt:    current,
 					UpdatedAt:    current,
-					Bookshelves:  []*book.Bookshelf{},
+					Bookshelf:    &book.Bookshelf{},
+					Reviews:      []*book.Review{},
 					Authors: []*book.Author{{
 						ID:        1,
 						Name:      "テスト著者",
-						CreatedAt: current,
-						UpdatedAt: current,
-					}},
-					Categories: []*book.Category{{
-						ID:        1,
-						Name:      "コミック",
+						NameKana:  "てすとちょしゃ",
 						CreatedAt: current,
 						UpdatedAt: current,
 					}},
@@ -534,10 +539,7 @@ func TestBookService_MultipleUpdate(t *testing.T) {
 			brm.EXPECT().MultipleUpdate(ctx, tc.Books).Return(tc.Expected)
 			for _, b := range tc.Books {
 				for _, a := range b.Authors {
-					brm.EXPECT().CreateAuthor(ctx, a).Return(tc.Expected)
-				}
-				for _, c := range b.Categories {
-					brm.EXPECT().CreateCategory(ctx, c).Return(tc.Expected)
+					brm.EXPECT().ShowOrCreateAuthor(ctx, a).Return(tc.Expected)
 				}
 			}
 
@@ -549,34 +551,44 @@ func TestBookService_MultipleUpdate(t *testing.T) {
 					t.Fatalf("want %#v, but %#v", tc.Expected, err)
 					return
 				}
+
+				for _, v := range tc.Books {
+					if v.UpdatedAt.IsZero() {
+						t.Fatal("UpdatedAt must be not null")
+						return
+					}
+				}
 			})
 		})
 	}
 }
 
 func TestBookService_Validation(t *testing.T) {
+	current := time.Now()
+
 	testCases := map[string]struct {
 		Book     *book.Book
 		Expected error
 	}{
 		"ok": {
 			Book: &book.Book{
-				ID:           0,
-				Title:        "テスト",
-				Description:  "",
-				Isbn:         "",
+				ID:           1,
+				Title:        "テスト書籍",
+				Description:  "本の説明",
+				Isbn:         "978-1-234-56789-7",
 				ThumbnailURL: "",
-				Version:      "0.0.1",
 				Publisher:    "テスト出版社",
 				PublishedOn:  time.Date(2020, 1, 1, 0, 0, 0, 0, time.Local),
-				CreatedAt:    time.Time{},
-				UpdatedAt:    time.Time{},
-				Bookshelves:  []*book.Bookshelf{},
+				CreatedAt:    current,
+				UpdatedAt:    current,
+				Bookshelf:    &book.Bookshelf{},
+				Reviews:      []*book.Review{},
 				Authors: []*book.Author{{
-					Name: "テスト著者",
-				}},
-				Categories: []*book.Category{{
-					Name: "コミック",
+					ID:        1,
+					Name:      "テスト著者",
+					NameKana:  "てすとちょしゃ",
+					CreatedAt: current,
+					UpdatedAt: current,
 				}},
 			},
 			Expected: nil,
@@ -655,13 +667,12 @@ func TestBookService_ValidationBookshelf(t *testing.T) {
 	}{
 		"ok": {
 			Bookshelf: &book.Bookshelf{
-				ID:         0,
-				BookID:     1,
-				UserID:     "00000000-0000-0000-0000-000000000000",
-				Status:     5,
-				Impression: "感想です",
-				CreatedAt:  time.Time{},
-				UpdatedAt:  time.Time{},
+				ID:        0,
+				BookID:    1,
+				UserID:    "00000000-0000-0000-0000-000000000000",
+				Status:    5,
+				CreatedAt: time.Time{},
+				UpdatedAt: time.Time{},
 			},
 			Expected: nil,
 		},
@@ -684,45 +695,6 @@ func TestBookService_ValidationBookshelf(t *testing.T) {
 				target := NewBookService(bvm, brm)
 
 				err := target.ValidationBookshelf(ctx, tc.Bookshelf)
-				if !reflect.DeepEqual(err, tc.Expected) {
-					t.Fatalf("want %#v, but %#v", tc.Expected, err)
-					return
-				}
-			})
-		})
-	}
-}
-
-func TestBookService_ValidationCategory(t *testing.T) {
-	testCases := map[string]struct {
-		Category *book.Category
-		Expected error
-	}{
-		"ok": {
-			Category: &book.Category{
-				Name: "コミック",
-			},
-			Expected: nil,
-		},
-	}
-
-	for result, tc := range testCases {
-		t.Run(result, func(t *testing.T) {
-			ctx, cancel := context.WithCancel(context.Background())
-			defer cancel()
-
-			ctrl := gomock.NewController(t)
-			defer ctrl.Finish()
-
-			bvm := mock_book.NewMockValidation(ctrl)
-			bvm.EXPECT().Category(ctx, tc.Category).Return(tc.Expected)
-
-			brm := mock_book.NewMockRepository(ctrl)
-
-			t.Run(result, func(t *testing.T) {
-				target := NewBookService(bvm, brm)
-
-				err := target.ValidationCategory(ctx, tc.Category)
 				if !reflect.DeepEqual(err, tc.Expected) {
 					t.Fatalf("want %#v, but %#v", tc.Expected, err)
 					return
