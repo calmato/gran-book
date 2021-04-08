@@ -325,3 +325,5 @@ function setBookshelfResponse(output: IBookshelfOutput): IBookshelfResponse {
 
   return response
 }
+
+export default router
