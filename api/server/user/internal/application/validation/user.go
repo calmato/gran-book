@@ -26,7 +26,7 @@ func NewUserRequestValidation() UserRequestValidation {
 }
 
 func (v *userRequestValidation) ListFollow(in *input.ListFollow) error {
-	ves := v.validator.Run(in)
+	ves := v.validator.Run(in, "")
 	if len(ves) == 0 {
 		return nil
 	}
@@ -36,7 +36,7 @@ func (v *userRequestValidation) ListFollow(in *input.ListFollow) error {
 }
 
 func (v *userRequestValidation) ListFollower(in *input.ListFollower) error {
-	ves := v.validator.Run(in)
+	ves := v.validator.Run(in, "")
 	if len(ves) == 0 {
 		return nil
 	}

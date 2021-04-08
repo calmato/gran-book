@@ -1,6 +1,8 @@
 package validation
 
 import (
+	"fmt"
+
 	"github.com/calmato/gran-book/api/server/book/internal/application/input"
 	"github.com/calmato/gran-book/api/server/book/internal/domain/exception"
 	"golang.org/x/xerrors"
@@ -26,10 +28,11 @@ func NewBookRequestValidation() BookRequestValidation {
 }
 
 func (v *bookRequestValidation) Book(in *input.Book) error {
-	ves := v.validator.Run(in)
+	ves := v.validator.Run(in, "")
 
-	for _, a := range in.Authors {
-		ves = append(ves, v.validator.Run(a)...) // fieldにprefix足す
+	for i, a := range in.Authors {
+		prefix := fmt.Sprintf("authors[%d].", i)
+		ves = append(ves, v.validator.Run(a, prefix)...)
 	}
 
 	if len(ves) == 0 {
@@ -41,7 +44,7 @@ func (v *bookRequestValidation) Book(in *input.Book) error {
 }
 
 func (v *bookRequestValidation) Bookshelf(in *input.Bookshelf) error {
-	ves := v.validator.Run(in)
+	ves := v.validator.Run(in, "")
 	if len(ves) == 0 {
 		return nil
 	}
