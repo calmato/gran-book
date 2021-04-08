@@ -81,7 +81,11 @@ func (s *bookService) Create(ctx context.Context, b *book.Book) error {
 	b.CreatedAt = current
 	b.UpdatedAt = current
 
-	s.associate(ctx, b)
+	err = s.associate(ctx, b)
+	if err != nil {
+		return err
+	}
+
 	return s.bookRepository.Create(ctx, b)
 }
 
