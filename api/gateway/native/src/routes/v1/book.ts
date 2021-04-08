@@ -1,5 +1,5 @@
 import express, { NextFunction, Request, Response } from 'express'
-import { createBook, showBook, updateBook } from '~/api'
+import { createBook, getUserProfile, showBook, updateBook } from '~/api'
 import { GrpcError } from '~/types/exception'
 import { IBookInputAuthor, ICreateBookInput, IShowBookInput, IUpdateBookInput } from '~/types/input'
 import { IBookOutput, IBookOutputAuthor, IBookOutputReview } from '~/types/output'
@@ -19,6 +19,7 @@ router.get(
 
     await showBook(req, input)
       .then((output: IBookOutput) => {
+        // TODO: User情報の取得
         const response: IBookResponse = setBookResponse(output)
         res.status(200).json(response)
       })
@@ -72,6 +73,7 @@ router.post(
 
     await createBook(req, input)
       .then((output: IBookOutput) => {
+        // TODO: User情報の取得
         const response: IBookResponse = setBookResponse(output)
         res.status(200).json(response)
       })
@@ -125,6 +127,7 @@ router.patch(
 
     await updateBook(req, input)
       .then((output: IBookOutput) => {
+        // TODO: User情報の取得
         const response: IBookResponse = setBookResponse(output)
         res.status(200).json(response)
       })
