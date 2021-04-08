@@ -43,8 +43,8 @@ export class CreateBookRequest extends jspb.Message {
     getPublisher(): string;
     setPublisher(value: string): CreateBookRequest;
 
-    getPublisherOn(): string;
-    setPublisherOn(value: string): CreateBookRequest;
+    getPublishedOn(): string;
+    setPublishedOn(value: string): CreateBookRequest;
 
     getThumbnailUrl(): string;
     setThumbnailUrl(value: string): CreateBookRequest;
@@ -78,7 +78,7 @@ export namespace CreateBookRequest {
         description: string,
         isbn: string,
         publisher: string,
-        publisherOn: string,
+        publishedOn: string,
         thumbnailUrl: string,
         rakutenUrl: string,
         rakutenGenreId: string,
@@ -129,8 +129,8 @@ export class UpdateBookRequest extends jspb.Message {
     getPublisher(): string;
     setPublisher(value: string): UpdateBookRequest;
 
-    getPublisherOn(): string;
-    setPublisherOn(value: string): UpdateBookRequest;
+    getPublishedOn(): string;
+    setPublishedOn(value: string): UpdateBookRequest;
 
     getThumbnailUrl(): string;
     setThumbnailUrl(value: string): UpdateBookRequest;
@@ -164,7 +164,7 @@ export namespace UpdateBookRequest {
         description: string,
         isbn: string,
         publisher: string,
-        publisherOn: string,
+        publishedOn: string,
         thumbnailUrl: string,
         rakutenUrl: string,
         rakutenGenreId: string,
