@@ -9,6 +9,7 @@ import (
 // AdminRequestValidation - Admin関連のリクエストバリデータ
 type AdminRequestValidation interface {
 	ListAdmin(in *input.ListAdmin) error
+	SearchAdmin(in *input.SearchAdmin) error
 	CreateAdmin(in *input.CreateAdmin) error
 	UpdateAdminRole(in *input.UpdateAdminRole) error
 	UpdateAdminPassword(in *input.UpdateAdminPassword) error
@@ -29,7 +30,7 @@ func NewAdminRequestValidation() AdminRequestValidation {
 }
 
 func (v *adminRequestValidation) ListAdmin(in *input.ListAdmin) error {
-	ves := v.validator.Run(in)
+	ves := v.validator.Run(in, "")
 	if len(ves) == 0 {
 		return nil
 	}
@@ -38,8 +39,18 @@ func (v *adminRequestValidation) ListAdmin(in *input.ListAdmin) error {
 	return exception.InvalidRequestValidation.New(err, ves...)
 }
 
+func (v *adminRequestValidation) SearchAdmin(in *input.SearchAdmin) error {
+	ves := v.validator.Run(in, "")
+	if len(ves) == 0 {
+		return nil
+	}
+
+	err := xerrors.New("Failed to SearchAdmin for RequestValidation")
+	return exception.InvalidRequestValidation.New(err, ves...)
+}
+
 func (v *adminRequestValidation) CreateAdmin(in *input.CreateAdmin) error {
-	ves := v.validator.Run(in)
+	ves := v.validator.Run(in, "")
 	if len(ves) == 0 {
 		return nil
 	}
@@ -49,7 +60,7 @@ func (v *adminRequestValidation) CreateAdmin(in *input.CreateAdmin) error {
 }
 
 func (v *adminRequestValidation) UpdateAdminRole(in *input.UpdateAdminRole) error {
-	ves := v.validator.Run(in)
+	ves := v.validator.Run(in, "")
 	if len(ves) == 0 {
 		return nil
 	}
@@ -59,7 +70,7 @@ func (v *adminRequestValidation) UpdateAdminRole(in *input.UpdateAdminRole) erro
 }
 
 func (v *adminRequestValidation) UpdateAdminPassword(in *input.UpdateAdminPassword) error {
-	ves := v.validator.Run(in)
+	ves := v.validator.Run(in, "")
 	if len(ves) == 0 {
 		return nil
 	}
@@ -69,7 +80,7 @@ func (v *adminRequestValidation) UpdateAdminPassword(in *input.UpdateAdminPasswo
 }
 
 func (v *adminRequestValidation) UpdateAdminProfile(in *input.UpdateAdminProfile) error {
-	ves := v.validator.Run(in)
+	ves := v.validator.Run(in, "")
 	if len(ves) == 0 {
 		return nil
 	}

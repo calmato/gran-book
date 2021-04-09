@@ -41,7 +41,7 @@ module "gke" {
     },
     {
       name         = "gran-book-stg-spot-node"
-      count        = 2
+      count        = 3
       preemptible  = true
       machine_type = "e2-small"
       disk_type    = "pd-standard"

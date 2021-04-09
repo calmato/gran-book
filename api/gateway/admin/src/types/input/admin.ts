@@ -5,6 +5,15 @@ export interface IListAdminInput {
   direction: string
 }
 
+export interface ISearchAdminInput {
+  limit: number
+  offset: number
+  by: string
+  direction: string
+  field: string
+  value: string
+}
+
 export interface ICreateAdminInput {
   username: string
   email: string

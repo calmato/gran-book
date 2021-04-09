@@ -1,0 +1,175 @@
+package application
+
+import (
+	"context"
+
+	"github.com/calmato/gran-book/api/server/book/internal/application/input"
+	"github.com/calmato/gran-book/api/server/book/internal/application/validation"
+	"github.com/calmato/gran-book/api/server/book/internal/domain/book"
+	"github.com/calmato/gran-book/api/server/book/lib/datetime"
+)
+
+// BookApplication - Bookアプリケーションのインターフェース
+type BookApplication interface {
+	Show(ctx context.Context, isbn string) (*book.Book, error)
+	Create(ctx context.Context, in *input.Book) (*book.Book, error)
+	Update(ctx context.Context, in *input.Book) (*book.Book, error)
+	CreateOrUpdateBookshelf(ctx context.Context, in *input.Bookshelf) (*book.Bookshelf, error)
+}
+
+type bookApplication struct {
+	bookRequestValidation validation.BookRequestValidation
+	bookService           book.Service
+}
+
+// NewBookApplication - BookApplicationの生成
+func NewBookApplication(brv validation.BookRequestValidation, bs book.Service) BookApplication {
+	return &bookApplication{
+		bookRequestValidation: brv,
+		bookService:           bs,
+	}
+}
+
+func (a *bookApplication) Show(ctx context.Context, isbn string) (*book.Book, error) {
+	return a.bookService.ShowByIsbn(ctx, isbn)
+}
+
+func (a *bookApplication) Create(ctx context.Context, in *input.Book) (*book.Book, error) {
+	err := a.bookRequestValidation.Book(in)
+	if err != nil {
+		return nil, err
+	}
+
+	as := make([]*book.Author, len(in.Authors))
+	for i, v := range in.Authors {
+		author := &book.Author{
+			Name:     v.Name,
+			NameKana: v.NameKana,
+		}
+
+		err = a.bookService.ValidationAuthor(ctx, author)
+		if err != nil {
+			return nil, err
+		}
+
+		as[i] = author
+	}
+
+	b := &book.Book{
+		Title:          in.Title,
+		TitleKana:      in.TitleKana,
+		Description:    in.Description,
+		Isbn:           in.Isbn,
+		Publisher:      in.Publisher,
+		PublishedOn:    datetime.StringToDate(in.PublishedOn),
+		ThumbnailURL:   in.ThumbnailURL,
+		RakutenURL:     in.RakutenURL,
+		RakutenGenreID: in.RakutenGenreID,
+		Authors:        as,
+	}
+
+	err = a.bookService.Validation(ctx, b)
+	if err != nil {
+		return nil, err
+	}
+
+	err = a.bookService.Create(ctx, b)
+	if err != nil {
+		return nil, err
+	}
+
+	return b, nil
+}
+
+func (a *bookApplication) Update(ctx context.Context, in *input.Book) (*book.Book, error) {
+	err := a.bookRequestValidation.Book(in)
+	if err != nil {
+		return nil, err
+	}
+
+	b, err := a.bookService.ShowByIsbn(ctx, in.Isbn)
+	if err != nil {
+		return nil, err
+	}
+
+	as := make([]*book.Author, len(in.Authors))
+	for i, v := range in.Authors {
+		author := &book.Author{
+			Name:     v.Name,
+			NameKana: v.NameKana,
+		}
+
+		err = a.bookService.ValidationAuthor(ctx, author)
+		if err != nil {
+			return nil, err
+		}
+
+		as[i] = author
+	}
+
+	b.Title = in.Title
+	b.TitleKana = in.TitleKana
+	b.Description = in.Description
+	b.Isbn = in.Isbn
+	b.Publisher = in.Publisher
+	b.PublishedOn = datetime.StringToDate(in.PublishedOn)
+	b.ThumbnailURL = in.ThumbnailURL
+	b.RakutenURL = in.RakutenURL
+	b.RakutenGenreID = in.RakutenGenreID
+	b.Authors = as
+
+	err = a.bookService.Validation(ctx, b)
+	if err != nil {
+		return nil, err
+	}
+
+	err = a.bookService.Update(ctx, b)
+	if err != nil {
+		return nil, err
+	}
+
+	return b, nil
+}
+
+func (a *bookApplication) CreateOrUpdateBookshelf(
+	ctx context.Context, in *input.Bookshelf,
+) (*book.Bookshelf, error) {
+	err := a.bookRequestValidation.Bookshelf(in)
+	if err != nil {
+		return nil, err
+	}
+
+	b, err := a.bookService.Show(ctx, in.BookID)
+	if err != nil {
+		return nil, err
+	}
+
+	bs, _ := a.bookService.ShowBookshelfByUserIDAndBookID(ctx, in.UserID, b.ID)
+	if bs == nil {
+		bs = &book.Bookshelf{}
+	}
+
+	bs.BookID = b.ID
+	bs.UserID = in.UserID
+	bs.Status = in.Status
+	bs.ReadOn = datetime.StringToDate(in.ReadOn)
+
+	err = a.bookService.ValidationBookshelf(ctx, bs)
+	if err != nil {
+		return nil, err
+	}
+
+	if bs.ID == 0 {
+		err = a.bookService.CreateBookshelf(ctx, bs)
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		err = a.bookService.UpdateBookshelf(ctx, bs)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return bs, nil
+}

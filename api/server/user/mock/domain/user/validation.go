@@ -47,3 +47,17 @@ func (mr *MockValidationMockRecorder) User(ctx, u interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "User", reflect.TypeOf((*MockValidation)(nil).User), ctx, u)
 }
+
+// Relationship mocks base method
+func (m *MockValidation) Relationship(ctx context.Context, r *user.Relationship) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Relationship", ctx, r)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Relationship indicates an expected call of Relationship
+func (mr *MockValidationMockRecorder) Relationship(ctx, r interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Relationship", reflect.TypeOf((*MockValidation)(nil).Relationship), ctx, r)
+}

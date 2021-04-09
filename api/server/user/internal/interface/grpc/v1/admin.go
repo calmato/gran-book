@@ -31,16 +31,52 @@ func (s *AdminServer) ListAdmin(ctx context.Context, req *pb.ListAdminRequest) (
 	}
 
 	in := &input.ListAdmin{
-		Limit:  req.Limit,
-		Offset: req.Offset,
+		Limit:  int(req.GetLimit()),
+		Offset: int(req.GetOffset()),
 	}
 
-	if req.Order != nil {
-		in.By = req.Order.By
-		in.Direction = req.Order.Direction
+	if o := req.GetOrder(); o != nil {
+		in.By = o.GetBy()
+		in.Direction = o.GetDirection()
 	}
 
 	us, out, err := s.AdminApplication.List(ctx, in)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	res := getAdminListResponse(us, out)
+	return res, nil
+}
+
+// SearchAdmin - 管理者一覧取得
+func (s *AdminServer) SearchAdmin(ctx context.Context, req *pb.SearchAdminRequest) (*pb.AdminListResponse, error) {
+	cu, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	err = authorization(cu)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	in := &input.SearchAdmin{
+		Limit:  int(req.GetLimit()),
+		Offset: int(req.GetOffset()),
+	}
+
+	if o := req.GetOrder(); o != nil {
+		in.By = o.GetBy()
+		in.Direction = o.GetDirection()
+	}
+
+	if s := req.GetSearch(); s != nil {
+		in.Field = s.GetField()
+		in.Value = s.GetValue()
+	}
+
+	us, out, err := s.AdminApplication.Search(ctx, in)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -61,7 +97,7 @@ func (s *AdminServer) GetAdmin(ctx context.Context, req *pb.GetAdminRequest) (*p
 		return nil, errorHandling(err)
 	}
 
-	u, err := s.AdminApplication.Show(ctx, req.Id)
+	u, err := s.AdminApplication.Show(ctx, req.GetId())
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -88,15 +124,15 @@ func (s *AdminServer) CreateAdmin(ctx context.Context, req *pb.CreateAdminReques
 	}
 
 	in := &input.CreateAdmin{
-		Username:             req.Username,
-		Email:                req.Email,
-		Password:             req.Password,
-		PasswordConfirmation: req.PasswordConfirmation,
-		Role:                 req.Role,
-		LastName:             req.LastName,
-		FirstName:            req.FirstName,
-		LastNameKana:         req.LastNameKana,
-		FirstNameKana:        req.FirstNameKana,
+		Username:             req.GetUsername(),
+		Email:                req.GetEmail(),
+		Password:             req.GetPassword(),
+		PasswordConfirmation: req.GetPasswordConfirmation(),
+		Role:                 int(req.GetRole()),
+		LastName:             req.GetLastName(),
+		FirstName:            req.GetFirstName(),
+		LastNameKana:         req.GetLastNameKana(),
+		FirstNameKana:        req.GetFirstNameKana(),
 	}
 
 	u, err := s.AdminApplication.Create(ctx, in)
@@ -120,16 +156,16 @@ func (s *AdminServer) UpdateAdminRole(ctx context.Context, req *pb.UpdateAdminRo
 		return nil, errorHandling(err)
 	}
 
-	err = hasAdminRole(cu, req.Id)
+	err = hasAdminRole(cu, req.GetId())
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
 	in := &input.UpdateAdminRole{
-		Role: req.Role,
+		Role: int(req.Role),
 	}
 
-	u, err := s.AdminApplication.UpdateRole(ctx, in, req.Id)
+	u, err := s.AdminApplication.UpdateRole(ctx, in, req.GetId())
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -152,17 +188,17 @@ func (s *AdminServer) UpdateAdminPassword(
 		return nil, errorHandling(err)
 	}
 
-	err = hasAdminRole(cu, req.Id)
+	err = hasAdminRole(cu, req.GetId())
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
 	in := &input.UpdateAdminPassword{
-		Password:             req.Password,
-		PasswordConfirmation: req.PasswordConfirmation,
+		Password:             req.GetPassword(),
+		PasswordConfirmation: req.GetPasswordConfirmation(),
 	}
 
-	u, err := s.AdminApplication.UpdatePassword(ctx, in, req.Id)
+	u, err := s.AdminApplication.UpdatePassword(ctx, in, req.GetId())
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -185,21 +221,21 @@ func (s *AdminServer) UpdateAdminProfile(
 		return nil, errorHandling(err)
 	}
 
-	err = hasAdminRole(cu, req.Id)
+	err = hasAdminRole(cu, req.GetId())
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
 	in := &input.UpdateAdminProfile{
-		Username:      req.Username,
-		Email:         req.Email,
-		LastName:      req.LastName,
-		FirstName:     req.FirstName,
-		LastNameKana:  req.LastNameKana,
-		FirstNameKana: req.FirstNameKana,
+		Username:      req.GetUsername(),
+		Email:         req.GetEmail(),
+		LastName:      req.GetLastName(),
+		FirstName:     req.GetFirstName(),
+		LastNameKana:  req.GetLastNameKana(),
+		FirstNameKana: req.GetFirstNameKana(),
 	}
 
-	u, err := s.AdminApplication.UpdateProfile(ctx, in, req.Id)
+	u, err := s.AdminApplication.UpdateProfile(ctx, in, req.GetId())
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -214,7 +250,7 @@ func getAdminResponse(u *user.User) *pb.AdminResponse {
 		Username:         u.Username,
 		Email:            u.Email,
 		PhoneNumber:      u.PhoneNumber,
-		Role:             u.Role,
+		Role:             int32(u.Role),
 		ThumbnailUrl:     u.ThumbnailURL,
 		SelfIntroduction: u.SelfIntroduction,
 		LastName:         u.LastName,
@@ -235,7 +271,7 @@ func getAdminListResponse(us []*user.User, out *output.ListQuery) *pb.AdminListR
 			Username:         u.Username,
 			Email:            u.Email,
 			PhoneNumber:      u.PhoneNumber,
-			Role:             u.Role,
+			Role:             int32(u.Role),
 			ThumbnailUrl:     u.ThumbnailURL,
 			SelfIntroduction: u.SelfIntroduction,
 			LastName:         u.LastName,
@@ -252,9 +288,9 @@ func getAdminListResponse(us []*user.User, out *output.ListQuery) *pb.AdminListR
 
 	res := &pb.AdminListResponse{
 		Users:  users,
-		Limit:  out.Limit,
-		Offset: out.Offset,
-		Total:  out.Total,
+		Limit:  int64(out.Limit),
+		Offset: int64(out.Offset),
+		Total:  int64(out.Total),
 	}
 
 	if out.Order != nil {

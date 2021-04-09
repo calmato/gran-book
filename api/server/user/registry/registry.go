@@ -15,16 +15,19 @@ import (
 type Registry struct {
 	AdminApplication application.AdminApplication
 	AuthApplication  application.AuthApplication
+	UserApplication  application.UserApplication
 }
 
 // NewRegistry - internalディレクトリ配下のファイルを読み込み
 func NewRegistry(db *repository.Client, fa *authentication.Auth, s *gcs.Storage) *Registry {
 	admin := adminInjection(db, fa, s)
 	auth := authInjection(db, fa, s)
+	user := userInjection(db, fa, s)
 
 	return &Registry{
 		AdminApplication: admin,
 		AuthApplication:  auth,
+		UserApplication:  user,
 	}
 }
 
@@ -50,4 +53,16 @@ func authInjection(db *repository.Client, fa *authentication.Auth, s *gcs.Storag
 	aa := application.NewAuthApplication(arv, us)
 
 	return aa
+}
+
+func userInjection(db *repository.Client, fa *authentication.Auth, s *gcs.Storage) application.UserApplication {
+	ur := repository.NewUserRepository(db, fa)
+	udv := dv.NewUserDomainValidation(ur)
+	uu := storage.NewUserUploader(s)
+	us := service.NewUserService(udv, ur, uu)
+
+	urv := rv.NewUserRequestValidation()
+	ua := application.NewUserApplication(urv, us)
+
+	return ua
 }

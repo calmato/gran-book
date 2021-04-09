@@ -5,21 +5,23 @@ import { corsOptions } from '~/config/cors'
 import { authentication } from '~/lib/authenticated'
 import { notFoundErrorHandler, otherErrorHandler } from '~/lib/error-handler'
 import { accessLogHandler } from '~/lib/log-handler'
-import { common, v1Auth } from '~/routes'
+import { common, v1Auth, v1Book, v1User } from '~/routes'
 
 const app = express()
 
 const host: string = process.env.HOST || '0.0.0.0'
 const port: string = process.env.PORT || '3000'
 
-app.use(bodyParser.urlencoded({ extended: true }))
-app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ limit: '4mb', extended: true }))
+app.use(bodyParser.json({ limit: '4mb' }))
 app.use(cors(corsOptions))
 app.use(accessLogHandler)
 app.use(authentication)
 
 app.use('/', common)
 app.use('/v1/auth', v1Auth)
+app.use('/v1/books', v1Book)
+app.use('/v1/users', v1User)
 
 app.use(notFoundErrorHandler)
 app.use(otherErrorHandler)

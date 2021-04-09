@@ -33,15 +33,26 @@
 | created_at        | DATETIME     |       |  true   |          |       |         | 登録日時                          |                        |
 | updated_at        | DATETIME     |       |  true   |          |       |         | 更新日時                          |                        |
 
+### relationships
+
+|    Field    |  DataType   | PK/FK | NotNull | Unsigned | Other | Default |       Explanation        | Validation |
+| :---------- | :---------- | :---: | :-----: | :------: | :---: | :------ | :----------------------- | ---------- |
+| id          | VARCHAR(36) |  PK   |  true   |          |  AI   |         | ID                       |            |
+| follow_id   | VARCHAR(36) |  FK   |  true   |          |  UQ   |         | フォローするユーザーID   |            |
+| follower_id | VARCHAR(36) |  FK   |  true   |          |  UQ   |         | フォローされるユーザーID |            |
+| created_at  | DATETIME    |       |  true   |          |       |         | 登録日時                 |            |
+| updated_at  | DATETIME    |       |  true   |          |       |         | 更新日時                 |            |
+
 ### books
 
 |     Field     |  DataType   | PK/FK | NotNull | Unsigned | Other | Default | Explanation | Validation |
 | :------------ | :---------- | :---: | :-----: | :------: | :---: | :------ | :---------- | :--------- |
 | id            | BIGINT(20)  |  PK   |  true   |   true   |  AI   |         | ID          |            |
-| publisher_id  | BIGINT(20)  |  FK   |  true   |   true   |  UQ   |         | 出版社ID    |            |
+| publisher_id  | BIGINT(20)  |  FK   |  false  |   true   |  UQ   |         | 出版社ID    |            |
 | title         | VARCHER(32) |       |  true   |          |  UQ   | ''      | タイトル    |            |
 | description   | TEXT(1000)  |       |  true   |          |       | NULL    | 説明        |            |
 | isbn          | VARCHAR(16) |       |  true   |          |       | ''      | ID          |            |
+| version       | VARCHAR(64) |       |  true   |          |       | ''      | バージョン  |            |
 | thumbnail_url | TEXT(8192)  |       |  false  |          |       | NULL    | サムネイル  |            |
 | published_at  | DATE        |       |  true   |          |       |         | 発売日      |            |
 | created_at    | DATETIME    |       |  true   |          |       |         | 登録日時    |            |
@@ -105,16 +116,6 @@
 | book_id     | BIGINT(20) |  FK   |  true   |   true   |  UQ   |         | 本ID         |            |
 | created_at  | DATETIME   |       |  true   |          |       |         | 登録日時     |            |
 | updated_at  | DATETIME   |       |  true   |          |       |         | 更新日時     |            |
-
-### follows
-
-|    Field    |  DataType   | PK/FK | NotNull | Unsigned | Other | Default |       Explanation        | Validation |
-| :---------- | :---------- | :---: | :-----: | :------: | :---: | :------ | :----------------------- | ---------- |
-| id          | VARCHAR(36) |  PK   |  true   |          |  AI   |         | ID                       |            |
-| follow_id   | VARCHAR(36) |  FK   |  true   |          |  UQ   |         | フォローするユーザーID   |            |
-| follower_id | VARCHAR(36) |  FK   |  true   |          |  UQ   |         | フォローされるユーザーID |            |
-| created_at  | DATETIME    |       |  true   |          |       |         | 登録日時                 |            |
-| updated_at  | DATETIME    |       |  true   |          |       |         | 更新日時                 |            |
 
 ### Sale
 

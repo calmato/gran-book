@@ -12,8 +12,8 @@ const app = express()
 const host: string = process.env.HOST || '0.0.0.0'
 const port: string = process.env.PORT || '3000'
 
-app.use(bodyParser.urlencoded({ extended: true }))
-app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ limit: '4mb', extended: true }))
+app.use(bodyParser.json({ limit: '4mb' }))
 app.use(cors(corsOptions))
 app.use(accessLogHandler)
 app.use(authentication)

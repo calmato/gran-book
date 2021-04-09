@@ -7,6 +7,7 @@ import {
   AdminResponse,
   CreateAdminRequest,
   ListAdminRequest,
+  SearchAdminRequest,
   UpdateAdminPasswordRequest,
   UpdateAdminProfileRequest,
   UpdateAdminRoleRequest,
@@ -14,6 +15,7 @@ import {
 import {
   ICreateAdminInput,
   IListAdminInput,
+  ISearchAdminInput,
   IUpdateAdminPasswordInput,
   IUpdateAdminProfileInput,
   IUpdateAdminRoleInput,
@@ -24,11 +26,40 @@ export function listAdmin(req: Request<any>, input: IListAdminInput): Promise<IA
   const request = new ListAdminRequest()
   const metadata = getGrpcMetadata(req)
 
+  const order = new ListAdminRequest.Order()
+  order.setBy(input.by)
+  order.setDirection(input.direction)
+
   request.setLimit(input.limit)
   request.setOffset(input.offset)
+  request.setOrder(order)
+
+  return new Promise((resolve: (res: IAdminListOutput) => void, reject: (reason: Error) => void) => {
+    adminClient.listAdmin(request, metadata, (err: any, res: AdminListResponse) => {
+      if (err) {
+        reject(getGrpcError(err))
+        return
+      }
+
+      resolve(setAdminListOutput(res))
+    })
+  })
+}
+
+export function searchAdmin(req: Request<any>, input: ISearchAdminInput): Promise<IAdminListOutput> {
+  const request = new SearchAdminRequest()
+  const metadata = getGrpcMetadata(req)
+
+  const search = new SearchAdminRequest.Search()
+  search.setField(input.field)
+  search.setValue(input.value)
+
+  request.setLimit(input.limit)
+  request.setOffset(input.offset)
+  request.setSearch(search)
 
   if (input.by !== '') {
-    const order = new ListAdminRequest.Order()
+    const order = new SearchAdminRequest.Order()
     order.setBy(input.by)
     order.setDirection(input.direction)
 
@@ -36,7 +67,7 @@ export function listAdmin(req: Request<any>, input: IListAdminInput): Promise<IA
   }
 
   return new Promise((resolve: (res: IAdminListOutput) => void, reject: (reason: Error) => void) => {
-    adminClient.listAdmin(request, metadata, (err: any, res: AdminListResponse) => {
+    adminClient.searchAdmin(request, metadata, (err: any, res: AdminListResponse) => {
       if (err) {
         reject(getGrpcError(err))
         return

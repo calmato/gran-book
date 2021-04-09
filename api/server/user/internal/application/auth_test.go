@@ -128,6 +128,7 @@ func TestAuthApplication_Create(t *testing.T) {
 		arvm.EXPECT().CreateAuth(tc.Input).Return(nil)
 
 		usm := mock_user.NewMockService(ctrl)
+		usm.EXPECT().Validation(ctx, gomock.Any()).Return(tc.Expected.Error)
 		usm.EXPECT().Create(ctx, gomock.Any()).Return(tc.Expected.Error)
 
 		t.Run(result, func(t *testing.T) {
@@ -173,6 +174,7 @@ func TestAuthApplication_UpdateEmail(t *testing.T) {
 		arvm.EXPECT().UpdateAuthEmail(tc.Input).Return(nil)
 
 		usm := mock_user.NewMockService(ctrl)
+		usm.EXPECT().Validation(ctx, tc.User).Return(tc.Expected)
 		usm.EXPECT().Update(ctx, tc.User).Return(tc.Expected)
 
 		t.Run(result, func(t *testing.T) {
@@ -261,6 +263,7 @@ func TestAuthApplication_UpdateProfile(t *testing.T) {
 		arvm.EXPECT().UpdateAuthProfile(tc.Input).Return(nil)
 
 		usm := mock_user.NewMockService(ctrl)
+		usm.EXPECT().Validation(ctx, gomock.Any()).Return(tc.Expected)
 		usm.EXPECT().Update(ctx, tc.User).Return(tc.Expected)
 
 		t.Run(result, func(t *testing.T) {
@@ -312,6 +315,7 @@ func TestAuthApplication_UpdateAddress(t *testing.T) {
 		arvm.EXPECT().UpdateAuthAddress(tc.Input).Return(nil)
 
 		usm := mock_user.NewMockService(ctrl)
+		usm.EXPECT().Validation(ctx, gomock.Any()).Return(tc.Expected)
 		usm.EXPECT().Update(ctx, tc.User).Return(tc.Expected)
 
 		t.Run(result, func(t *testing.T) {

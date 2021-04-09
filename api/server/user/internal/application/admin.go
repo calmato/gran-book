@@ -15,6 +15,7 @@ import (
 // AdminApplication - Adminアプリケーションのインターフェース
 type AdminApplication interface {
 	List(ctx context.Context, in *input.ListAdmin) ([]*user.User, *output.ListQuery, error)
+	Search(ctx context.Context, in *input.SearchAdmin) ([]*user.User, *output.ListQuery, error)
 	Show(ctx context.Context, uid string) (*user.User, error)
 	Create(ctx context.Context, in *input.CreateAdmin) (*user.User, error)
 	UpdateRole(ctx context.Context, in *input.UpdateAdminRole, uid string) (*user.User, error)
@@ -48,7 +49,7 @@ func (a *adminApplication) List(ctx context.Context, in *input.ListAdmin) ([]*us
 			{
 				Field:    "role",
 				Operator: "BETWEEN",
-				Value:    []int64{1, 3},
+				Value:    []int{1, 3},
 			},
 		},
 	}
@@ -62,7 +63,72 @@ func (a *adminApplication) List(ctx context.Context, in *input.ListAdmin) ([]*us
 		query.Order = o
 	}
 
-	us, total, err := a.userService.List(ctx, query)
+	us, err := a.userService.List(ctx, query)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	total, err := a.userService.ListCount(ctx, query)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	out := &output.ListQuery{
+		Limit:  query.Limit,
+		Offset: query.Offset,
+		Total:  total,
+	}
+
+	if query.Order != nil {
+		o := &output.QueryOrder{
+			By:        query.Order.By,
+			Direction: query.Order.Direction,
+		}
+
+		out.Order = o
+	}
+
+	return us, out, nil
+}
+
+func (a *adminApplication) Search(ctx context.Context, in *input.SearchAdmin) ([]*user.User, *output.ListQuery, error) {
+	err := a.adminRequestValidation.SearchAdmin(in)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	query := &domain.ListQuery{
+		Limit:  in.Limit,
+		Offset: in.Offset,
+		Conditions: []*domain.QueryCondition{
+			{
+				Field:    "role",
+				Operator: "BETWEEN",
+				Value:    []int{1, 3},
+			},
+			{
+				Field:    in.Field,
+				Operator: "LIKE",
+				Value:    in.Value,
+			},
+		},
+	}
+
+	if in.By != "" {
+		o := &domain.QueryOrder{
+			By:        in.By,
+			Direction: in.Direction,
+		}
+
+		query.Order = o
+	}
+
+	us, err := a.userService.List(ctx, query)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	total, err := a.userService.ListCount(ctx, query)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -113,6 +179,11 @@ func (a *adminApplication) Create(ctx context.Context, in *input.CreateAdmin) (*
 		Activated:     true,
 	}
 
+	err = a.userService.Validation(ctx, u)
+	if err != nil {
+		return nil, err
+	}
+
 	err = a.userService.Create(ctx, u)
 	if err != nil {
 		return nil, err
@@ -133,6 +204,11 @@ func (a *adminApplication) UpdateRole(ctx context.Context, in *input.UpdateAdmin
 	}
 
 	u.Role = in.Role
+
+	err = a.userService.Validation(ctx, u)
+	if err != nil {
+		return nil, err
+	}
 
 	err = a.userService.Update(ctx, u)
 	if err != nil {
@@ -182,6 +258,11 @@ func (a *adminApplication) UpdateProfile(
 	u.FirstName = in.FirstName
 	u.LastNameKana = in.LastNameKana
 	u.FirstNameKana = in.FirstNameKana
+
+	err = a.userService.Validation(ctx, u)
+	if err != nil {
+		return nil, err
+	}
 
 	err = a.userService.Update(ctx, u)
 	if err != nil {
