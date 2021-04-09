@@ -2003,7 +2003,8 @@ proto.proto.UploadAuthThumbnailRequest.prototype.toObject = function(opt_include
  */
 proto.proto.UploadAuthThumbnailRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    thumbnail: msg.getThumbnail_asB64()
+    thumbnail: msg.getThumbnail_asB64(),
+    position: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -2044,6 +2045,10 @@ proto.proto.UploadAuthThumbnailRequest.deserializeBinaryFromReader = function(ms
       var value = /** @type {!Uint8Array} */ (reader.readBytes());
       msg.setThumbnail(value);
       break;
+    case 2:
+      var value = /** @type {number} */ (reader.readInt64());
+      msg.setPosition(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -2077,6 +2082,13 @@ proto.proto.UploadAuthThumbnailRequest.serializeBinaryToWriter = function(messag
   if (f.length > 0) {
     writer.writeBytes(
       1,
+      f
+    );
+  }
+  f = message.getPosition();
+  if (f !== 0) {
+    writer.writeInt64(
+      2,
       f
     );
   }
@@ -2122,6 +2134,24 @@ proto.proto.UploadAuthThumbnailRequest.prototype.getThumbnail_asU8 = function() 
  */
 proto.proto.UploadAuthThumbnailRequest.prototype.setThumbnail = function(value) {
   return jspb.Message.setProto3BytesField(this, 1, value);
+};
+
+
+/**
+ * optional int64 position = 2;
+ * @return {number}
+ */
+proto.proto.UploadAuthThumbnailRequest.prototype.getPosition = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.proto.UploadAuthThumbnailRequest} returns this
+ */
+proto.proto.UploadAuthThumbnailRequest.prototype.setPosition = function(value) {
+  return jspb.Message.setProto3IntField(this, 2, value);
 };
 
 
