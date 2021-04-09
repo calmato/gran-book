@@ -71,6 +71,7 @@ message UpdateAuthAddressRequest {
 
 message UploadAuthThumbnailRequest {
   bytes thumbnail = 1;
+  int64 position = 2;
 }
 
 message ListAdminRequest {

@@ -198,6 +198,9 @@ export class UploadAuthThumbnailRequest extends jspb.Message {
     getThumbnail_asB64(): string;
     setThumbnail(value: Uint8Array | string): UploadAuthThumbnailRequest;
 
+    getPosition(): number;
+    setPosition(value: number): UploadAuthThumbnailRequest;
+
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): UploadAuthThumbnailRequest.AsObject;
@@ -212,6 +215,7 @@ export class UploadAuthThumbnailRequest extends jspb.Message {
 export namespace UploadAuthThumbnailRequest {
     export type AsObject = {
         thumbnail: Uint8Array | string,
+        position: number,
     }
 }
 
