@@ -37,6 +37,17 @@ function deserialize_proto_AuthResponse(buffer_arg) {
   return proto_user_apiv1_pb.AuthResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_proto_AuthThumbnailResponse(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.AuthThumbnailResponse)) {
+    throw new Error('Expected argument of type proto.AuthThumbnailResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_AuthThumbnailResponse(buffer_arg) {
+  return proto_user_apiv1_pb.AuthThumbnailResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_proto_CreateAdminRequest(arg) {
   if (!(arg instanceof proto_user_apiv1_pb.CreateAdminRequest)) {
     throw new Error('Expected argument of type proto.CreateAdminRequest');
@@ -257,6 +268,17 @@ function deserialize_proto_UpdateAuthProfileRequest(buffer_arg) {
   return proto_user_apiv1_pb.UpdateAuthProfileRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_proto_UploadAuthThumbnailRequest(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.UploadAuthThumbnailRequest)) {
+    throw new Error('Expected argument of type proto.UploadAuthThumbnailRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_UploadAuthThumbnailRequest(buffer_arg) {
+  return proto_user_apiv1_pb.UploadAuthThumbnailRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_proto_UserProfileResponse(arg) {
   if (!(arg instanceof proto_user_apiv1_pb.UserProfileResponse)) {
     throw new Error('Expected argument of type proto.UserProfileResponse');
@@ -335,6 +357,17 @@ var AuthServiceService = exports.AuthServiceService = {
     requestDeserialize: deserialize_proto_UpdateAuthAddressRequest,
     responseSerialize: serialize_proto_AuthResponse,
     responseDeserialize: deserialize_proto_AuthResponse,
+  },
+  uploadAuthThumbnail: {
+    path: '/proto.AuthService/UploadAuthThumbnail',
+    requestStream: false,
+    responseStream: false,
+    requestType: proto_user_apiv1_pb.UploadAuthThumbnailRequest,
+    responseType: proto_user_apiv1_pb.AuthThumbnailResponse,
+    requestSerialize: serialize_proto_UploadAuthThumbnailRequest,
+    requestDeserialize: deserialize_proto_UploadAuthThumbnailRequest,
+    responseSerialize: serialize_proto_AuthThumbnailResponse,
+    responseDeserialize: deserialize_proto_AuthThumbnailResponse,
   },
 };
 

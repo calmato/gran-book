@@ -10,6 +10,7 @@ service AuthService {
   rpc UpdateAuthPassword (UpdateAuthPasswordRequest) returns (AuthResponse);
   rpc UpdateAuthProfile (UpdateAuthProfileRequest) returns (AuthResponse);
   rpc UpdateAuthAddress (UpdateAuthAddressRequest) returns (AuthResponse);
+  rpc UploadAuthThumbnail (UploadAuthThumbnailRequest) returns (AuthThumbnailResponse);
 }
 
 service AdminService {
@@ -66,6 +67,10 @@ message UpdateAuthAddressRequest {
   string city = 8;
   string address_line1 = 9;
   string address_line2 = 10;
+}
+
+message UploadAuthThumbnailRequest {
+  bytes thumbnail = 1;
 }
 
 message ListAdminRequest {
@@ -175,6 +180,10 @@ message AuthResponse {
   bool activated = 18;
   string created_at = 19;
   string updated_at = 20;
+}
+
+message AuthThumbnailResponse {
+  string thumbnail_url = 1;
 }
 
 message AdminResponse {
