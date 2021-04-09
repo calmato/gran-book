@@ -7,6 +7,7 @@ const statusConverter: { [key: number]: number } = {
   5: 404, // NOT_FOUND -> Not Found
   6: 409, // ALREADY_EXISTS -> Conflict
   7: 403, // PREMISSION_DENIED -> Forbidden
+  12: 501, // UNIMPLEMENTED -> Not Implemented
   13: 500, // INTERNAL -> Internal Server Error
   14: 503, // UNAVAILABLE -> Service Unavailable
   16: 401, // UNAUTHENTICATED -> Unauthorized
@@ -51,6 +52,11 @@ export function serverError(details: Array<any>): HttpError {
   return new HttpError(500, message, details)
 }
 
+export function notImplemented(details: Array<any>): HttpError {
+  const message = 'Not Implemented'
+  return new HttpError(501, message, details)
+}
+
 export function serviceUnavailable(details: Array<any>): HttpError {
   const message = 'Service Unavailable'
   return new HttpError(503, message, details)
@@ -72,6 +78,8 @@ export function getHttpError(err: Error): HttpError {
         return notFound()
       case 409:
         return alreadyExists(details)
+      case 501:
+        return notImplemented(details)
       case 503:
         return serviceUnavailable(details)
       default:
