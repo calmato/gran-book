@@ -51,6 +51,11 @@ export function serverError(details: Array<any>): HttpError {
   return new HttpError(500, message, details)
 }
 
+export function serviceUnavailable(details: Array<any>): HttpError {
+  const message = 'Service Unavailable'
+  return new HttpError(503, message, details)
+}
+
 export function getHttpError(err: Error): HttpError {
   if (err instanceof GrpcError) {
     const status: number = convertStatusGrpcToHttp(err.status)
@@ -67,6 +72,8 @@ export function getHttpError(err: Error): HttpError {
         return notFound()
       case 409:
         return alreadyExists(details)
+      case 503:
+        return serviceUnavailable(details)
       default:
         return serverError(details)
     }
