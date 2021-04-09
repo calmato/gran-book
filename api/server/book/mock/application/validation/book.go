@@ -33,30 +33,30 @@ func (m *MockBookRequestValidation) EXPECT() *MockBookRequestValidationMockRecor
 	return m.recorder
 }
 
-// BookItem mocks base method
-func (m *MockBookRequestValidation) BookItem(in *input.BookItem) error {
+// Book mocks base method
+func (m *MockBookRequestValidation) Book(in *input.Book) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "BookItem", in)
+	ret := m.ctrl.Call(m, "Book", in)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// BookItem indicates an expected call of BookItem
-func (mr *MockBookRequestValidationMockRecorder) BookItem(in interface{}) *gomock.Call {
+// Book indicates an expected call of Book
+func (mr *MockBookRequestValidationMockRecorder) Book(in interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BookItem", reflect.TypeOf((*MockBookRequestValidation)(nil).BookItem), in)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Book", reflect.TypeOf((*MockBookRequestValidation)(nil).Book), in)
 }
 
-// CreateAndUpdateBooks mocks base method
-func (m *MockBookRequestValidation) CreateAndUpdateBooks(in *input.CreateAndUpdateBooks) error {
+// Bookshelf mocks base method
+func (m *MockBookRequestValidation) Bookshelf(in *input.Bookshelf) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateAndUpdateBooks", in)
+	ret := m.ctrl.Call(m, "Bookshelf", in)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// CreateAndUpdateBooks indicates an expected call of CreateAndUpdateBooks
-func (mr *MockBookRequestValidationMockRecorder) CreateAndUpdateBooks(in interface{}) *gomock.Call {
+// Bookshelf indicates an expected call of Bookshelf
+func (mr *MockBookRequestValidationMockRecorder) Bookshelf(in interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAndUpdateBooks", reflect.TypeOf((*MockBookRequestValidation)(nil).CreateAndUpdateBooks), in)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Bookshelf", reflect.TypeOf((*MockBookRequestValidation)(nil).Bookshelf), in)
 }

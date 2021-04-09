@@ -24,4 +24,6 @@ type Service interface {
 	DeleteRelationship(ctx context.Context, id int) error
 	UploadThumbnail(ctx context.Context, uid string, thumbnail []byte) (string, error)
 	IsFriend(ctx context.Context, friendID string, uid string) (bool, bool)
+	Validation(ctx context.Context, u *User) error
+	ValidationRelationship(ctx context.Context, r *Relationship) error
 }

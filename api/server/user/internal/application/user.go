@@ -189,6 +189,11 @@ func (a *userApplication) RegisterFollow(
 		FollowerID: uid,
 	}
 
+	err = a.userService.ValidationRelationship(ctx, r)
+	if err != nil {
+		return nil, nil, err
+	}
+
 	err = a.userService.CreateRelationship(ctx, r)
 	if err != nil {
 		return nil, nil, err
