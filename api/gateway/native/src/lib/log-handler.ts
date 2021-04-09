@@ -34,8 +34,6 @@ export function accessLogHandler(req: Request, _: Response, next: NextFunction):
 }
 
 export function errorLogHandler(req: Request, err: HttpError): void {
-  console.log('debug: response', err)
-
   const logs: any = {
     direction: 'response',
     path: req.path,
