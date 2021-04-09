@@ -74,7 +74,7 @@ interface IAuthServiceService_IUpdateAuthAddress extends grpc.MethodDefinition<p
 }
 interface IAuthServiceService_IUploadAuthThumbnail extends grpc.MethodDefinition<proto_user_apiv1_pb.UploadAuthThumbnailRequest, proto_user_apiv1_pb.AuthThumbnailResponse> {
     path: "/proto.AuthService/UploadAuthThumbnail";
-    requestStream: false;
+    requestStream: true;
     responseStream: false;
     requestSerialize: grpc.serialize<proto_user_apiv1_pb.UploadAuthThumbnailRequest>;
     requestDeserialize: grpc.deserialize<proto_user_apiv1_pb.UploadAuthThumbnailRequest>;
@@ -91,7 +91,7 @@ export interface IAuthServiceServer extends grpc.UntypedServiceImplementation {
     updateAuthPassword: grpc.handleUnaryCall<proto_user_apiv1_pb.UpdateAuthPasswordRequest, proto_user_apiv1_pb.AuthResponse>;
     updateAuthProfile: grpc.handleUnaryCall<proto_user_apiv1_pb.UpdateAuthProfileRequest, proto_user_apiv1_pb.AuthResponse>;
     updateAuthAddress: grpc.handleUnaryCall<proto_user_apiv1_pb.UpdateAuthAddressRequest, proto_user_apiv1_pb.AuthResponse>;
-    uploadAuthThumbnail: grpc.handleUnaryCall<proto_user_apiv1_pb.UploadAuthThumbnailRequest, proto_user_apiv1_pb.AuthThumbnailResponse>;
+    uploadAuthThumbnail: handleClientStreamingCall<proto_user_apiv1_pb.UploadAuthThumbnailRequest, proto_user_apiv1_pb.AuthThumbnailResponse>;
 }
 
 export interface IAuthServiceClient {
@@ -113,9 +113,10 @@ export interface IAuthServiceClient {
     updateAuthAddress(request: proto_user_apiv1_pb.UpdateAuthAddressRequest, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AuthResponse) => void): grpc.ClientUnaryCall;
     updateAuthAddress(request: proto_user_apiv1_pb.UpdateAuthAddressRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AuthResponse) => void): grpc.ClientUnaryCall;
     updateAuthAddress(request: proto_user_apiv1_pb.UpdateAuthAddressRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AuthResponse) => void): grpc.ClientUnaryCall;
-    uploadAuthThumbnail(request: proto_user_apiv1_pb.UploadAuthThumbnailRequest, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AuthThumbnailResponse) => void): grpc.ClientUnaryCall;
-    uploadAuthThumbnail(request: proto_user_apiv1_pb.UploadAuthThumbnailRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AuthThumbnailResponse) => void): grpc.ClientUnaryCall;
-    uploadAuthThumbnail(request: proto_user_apiv1_pb.UploadAuthThumbnailRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AuthThumbnailResponse) => void): grpc.ClientUnaryCall;
+    uploadAuthThumbnail(callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AuthThumbnailResponse) => void): grpc.ClientWritableStream<proto_user_apiv1_pb.UploadAuthThumbnailRequest>;
+    uploadAuthThumbnail(metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AuthThumbnailResponse) => void): grpc.ClientWritableStream<proto_user_apiv1_pb.UploadAuthThumbnailRequest>;
+    uploadAuthThumbnail(options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AuthThumbnailResponse) => void): grpc.ClientWritableStream<proto_user_apiv1_pb.UploadAuthThumbnailRequest>;
+    uploadAuthThumbnail(metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AuthThumbnailResponse) => void): grpc.ClientWritableStream<proto_user_apiv1_pb.UploadAuthThumbnailRequest>;
 }
 
 export class AuthServiceClient extends grpc.Client implements IAuthServiceClient {
@@ -138,9 +139,10 @@ export class AuthServiceClient extends grpc.Client implements IAuthServiceClient
     public updateAuthAddress(request: proto_user_apiv1_pb.UpdateAuthAddressRequest, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AuthResponse) => void): grpc.ClientUnaryCall;
     public updateAuthAddress(request: proto_user_apiv1_pb.UpdateAuthAddressRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AuthResponse) => void): grpc.ClientUnaryCall;
     public updateAuthAddress(request: proto_user_apiv1_pb.UpdateAuthAddressRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AuthResponse) => void): grpc.ClientUnaryCall;
-    public uploadAuthThumbnail(request: proto_user_apiv1_pb.UploadAuthThumbnailRequest, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AuthThumbnailResponse) => void): grpc.ClientUnaryCall;
-    public uploadAuthThumbnail(request: proto_user_apiv1_pb.UploadAuthThumbnailRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AuthThumbnailResponse) => void): grpc.ClientUnaryCall;
-    public uploadAuthThumbnail(request: proto_user_apiv1_pb.UploadAuthThumbnailRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AuthThumbnailResponse) => void): grpc.ClientUnaryCall;
+    public uploadAuthThumbnail(callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AuthThumbnailResponse) => void): grpc.ClientWritableStream<proto_user_apiv1_pb.UploadAuthThumbnailRequest>;
+    public uploadAuthThumbnail(metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AuthThumbnailResponse) => void): grpc.ClientWritableStream<proto_user_apiv1_pb.UploadAuthThumbnailRequest>;
+    public uploadAuthThumbnail(options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AuthThumbnailResponse) => void): grpc.ClientWritableStream<proto_user_apiv1_pb.UploadAuthThumbnailRequest>;
+    public uploadAuthThumbnail(metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AuthThumbnailResponse) => void): grpc.ClientWritableStream<proto_user_apiv1_pb.UploadAuthThumbnailRequest>;
 }
 
 interface IAdminServiceService extends grpc.ServiceDefinition<grpc.UntypedServiceImplementation> {

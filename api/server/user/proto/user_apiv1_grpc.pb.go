@@ -23,7 +23,7 @@ type AuthServiceClient interface {
 	UpdateAuthPassword(ctx context.Context, in *UpdateAuthPasswordRequest, opts ...grpc.CallOption) (*AuthResponse, error)
 	UpdateAuthProfile(ctx context.Context, in *UpdateAuthProfileRequest, opts ...grpc.CallOption) (*AuthResponse, error)
 	UpdateAuthAddress(ctx context.Context, in *UpdateAuthAddressRequest, opts ...grpc.CallOption) (*AuthResponse, error)
-	UploadAuthThumbnail(ctx context.Context, in *UploadAuthThumbnailRequest, opts ...grpc.CallOption) (*AuthThumbnailResponse, error)
+	UploadAuthThumbnail(ctx context.Context, opts ...grpc.CallOption) (AuthService_UploadAuthThumbnailClient, error)
 }
 
 type authServiceClient struct {
@@ -88,13 +88,38 @@ func (c *authServiceClient) UpdateAuthAddress(ctx context.Context, in *UpdateAut
 	return out, nil
 }
 
-func (c *authServiceClient) UploadAuthThumbnail(ctx context.Context, in *UploadAuthThumbnailRequest, opts ...grpc.CallOption) (*AuthThumbnailResponse, error) {
-	out := new(AuthThumbnailResponse)
-	err := c.cc.Invoke(ctx, "/proto.AuthService/UploadAuthThumbnail", in, out, opts...)
+func (c *authServiceClient) UploadAuthThumbnail(ctx context.Context, opts ...grpc.CallOption) (AuthService_UploadAuthThumbnailClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_AuthService_serviceDesc.Streams[0], "/proto.AuthService/UploadAuthThumbnail", opts...)
 	if err != nil {
 		return nil, err
 	}
-	return out, nil
+	x := &authServiceUploadAuthThumbnailClient{stream}
+	return x, nil
+}
+
+type AuthService_UploadAuthThumbnailClient interface {
+	Send(*UploadAuthThumbnailRequest) error
+	CloseAndRecv() (*AuthThumbnailResponse, error)
+	grpc.ClientStream
+}
+
+type authServiceUploadAuthThumbnailClient struct {
+	grpc.ClientStream
+}
+
+func (x *authServiceUploadAuthThumbnailClient) Send(m *UploadAuthThumbnailRequest) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *authServiceUploadAuthThumbnailClient) CloseAndRecv() (*AuthThumbnailResponse, error) {
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	m := new(AuthThumbnailResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
 }
 
 // AuthServiceServer is the server API for AuthService service.
@@ -107,7 +132,7 @@ type AuthServiceServer interface {
 	UpdateAuthPassword(context.Context, *UpdateAuthPasswordRequest) (*AuthResponse, error)
 	UpdateAuthProfile(context.Context, *UpdateAuthProfileRequest) (*AuthResponse, error)
 	UpdateAuthAddress(context.Context, *UpdateAuthAddressRequest) (*AuthResponse, error)
-	UploadAuthThumbnail(context.Context, *UploadAuthThumbnailRequest) (*AuthThumbnailResponse, error)
+	UploadAuthThumbnail(AuthService_UploadAuthThumbnailServer) error
 	mustEmbedUnimplementedAuthServiceServer()
 }
 
@@ -133,8 +158,8 @@ func (UnimplementedAuthServiceServer) UpdateAuthProfile(context.Context, *Update
 func (UnimplementedAuthServiceServer) UpdateAuthAddress(context.Context, *UpdateAuthAddressRequest) (*AuthResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateAuthAddress not implemented")
 }
-func (UnimplementedAuthServiceServer) UploadAuthThumbnail(context.Context, *UploadAuthThumbnailRequest) (*AuthThumbnailResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UploadAuthThumbnail not implemented")
+func (UnimplementedAuthServiceServer) UploadAuthThumbnail(AuthService_UploadAuthThumbnailServer) error {
+	return status.Errorf(codes.Unimplemented, "method UploadAuthThumbnail not implemented")
 }
 func (UnimplementedAuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {}
 
@@ -257,22 +282,30 @@ func _AuthService_UpdateAuthAddress_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AuthService_UploadAuthThumbnail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UploadAuthThumbnailRequest)
-	if err := dec(in); err != nil {
+func _AuthService_UploadAuthThumbnail_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(AuthServiceServer).UploadAuthThumbnail(&authServiceUploadAuthThumbnailServer{stream})
+}
+
+type AuthService_UploadAuthThumbnailServer interface {
+	SendAndClose(*AuthThumbnailResponse) error
+	Recv() (*UploadAuthThumbnailRequest, error)
+	grpc.ServerStream
+}
+
+type authServiceUploadAuthThumbnailServer struct {
+	grpc.ServerStream
+}
+
+func (x *authServiceUploadAuthThumbnailServer) SendAndClose(m *AuthThumbnailResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *authServiceUploadAuthThumbnailServer) Recv() (*UploadAuthThumbnailRequest, error) {
+	m := new(UploadAuthThumbnailRequest)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
-	if interceptor == nil {
-		return srv.(AuthServiceServer).UploadAuthThumbnail(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/proto.AuthService/UploadAuthThumbnail",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).UploadAuthThumbnail(ctx, req.(*UploadAuthThumbnailRequest))
-	}
-	return interceptor(ctx, in, info, handler)
+	return m, nil
 }
 
 var _AuthService_serviceDesc = grpc.ServiceDesc{
@@ -303,12 +336,14 @@ var _AuthService_serviceDesc = grpc.ServiceDesc{
 			MethodName: "UpdateAuthAddress",
 			Handler:    _AuthService_UpdateAuthAddress_Handler,
 		},
+	},
+	Streams: []grpc.StreamDesc{
 		{
-			MethodName: "UploadAuthThumbnail",
-			Handler:    _AuthService_UploadAuthThumbnail_Handler,
+			StreamName:    "UploadAuthThumbnail",
+			Handler:       _AuthService_UploadAuthThumbnail_Handler,
+			ClientStreams: true,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
 	Metadata: "proto/user_apiv1.proto",
 }
 

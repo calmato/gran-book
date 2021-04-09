@@ -360,7 +360,7 @@ var AuthServiceService = exports.AuthServiceService = {
   },
   uploadAuthThumbnail: {
     path: '/proto.AuthService/UploadAuthThumbnail',
-    requestStream: false,
+    requestStream: true,
     responseStream: false,
     requestType: proto_user_apiv1_pb.UploadAuthThumbnailRequest,
     responseType: proto_user_apiv1_pb.AuthThumbnailResponse,
