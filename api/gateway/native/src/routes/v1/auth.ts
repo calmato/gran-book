@@ -1,4 +1,5 @@
 import express, { NextFunction, Request, Response } from 'express'
+import multer from '~/plugins/multer'
 import { getAuth, createAuth, updateAuthProfile, updateAuthAddress, updateAuthEmail, UpdateAuthPassword } from '~/api'
 import {
   ICreateAuthRequest,
@@ -17,6 +18,7 @@ import {
 } from '~/types/input'
 import { IAuthOutput } from '~/types/output'
 import { GrpcError } from '~/types/exception'
+import { badRequest } from '~/lib/http-exception'
 
 const router = express.Router()
 
@@ -148,6 +150,11 @@ router.patch(
       .catch((err: GrpcError) => next(err))
   }
 )
+
+router.post('/thumbnail', multer.single('thumbnail'), (req: Request, res: Response, next: NextFunction): void => {
+  // TODO: エラー処理
+  res.status(503).json({ file: req.file, body: req.body })
+})
 
 function setAuthResponse(output: IAuthOutput): IAuthResponse {
   const response: IAuthResponse = {
