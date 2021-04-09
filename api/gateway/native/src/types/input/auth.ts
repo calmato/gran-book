@@ -33,3 +33,7 @@ export interface IUpdateAuthAddressInput {
   addressLine1: string
   addressLine2: string
 }
+
+export interface IUploadAuthThumbnailInput {
+  path: string
+}
