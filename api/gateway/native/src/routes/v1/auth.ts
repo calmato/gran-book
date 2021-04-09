@@ -1,6 +1,14 @@
 import express, { NextFunction, Request, Response } from 'express'
 import multer from '~/plugins/multer'
-import { getAuth, createAuth, updateAuthProfile, updateAuthAddress, updateAuthEmail, UpdateAuthPassword } from '~/api'
+import {
+  getAuth,
+  createAuth,
+  updateAuthProfile,
+  updateAuthAddress,
+  updateAuthEmail,
+  UpdateAuthPassword,
+  uploadAuthThumbnail,
+} from '~/api'
 import {
   ICreateAuthRequest,
   IUpdateAuthAddressRequest,
@@ -8,15 +16,16 @@ import {
   IUpdateAuthPasswordRequest,
   IUpdateAuthProfileRequest,
 } from '~/types/request'
-import { IAuthResponse } from '~/types/response'
+import { IAuthResponse, IAuthThumbnailResponse } from '~/types/response'
 import {
   ICreateAuthInput,
   IUpdateAuthAddressInput,
   IUpdateAuthEmailInput,
   IUpdateAuthPasswordInput,
   IUpdateAuthProfileInput,
+  IUploadAuthThumbnailInput,
 } from '~/types/input'
-import { IAuthOutput } from '~/types/output'
+import { IAuthOutput, IAuthThumbnailOutput } from '~/types/output'
 import { GrpcError } from '~/types/exception'
 import { badRequest } from '~/lib/http-exception'
 
@@ -151,10 +160,27 @@ router.patch(
   }
 )
 
-router.post('/thumbnail', multer.single('thumbnail'), (req: Request, res: Response, next: NextFunction): void => {
-  // TODO: エラー処理
-  res.status(503).json({ file: req.file, body: req.body })
-})
+router.post(
+  '/thumbnail',
+  multer.single('thumbnail'),
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    if (!req.file) {
+      next(badRequest([{ message: 'thumbnail is not exists' }]))
+      return
+    }
+
+    const input: IUploadAuthThumbnailInput = {
+      path: req.file.path,
+    }
+
+    await uploadAuthThumbnail(req, input)
+      .then((output: IAuthThumbnailOutput) => {
+        const response: IAuthThumbnailResponse = { thumbnailUrl: output.thumbnailUrl }
+        res.status(200).json(response)
+      })
+      .catch((err: GrpcError) => next(err))
+  }
+)
 
 function setAuthResponse(output: IAuthOutput): IAuthResponse {
   const response: IAuthResponse = {

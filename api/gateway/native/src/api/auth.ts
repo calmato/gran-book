@@ -1,4 +1,6 @@
 import { Request } from 'express'
+import fs from 'fs'
+import { ClientWritableStream } from '@grpc/grpc-js'
 import { authClient } from '~/plugins/grpc'
 import { getGrpcError } from '~/lib/grpc-exception'
 import { getGrpcMetadata } from '~/lib/grpc-metadata'
@@ -10,6 +12,8 @@ import {
   UpdateAuthEmailRequest,
   UpdateAuthPasswordRequest,
   UpdateAuthProfileRequest,
+  UploadAuthThumbnailRequest,
+  AuthThumbnailResponse,
 } from '~/proto/user_apiv1_pb'
 import {
   ICreateAuthInput,
@@ -17,8 +21,9 @@ import {
   IUpdateAuthEmailInput,
   IUpdateAuthPasswordInput,
   IUpdateAuthProfileInput,
+  IUploadAuthThumbnailInput,
 } from '~/types/input'
-import { IAuthOutput } from '~/types/output'
+import { IAuthOutput, IAuthThumbnailOutput } from '~/types/output'
 
 export function getAuth(req: Request<any>): Promise<IAuthOutput> {
   const request = new EmptyUser()
@@ -138,6 +143,46 @@ export function updateAuthAddress(req: Request<any>, input: IUpdateAuthAddressIn
 
       resolve(setAuthOutput(res))
     })
+  })
+}
+
+export function uploadAuthThumbnail(
+  req: Request<any>,
+  input: IUploadAuthThumbnailInput
+): Promise<IAuthThumbnailOutput> {
+  const metadata = getGrpcMetadata(req)
+
+  return new Promise((resolve: (res: IAuthThumbnailOutput) => void, reject: (reason: Error) => void) => {
+    const call: ClientWritableStream<UploadAuthThumbnailRequest> = authClient.uploadAuthThumbnail(
+      metadata,
+      (err: any, res: AuthThumbnailResponse) => {
+        if (err) {
+          reject(getGrpcError(err))
+          return
+        }
+
+        const output: IAuthThumbnailOutput = {
+          thumbnailUrl: res.getThumbnailUrl(),
+        }
+
+        resolve(output)
+        return
+      }
+    )
+
+    const stream: fs.ReadStream = fs.createReadStream(input.path, { highWaterMark: 102400 })
+    let count = 0 // 読み込み回数
+
+    stream.on('data', (chunk: Buffer) => {
+      const request = new UploadAuthThumbnailRequest()
+      request.setThumbnail(chunk)
+      request.setPosition(count)
+
+      call.write(request)
+      count += 1
+    })
+
+    call.end()
   })
 }
 
