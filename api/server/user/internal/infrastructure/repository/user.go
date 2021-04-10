@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/base64"
 	"encoding/json"
+	"fmt"
 	"strings"
 	"time"
 
@@ -185,7 +186,7 @@ func (r *userRepository) CreateWithOAuth(ctx context.Context, u *user.User) erro
 		return exception.NotFound.New(err)
 	}
 
-	u.Username = au.UserInfo.DisplayName
+	u.Username = getUsername(au.UserInfo.DisplayName, u.ID)
 	u.Email = au.UserInfo.Email
 	u.ThumbnailURL = au.UserInfo.PhotoURL
 
@@ -335,4 +336,15 @@ func verifyToken(t *firebaseToken) error {
 	}
 
 	return nil
+}
+
+// OAuth認証による初回User登録時、UIDの先頭12文字を取得して作成
+// e.g.) 12345678-qwer-asdf-zxcv-uiophjklvbnm -> 12345678qwer
+func getUsername(displayName string, uid string) string {
+	if displayName != "" {
+		return displayName
+	}
+
+	str := strings.Replace(uid, "-", "", -1)
+	return fmt.Sprintf("user-%s", str[0:12])
 }
