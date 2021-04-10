@@ -6,6 +6,8 @@ import { AuthStackParamList } from '~/types/navigation';
 import HeaderWithCloseButton from '~/components/organisms/HeaderWithCloseButton';
 import SignInButtonGroup from '~/components/organisms/SingInButtonGroup';
 import TitleLogoText from '~/components/atoms/TitleLogoText';
+import * as WebBrowser from 'expo-web-browser';
+import * as Google from 'expo-auth-session/providers/google';
 
 type AuthSignInNavigationProp = StackNavigationProp<AuthStackParamList, 'SignUp'>;
 
@@ -27,8 +29,20 @@ interface Props {
   navigation: AuthSignInNavigationProp;
 }
 
+WebBrowser.maybeCompleteAuthSession();
+
 const SignInSelect = function SignInSelect(props: Props): ReactElement {
   const navigation = props.navigation;
+
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    expoClientId: 'GOOGLE_GUID.apps.googleusercontent.com',
+  });
+
+  React.useEffect(() => {
+    if (response?.type === 'success') {
+      const { authentication } = response;
+      }
+  }, [response]);
 
   return (
     <View style={styles.container}>
@@ -41,6 +55,7 @@ const SignInSelect = function SignInSelect(props: Props): ReactElement {
         </Text>
       </View>
       <SignInButtonGroup
+        handleSignInWithGoogle={() => promptAsync()}
         handleRegisterWithMail={() => navigation.navigate('SignUp')}
         handleSignInWithMail={() => navigation.navigate('SignIn')}
       />
