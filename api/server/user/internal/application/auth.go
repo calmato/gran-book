@@ -19,6 +19,7 @@ type AuthApplication interface {
 	UpdatePassword(ctx context.Context, in *input.UpdateAuthPassword, u *user.User) error
 	UpdateProfile(ctx context.Context, in *input.UpdateAuthProfile, u *user.User) error
 	UpdateAddress(ctx context.Context, in *input.UpdateAuthAddress, u *user.User) error
+	UploadThumbnail(ctx context.Context, in *input.UploadAuthThumbnail, u *user.User) (string, error)
 }
 
 type authApplication struct {
@@ -153,6 +154,17 @@ func (a *authApplication) UpdateAddress(ctx context.Context, in *input.UpdateAut
 	}
 
 	return a.userService.Update(ctx, u)
+}
+
+func (a *authApplication) UploadThumbnail(
+	ctx context.Context, in *input.UploadAuthThumbnail, u *user.User,
+) (string, error) {
+	err := a.authRequestValidation.UploadAuthThumbnail(in)
+	if err != nil {
+		return "", err
+	}
+
+	return a.userService.UploadThumbnail(ctx, u.ID, in.Thumbnail)
 }
 
 func (a *authApplication) getThumbnailURL(ctx context.Context, uid string, thumbnail string) (string, error) {
