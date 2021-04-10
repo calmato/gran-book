@@ -6,8 +6,14 @@ import { AuthStackParamList } from '~/types/navigation';
 import HeaderWithCloseButton from '~/components/organisms/HeaderWithCloseButton';
 import SignInButtonGroup from '~/components/organisms/SingInButtonGroup';
 import TitleLogoText from '~/components/atoms/TitleLogoText';
+import Firebase from 'firebase';
+import * as WebBrowser from 'expo-web-browser';
+import {useAuthRequest} from 'expo-auth-session/providers/facebook';
+import { ResponseType } from 'expo-auth-session';
 
 type AuthSignInNavigationProp = StackNavigationProp<AuthStackParamList, 'SignUp'>;
+
+WebBrowser.maybeCompleteAuthSession();
 
 const styles = StyleSheet.create({
   container: {
@@ -30,6 +36,21 @@ interface Props {
 const SignInSelect = function SignInSelect(props: Props): ReactElement {
   const navigation = props.navigation;
 
+  const [request, response, promptAsync] = useAuthRequest({
+    responseType: ResponseType.Token,
+    clientId: '254032153080907',
+  });
+
+  React.useEffect(() => {
+    if (response?.type === 'success') {
+      const { access_token } = response.params;
+      
+      const credential = Firebase.auth.FacebookAuthProvider.credential(access_token);
+      // Sign in with the credential from the Facebook user.
+      Firebase.auth().signInWithCredential(credential);
+    }
+  }, [response]);
+
   return (
     <View style={styles.container}>
       <HeaderWithCloseButton title="登録/サインイン" onPress={() => navigation.goBack()} />
@@ -41,6 +62,7 @@ const SignInSelect = function SignInSelect(props: Props): ReactElement {
         </Text>
       </View>
       <SignInButtonGroup
+        handleSignInWithFacebook={() => promptAsync()}
         handleRegisterWithMail={() => navigation.navigate('SignUp')}
         handleSignInWithMail={() => navigation.navigate('SignIn')}
       />
