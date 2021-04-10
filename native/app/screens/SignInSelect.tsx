@@ -8,6 +8,7 @@ import SignInButtonGroup from '~/components/organisms/SingInButtonGroup';
 import TitleLogoText from '~/components/atoms/TitleLogoText';
 import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
+import Firebase from 'firebase'
 
 type AuthSignInNavigationProp = StackNavigationProp<AuthStackParamList, 'SignUp'>;
 
@@ -34,14 +35,29 @@ WebBrowser.maybeCompleteAuthSession();
 const SignInSelect = function SignInSelect(props: Props): ReactElement {
   const navigation = props.navigation;
 
-  const [request, response, promptAsync] = Google.useAuthRequest({
-    expoClientId: 'GOOGLE_GUID.apps.googleusercontent.com',
-  });
+  const [_request, response, promptAsync] = Google.useIdTokenAuthRequest(
+    {
+      clientId: '711103859602-pl5m005fp0bhhum9lm99fgoinneaar7m.apps.googleusercontent.com',
+      },
+  );
+
+  const handleSignInWithGoogle = () => {
+    promptAsync()
+    .then(() => {
+      console.log('loggedIn')
+    })
+    .catch((err:Error) => {
+      console.log(err)
+    })
+  }
 
   React.useEffect(() => {
     if (response?.type === 'success') {
-      const { authentication } = response;
-      }
+      const { id_token } = response.params;
+      
+      const credential = Firebase.auth.GoogleAuthProvider.credential(id_token);
+      Firebase.auth().signInWithCredential(credential);
+    }
   }, [response]);
 
   return (
