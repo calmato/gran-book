@@ -198,6 +198,7 @@ export function getAuthAsync() {
         await LocalStorage.AuthStorage.save(auth);
       })
       .catch((err: Error) => {
+        console.log(err)
         throw err;
       });
   };
