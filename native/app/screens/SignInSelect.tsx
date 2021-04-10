@@ -10,8 +10,7 @@ import Firebase from 'firebase';
 import * as WebBrowser from 'expo-web-browser';
 import {useAuthRequest} from 'expo-auth-session/providers/facebook';
 import { ResponseType } from 'expo-auth-session';
-
-type AuthSignInNavigationProp = StackNavigationProp<AuthStackParamList, 'SignUp'>;
+import { useNavigation } from '@react-navigation/native';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -30,13 +29,15 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  navigation: AuthSignInNavigationProp;
+  actions: {
+    getAuth: () => Promise<void>;
+  };
 }
 
 const SignInSelect = function SignInSelect(props: Props): ReactElement {
-  const navigation = props.navigation;
+  const navigation = useNavigation();
 
-  const [request, response, promptAsync] = useAuthRequest({
+  const [_request, response, promptAsync] = useAuthRequest({
     responseType: ResponseType.Token,
     clientId: '254032153080907',
   });
