@@ -174,6 +174,29 @@ func (r *userRepository) Create(ctx context.Context, u *user.User) error {
 	return nil
 }
 
+func (r *userRepository) CreateWithOAuth(ctx context.Context, u *user.User) error {
+	au, err := r.auth.GetUserByUID(ctx, u.ID)
+	if err != nil {
+		return exception.NotFound.New(err)
+	}
+
+	if au.UserInfo == nil {
+		err = xerrors.New("UserInfo is not exists in Firebase Authentication")
+		return exception.NotFound.New(err)
+	}
+
+	u.Username = au.UserInfo.DisplayName
+	u.Email = au.UserInfo.Email
+	u.ThumbnailURL = au.UserInfo.PhotoURL
+
+	err = r.client.db.Create(&u).Error
+	if err != nil {
+		return exception.ErrorInOtherAPI.New(err)
+	}
+
+	return nil
+}
+
 func (r *userRepository) CreateRelationship(ctx context.Context, rs *user.Relationship) error {
 	err := r.client.db.Create(&rs).Error
 	if err != nil {
