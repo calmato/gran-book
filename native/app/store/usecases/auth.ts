@@ -337,3 +337,7 @@ export function profileEditAsync(
       });
   };
 }
+
+export const getMessageDocRef = async () => {
+  return await firebase.firestore().collection('messages').doc();
+};
