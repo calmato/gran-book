@@ -708,3 +708,43 @@ func TestAuthRequestValidation_UpdateAuthAddress(t *testing.T) {
 		})
 	}
 }
+
+func TestAuthRequestValidation_UploadAuthThumbnail(t *testing.T) {
+	testCases := map[string]struct {
+		Input    *input.UploadAuthThumbnail
+		Expected bool
+	}{
+		"ok": {
+			Input: &input.UploadAuthThumbnail{
+				Thumbnail: []byte("あいうえお"),
+			},
+			Expected: true,
+		},
+		"ng_thumbnail_required": {
+			Input: &input.UploadAuthThumbnail{
+				Thumbnail: nil,
+			},
+			Expected: false,
+		},
+	}
+
+	for result, tc := range testCases {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		t.Run(result, func(t *testing.T) {
+			target := NewAuthRequestValidation()
+
+			got := target.UploadAuthThumbnail(tc.Input)
+			if tc.Expected {
+				if got != nil {
+					t.Fatalf("Incorrect result: %#v", got)
+				}
+			} else {
+				if got == nil {
+					t.Fatalf("Incorrect result: result is nil")
+				}
+			}
+		})
+	}
+}
