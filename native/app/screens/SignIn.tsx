@@ -64,7 +64,7 @@ const SignIn = function SignIn(props: Props): ReactElement {
         setApplicationState(Status.AUTHORIZED);
       })
       .catch((err) => {
-        console.log(err)
+        console.log(err);
         createAlertNotifySignupError(err.code);
       });
   }, [formData.email, formData.password, signInWithEmail, getAuth, setApplicationState]);

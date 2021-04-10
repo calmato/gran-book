@@ -48,27 +48,27 @@ const SignInSelect = function SignInSelect(props: Props): ReactElement {
   });
 
   const createAlertNotifySignupError = (code: number) =>
-  Alert.alert('サインインに失敗', `${generateErrorMessage(code)}`, [
-    {
-      text: 'OK',
-    },
-  ]);
+    Alert.alert('サインインに失敗', `${generateErrorMessage(code)}`, [
+      {
+        text: 'OK',
+      },
+    ]);
 
   const handleSignInWithFacebook = () => {
     promptAsync()
-    .then(() => {
-      console.log('loggedIn')
-      return getAuth();
-    })
-    .then(() => {
-      console.log('gotAuth')
-      setApplicationState(Status.AUTHORIZED);
-    })
-    .catch((err) => {
-      console.log(err)
-      createAlertNotifySignupError(err.code)
-    });
-  }
+      .then(() => {
+        console.log('loggedIn');
+        return getAuth();
+      })
+      .then(() => {
+        console.log('gotAuth');
+        setApplicationState(Status.AUTHORIZED);
+      })
+      .catch((err) => {
+        console.log(err);
+        createAlertNotifySignupError(err.code);
+      });
+  };
 
   React.useEffect(() => {
     if (response?.type === 'success') {
