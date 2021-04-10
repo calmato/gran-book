@@ -157,16 +157,14 @@ export function uploadAuthThumbnail(
       metadata,
       (err: any, res: AuthThumbnailResponse) => {
         if (err) {
-          reject(getGrpcError(err))
-          return
+          return reject(getGrpcError(err))
         }
 
         const output: IAuthThumbnailOutput = {
           thumbnailUrl: res.getThumbnailUrl(),
         }
 
-        resolve(output)
-        return
+        return resolve(output)
       }
     )
 
@@ -182,7 +180,9 @@ export function uploadAuthThumbnail(
       count += 1
     })
 
-    call.end()
+    stream.on('end', () => {
+      call.end() // TODO: try-catchとかのエラー処理必要かも
+    })
   })
 }
 
