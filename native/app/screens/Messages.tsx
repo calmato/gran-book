@@ -20,13 +20,13 @@ export const MessagesScreen = () => {
   }, [formData.newText]);
 
   const sendMessage = async (value: string) => {
-    if (value != '') {
+    if (value !== '') {
       const docRef = await getMessageDocRef();
-      const newMessage = {
+      const newMessage: MessageForm = {
         newText: value,
         createdAt: firebase.firestore.Timestamp.now(),
         userId: ''
-      } as MessageForm;
+      };
       await docRef.set(newMessage);
     }
   };
