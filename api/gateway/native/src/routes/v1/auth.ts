@@ -6,7 +6,7 @@ import {
   updateAuthProfile,
   updateAuthAddress,
   updateAuthEmail,
-  UpdateAuthPassword,
+  updateAuthPassword,
   uploadAuthThumbnail,
 } from '~/api'
 import {
@@ -92,7 +92,7 @@ router.patch(
       passwordConfirmation,
     }
 
-    await UpdateAuthPassword(req, input)
+    await updateAuthPassword(req, input)
       .then((output: IAuthOutput) => {
         const response: IAuthResponse = setAuthResponse(output)
         res.status(200).json(response)
