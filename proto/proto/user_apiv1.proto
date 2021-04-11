@@ -11,6 +11,7 @@ service AuthService {
   rpc UpdateAuthProfile (UpdateAuthProfileRequest) returns (AuthResponse);
   rpc UpdateAuthAddress (UpdateAuthAddressRequest) returns (AuthResponse);
   rpc UploadAuthThumbnail (stream UploadAuthThumbnailRequest) returns (AuthThumbnailResponse);
+  rpc DeleteAuth (EmptyUser) returns (EmptyUser);
 }
 
 service AdminService {

@@ -24,6 +24,7 @@ type AuthServiceClient interface {
 	UpdateAuthProfile(ctx context.Context, in *UpdateAuthProfileRequest, opts ...grpc.CallOption) (*AuthResponse, error)
 	UpdateAuthAddress(ctx context.Context, in *UpdateAuthAddressRequest, opts ...grpc.CallOption) (*AuthResponse, error)
 	UploadAuthThumbnail(ctx context.Context, opts ...grpc.CallOption) (AuthService_UploadAuthThumbnailClient, error)
+	DeleteAuth(ctx context.Context, in *EmptyUser, opts ...grpc.CallOption) (*EmptyUser, error)
 }
 
 type authServiceClient struct {
@@ -122,6 +123,15 @@ func (x *authServiceUploadAuthThumbnailClient) CloseAndRecv() (*AuthThumbnailRes
 	return m, nil
 }
 
+func (c *authServiceClient) DeleteAuth(ctx context.Context, in *EmptyUser, opts ...grpc.CallOption) (*EmptyUser, error) {
+	out := new(EmptyUser)
+	err := c.cc.Invoke(ctx, "/proto.AuthService/DeleteAuth", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuthServiceServer is the server API for AuthService service.
 // All implementations must embed UnimplementedAuthServiceServer
 // for forward compatibility
@@ -133,6 +143,7 @@ type AuthServiceServer interface {
 	UpdateAuthProfile(context.Context, *UpdateAuthProfileRequest) (*AuthResponse, error)
 	UpdateAuthAddress(context.Context, *UpdateAuthAddressRequest) (*AuthResponse, error)
 	UploadAuthThumbnail(AuthService_UploadAuthThumbnailServer) error
+	DeleteAuth(context.Context, *EmptyUser) (*EmptyUser, error)
 	mustEmbedUnimplementedAuthServiceServer()
 }
 
@@ -160,6 +171,9 @@ func (UnimplementedAuthServiceServer) UpdateAuthAddress(context.Context, *Update
 }
 func (UnimplementedAuthServiceServer) UploadAuthThumbnail(AuthService_UploadAuthThumbnailServer) error {
 	return status.Errorf(codes.Unimplemented, "method UploadAuthThumbnail not implemented")
+}
+func (UnimplementedAuthServiceServer) DeleteAuth(context.Context, *EmptyUser) (*EmptyUser, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteAuth not implemented")
 }
 func (UnimplementedAuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {}
 
@@ -308,6 +322,24 @@ func (x *authServiceUploadAuthThumbnailServer) Recv() (*UploadAuthThumbnailReque
 	return m, nil
 }
 
+func _AuthService_DeleteAuth_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EmptyUser)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).DeleteAuth(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.AuthService/DeleteAuth",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).DeleteAuth(ctx, req.(*EmptyUser))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _AuthService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "proto.AuthService",
 	HandlerType: (*AuthServiceServer)(nil),
@@ -335,6 +367,10 @@ var _AuthService_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateAuthAddress",
 			Handler:    _AuthService_UpdateAuthAddress_Handler,
+		},
+		{
+			MethodName: "DeleteAuth",
+			Handler:    _AuthService_DeleteAuth_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

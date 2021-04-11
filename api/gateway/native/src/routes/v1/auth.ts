@@ -8,6 +8,7 @@ import {
   updateAuthEmail,
   updateAuthPassword,
   uploadAuthThumbnail,
+  deleteAuth,
 } from '~/api'
 import {
   ICreateAuthRequest,
@@ -59,6 +60,17 @@ router.post(
       .then((output: IAuthOutput) => {
         const response: IAuthResponse = setAuthResponse(output)
         res.status(200).json(response)
+      })
+      .catch((err: GrpcError) => next(err))
+  }
+)
+
+router.delete(
+  '/',
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    await deleteAuth(req)
+      .then(() => {
+        res.status(200).json({ message: 'ok' })
       })
       .catch((err: GrpcError) => next(err))
   }

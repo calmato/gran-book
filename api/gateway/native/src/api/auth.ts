@@ -186,6 +186,22 @@ export function uploadAuthThumbnail(
   })
 }
 
+export function deleteAuth(req: Request<any>): Promise<void> {
+  const request = new EmptyUser()
+  const metadata = getGrpcMetadata(req)
+
+  return new Promise((resolve: () => void, reject: (reason: Error) => void) => {
+    authClient.deleteAuth(request, metadata, (err: any) => {
+      if (err) {
+        reject(getGrpcError(err))
+        return
+      }
+
+      resolve()
+    })
+  })
+}
+
 function setAuthOutput(res: AuthResponse): IAuthOutput {
   const output: IAuthOutput = {
     id: res.getId(),
