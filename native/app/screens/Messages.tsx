@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, SafeAreaView, TextInput, Alert } from 'react-native';
+import { View, StyleSheet, SafeAreaView, TextInput, Text } from 'react-native';
 import { StatusBar as ExpoStatusBar } from 'expo-status-bar';
 import firebase from '~/lib/firebase';
 import { getMessageDocRef } from '~/store/usecases/auth';
@@ -15,7 +15,7 @@ export const MessagesScreen = () => {
     userId: '',
   });
 
-  const postalCheck: boolean = useMemo((): boolean => {
+  const canSubmit: boolean = useMemo((): boolean => {
     return formData.newText.length > 0;
   }, [formData.newText]);
 
@@ -51,7 +51,7 @@ export const MessagesScreen = () => {
           name="send"
           size={24}
           color={COLOR.PRIMARY}
-          disabled={!postalCheck}
+          disabled={!canSubmit}
           onPress={() => {
             sendMessage(formData.newText);
           }}
