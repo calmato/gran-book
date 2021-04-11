@@ -180,7 +180,6 @@ function setAdminOutput(res: AdminResponse): IAdminOutput {
     firstName: res.getFirstName(),
     lastNameKana: res.getLastNameKana(),
     firstNameKana: res.getFirstNameKana(),
-    activated: res.getActivated(),
     createdAt: res.getCreatedAt(),
     updatedAt: res.getUpdatedAt(),
   }
@@ -202,7 +201,6 @@ function setAdminListOutput(res: AdminListResponse): IAdminListOutput {
       firstName: u.getFirstName(),
       lastNameKana: u.getLastNameKana(),
       firstNameKana: u.getFirstNameKana(),
-      activated: u.getActivated(),
       createdAt: u.getCreatedAt(),
       updatedAt: u.getUpdatedAt(),
     })
