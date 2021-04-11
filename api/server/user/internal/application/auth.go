@@ -41,11 +41,26 @@ func (a *authApplication) Authentication(ctx context.Context) (*user.User, error
 	}
 
 	u, err := a.userService.Show(ctx, uid)
-	if err != nil {
-		return nil, exception.ErrorInDatastore.New(err)
+	if err == nil {
+		return u, nil
 	}
 
-	return u, nil
+	// err: Auth APIにはデータがあるが、User DBにはレコードがない
+	// -> Auth APIのデータを基にUser DBに登録
+	ou := &user.User{
+		ID:        uid,
+		Gender:    0,
+		Role:      user.UserRole,
+		Activated: true,
+	}
+
+	// TODO: domain validation
+	err = a.userService.CreateWithOAuth(ctx, ou)
+	if err != nil {
+		return nil, err
+	}
+
+	return ou, nil
 }
 
 func (a *authApplication) Create(ctx context.Context, in *input.CreateAuth) (*user.User, error) {
