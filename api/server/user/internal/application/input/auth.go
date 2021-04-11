@@ -23,7 +23,7 @@ type UpdateAuthPassword struct {
 type UpdateAuthProfile struct {
 	Username         string `json:"username" validate:"required,max=32"`
 	Gender           int    `json:"gender" validate:"gte=0,lte=2"`
-	Thumbnail        string `json:"thumbnail"`
+	ThumbnailURL     string `json:"thumbnailUrl"`
 	SelfIntroduction string `json:"selfIntroduction" validate:"max=256"`
 }
 
