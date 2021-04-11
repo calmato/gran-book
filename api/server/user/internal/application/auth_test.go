@@ -409,8 +409,7 @@ func TestAuthApplication_Delete(t *testing.T) {
 		arvm := mock_validation.NewMockAuthRequestValidation(ctrl)
 
 		usm := mock_user.NewMockService(ctrl)
-		usm.EXPECT().Validation(ctx, tc.User).Return(tc.Expected)
-		usm.EXPECT().Update(ctx, tc.User).Return(tc.Expected)
+		usm.EXPECT().Delete(ctx, tc.User.ID).Return(tc.Expected)
 
 		t.Run(result, func(t *testing.T) {
 			target := NewAuthApplication(arvm, usm)
