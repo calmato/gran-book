@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, SafeAreaView, TextInput, Button, Alert } from 'react-native';
+import { View, StyleSheet, SafeAreaView, TextInput, Alert } from 'react-native';
 import { StatusBar as ExpoStatusBar } from 'expo-status-bar';
 import firebase from '~/lib/firebase';
 import { getMessageDocRef } from '~/store/usecases/auth';
@@ -27,7 +27,7 @@ export const MessagesScreen = () => {
         createdAt: firebase.firestore.Timestamp.now(),
         userId: ''
       };
-      await docRef.set(newMessage);
+      await docRef.add(newMessage)
     }
   };
 
