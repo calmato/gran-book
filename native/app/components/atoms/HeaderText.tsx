@@ -1,26 +1,28 @@
 import React, { ReactElement } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import { colors } from 'react-native-elements';
+import { COLOR } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
   textStyle: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: colors.white,
+    color: COLOR.TEXT_TITLE,
   },
   layout: {
-    justifyContent: 'center'
-  }
+    justifyContent: 'center',
+  },
 });
 
 interface Props {
-  title: string
+  title: string;
 }
 
 const HeaderText = function HeaderText(props: Props): ReactElement {
   return (
     <View style={styles.layout}>
-      <Text style={styles.textStyle}>{props.title}</Text>
+      <Text style={styles.textStyle} numberOfLines={1}>
+        {props.title}
+      </Text>
     </View>
   );
 };
