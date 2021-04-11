@@ -35,7 +35,7 @@ const SearchResult = function SearchResult(props: Props): ReactElement {
   return (
     <View>
       <HeaderWithBackButton onPress={() => navigation.goBack()} title={keyword} />
-      <Text style={styles.totalItemsTextStyle}>検索結果：{results.totalItems}件</Text>
+      <Text style={styles.totalItemsTextStyle}>検索結果：{results.hits}件</Text>
       <ScrollView style={{ marginBottom: 'auto' }}>
         <SearchResultItemList results={results} onPress={selectBook} />
       </ScrollView>

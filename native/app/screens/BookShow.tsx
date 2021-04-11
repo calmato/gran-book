@@ -63,7 +63,7 @@ const BookShow = function BookShow(props: Props): ReactElement {
 
   return (
     <View>
-      <HeaderWithBackButton onPress={() => navigation.goBack()} title={book.volumeInfo.title} />
+      <HeaderWithBackButton onPress={() => navigation.goBack()} title={book.title} />
       <ScrollView contentContainerStyle={styles.container} style={{ marginBottom: 'auto' }}>
         <View
           style={{
@@ -76,8 +76,8 @@ const BookShow = function BookShow(props: Props): ReactElement {
           <Image
             // TODO 本の情報を代入
             source={
-              book.volumeInfo?.imageLinks?.smallThumbnail
-                ? { uri: book.volumeInfo?.imageLinks?.thumbnail }
+              book.largeImageUrl
+                ? { uri: book.largeImageUrl }
                 : require('assets/logo.png')
             }
             style={styles.imageContainer}
@@ -85,17 +85,17 @@ const BookShow = function BookShow(props: Props): ReactElement {
           />
           <MaterialCommunityIcons name="chevron-right-circle" size={36} color={COLOR.TEXT_GRAY} />
         </View>
-        <Text style={styles.titleContainer}>題名: {book.volumeInfo.title}</Text>
+        <Text style={styles.titleContainer}>題名: {book.title}</Text>
         <Text style={styles.authorContainer}>
           著者:{' '}
-          {book.volumeInfo?.authors ? book.volumeInfo?.authors.join(' ') : '著者情報がありません'}
+          {book.author ? book.author : '著者情報がありません'}
         </Text>
         <Text style={styles.detailContainer}>本の詳細</Text>
-        <Text>{book.volumeInfo.description}</Text>
+        <Text>{book.contents}</Text>
         <FlexBoxBookCategory
           category={
-            book.volumeInfo.categories
-              ? book.volumeInfo.categories.join(' ')
+            book.booksGenreId
+              ? book.booksGenreId
               : 'カテゴリ情報がありません'
           }
         />
@@ -108,7 +108,7 @@ const BookShow = function BookShow(props: Props): ReactElement {
         />
         <Button
           onPress={() => undefined}
-          title="Amazonで見る"
+          title="楽天で見る"
           containerStyle={{ marginTop: 10, marginBottom: 10 }}
           buttonStyle={{ backgroundColor: COLOR.PRIMARY_DARK }}
         />
