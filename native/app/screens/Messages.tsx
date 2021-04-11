@@ -25,7 +25,7 @@ export const MessagesScreen = () => {
       const newMessage: MessageForm = {
         newText: value,
         createdAt: firebase.firestore.Timestamp.now(),
-        userId: ''
+        userId: '',
       };
       await docRef.add(newMessage);
     }
@@ -48,14 +48,16 @@ export const MessagesScreen = () => {
           returnKeyType="done"
         />
         <Ionicons
-          name="send" size={24} color={COLOR.PRIMARY}
+          name="send"
+          size={24}
+          color={COLOR.PRIMARY}
           disabled={!postalCheck}
           onPress={() => {
             sendMessage(formData.newText);
           }}
         />
       </View>
-    </SafeAreaView >
+    </SafeAreaView>
   );
 };
 
@@ -64,12 +66,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLOR.BACKGROUND_WHITE,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   inputTextContainer: {
     width: '100%',
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   inputText: {
     color: COLOR.TEXT_DEFAULT,
@@ -79,8 +81,6 @@ const styles = StyleSheet.create({
     height: 32,
     flex: 1,
     borderRadius: 5,
-    paddingHorizontal: 10
-
-  }
+    paddingHorizontal: 10,
+  },
 });
-
