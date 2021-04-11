@@ -18,6 +18,7 @@ type AuthApplication interface {
 	UpdateProfile(ctx context.Context, in *input.UpdateAuthProfile, u *user.User) error
 	UpdateAddress(ctx context.Context, in *input.UpdateAuthAddress, u *user.User) error
 	UploadThumbnail(ctx context.Context, in *input.UploadAuthThumbnail, u *user.User) (string, error)
+	Delete(ctx context.Context, u *user.User) error
 }
 
 type authApplication struct {
@@ -170,4 +171,15 @@ func (a *authApplication) UploadThumbnail(
 	}
 
 	return a.userService.UploadThumbnail(ctx, u.ID, in.Thumbnail)
+}
+
+func (a *authApplication) Delete(ctx context.Context, u *user.User) error {
+	u.Activated = false
+
+	err := a.userService.Validation(ctx, u)
+	if err != nil {
+		return err
+	}
+
+	return a.userService.Update(ctx, u)
 }

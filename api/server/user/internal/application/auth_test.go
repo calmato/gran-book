@@ -387,3 +387,41 @@ func TestAuthApplication_UploadThumbnail(t *testing.T) {
 		})
 	}
 }
+
+func TestAuthApplication_Delete(t *testing.T) {
+	testCases := map[string]struct {
+		User     *user.User
+		Expected error
+	}{
+		"ok": {
+			User: &user.User{
+				ID: "00000000-0000-0000-0000-000000000000",
+			},
+			Expected: nil,
+		},
+	}
+
+	for result, tc := range testCases {
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		arvm := mock_validation.NewMockAuthRequestValidation(ctrl)
+
+		usm := mock_user.NewMockService(ctrl)
+		usm.EXPECT().Validation(ctx, tc.User).Return(tc.Expected)
+		usm.EXPECT().Update(ctx, tc.User).Return(tc.Expected)
+
+		t.Run(result, func(t *testing.T) {
+			target := NewAuthApplication(arvm, usm)
+
+			err := target.Delete(ctx, tc.User)
+			if !reflect.DeepEqual(err, tc.Expected.Error) {
+				t.Fatalf("want %#v, but %#v", tc.Expected, err)
+				return
+			}
+		})
+	}
+}
