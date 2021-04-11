@@ -20,3 +20,7 @@ export interface IAuthOutput {
   createdAt: string
   updatedAt: string
 }
+
+export interface IAuthThumbnailOutput {
+  thumbnailUrl: string
+}
