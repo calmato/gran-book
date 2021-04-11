@@ -10,6 +10,7 @@ service AuthService {
   rpc UpdateAuthPassword (UpdateAuthPasswordRequest) returns (AuthResponse);
   rpc UpdateAuthProfile (UpdateAuthProfileRequest) returns (AuthResponse);
   rpc UpdateAuthAddress (UpdateAuthAddressRequest) returns (AuthResponse);
+  rpc DeleteAuth (EmptyUser) returns (EmptyUser);
 }
 
 service AdminService {

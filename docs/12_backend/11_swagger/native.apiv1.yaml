@@ -52,6 +52,25 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorResponse'
+    delete:
+      summary: ユーザ退会
+      tags:
+        - AuthService
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
   /v1/auth/email:
     patch:
       summary: メールアドレス更新
@@ -671,6 +690,8 @@ components:
         readOn:
           type: string
     # Response
+    emptyResponse:
+      type: object
     authResponse:
       type: object
       properties:

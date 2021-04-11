@@ -336,6 +336,17 @@ var AuthServiceService = exports.AuthServiceService = {
     responseSerialize: serialize_proto_AuthResponse,
     responseDeserialize: deserialize_proto_AuthResponse,
   },
+  deleteAuth: {
+    path: '/proto.AuthService/DeleteAuth',
+    requestStream: false,
+    responseStream: false,
+    requestType: proto_user_apiv1_pb.EmptyUser,
+    responseType: proto_user_apiv1_pb.EmptyUser,
+    requestSerialize: serialize_proto_EmptyUser,
+    requestDeserialize: deserialize_proto_EmptyUser,
+    responseSerialize: serialize_proto_EmptyUser,
+    responseDeserialize: deserialize_proto_EmptyUser,
+  },
 };
 
 exports.AuthServiceClient = grpc.makeGenericClientConstructor(AuthServiceService);
