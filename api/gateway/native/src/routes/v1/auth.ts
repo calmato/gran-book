@@ -104,12 +104,12 @@ router.patch(
 router.patch(
   '/profile',
   async (req: Request<IUpdateAuthProfileRequest>, res: Response<IAuthResponse>, next: NextFunction): Promise<void> => {
-    const { username, gender, thumbnail, selfIntroduction } = req.body as IUpdateAuthProfileRequest
+    const { username, gender, thumbnailUrl, selfIntroduction } = req.body as IUpdateAuthProfileRequest
 
     const input: IUpdateAuthProfileInput = {
       username,
       gender,
-      thumbnail,
+      thumbnailUrl,
       selfIntroduction,
     }
 

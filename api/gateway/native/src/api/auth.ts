@@ -104,7 +104,7 @@ export function updateAuthProfile(req: Request<any>, input: IUpdateAuthProfileIn
 
   request.setUsername(input.username)
   request.setGender(input.gender)
-  request.setThumbnail(input.thumbnail)
+  request.setThumbnailUrl(input.thumbnailUrl)
   request.setSelfIntroduction(input.selfIntroduction)
 
   return new Promise((resolve: (res: IAuthOutput) => void, reject: (reason: Error) => void) => {
