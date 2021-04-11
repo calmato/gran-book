@@ -22,6 +22,7 @@ type Service interface {
 	CreateRelationship(ctx context.Context, r *Relationship) error
 	Update(ctx context.Context, u *User) error
 	UpdatePassword(ctx context.Context, uid string, password string) error
+	Delete(ctx context.Context, uid string) error
 	DeleteRelationship(ctx context.Context, id int) error
 	UploadThumbnail(ctx context.Context, uid string, thumbnail []byte) (string, error)
 	IsFriend(ctx context.Context, friendID string, uid string) (bool, bool)

@@ -174,12 +174,5 @@ func (a *authApplication) UploadThumbnail(
 }
 
 func (a *authApplication) Delete(ctx context.Context, u *user.User) error {
-	u.Activated = false
-
-	err := a.userService.Validation(ctx, u)
-	if err != nil {
-		return err
-	}
-
-	return a.userService.Update(ctx, u)
+	return a.userService.Delete(ctx, u.ID)
 }
