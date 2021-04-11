@@ -607,7 +607,7 @@ components:
         gender:
           type: integer
           format: int32
-        thumbnail:
+        thumbnailUrl:
           type: string
           format: byte
         selfIntroduction:
