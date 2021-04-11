@@ -33,6 +33,7 @@ const googleDeserializeMap = {
 
 interface ServiceError {
   code: number
+  details: string
   metadata?: Metadata
 }
 
@@ -99,7 +100,7 @@ export function getGrpcError(err: ServiceError): GrpcError {
 
     return new GrpcError(status.getCode(), getErrorDetails(details))
   } else {
-    return new GrpcError(err.code)
+    return new GrpcError(err.code, [{ details: err.details }])
   }
 }
 /* eslint-enable */

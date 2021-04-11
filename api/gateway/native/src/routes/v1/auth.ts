@@ -1,5 +1,15 @@
 import express, { NextFunction, Request, Response } from 'express'
-import { getAuth, createAuth, updateAuthProfile, updateAuthAddress, updateAuthEmail, UpdateAuthPassword, deleteAuth } from '~/api'
+import multer from '~/plugins/multer'
+import {
+  getAuth,
+  createAuth,
+  updateAuthProfile,
+  updateAuthAddress,
+  updateAuthEmail,
+  UpdateAuthPassword,
+  uploadAuthThumbnail,
+  deleteAuth,
+} from '~/api'
 import {
   ICreateAuthRequest,
   IUpdateAuthAddressRequest,
@@ -7,16 +17,18 @@ import {
   IUpdateAuthPasswordRequest,
   IUpdateAuthProfileRequest,
 } from '~/types/request'
-import { IAuthResponse } from '~/types/response'
+import { IAuthResponse, IAuthThumbnailResponse } from '~/types/response'
 import {
   ICreateAuthInput,
   IUpdateAuthAddressInput,
   IUpdateAuthEmailInput,
   IUpdateAuthPasswordInput,
   IUpdateAuthProfileInput,
+  IUploadAuthThumbnailInput,
 } from '~/types/input'
-import { IAuthOutput } from '~/types/output'
+import { IAuthOutput, IAuthThumbnailOutput } from '~/types/output'
 import { GrpcError } from '~/types/exception'
+import { badRequest } from '~/lib/http-exception'
 
 const router = express.Router()
 
@@ -154,6 +166,28 @@ router.patch(
     await updateAuthAddress(req, input)
       .then((output: IAuthOutput) => {
         const response: IAuthResponse = setAuthResponse(output)
+        res.status(200).json(response)
+      })
+      .catch((err: GrpcError) => next(err))
+  }
+)
+
+router.post(
+  '/thumbnail',
+  multer.single('thumbnail'),
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    if (!req.file) {
+      next(badRequest([{ message: 'thumbnail is not exists' }]))
+      return
+    }
+
+    const input: IUploadAuthThumbnailInput = {
+      path: req.file.path,
+    }
+
+    await uploadAuthThumbnail(req, input)
+      .then((output: IAuthThumbnailOutput) => {
+        const response: IAuthThumbnailResponse = { thumbnailUrl: output.thumbnailUrl }
         res.status(200).json(response)
       })
       .catch((err: GrpcError) => next(err))

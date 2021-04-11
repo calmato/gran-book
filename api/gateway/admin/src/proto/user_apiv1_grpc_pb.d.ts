@@ -15,6 +15,7 @@ interface IAuthServiceService extends grpc.ServiceDefinition<grpc.UntypedService
     updateAuthPassword: IAuthServiceService_IUpdateAuthPassword;
     updateAuthProfile: IAuthServiceService_IUpdateAuthProfile;
     updateAuthAddress: IAuthServiceService_IUpdateAuthAddress;
+    uploadAuthThumbnail: IAuthServiceService_IUploadAuthThumbnail;
     deleteAuth: IAuthServiceService_IDeleteAuth;
 }
 
@@ -72,6 +73,15 @@ interface IAuthServiceService_IUpdateAuthAddress extends grpc.MethodDefinition<p
     responseSerialize: grpc.serialize<proto_user_apiv1_pb.AuthResponse>;
     responseDeserialize: grpc.deserialize<proto_user_apiv1_pb.AuthResponse>;
 }
+interface IAuthServiceService_IUploadAuthThumbnail extends grpc.MethodDefinition<proto_user_apiv1_pb.UploadAuthThumbnailRequest, proto_user_apiv1_pb.AuthThumbnailResponse> {
+    path: "/proto.AuthService/UploadAuthThumbnail";
+    requestStream: true;
+    responseStream: false;
+    requestSerialize: grpc.serialize<proto_user_apiv1_pb.UploadAuthThumbnailRequest>;
+    requestDeserialize: grpc.deserialize<proto_user_apiv1_pb.UploadAuthThumbnailRequest>;
+    responseSerialize: grpc.serialize<proto_user_apiv1_pb.AuthThumbnailResponse>;
+    responseDeserialize: grpc.deserialize<proto_user_apiv1_pb.AuthThumbnailResponse>;
+}
 interface IAuthServiceService_IDeleteAuth extends grpc.MethodDefinition<proto_user_apiv1_pb.EmptyUser, proto_user_apiv1_pb.EmptyUser> {
     path: "/proto.AuthService/DeleteAuth";
     requestStream: false;
@@ -91,6 +101,7 @@ export interface IAuthServiceServer extends grpc.UntypedServiceImplementation {
     updateAuthPassword: grpc.handleUnaryCall<proto_user_apiv1_pb.UpdateAuthPasswordRequest, proto_user_apiv1_pb.AuthResponse>;
     updateAuthProfile: grpc.handleUnaryCall<proto_user_apiv1_pb.UpdateAuthProfileRequest, proto_user_apiv1_pb.AuthResponse>;
     updateAuthAddress: grpc.handleUnaryCall<proto_user_apiv1_pb.UpdateAuthAddressRequest, proto_user_apiv1_pb.AuthResponse>;
+    uploadAuthThumbnail: handleClientStreamingCall<proto_user_apiv1_pb.UploadAuthThumbnailRequest, proto_user_apiv1_pb.AuthThumbnailResponse>;
     deleteAuth: grpc.handleUnaryCall<proto_user_apiv1_pb.EmptyUser, proto_user_apiv1_pb.EmptyUser>;
 }
 
@@ -113,6 +124,10 @@ export interface IAuthServiceClient {
     updateAuthAddress(request: proto_user_apiv1_pb.UpdateAuthAddressRequest, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AuthResponse) => void): grpc.ClientUnaryCall;
     updateAuthAddress(request: proto_user_apiv1_pb.UpdateAuthAddressRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AuthResponse) => void): grpc.ClientUnaryCall;
     updateAuthAddress(request: proto_user_apiv1_pb.UpdateAuthAddressRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AuthResponse) => void): grpc.ClientUnaryCall;
+    uploadAuthThumbnail(callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AuthThumbnailResponse) => void): grpc.ClientWritableStream<proto_user_apiv1_pb.UploadAuthThumbnailRequest>;
+    uploadAuthThumbnail(metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AuthThumbnailResponse) => void): grpc.ClientWritableStream<proto_user_apiv1_pb.UploadAuthThumbnailRequest>;
+    uploadAuthThumbnail(options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AuthThumbnailResponse) => void): grpc.ClientWritableStream<proto_user_apiv1_pb.UploadAuthThumbnailRequest>;
+    uploadAuthThumbnail(metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AuthThumbnailResponse) => void): grpc.ClientWritableStream<proto_user_apiv1_pb.UploadAuthThumbnailRequest>;
     deleteAuth(request: proto_user_apiv1_pb.EmptyUser, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.EmptyUser) => void): grpc.ClientUnaryCall;
     deleteAuth(request: proto_user_apiv1_pb.EmptyUser, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.EmptyUser) => void): grpc.ClientUnaryCall;
     deleteAuth(request: proto_user_apiv1_pb.EmptyUser, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.EmptyUser) => void): grpc.ClientUnaryCall;
@@ -138,6 +153,10 @@ export class AuthServiceClient extends grpc.Client implements IAuthServiceClient
     public updateAuthAddress(request: proto_user_apiv1_pb.UpdateAuthAddressRequest, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AuthResponse) => void): grpc.ClientUnaryCall;
     public updateAuthAddress(request: proto_user_apiv1_pb.UpdateAuthAddressRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AuthResponse) => void): grpc.ClientUnaryCall;
     public updateAuthAddress(request: proto_user_apiv1_pb.UpdateAuthAddressRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AuthResponse) => void): grpc.ClientUnaryCall;
+    public uploadAuthThumbnail(callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AuthThumbnailResponse) => void): grpc.ClientWritableStream<proto_user_apiv1_pb.UploadAuthThumbnailRequest>;
+    public uploadAuthThumbnail(metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AuthThumbnailResponse) => void): grpc.ClientWritableStream<proto_user_apiv1_pb.UploadAuthThumbnailRequest>;
+    public uploadAuthThumbnail(options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AuthThumbnailResponse) => void): grpc.ClientWritableStream<proto_user_apiv1_pb.UploadAuthThumbnailRequest>;
+    public uploadAuthThumbnail(metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AuthThumbnailResponse) => void): grpc.ClientWritableStream<proto_user_apiv1_pb.UploadAuthThumbnailRequest>;
     public deleteAuth(request: proto_user_apiv1_pb.EmptyUser, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.EmptyUser) => void): grpc.ClientUnaryCall;
     public deleteAuth(request: proto_user_apiv1_pb.EmptyUser, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.EmptyUser) => void): grpc.ClientUnaryCall;
     public deleteAuth(request: proto_user_apiv1_pb.EmptyUser, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.EmptyUser) => void): grpc.ClientUnaryCall;

@@ -192,6 +192,33 @@ export namespace UpdateAuthAddressRequest {
     }
 }
 
+export class UploadAuthThumbnailRequest extends jspb.Message { 
+    getThumbnail(): Uint8Array | string;
+    getThumbnail_asU8(): Uint8Array;
+    getThumbnail_asB64(): string;
+    setThumbnail(value: Uint8Array | string): UploadAuthThumbnailRequest;
+
+    getPosition(): number;
+    setPosition(value: number): UploadAuthThumbnailRequest;
+
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): UploadAuthThumbnailRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: UploadAuthThumbnailRequest): UploadAuthThumbnailRequest.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: UploadAuthThumbnailRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): UploadAuthThumbnailRequest;
+    static deserializeBinaryFromReader(message: UploadAuthThumbnailRequest, reader: jspb.BinaryReader): UploadAuthThumbnailRequest;
+}
+
+export namespace UploadAuthThumbnailRequest {
+    export type AsObject = {
+        thumbnail: Uint8Array | string,
+        position: number,
+    }
+}
+
 export class ListAdminRequest extends jspb.Message { 
     getLimit(): number;
     setLimit(value: number): ListAdminRequest;
@@ -730,6 +757,27 @@ export namespace AuthResponse {
         activated: boolean,
         createdAt: string,
         updatedAt: string,
+    }
+}
+
+export class AuthThumbnailResponse extends jspb.Message { 
+    getThumbnailUrl(): string;
+    setThumbnailUrl(value: string): AuthThumbnailResponse;
+
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): AuthThumbnailResponse.AsObject;
+    static toObject(includeInstance: boolean, msg: AuthThumbnailResponse): AuthThumbnailResponse.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: AuthThumbnailResponse, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): AuthThumbnailResponse;
+    static deserializeBinaryFromReader(message: AuthThumbnailResponse, reader: jspb.BinaryReader): AuthThumbnailResponse;
+}
+
+export namespace AuthThumbnailResponse {
+    export type AsObject = {
+        thumbnailUrl: string,
     }
 }
 

@@ -175,6 +175,36 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorResponse'
+  /v1/auth/thumbnail:
+    post:
+      summary: サムネイルアップロード
+      tags:
+        - AuthService
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                thumbnail:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/authThumbnailResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
   /v1/users/{userId}/profile:
     get:
       summary: ユーザプロフィール取得
@@ -734,6 +764,11 @@ components:
         createdAt:
           type: string
         updatedAt:
+          type: string
+    authThumbnailResponse:
+      type: object
+      properties:
+        thumbnailUrl:
           type: string
     userProfileResponse:
       type: object
