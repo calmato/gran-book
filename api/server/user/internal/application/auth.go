@@ -41,11 +41,26 @@ func (a *authApplication) Authentication(ctx context.Context) (*user.User, error
 	}
 
 	u, err := a.userService.Show(ctx, uid)
-	if err != nil {
-		return nil, exception.ErrorInDatastore.New(err)
+	if err == nil {
+		return u, nil
 	}
 
-	return u, nil
+	// err: Auth APIにはデータがあるが、User DBにはレコードがない
+	// -> Auth APIのデータを基にUser DBに登録
+	ou := &user.User{
+		ID:        uid,
+		Gender:    0,
+		Role:      user.UserRole,
+		Activated: true,
+	}
+
+	// TODO: domain validation
+	err = a.userService.CreateWithOAuth(ctx, ou)
+	if err != nil {
+		return nil, err
+	}
+
+	return ou, nil
 }
 
 func (a *authApplication) Create(ctx context.Context, in *input.CreateAuth) (*user.User, error) {
@@ -63,6 +78,11 @@ func (a *authApplication) Create(ctx context.Context, in *input.CreateAuth) (*us
 		Activated: true,
 	}
 
+	err = a.userService.Validation(ctx, u)
+	if err != nil {
+		return nil, err
+	}
+
 	err = a.userService.Create(ctx, u)
 	if err != nil {
 		return nil, err
@@ -78,6 +98,11 @@ func (a *authApplication) UpdateEmail(ctx context.Context, in *input.UpdateAuthE
 	}
 
 	u.Email = strings.ToLower(in.Email)
+
+	err = a.userService.Validation(ctx, u)
+	if err != nil {
+		return err
+	}
 
 	return a.userService.Update(ctx, u)
 }
@@ -104,8 +129,17 @@ func (a *authApplication) UpdateProfile(ctx context.Context, in *input.UpdateAut
 
 	u.Username = in.Username
 	u.Gender = in.Gender
-	u.ThumbnailURL = thumbnailURL
 	u.SelfIntroduction = in.SelfIntroduction
+
+	// TODO: 古いサムネイルを消す処理を挟みたい
+	if thumbnailURL != "" {
+		u.ThumbnailURL = thumbnailURL
+	}
+
+	err = a.userService.Validation(ctx, u)
+	if err != nil {
+		return err
+	}
 
 	return a.userService.Update(ctx, u)
 }
@@ -127,6 +161,11 @@ func (a *authApplication) UpdateAddress(ctx context.Context, in *input.UpdateAut
 	u.City = in.City
 	u.AddressLine1 = in.AddressLine1
 	u.AddressLine2 = in.AddressLine2
+
+	err = a.userService.Validation(ctx, u)
+	if err != nil {
+		return err
+	}
 
 	return a.userService.Update(ctx, u)
 }

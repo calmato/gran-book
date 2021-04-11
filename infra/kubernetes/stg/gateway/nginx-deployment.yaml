@@ -10,6 +10,8 @@ spec:
   selector:
     matchLabels:
       app: nginx
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
@@ -31,7 +33,7 @@ spec:
         resources:
           limits:
             cpu: 100m
-            memory: 64Mi
+            memory: 128Mi
         ports:
         - name: http
           hostPort: 80
@@ -45,6 +47,9 @@ spec:
           readOnly: true
         - name: nginx-conf
           mountPath: /etc/nginx/conf.d
+        env:
+        - name: TZ
+          value: 'Asia/Tokyo'
       volumes:
       - name: tls-certs
         secret:

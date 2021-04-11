@@ -18,6 +18,7 @@ type Repository interface {
 	Show(ctx context.Context, uid string) (*User, error)
 	ShowRelationship(ctx context.Context, id int) (*Relationship, error)
 	Create(ctx context.Context, u *User) error
+	CreateWithOAuth(ctx context.Context, u *User) error
 	CreateRelationship(ctx context.Context, r *Relationship) error
 	Update(ctx context.Context, u *User) error
 	UpdatePassword(ctx context.Context, uid string, password string) error

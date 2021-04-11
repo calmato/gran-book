@@ -5,9 +5,11 @@ import (
 	"time"
 
 	"github.com/calmato/gran-book/api/server/user/internal/domain"
+	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/user"
 	"github.com/calmato/gran-book/api/server/user/lib/array"
 	"github.com/google/uuid"
+	"golang.org/x/xerrors"
 )
 
 type userService struct {
@@ -169,12 +171,7 @@ func (s *userService) ShowRelationshipByUID(
 }
 
 func (s *userService) Create(ctx context.Context, u *user.User) error {
-	err := s.userDomainValidation.User(ctx, u)
-	if err != nil {
-		return err
-	}
-
-	current := time.Now()
+	current := time.Now().Local()
 
 	u.ID = uuid.New().String()
 	u.CreatedAt = current
@@ -183,13 +180,22 @@ func (s *userService) Create(ctx context.Context, u *user.User) error {
 	return s.userRepository.Create(ctx, u)
 }
 
-func (s *userService) CreateRelationship(ctx context.Context, r *user.Relationship) error {
-	err := s.userDomainValidation.Relationship(ctx, r)
-	if err != nil {
-		return err
+func (s *userService) CreateWithOAuth(ctx context.Context, u *user.User) error {
+	if u == nil || u.ID == "" {
+		err := xerrors.New("User is nil")
+		return exception.NotFound.New(err)
 	}
 
-	current := time.Now()
+	current := time.Now().Local()
+
+	u.CreatedAt = current
+	u.UpdatedAt = current
+
+	return s.userRepository.CreateWithOAuth(ctx, u)
+}
+
+func (s *userService) CreateRelationship(ctx context.Context, r *user.Relationship) error {
+	current := time.Now().Local()
 
 	r.CreatedAt = current
 	r.UpdatedAt = current
@@ -198,12 +204,7 @@ func (s *userService) CreateRelationship(ctx context.Context, r *user.Relationsh
 }
 
 func (s *userService) Update(ctx context.Context, u *user.User) error {
-	err := s.userDomainValidation.User(ctx, u)
-	if err != nil {
-		return err
-	}
-
-	u.UpdatedAt = time.Now()
+	u.UpdatedAt = time.Now().Local()
 
 	return s.userRepository.Update(ctx, u)
 }
@@ -236,4 +237,12 @@ func (s *userService) IsFriend(ctx context.Context, friendID string, uid string)
 	}
 
 	return isFollow, isFollower
+}
+
+func (s *userService) Validation(ctx context.Context, u *user.User) error {
+	return s.userDomainValidation.User(ctx, u)
+}
+
+func (s *userService) ValidationRelationship(ctx context.Context, r *user.Relationship) error {
+	return s.userDomainValidation.Relationship(ctx, r)
 }
