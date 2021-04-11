@@ -1,5 +1,5 @@
 import express, { NextFunction, Request, Response } from 'express'
-import { getAuth, createAuth, updateAuthProfile, updateAuthAddress, updateAuthEmail, UpdateAuthPassword } from '~/api'
+import { getAuth, createAuth, updateAuthProfile, updateAuthAddress, updateAuthEmail, UpdateAuthPassword, deleteAuth } from '~/api'
 import {
   ICreateAuthRequest,
   IUpdateAuthAddressRequest,
@@ -48,6 +48,17 @@ router.post(
       .then((output: IAuthOutput) => {
         const response: IAuthResponse = setAuthResponse(output)
         res.status(200).json(response)
+      })
+      .catch((err: GrpcError) => next(err))
+  }
+)
+
+router.delete(
+  '/',
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    await deleteAuth(req)
+      .then(() => {
+        res.status(200).json({ message: 'ok' })
       })
       .catch((err: GrpcError) => next(err))
   }
