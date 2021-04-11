@@ -1,7 +1,7 @@
 ﻿import React, { ReactElement } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { ISearchResponse, ISearchResultItem } from '~/types/response/search';
+import { ISearchResponse, ISearchResultItem } from '~/types/response/external/rakuten-books';
 import SearchResultItem from '~/components/molecules/SearchResultItem';
 
 const styles = StyleSheet.create({});
@@ -16,8 +16,8 @@ const SearchResultItemList = function SearchResultItemList(props: Props): ReactE
 
   return (
     <View>
-      {results.items.map((item) => (
-        <SearchResultItem key={item.id} book={item} onPress={() => props.onPress(item)} />
+      {results.Items.map((item) => (
+        <SearchResultItem key={item.isbn} book={item} onPress={() => props.onPress(item)} />
       ))}
     </View>
   );
