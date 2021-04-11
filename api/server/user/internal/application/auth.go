@@ -48,10 +48,9 @@ func (a *authApplication) Authentication(ctx context.Context) (*user.User, error
 	// err: Auth APIにはデータがあるが、User DBにはレコードがない
 	// -> Auth APIのデータを基にUser DBに登録
 	ou := &user.User{
-		ID:        uid,
-		Gender:    0,
-		Role:      user.UserRole,
-		Activated: true,
+		ID:     uid,
+		Gender: 0,
+		Role:   user.UserRole,
 	}
 
 	// TODO: domain validation
@@ -70,12 +69,11 @@ func (a *authApplication) Create(ctx context.Context, in *input.CreateAuth) (*us
 	}
 
 	u := &user.User{
-		Username:  in.Username,
-		Email:     strings.ToLower(in.Email),
-		Password:  in.Password,
-		Gender:    0,
-		Role:      user.UserRole,
-		Activated: true,
+		Username: in.Username,
+		Email:    strings.ToLower(in.Email),
+		Password: in.Password,
+		Gender:   0,
+		Role:     user.UserRole,
 	}
 
 	err = a.userService.Validation(ctx, u)

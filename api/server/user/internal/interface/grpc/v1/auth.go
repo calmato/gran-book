@@ -222,7 +222,6 @@ func getAuthResponse(u *user.User) *pb.AuthResponse {
 		City:             u.City,
 		AddressLine1:     u.AddressLine1,
 		AddressLine2:     u.AddressLine2,
-		Activated:        u.Activated,
 		CreatedAt:        datetime.TimeToString(u.CreatedAt),
 		UpdatedAt:        datetime.TimeToString(u.UpdatedAt),
 	}
