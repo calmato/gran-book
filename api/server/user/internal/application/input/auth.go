@@ -40,3 +40,8 @@ type UpdateAuthAddress struct {
 	AddressLine1  string `json:"addressLine1" validate:"required,max=64"`
 	AddressLine2  string `json:"addressLine2" validate:"max=64"`
 }
+
+// UploadAuthThumbnail - サムネイルアップロードのリクエスト
+type UploadAuthThumbnail struct {
+	Thumbnail []byte `json:"thumbnail" validate:"required"`
+}
