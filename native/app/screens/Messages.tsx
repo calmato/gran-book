@@ -27,7 +27,7 @@ export const MessagesScreen = () => {
         createdAt: firebase.firestore.Timestamp.now(),
         userId: ''
       };
-      await docRef.add(newMessage)
+      await docRef.add(newMessage);
     }
   };
 
