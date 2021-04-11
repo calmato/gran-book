@@ -1,5 +1,13 @@
 import express, { NextFunction, Request, Response } from 'express'
-import { getAuth, createAuth, updateAuthProfile, updateAuthAddress, updateAuthEmail, UpdateAuthPassword, deleteAuth } from '~/api'
+import {
+  getAuth,
+  createAuth,
+  updateAuthProfile,
+  updateAuthAddress,
+  updateAuthEmail,
+  UpdateAuthPassword,
+  deleteAuth,
+} from '~/api'
 import {
   ICreateAuthRequest,
   IUpdateAuthAddressRequest,
