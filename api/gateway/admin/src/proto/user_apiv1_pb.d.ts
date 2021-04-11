@@ -109,8 +109,8 @@ export class UpdateAuthProfileRequest extends jspb.Message {
     getGender(): number;
     setGender(value: number): UpdateAuthProfileRequest;
 
-    getThumbnail(): string;
-    setThumbnail(value: string): UpdateAuthProfileRequest;
+    getThumbnailUrl(): string;
+    setThumbnailUrl(value: string): UpdateAuthProfileRequest;
 
     getSelfIntroduction(): string;
     setSelfIntroduction(value: string): UpdateAuthProfileRequest;
@@ -130,7 +130,7 @@ export namespace UpdateAuthProfileRequest {
     export type AsObject = {
         username: string,
         gender: number,
-        thumbnail: string,
+        thumbnailUrl: string,
         selfIntroduction: string,
     }
 }
