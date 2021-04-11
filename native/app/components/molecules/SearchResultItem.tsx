@@ -36,6 +36,7 @@ const SearchResultItem = function SearchResultItem(props: Props): ReactElement {
         source={
           book.largeImageUrl
             ? { uri: book.largeImageUrl }
+
             : require('assets/logo.png')
         }
         style={styles.bookCoverStyle}

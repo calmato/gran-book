@@ -1,6 +1,5 @@
 ﻿import React, { ReactElement } from 'react';
 import { StyleSheet, View } from 'react-native';
-
 import { ISearchResponse, ISearchResultItem } from '~/types/response/external/rakuten-books';
 import SearchResultItem from '~/components/molecules/SearchResultItem';
 
