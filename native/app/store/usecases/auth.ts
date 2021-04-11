@@ -256,6 +256,20 @@ function sendEmailVerification(): Promise<void> {
   });
 }
 
+export function sendPasswordResetEmail(email: string): Promise<void> {
+  return new Promise((resolve: () => void, reject: (reason: Error) => void) => {
+    firebase
+      .auth()
+      .sendPasswordResetEmail(email)
+      .then(() => {
+        resolve();
+      })
+      .catch((err: Error) => {
+        reject(err);
+      });
+  });
+}
+
 export function editEmailAsync(email: string) {
   return async (): Promise<void> => {
     return await internal
