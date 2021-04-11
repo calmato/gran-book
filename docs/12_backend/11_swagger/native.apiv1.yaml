@@ -187,11 +187,7 @@ paths:
         content:
           multipart/form-data:
             schema:
-              type: object
-              properties:
-                thumbnail:
-                  type: string
-                  format: binary
+              $ref: '#/components/schemas/uploadAuthThumbnailRequest'
       responses:
         '200':
           description: A successful response.
@@ -626,7 +622,7 @@ components:
         gender:
           type: integer
           format: int32
-        thumbnail:
+        thumbnailUrl:
           type: string
           format: byte
         selfIntroduction:
@@ -654,6 +650,12 @@ components:
           type: string
         addressLine2:
           type: string
+    uploadAuthThumbnailRequest:
+      type: object
+      properties:
+        thumbnail:
+          type: string
+          format: binary
     createBookRequest:
       type: object
       properties:

@@ -79,7 +79,7 @@ export function updateAuthEmail(req: Request<any>, input: IUpdateAuthEmailInput)
   })
 }
 
-export function UpdateAuthPassword(req: Request<any>, input: IUpdateAuthPasswordInput): Promise<IAuthOutput> {
+export function updateAuthPassword(req: Request<any>, input: IUpdateAuthPasswordInput): Promise<IAuthOutput> {
   const request = new UpdateAuthPasswordRequest()
   const metadata = getGrpcMetadata(req)
 
@@ -104,7 +104,7 @@ export function updateAuthProfile(req: Request<any>, input: IUpdateAuthProfileIn
 
   request.setUsername(input.username)
   request.setGender(input.gender)
-  request.setThumbnail(input.thumbnail)
+  request.setThumbnailUrl(input.thumbnailUrl)
   request.setSelfIntroduction(input.selfIntroduction)
 
   return new Promise((resolve: (res: IAuthOutput) => void, reject: (reason: Error) => void) => {

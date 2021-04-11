@@ -102,3 +102,17 @@ func (mr *MockAuthRequestValidationMockRecorder) UpdateAuthAddress(in interface{
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAuthAddress", reflect.TypeOf((*MockAuthRequestValidation)(nil).UpdateAuthAddress), in)
 }
+
+// UploadAuthThumbnail mocks base method
+func (m *MockAuthRequestValidation) UploadAuthThumbnail(in *input.UploadAuthThumbnail) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UploadAuthThumbnail", in)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UploadAuthThumbnail indicates an expected call of UploadAuthThumbnail
+func (mr *MockAuthRequestValidationMockRecorder) UploadAuthThumbnail(in interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UploadAuthThumbnail", reflect.TypeOf((*MockAuthRequestValidation)(nil).UploadAuthThumbnail), in)
+}

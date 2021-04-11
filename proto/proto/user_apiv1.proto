@@ -53,7 +53,7 @@ message UpdateAuthPasswordRequest {
 message UpdateAuthProfileRequest {
   string username = 1;
   int32 gender = 2;
-  string thumbnail = 3;
+  string thumbnail_url = 3;
   string self_introduction = 4;
 }
 

@@ -242,7 +242,7 @@ func TestAuthApplication_UpdateProfile(t *testing.T) {
 			Input: &input.UpdateAuthProfile{
 				Username:         "test-user",
 				Gender:           0,
-				Thumbnail:        "",
+				ThumbnailURL:     "",
 				SelfIntroduction: "自己紹介",
 			},
 			User: &user.User{
@@ -324,6 +324,64 @@ func TestAuthApplication_UpdateAddress(t *testing.T) {
 			got := target.UpdateAddress(ctx, tc.Input, tc.User)
 			if !reflect.DeepEqual(got, tc.Expected) {
 				t.Fatalf("want %#v, but %#v", tc.Expected, got)
+				return
+			}
+		})
+	}
+}
+
+func TestAuthApplication_UploadThumbnail(t *testing.T) {
+	testCases := map[string]struct {
+		Input    *input.UploadAuthThumbnail
+		User     *user.User
+		Expected struct {
+			ThumbnailURL string
+			Error        error
+		}
+	}{
+		"ok": {
+			Input: &input.UploadAuthThumbnail{
+				Thumbnail: []byte("あいうえお"),
+			},
+			User: &user.User{
+				ID: "00000000-0000-0000-0000-000000000000",
+			},
+			Expected: struct {
+				ThumbnailURL string
+				Error        error
+			}{
+				ThumbnailURL: "https://google.co.jp",
+				Error:        nil,
+			},
+		},
+	}
+
+	for result, tc := range testCases {
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		arvm := mock_validation.NewMockAuthRequestValidation(ctrl)
+		arvm.EXPECT().UploadAuthThumbnail(tc.Input).Return(nil)
+
+		usm := mock_user.NewMockService(ctrl)
+		usm.EXPECT().
+			UploadThumbnail(ctx, tc.User.ID, tc.Input.Thumbnail).
+			Return(tc.Expected.ThumbnailURL, tc.Expected.Error)
+
+		t.Run(result, func(t *testing.T) {
+			target := NewAuthApplication(arvm, usm)
+
+			got, err := target.UploadThumbnail(ctx, tc.Input, tc.User)
+			if !reflect.DeepEqual(err, tc.Expected.Error) {
+				t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+				return
+			}
+
+			if !reflect.DeepEqual(got, tc.Expected.ThumbnailURL) {
+				t.Fatalf("want %#v, but %#v", tc.Expected.ThumbnailURL, got)
 				return
 			}
 		})

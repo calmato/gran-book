@@ -6,7 +6,7 @@ import {
   updateAuthProfile,
   updateAuthAddress,
   updateAuthEmail,
-  UpdateAuthPassword,
+  updateAuthPassword,
   uploadAuthThumbnail,
   deleteAuth,
 } from '~/api'
@@ -104,7 +104,7 @@ router.patch(
       passwordConfirmation,
     }
 
-    await UpdateAuthPassword(req, input)
+    await updateAuthPassword(req, input)
       .then((output: IAuthOutput) => {
         const response: IAuthResponse = setAuthResponse(output)
         res.status(200).json(response)
@@ -116,12 +116,12 @@ router.patch(
 router.patch(
   '/profile',
   async (req: Request<IUpdateAuthProfileRequest>, res: Response<IAuthResponse>, next: NextFunction): Promise<void> => {
-    const { username, gender, thumbnail, selfIntroduction } = req.body as IUpdateAuthProfileRequest
+    const { username, gender, thumbnailUrl, selfIntroduction } = req.body as IUpdateAuthProfileRequest
 
     const input: IUpdateAuthProfileInput = {
       username,
       gender,
-      thumbnail,
+      thumbnailUrl,
       selfIntroduction,
     }
 

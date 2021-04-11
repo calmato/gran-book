@@ -1385,7 +1385,7 @@ proto.proto.UpdateAuthProfileRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     username: jspb.Message.getFieldWithDefault(msg, 1, ""),
     gender: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    thumbnail: jspb.Message.getFieldWithDefault(msg, 3, ""),
+    thumbnailUrl: jspb.Message.getFieldWithDefault(msg, 3, ""),
     selfIntroduction: jspb.Message.getFieldWithDefault(msg, 4, "")
   };
 
@@ -1433,7 +1433,7 @@ proto.proto.UpdateAuthProfileRequest.deserializeBinaryFromReader = function(msg,
       break;
     case 3:
       var value = /** @type {string} */ (reader.readString());
-      msg.setThumbnail(value);
+      msg.setThumbnailUrl(value);
       break;
     case 4:
       var value = /** @type {string} */ (reader.readString());
@@ -1482,7 +1482,7 @@ proto.proto.UpdateAuthProfileRequest.serializeBinaryToWriter = function(message,
       f
     );
   }
-  f = message.getThumbnail();
+  f = message.getThumbnailUrl();
   if (f.length > 0) {
     writer.writeString(
       3,
@@ -1536,10 +1536,10 @@ proto.proto.UpdateAuthProfileRequest.prototype.setGender = function(value) {
 
 
 /**
- * optional string thumbnail = 3;
+ * optional string thumbnail_url = 3;
  * @return {string}
  */
-proto.proto.UpdateAuthProfileRequest.prototype.getThumbnail = function() {
+proto.proto.UpdateAuthProfileRequest.prototype.getThumbnailUrl = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
 };
 
@@ -1548,7 +1548,7 @@ proto.proto.UpdateAuthProfileRequest.prototype.getThumbnail = function() {
  * @param {string} value
  * @return {!proto.proto.UpdateAuthProfileRequest} returns this
  */
-proto.proto.UpdateAuthProfileRequest.prototype.setThumbnail = function(value) {
+proto.proto.UpdateAuthProfileRequest.prototype.setThumbnailUrl = function(value) {
   return jspb.Message.setProto3StringField(this, 3, value);
 };
 
