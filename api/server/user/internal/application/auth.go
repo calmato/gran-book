@@ -2,7 +2,6 @@ package application
 
 import (
 	"context"
-	"encoding/base64"
 	"strings"
 
 	"github.com/calmato/gran-book/api/server/user/internal/application/input"
@@ -123,25 +122,17 @@ func (a *authApplication) UpdateProfile(ctx context.Context, in *input.UpdateAut
 		return err
 	}
 
-	thumbnailURL, err := a.getThumbnailURL(ctx, u.ID, in.Thumbnail)
-	if err != nil {
-		return err
-	}
-
 	u.Username = in.Username
 	u.Gender = in.Gender
+	u.ThumbnailURL = in.ThumbnailURL
 	u.SelfIntroduction = in.SelfIntroduction
-
-	// TODO: 古いサムネイルを消す処理を挟みたい
-	if thumbnailURL != "" {
-		u.ThumbnailURL = thumbnailURL
-	}
 
 	err = a.userService.Validation(ctx, u)
 	if err != nil {
 		return err
 	}
 
+	// TODO: 古いサムネイルを消す処理を挟みたい
 	return a.userService.Update(ctx, u)
 }
 
@@ -180,26 +171,4 @@ func (a *authApplication) UploadThumbnail(
 	}
 
 	return a.userService.UploadThumbnail(ctx, u.ID, in.Thumbnail)
-}
-
-func (a *authApplication) getThumbnailURL(ctx context.Context, uid string, thumbnail string) (string, error) {
-	if thumbnail == "" {
-		return "", nil
-	}
-
-	// data:image/png;base64,iVBORw0KGgoAAAA... みたいなのうちの
-	// `data:image/png;base64,` の部分を無くした []byte を取得
-	b64data := thumbnail[strings.IndexByte(thumbnail, ',')+1:]
-
-	data, err := base64.StdEncoding.DecodeString(b64data)
-	if err != nil {
-		ve := &exception.ValidationError{
-			Field:   "thumbnail",
-			Message: exception.UnableConvertBase64Massage,
-		}
-
-		return "", exception.UnableConvertBase64.New(err, ve)
-	}
-
-	return a.userService.UploadThumbnail(ctx, uid, data)
 }

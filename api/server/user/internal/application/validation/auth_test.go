@@ -282,7 +282,7 @@ func TestAuthRequestValidation_UpdateAuthProfile(t *testing.T) {
 			Input: &input.UpdateAuthProfile{
 				Username:         "test-user",
 				Gender:           0,
-				Thumbnail:        "",
+				ThumbnailURL:     "",
 				SelfIntroduction: "自己紹介",
 			},
 			Expected: true,
@@ -291,7 +291,7 @@ func TestAuthRequestValidation_UpdateAuthProfile(t *testing.T) {
 			Input: &input.UpdateAuthProfile{
 				Username:         "",
 				Gender:           0,
-				Thumbnail:        "",
+				ThumbnailURL:     "",
 				SelfIntroduction: "自己紹介",
 			},
 			Expected: false,
@@ -300,7 +300,7 @@ func TestAuthRequestValidation_UpdateAuthProfile(t *testing.T) {
 			Input: &input.UpdateAuthProfile{
 				Username:         strings.Repeat("x", 33),
 				Gender:           0,
-				Thumbnail:        "",
+				ThumbnailURL:     "",
 				SelfIntroduction: "自己紹介",
 			},
 			Expected: false,
@@ -309,7 +309,7 @@ func TestAuthRequestValidation_UpdateAuthProfile(t *testing.T) {
 			Input: &input.UpdateAuthProfile{
 				Username:         "test-user",
 				Gender:           -1,
-				Thumbnail:        "",
+				ThumbnailURL:     "",
 				SelfIntroduction: "自己紹介",
 			},
 			Expected: false,
@@ -318,7 +318,7 @@ func TestAuthRequestValidation_UpdateAuthProfile(t *testing.T) {
 			Input: &input.UpdateAuthProfile{
 				Username:         "test-user",
 				Gender:           3,
-				Thumbnail:        "",
+				ThumbnailURL:     "",
 				SelfIntroduction: "自己紹介",
 			},
 			Expected: false,
@@ -327,7 +327,7 @@ func TestAuthRequestValidation_UpdateAuthProfile(t *testing.T) {
 			Input: &input.UpdateAuthProfile{
 				Username:         "test-user",
 				Gender:           0,
-				Thumbnail:        "",
+				ThumbnailURL:     "",
 				SelfIntroduction: strings.Repeat("x", 257),
 			},
 			Expected: false,

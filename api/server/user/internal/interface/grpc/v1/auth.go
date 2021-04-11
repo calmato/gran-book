@@ -101,7 +101,7 @@ func (s *AuthServer) UpdateAuthProfile(
 	in := &input.UpdateAuthProfile{
 		Username:         req.GetUsername(),
 		Gender:           int(req.GetGender()),
-		Thumbnail:        req.GetThumbnail(),
+		ThumbnailURL:     req.GetThumbnailUrl(),
 		SelfIntroduction: req.GetSelfIntroduction(),
 	}
 

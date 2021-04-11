@@ -242,7 +242,7 @@ func TestAuthApplication_UpdateProfile(t *testing.T) {
 			Input: &input.UpdateAuthProfile{
 				Username:         "test-user",
 				Gender:           0,
-				Thumbnail:        "",
+				ThumbnailURL:     "",
 				SelfIntroduction: "自己紹介",
 			},
 			User: &user.User{

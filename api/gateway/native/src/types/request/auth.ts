@@ -17,7 +17,7 @@ export interface IUpdateAuthPasswordRequest {
 export interface IUpdateAuthProfileRequest {
   username: string
   gender: number
-  thumbnail: string
+  thumbnailUrl: string
   selfIntroduction: string
 }
 
