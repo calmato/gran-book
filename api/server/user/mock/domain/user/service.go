@@ -185,6 +185,20 @@ func (mr *MockServiceMockRecorder) Create(ctx, u interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockService)(nil).Create), ctx, u)
 }
 
+// CreateWithOAuth mocks base method
+func (m *MockService) CreateWithOAuth(ctx context.Context, u *user.User) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateWithOAuth", ctx, u)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CreateWithOAuth indicates an expected call of CreateWithOAuth
+func (mr *MockServiceMockRecorder) CreateWithOAuth(ctx, u interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateWithOAuth", reflect.TypeOf((*MockService)(nil).CreateWithOAuth), ctx, u)
+}
+
 // CreateRelationship mocks base method
 func (m *MockService) CreateRelationship(ctx context.Context, r *user.Relationship) error {
 	m.ctrl.T.Helper()
