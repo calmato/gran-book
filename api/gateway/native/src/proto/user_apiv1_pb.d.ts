@@ -543,6 +543,9 @@ export namespace UpdateAdminProfileRequest {
 }
 
 export class UploadAdminThumbnailRequest extends jspb.Message { 
+    getUserId(): string;
+    setUserId(value: string): UploadAdminThumbnailRequest;
+
     getThumbnail(): Uint8Array | string;
     getThumbnail_asU8(): Uint8Array;
     getThumbnail_asB64(): string;
@@ -564,6 +567,7 @@ export class UploadAdminThumbnailRequest extends jspb.Message {
 
 export namespace UploadAdminThumbnailRequest {
     export type AsObject = {
+        userId: string,
         thumbnail: Uint8Array | string,
         position: number,
     }

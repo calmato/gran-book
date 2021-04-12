@@ -139,8 +139,9 @@ message UpdateAdminProfileRequest {
 }
 
 message UploadAdminThumbnailRequest {
-  bytes thumbnail = 1;
-  int64 position = 2;
+  string user_id = 1;
+  bytes thumbnail = 2;
+  int64 position = 3;
 }
 
 message ListFollowRequest {

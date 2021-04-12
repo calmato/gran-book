@@ -4344,8 +4344,9 @@ proto.proto.UploadAdminThumbnailRequest.prototype.toObject = function(opt_includ
  */
 proto.proto.UploadAdminThumbnailRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
+    userId: jspb.Message.getFieldWithDefault(msg, 1, ""),
     thumbnail: msg.getThumbnail_asB64(),
-    position: jspb.Message.getFieldWithDefault(msg, 2, 0)
+    position: jspb.Message.getFieldWithDefault(msg, 3, 0)
   };
 
   if (includeInstance) {
@@ -4383,10 +4384,14 @@ proto.proto.UploadAdminThumbnailRequest.deserializeBinaryFromReader = function(m
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setUserId(value);
+      break;
+    case 2:
       var value = /** @type {!Uint8Array} */ (reader.readBytes());
       msg.setThumbnail(value);
       break;
-    case 2:
+    case 3:
       var value = /** @type {number} */ (reader.readInt64());
       msg.setPosition(value);
       break;
@@ -4419,17 +4424,24 @@ proto.proto.UploadAdminThumbnailRequest.prototype.serializeBinary = function() {
  */
 proto.proto.UploadAdminThumbnailRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
+  f = message.getUserId();
+  if (f.length > 0) {
+    writer.writeString(
+      1,
+      f
+    );
+  }
   f = message.getThumbnail_asU8();
   if (f.length > 0) {
     writer.writeBytes(
-      1,
+      2,
       f
     );
   }
   f = message.getPosition();
   if (f !== 0) {
     writer.writeInt64(
-      2,
+      3,
       f
     );
   }
@@ -4437,16 +4449,34 @@ proto.proto.UploadAdminThumbnailRequest.serializeBinaryToWriter = function(messa
 
 
 /**
- * optional bytes thumbnail = 1;
- * @return {!(string|Uint8Array)}
+ * optional string user_id = 1;
+ * @return {string}
  */
-proto.proto.UploadAdminThumbnailRequest.prototype.getThumbnail = function() {
-  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
+proto.proto.UploadAdminThumbnailRequest.prototype.getUserId = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
 
 /**
- * optional bytes thumbnail = 1;
+ * @param {string} value
+ * @return {!proto.proto.UploadAdminThumbnailRequest} returns this
+ */
+proto.proto.UploadAdminThumbnailRequest.prototype.setUserId = function(value) {
+  return jspb.Message.setProto3StringField(this, 1, value);
+};
+
+
+/**
+ * optional bytes thumbnail = 2;
+ * @return {!(string|Uint8Array)}
+ */
+proto.proto.UploadAdminThumbnailRequest.prototype.getThumbnail = function() {
+  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
+};
+
+
+/**
+ * optional bytes thumbnail = 2;
  * This is a type-conversion wrapper around `getThumbnail()`
  * @return {string}
  */
@@ -4457,7 +4487,7 @@ proto.proto.UploadAdminThumbnailRequest.prototype.getThumbnail_asB64 = function(
 
 
 /**
- * optional bytes thumbnail = 1;
+ * optional bytes thumbnail = 2;
  * Note that Uint8Array is not supported on all browsers.
  * @see http://caniuse.com/Uint8Array
  * This is a type-conversion wrapper around `getThumbnail()`
@@ -4474,16 +4504,16 @@ proto.proto.UploadAdminThumbnailRequest.prototype.getThumbnail_asU8 = function()
  * @return {!proto.proto.UploadAdminThumbnailRequest} returns this
  */
 proto.proto.UploadAdminThumbnailRequest.prototype.setThumbnail = function(value) {
-  return jspb.Message.setProto3BytesField(this, 1, value);
+  return jspb.Message.setProto3BytesField(this, 2, value);
 };
 
 
 /**
- * optional int64 position = 2;
+ * optional int64 position = 3;
  * @return {number}
  */
 proto.proto.UploadAdminThumbnailRequest.prototype.getPosition = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
 };
 
 
@@ -4492,7 +4522,7 @@ proto.proto.UploadAdminThumbnailRequest.prototype.getPosition = function() {
  * @return {!proto.proto.UploadAdminThumbnailRequest} returns this
  */
 proto.proto.UploadAdminThumbnailRequest.prototype.setPosition = function(value) {
-  return jspb.Message.setProto3IntField(this, 2, value);
+  return jspb.Message.setProto3IntField(this, 3, value);
 };
 
 
