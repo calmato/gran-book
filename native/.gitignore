@@ -11,4 +11,3 @@ web-build/
 
 # macOS
 .DS_Store
-node_modules/.yarn-integrity
