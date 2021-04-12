@@ -46,7 +46,6 @@ func TestAuthApplication_Authentication(t *testing.T) {
 					AddressLine1:     "貫井北町4-1-1",
 					AddressLine2:     "",
 					InstanceID:       "",
-					Activated:        true,
 					CreatedAt:        current,
 					UpdatedAt:        current,
 				},
@@ -105,12 +104,11 @@ func TestAuthApplication_Create(t *testing.T) {
 				Error error
 			}{
 				User: &user.User{
-					Username:  "test-user",
-					Email:     "test-user@calmato.com",
-					Password:  "12345678",
-					Gender:    0,
-					Role:      0,
-					Activated: true,
+					Username: "test-user",
+					Email:    "test-user@calmato.com",
+					Password: "12345678",
+					Gender:   0,
+					Role:     0,
 				},
 				Error: nil,
 			},
@@ -382,6 +380,43 @@ func TestAuthApplication_UploadThumbnail(t *testing.T) {
 
 			if !reflect.DeepEqual(got, tc.Expected.ThumbnailURL) {
 				t.Fatalf("want %#v, but %#v", tc.Expected.ThumbnailURL, got)
+				return
+			}
+		})
+	}
+}
+
+func TestAuthApplication_Delete(t *testing.T) {
+	testCases := map[string]struct {
+		User     *user.User
+		Expected error
+	}{
+		"ok": {
+			User: &user.User{
+				ID: "00000000-0000-0000-0000-000000000000",
+			},
+			Expected: nil,
+		},
+	}
+
+	for result, tc := range testCases {
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		arvm := mock_validation.NewMockAuthRequestValidation(ctrl)
+
+		usm := mock_user.NewMockService(ctrl)
+		usm.EXPECT().Delete(ctx, tc.User.ID).Return(tc.Expected)
+
+		t.Run(result, func(t *testing.T) {
+			target := NewAuthApplication(arvm, usm)
+
+			err := target.Delete(ctx, tc.User)
+			if !reflect.DeepEqual(err, tc.Expected) {
+				t.Fatalf("want %#v, but %#v", tc.Expected, err)
 				return
 			}
 		})

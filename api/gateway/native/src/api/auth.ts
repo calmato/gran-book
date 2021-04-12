@@ -221,7 +221,6 @@ function setAuthOutput(res: AuthResponse): IAuthOutput {
     city: res.getCity(),
     addressLine1: res.getAddressLine1(),
     addressLine2: res.getAddressLine2(),
-    activated: res.getActivated(),
     createdAt: res.getCreatedAt(),
     updatedAt: res.getUpdatedAt(),
   }

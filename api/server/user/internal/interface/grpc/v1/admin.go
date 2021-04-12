@@ -257,7 +257,6 @@ func getAdminResponse(u *user.User) *pb.AdminResponse {
 		FirstName:        u.FirstName,
 		LastNameKana:     u.LastNameKana,
 		FirstNameKana:    u.FirstNameKana,
-		Activated:        u.Activated,
 		CreatedAt:        datetime.TimeToString(u.CreatedAt),
 		UpdatedAt:        datetime.TimeToString(u.UpdatedAt),
 	}
@@ -278,7 +277,6 @@ func getAdminListResponse(us []*user.User, out *output.ListQuery) *pb.AdminListR
 			FirstName:        u.FirstName,
 			LastNameKana:     u.LastNameKana,
 			FirstNameKana:    u.FirstNameKana,
-			Activated:        u.Activated,
 			CreatedAt:        datetime.TimeToString(u.CreatedAt),
 			UpdatedAt:        datetime.TimeToString(u.UpdatedAt),
 		}

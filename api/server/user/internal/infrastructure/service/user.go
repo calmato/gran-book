@@ -213,6 +213,10 @@ func (s *userService) UpdatePassword(ctx context.Context, uid string, password s
 	return s.userRepository.UpdatePassword(ctx, uid, password)
 }
 
+func (s *userService) Delete(ctx context.Context, uid string) error {
+	return s.userRepository.Delete(ctx, uid)
+}
+
 func (s *userService) DeleteRelationship(ctx context.Context, id int) error {
 	return s.userRepository.DeleteRelationship(ctx, id)
 }

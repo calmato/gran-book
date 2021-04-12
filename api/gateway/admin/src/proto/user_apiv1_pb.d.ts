@@ -715,9 +715,6 @@ export class AuthResponse extends jspb.Message {
     getAddressLine2(): string;
     setAddressLine2(value: string): AuthResponse;
 
-    getActivated(): boolean;
-    setActivated(value: boolean): AuthResponse;
-
     getCreatedAt(): string;
     setCreatedAt(value: string): AuthResponse;
 
@@ -754,7 +751,6 @@ export namespace AuthResponse {
         city: string,
         addressLine1: string,
         addressLine2: string,
-        activated: boolean,
         createdAt: string,
         updatedAt: string,
     }
@@ -815,9 +811,6 @@ export class AdminResponse extends jspb.Message {
     getFirstNameKana(): string;
     setFirstNameKana(value: string): AdminResponse;
 
-    getActivated(): boolean;
-    setActivated(value: boolean): AdminResponse;
-
     getCreatedAt(): string;
     setCreatedAt(value: string): AdminResponse;
 
@@ -848,7 +841,6 @@ export namespace AdminResponse {
         firstName: string,
         lastNameKana: string,
         firstNameKana: string,
-        activated: boolean,
         createdAt: string,
         updatedAt: string,
     }
@@ -930,9 +922,6 @@ export namespace AdminListResponse {
         getFirstNameKana(): string;
         setFirstNameKana(value: string): User;
 
-        getActivated(): boolean;
-        setActivated(value: boolean): User;
-
         getCreatedAt(): string;
         setCreatedAt(value: string): User;
 
@@ -963,7 +952,6 @@ export namespace AdminListResponse {
             firstName: string,
             lastNameKana: string,
             firstNameKana: string,
-            activated: boolean,
             createdAt: string,
             updatedAt: string,
         }

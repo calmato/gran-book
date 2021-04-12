@@ -188,6 +188,21 @@ func (s *AuthServer) UploadAuthThumbnail(stream pb.AuthService_UploadAuthThumbna
 	}
 }
 
+// DeleteAuth - ユーザ退会
+func (s *AuthServer) DeleteAuth(ctx context.Context, _ *pb.EmptyUser) (*pb.EmptyUser, error) {
+	u, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	err = s.AuthApplication.Delete(ctx, u)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	return &pb.EmptyUser{}, nil
+}
+
 func getAuthResponse(u *user.User) *pb.AuthResponse {
 	return &pb.AuthResponse{
 		Id:               u.ID,
@@ -207,7 +222,6 @@ func getAuthResponse(u *user.User) *pb.AuthResponse {
 		City:             u.City,
 		AddressLine1:     u.AddressLine1,
 		AddressLine2:     u.AddressLine2,
-		Activated:        u.Activated,
 		CreatedAt:        datetime.TimeToString(u.CreatedAt),
 		UpdatedAt:        datetime.TimeToString(u.UpdatedAt),
 	}

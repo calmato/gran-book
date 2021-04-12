@@ -18,6 +18,7 @@ type AuthApplication interface {
 	UpdateProfile(ctx context.Context, in *input.UpdateAuthProfile, u *user.User) error
 	UpdateAddress(ctx context.Context, in *input.UpdateAuthAddress, u *user.User) error
 	UploadThumbnail(ctx context.Context, in *input.UploadAuthThumbnail, u *user.User) (string, error)
+	Delete(ctx context.Context, u *user.User) error
 }
 
 type authApplication struct {
@@ -47,10 +48,9 @@ func (a *authApplication) Authentication(ctx context.Context) (*user.User, error
 	// err: Auth APIにはデータがあるが、User DBにはレコードがない
 	// -> Auth APIのデータを基にUser DBに登録
 	ou := &user.User{
-		ID:        uid,
-		Gender:    0,
-		Role:      user.UserRole,
-		Activated: true,
+		ID:     uid,
+		Gender: 0,
+		Role:   user.UserRole,
 	}
 
 	// TODO: domain validation
@@ -69,12 +69,11 @@ func (a *authApplication) Create(ctx context.Context, in *input.CreateAuth) (*us
 	}
 
 	u := &user.User{
-		Username:  in.Username,
-		Email:     strings.ToLower(in.Email),
-		Password:  in.Password,
-		Gender:    0,
-		Role:      user.UserRole,
-		Activated: true,
+		Username: in.Username,
+		Email:    strings.ToLower(in.Email),
+		Password: in.Password,
+		Gender:   0,
+		Role:     user.UserRole,
 	}
 
 	err = a.userService.Validation(ctx, u)
@@ -170,4 +169,8 @@ func (a *authApplication) UploadThumbnail(
 	}
 
 	return a.userService.UploadThumbnail(ctx, u.ID, in.Thumbnail)
+}
+
+func (a *authApplication) Delete(ctx context.Context, u *user.User) error {
+	return a.userService.Delete(ctx, u.ID)
 }
