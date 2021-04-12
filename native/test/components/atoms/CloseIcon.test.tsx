@@ -8,13 +8,12 @@ import { colors } from 'react-native-elements';
 import CloseIcon from '@/components/atoms/CloseIcon';
 
 describe('<CloseIcon />', () => {
-
   let render: ShallowRenderer.ShallowRenderer;
 
   beforeEach(() => {
     render = ShallowRenderer.createRenderer();
   });
-  
+
   it('has default props', () => {
     render.render(<CloseIcon />);
     const got = render.getRenderOutput();

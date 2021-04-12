@@ -2,7 +2,7 @@ import 'jest';
 import React from 'react';
 
 import { shallow, configure } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16.1';
+import Adapter from 'enzyme-adapter-react-16';
 import AppleButton from '~/components/molecules/AppleButton';
 import { Button } from 'react-native-elements';
 import { ViewStyle } from 'react-native';
@@ -28,7 +28,7 @@ describe('<AppleButton />', () => {
     expect(button.props.buttonStyle).toEqual(buttonStyle);
 
     const icon = button.props.icon;
-    
+
     expect(icon.props.name).toEqual('logo-apple');
     expect(icon.props.size).toEqual(24);
     expect(icon.props.color).toEqual('white');

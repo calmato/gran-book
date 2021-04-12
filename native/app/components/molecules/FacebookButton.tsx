@@ -7,31 +7,25 @@ import { COLOR, SOCIAL_BUTTON } from '~~/constants/theme';
 const styles = StyleSheet.create({
   buttonStyle: {
     backgroundColor: COLOR.FACEBOOK,
-    ...SOCIAL_BUTTON
+    ...SOCIAL_BUTTON,
   },
   iconStyle: {
-    marginRight: 10
-  }
+    marginRight: 10,
+  },
 });
 
 interface Props {
-  style?: ViewStyle
+  style?: ViewStyle;
 }
 
 const FacebookButton = function FacebookButton(props: Props): ReactElement {
   return (
     <Button
-      icon={
-        <Ionicons
-          name="logo-facebook"
-          size={24}
-          color="white"
-          style={styles.iconStyle}
-        />
-      }
+      icon={<Ionicons name="logo-facebook" size={24} color="white" style={styles.iconStyle} />}
       buttonStyle={styles.buttonStyle}
       containerStyle={props.style}
-      title="Facebookでサインイン" />
+      title="Facebookでサインイン"
+    />
   );
 };
 

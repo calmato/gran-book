@@ -9,26 +9,19 @@ const styles = StyleSheet.create({
     ...SOCIAL_BUTTON,
   },
   iconStyle: {
-    marginRight: 10
-  }
+    marginRight: 10,
+  },
 });
 
 interface Props {
-  style?: ViewStyle,
-  onPress: () => void,
+  style?: ViewStyle;
+  onPress: () => void;
 }
 
 const MailSignInButton = function MailSignInButton(props: Props): ReactElement {
   return (
     <Button
-      icon={
-        <Ionicons
-          name="md-mail"
-          size={24}
-          color="white"
-          style={styles.iconStyle}
-        />
-      }
+      icon={<Ionicons name="md-mail" size={24} color="white" style={styles.iconStyle} />}
       buttonStyle={styles.buttonStyle}
       containerStyle={props.style}
       onPress={props.onPress}
@@ -36,7 +29,5 @@ const MailSignInButton = function MailSignInButton(props: Props): ReactElement {
     />
   );
 };
-
-// MailSignInButton.defaultProps={}
 
 export default MailSignInButton;
