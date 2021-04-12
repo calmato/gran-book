@@ -415,7 +415,7 @@ func TestAuthApplication_Delete(t *testing.T) {
 			target := NewAuthApplication(arvm, usm)
 
 			err := target.Delete(ctx, tc.User)
-			if !reflect.DeepEqual(err, tc.Expected.Error) {
+			if !reflect.DeepEqual(err, tc.Expected) {
 				t.Fatalf("want %#v, but %#v", tc.Expected, err)
 				return
 			}
