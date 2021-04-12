@@ -394,6 +394,7 @@ type AdminServiceClient interface {
 	UpdateAdminRole(ctx context.Context, in *UpdateAdminRoleRequest, opts ...grpc.CallOption) (*AdminResponse, error)
 	UpdateAdminPassword(ctx context.Context, in *UpdateAdminPasswordRequest, opts ...grpc.CallOption) (*AdminResponse, error)
 	UpdateAdminProfile(ctx context.Context, in *UpdateAdminProfileRequest, opts ...grpc.CallOption) (*AdminResponse, error)
+	UploadAdminThumbnail(ctx context.Context, opts ...grpc.CallOption) (AdminService_UploadAdminThumbnailClient, error)
 }
 
 type adminServiceClient struct {
@@ -467,6 +468,40 @@ func (c *adminServiceClient) UpdateAdminProfile(ctx context.Context, in *UpdateA
 	return out, nil
 }
 
+func (c *adminServiceClient) UploadAdminThumbnail(ctx context.Context, opts ...grpc.CallOption) (AdminService_UploadAdminThumbnailClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_AdminService_serviceDesc.Streams[0], "/proto.AdminService/UploadAdminThumbnail", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &adminServiceUploadAdminThumbnailClient{stream}
+	return x, nil
+}
+
+type AdminService_UploadAdminThumbnailClient interface {
+	Send(*UploadAdminThumbnailRequest) error
+	CloseAndRecv() (*AdminThumbnailResponse, error)
+	grpc.ClientStream
+}
+
+type adminServiceUploadAdminThumbnailClient struct {
+	grpc.ClientStream
+}
+
+func (x *adminServiceUploadAdminThumbnailClient) Send(m *UploadAdminThumbnailRequest) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *adminServiceUploadAdminThumbnailClient) CloseAndRecv() (*AdminThumbnailResponse, error) {
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	m := new(AdminThumbnailResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // AdminServiceServer is the server API for AdminService service.
 // All implementations must embed UnimplementedAdminServiceServer
 // for forward compatibility
@@ -478,6 +513,7 @@ type AdminServiceServer interface {
 	UpdateAdminRole(context.Context, *UpdateAdminRoleRequest) (*AdminResponse, error)
 	UpdateAdminPassword(context.Context, *UpdateAdminPasswordRequest) (*AdminResponse, error)
 	UpdateAdminProfile(context.Context, *UpdateAdminProfileRequest) (*AdminResponse, error)
+	UploadAdminThumbnail(AdminService_UploadAdminThumbnailServer) error
 	mustEmbedUnimplementedAdminServiceServer()
 }
 
@@ -505,6 +541,9 @@ func (UnimplementedAdminServiceServer) UpdateAdminPassword(context.Context, *Upd
 }
 func (UnimplementedAdminServiceServer) UpdateAdminProfile(context.Context, *UpdateAdminProfileRequest) (*AdminResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateAdminProfile not implemented")
+}
+func (UnimplementedAdminServiceServer) UploadAdminThumbnail(AdminService_UploadAdminThumbnailServer) error {
+	return status.Errorf(codes.Unimplemented, "method UploadAdminThumbnail not implemented")
 }
 func (UnimplementedAdminServiceServer) mustEmbedUnimplementedAdminServiceServer() {}
 
@@ -645,6 +684,32 @@ func _AdminService_UpdateAdminProfile_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AdminService_UploadAdminThumbnail_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(AdminServiceServer).UploadAdminThumbnail(&adminServiceUploadAdminThumbnailServer{stream})
+}
+
+type AdminService_UploadAdminThumbnailServer interface {
+	SendAndClose(*AdminThumbnailResponse) error
+	Recv() (*UploadAdminThumbnailRequest, error)
+	grpc.ServerStream
+}
+
+type adminServiceUploadAdminThumbnailServer struct {
+	grpc.ServerStream
+}
+
+func (x *adminServiceUploadAdminThumbnailServer) SendAndClose(m *AdminThumbnailResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *adminServiceUploadAdminThumbnailServer) Recv() (*UploadAdminThumbnailRequest, error) {
+	m := new(UploadAdminThumbnailRequest)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 var _AdminService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "proto.AdminService",
 	HandlerType: (*AdminServiceServer)(nil),
@@ -678,7 +743,13 @@ var _AdminService_serviceDesc = grpc.ServiceDesc{
 			Handler:    _AdminService_UpdateAdminProfile_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "UploadAdminThumbnail",
+			Handler:       _AdminService_UploadAdminThumbnail_Handler,
+			ClientStreams: true,
+		},
+	},
 	Metadata: "proto/user_apiv1.proto",
 }
 

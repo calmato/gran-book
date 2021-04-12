@@ -26,6 +26,17 @@ function deserialize_proto_AdminResponse(buffer_arg) {
   return proto_user_apiv1_pb.AdminResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_proto_AdminThumbnailResponse(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.AdminThumbnailResponse)) {
+    throw new Error('Expected argument of type proto.AdminThumbnailResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_AdminThumbnailResponse(buffer_arg) {
+  return proto_user_apiv1_pb.AdminThumbnailResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_proto_AuthResponse(arg) {
   if (!(arg instanceof proto_user_apiv1_pb.AuthResponse)) {
     throw new Error('Expected argument of type proto.AuthResponse');
@@ -268,6 +279,17 @@ function deserialize_proto_UpdateAuthProfileRequest(buffer_arg) {
   return proto_user_apiv1_pb.UpdateAuthProfileRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_proto_UploadAdminThumbnailRequest(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.UploadAdminThumbnailRequest)) {
+    throw new Error('Expected argument of type proto.UploadAdminThumbnailRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_UploadAdminThumbnailRequest(buffer_arg) {
+  return proto_user_apiv1_pb.UploadAdminThumbnailRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_proto_UploadAuthThumbnailRequest(arg) {
   if (!(arg instanceof proto_user_apiv1_pb.UploadAuthThumbnailRequest)) {
     throw new Error('Expected argument of type proto.UploadAuthThumbnailRequest');
@@ -460,6 +482,17 @@ var AdminServiceService = exports.AdminServiceService = {
     requestDeserialize: deserialize_proto_UpdateAdminProfileRequest,
     responseSerialize: serialize_proto_AdminResponse,
     responseDeserialize: deserialize_proto_AdminResponse,
+  },
+  uploadAdminThumbnail: {
+    path: '/proto.AdminService/UploadAdminThumbnail',
+    requestStream: true,
+    responseStream: false,
+    requestType: proto_user_apiv1_pb.UploadAdminThumbnailRequest,
+    responseType: proto_user_apiv1_pb.AdminThumbnailResponse,
+    requestSerialize: serialize_proto_UploadAdminThumbnailRequest,
+    requestDeserialize: deserialize_proto_UploadAdminThumbnailRequest,
+    responseSerialize: serialize_proto_AdminThumbnailResponse,
+    responseDeserialize: deserialize_proto_AdminThumbnailResponse,
   },
 };
 

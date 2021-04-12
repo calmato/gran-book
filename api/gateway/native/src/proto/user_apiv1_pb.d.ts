@@ -542,6 +542,33 @@ export namespace UpdateAdminProfileRequest {
     }
 }
 
+export class UploadAdminThumbnailRequest extends jspb.Message { 
+    getThumbnail(): Uint8Array | string;
+    getThumbnail_asU8(): Uint8Array;
+    getThumbnail_asB64(): string;
+    setThumbnail(value: Uint8Array | string): UploadAdminThumbnailRequest;
+
+    getPosition(): number;
+    setPosition(value: number): UploadAdminThumbnailRequest;
+
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): UploadAdminThumbnailRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: UploadAdminThumbnailRequest): UploadAdminThumbnailRequest.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: UploadAdminThumbnailRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): UploadAdminThumbnailRequest;
+    static deserializeBinaryFromReader(message: UploadAdminThumbnailRequest, reader: jspb.BinaryReader): UploadAdminThumbnailRequest;
+}
+
+export namespace UploadAdminThumbnailRequest {
+    export type AsObject = {
+        thumbnail: Uint8Array | string,
+        position: number,
+    }
+}
+
 export class ListFollowRequest extends jspb.Message { 
     getId(): string;
     setId(value: string): ListFollowRequest;
@@ -982,6 +1009,27 @@ export namespace AdminListResponse {
         }
     }
 
+}
+
+export class AdminThumbnailResponse extends jspb.Message { 
+    getThumbnailUrl(): string;
+    setThumbnailUrl(value: string): AdminThumbnailResponse;
+
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): AdminThumbnailResponse.AsObject;
+    static toObject(includeInstance: boolean, msg: AdminThumbnailResponse): AdminThumbnailResponse.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: AdminThumbnailResponse, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): AdminThumbnailResponse;
+    static deserializeBinaryFromReader(message: AdminThumbnailResponse, reader: jspb.BinaryReader): AdminThumbnailResponse;
+}
+
+export namespace AdminThumbnailResponse {
+    export type AsObject = {
+        thumbnailUrl: string,
+    }
 }
 
 export class UserProfileResponse extends jspb.Message { 

@@ -170,6 +170,7 @@ interface IAdminServiceService extends grpc.ServiceDefinition<grpc.UntypedServic
     updateAdminRole: IAdminServiceService_IUpdateAdminRole;
     updateAdminPassword: IAdminServiceService_IUpdateAdminPassword;
     updateAdminProfile: IAdminServiceService_IUpdateAdminProfile;
+    uploadAdminThumbnail: IAdminServiceService_IUploadAdminThumbnail;
 }
 
 interface IAdminServiceService_IListAdmin extends grpc.MethodDefinition<proto_user_apiv1_pb.ListAdminRequest, proto_user_apiv1_pb.AdminListResponse> {
@@ -235,6 +236,15 @@ interface IAdminServiceService_IUpdateAdminProfile extends grpc.MethodDefinition
     responseSerialize: grpc.serialize<proto_user_apiv1_pb.AdminResponse>;
     responseDeserialize: grpc.deserialize<proto_user_apiv1_pb.AdminResponse>;
 }
+interface IAdminServiceService_IUploadAdminThumbnail extends grpc.MethodDefinition<proto_user_apiv1_pb.UploadAdminThumbnailRequest, proto_user_apiv1_pb.AdminThumbnailResponse> {
+    path: "/proto.AdminService/UploadAdminThumbnail";
+    requestStream: true;
+    responseStream: false;
+    requestSerialize: grpc.serialize<proto_user_apiv1_pb.UploadAdminThumbnailRequest>;
+    requestDeserialize: grpc.deserialize<proto_user_apiv1_pb.UploadAdminThumbnailRequest>;
+    responseSerialize: grpc.serialize<proto_user_apiv1_pb.AdminThumbnailResponse>;
+    responseDeserialize: grpc.deserialize<proto_user_apiv1_pb.AdminThumbnailResponse>;
+}
 
 export const AdminServiceService: IAdminServiceService;
 
@@ -246,6 +256,7 @@ export interface IAdminServiceServer extends grpc.UntypedServiceImplementation {
     updateAdminRole: grpc.handleUnaryCall<proto_user_apiv1_pb.UpdateAdminRoleRequest, proto_user_apiv1_pb.AdminResponse>;
     updateAdminPassword: grpc.handleUnaryCall<proto_user_apiv1_pb.UpdateAdminPasswordRequest, proto_user_apiv1_pb.AdminResponse>;
     updateAdminProfile: grpc.handleUnaryCall<proto_user_apiv1_pb.UpdateAdminProfileRequest, proto_user_apiv1_pb.AdminResponse>;
+    uploadAdminThumbnail: handleClientStreamingCall<proto_user_apiv1_pb.UploadAdminThumbnailRequest, proto_user_apiv1_pb.AdminThumbnailResponse>;
 }
 
 export interface IAdminServiceClient {
@@ -270,6 +281,10 @@ export interface IAdminServiceClient {
     updateAdminProfile(request: proto_user_apiv1_pb.UpdateAdminProfileRequest, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminResponse) => void): grpc.ClientUnaryCall;
     updateAdminProfile(request: proto_user_apiv1_pb.UpdateAdminProfileRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminResponse) => void): grpc.ClientUnaryCall;
     updateAdminProfile(request: proto_user_apiv1_pb.UpdateAdminProfileRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminResponse) => void): grpc.ClientUnaryCall;
+    uploadAdminThumbnail(callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminThumbnailResponse) => void): grpc.ClientWritableStream<proto_user_apiv1_pb.UploadAdminThumbnailRequest>;
+    uploadAdminThumbnail(metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminThumbnailResponse) => void): grpc.ClientWritableStream<proto_user_apiv1_pb.UploadAdminThumbnailRequest>;
+    uploadAdminThumbnail(options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminThumbnailResponse) => void): grpc.ClientWritableStream<proto_user_apiv1_pb.UploadAdminThumbnailRequest>;
+    uploadAdminThumbnail(metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminThumbnailResponse) => void): grpc.ClientWritableStream<proto_user_apiv1_pb.UploadAdminThumbnailRequest>;
 }
 
 export class AdminServiceClient extends grpc.Client implements IAdminServiceClient {
@@ -295,6 +310,10 @@ export class AdminServiceClient extends grpc.Client implements IAdminServiceClie
     public updateAdminProfile(request: proto_user_apiv1_pb.UpdateAdminProfileRequest, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminResponse) => void): grpc.ClientUnaryCall;
     public updateAdminProfile(request: proto_user_apiv1_pb.UpdateAdminProfileRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminResponse) => void): grpc.ClientUnaryCall;
     public updateAdminProfile(request: proto_user_apiv1_pb.UpdateAdminProfileRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminResponse) => void): grpc.ClientUnaryCall;
+    public uploadAdminThumbnail(callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminThumbnailResponse) => void): grpc.ClientWritableStream<proto_user_apiv1_pb.UploadAdminThumbnailRequest>;
+    public uploadAdminThumbnail(metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminThumbnailResponse) => void): grpc.ClientWritableStream<proto_user_apiv1_pb.UploadAdminThumbnailRequest>;
+    public uploadAdminThumbnail(options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminThumbnailResponse) => void): grpc.ClientWritableStream<proto_user_apiv1_pb.UploadAdminThumbnailRequest>;
+    public uploadAdminThumbnail(metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminThumbnailResponse) => void): grpc.ClientWritableStream<proto_user_apiv1_pb.UploadAdminThumbnailRequest>;
 }
 
 interface IUserServiceService extends grpc.ServiceDefinition<grpc.UntypedServiceImplementation> {
