@@ -46,3 +46,8 @@ export interface IUpdateAdminProfileInput {
   lastNameKana: string
   firstNameKana: string
 }
+
+export interface IUploadAdminThumbnailInput {
+  userId: string
+  path: string
+}

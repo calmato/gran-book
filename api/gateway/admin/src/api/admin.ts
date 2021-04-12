@@ -1,16 +1,20 @@
 import { Request } from 'express'
+import fs from 'fs'
+import { ClientWritableStream } from '@grpc/grpc-js'
 import { adminClient } from '~/plugins/grpc'
 import { getGrpcError } from '~/lib/grpc-exception'
 import { getGrpcMetadata } from '~/lib/grpc-metadata'
 import {
   AdminListResponse,
   AdminResponse,
+  AdminThumbnailResponse,
   CreateAdminRequest,
   ListAdminRequest,
   SearchAdminRequest,
   UpdateAdminPasswordRequest,
   UpdateAdminProfileRequest,
   UpdateAdminRoleRequest,
+  UploadAdminThumbnailRequest,
 } from '~/proto/user_apiv1_pb'
 import {
   ICreateAdminInput,
@@ -19,8 +23,15 @@ import {
   IUpdateAdminPasswordInput,
   IUpdateAdminProfileInput,
   IUpdateAdminRoleInput,
+  IUploadAdminThumbnailInput,
 } from '~/types/input'
-import { IAdminListOutput, IAdminListOutputOrder, IAdminListOutputUser, IAdminOutput } from '~/types/output'
+import {
+  IAdminListOutput,
+  IAdminListOutputOrder,
+  IAdminListOutputUser,
+  IAdminOutput,
+  IAdminThumbnailOutput,
+} from '~/types/output'
 
 export function listAdmin(req: Request<any>, input: IListAdminInput): Promise<IAdminListOutput> {
   const request = new ListAdminRequest()
@@ -163,6 +174,47 @@ export function updateAdminProfile(req: Request<any>, input: IUpdateAdminProfile
       }
 
       resolve(setAdminOutput(res))
+    })
+  })
+}
+
+export function uploadAdminThumbnail(
+  req: Request<any>,
+  input: IUploadAdminThumbnailInput
+): Promise<IAdminThumbnailOutput> {
+  const metadata = getGrpcMetadata(req)
+
+  return new Promise((resolve: (res: IAdminThumbnailOutput) => void, reject: (reason: Error) => void) => {
+    const call: ClientWritableStream<UploadAdminThumbnailRequest> = adminClient.uploadAdminThumbnail(
+      metadata,
+      (err: any, res: AdminThumbnailResponse) => {
+        if (err) {
+          return reject(getGrpcError(err))
+        }
+
+        const output: IAdminThumbnailOutput = {
+          thumbnailUrl: res.getThumbnailUrl(),
+        }
+
+        return resolve(output)
+      }
+    )
+
+    const stream: fs.ReadStream = fs.createReadStream(input.path, { highWaterMark: 102400 })
+    let count = 0 // 読み込み回数
+
+    stream.on('data', (chunk: Buffer) => {
+      const request = new UploadAdminThumbnailRequest()
+      request.setUserId(input.userId)
+      request.setThumbnail(chunk)
+      request.setPosition(count)
+
+      call.write(request)
+      count += 1
+    })
+
+    stream.on('end', () => {
+      call.end() // TODO: try-catchとかのエラー処理必要かも
     })
   })
 }
