@@ -22,6 +22,7 @@ service AdminService {
   rpc UpdateAdminRole (UpdateAdminRoleRequest) returns (AdminResponse);
   rpc UpdateAdminPassword (UpdateAdminPasswordRequest) returns (AdminResponse);
   rpc UpdateAdminProfile (UpdateAdminProfileRequest) returns (AdminResponse);
+  rpc UploadAdminThumbnail (stream UploadAdminThumbnailRequest) returns (AdminThumbnailResponse);
 }
 
 service UserService {
@@ -137,6 +138,12 @@ message UpdateAdminProfileRequest {
   string first_name_kana = 7;
 }
 
+message UploadAdminThumbnailRequest {
+  string user_id = 1;
+  bytes thumbnail = 2;
+  int64 position = 3;
+}
+
 message ListFollowRequest {
   string id = 1;
   int64 limit = 2;
@@ -228,6 +235,10 @@ message AdminListResponse {
   int64 offset = 3;
   int64 total = 4;
   Order order = 5;
+}
+
+message AdminThumbnailResponse {
+  string thumbnail_url = 1;
 }
 
 message UserProfileResponse {

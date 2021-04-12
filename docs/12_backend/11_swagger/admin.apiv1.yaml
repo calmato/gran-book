@@ -302,6 +302,39 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorResponse'
+  /v1/admin/{userId}/thumbnail:
+    post:
+      summary: 管理者サムネイルアップロード
+      tags:
+        - AdminService
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: string
+          required: true
+          description: ユーザーID
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/uploadAdminThumbnailRequest'
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/adminThumbnailResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
 tags:
   - name: AuthService
     description: 認証関連
@@ -403,6 +436,12 @@ components:
           type: string
         firstNameKana:
           type: string
+    uploadAdminThumbnailRequest:
+      type: object
+      properties:
+        thumbnail:
+          type: string
+          format: binary
     # Response - Auth
     authResponse:
       type: object
@@ -516,6 +555,11 @@ components:
               type: string
             direction:
               type: string
+    adminThumbnailResponse:
+      type: object
+      properties:
+        thumbnailUrl:
+          type: string
     # Response - Error
     errorResponse:
       type: object
