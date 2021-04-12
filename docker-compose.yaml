@@ -46,6 +46,7 @@ services:
     volumes:
       - ./api/gateway/native:/var/gateway:cached
       - ./tmp/logs/native_gateway:/var/log/gateway:delegated
+      - ./tmp/uploads/native_gateway:/var/gateway/tmp/uploads:delegated
     environment:
       - HOST=0.0.0.0
       - PORT=8080
@@ -70,6 +71,7 @@ services:
     volumes:
       - ./api/gateway/admin:/var/gateway:cached
       - ./tmp/logs/admin_gateway:/var/log/gateway:delegated
+      - ./tmp/uploads/admin_gateway:/var/gateway/tmp/uploads:delegated
     environment:
       - HOST=0.0.0.0
       - PORT=8080

@@ -109,8 +109,8 @@ export class UpdateAuthProfileRequest extends jspb.Message {
     getGender(): number;
     setGender(value: number): UpdateAuthProfileRequest;
 
-    getThumbnail(): string;
-    setThumbnail(value: string): UpdateAuthProfileRequest;
+    getThumbnailUrl(): string;
+    setThumbnailUrl(value: string): UpdateAuthProfileRequest;
 
     getSelfIntroduction(): string;
     setSelfIntroduction(value: string): UpdateAuthProfileRequest;
@@ -130,7 +130,7 @@ export namespace UpdateAuthProfileRequest {
     export type AsObject = {
         username: string,
         gender: number,
-        thumbnail: string,
+        thumbnailUrl: string,
         selfIntroduction: string,
     }
 }
@@ -189,6 +189,33 @@ export namespace UpdateAuthAddressRequest {
         city: string,
         addressLine1: string,
         addressLine2: string,
+    }
+}
+
+export class UploadAuthThumbnailRequest extends jspb.Message { 
+    getThumbnail(): Uint8Array | string;
+    getThumbnail_asU8(): Uint8Array;
+    getThumbnail_asB64(): string;
+    setThumbnail(value: Uint8Array | string): UploadAuthThumbnailRequest;
+
+    getPosition(): number;
+    setPosition(value: number): UploadAuthThumbnailRequest;
+
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): UploadAuthThumbnailRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: UploadAuthThumbnailRequest): UploadAuthThumbnailRequest.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: UploadAuthThumbnailRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): UploadAuthThumbnailRequest;
+    static deserializeBinaryFromReader(message: UploadAuthThumbnailRequest, reader: jspb.BinaryReader): UploadAuthThumbnailRequest;
+}
+
+export namespace UploadAuthThumbnailRequest {
+    export type AsObject = {
+        thumbnail: Uint8Array | string,
+        position: number,
     }
 }
 
@@ -688,9 +715,6 @@ export class AuthResponse extends jspb.Message {
     getAddressLine2(): string;
     setAddressLine2(value: string): AuthResponse;
 
-    getActivated(): boolean;
-    setActivated(value: boolean): AuthResponse;
-
     getCreatedAt(): string;
     setCreatedAt(value: string): AuthResponse;
 
@@ -727,9 +751,29 @@ export namespace AuthResponse {
         city: string,
         addressLine1: string,
         addressLine2: string,
-        activated: boolean,
         createdAt: string,
         updatedAt: string,
+    }
+}
+
+export class AuthThumbnailResponse extends jspb.Message { 
+    getThumbnailUrl(): string;
+    setThumbnailUrl(value: string): AuthThumbnailResponse;
+
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): AuthThumbnailResponse.AsObject;
+    static toObject(includeInstance: boolean, msg: AuthThumbnailResponse): AuthThumbnailResponse.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: AuthThumbnailResponse, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): AuthThumbnailResponse;
+    static deserializeBinaryFromReader(message: AuthThumbnailResponse, reader: jspb.BinaryReader): AuthThumbnailResponse;
+}
+
+export namespace AuthThumbnailResponse {
+    export type AsObject = {
+        thumbnailUrl: string,
     }
 }
 
@@ -767,9 +811,6 @@ export class AdminResponse extends jspb.Message {
     getFirstNameKana(): string;
     setFirstNameKana(value: string): AdminResponse;
 
-    getActivated(): boolean;
-    setActivated(value: boolean): AdminResponse;
-
     getCreatedAt(): string;
     setCreatedAt(value: string): AdminResponse;
 
@@ -800,7 +841,6 @@ export namespace AdminResponse {
         firstName: string,
         lastNameKana: string,
         firstNameKana: string,
-        activated: boolean,
         createdAt: string,
         updatedAt: string,
     }
@@ -882,9 +922,6 @@ export namespace AdminListResponse {
         getFirstNameKana(): string;
         setFirstNameKana(value: string): User;
 
-        getActivated(): boolean;
-        setActivated(value: boolean): User;
-
         getCreatedAt(): string;
         setCreatedAt(value: string): User;
 
@@ -915,7 +952,6 @@ export namespace AdminListResponse {
             firstName: string,
             lastNameKana: string,
             firstNameKana: string,
-            activated: boolean,
             createdAt: string,
             updatedAt: string,
         }

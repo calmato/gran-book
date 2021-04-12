@@ -1,4 +1,6 @@
 import { Request } from 'express'
+import fs from 'fs'
+import { ClientWritableStream } from '@grpc/grpc-js'
 import { authClient } from '~/plugins/grpc'
 import { getGrpcError } from '~/lib/grpc-exception'
 import { getGrpcMetadata } from '~/lib/grpc-metadata'
@@ -10,6 +12,8 @@ import {
   UpdateAuthEmailRequest,
   UpdateAuthPasswordRequest,
   UpdateAuthProfileRequest,
+  UploadAuthThumbnailRequest,
+  AuthThumbnailResponse,
 } from '~/proto/user_apiv1_pb'
 import {
   ICreateAuthInput,
@@ -17,8 +21,9 @@ import {
   IUpdateAuthEmailInput,
   IUpdateAuthPasswordInput,
   IUpdateAuthProfileInput,
+  IUploadAuthThumbnailInput,
 } from '~/types/input'
-import { IAuthOutput } from '~/types/output'
+import { IAuthOutput, IAuthThumbnailOutput } from '~/types/output'
 
 export function getAuth(req: Request<any>): Promise<IAuthOutput> {
   const request = new EmptyUser()
@@ -74,7 +79,7 @@ export function updateAuthEmail(req: Request<any>, input: IUpdateAuthEmailInput)
   })
 }
 
-export function UpdateAuthPassword(req: Request<any>, input: IUpdateAuthPasswordInput): Promise<IAuthOutput> {
+export function updateAuthPassword(req: Request<any>, input: IUpdateAuthPasswordInput): Promise<IAuthOutput> {
   const request = new UpdateAuthPasswordRequest()
   const metadata = getGrpcMetadata(req)
 
@@ -99,7 +104,7 @@ export function updateAuthProfile(req: Request<any>, input: IUpdateAuthProfileIn
 
   request.setUsername(input.username)
   request.setGender(input.gender)
-  request.setThumbnail(input.thumbnail)
+  request.setThumbnailUrl(input.thumbnailUrl)
   request.setSelfIntroduction(input.selfIntroduction)
 
   return new Promise((resolve: (res: IAuthOutput) => void, reject: (reason: Error) => void) => {
@@ -141,6 +146,62 @@ export function updateAuthAddress(req: Request<any>, input: IUpdateAuthAddressIn
   })
 }
 
+export function uploadAuthThumbnail(
+  req: Request<any>,
+  input: IUploadAuthThumbnailInput
+): Promise<IAuthThumbnailOutput> {
+  const metadata = getGrpcMetadata(req)
+
+  return new Promise((resolve: (res: IAuthThumbnailOutput) => void, reject: (reason: Error) => void) => {
+    const call: ClientWritableStream<UploadAuthThumbnailRequest> = authClient.uploadAuthThumbnail(
+      metadata,
+      (err: any, res: AuthThumbnailResponse) => {
+        if (err) {
+          return reject(getGrpcError(err))
+        }
+
+        const output: IAuthThumbnailOutput = {
+          thumbnailUrl: res.getThumbnailUrl(),
+        }
+
+        return resolve(output)
+      }
+    )
+
+    const stream: fs.ReadStream = fs.createReadStream(input.path, { highWaterMark: 102400 })
+    let count = 0 // 読み込み回数
+
+    stream.on('data', (chunk: Buffer) => {
+      const request = new UploadAuthThumbnailRequest()
+      request.setThumbnail(chunk)
+      request.setPosition(count)
+
+      call.write(request)
+      count += 1
+    })
+
+    stream.on('end', () => {
+      call.end() // TODO: try-catchとかのエラー処理必要かも
+    })
+  })
+}
+
+export function deleteAuth(req: Request<any>): Promise<void> {
+  const request = new EmptyUser()
+  const metadata = getGrpcMetadata(req)
+
+  return new Promise((resolve: () => void, reject: (reason: Error) => void) => {
+    authClient.deleteAuth(request, metadata, (err: any) => {
+      if (err) {
+        reject(getGrpcError(err))
+        return
+      }
+
+      resolve()
+    })
+  })
+}
+
 function setAuthOutput(res: AuthResponse): IAuthOutput {
   const output: IAuthOutput = {
     id: res.getId(),
@@ -160,7 +221,6 @@ function setAuthOutput(res: AuthResponse): IAuthOutput {
     city: res.getCity(),
     addressLine1: res.getAddressLine1(),
     addressLine2: res.getAddressLine2(),
-    activated: res.getActivated(),
     createdAt: res.getCreatedAt(),
     updatedAt: res.getUpdatedAt(),
   }

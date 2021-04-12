@@ -112,7 +112,6 @@ func TestUserService_List(t *testing.T) {
 						AddressLine1:     "貫井北町4-1-1",
 						AddressLine2:     "",
 						InstanceID:       "",
-						Activated:        true,
 						CreatedAt:        current,
 						UpdatedAt:        current,
 					},
@@ -460,7 +459,6 @@ func TestUserService_Show(t *testing.T) {
 					AddressLine1:     "貫井北町4-1-1",
 					AddressLine2:     "",
 					InstanceID:       "",
-					Activated:        true,
 					CreatedAt:        current,
 					UpdatedAt:        current,
 				},
@@ -684,7 +682,6 @@ func TestUserService_Create(t *testing.T) {
 				AddressLine1:     "貫井北町4-1-1",
 				AddressLine2:     "",
 				InstanceID:       "",
-				Activated:        true,
 				CreatedAt:        time.Time{},
 				UpdatedAt:        time.Time{},
 			},
@@ -813,7 +810,6 @@ func TestUserService_Update(t *testing.T) {
 				AddressLine1:     "貫井北町4-1-1",
 				AddressLine2:     "",
 				InstanceID:       "",
-				Activated:        true,
 				CreatedAt:        current,
 				UpdatedAt:        current,
 			},
@@ -883,6 +879,43 @@ func TestUserService_UpdatePassword(t *testing.T) {
 			target := NewUserService(uvm, urm, uum)
 
 			got := target.UpdatePassword(ctx, tc.UID, tc.Password)
+			if !reflect.DeepEqual(got, tc.Expected) {
+				t.Fatalf("want %#v, but %#v", tc.Expected, got)
+				return
+			}
+		})
+	}
+}
+
+func TestUserService_Delete(t *testing.T) {
+	testCases := map[string]struct {
+		UID      string
+		Expected error
+	}{
+		"ok": {
+			UID:      "00000000-0000-0000-0000-000000000000",
+			Expected: nil,
+		},
+	}
+
+	for result, tc := range testCases {
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		uvm := mock_user.NewMockValidation(ctrl)
+
+		urm := mock_user.NewMockRepository(ctrl)
+		urm.EXPECT().Delete(ctx, tc.UID).Return(tc.Expected)
+
+		uum := mock_user.NewMockUploader(ctrl)
+
+		t.Run(result, func(t *testing.T) {
+			target := NewUserService(uvm, urm, uum)
+
+			got := target.Delete(ctx, tc.UID)
 			if !reflect.DeepEqual(got, tc.Expected) {
 				t.Fatalf("want %#v, but %#v", tc.Expected, got)
 				return
@@ -1071,7 +1104,6 @@ func TestUserService_Validation(t *testing.T) {
 				AddressLine1:     "貫井北町4-1-1",
 				AddressLine2:     "",
 				InstanceID:       "",
-				Activated:        true,
 				CreatedAt:        time.Time{},
 				UpdatedAt:        time.Time{},
 			},

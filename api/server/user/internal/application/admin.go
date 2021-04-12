@@ -176,7 +176,6 @@ func (a *adminApplication) Create(ctx context.Context, in *input.CreateAdmin) (*
 		FirstName:     in.FirstName,
 		LastNameKana:  in.LastNameKana,
 		FirstNameKana: in.FirstNameKana,
-		Activated:     true,
 	}
 
 	err = a.userService.Validation(ctx, u)

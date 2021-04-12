@@ -242,6 +242,20 @@ func (r *userRepository) UpdatePassword(ctx context.Context, uid string, passwor
 	return nil
 }
 
+func (r *userRepository) Delete(ctx context.Context, uid string) error {
+	err := r.client.db.Where("id = ?", uid).Delete(&user.User{}).Error
+	if err != nil {
+		return exception.ErrorInDatastore.New(err)
+	}
+
+	err = r.auth.DeleteUser(ctx, uid)
+	if err != nil {
+		return exception.ErrorInDatastore.New(err)
+	}
+
+	return nil
+}
+
 func (r *userRepository) DeleteRelationship(ctx context.Context, id int) error {
 	err := r.client.db.Delete(&user.Relationship{}, id).Error
 	if err != nil {

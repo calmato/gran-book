@@ -10,6 +10,8 @@ service AuthService {
   rpc UpdateAuthPassword (UpdateAuthPasswordRequest) returns (AuthResponse);
   rpc UpdateAuthProfile (UpdateAuthProfileRequest) returns (AuthResponse);
   rpc UpdateAuthAddress (UpdateAuthAddressRequest) returns (AuthResponse);
+  rpc UploadAuthThumbnail (stream UploadAuthThumbnailRequest) returns (AuthThumbnailResponse);
+  rpc DeleteAuth (EmptyUser) returns (EmptyUser);
 }
 
 service AdminService {
@@ -51,7 +53,7 @@ message UpdateAuthPasswordRequest {
 message UpdateAuthProfileRequest {
   string username = 1;
   int32 gender = 2;
-  string thumbnail = 3;
+  string thumbnail_url = 3;
   string self_introduction = 4;
 }
 
@@ -66,6 +68,11 @@ message UpdateAuthAddressRequest {
   string city = 8;
   string address_line1 = 9;
   string address_line2 = 10;
+}
+
+message UploadAuthThumbnailRequest {
+  bytes thumbnail = 1;
+  int64 position = 2;
 }
 
 message ListAdminRequest {
@@ -172,9 +179,12 @@ message AuthResponse {
   string city = 15;
   string address_line1 = 16;
   string address_line2 = 17;
-  bool activated = 18;
-  string created_at = 19;
-  string updated_at = 20;
+  string created_at = 18;
+  string updated_at = 19;
+}
+
+message AuthThumbnailResponse {
+  string thumbnail_url = 1;
 }
 
 message AdminResponse {
@@ -189,9 +199,8 @@ message AdminResponse {
   string first_name = 9;
   string last_name_kana = 10;
   string first_name_kana = 11;
-  bool activated = 12;
-  string created_at = 13;
-  string updated_at = 14;
+  string created_at = 12;
+  string updated_at = 13;
 }
 
 message AdminListResponse {
@@ -207,9 +216,8 @@ message AdminListResponse {
     string first_name = 9;
     string last_name_kana = 10;
     string first_name_kana = 11;
-    bool activated = 12;
-    string created_at = 13;
-    string updated_at = 14;
+    string created_at = 12;
+    string updated_at = 13;
   }
   message Order {
     string by = 1;

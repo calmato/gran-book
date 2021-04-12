@@ -17,7 +17,7 @@ export interface IUpdateAuthPasswordInput {
 export interface IUpdateAuthProfileInput {
   username: string
   gender: number
-  thumbnail: string
+  thumbnailUrl: string
   selfIntroduction: string
 }
 
@@ -32,4 +32,8 @@ export interface IUpdateAuthAddressInput {
   city: string
   addressLine1: string
   addressLine2: string
+}
+
+export interface IUploadAuthThumbnailInput {
+  path: string
 }
