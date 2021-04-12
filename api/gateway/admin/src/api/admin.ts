@@ -25,7 +25,13 @@ import {
   IUpdateAdminRoleInput,
   IUploadAdminThumbnailInput,
 } from '~/types/input'
-import { IAdminListOutput, IAdminListOutputOrder, IAdminListOutputUser, IAdminOutput, IAdminThumbnailOutput } from '~/types/output'
+import {
+  IAdminListOutput,
+  IAdminListOutputOrder,
+  IAdminListOutputUser,
+  IAdminOutput,
+  IAdminThumbnailOutput,
+} from '~/types/output'
 
 export function listAdmin(req: Request<any>, input: IListAdminInput): Promise<IAdminListOutput> {
   const request = new ListAdminRequest()
