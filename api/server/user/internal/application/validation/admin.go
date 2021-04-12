@@ -14,6 +14,7 @@ type AdminRequestValidation interface {
 	UpdateAdminRole(in *input.UpdateAdminRole) error
 	UpdateAdminPassword(in *input.UpdateAdminPassword) error
 	UpdateAdminProfile(in *input.UpdateAdminProfile) error
+	UploadAdminThumbnail(in *input.UploadAdminThumbnail) error
 }
 
 type adminRequestValidation struct {
@@ -86,5 +87,15 @@ func (v *adminRequestValidation) UpdateAdminProfile(in *input.UpdateAdminProfile
 	}
 
 	err := xerrors.New("Failed to UpdateAdminProfile for RequestValidation")
+	return exception.InvalidRequestValidation.New(err, ves...)
+}
+
+func (v *adminRequestValidation) UploadAdminThumbnail(in *input.UploadAdminThumbnail) error {
+	ves := v.validator.Run(in, "")
+	if len(ves) == 0 {
+		return nil
+	}
+
+	err := xerrors.New("Failed to UploadAdminThumbnail for RequestValidation")
 	return exception.InvalidRequestValidation.New(err, ves...)
 }
