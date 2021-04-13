@@ -448,6 +448,7 @@ func TestAuthApplication_RegisterDevice(t *testing.T) {
 		defer ctrl.Finish()
 
 		arvm := mock_validation.NewMockAuthRequestValidation(ctrl)
+		arvm.EXPECT().RegisterAuthDevice(tc.Input).Return(nil)
 
 		usm := mock_user.NewMockService(ctrl)
 		usm.EXPECT().Update(ctx, tc.User.ID).Return(tc.Expected)
