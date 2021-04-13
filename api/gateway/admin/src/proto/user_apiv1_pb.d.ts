@@ -220,8 +220,8 @@ export namespace UploadAuthThumbnailRequest {
 }
 
 export class RegisterAuthDeviceRequest extends jspb.Message { 
-    getDeviceId(): string;
-    setDeviceId(value: string): RegisterAuthDeviceRequest;
+    getInstanceId(): string;
+    setInstanceId(value: string): RegisterAuthDeviceRequest;
 
 
     serializeBinary(): Uint8Array;
@@ -236,7 +236,7 @@ export class RegisterAuthDeviceRequest extends jspb.Message {
 
 export namespace RegisterAuthDeviceRequest {
     export type AsObject = {
-        deviceId: string,
+        instanceId: string,
     }
 }
 

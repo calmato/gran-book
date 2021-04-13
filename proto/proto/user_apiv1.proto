@@ -78,7 +78,7 @@ message UploadAuthThumbnailRequest {
 }
 
 message RegisterAuthDeviceRequest {
-  string device_id = 1;
+  string instance_id = 1;
 }
 
 message ListAdminRequest {

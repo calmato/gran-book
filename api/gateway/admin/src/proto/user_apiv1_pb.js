@@ -2253,7 +2253,7 @@ proto.proto.RegisterAuthDeviceRequest.prototype.toObject = function(opt_includeI
  */
 proto.proto.RegisterAuthDeviceRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    deviceId: jspb.Message.getFieldWithDefault(msg, 1, "")
+    instanceId: jspb.Message.getFieldWithDefault(msg, 1, "")
   };
 
   if (includeInstance) {
@@ -2292,7 +2292,7 @@ proto.proto.RegisterAuthDeviceRequest.deserializeBinaryFromReader = function(msg
     switch (field) {
     case 1:
       var value = /** @type {string} */ (reader.readString());
-      msg.setDeviceId(value);
+      msg.setInstanceId(value);
       break;
     default:
       reader.skipField();
@@ -2323,7 +2323,7 @@ proto.proto.RegisterAuthDeviceRequest.prototype.serializeBinary = function() {
  */
 proto.proto.RegisterAuthDeviceRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getDeviceId();
+  f = message.getInstanceId();
   if (f.length > 0) {
     writer.writeString(
       1,
@@ -2334,10 +2334,10 @@ proto.proto.RegisterAuthDeviceRequest.serializeBinaryToWriter = function(message
 
 
 /**
- * optional string device_id = 1;
+ * optional string instance_id = 1;
  * @return {string}
  */
-proto.proto.RegisterAuthDeviceRequest.prototype.getDeviceId = function() {
+proto.proto.RegisterAuthDeviceRequest.prototype.getInstanceId = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
@@ -2346,7 +2346,7 @@ proto.proto.RegisterAuthDeviceRequest.prototype.getDeviceId = function() {
  * @param {string} value
  * @return {!proto.proto.RegisterAuthDeviceRequest} returns this
  */
-proto.proto.RegisterAuthDeviceRequest.prototype.setDeviceId = function(value) {
+proto.proto.RegisterAuthDeviceRequest.prototype.setInstanceId = function(value) {
   return jspb.Message.setProto3StringField(this, 1, value);
 };
 
