@@ -37,3 +37,7 @@ export interface IUpdateAuthAddressInput {
 export interface IUploadAuthThumbnailInput {
   path: string
 }
+
+export interface IRegisterAuthDeviceInput {
+  instanceId: string
+}

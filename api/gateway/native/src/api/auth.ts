@@ -14,9 +14,11 @@ import {
   UpdateAuthProfileRequest,
   UploadAuthThumbnailRequest,
   AuthThumbnailResponse,
+  RegisterAuthDeviceRequest,
 } from '~/proto/user_apiv1_pb'
 import {
   ICreateAuthInput,
+  IRegisterAuthDeviceInput,
   IUpdateAuthAddressInput,
   IUpdateAuthEmailInput,
   IUpdateAuthPasswordInput,
@@ -198,6 +200,25 @@ export function deleteAuth(req: Request<any>): Promise<void> {
       }
 
       resolve()
+    })
+  })
+}
+
+export function registerAuthDevice(req: Request<any>, input: IRegisterAuthDeviceInput): Promise<IAuthOutput> {
+  const request = new RegisterAuthDeviceRequest()
+  const metadata = getGrpcMetadata(req)
+
+  request.setInstanceId(input.instanceId)
+
+  return new Promise((resolve: (output: IAuthOutput) => void, reject: (reason: Error) => void) => {
+    authClient.registerAuthDevice(request, metadata, (err: any, res: AuthResponse) => {
+      if (err) {
+        reject(getGrpcError(err))
+        return
+      }
+
+      const output: IAuthOutput = setAuthOutput(res)
+      resolve(output)
     })
   })
 }

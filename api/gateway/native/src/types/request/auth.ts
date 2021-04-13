@@ -33,3 +33,7 @@ export interface IUpdateAuthAddressRequest {
   addressLine1: string
   addressLine2: string
 }
+
+export interface IRegisterAuthDeviceRequest {
+  instanceId: string
+}

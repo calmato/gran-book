@@ -12,6 +12,7 @@ service AuthService {
   rpc UpdateAuthAddress (UpdateAuthAddressRequest) returns (AuthResponse);
   rpc UploadAuthThumbnail (stream UploadAuthThumbnailRequest) returns (AuthThumbnailResponse);
   rpc DeleteAuth (EmptyUser) returns (EmptyUser);
+  rpc RegisterAuthDevice (RegisterAuthDeviceRequest) returns (AuthResponse);
 }
 
 service AdminService {
@@ -74,6 +75,10 @@ message UpdateAuthAddressRequest {
 message UploadAuthThumbnailRequest {
   bytes thumbnail = 1;
   int64 position = 2;
+}
+
+message RegisterAuthDeviceRequest {
+  string instance_id = 1;
 }
 
 message ListAdminRequest {

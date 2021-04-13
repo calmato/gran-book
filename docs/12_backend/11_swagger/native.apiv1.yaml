@@ -175,6 +175,32 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorResponse'
+  /v1/auth/device:
+    post:
+      summary: デバイスID登録
+      tags:
+        - AuthService
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/registerAuthDeviceRequest'
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/authResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
   /v1/auth/thumbnail:
     post:
       summary: サムネイルアップロード
@@ -649,6 +675,11 @@ components:
         addressLine1:
           type: string
         addressLine2:
+          type: string
+    registerAuthDeviceRequest:
+      type: object
+      properties:
+        instanceId:
           type: string
     uploadAuthThumbnailRequest:
       type: object
