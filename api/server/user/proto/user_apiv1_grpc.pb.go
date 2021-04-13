@@ -431,6 +431,7 @@ type AdminServiceClient interface {
 	UpdateAdminPassword(ctx context.Context, in *UpdateAdminPasswordRequest, opts ...grpc.CallOption) (*AdminResponse, error)
 	UpdateAdminProfile(ctx context.Context, in *UpdateAdminProfileRequest, opts ...grpc.CallOption) (*AdminResponse, error)
 	UploadAdminThumbnail(ctx context.Context, opts ...grpc.CallOption) (AdminService_UploadAdminThumbnailClient, error)
+	DeleteAdmin(ctx context.Context, in *DeleteAdminRequest, opts ...grpc.CallOption) (*EmptyUser, error)
 }
 
 type adminServiceClient struct {
@@ -538,6 +539,15 @@ func (x *adminServiceUploadAdminThumbnailClient) CloseAndRecv() (*AdminThumbnail
 	return m, nil
 }
 
+func (c *adminServiceClient) DeleteAdmin(ctx context.Context, in *DeleteAdminRequest, opts ...grpc.CallOption) (*EmptyUser, error) {
+	out := new(EmptyUser)
+	err := c.cc.Invoke(ctx, "/proto.AdminService/DeleteAdmin", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AdminServiceServer is the server API for AdminService service.
 // All implementations must embed UnimplementedAdminServiceServer
 // for forward compatibility
@@ -550,6 +560,7 @@ type AdminServiceServer interface {
 	UpdateAdminPassword(context.Context, *UpdateAdminPasswordRequest) (*AdminResponse, error)
 	UpdateAdminProfile(context.Context, *UpdateAdminProfileRequest) (*AdminResponse, error)
 	UploadAdminThumbnail(AdminService_UploadAdminThumbnailServer) error
+	DeleteAdmin(context.Context, *DeleteAdminRequest) (*EmptyUser, error)
 	mustEmbedUnimplementedAdminServiceServer()
 }
 
@@ -580,6 +591,9 @@ func (UnimplementedAdminServiceServer) UpdateAdminProfile(context.Context, *Upda
 }
 func (UnimplementedAdminServiceServer) UploadAdminThumbnail(AdminService_UploadAdminThumbnailServer) error {
 	return status.Errorf(codes.Unimplemented, "method UploadAdminThumbnail not implemented")
+}
+func (UnimplementedAdminServiceServer) DeleteAdmin(context.Context, *DeleteAdminRequest) (*EmptyUser, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteAdmin not implemented")
 }
 func (UnimplementedAdminServiceServer) mustEmbedUnimplementedAdminServiceServer() {}
 
@@ -746,6 +760,24 @@ func (x *adminServiceUploadAdminThumbnailServer) Recv() (*UploadAdminThumbnailRe
 	return m, nil
 }
 
+func _AdminService_DeleteAdmin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteAdminRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).DeleteAdmin(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.AdminService/DeleteAdmin",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).DeleteAdmin(ctx, req.(*DeleteAdminRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _AdminService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "proto.AdminService",
 	HandlerType: (*AdminServiceServer)(nil),
@@ -777,6 +809,10 @@ var _AdminService_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateAdminProfile",
 			Handler:    _AdminService_UpdateAdminProfile_Handler,
+		},
+		{
+			MethodName: "DeleteAdmin",
+			Handler:    _AdminService_DeleteAdmin_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

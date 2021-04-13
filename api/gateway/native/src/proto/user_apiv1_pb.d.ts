@@ -594,6 +594,27 @@ export namespace UploadAdminThumbnailRequest {
     }
 }
 
+export class DeleteAdminRequest extends jspb.Message { 
+    getUserId(): string;
+    setUserId(value: string): DeleteAdminRequest;
+
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): DeleteAdminRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: DeleteAdminRequest): DeleteAdminRequest.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: DeleteAdminRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): DeleteAdminRequest;
+    static deserializeBinaryFromReader(message: DeleteAdminRequest, reader: jspb.BinaryReader): DeleteAdminRequest;
+}
+
+export namespace DeleteAdminRequest {
+    export type AsObject = {
+        userId: string,
+    }
+}
+
 export class ListFollowRequest extends jspb.Message { 
     getId(): string;
     setId(value: string): ListFollowRequest;
