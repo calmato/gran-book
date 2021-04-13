@@ -51,3 +51,7 @@ export interface IUploadAdminThumbnailInput {
   userId: string
   path: string
 }
+
+export interface IDeleteAdminInput {
+  userId: string
+}
