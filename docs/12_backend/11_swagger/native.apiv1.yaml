@@ -679,7 +679,7 @@ components:
     registerAuthDeviceRequest:
       type: object
       properties:
-        deviceId:
+        instanceId:
           type: string
     uploadAuthThumbnailRequest:
       type: object
