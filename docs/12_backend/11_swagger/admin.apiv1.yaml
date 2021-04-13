@@ -362,11 +362,40 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorResponse'
+  /v1/books/{bookId}:
+    post:
+      summary: 書籍削除
+      tags:
+        - BookService
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: bookId
+          schema:
+            type: string
+          required: true
+          description: 書籍ID
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
 tags:
   - name: AuthService
     description: 認証関連
   - name: AdminService
     description: 管理者関連
+  - name: BookService
+    description: 書籍関連
 components:
   securitySchemes:
     BearerAuth:
