@@ -17,6 +17,7 @@ interface IAuthServiceService extends grpc.ServiceDefinition<grpc.UntypedService
     updateAuthAddress: IAuthServiceService_IUpdateAuthAddress;
     uploadAuthThumbnail: IAuthServiceService_IUploadAuthThumbnail;
     deleteAuth: IAuthServiceService_IDeleteAuth;
+    registerAuthDevice: IAuthServiceService_IRegisterAuthDevice;
 }
 
 interface IAuthServiceService_IGetAuth extends grpc.MethodDefinition<proto_user_apiv1_pb.EmptyUser, proto_user_apiv1_pb.AuthResponse> {
@@ -91,6 +92,15 @@ interface IAuthServiceService_IDeleteAuth extends grpc.MethodDefinition<proto_us
     responseSerialize: grpc.serialize<proto_user_apiv1_pb.EmptyUser>;
     responseDeserialize: grpc.deserialize<proto_user_apiv1_pb.EmptyUser>;
 }
+interface IAuthServiceService_IRegisterAuthDevice extends grpc.MethodDefinition<proto_user_apiv1_pb.RegisterAuthDeviceRequest, proto_user_apiv1_pb.AuthResponse> {
+    path: "/proto.AuthService/RegisterAuthDevice";
+    requestStream: false;
+    responseStream: false;
+    requestSerialize: grpc.serialize<proto_user_apiv1_pb.RegisterAuthDeviceRequest>;
+    requestDeserialize: grpc.deserialize<proto_user_apiv1_pb.RegisterAuthDeviceRequest>;
+    responseSerialize: grpc.serialize<proto_user_apiv1_pb.AuthResponse>;
+    responseDeserialize: grpc.deserialize<proto_user_apiv1_pb.AuthResponse>;
+}
 
 export const AuthServiceService: IAuthServiceService;
 
@@ -103,6 +113,7 @@ export interface IAuthServiceServer extends grpc.UntypedServiceImplementation {
     updateAuthAddress: grpc.handleUnaryCall<proto_user_apiv1_pb.UpdateAuthAddressRequest, proto_user_apiv1_pb.AuthResponse>;
     uploadAuthThumbnail: handleClientStreamingCall<proto_user_apiv1_pb.UploadAuthThumbnailRequest, proto_user_apiv1_pb.AuthThumbnailResponse>;
     deleteAuth: grpc.handleUnaryCall<proto_user_apiv1_pb.EmptyUser, proto_user_apiv1_pb.EmptyUser>;
+    registerAuthDevice: grpc.handleUnaryCall<proto_user_apiv1_pb.RegisterAuthDeviceRequest, proto_user_apiv1_pb.AuthResponse>;
 }
 
 export interface IAuthServiceClient {
@@ -131,6 +142,9 @@ export interface IAuthServiceClient {
     deleteAuth(request: proto_user_apiv1_pb.EmptyUser, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.EmptyUser) => void): grpc.ClientUnaryCall;
     deleteAuth(request: proto_user_apiv1_pb.EmptyUser, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.EmptyUser) => void): grpc.ClientUnaryCall;
     deleteAuth(request: proto_user_apiv1_pb.EmptyUser, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.EmptyUser) => void): grpc.ClientUnaryCall;
+    registerAuthDevice(request: proto_user_apiv1_pb.RegisterAuthDeviceRequest, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AuthResponse) => void): grpc.ClientUnaryCall;
+    registerAuthDevice(request: proto_user_apiv1_pb.RegisterAuthDeviceRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AuthResponse) => void): grpc.ClientUnaryCall;
+    registerAuthDevice(request: proto_user_apiv1_pb.RegisterAuthDeviceRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AuthResponse) => void): grpc.ClientUnaryCall;
 }
 
 export class AuthServiceClient extends grpc.Client implements IAuthServiceClient {
@@ -160,6 +174,9 @@ export class AuthServiceClient extends grpc.Client implements IAuthServiceClient
     public deleteAuth(request: proto_user_apiv1_pb.EmptyUser, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.EmptyUser) => void): grpc.ClientUnaryCall;
     public deleteAuth(request: proto_user_apiv1_pb.EmptyUser, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.EmptyUser) => void): grpc.ClientUnaryCall;
     public deleteAuth(request: proto_user_apiv1_pb.EmptyUser, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.EmptyUser) => void): grpc.ClientUnaryCall;
+    public registerAuthDevice(request: proto_user_apiv1_pb.RegisterAuthDeviceRequest, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AuthResponse) => void): grpc.ClientUnaryCall;
+    public registerAuthDevice(request: proto_user_apiv1_pb.RegisterAuthDeviceRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AuthResponse) => void): grpc.ClientUnaryCall;
+    public registerAuthDevice(request: proto_user_apiv1_pb.RegisterAuthDeviceRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AuthResponse) => void): grpc.ClientUnaryCall;
 }
 
 interface IAdminServiceService extends grpc.ServiceDefinition<grpc.UntypedServiceImplementation> {

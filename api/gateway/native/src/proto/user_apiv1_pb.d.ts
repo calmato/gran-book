@@ -219,6 +219,27 @@ export namespace UploadAuthThumbnailRequest {
     }
 }
 
+export class RegisterAuthDeviceRequest extends jspb.Message { 
+    getDeviceId(): string;
+    setDeviceId(value: string): RegisterAuthDeviceRequest;
+
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): RegisterAuthDeviceRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: RegisterAuthDeviceRequest): RegisterAuthDeviceRequest.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: RegisterAuthDeviceRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): RegisterAuthDeviceRequest;
+    static deserializeBinaryFromReader(message: RegisterAuthDeviceRequest, reader: jspb.BinaryReader): RegisterAuthDeviceRequest;
+}
+
+export namespace RegisterAuthDeviceRequest {
+    export type AsObject = {
+        deviceId: string,
+    }
+}
+
 export class ListAdminRequest extends jspb.Message { 
     getLimit(): number;
     setLimit(value: number): ListAdminRequest;

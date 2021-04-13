@@ -169,6 +169,17 @@ function deserialize_proto_ListFollowerRequest(buffer_arg) {
   return proto_user_apiv1_pb.ListFollowerRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_proto_RegisterAuthDeviceRequest(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.RegisterAuthDeviceRequest)) {
+    throw new Error('Expected argument of type proto.RegisterAuthDeviceRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_RegisterAuthDeviceRequest(buffer_arg) {
+  return proto_user_apiv1_pb.RegisterAuthDeviceRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_proto_RegisterFollowRequest(arg) {
   if (!(arg instanceof proto_user_apiv1_pb.RegisterFollowRequest)) {
     throw new Error('Expected argument of type proto.RegisterFollowRequest');
@@ -401,6 +412,17 @@ var AuthServiceService = exports.AuthServiceService = {
     requestDeserialize: deserialize_proto_EmptyUser,
     responseSerialize: serialize_proto_EmptyUser,
     responseDeserialize: deserialize_proto_EmptyUser,
+  },
+  registerAuthDevice: {
+    path: '/proto.AuthService/RegisterAuthDevice',
+    requestStream: false,
+    responseStream: false,
+    requestType: proto_user_apiv1_pb.RegisterAuthDeviceRequest,
+    responseType: proto_user_apiv1_pb.AuthResponse,
+    requestSerialize: serialize_proto_RegisterAuthDeviceRequest,
+    requestDeserialize: deserialize_proto_RegisterAuthDeviceRequest,
+    responseSerialize: serialize_proto_AuthResponse,
+    responseDeserialize: deserialize_proto_AuthResponse,
   },
 };
 

@@ -25,6 +25,7 @@ type AuthServiceClient interface {
 	UpdateAuthAddress(ctx context.Context, in *UpdateAuthAddressRequest, opts ...grpc.CallOption) (*AuthResponse, error)
 	UploadAuthThumbnail(ctx context.Context, opts ...grpc.CallOption) (AuthService_UploadAuthThumbnailClient, error)
 	DeleteAuth(ctx context.Context, in *EmptyUser, opts ...grpc.CallOption) (*EmptyUser, error)
+	RegisterAuthDevice(ctx context.Context, in *RegisterAuthDeviceRequest, opts ...grpc.CallOption) (*AuthResponse, error)
 }
 
 type authServiceClient struct {
@@ -132,6 +133,15 @@ func (c *authServiceClient) DeleteAuth(ctx context.Context, in *EmptyUser, opts 
 	return out, nil
 }
 
+func (c *authServiceClient) RegisterAuthDevice(ctx context.Context, in *RegisterAuthDeviceRequest, opts ...grpc.CallOption) (*AuthResponse, error) {
+	out := new(AuthResponse)
+	err := c.cc.Invoke(ctx, "/proto.AuthService/RegisterAuthDevice", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuthServiceServer is the server API for AuthService service.
 // All implementations must embed UnimplementedAuthServiceServer
 // for forward compatibility
@@ -144,6 +154,7 @@ type AuthServiceServer interface {
 	UpdateAuthAddress(context.Context, *UpdateAuthAddressRequest) (*AuthResponse, error)
 	UploadAuthThumbnail(AuthService_UploadAuthThumbnailServer) error
 	DeleteAuth(context.Context, *EmptyUser) (*EmptyUser, error)
+	RegisterAuthDevice(context.Context, *RegisterAuthDeviceRequest) (*AuthResponse, error)
 	mustEmbedUnimplementedAuthServiceServer()
 }
 
@@ -174,6 +185,9 @@ func (UnimplementedAuthServiceServer) UploadAuthThumbnail(AuthService_UploadAuth
 }
 func (UnimplementedAuthServiceServer) DeleteAuth(context.Context, *EmptyUser) (*EmptyUser, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteAuth not implemented")
+}
+func (UnimplementedAuthServiceServer) RegisterAuthDevice(context.Context, *RegisterAuthDeviceRequest) (*AuthResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RegisterAuthDevice not implemented")
 }
 func (UnimplementedAuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {}
 
@@ -340,6 +354,24 @@ func _AuthService_DeleteAuth_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthService_RegisterAuthDevice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RegisterAuthDeviceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).RegisterAuthDevice(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.AuthService/RegisterAuthDevice",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).RegisterAuthDevice(ctx, req.(*RegisterAuthDeviceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _AuthService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "proto.AuthService",
 	HandlerType: (*AuthServiceServer)(nil),
@@ -371,6 +403,10 @@ var _AuthService_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteAuth",
 			Handler:    _AuthService_DeleteAuth_Handler,
+		},
+		{
+			MethodName: "RegisterAuthDevice",
+			Handler:    _AuthService_RegisterAuthDevice_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
