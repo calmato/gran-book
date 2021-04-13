@@ -9,6 +9,8 @@ import {
   AdminResponse,
   AdminThumbnailResponse,
   CreateAdminRequest,
+  DeleteAdminRequest,
+  EmptyUser,
   ListAdminRequest,
   SearchAdminRequest,
   UpdateAdminPasswordRequest,
@@ -18,6 +20,7 @@ import {
 } from '~/proto/user_apiv1_pb'
 import {
   ICreateAdminInput,
+  IDeleteAdminInput,
   IListAdminInput,
   ISearchAdminInput,
   IUpdateAdminPasswordInput,
@@ -215,6 +218,24 @@ export function uploadAdminThumbnail(
 
     stream.on('end', () => {
       call.end() // TODO: try-catchとかのエラー処理必要かも
+    })
+  })
+}
+
+export function deleteAdmin(req: Request<any>, input: IDeleteAdminInput): Promise<void> {
+  const request = new DeleteAdminRequest()
+  const metadata = getGrpcMetadata(req)
+
+  request.setUserId(input.userId)
+
+  return new Promise((resolve: () => void, reject: (reason: Error) => void) => {
+    adminClient.deleteAdmin(request, metadata, (err: any, _: EmptyUser) => {
+      if (err) {
+        reject(getGrpcError(err))
+        return
+      }
+
+      resolve()
     })
   })
 }
