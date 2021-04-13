@@ -288,6 +288,31 @@ func (s *AdminServer) UploadAdminThumbnail(stream pb.AdminService_UploadAdminThu
 	}
 }
 
+// DeleteAdmin - 管理者権限削除
+func (s *AdminServer) DeleteAdmin(ctx context.Context, req *pb.DeleteAdminRequest) (*pb.EmptyUser, error) {
+	cu, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	err = authorization(cu)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	err = hasAdminRole(cu, req.GetUserId())
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	err = s.AdminApplication.Delete(ctx, req.GetUserId())
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	return &pb.EmptyUser{}, nil
+}
+
 func getAdminResponse(u *user.User) *pb.AdminResponse {
 	return &pb.AdminResponse{
 		Id:               u.ID,
