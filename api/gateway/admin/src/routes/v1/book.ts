@@ -21,3 +21,5 @@ router.delete(
       .catch((err: GrpcError) => next(err))
   }
 )
+
+export default router
