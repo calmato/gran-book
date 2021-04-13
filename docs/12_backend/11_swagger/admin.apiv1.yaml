@@ -203,6 +203,33 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorResponse'
+  /v1/admin/{userId}:
+    delete:
+      summary: 管理者削除
+      tags:
+        - AdminService
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: string
+          required: true
+          description: ユーザーID
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
   /v1/admin/{userId}/role:
     patch:
       summary: 管理者権限更新
@@ -561,6 +588,8 @@ components:
         thumbnailUrl:
           type: string
     # Response - Error
+    emptyResponse:
+      type: object
     errorResponse:
       type: object
       properties:

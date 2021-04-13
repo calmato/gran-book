@@ -188,6 +188,7 @@ interface IAdminServiceService extends grpc.ServiceDefinition<grpc.UntypedServic
     updateAdminPassword: IAdminServiceService_IUpdateAdminPassword;
     updateAdminProfile: IAdminServiceService_IUpdateAdminProfile;
     uploadAdminThumbnail: IAdminServiceService_IUploadAdminThumbnail;
+    deleteAdmin: IAdminServiceService_IDeleteAdmin;
 }
 
 interface IAdminServiceService_IListAdmin extends grpc.MethodDefinition<proto_user_apiv1_pb.ListAdminRequest, proto_user_apiv1_pb.AdminListResponse> {
@@ -262,6 +263,15 @@ interface IAdminServiceService_IUploadAdminThumbnail extends grpc.MethodDefiniti
     responseSerialize: grpc.serialize<proto_user_apiv1_pb.AdminThumbnailResponse>;
     responseDeserialize: grpc.deserialize<proto_user_apiv1_pb.AdminThumbnailResponse>;
 }
+interface IAdminServiceService_IDeleteAdmin extends grpc.MethodDefinition<proto_user_apiv1_pb.DeleteAdminRequest, proto_user_apiv1_pb.EmptyUser> {
+    path: "/proto.AdminService/DeleteAdmin";
+    requestStream: false;
+    responseStream: false;
+    requestSerialize: grpc.serialize<proto_user_apiv1_pb.DeleteAdminRequest>;
+    requestDeserialize: grpc.deserialize<proto_user_apiv1_pb.DeleteAdminRequest>;
+    responseSerialize: grpc.serialize<proto_user_apiv1_pb.EmptyUser>;
+    responseDeserialize: grpc.deserialize<proto_user_apiv1_pb.EmptyUser>;
+}
 
 export const AdminServiceService: IAdminServiceService;
 
@@ -274,6 +284,7 @@ export interface IAdminServiceServer extends grpc.UntypedServiceImplementation {
     updateAdminPassword: grpc.handleUnaryCall<proto_user_apiv1_pb.UpdateAdminPasswordRequest, proto_user_apiv1_pb.AdminResponse>;
     updateAdminProfile: grpc.handleUnaryCall<proto_user_apiv1_pb.UpdateAdminProfileRequest, proto_user_apiv1_pb.AdminResponse>;
     uploadAdminThumbnail: handleClientStreamingCall<proto_user_apiv1_pb.UploadAdminThumbnailRequest, proto_user_apiv1_pb.AdminThumbnailResponse>;
+    deleteAdmin: grpc.handleUnaryCall<proto_user_apiv1_pb.DeleteAdminRequest, proto_user_apiv1_pb.EmptyUser>;
 }
 
 export interface IAdminServiceClient {
@@ -302,6 +313,9 @@ export interface IAdminServiceClient {
     uploadAdminThumbnail(metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminThumbnailResponse) => void): grpc.ClientWritableStream<proto_user_apiv1_pb.UploadAdminThumbnailRequest>;
     uploadAdminThumbnail(options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminThumbnailResponse) => void): grpc.ClientWritableStream<proto_user_apiv1_pb.UploadAdminThumbnailRequest>;
     uploadAdminThumbnail(metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminThumbnailResponse) => void): grpc.ClientWritableStream<proto_user_apiv1_pb.UploadAdminThumbnailRequest>;
+    deleteAdmin(request: proto_user_apiv1_pb.DeleteAdminRequest, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.EmptyUser) => void): grpc.ClientUnaryCall;
+    deleteAdmin(request: proto_user_apiv1_pb.DeleteAdminRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.EmptyUser) => void): grpc.ClientUnaryCall;
+    deleteAdmin(request: proto_user_apiv1_pb.DeleteAdminRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.EmptyUser) => void): grpc.ClientUnaryCall;
 }
 
 export class AdminServiceClient extends grpc.Client implements IAdminServiceClient {
@@ -331,6 +345,9 @@ export class AdminServiceClient extends grpc.Client implements IAdminServiceClie
     public uploadAdminThumbnail(metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminThumbnailResponse) => void): grpc.ClientWritableStream<proto_user_apiv1_pb.UploadAdminThumbnailRequest>;
     public uploadAdminThumbnail(options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminThumbnailResponse) => void): grpc.ClientWritableStream<proto_user_apiv1_pb.UploadAdminThumbnailRequest>;
     public uploadAdminThumbnail(metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminThumbnailResponse) => void): grpc.ClientWritableStream<proto_user_apiv1_pb.UploadAdminThumbnailRequest>;
+    public deleteAdmin(request: proto_user_apiv1_pb.DeleteAdminRequest, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.EmptyUser) => void): grpc.ClientUnaryCall;
+    public deleteAdmin(request: proto_user_apiv1_pb.DeleteAdminRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.EmptyUser) => void): grpc.ClientUnaryCall;
+    public deleteAdmin(request: proto_user_apiv1_pb.DeleteAdminRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.EmptyUser) => void): grpc.ClientUnaryCall;
 }
 
 interface IUserServiceService extends grpc.ServiceDefinition<grpc.UntypedServiceImplementation> {

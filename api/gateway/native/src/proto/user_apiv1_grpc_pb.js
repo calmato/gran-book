@@ -81,6 +81,17 @@ function deserialize_proto_CreateAuthRequest(buffer_arg) {
   return proto_user_apiv1_pb.CreateAuthRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_proto_DeleteAdminRequest(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.DeleteAdminRequest)) {
+    throw new Error('Expected argument of type proto.DeleteAdminRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_DeleteAdminRequest(buffer_arg) {
+  return proto_user_apiv1_pb.DeleteAdminRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_proto_EmptyUser(arg) {
   if (!(arg instanceof proto_user_apiv1_pb.EmptyUser)) {
     throw new Error('Expected argument of type proto.EmptyUser');
@@ -515,6 +526,17 @@ var AdminServiceService = exports.AdminServiceService = {
     requestDeserialize: deserialize_proto_UploadAdminThumbnailRequest,
     responseSerialize: serialize_proto_AdminThumbnailResponse,
     responseDeserialize: deserialize_proto_AdminThumbnailResponse,
+  },
+  deleteAdmin: {
+    path: '/proto.AdminService/DeleteAdmin',
+    requestStream: false,
+    responseStream: false,
+    requestType: proto_user_apiv1_pb.DeleteAdminRequest,
+    responseType: proto_user_apiv1_pb.EmptyUser,
+    requestSerialize: serialize_proto_DeleteAdminRequest,
+    requestDeserialize: deserialize_proto_DeleteAdminRequest,
+    responseSerialize: serialize_proto_EmptyUser,
+    responseDeserialize: deserialize_proto_EmptyUser,
   },
 };
 

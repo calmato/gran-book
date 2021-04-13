@@ -24,6 +24,7 @@ service AdminService {
   rpc UpdateAdminPassword (UpdateAdminPasswordRequest) returns (AdminResponse);
   rpc UpdateAdminProfile (UpdateAdminProfileRequest) returns (AdminResponse);
   rpc UploadAdminThumbnail (stream UploadAdminThumbnailRequest) returns (AdminThumbnailResponse);
+  rpc DeleteAdmin(DeleteAdminRequest) returns (EmptyUser);
 }
 
 service UserService {
@@ -147,6 +148,10 @@ message UploadAdminThumbnailRequest {
   string user_id = 1;
   bytes thumbnail = 2;
   int64 position = 3;
+}
+
+message DeleteAdminRequest {
+  string user_id = 1;
 }
 
 message ListFollowRequest {
