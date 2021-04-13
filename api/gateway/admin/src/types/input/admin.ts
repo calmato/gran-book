@@ -14,6 +14,10 @@ export interface ISearchAdminInput {
   value: string
 }
 
+export interface IGetAdminInput {
+  id: string
+}
+
 export interface ICreateAdminInput {
   username: string
   email: string
