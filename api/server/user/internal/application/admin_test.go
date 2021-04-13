@@ -518,3 +518,43 @@ func TestAdminApplication_UpdateProfile(t *testing.T) {
 		})
 	}
 }
+
+func TestAdminApplication_Delete(t *testing.T) {
+	testCases := map[string]struct {
+		UID      string
+		Expected error
+	}{
+		"ok": {
+			UID:      "00000000-0000-0000-0000-000000000000",
+			Expected: nil,
+		},
+	}
+
+	for result, tc := range testCases {
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		u := &user.User{
+			ID: tc.UID,
+		}
+
+		arvm := mock_validation.NewMockAdminRequestValidation(ctrl)
+
+		usm := mock_user.NewMockService(ctrl)
+		usm.EXPECT().Show(ctx, tc.UID).Return(u, nil)
+		usm.EXPECT().Update(ctx, u).Return(tc.Expected)
+
+		t.Run(result, func(t *testing.T) {
+			target := NewAdminApplication(arvm, usm)
+
+			err := target.Delete(ctx, tc.UID)
+			if !reflect.DeepEqual(err, tc.Expected) {
+				t.Fatalf("want %#v, but %#v", tc.Expected, err)
+				return
+			}
+		})
+	}
+}
