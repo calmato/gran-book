@@ -19,6 +19,7 @@ type AuthApplication interface {
 	UpdateAddress(ctx context.Context, in *input.UpdateAuthAddress, u *user.User) error
 	UploadThumbnail(ctx context.Context, in *input.UploadAuthThumbnail, u *user.User) (string, error)
 	Delete(ctx context.Context, u *user.User) error
+	RegisterDevice(ctx context.Context, in *input.RegisterAuthDevice, u *user.User) error
 }
 
 type authApplication struct {
@@ -173,4 +174,15 @@ func (a *authApplication) UploadThumbnail(
 
 func (a *authApplication) Delete(ctx context.Context, u *user.User) error {
 	return a.userService.Delete(ctx, u.ID)
+}
+
+func (a *authApplication) RegisterDevice(ctx context.Context, in *input.RegisterAuthDevice, u *user.User) error {
+	err := a.authRequestValidation.RegisterAuthDevice(in)
+	if err != nil {
+		return err
+	}
+
+	u.InstanceID = in.InstanceID
+
+	return a.userService.Update(ctx, u)
 }
