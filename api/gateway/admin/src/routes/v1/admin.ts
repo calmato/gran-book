@@ -3,6 +3,7 @@ import multer from '~/plugins/multer'
 import {
   createAdmin,
   deleteAdmin,
+  getAdmin,
   listAdmin,
   searchAdmin,
   updateAdminPassword,
@@ -15,6 +16,7 @@ import { GrpcError } from '~/types/exception'
 import {
   ICreateAdminInput,
   IDeleteAdminInput,
+  IGetAdminInput,
   IListAdminInput,
   ISearchAdminInput,
   IUpdateAdminPasswordInput,
@@ -100,6 +102,24 @@ router.post(
     }
 
     await createAdmin(req, input)
+      .then((output: IAdminOutput) => {
+        const response: IAdminResponse = setAdminResponse(output)
+        res.status(200).json(response)
+      })
+      .catch((err: GrpcError) => next(err))
+  }
+)
+
+router.get(
+  '/:userId',
+  async (req: Request, res: Response<IAdminResponse>, next: NextFunction): Promise<void> => {
+    const { userId } = req.params
+
+    const input: IGetAdminInput = {
+      id: userId,
+    }
+
+    await getAdmin(req, input)
       .then((output: IAdminOutput) => {
         const response: IAdminResponse = setAdminResponse(output)
         res.status(200).json(response)
