@@ -204,7 +204,9 @@ func (s *AuthServer) DeleteAuth(ctx context.Context, _ *pb.EmptyUser) (*pb.Empty
 }
 
 // RegisterAuthDevice - デバイス登録
-func (s *AuthServer) RegisterAuthDevice(ctx context.Context, req *pb.RegisterAuthDeviceRequest) (*pb.AuthResponse, error) {
+func (s *AuthServer) RegisterAuthDevice(
+	ctx context.Context, req *pb.RegisterAuthDeviceRequest,
+) (*pb.AuthResponse, error) {
 	u, err := s.AuthApplication.Authentication(ctx)
 	if err != nil {
 		return nil, errorHandling(err)
