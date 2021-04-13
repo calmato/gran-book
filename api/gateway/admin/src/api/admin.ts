@@ -11,6 +11,7 @@ import {
   CreateAdminRequest,
   DeleteAdminRequest,
   EmptyUser,
+  GetAdminRequest,
   ListAdminRequest,
   SearchAdminRequest,
   UpdateAdminPasswordRequest,
@@ -21,6 +22,7 @@ import {
 import {
   ICreateAdminInput,
   IDeleteAdminInput,
+  IGetAdminInput,
   IListAdminInput,
   ISearchAdminInput,
   IUpdateAdminPasswordInput,
@@ -88,6 +90,24 @@ export function searchAdmin(req: Request<any>, input: ISearchAdminInput): Promis
       }
 
       resolve(setAdminListOutput(res))
+    })
+  })
+}
+
+export function getAdmin(req: Request<any>, input: IGetAdminInput): Promise<IAdminOutput> {
+  const request = new GetAdminRequest()
+  const metadata = getGrpcMetadata(req)
+
+  request.setId(input.id)
+
+  return new Promise((resolve: (res: IAdminOutput) => void, reject: (reason: Error) => void) => {
+    adminClient.getAdmin(request, metadata, (err: any, res: AdminResponse) => {
+      if (err) {
+        reject(getGrpcError(err))
+        return
+      }
+
+      resolve(setAdminOutput(res))
     })
   })
 }
