@@ -2,6 +2,7 @@ import express, { Request, Response, NextFunction } from 'express'
 import multer from '~/plugins/multer'
 import {
   createAdmin,
+  deleteAdmin,
   listAdmin,
   searchAdmin,
   updateAdminPassword,
@@ -13,6 +14,7 @@ import { badRequest } from '~/lib/http-exception'
 import { GrpcError } from '~/types/exception'
 import {
   ICreateAdminInput,
+  IDeleteAdminInput,
   IListAdminInput,
   ISearchAdminInput,
   IUpdateAdminPasswordInput,
@@ -101,6 +103,23 @@ router.post(
       .then((output: IAdminOutput) => {
         const response: IAdminResponse = setAdminResponse(output)
         res.status(200).json(response)
+      })
+      .catch((err: GrpcError) => next(err))
+  }
+)
+
+router.delete(
+  '/:userId',
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    const { userId } = req.params
+
+    const input: IDeleteAdminInput = {
+      userId,
+    }
+
+    await deleteAdmin(req, input)
+      .then(() => {
+        res.status(200).json({ status: 'ok' })
       })
       .catch((err: GrpcError) => next(err))
   }
