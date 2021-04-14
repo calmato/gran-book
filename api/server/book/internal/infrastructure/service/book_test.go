@@ -563,6 +563,43 @@ func TestBookService_MultipleUpdate(t *testing.T) {
 	}
 }
 
+func TestBookService_DeleteBookshelf(t *testing.T) {
+	testCases := map[string]struct {
+		BookshelfID int
+		Expected    error
+	}{
+		"ok": {
+			BookshelfID: 1,
+			Expected:    nil,
+		},
+	}
+
+	for result, tc := range testCases {
+		t.Run(result, func(t *testing.T) {
+			ctx, cancel := context.WithCancel(context.Background())
+			defer cancel()
+
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			bvm := mock_book.NewMockValidation(ctrl)
+
+			brm := mock_book.NewMockRepository(ctrl)
+			brm.EXPECT().DeleteBookshelf(ctx, tc.BookshelfID).Return(tc.Expected)
+
+			t.Run(result, func(t *testing.T) {
+				target := NewBookService(bvm, brm)
+
+				err := target.DeleteBookshelf(ctx, tc.BookshelfID)
+				if !reflect.DeepEqual(err, tc.Expected) {
+					t.Fatalf("want %#v, but %#v", tc.Expected, err)
+					return
+				}
+			})
+		})
+	}
+}
+
 func TestBookService_Validation(t *testing.T) {
 	current := time.Now()
 
