@@ -22,6 +22,7 @@ type AdminApplication interface {
 	UpdatePassword(ctx context.Context, in *input.UpdateAdminPassword, uid string) (*user.User, error)
 	UpdateProfile(ctx context.Context, in *input.UpdateAdminProfile, uid string) (*user.User, error)
 	UploadThumbnail(ctx context.Context, in *input.UploadAdminThumbnail, uid string) (string, error)
+	Delete(ctx context.Context, uid string) error
 }
 
 type adminApplication struct {
@@ -281,4 +282,15 @@ func (a *adminApplication) UploadThumbnail(
 	}
 
 	return a.userService.UploadThumbnail(ctx, uid, in.Thumbnail)
+}
+
+func (a *adminApplication) Delete(ctx context.Context, uid string) error {
+	u, err := a.userService.Show(ctx, uid)
+	if err != nil {
+		return exception.NotFound.New(err)
+	}
+
+	u.Role = 0
+
+	return a.userService.Update(ctx, u)
 }
