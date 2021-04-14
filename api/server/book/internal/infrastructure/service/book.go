@@ -150,6 +150,10 @@ func (s *bookService) MultipleUpdate(ctx context.Context, bs []*book.Book) error
 	return s.bookRepository.MultipleUpdate(ctx, bs)
 }
 
+func (s *bookService) Delete(ctx context.Context, bookID int) error {
+	return s.bookRepository.Delete(ctx, bookID)
+}
+
 func (s *bookService) Validation(ctx context.Context, b *book.Book) error {
 	return s.bookDomainValidation.Book(ctx, b)
 }
