@@ -6,6 +6,8 @@ import {
   BookResponse,
   BookshelfResponse,
   CreateBookRequest,
+  DeleteBookshelfRequest,
+  EmptyBook,
   ReadBookshelfRequest,
   ReadingBookshelfRequest,
   ReleaseBookshelfRequest,
@@ -17,6 +19,7 @@ import {
 import {
   IBookInputAuthor,
   ICreateBookInput,
+  IDeleteBookshelfInput,
   IReadBookshelfInput,
   IReadingBookshelfInput,
   IReleaseBookshelfInput,
@@ -219,6 +222,24 @@ export function releaseBookshelf(req: Request<any>, input: IReleaseBookshelfInpu
 
       const output: IBookshelfOutput = setBookshelfOutput(res)
       resolve(output)
+    })
+  })
+}
+
+export function deleteBookshelf(req: Request<any>, input: IDeleteBookshelfInput): Promise<void> {
+  const request = new DeleteBookshelfRequest()
+  const metadata = getGrpcMetadata(req)
+
+  request.setBookId(input.bookId)
+
+  return new Promise((resolve: () => void, reject: (reason: Error) => void) => {
+    bookClient.deleteBookshelf(request, metadata, (err: any, _: EmptyBook) => {
+      if (err) {
+        reject(getGrpcError(err))
+        return
+      }
+
+      resolve()
     })
   })
 }
