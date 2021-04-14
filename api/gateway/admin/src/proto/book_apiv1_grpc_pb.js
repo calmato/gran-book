@@ -48,6 +48,17 @@ function deserialize_proto_DeleteBookRequest(buffer_arg) {
   return proto_book_apiv1_pb.DeleteBookRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_proto_DeleteBookshelfRequest(arg) {
+  if (!(arg instanceof proto_book_apiv1_pb.DeleteBookshelfRequest)) {
+    throw new Error('Expected argument of type proto.DeleteBookshelfRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_DeleteBookshelfRequest(buffer_arg) {
+  return proto_book_apiv1_pb.DeleteBookshelfRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_proto_EmptyBook(arg) {
   if (!(arg instanceof proto_book_apiv1_pb.EmptyBook)) {
     throw new Error('Expected argument of type proto.EmptyBook');
@@ -234,6 +245,17 @@ var BookServiceService = exports.BookServiceService = {
     responseType: proto_book_apiv1_pb.EmptyBook,
     requestSerialize: serialize_proto_DeleteBookRequest,
     requestDeserialize: deserialize_proto_DeleteBookRequest,
+    responseSerialize: serialize_proto_EmptyBook,
+    responseDeserialize: deserialize_proto_EmptyBook,
+  },
+  deleteBookshelf: {
+    path: '/proto.BookService/DeleteBookshelf',
+    requestStream: false,
+    responseStream: false,
+    requestType: proto_book_apiv1_pb.DeleteBookshelfRequest,
+    responseType: proto_book_apiv1_pb.EmptyBook,
+    requestSerialize: serialize_proto_DeleteBookshelfRequest,
+    requestDeserialize: deserialize_proto_DeleteBookshelfRequest,
     responseSerialize: serialize_proto_EmptyBook,
     responseDeserialize: deserialize_proto_EmptyBook,
   },
