@@ -273,6 +273,15 @@ func (r *bookRepository) Delete(ctx context.Context, bookID int) error {
 	return nil
 }
 
+func (r *bookRepository) DeleteBookshelf(ctx context.Context, bookshelfID int) error {
+	err := r.client.db.Where("id = ?", bookshelfID).Delete(&book.Bookshelf{}).Error
+	if err != nil {
+		return exception.ErrorInDatastore.New(err)
+	}
+
+	return nil
+}
+
 func (r *bookRepository) GetIDByIsbn(ctx context.Context, isbn string) (int, error) {
 	b := &book.Book{}
 

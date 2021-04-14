@@ -291,6 +291,20 @@ func getBookResponse(b *book.Book) *pb.BookResponse {
 	}
 }
 
+func (s *BookServer) DeleteBookshelf(ctx context.Context, req *pb.DeleteBookshelfRequest) (*pb.EmptyBook, error) {
+	cuid, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	err = s.BookApplication.DeleteBookshelf(ctx, int(req.GetBookId()), cuid)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	return &pb.EmptyBook{}, nil
+}
+
 func getBookshelfResponse(bs *book.Bookshelf) *pb.BookshelfResponse {
 	return &pb.BookshelfResponse{
 		Id:        int64(bs.ID),

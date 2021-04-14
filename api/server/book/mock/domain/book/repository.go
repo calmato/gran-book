@@ -206,6 +206,20 @@ func (mr *MockRepositoryMockRecorder) Delete(ctx, bookID interface{}) *gomock.Ca
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockRepository)(nil).Delete), ctx, bookID)
 }
 
+// DeleteBookshelf mocks base method
+func (m *MockRepository) DeleteBookshelf(ctx context.Context, bookshelfID int) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteBookshelf", ctx, bookshelfID)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteBookshelf indicates an expected call of DeleteBookshelf
+func (mr *MockRepositoryMockRecorder) DeleteBookshelf(ctx, bookshelfID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteBookshelf", reflect.TypeOf((*MockRepository)(nil).DeleteBookshelf), ctx, bookshelfID)
+}
+
 // GetIDByIsbn mocks base method
 func (m *MockRepository) GetIDByIsbn(ctx context.Context, isbn string) (int, error) {
 	m.ctrl.T.Helper()

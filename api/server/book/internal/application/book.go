@@ -16,6 +16,7 @@ type BookApplication interface {
 	Update(ctx context.Context, in *input.Book) (*book.Book, error)
 	CreateOrUpdateBookshelf(ctx context.Context, in *input.Bookshelf) (*book.Bookshelf, error)
 	Delete(ctx context.Context, bookID int) error
+	DeleteBookshelf(ctx context.Context, bookID int, uid string) error
 }
 
 type bookApplication struct {
@@ -182,4 +183,13 @@ func (a *bookApplication) Delete(ctx context.Context, bookID int) error {
 	}
 
 	return a.bookService.Delete(ctx, b.ID)
+}
+
+func (a *bookApplication) DeleteBookshelf(ctx context.Context, bookID int, uid string) error {
+	b, err := a.bookService.ShowBookshelfByUserIDAndBookID(ctx, uid, bookID)
+	if err != nil {
+		return err
+	}
+
+	return a.bookService.DeleteBookshelf(ctx, b.ID)
 }

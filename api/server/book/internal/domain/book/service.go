@@ -14,6 +14,7 @@ type Service interface {
 	MultipleCreate(ctx context.Context, bs []*Book) error
 	MultipleUpdate(ctx context.Context, bs []*Book) error
 	Delete(ctx context.Context, bookID int) error
+	DeleteBookshelf(ctx context.Context, bookshelfID int) error
 	Validation(ctx context.Context, b *Book) error
 	ValidationAuthor(ctx context.Context, a *Author) error
 	ValidationBookshelf(ctx context.Context, b *Bookshelf) error
