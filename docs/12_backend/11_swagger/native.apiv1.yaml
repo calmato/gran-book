@@ -462,6 +462,40 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorResponse'
+  /v1/users/{userId}/books/{bookId}:
+    delete:
+      summary: 本棚削除
+      tags:
+        - BookService
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: string
+          required: true
+          description: ユーザID
+        - in: path
+          name: bookId
+          schema:
+            type: integer
+            format: int64
+          required: true
+          description: 書籍ID
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
   /v1/users/{userId}/books/{bookId}/read:
     post:
       summary: 読んだ本の登録

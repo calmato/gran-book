@@ -237,6 +237,27 @@ export namespace DeleteBookRequest {
     }
 }
 
+export class DeleteBookshelfRequest extends jspb.Message { 
+    getBookId(): number;
+    setBookId(value: number): DeleteBookshelfRequest;
+
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): DeleteBookshelfRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: DeleteBookshelfRequest): DeleteBookshelfRequest.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: DeleteBookshelfRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): DeleteBookshelfRequest;
+    static deserializeBinaryFromReader(message: DeleteBookshelfRequest, reader: jspb.BinaryReader): DeleteBookshelfRequest;
+}
+
+export namespace DeleteBookshelfRequest {
+    export type AsObject = {
+        bookId: number,
+    }
+}
+
 export class ReadBookshelfRequest extends jspb.Message { 
     getBookId(): number;
     setBookId(value: number): ReadBookshelfRequest;
