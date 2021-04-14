@@ -45,3 +45,8 @@ type UpdateAuthAddress struct {
 type UploadAuthThumbnail struct {
 	Thumbnail []byte `json:"thumbnail" validate:"required"`
 }
+
+// RegisterAuthDevice - デバイス登録のリクエスト
+type RegisterAuthDevice struct {
+	InstanceID string `json:"instanceId" validate:"required"`
+}

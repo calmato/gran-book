@@ -264,6 +264,15 @@ func (r *bookRepository) MultipleUpdate(ctx context.Context, bs []*book.Book) er
 	return tx.Commit().Error
 }
 
+func (r *bookRepository) Delete(ctx context.Context, bookID int) error {
+	err := r.client.db.Where("id = ?", bookID).Delete(&book.Book{}).Error
+	if err != nil {
+		return exception.ErrorInDatastore.New(err)
+	}
+
+	return nil
+}
+
 func (r *bookRepository) DeleteBookshelf(ctx context.Context, bookshelfID int) error {
 	err := r.client.db.Where("id = ?", bookshelfID).Delete(&book.Bookshelf{}).Error
 	if err != nil {

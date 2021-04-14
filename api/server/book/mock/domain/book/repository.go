@@ -192,6 +192,20 @@ func (mr *MockRepositoryMockRecorder) MultipleUpdate(ctx, bs interface{}) *gomoc
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MultipleUpdate", reflect.TypeOf((*MockRepository)(nil).MultipleUpdate), ctx, bs)
 }
 
+// Delete mocks base method
+func (m *MockRepository) Delete(ctx context.Context, bookID int) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Delete", ctx, bookID)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Delete indicates an expected call of Delete
+func (mr *MockRepositoryMockRecorder) Delete(ctx, bookID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockRepository)(nil).Delete), ctx, bookID)
+}
+
 // DeleteBookshelf mocks base method
 func (m *MockRepository) DeleteBookshelf(ctx context.Context, bookshelfID int) error {
 	m.ctrl.T.Helper()

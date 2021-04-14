@@ -408,6 +408,46 @@ func TestBookApplication_CreateOrUpdateBookshelf(t *testing.T) {
 	}
 }
 
+func TestBookApplication_Delete(t *testing.T) {
+	testCases := map[string]struct {
+		BookID   int
+		Expected error
+	}{
+		"ok": {
+			BookID:   1,
+			Expected: nil,
+		},
+	}
+
+	for result, tc := range testCases {
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		b := &book.Book{
+			ID: tc.BookID,
+		}
+
+		brv := mock_validation.NewMockBookRequestValidation(ctrl)
+
+		bsm := mock_book.NewMockService(ctrl)
+		bsm.EXPECT().Show(ctx, tc.BookID).Return(b, nil)
+		bsm.EXPECT().Delete(ctx, tc.BookID).Return(tc.Expected)
+
+		t.Run(result, func(t *testing.T) {
+			target := NewBookApplication(brv, bsm)
+
+			got := target.Delete(ctx, tc.BookID)
+			if !reflect.DeepEqual(got, tc.Expected) {
+				t.Fatalf("want %#v, but %#v", tc.Expected, got)
+				return
+			}
+		})
+	}
+}
+
 func TestBookApplication_DeleteBookshelf(t *testing.T) {
 	testCases := map[string]struct {
 		BookID   int
