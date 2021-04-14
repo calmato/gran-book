@@ -224,6 +224,20 @@ func (s *BookServer) ReleaseBookshelf(
 	return res, nil
 }
 
+func (s *BookServer) DeleteBook(ctx context.Context, req *pb.DeleteBookRequest) (*pb.EmptyBook, error) {
+	_, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	err = s.BookApplication.Delete(ctx, int(req.GetBookId()))
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	return &pb.EmptyBook{}, nil
+}
+
 func getBookResponse(b *book.Book) *pb.BookResponse {
 	as := make([]*pb.BookResponse_Author, len(b.Authors))
 	for i, v := range b.Authors {
