@@ -682,9 +682,6 @@ components:
           type: string
         phoneNumber:
           type: string
-        role:
-          type: integer
-          format: int32
         thumbnailUrl:
           type: string
         selfIntroduction:
