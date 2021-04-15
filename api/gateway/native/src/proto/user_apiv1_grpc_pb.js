@@ -147,6 +147,17 @@ function deserialize_proto_GetUserProfileRequest(buffer_arg) {
   return proto_user_apiv1_pb.GetUserProfileRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_proto_GetUserRequest(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.GetUserRequest)) {
+    throw new Error('Expected argument of type proto.GetUserRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_GetUserRequest(buffer_arg) {
+  return proto_user_apiv1_pb.GetUserRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_proto_ListAdminRequest(arg) {
   if (!(arg instanceof proto_user_apiv1_pb.ListAdminRequest)) {
     throw new Error('Expected argument of type proto.ListAdminRequest');
@@ -332,6 +343,17 @@ function serialize_proto_UserProfileResponse(arg) {
 
 function deserialize_proto_UserProfileResponse(buffer_arg) {
   return proto_user_apiv1_pb.UserProfileResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_proto_UserResponse(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.UserResponse)) {
+    throw new Error('Expected argument of type proto.UserResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_UserResponse(buffer_arg) {
+  return proto_user_apiv1_pb.UserResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 
@@ -563,6 +585,17 @@ var UserServiceService = exports.UserServiceService = {
     requestDeserialize: deserialize_proto_ListFollowerRequest,
     responseSerialize: serialize_proto_FollowerListResponse,
     responseDeserialize: deserialize_proto_FollowerListResponse,
+  },
+  getUser: {
+    path: '/proto.UserService/GetUser',
+    requestStream: false,
+    responseStream: false,
+    requestType: proto_user_apiv1_pb.GetUserRequest,
+    responseType: proto_user_apiv1_pb.UserResponse,
+    requestSerialize: serialize_proto_GetUserRequest,
+    requestDeserialize: deserialize_proto_GetUserRequest,
+    responseSerialize: serialize_proto_UserResponse,
+    responseDeserialize: deserialize_proto_UserResponse,
   },
   getUserProfile: {
     path: '/proto.UserService/GetUserProfile',

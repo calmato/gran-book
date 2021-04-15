@@ -30,6 +30,7 @@ service AdminService {
 service UserService {
   rpc ListFollow (ListFollowRequest) returns (FollowListResponse);
   rpc ListFollower (ListFollowerRequest) returns (FollowerListResponse);
+  rpc GetUser (GetUserRequest) returns (UserResponse);
   rpc GetUserProfile (GetUserProfileRequest) returns (UserProfileResponse);
   rpc RegisterFollow (RegisterFollowRequest) returns (UserProfileResponse);
   rpc UnregisterFollow (UnregisterFollowRequest) returns (UserProfileResponse);
@@ -166,6 +167,10 @@ message ListFollowerRequest {
   int64 offset = 3;
 }
 
+message GetUserRequest {
+  string id = 1;
+}
+
 message GetUserProfileRequest {
   string id = 1;
 }
@@ -249,6 +254,22 @@ message AdminListResponse {
 
 message AdminThumbnailResponse {
   string thumbnail_url = 1;
+}
+
+message UserResponse {
+  string id = 1;
+  string username = 2;
+  string email = 3;
+  string phone_number = 4;
+  int32 role = 5;
+  string thumbnail_url = 6;
+  string self_introduction = 7;
+  string last_name = 8;
+  string first_name = 9;
+  string last_name_kana = 10;
+  string first_name_kana = 11;
+  string created_at = 12;
+  string updated_at = 13;
 }
 
 message UserProfileResponse {

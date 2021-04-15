@@ -831,6 +831,7 @@ var _AdminService_serviceDesc = grpc.ServiceDesc{
 type UserServiceClient interface {
 	ListFollow(ctx context.Context, in *ListFollowRequest, opts ...grpc.CallOption) (*FollowListResponse, error)
 	ListFollower(ctx context.Context, in *ListFollowerRequest, opts ...grpc.CallOption) (*FollowerListResponse, error)
+	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*UserResponse, error)
 	GetUserProfile(ctx context.Context, in *GetUserProfileRequest, opts ...grpc.CallOption) (*UserProfileResponse, error)
 	RegisterFollow(ctx context.Context, in *RegisterFollowRequest, opts ...grpc.CallOption) (*UserProfileResponse, error)
 	UnregisterFollow(ctx context.Context, in *UnregisterFollowRequest, opts ...grpc.CallOption) (*UserProfileResponse, error)
@@ -856,6 +857,15 @@ func (c *userServiceClient) ListFollow(ctx context.Context, in *ListFollowReques
 func (c *userServiceClient) ListFollower(ctx context.Context, in *ListFollowerRequest, opts ...grpc.CallOption) (*FollowerListResponse, error) {
 	out := new(FollowerListResponse)
 	err := c.cc.Invoke(ctx, "/proto.UserService/ListFollower", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*UserResponse, error) {
+	out := new(UserResponse)
+	err := c.cc.Invoke(ctx, "/proto.UserService/GetUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -895,6 +905,7 @@ func (c *userServiceClient) UnregisterFollow(ctx context.Context, in *Unregister
 type UserServiceServer interface {
 	ListFollow(context.Context, *ListFollowRequest) (*FollowListResponse, error)
 	ListFollower(context.Context, *ListFollowerRequest) (*FollowerListResponse, error)
+	GetUser(context.Context, *GetUserRequest) (*UserResponse, error)
 	GetUserProfile(context.Context, *GetUserProfileRequest) (*UserProfileResponse, error)
 	RegisterFollow(context.Context, *RegisterFollowRequest) (*UserProfileResponse, error)
 	UnregisterFollow(context.Context, *UnregisterFollowRequest) (*UserProfileResponse, error)
@@ -910,6 +921,9 @@ func (UnimplementedUserServiceServer) ListFollow(context.Context, *ListFollowReq
 }
 func (UnimplementedUserServiceServer) ListFollower(context.Context, *ListFollowerRequest) (*FollowerListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListFollower not implemented")
+}
+func (UnimplementedUserServiceServer) GetUser(context.Context, *GetUserRequest) (*UserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
 }
 func (UnimplementedUserServiceServer) GetUserProfile(context.Context, *GetUserProfileRequest) (*UserProfileResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserProfile not implemented")
@@ -965,6 +979,24 @@ func _UserService_ListFollower_Handler(srv interface{}, ctx context.Context, dec
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServiceServer).ListFollower(ctx, req.(*ListFollowerRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_GetUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).GetUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.UserService/GetUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).GetUser(ctx, req.(*GetUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1034,6 +1066,10 @@ var _UserService_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListFollower",
 			Handler:    _UserService_ListFollower_Handler,
+		},
+		{
+			MethodName: "GetUser",
+			Handler:    _UserService_GetUser_Handler,
 		},
 		{
 			MethodName: "GetUserProfile",

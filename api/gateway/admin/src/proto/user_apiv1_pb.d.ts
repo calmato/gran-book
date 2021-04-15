@@ -673,6 +673,27 @@ export namespace ListFollowerRequest {
     }
 }
 
+export class GetUserRequest extends jspb.Message { 
+    getId(): string;
+    setId(value: string): GetUserRequest;
+
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): GetUserRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: GetUserRequest): GetUserRequest.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: GetUserRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): GetUserRequest;
+    static deserializeBinaryFromReader(message: GetUserRequest, reader: jspb.BinaryReader): GetUserRequest;
+}
+
+export namespace GetUserRequest {
+    export type AsObject = {
+        id: string,
+    }
+}
+
 export class GetUserProfileRequest extends jspb.Message { 
     getId(): string;
     setId(value: string): GetUserProfileRequest;
@@ -1075,6 +1096,75 @@ export class AdminThumbnailResponse extends jspb.Message {
 export namespace AdminThumbnailResponse {
     export type AsObject = {
         thumbnailUrl: string,
+    }
+}
+
+export class UserResponse extends jspb.Message { 
+    getId(): string;
+    setId(value: string): UserResponse;
+
+    getUsername(): string;
+    setUsername(value: string): UserResponse;
+
+    getEmail(): string;
+    setEmail(value: string): UserResponse;
+
+    getPhoneNumber(): string;
+    setPhoneNumber(value: string): UserResponse;
+
+    getRole(): number;
+    setRole(value: number): UserResponse;
+
+    getThumbnailUrl(): string;
+    setThumbnailUrl(value: string): UserResponse;
+
+    getSelfIntroduction(): string;
+    setSelfIntroduction(value: string): UserResponse;
+
+    getLastName(): string;
+    setLastName(value: string): UserResponse;
+
+    getFirstName(): string;
+    setFirstName(value: string): UserResponse;
+
+    getLastNameKana(): string;
+    setLastNameKana(value: string): UserResponse;
+
+    getFirstNameKana(): string;
+    setFirstNameKana(value: string): UserResponse;
+
+    getCreatedAt(): string;
+    setCreatedAt(value: string): UserResponse;
+
+    getUpdatedAt(): string;
+    setUpdatedAt(value: string): UserResponse;
+
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): UserResponse.AsObject;
+    static toObject(includeInstance: boolean, msg: UserResponse): UserResponse.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: UserResponse, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): UserResponse;
+    static deserializeBinaryFromReader(message: UserResponse, reader: jspb.BinaryReader): UserResponse;
+}
+
+export namespace UserResponse {
+    export type AsObject = {
+        id: string,
+        username: string,
+        email: string,
+        phoneNumber: string,
+        role: number,
+        thumbnailUrl: string,
+        selfIntroduction: string,
+        lastName: string,
+        firstName: string,
+        lastNameKana: string,
+        firstNameKana: string,
+        createdAt: string,
+        updatedAt: string,
     }
 }
 
