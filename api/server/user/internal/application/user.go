@@ -19,6 +19,7 @@ type UserApplication interface {
 	ListFollower(
 		ctx context.Context, in *input.ListFollower, uid string, cuid string,
 	) ([]*user.Follower, *output.ListQuery, error)
+	Show(ctx context.Context, uid string) (*user.User, error)
 	GetUserProfile(ctx context.Context, uid string, cuid string) (*user.User, *output.UserProfile, error)
 	RegisterFollow(ctx context.Context, uid string, cuid string) (*user.User, *output.UserProfile, error)
 	UnregisterFollow(ctx context.Context, uid string, cuid string) (*user.User, *output.UserProfile, error)
@@ -149,6 +150,10 @@ func (a *userApplication) ListFollower(
 	}
 
 	return fs, out, nil
+}
+
+func (a *userApplication) Show(ctx context.Context, uid string) (*user.User, error) {
+	return a.userService.Show(ctx, uid)
 }
 
 func (a *userApplication) GetUserProfile(
