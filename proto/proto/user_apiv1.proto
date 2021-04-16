@@ -12,6 +12,7 @@ service AuthService {
   rpc UpdateAuthAddress (UpdateAuthAddressRequest) returns (AuthResponse);
   rpc UploadAuthThumbnail (stream UploadAuthThumbnailRequest) returns (AuthThumbnailResponse);
   rpc DeleteAuth (EmptyUser) returns (EmptyUser);
+  rpc RegisterAuthDevice (RegisterAuthDeviceRequest) returns (AuthResponse);
 }
 
 service AdminService {
@@ -22,11 +23,14 @@ service AdminService {
   rpc UpdateAdminRole (UpdateAdminRoleRequest) returns (AdminResponse);
   rpc UpdateAdminPassword (UpdateAdminPasswordRequest) returns (AdminResponse);
   rpc UpdateAdminProfile (UpdateAdminProfileRequest) returns (AdminResponse);
+  rpc UploadAdminThumbnail (stream UploadAdminThumbnailRequest) returns (AdminThumbnailResponse);
+  rpc DeleteAdmin(DeleteAdminRequest) returns (EmptyUser);
 }
 
 service UserService {
   rpc ListFollow (ListFollowRequest) returns (FollowListResponse);
   rpc ListFollower (ListFollowerRequest) returns (FollowerListResponse);
+  rpc GetUser (GetUserRequest) returns (UserResponse);
   rpc GetUserProfile (GetUserProfileRequest) returns (UserProfileResponse);
   rpc RegisterFollow (RegisterFollowRequest) returns (UserProfileResponse);
   rpc UnregisterFollow (UnregisterFollowRequest) returns (UserProfileResponse);
@@ -73,6 +77,10 @@ message UpdateAuthAddressRequest {
 message UploadAuthThumbnailRequest {
   bytes thumbnail = 1;
   int64 position = 2;
+}
+
+message RegisterAuthDeviceRequest {
+  string instance_id = 1;
 }
 
 message ListAdminRequest {
@@ -137,6 +145,16 @@ message UpdateAdminProfileRequest {
   string first_name_kana = 7;
 }
 
+message UploadAdminThumbnailRequest {
+  string user_id = 1;
+  bytes thumbnail = 2;
+  int64 position = 3;
+}
+
+message DeleteAdminRequest {
+  string user_id = 1;
+}
+
 message ListFollowRequest {
   string id = 1;
   int64 limit = 2;
@@ -147,6 +165,10 @@ message ListFollowerRequest {
   string id = 1;
   int64 limit = 2;
   int64 offset = 3;
+}
+
+message GetUserRequest {
+  string id = 1;
 }
 
 message GetUserProfileRequest {
@@ -228,6 +250,26 @@ message AdminListResponse {
   int64 offset = 3;
   int64 total = 4;
   Order order = 5;
+}
+
+message AdminThumbnailResponse {
+  string thumbnail_url = 1;
+}
+
+message UserResponse {
+  string id = 1;
+  string username = 2;
+  string email = 3;
+  string phone_number = 4;
+  int32 role = 5;
+  string thumbnail_url = 6;
+  string self_introduction = 7;
+  string last_name = 8;
+  string first_name = 9;
+  string last_name_kana = 10;
+  string first_name_kana = 11;
+  string created_at = 12;
+  string updated_at = 13;
 }
 
 message UserProfileResponse {

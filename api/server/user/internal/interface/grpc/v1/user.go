@@ -7,6 +7,7 @@ import (
 	"github.com/calmato/gran-book/api/server/user/internal/application/input"
 	"github.com/calmato/gran-book/api/server/user/internal/application/output"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/user"
+	"github.com/calmato/gran-book/api/server/user/lib/datetime"
 	pb "github.com/calmato/gran-book/api/server/user/proto"
 )
 
@@ -95,6 +96,21 @@ func (s *UserServer) ListFollower(ctx context.Context, req *pb.ListFollowerReque
 	return res, nil
 }
 
+func (s *UserServer) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.UserResponse, error) {
+	_, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	u, err := s.UserApplication.Show(ctx, req.GetId())
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	res := getUserResponse(u)
+	return res, nil
+}
+
 // GetUserProfile - ユーザプロフィール取得
 func (s *UserServer) GetUserProfile(
 	ctx context.Context, req *pb.GetUserProfileRequest,
@@ -147,6 +163,24 @@ func (s *UserServer) UnregisterFollow(
 
 	res := getUserProfileResponse(u, out)
 	return res, nil
+}
+
+func getUserResponse(u *user.User) *pb.UserResponse {
+	return &pb.UserResponse{
+		Id:               u.ID,
+		Username:         u.Username,
+		Email:            u.Email,
+		PhoneNumber:      u.PhoneNumber,
+		Role:             int32(u.Role),
+		ThumbnailUrl:     u.ThumbnailURL,
+		SelfIntroduction: u.SelfIntroduction,
+		LastName:         u.LastName,
+		FirstName:        u.FirstName,
+		LastNameKana:     u.LastNameKana,
+		FirstNameKana:    u.FirstNameKana,
+		CreatedAt:        datetime.TimeToString(u.CreatedAt),
+		UpdatedAt:        datetime.TimeToString(u.UpdatedAt),
+	}
 }
 
 func getUserProfileResponse(u *user.User, out *output.UserProfile) *pb.UserProfileResponse {

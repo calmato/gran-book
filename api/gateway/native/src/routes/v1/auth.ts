@@ -9,9 +9,11 @@ import {
   updateAuthPassword,
   uploadAuthThumbnail,
   deleteAuth,
+  registerAuthDevice,
 } from '~/api'
 import {
   ICreateAuthRequest,
+  IRegisterAuthDeviceRequest,
   IUpdateAuthAddressRequest,
   IUpdateAuthEmailRequest,
   IUpdateAuthPasswordRequest,
@@ -20,6 +22,7 @@ import {
 import { IAuthResponse, IAuthThumbnailResponse } from '~/types/response'
 import {
   ICreateAuthInput,
+  IRegisterAuthDeviceInput,
   IUpdateAuthAddressInput,
   IUpdateAuthEmailInput,
   IUpdateAuthPasswordInput,
@@ -188,6 +191,24 @@ router.post(
     await uploadAuthThumbnail(req, input)
       .then((output: IAuthThumbnailOutput) => {
         const response: IAuthThumbnailResponse = { thumbnailUrl: output.thumbnailUrl }
+        res.status(200).json(response)
+      })
+      .catch((err: GrpcError) => next(err))
+  }
+)
+
+router.post(
+  '/device',
+  async (req: Request<IRegisterAuthDeviceRequest>, res: Response<IAuthResponse>, next: NextFunction): Promise<void> => {
+    const { instanceId } = req.body as IRegisterAuthDeviceRequest
+
+    const input: IRegisterAuthDeviceInput = {
+      instanceId,
+    }
+
+    await registerAuthDevice(req, input)
+      .then((output: IAuthOutput) => {
+        const response: IAuthResponse = setAuthResponse(output)
         res.status(200).json(response)
       })
       .catch((err: GrpcError) => next(err))

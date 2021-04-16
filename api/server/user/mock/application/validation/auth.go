@@ -116,3 +116,17 @@ func (mr *MockAuthRequestValidationMockRecorder) UploadAuthThumbnail(in interfac
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UploadAuthThumbnail", reflect.TypeOf((*MockAuthRequestValidation)(nil).UploadAuthThumbnail), in)
 }
+
+// RegisterAuthDevice mocks base method
+func (m *MockAuthRequestValidation) RegisterAuthDevice(in *input.RegisterAuthDevice) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RegisterAuthDevice", in)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// RegisterAuthDevice indicates an expected call of RegisterAuthDevice
+func (mr *MockAuthRequestValidationMockRecorder) RegisterAuthDevice(in interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegisterAuthDevice", reflect.TypeOf((*MockAuthRequestValidation)(nil).RegisterAuthDevice), in)
+}

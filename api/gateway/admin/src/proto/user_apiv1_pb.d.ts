@@ -219,6 +219,27 @@ export namespace UploadAuthThumbnailRequest {
     }
 }
 
+export class RegisterAuthDeviceRequest extends jspb.Message { 
+    getInstanceId(): string;
+    setInstanceId(value: string): RegisterAuthDeviceRequest;
+
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): RegisterAuthDeviceRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: RegisterAuthDeviceRequest): RegisterAuthDeviceRequest.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: RegisterAuthDeviceRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): RegisterAuthDeviceRequest;
+    static deserializeBinaryFromReader(message: RegisterAuthDeviceRequest, reader: jspb.BinaryReader): RegisterAuthDeviceRequest;
+}
+
+export namespace RegisterAuthDeviceRequest {
+    export type AsObject = {
+        instanceId: string,
+    }
+}
+
 export class ListAdminRequest extends jspb.Message { 
     getLimit(): number;
     setLimit(value: number): ListAdminRequest;
@@ -542,6 +563,58 @@ export namespace UpdateAdminProfileRequest {
     }
 }
 
+export class UploadAdminThumbnailRequest extends jspb.Message { 
+    getUserId(): string;
+    setUserId(value: string): UploadAdminThumbnailRequest;
+
+    getThumbnail(): Uint8Array | string;
+    getThumbnail_asU8(): Uint8Array;
+    getThumbnail_asB64(): string;
+    setThumbnail(value: Uint8Array | string): UploadAdminThumbnailRequest;
+
+    getPosition(): number;
+    setPosition(value: number): UploadAdminThumbnailRequest;
+
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): UploadAdminThumbnailRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: UploadAdminThumbnailRequest): UploadAdminThumbnailRequest.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: UploadAdminThumbnailRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): UploadAdminThumbnailRequest;
+    static deserializeBinaryFromReader(message: UploadAdminThumbnailRequest, reader: jspb.BinaryReader): UploadAdminThumbnailRequest;
+}
+
+export namespace UploadAdminThumbnailRequest {
+    export type AsObject = {
+        userId: string,
+        thumbnail: Uint8Array | string,
+        position: number,
+    }
+}
+
+export class DeleteAdminRequest extends jspb.Message { 
+    getUserId(): string;
+    setUserId(value: string): DeleteAdminRequest;
+
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): DeleteAdminRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: DeleteAdminRequest): DeleteAdminRequest.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: DeleteAdminRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): DeleteAdminRequest;
+    static deserializeBinaryFromReader(message: DeleteAdminRequest, reader: jspb.BinaryReader): DeleteAdminRequest;
+}
+
+export namespace DeleteAdminRequest {
+    export type AsObject = {
+        userId: string,
+    }
+}
+
 export class ListFollowRequest extends jspb.Message { 
     getId(): string;
     setId(value: string): ListFollowRequest;
@@ -597,6 +670,27 @@ export namespace ListFollowerRequest {
         id: string,
         limit: number,
         offset: number,
+    }
+}
+
+export class GetUserRequest extends jspb.Message { 
+    getId(): string;
+    setId(value: string): GetUserRequest;
+
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): GetUserRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: GetUserRequest): GetUserRequest.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: GetUserRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): GetUserRequest;
+    static deserializeBinaryFromReader(message: GetUserRequest, reader: jspb.BinaryReader): GetUserRequest;
+}
+
+export namespace GetUserRequest {
+    export type AsObject = {
+        id: string,
     }
 }
 
@@ -982,6 +1076,96 @@ export namespace AdminListResponse {
         }
     }
 
+}
+
+export class AdminThumbnailResponse extends jspb.Message { 
+    getThumbnailUrl(): string;
+    setThumbnailUrl(value: string): AdminThumbnailResponse;
+
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): AdminThumbnailResponse.AsObject;
+    static toObject(includeInstance: boolean, msg: AdminThumbnailResponse): AdminThumbnailResponse.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: AdminThumbnailResponse, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): AdminThumbnailResponse;
+    static deserializeBinaryFromReader(message: AdminThumbnailResponse, reader: jspb.BinaryReader): AdminThumbnailResponse;
+}
+
+export namespace AdminThumbnailResponse {
+    export type AsObject = {
+        thumbnailUrl: string,
+    }
+}
+
+export class UserResponse extends jspb.Message { 
+    getId(): string;
+    setId(value: string): UserResponse;
+
+    getUsername(): string;
+    setUsername(value: string): UserResponse;
+
+    getEmail(): string;
+    setEmail(value: string): UserResponse;
+
+    getPhoneNumber(): string;
+    setPhoneNumber(value: string): UserResponse;
+
+    getRole(): number;
+    setRole(value: number): UserResponse;
+
+    getThumbnailUrl(): string;
+    setThumbnailUrl(value: string): UserResponse;
+
+    getSelfIntroduction(): string;
+    setSelfIntroduction(value: string): UserResponse;
+
+    getLastName(): string;
+    setLastName(value: string): UserResponse;
+
+    getFirstName(): string;
+    setFirstName(value: string): UserResponse;
+
+    getLastNameKana(): string;
+    setLastNameKana(value: string): UserResponse;
+
+    getFirstNameKana(): string;
+    setFirstNameKana(value: string): UserResponse;
+
+    getCreatedAt(): string;
+    setCreatedAt(value: string): UserResponse;
+
+    getUpdatedAt(): string;
+    setUpdatedAt(value: string): UserResponse;
+
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): UserResponse.AsObject;
+    static toObject(includeInstance: boolean, msg: UserResponse): UserResponse.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: UserResponse, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): UserResponse;
+    static deserializeBinaryFromReader(message: UserResponse, reader: jspb.BinaryReader): UserResponse;
+}
+
+export namespace UserResponse {
+    export type AsObject = {
+        id: string,
+        username: string,
+        email: string,
+        phoneNumber: string,
+        role: number,
+        thumbnailUrl: string,
+        selfIntroduction: string,
+        lastName: string,
+        firstName: string,
+        lastNameKana: string,
+        firstNameKana: string,
+        createdAt: string,
+        updatedAt: string,
+    }
 }
 
 export class UserProfileResponse extends jspb.Message { 

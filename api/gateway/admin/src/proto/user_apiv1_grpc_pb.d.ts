@@ -17,6 +17,7 @@ interface IAuthServiceService extends grpc.ServiceDefinition<grpc.UntypedService
     updateAuthAddress: IAuthServiceService_IUpdateAuthAddress;
     uploadAuthThumbnail: IAuthServiceService_IUploadAuthThumbnail;
     deleteAuth: IAuthServiceService_IDeleteAuth;
+    registerAuthDevice: IAuthServiceService_IRegisterAuthDevice;
 }
 
 interface IAuthServiceService_IGetAuth extends grpc.MethodDefinition<proto_user_apiv1_pb.EmptyUser, proto_user_apiv1_pb.AuthResponse> {
@@ -91,6 +92,15 @@ interface IAuthServiceService_IDeleteAuth extends grpc.MethodDefinition<proto_us
     responseSerialize: grpc.serialize<proto_user_apiv1_pb.EmptyUser>;
     responseDeserialize: grpc.deserialize<proto_user_apiv1_pb.EmptyUser>;
 }
+interface IAuthServiceService_IRegisterAuthDevice extends grpc.MethodDefinition<proto_user_apiv1_pb.RegisterAuthDeviceRequest, proto_user_apiv1_pb.AuthResponse> {
+    path: "/proto.AuthService/RegisterAuthDevice";
+    requestStream: false;
+    responseStream: false;
+    requestSerialize: grpc.serialize<proto_user_apiv1_pb.RegisterAuthDeviceRequest>;
+    requestDeserialize: grpc.deserialize<proto_user_apiv1_pb.RegisterAuthDeviceRequest>;
+    responseSerialize: grpc.serialize<proto_user_apiv1_pb.AuthResponse>;
+    responseDeserialize: grpc.deserialize<proto_user_apiv1_pb.AuthResponse>;
+}
 
 export const AuthServiceService: IAuthServiceService;
 
@@ -103,6 +113,7 @@ export interface IAuthServiceServer extends grpc.UntypedServiceImplementation {
     updateAuthAddress: grpc.handleUnaryCall<proto_user_apiv1_pb.UpdateAuthAddressRequest, proto_user_apiv1_pb.AuthResponse>;
     uploadAuthThumbnail: handleClientStreamingCall<proto_user_apiv1_pb.UploadAuthThumbnailRequest, proto_user_apiv1_pb.AuthThumbnailResponse>;
     deleteAuth: grpc.handleUnaryCall<proto_user_apiv1_pb.EmptyUser, proto_user_apiv1_pb.EmptyUser>;
+    registerAuthDevice: grpc.handleUnaryCall<proto_user_apiv1_pb.RegisterAuthDeviceRequest, proto_user_apiv1_pb.AuthResponse>;
 }
 
 export interface IAuthServiceClient {
@@ -131,6 +142,9 @@ export interface IAuthServiceClient {
     deleteAuth(request: proto_user_apiv1_pb.EmptyUser, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.EmptyUser) => void): grpc.ClientUnaryCall;
     deleteAuth(request: proto_user_apiv1_pb.EmptyUser, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.EmptyUser) => void): grpc.ClientUnaryCall;
     deleteAuth(request: proto_user_apiv1_pb.EmptyUser, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.EmptyUser) => void): grpc.ClientUnaryCall;
+    registerAuthDevice(request: proto_user_apiv1_pb.RegisterAuthDeviceRequest, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AuthResponse) => void): grpc.ClientUnaryCall;
+    registerAuthDevice(request: proto_user_apiv1_pb.RegisterAuthDeviceRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AuthResponse) => void): grpc.ClientUnaryCall;
+    registerAuthDevice(request: proto_user_apiv1_pb.RegisterAuthDeviceRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AuthResponse) => void): grpc.ClientUnaryCall;
 }
 
 export class AuthServiceClient extends grpc.Client implements IAuthServiceClient {
@@ -160,6 +174,9 @@ export class AuthServiceClient extends grpc.Client implements IAuthServiceClient
     public deleteAuth(request: proto_user_apiv1_pb.EmptyUser, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.EmptyUser) => void): grpc.ClientUnaryCall;
     public deleteAuth(request: proto_user_apiv1_pb.EmptyUser, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.EmptyUser) => void): grpc.ClientUnaryCall;
     public deleteAuth(request: proto_user_apiv1_pb.EmptyUser, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.EmptyUser) => void): grpc.ClientUnaryCall;
+    public registerAuthDevice(request: proto_user_apiv1_pb.RegisterAuthDeviceRequest, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AuthResponse) => void): grpc.ClientUnaryCall;
+    public registerAuthDevice(request: proto_user_apiv1_pb.RegisterAuthDeviceRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AuthResponse) => void): grpc.ClientUnaryCall;
+    public registerAuthDevice(request: proto_user_apiv1_pb.RegisterAuthDeviceRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AuthResponse) => void): grpc.ClientUnaryCall;
 }
 
 interface IAdminServiceService extends grpc.ServiceDefinition<grpc.UntypedServiceImplementation> {
@@ -170,6 +187,8 @@ interface IAdminServiceService extends grpc.ServiceDefinition<grpc.UntypedServic
     updateAdminRole: IAdminServiceService_IUpdateAdminRole;
     updateAdminPassword: IAdminServiceService_IUpdateAdminPassword;
     updateAdminProfile: IAdminServiceService_IUpdateAdminProfile;
+    uploadAdminThumbnail: IAdminServiceService_IUploadAdminThumbnail;
+    deleteAdmin: IAdminServiceService_IDeleteAdmin;
 }
 
 interface IAdminServiceService_IListAdmin extends grpc.MethodDefinition<proto_user_apiv1_pb.ListAdminRequest, proto_user_apiv1_pb.AdminListResponse> {
@@ -235,6 +254,24 @@ interface IAdminServiceService_IUpdateAdminProfile extends grpc.MethodDefinition
     responseSerialize: grpc.serialize<proto_user_apiv1_pb.AdminResponse>;
     responseDeserialize: grpc.deserialize<proto_user_apiv1_pb.AdminResponse>;
 }
+interface IAdminServiceService_IUploadAdminThumbnail extends grpc.MethodDefinition<proto_user_apiv1_pb.UploadAdminThumbnailRequest, proto_user_apiv1_pb.AdminThumbnailResponse> {
+    path: "/proto.AdminService/UploadAdminThumbnail";
+    requestStream: true;
+    responseStream: false;
+    requestSerialize: grpc.serialize<proto_user_apiv1_pb.UploadAdminThumbnailRequest>;
+    requestDeserialize: grpc.deserialize<proto_user_apiv1_pb.UploadAdminThumbnailRequest>;
+    responseSerialize: grpc.serialize<proto_user_apiv1_pb.AdminThumbnailResponse>;
+    responseDeserialize: grpc.deserialize<proto_user_apiv1_pb.AdminThumbnailResponse>;
+}
+interface IAdminServiceService_IDeleteAdmin extends grpc.MethodDefinition<proto_user_apiv1_pb.DeleteAdminRequest, proto_user_apiv1_pb.EmptyUser> {
+    path: "/proto.AdminService/DeleteAdmin";
+    requestStream: false;
+    responseStream: false;
+    requestSerialize: grpc.serialize<proto_user_apiv1_pb.DeleteAdminRequest>;
+    requestDeserialize: grpc.deserialize<proto_user_apiv1_pb.DeleteAdminRequest>;
+    responseSerialize: grpc.serialize<proto_user_apiv1_pb.EmptyUser>;
+    responseDeserialize: grpc.deserialize<proto_user_apiv1_pb.EmptyUser>;
+}
 
 export const AdminServiceService: IAdminServiceService;
 
@@ -246,6 +283,8 @@ export interface IAdminServiceServer extends grpc.UntypedServiceImplementation {
     updateAdminRole: grpc.handleUnaryCall<proto_user_apiv1_pb.UpdateAdminRoleRequest, proto_user_apiv1_pb.AdminResponse>;
     updateAdminPassword: grpc.handleUnaryCall<proto_user_apiv1_pb.UpdateAdminPasswordRequest, proto_user_apiv1_pb.AdminResponse>;
     updateAdminProfile: grpc.handleUnaryCall<proto_user_apiv1_pb.UpdateAdminProfileRequest, proto_user_apiv1_pb.AdminResponse>;
+    uploadAdminThumbnail: handleClientStreamingCall<proto_user_apiv1_pb.UploadAdminThumbnailRequest, proto_user_apiv1_pb.AdminThumbnailResponse>;
+    deleteAdmin: grpc.handleUnaryCall<proto_user_apiv1_pb.DeleteAdminRequest, proto_user_apiv1_pb.EmptyUser>;
 }
 
 export interface IAdminServiceClient {
@@ -270,6 +309,13 @@ export interface IAdminServiceClient {
     updateAdminProfile(request: proto_user_apiv1_pb.UpdateAdminProfileRequest, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminResponse) => void): grpc.ClientUnaryCall;
     updateAdminProfile(request: proto_user_apiv1_pb.UpdateAdminProfileRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminResponse) => void): grpc.ClientUnaryCall;
     updateAdminProfile(request: proto_user_apiv1_pb.UpdateAdminProfileRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminResponse) => void): grpc.ClientUnaryCall;
+    uploadAdminThumbnail(callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminThumbnailResponse) => void): grpc.ClientWritableStream<proto_user_apiv1_pb.UploadAdminThumbnailRequest>;
+    uploadAdminThumbnail(metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminThumbnailResponse) => void): grpc.ClientWritableStream<proto_user_apiv1_pb.UploadAdminThumbnailRequest>;
+    uploadAdminThumbnail(options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminThumbnailResponse) => void): grpc.ClientWritableStream<proto_user_apiv1_pb.UploadAdminThumbnailRequest>;
+    uploadAdminThumbnail(metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminThumbnailResponse) => void): grpc.ClientWritableStream<proto_user_apiv1_pb.UploadAdminThumbnailRequest>;
+    deleteAdmin(request: proto_user_apiv1_pb.DeleteAdminRequest, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.EmptyUser) => void): grpc.ClientUnaryCall;
+    deleteAdmin(request: proto_user_apiv1_pb.DeleteAdminRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.EmptyUser) => void): grpc.ClientUnaryCall;
+    deleteAdmin(request: proto_user_apiv1_pb.DeleteAdminRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.EmptyUser) => void): grpc.ClientUnaryCall;
 }
 
 export class AdminServiceClient extends grpc.Client implements IAdminServiceClient {
@@ -295,11 +341,19 @@ export class AdminServiceClient extends grpc.Client implements IAdminServiceClie
     public updateAdminProfile(request: proto_user_apiv1_pb.UpdateAdminProfileRequest, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminResponse) => void): grpc.ClientUnaryCall;
     public updateAdminProfile(request: proto_user_apiv1_pb.UpdateAdminProfileRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminResponse) => void): grpc.ClientUnaryCall;
     public updateAdminProfile(request: proto_user_apiv1_pb.UpdateAdminProfileRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminResponse) => void): grpc.ClientUnaryCall;
+    public uploadAdminThumbnail(callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminThumbnailResponse) => void): grpc.ClientWritableStream<proto_user_apiv1_pb.UploadAdminThumbnailRequest>;
+    public uploadAdminThumbnail(metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminThumbnailResponse) => void): grpc.ClientWritableStream<proto_user_apiv1_pb.UploadAdminThumbnailRequest>;
+    public uploadAdminThumbnail(options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminThumbnailResponse) => void): grpc.ClientWritableStream<proto_user_apiv1_pb.UploadAdminThumbnailRequest>;
+    public uploadAdminThumbnail(metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.AdminThumbnailResponse) => void): grpc.ClientWritableStream<proto_user_apiv1_pb.UploadAdminThumbnailRequest>;
+    public deleteAdmin(request: proto_user_apiv1_pb.DeleteAdminRequest, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.EmptyUser) => void): grpc.ClientUnaryCall;
+    public deleteAdmin(request: proto_user_apiv1_pb.DeleteAdminRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.EmptyUser) => void): grpc.ClientUnaryCall;
+    public deleteAdmin(request: proto_user_apiv1_pb.DeleteAdminRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.EmptyUser) => void): grpc.ClientUnaryCall;
 }
 
 interface IUserServiceService extends grpc.ServiceDefinition<grpc.UntypedServiceImplementation> {
     listFollow: IUserServiceService_IListFollow;
     listFollower: IUserServiceService_IListFollower;
+    getUser: IUserServiceService_IGetUser;
     getUserProfile: IUserServiceService_IGetUserProfile;
     registerFollow: IUserServiceService_IRegisterFollow;
     unregisterFollow: IUserServiceService_IUnregisterFollow;
@@ -322,6 +376,15 @@ interface IUserServiceService_IListFollower extends grpc.MethodDefinition<proto_
     requestDeserialize: grpc.deserialize<proto_user_apiv1_pb.ListFollowerRequest>;
     responseSerialize: grpc.serialize<proto_user_apiv1_pb.FollowerListResponse>;
     responseDeserialize: grpc.deserialize<proto_user_apiv1_pb.FollowerListResponse>;
+}
+interface IUserServiceService_IGetUser extends grpc.MethodDefinition<proto_user_apiv1_pb.GetUserRequest, proto_user_apiv1_pb.UserResponse> {
+    path: "/proto.UserService/GetUser";
+    requestStream: false;
+    responseStream: false;
+    requestSerialize: grpc.serialize<proto_user_apiv1_pb.GetUserRequest>;
+    requestDeserialize: grpc.deserialize<proto_user_apiv1_pb.GetUserRequest>;
+    responseSerialize: grpc.serialize<proto_user_apiv1_pb.UserResponse>;
+    responseDeserialize: grpc.deserialize<proto_user_apiv1_pb.UserResponse>;
 }
 interface IUserServiceService_IGetUserProfile extends grpc.MethodDefinition<proto_user_apiv1_pb.GetUserProfileRequest, proto_user_apiv1_pb.UserProfileResponse> {
     path: "/proto.UserService/GetUserProfile";
@@ -356,6 +419,7 @@ export const UserServiceService: IUserServiceService;
 export interface IUserServiceServer extends grpc.UntypedServiceImplementation {
     listFollow: grpc.handleUnaryCall<proto_user_apiv1_pb.ListFollowRequest, proto_user_apiv1_pb.FollowListResponse>;
     listFollower: grpc.handleUnaryCall<proto_user_apiv1_pb.ListFollowerRequest, proto_user_apiv1_pb.FollowerListResponse>;
+    getUser: grpc.handleUnaryCall<proto_user_apiv1_pb.GetUserRequest, proto_user_apiv1_pb.UserResponse>;
     getUserProfile: grpc.handleUnaryCall<proto_user_apiv1_pb.GetUserProfileRequest, proto_user_apiv1_pb.UserProfileResponse>;
     registerFollow: grpc.handleUnaryCall<proto_user_apiv1_pb.RegisterFollowRequest, proto_user_apiv1_pb.UserProfileResponse>;
     unregisterFollow: grpc.handleUnaryCall<proto_user_apiv1_pb.UnregisterFollowRequest, proto_user_apiv1_pb.UserProfileResponse>;
@@ -368,6 +432,9 @@ export interface IUserServiceClient {
     listFollower(request: proto_user_apiv1_pb.ListFollowerRequest, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.FollowerListResponse) => void): grpc.ClientUnaryCall;
     listFollower(request: proto_user_apiv1_pb.ListFollowerRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.FollowerListResponse) => void): grpc.ClientUnaryCall;
     listFollower(request: proto_user_apiv1_pb.ListFollowerRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.FollowerListResponse) => void): grpc.ClientUnaryCall;
+    getUser(request: proto_user_apiv1_pb.GetUserRequest, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.UserResponse) => void): grpc.ClientUnaryCall;
+    getUser(request: proto_user_apiv1_pb.GetUserRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.UserResponse) => void): grpc.ClientUnaryCall;
+    getUser(request: proto_user_apiv1_pb.GetUserRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.UserResponse) => void): grpc.ClientUnaryCall;
     getUserProfile(request: proto_user_apiv1_pb.GetUserProfileRequest, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.UserProfileResponse) => void): grpc.ClientUnaryCall;
     getUserProfile(request: proto_user_apiv1_pb.GetUserProfileRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.UserProfileResponse) => void): grpc.ClientUnaryCall;
     getUserProfile(request: proto_user_apiv1_pb.GetUserProfileRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.UserProfileResponse) => void): grpc.ClientUnaryCall;
@@ -387,6 +454,9 @@ export class UserServiceClient extends grpc.Client implements IUserServiceClient
     public listFollower(request: proto_user_apiv1_pb.ListFollowerRequest, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.FollowerListResponse) => void): grpc.ClientUnaryCall;
     public listFollower(request: proto_user_apiv1_pb.ListFollowerRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.FollowerListResponse) => void): grpc.ClientUnaryCall;
     public listFollower(request: proto_user_apiv1_pb.ListFollowerRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.FollowerListResponse) => void): grpc.ClientUnaryCall;
+    public getUser(request: proto_user_apiv1_pb.GetUserRequest, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.UserResponse) => void): grpc.ClientUnaryCall;
+    public getUser(request: proto_user_apiv1_pb.GetUserRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.UserResponse) => void): grpc.ClientUnaryCall;
+    public getUser(request: proto_user_apiv1_pb.GetUserRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.UserResponse) => void): grpc.ClientUnaryCall;
     public getUserProfile(request: proto_user_apiv1_pb.GetUserProfileRequest, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.UserProfileResponse) => void): grpc.ClientUnaryCall;
     public getUserProfile(request: proto_user_apiv1_pb.GetUserProfileRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.UserProfileResponse) => void): grpc.ClientUnaryCall;
     public getUserProfile(request: proto_user_apiv1_pb.GetUserProfileRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.UserProfileResponse) => void): grpc.ClientUnaryCall;

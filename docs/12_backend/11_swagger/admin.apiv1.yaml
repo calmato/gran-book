@@ -203,6 +203,59 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorResponse'
+  /v1/admin/{userId}:
+    get:
+      summary: 管理者取得
+      tags:
+        - AdminService
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: string
+          required: true
+          description: ユーザーID
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/adminResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+    delete:
+      summary: 管理者削除
+      tags:
+        - AdminService
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: string
+          required: true
+          description: ユーザーID
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
   /v1/admin/{userId}/role:
     patch:
       summary: 管理者権限更新
@@ -302,11 +355,102 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorResponse'
+  /v1/admin/{userId}/thumbnail:
+    post:
+      summary: 管理者サムネイルアップロード
+      tags:
+        - AdminService
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: string
+          required: true
+          description: ユーザーID
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/uploadAdminThumbnailRequest'
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/adminThumbnailResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+  /v1/users/{userId}:
+    get:
+      summary: ユーザー取得
+      tags:
+        - UserService
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: string
+          required: true
+          description: ユーザーID
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+  /v1/books/{bookId}:
+    post:
+      summary: 書籍削除
+      tags:
+        - BookService
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: bookId
+          schema:
+            type: string
+          required: true
+          description: 書籍ID
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
 tags:
   - name: AuthService
     description: 認証関連
   - name: AdminService
     description: 管理者関連
+  - name: UserService
+    description: ユーザ関連
+  - name: BookService
+    description: 書籍関連
 components:
   securitySchemes:
     BearerAuth:
@@ -403,6 +547,12 @@ components:
           type: string
         firstNameKana:
           type: string
+    uploadAdminThumbnailRequest:
+      type: object
+      properties:
+        thumbnail:
+          type: string
+          format: binary
     # Response - Auth
     authResponse:
       type: object
@@ -434,7 +584,7 @@ components:
           type: string
         updatedAt:
           type: string
-    # Response - Admin
+    # Response
     adminResponse:
       type: object
       properties:
@@ -516,7 +666,40 @@ components:
               type: string
             direction:
               type: string
-    # Response - Error
+    adminThumbnailResponse:
+      type: object
+      properties:
+        thumbnailUrl:
+          type: string
+    userResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+        email:
+          type: string
+        phoneNumber:
+          type: string
+        thumbnailUrl:
+          type: string
+        selfIntroduction:
+          type: string
+        lastName:
+          type: string
+        firstName:
+          type: string
+        lastNameKana:
+          type: string
+        firstNameKana:
+          type: string
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+    emptyResponse:
+      type: object
     errorResponse:
       type: object
       properties:

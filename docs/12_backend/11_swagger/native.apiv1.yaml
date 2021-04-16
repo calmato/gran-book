@@ -175,6 +175,32 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorResponse'
+  /v1/auth/device:
+    post:
+      summary: デバイスID登録
+      tags:
+        - AuthService
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/registerAuthDeviceRequest'
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/authResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
   /v1/auth/thumbnail:
     post:
       summary: サムネイルアップロード
@@ -436,7 +462,41 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorResponse'
-  /v1/books/{bookId}/read:
+  /v1/users/{userId}/books/{bookId}:
+    delete:
+      summary: 本棚削除
+      tags:
+        - BookService
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: string
+          required: true
+          description: ユーザID
+        - in: path
+          name: bookId
+          schema:
+            type: integer
+            format: int64
+          required: true
+          description: 書籍ID
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+  /v1/users/{userId}/books/{bookId}/read:
     post:
       summary: 読んだ本の登録
       tags:
@@ -445,9 +505,16 @@ paths:
         - BearerAuth: []
       parameters:
         - in: path
-          name: bookId
+          name: userId
           schema:
             type: string
+          required: true
+          description: ユーザID
+        - in: path
+          name: bookId
+          schema:
+            type: integer
+            format: int64
           required: true
           description: 書籍ID
       requestBody:
@@ -469,7 +536,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorResponse'
-  /v1/books/{bookId}/reading:
+  /v1/users/{userId}/books/{bookId}/reading:
     post:
       summary: 読んでいる本の登録
       tags:
@@ -478,9 +545,16 @@ paths:
         - BearerAuth: []
       parameters:
         - in: path
-          name: bookId
+          name: userId
           schema:
             type: string
+          required: true
+          description: ユーザID
+        - in: path
+          name: bookId
+          schema:
+            type: integer
+            format: int64
           required: true
           description: 書籍ID
       responses:
@@ -496,7 +570,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorResponse'
-  /v1/books/{bookId}/stack:
+  /v1/users/{userId}/books/{bookId}/stack:
     post:
       summary: 積読本の登録
       tags:
@@ -505,9 +579,16 @@ paths:
         - BearerAuth: []
       parameters:
         - in: path
-          name: bookId
+          name: userId
           schema:
             type: string
+          required: true
+          description: ユーザID
+        - in: path
+          name: bookId
+          schema:
+            type: integer
+            format: int64
           required: true
           description: 書籍ID
       responses:
@@ -523,7 +604,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorResponse'
-  /v1/books/{bookId}/want:
+  /v1/users/{userId}/books/{bookId}/want:
     post:
       summary: 欲しい本の登録
       tags:
@@ -532,9 +613,16 @@ paths:
         - BearerAuth: []
       parameters:
         - in: path
-          name: bookId
+          name: userId
           schema:
             type: string
+          required: true
+          description: ユーザID
+        - in: path
+          name: bookId
+          schema:
+            type: integer
+            format: int64
           required: true
           description: 書籍ID
       responses:
@@ -550,7 +638,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorResponse'
-  /v1/books/{bookId}/release:
+  /v1/users/{userId}/books/{bookId}/release:
     post:
       summary: 手放したい本の登録
       tags:
@@ -559,9 +647,16 @@ paths:
         - BearerAuth: []
       parameters:
         - in: path
-          name: bookId
+          name: userId
           schema:
             type: string
+          required: true
+          description: ユーザID
+        - in: path
+          name: bookId
+          schema:
+            type: integer
+            format: int64
           required: true
           description: 書籍ID
       responses:
@@ -649,6 +744,11 @@ components:
         addressLine1:
           type: string
         addressLine2:
+          type: string
+    registerAuthDeviceRequest:
+      type: object
+      properties:
+        instanceId:
           type: string
     uploadAuthThumbnailRequest:
       type: object

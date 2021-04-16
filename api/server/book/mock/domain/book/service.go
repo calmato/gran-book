@@ -163,6 +163,34 @@ func (mr *MockServiceMockRecorder) MultipleUpdate(ctx, bs interface{}) *gomock.C
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MultipleUpdate", reflect.TypeOf((*MockService)(nil).MultipleUpdate), ctx, bs)
 }
 
+// Delete mocks base method
+func (m *MockService) Delete(ctx context.Context, bookID int) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Delete", ctx, bookID)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Delete indicates an expected call of Delete
+func (mr *MockServiceMockRecorder) Delete(ctx, bookID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockService)(nil).Delete), ctx, bookID)
+}
+
+// DeleteBookshelf mocks base method
+func (m *MockService) DeleteBookshelf(ctx context.Context, bookshelfID int) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteBookshelf", ctx, bookshelfID)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteBookshelf indicates an expected call of DeleteBookshelf
+func (mr *MockServiceMockRecorder) DeleteBookshelf(ctx, bookshelfID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteBookshelf", reflect.TypeOf((*MockService)(nil).DeleteBookshelf), ctx, bookshelfID)
+}
+
 // Validation mocks base method
 func (m *MockService) Validation(ctx context.Context, b *book.Book) error {
 	m.ctrl.T.Helper()

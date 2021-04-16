@@ -12,7 +12,11 @@ service BookService {
   rpc StackBookshelf (StackBookshelfRequest) returns (BookshelfResponse);
   rpc WantBookshelf (WantBookshelfRequest) returns (BookshelfResponse);
   rpc ReleaseBookshelf (ReleaseBookshelfRequest) returns (BookshelfResponse);
+  rpc DeleteBook (DeleteBookRequest) returns (EmptyBook);
+  rpc DeleteBookshelf (DeleteBookshelfRequest) returns (EmptyBook);
 }
+
+message EmptyBook {}
 
 message ShowBookRequest {
   string isbn = 1;
@@ -50,6 +54,14 @@ message UpdateBookRequest {
   string rakuten_url = 8;
   string rakuten_genre_id = 9;
   repeated Author authors = 10;
+}
+
+message DeleteBookRequest {
+  int64 book_id = 1;
+}
+
+message DeleteBookshelfRequest {
+  int64 book_id = 1;
 }
 
 message ReadBookshelfRequest {

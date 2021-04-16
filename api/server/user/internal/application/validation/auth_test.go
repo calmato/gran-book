@@ -748,3 +748,43 @@ func TestAuthRequestValidation_UploadAuthThumbnail(t *testing.T) {
 		})
 	}
 }
+
+func TestAuthRequestValidation_RegisterDevice(t *testing.T) {
+	testCases := map[string]struct {
+		Input    *input.RegisterAuthDevice
+		Expected bool
+	}{
+		"ok": {
+			Input: &input.RegisterAuthDevice{
+				InstanceID: "cTP0f6Y_Q26VG9TbTjReZz:APA91bG6Ns9A5DsXaMcImyyNImS4VD",
+			},
+			Expected: true,
+		},
+		"ng_instanceId_required": {
+			Input: &input.RegisterAuthDevice{
+				InstanceID: "",
+			},
+			Expected: false,
+		},
+	}
+
+	for result, tc := range testCases {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		t.Run(result, func(t *testing.T) {
+			target := NewAuthRequestValidation()
+
+			got := target.RegisterAuthDevice(tc.Input)
+			if tc.Expected {
+				if got != nil {
+					t.Fatalf("Incorrect result: %#v", got)
+				}
+			} else {
+				if got == nil {
+					t.Fatalf("Incorrect result: result is nil")
+				}
+			}
+		})
+	}
+}
