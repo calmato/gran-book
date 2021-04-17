@@ -84,7 +84,8 @@ export function registerForPushNotificationsAsync() {
       .then((res: Notifications.ExpoPushToken) => {
         const token: string = res.data;
 
-        return internal.post('/v1/auth/device', { instanceId: token })
+        return internal
+          .post('/v1/auth/device', { instanceId: token })
           .then(async () => {
             await LocalStorage.DeviceStorage.save(token);
           })
