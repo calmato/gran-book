@@ -1,6 +1,6 @@
 import React from 'react';
 import { useReduxDispatch } from '~/store/modules';
-import { getAuthAsync, signInWithEmailAsync } from '~/store/usecases';
+import { getAuthAsync, registerForPushNotificationsAsync, signInWithEmailAsync } from '~/store/usecases';
 import SignIn from '~/screens/SignIn';
 
 export default function ConnectedSignIn(): JSX.Element {
@@ -13,6 +13,9 @@ export default function ConnectedSignIn(): JSX.Element {
       },
       getAuth(): Promise<void> {
         return dispatch(getAuthAsync());
+      },
+      registerForPushNotifications(): Promise<void> {
+        return dispatch(registerForPushNotificationsAsync());
       },
     }),
     [dispatch],
