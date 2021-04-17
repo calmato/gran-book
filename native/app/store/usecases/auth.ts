@@ -49,6 +49,11 @@ export function authenticationAsync() {
 
 export function registerForPushNotificationsAsync() {
   return async (): Promise<void> => {
+    const deviceId: string = await LocalStorage.DeviceStorage.retrieve();
+    if (deviceId !== '') {
+      return Promise.resolve();
+    }
+
     if (!Constants.isDevice) {
       alert('Must use physical device for Push Notifications');
       return Promise.resolve();
@@ -76,9 +81,16 @@ export function registerForPushNotificationsAsync() {
     }
 
     await Notifications.getExpoPushTokenAsync()
-      .then((res) => {
+      .then((res: Notifications.ExpoPushToken) => {
         const token: string = res.data;
-        return internal.post('/v1/auth/device', { instanceId: token });
+
+        return internal.post('/v1/auth/device', { instanceId: token })
+          .then(async () => {
+            await LocalStorage.DeviceStorage.save(token);
+          })
+          .catch((err: Error) => {
+            return Promise.reject(err);
+          });
       })
       .catch((err: Error) => {
         return Promise.reject(err);
