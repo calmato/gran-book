@@ -80,7 +80,7 @@ export default defineComponent({
     const maintenanceItems: ISidebarListItem[] = [
       { icon: 'mdi-cart', text: 'お取り引き管理', to: '/' },
       { icon: 'mdi-forum', text: 'お問い合わせ管理', to: '/' },
-      { icon: 'mdi-bell-ring', text: 'お知らせ管理', to: '/' },
+      { icon: 'mdi-bell-ring', text: 'お知らせ管理', to: '/notifications' },
       { icon: 'mdi-cash-100', text: 'セール情報管理', to: '/' },
     ]
     const developerItems: ISidebarListItem[] = [
