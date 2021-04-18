@@ -830,6 +830,7 @@ var _AdminService_serviceDesc = grpc.ServiceDesc{
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserServiceClient interface {
 	ListUser(ctx context.Context, in *ListUserRequest, opts ...grpc.CallOption) (*UserListResponse, error)
+	ListUserWithUserIds(ctx context.Context, in *ListUserWithUserIdsRequest, opts ...grpc.CallOption) (*UserListResponse, error)
 	ListFollow(ctx context.Context, in *ListFollowRequest, opts ...grpc.CallOption) (*FollowListResponse, error)
 	ListFollower(ctx context.Context, in *ListFollowerRequest, opts ...grpc.CallOption) (*FollowerListResponse, error)
 	SearchUser(ctx context.Context, in *SearchUserRequest, opts ...grpc.CallOption) (*UserListResponse, error)
@@ -850,6 +851,15 @@ func NewUserServiceClient(cc grpc.ClientConnInterface) UserServiceClient {
 func (c *userServiceClient) ListUser(ctx context.Context, in *ListUserRequest, opts ...grpc.CallOption) (*UserListResponse, error) {
 	out := new(UserListResponse)
 	err := c.cc.Invoke(ctx, "/proto.UserService/ListUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) ListUserWithUserIds(ctx context.Context, in *ListUserWithUserIdsRequest, opts ...grpc.CallOption) (*UserListResponse, error) {
+	out := new(UserListResponse)
+	err := c.cc.Invoke(ctx, "/proto.UserService/ListUserWithUserIds", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -924,6 +934,7 @@ func (c *userServiceClient) UnregisterFollow(ctx context.Context, in *Unregister
 // for forward compatibility
 type UserServiceServer interface {
 	ListUser(context.Context, *ListUserRequest) (*UserListResponse, error)
+	ListUserWithUserIds(context.Context, *ListUserWithUserIdsRequest) (*UserListResponse, error)
 	ListFollow(context.Context, *ListFollowRequest) (*FollowListResponse, error)
 	ListFollower(context.Context, *ListFollowerRequest) (*FollowerListResponse, error)
 	SearchUser(context.Context, *SearchUserRequest) (*UserListResponse, error)
@@ -940,6 +951,9 @@ type UnimplementedUserServiceServer struct {
 
 func (UnimplementedUserServiceServer) ListUser(context.Context, *ListUserRequest) (*UserListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListUser not implemented")
+}
+func (UnimplementedUserServiceServer) ListUserWithUserIds(context.Context, *ListUserWithUserIdsRequest) (*UserListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListUserWithUserIds not implemented")
 }
 func (UnimplementedUserServiceServer) ListFollow(context.Context, *ListFollowRequest) (*FollowListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListFollow not implemented")
@@ -989,6 +1003,24 @@ func _UserService_ListUser_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServiceServer).ListUser(ctx, req.(*ListUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_ListUserWithUserIds_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListUserWithUserIdsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).ListUserWithUserIds(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.UserService/ListUserWithUserIds",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).ListUserWithUserIds(ctx, req.(*ListUserWithUserIdsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1126,6 +1158,10 @@ var _UserService_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListUser",
 			Handler:    _UserService_ListUser_Handler,
+		},
+		{
+			MethodName: "ListUserWithUserIds",
+			Handler:    _UserService_ListUserWithUserIds_Handler,
 		},
 		{
 			MethodName: "ListFollow",

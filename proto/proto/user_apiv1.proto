@@ -29,6 +29,7 @@ service AdminService {
 
 service UserService {
   rpc ListUser (ListUserRequest) returns (UserListResponse);
+  rpc ListUserWithUserIds (ListUserWithUserIdsRequest) returns (UserListResponse);
   rpc ListFollow (ListFollowRequest) returns (FollowListResponse);
   rpc ListFollower (ListFollowerRequest) returns (FollowerListResponse);
   rpc SearchUser (SearchUserRequest) returns (UserListResponse);
@@ -157,6 +158,20 @@ message DeleteAdminRequest {
   string user_id = 1;
 }
 
+message ListUserRequest {
+  message Order {
+    string by = 1;
+    string direction = 2;
+  }
+  int64 limit = 1;
+  int64 offset = 2;
+  Order order = 3;
+}
+
+message ListUserWithUserIdsRequest {
+  repeated string users = 1;
+}
+
 message ListFollowRequest {
   string id = 1;
   int64 limit = 2;
@@ -167,16 +182,6 @@ message ListFollowerRequest {
   string id = 1;
   int64 limit = 2;
   int64 offset = 3;
-}
-
-message ListUserRequest {
-  message Order {
-    string by = 1;
-    string direction = 2;
-  }
-  int64 limit = 1;
-  int64 offset = 2;
-  Order order = 3;
 }
 
 message SearchUserRequest {
