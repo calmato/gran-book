@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, SafeAreaView, TextInput, Text } from 'react-native';
+import React, { useState, useMemo } from 'react';
+import { View, StyleSheet, SafeAreaView, TextInput, Text, KeyboardAvoidingView } from 'react-native';
 import { StatusBar as ExpoStatusBar } from 'expo-status-bar';
 import firebase from '~/lib/firebase';
 import { getMessageDocRef } from '~/store/usecases/auth';
 import { COLOR } from '~~/constants/theme';
 import { Ionicons } from '@expo/vector-icons';
 import { MessageForm } from '~/types/forms';
-import { useMemo } from 'react';
+import { Header } from 'react-native-elements';
 
 export const MessagesScreen = () => {
   const [formData, setText] = useState<MessageForm>({
@@ -34,7 +34,10 @@ export const MessagesScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <ExpoStatusBar style="light" />
-      <View style={styles.inputTextContainer}>
+      <Header>
+
+      </Header>
+      <View style={styles.chatFooter}>
         <TextInput
           style={styles.inputText}
           onChangeText={(value) => {
@@ -64,14 +67,9 @@ export const MessagesScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLOR.BACKGROUND_WHITE,
+    backgroundColor: COLOR.BACKGROUND_GREY,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  inputTextContainer: {
-    width: '100%',
-    flexDirection: 'row',
-    alignItems: 'center',
   },
   inputText: {
     color: COLOR.TEXT_DEFAULT,
@@ -83,4 +81,22 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingHorizontal: 10,
   },
+
+  inputImage:{
+
+  },
+
+  chatFooter: {
+    flex: 1,
+    backgroundColor: COLOR.BACKGROUND_WHITE,
+    height: 96,
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    position: 'absolute',
+    bottom: 0
+  },
+
 });
+
+export default MessagesScreen;
