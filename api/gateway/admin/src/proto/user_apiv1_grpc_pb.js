@@ -202,6 +202,17 @@ function deserialize_proto_ListUserRequest(buffer_arg) {
   return proto_user_apiv1_pb.ListUserRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_proto_ListUserWithUserIdsRequest(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.ListUserWithUserIdsRequest)) {
+    throw new Error('Expected argument of type proto.ListUserWithUserIdsRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_ListUserWithUserIdsRequest(buffer_arg) {
+  return proto_user_apiv1_pb.ListUserWithUserIdsRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_proto_RegisterAuthDeviceRequest(arg) {
   if (!(arg instanceof proto_user_apiv1_pb.RegisterAuthDeviceRequest)) {
     throw new Error('Expected argument of type proto.RegisterAuthDeviceRequest');
@@ -605,6 +616,17 @@ var UserServiceService = exports.UserServiceService = {
     responseType: proto_user_apiv1_pb.UserListResponse,
     requestSerialize: serialize_proto_ListUserRequest,
     requestDeserialize: deserialize_proto_ListUserRequest,
+    responseSerialize: serialize_proto_UserListResponse,
+    responseDeserialize: deserialize_proto_UserListResponse,
+  },
+  listUserWithUserIds: {
+    path: '/proto.UserService/ListUserWithUserIds',
+    requestStream: false,
+    responseStream: false,
+    requestType: proto_user_apiv1_pb.ListUserWithUserIdsRequest,
+    responseType: proto_user_apiv1_pb.UserListResponse,
+    requestSerialize: serialize_proto_ListUserWithUserIdsRequest,
+    requestDeserialize: deserialize_proto_ListUserWithUserIdsRequest,
     responseSerialize: serialize_proto_UserListResponse,
     responseDeserialize: deserialize_proto_UserListResponse,
   },

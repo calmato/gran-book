@@ -615,64 +615,6 @@ export namespace DeleteAdminRequest {
     }
 }
 
-export class ListFollowRequest extends jspb.Message { 
-    getId(): string;
-    setId(value: string): ListFollowRequest;
-
-    getLimit(): number;
-    setLimit(value: number): ListFollowRequest;
-
-    getOffset(): number;
-    setOffset(value: number): ListFollowRequest;
-
-
-    serializeBinary(): Uint8Array;
-    toObject(includeInstance?: boolean): ListFollowRequest.AsObject;
-    static toObject(includeInstance: boolean, msg: ListFollowRequest): ListFollowRequest.AsObject;
-    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-    static serializeBinaryToWriter(message: ListFollowRequest, writer: jspb.BinaryWriter): void;
-    static deserializeBinary(bytes: Uint8Array): ListFollowRequest;
-    static deserializeBinaryFromReader(message: ListFollowRequest, reader: jspb.BinaryReader): ListFollowRequest;
-}
-
-export namespace ListFollowRequest {
-    export type AsObject = {
-        id: string,
-        limit: number,
-        offset: number,
-    }
-}
-
-export class ListFollowerRequest extends jspb.Message { 
-    getId(): string;
-    setId(value: string): ListFollowerRequest;
-
-    getLimit(): number;
-    setLimit(value: number): ListFollowerRequest;
-
-    getOffset(): number;
-    setOffset(value: number): ListFollowerRequest;
-
-
-    serializeBinary(): Uint8Array;
-    toObject(includeInstance?: boolean): ListFollowerRequest.AsObject;
-    static toObject(includeInstance: boolean, msg: ListFollowerRequest): ListFollowerRequest.AsObject;
-    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-    static serializeBinaryToWriter(message: ListFollowerRequest, writer: jspb.BinaryWriter): void;
-    static deserializeBinary(bytes: Uint8Array): ListFollowerRequest;
-    static deserializeBinaryFromReader(message: ListFollowerRequest, reader: jspb.BinaryReader): ListFollowerRequest;
-}
-
-export namespace ListFollowerRequest {
-    export type AsObject = {
-        id: string,
-        limit: number,
-        offset: number,
-    }
-}
-
 export class ListUserRequest extends jspb.Message { 
     getLimit(): number;
     setLimit(value: number): ListUserRequest;
@@ -730,6 +672,87 @@ export namespace ListUserRequest {
         }
     }
 
+}
+
+export class ListUserWithUserIdsRequest extends jspb.Message { 
+    clearUsersList(): void;
+    getUsersList(): Array<string>;
+    setUsersList(value: Array<string>): ListUserWithUserIdsRequest;
+    addUsers(value: string, index?: number): string;
+
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): ListUserWithUserIdsRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: ListUserWithUserIdsRequest): ListUserWithUserIdsRequest.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: ListUserWithUserIdsRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): ListUserWithUserIdsRequest;
+    static deserializeBinaryFromReader(message: ListUserWithUserIdsRequest, reader: jspb.BinaryReader): ListUserWithUserIdsRequest;
+}
+
+export namespace ListUserWithUserIdsRequest {
+    export type AsObject = {
+        usersList: Array<string>,
+    }
+}
+
+export class ListFollowRequest extends jspb.Message { 
+    getId(): string;
+    setId(value: string): ListFollowRequest;
+
+    getLimit(): number;
+    setLimit(value: number): ListFollowRequest;
+
+    getOffset(): number;
+    setOffset(value: number): ListFollowRequest;
+
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): ListFollowRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: ListFollowRequest): ListFollowRequest.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: ListFollowRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): ListFollowRequest;
+    static deserializeBinaryFromReader(message: ListFollowRequest, reader: jspb.BinaryReader): ListFollowRequest;
+}
+
+export namespace ListFollowRequest {
+    export type AsObject = {
+        id: string,
+        limit: number,
+        offset: number,
+    }
+}
+
+export class ListFollowerRequest extends jspb.Message { 
+    getId(): string;
+    setId(value: string): ListFollowerRequest;
+
+    getLimit(): number;
+    setLimit(value: number): ListFollowerRequest;
+
+    getOffset(): number;
+    setOffset(value: number): ListFollowerRequest;
+
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): ListFollowerRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: ListFollowerRequest): ListFollowerRequest.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: ListFollowerRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): ListFollowerRequest;
+    static deserializeBinaryFromReader(message: ListFollowerRequest, reader: jspb.BinaryReader): ListFollowerRequest;
+}
+
+export namespace ListFollowerRequest {
+    export type AsObject = {
+        id: string,
+        limit: number,
+        offset: number,
+    }
 }
 
 export class SearchUserRequest extends jspb.Message { 
