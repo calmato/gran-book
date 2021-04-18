@@ -47,15 +47,9 @@ func (a *userApplication) List(ctx context.Context, in *input.ListUser) ([]*user
 	}
 
 	query := &domain.ListQuery{
-		Limit:  in.Limit,
-		Offset: in.Offset,
-		Conditions: []*domain.QueryCondition{
-			{
-				Field:    "role",
-				Operator: "==",
-				Value:    0,
-			},
-		},
+		Limit:      in.Limit,
+		Offset:     in.Offset,
+		Conditions: []*domain.QueryCondition{},
 	}
 
 	if in.By != "" {
@@ -219,11 +213,6 @@ func (a *userApplication) Search(ctx context.Context, in *input.SearchUser) ([]*
 		Limit:  in.Limit,
 		Offset: in.Offset,
 		Conditions: []*domain.QueryCondition{
-			{
-				Field:    "role",
-				Operator: "==",
-				Value:    0,
-			},
 			{
 				Field:    in.Field,
 				Operator: "LIKE",
