@@ -191,6 +191,17 @@ function deserialize_proto_ListFollowerRequest(buffer_arg) {
   return proto_user_apiv1_pb.ListFollowerRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_proto_ListUserRequest(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.ListUserRequest)) {
+    throw new Error('Expected argument of type proto.ListUserRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_ListUserRequest(buffer_arg) {
+  return proto_user_apiv1_pb.ListUserRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_proto_RegisterAuthDeviceRequest(arg) {
   if (!(arg instanceof proto_user_apiv1_pb.RegisterAuthDeviceRequest)) {
     throw new Error('Expected argument of type proto.RegisterAuthDeviceRequest');
@@ -222,6 +233,17 @@ function serialize_proto_SearchAdminRequest(arg) {
 
 function deserialize_proto_SearchAdminRequest(buffer_arg) {
   return proto_user_apiv1_pb.SearchAdminRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_proto_SearchUserRequest(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.SearchUserRequest)) {
+    throw new Error('Expected argument of type proto.SearchUserRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_SearchUserRequest(buffer_arg) {
+  return proto_user_apiv1_pb.SearchUserRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 function serialize_proto_UnregisterFollowRequest(arg) {
@@ -332,6 +354,17 @@ function serialize_proto_UploadAuthThumbnailRequest(arg) {
 
 function deserialize_proto_UploadAuthThumbnailRequest(buffer_arg) {
   return proto_user_apiv1_pb.UploadAuthThumbnailRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_proto_UserListResponse(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.UserListResponse)) {
+    throw new Error('Expected argument of type proto.UserListResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_UserListResponse(buffer_arg) {
+  return proto_user_apiv1_pb.UserListResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 function serialize_proto_UserProfileResponse(arg) {
@@ -564,6 +597,17 @@ var AdminServiceService = exports.AdminServiceService = {
 
 exports.AdminServiceClient = grpc.makeGenericClientConstructor(AdminServiceService);
 var UserServiceService = exports.UserServiceService = {
+  listUser: {
+    path: '/proto.UserService/ListUser',
+    requestStream: false,
+    responseStream: false,
+    requestType: proto_user_apiv1_pb.ListUserRequest,
+    responseType: proto_user_apiv1_pb.UserListResponse,
+    requestSerialize: serialize_proto_ListUserRequest,
+    requestDeserialize: deserialize_proto_ListUserRequest,
+    responseSerialize: serialize_proto_UserListResponse,
+    responseDeserialize: deserialize_proto_UserListResponse,
+  },
   listFollow: {
     path: '/proto.UserService/ListFollow',
     requestStream: false,
@@ -585,6 +629,17 @@ var UserServiceService = exports.UserServiceService = {
     requestDeserialize: deserialize_proto_ListFollowerRequest,
     responseSerialize: serialize_proto_FollowerListResponse,
     responseDeserialize: deserialize_proto_FollowerListResponse,
+  },
+  searchUser: {
+    path: '/proto.UserService/SearchUser',
+    requestStream: false,
+    responseStream: false,
+    requestType: proto_user_apiv1_pb.SearchUserRequest,
+    responseType: proto_user_apiv1_pb.UserListResponse,
+    requestSerialize: serialize_proto_SearchUserRequest,
+    requestDeserialize: deserialize_proto_SearchUserRequest,
+    responseSerialize: serialize_proto_UserListResponse,
+    responseDeserialize: deserialize_proto_UserListResponse,
   },
   getUser: {
     path: '/proto.UserService/GetUser',

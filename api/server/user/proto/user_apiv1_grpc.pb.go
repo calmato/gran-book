@@ -829,8 +829,10 @@ var _AdminService_serviceDesc = grpc.ServiceDesc{
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserServiceClient interface {
+	ListUser(ctx context.Context, in *ListUserRequest, opts ...grpc.CallOption) (*UserListResponse, error)
 	ListFollow(ctx context.Context, in *ListFollowRequest, opts ...grpc.CallOption) (*FollowListResponse, error)
 	ListFollower(ctx context.Context, in *ListFollowerRequest, opts ...grpc.CallOption) (*FollowerListResponse, error)
+	SearchUser(ctx context.Context, in *SearchUserRequest, opts ...grpc.CallOption) (*UserListResponse, error)
 	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*UserResponse, error)
 	GetUserProfile(ctx context.Context, in *GetUserProfileRequest, opts ...grpc.CallOption) (*UserProfileResponse, error)
 	RegisterFollow(ctx context.Context, in *RegisterFollowRequest, opts ...grpc.CallOption) (*UserProfileResponse, error)
@@ -845,6 +847,15 @@ func NewUserServiceClient(cc grpc.ClientConnInterface) UserServiceClient {
 	return &userServiceClient{cc}
 }
 
+func (c *userServiceClient) ListUser(ctx context.Context, in *ListUserRequest, opts ...grpc.CallOption) (*UserListResponse, error) {
+	out := new(UserListResponse)
+	err := c.cc.Invoke(ctx, "/proto.UserService/ListUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *userServiceClient) ListFollow(ctx context.Context, in *ListFollowRequest, opts ...grpc.CallOption) (*FollowListResponse, error) {
 	out := new(FollowListResponse)
 	err := c.cc.Invoke(ctx, "/proto.UserService/ListFollow", in, out, opts...)
@@ -857,6 +868,15 @@ func (c *userServiceClient) ListFollow(ctx context.Context, in *ListFollowReques
 func (c *userServiceClient) ListFollower(ctx context.Context, in *ListFollowerRequest, opts ...grpc.CallOption) (*FollowerListResponse, error) {
 	out := new(FollowerListResponse)
 	err := c.cc.Invoke(ctx, "/proto.UserService/ListFollower", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) SearchUser(ctx context.Context, in *SearchUserRequest, opts ...grpc.CallOption) (*UserListResponse, error) {
+	out := new(UserListResponse)
+	err := c.cc.Invoke(ctx, "/proto.UserService/SearchUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -903,8 +923,10 @@ func (c *userServiceClient) UnregisterFollow(ctx context.Context, in *Unregister
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
 type UserServiceServer interface {
+	ListUser(context.Context, *ListUserRequest) (*UserListResponse, error)
 	ListFollow(context.Context, *ListFollowRequest) (*FollowListResponse, error)
 	ListFollower(context.Context, *ListFollowerRequest) (*FollowerListResponse, error)
+	SearchUser(context.Context, *SearchUserRequest) (*UserListResponse, error)
 	GetUser(context.Context, *GetUserRequest) (*UserResponse, error)
 	GetUserProfile(context.Context, *GetUserProfileRequest) (*UserProfileResponse, error)
 	RegisterFollow(context.Context, *RegisterFollowRequest) (*UserProfileResponse, error)
@@ -916,11 +938,17 @@ type UserServiceServer interface {
 type UnimplementedUserServiceServer struct {
 }
 
+func (UnimplementedUserServiceServer) ListUser(context.Context, *ListUserRequest) (*UserListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListUser not implemented")
+}
 func (UnimplementedUserServiceServer) ListFollow(context.Context, *ListFollowRequest) (*FollowListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListFollow not implemented")
 }
 func (UnimplementedUserServiceServer) ListFollower(context.Context, *ListFollowerRequest) (*FollowerListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListFollower not implemented")
+}
+func (UnimplementedUserServiceServer) SearchUser(context.Context, *SearchUserRequest) (*UserListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SearchUser not implemented")
 }
 func (UnimplementedUserServiceServer) GetUser(context.Context, *GetUserRequest) (*UserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
@@ -945,6 +973,24 @@ type UnsafeUserServiceServer interface {
 
 func RegisterUserServiceServer(s grpc.ServiceRegistrar, srv UserServiceServer) {
 	s.RegisterService(&_UserService_serviceDesc, srv)
+}
+
+func _UserService_ListUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).ListUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.UserService/ListUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).ListUser(ctx, req.(*ListUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _UserService_ListFollow_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -979,6 +1025,24 @@ func _UserService_ListFollower_Handler(srv interface{}, ctx context.Context, dec
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServiceServer).ListFollower(ctx, req.(*ListFollowerRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_SearchUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SearchUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).SearchUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.UserService/SearchUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).SearchUser(ctx, req.(*SearchUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1060,12 +1124,20 @@ var _UserService_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*UserServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
+			MethodName: "ListUser",
+			Handler:    _UserService_ListUser_Handler,
+		},
+		{
 			MethodName: "ListFollow",
 			Handler:    _UserService_ListFollow_Handler,
 		},
 		{
 			MethodName: "ListFollower",
 			Handler:    _UserService_ListFollower_Handler,
+		},
+		{
+			MethodName: "SearchUser",
+			Handler:    _UserService_SearchUser_Handler,
 		},
 		{
 			MethodName: "GetUser",

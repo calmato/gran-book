@@ -388,6 +388,51 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorResponse'
+  /v1/users:
+    get:
+      summary: ユーザー一覧
+      tags:
+        - UserService
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          required: false
+          description: 取得上限数
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          required: false
+          description: 取得開始位置
+        - in: query
+          name: field
+          schema:
+            type: string
+          required: false
+          description: 検索項目
+        - in: query
+          name: value
+          schema:
+            type: string
+          required: false
+          description: 検索値
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userListResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
   /v1/users/{userId}:
     get:
       summary: ユーザー取得
@@ -698,6 +743,54 @@ components:
           type: string
         updatedAt:
           type: string
+    userListResponse:
+      type: object
+      properties:
+        users:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              username:
+                type: string
+              email:
+                type: string
+              phoneNumber:
+                type: string
+              thumbnailUrl:
+                type: string
+              selfIntroduction:
+                type: string
+              lastName:
+                type: string
+              firstName:
+                type: string
+              lastNameKana:
+                type: string
+              firstNameKana:
+                type: string
+              createdAt:
+                type: string
+              updatedAt:
+                type: string
+        limit:
+          type: integer
+          format: int64
+        offset:
+          type: integer
+          format: int64
+        total:
+          type: integer
+          format: int64
+        order:
+          type: object
+          properties:
+            by:
+              type: string
+            direction:
+              type: string
     emptyResponse:
       type: object
     errorResponse:
