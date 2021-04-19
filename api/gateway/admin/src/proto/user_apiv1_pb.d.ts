@@ -675,10 +675,10 @@ export namespace ListUserRequest {
 }
 
 export class ListUserByUserIdsRequest extends jspb.Message { 
-    clearUseridsList(): void;
-    getUseridsList(): Array<string>;
-    setUseridsList(value: Array<string>): ListUserByUserIdsRequest;
-    addUserids(value: string, index?: number): string;
+    clearUserIdsList(): void;
+    getUserIdsList(): Array<string>;
+    setUserIdsList(value: Array<string>): ListUserByUserIdsRequest;
+    addUserIds(value: string, index?: number): string;
 
 
     serializeBinary(): Uint8Array;
@@ -693,7 +693,7 @@ export class ListUserByUserIdsRequest extends jspb.Message {
 
 export namespace ListUserByUserIdsRequest {
     export type AsObject = {
-        useridsList: Array<string>,
+        userIdsList: Array<string>,
     }
 }
 

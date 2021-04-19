@@ -49,9 +49,9 @@ func (s *UserServer) ListUser(ctx context.Context, req *pb.ListUserRequest) (*pb
 	return res, nil
 }
 
-// ListUserWithUserIds - ユーザー一覧取得 (ID指定)
-func (s *UserServer) ListUserWithUserIds(
-	ctx context.Context, req *pb.ListUserWithUserIdsRequest,
+// ListUserByUserIds - ユーザー一覧取得 (ID指定)
+func (s *UserServer) ListUserByUserIds(
+	ctx context.Context, req *pb.ListUserByUserIdsRequest,
 ) (*pb.UserListResponse, error) {
 	_, err := s.AuthApplication.Authentication(ctx)
 	if err != nil {
@@ -59,7 +59,7 @@ func (s *UserServer) ListUserWithUserIds(
 	}
 
 	in := &input.ListUserByUserIDs{
-		UserIDs: req.GetUsers(),
+		UserIDs: req.GetUserIds(),
 	}
 
 	us, err := s.UserApplication.ListByUserIDs(ctx, in)
