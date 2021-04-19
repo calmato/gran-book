@@ -674,26 +674,26 @@ export namespace ListUserRequest {
 
 }
 
-export class ListUserWithUserIdsRequest extends jspb.Message { 
-    clearUsersList(): void;
-    getUsersList(): Array<string>;
-    setUsersList(value: Array<string>): ListUserWithUserIdsRequest;
-    addUsers(value: string, index?: number): string;
+export class ListUserByUserIdsRequest extends jspb.Message { 
+    clearUseridsList(): void;
+    getUseridsList(): Array<string>;
+    setUseridsList(value: Array<string>): ListUserByUserIdsRequest;
+    addUserids(value: string, index?: number): string;
 
 
     serializeBinary(): Uint8Array;
-    toObject(includeInstance?: boolean): ListUserWithUserIdsRequest.AsObject;
-    static toObject(includeInstance: boolean, msg: ListUserWithUserIdsRequest): ListUserWithUserIdsRequest.AsObject;
+    toObject(includeInstance?: boolean): ListUserByUserIdsRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: ListUserByUserIdsRequest): ListUserByUserIdsRequest.AsObject;
     static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
     static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-    static serializeBinaryToWriter(message: ListUserWithUserIdsRequest, writer: jspb.BinaryWriter): void;
-    static deserializeBinary(bytes: Uint8Array): ListUserWithUserIdsRequest;
-    static deserializeBinaryFromReader(message: ListUserWithUserIdsRequest, reader: jspb.BinaryReader): ListUserWithUserIdsRequest;
+    static serializeBinaryToWriter(message: ListUserByUserIdsRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): ListUserByUserIdsRequest;
+    static deserializeBinaryFromReader(message: ListUserByUserIdsRequest, reader: jspb.BinaryReader): ListUserByUserIdsRequest;
 }
 
-export namespace ListUserWithUserIdsRequest {
+export namespace ListUserByUserIdsRequest {
     export type AsObject = {
-        usersList: Array<string>,
+        useridsList: Array<string>,
     }
 }
 

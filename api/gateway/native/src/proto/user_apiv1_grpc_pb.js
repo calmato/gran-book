@@ -191,6 +191,17 @@ function deserialize_proto_ListFollowerRequest(buffer_arg) {
   return proto_user_apiv1_pb.ListFollowerRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_proto_ListUserByUserIdsRequest(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.ListUserByUserIdsRequest)) {
+    throw new Error('Expected argument of type proto.ListUserByUserIdsRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_ListUserByUserIdsRequest(buffer_arg) {
+  return proto_user_apiv1_pb.ListUserByUserIdsRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_proto_ListUserRequest(arg) {
   if (!(arg instanceof proto_user_apiv1_pb.ListUserRequest)) {
     throw new Error('Expected argument of type proto.ListUserRequest');
@@ -200,17 +211,6 @@ function serialize_proto_ListUserRequest(arg) {
 
 function deserialize_proto_ListUserRequest(buffer_arg) {
   return proto_user_apiv1_pb.ListUserRequest.deserializeBinary(new Uint8Array(buffer_arg));
-}
-
-function serialize_proto_ListUserWithUserIdsRequest(arg) {
-  if (!(arg instanceof proto_user_apiv1_pb.ListUserWithUserIdsRequest)) {
-    throw new Error('Expected argument of type proto.ListUserWithUserIdsRequest');
-  }
-  return Buffer.from(arg.serializeBinary());
-}
-
-function deserialize_proto_ListUserWithUserIdsRequest(buffer_arg) {
-  return proto_user_apiv1_pb.ListUserWithUserIdsRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 function serialize_proto_RegisterAuthDeviceRequest(arg) {
@@ -619,14 +619,14 @@ var UserServiceService = exports.UserServiceService = {
     responseSerialize: serialize_proto_UserListResponse,
     responseDeserialize: deserialize_proto_UserListResponse,
   },
-  listUserWithUserIds: {
-    path: '/proto.UserService/ListUserWithUserIds',
+  listUserByUserIds: {
+    path: '/proto.UserService/ListUserByUserIds',
     requestStream: false,
     responseStream: false,
-    requestType: proto_user_apiv1_pb.ListUserWithUserIdsRequest,
+    requestType: proto_user_apiv1_pb.ListUserByUserIdsRequest,
     responseType: proto_user_apiv1_pb.UserListResponse,
-    requestSerialize: serialize_proto_ListUserWithUserIdsRequest,
-    requestDeserialize: deserialize_proto_ListUserWithUserIdsRequest,
+    requestSerialize: serialize_proto_ListUserByUserIdsRequest,
+    requestDeserialize: deserialize_proto_ListUserByUserIdsRequest,
     responseSerialize: serialize_proto_UserListResponse,
     responseDeserialize: deserialize_proto_UserListResponse,
   },
