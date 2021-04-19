@@ -49,6 +49,34 @@ func (s *UserServer) ListUser(ctx context.Context, req *pb.ListUserRequest) (*pb
 	return res, nil
 }
 
+// ListUserByUserIds - ユーザー一覧取得 (ID指定)
+func (s *UserServer) ListUserByUserIds(
+	ctx context.Context, req *pb.ListUserByUserIdsRequest,
+) (*pb.UserListResponse, error) {
+	_, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	in := &input.ListUserByUserIDs{
+		UserIDs: req.GetUserIds(),
+	}
+
+	us, err := s.UserApplication.ListByUserIDs(ctx, in)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	out := &output.ListQuery{
+		Limit:  0,
+		Offset: 0,
+		Total:  len(us),
+	}
+
+	res := getUserListResponse(us, out)
+	return res, nil
+}
+
 // ListFollow - フォロー一覧取得
 func (s *UserServer) ListFollow(ctx context.Context, req *pb.ListFollowRequest) (*pb.FollowListResponse, error) {
 	cu, err := s.AuthApplication.Authentication(ctx)

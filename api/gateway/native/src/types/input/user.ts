@@ -1,4 +1,4 @@
-export interface IListUserWithUserIdsInput {
+export interface IListUserByUserIdsInput {
   ids: Array<string>
 }
 

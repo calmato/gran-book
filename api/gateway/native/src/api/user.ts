@@ -8,7 +8,7 @@ import {
   GetUserProfileRequest,
   ListFollowerRequest,
   ListFollowRequest,
-  ListUserWithUserIdsRequest,
+  ListUserByUserIdsRequest,
   RegisterFollowRequest,
   UnregisterFollowRequest,
   UserListResponse,
@@ -18,7 +18,7 @@ import {
   IGetUserProfileInput,
   IListFollowerInput,
   IListFollowInput,
-  IListUserWithUserIdsInput,
+  IListUserByUserIdsInput,
   IRegisterFollowInput,
   IUnregisterFollowInput,
 } from '~/types/input'
@@ -33,14 +33,14 @@ import {
   IUserProfileOutput,
 } from '~/types/output'
 
-export function listUserWithUserIds(req: Request<any>, input: IListUserWithUserIdsInput): Promise<IUserListOutput> {
-  const request = new ListUserWithUserIdsRequest()
+export function listUserWithUserIds(req: Request<any>, input: IListUserByUserIdsInput): Promise<IUserListOutput> {
+  const request = new ListUserByUserIdsRequest()
   const metadata = getGrpcMetadata(req)
 
-  request.setUsersList(input.ids)
+  request.setUserIdsList(input.ids)
 
   return new Promise((resolve: (res: IUserListOutput) => void, reject: (reason: Error) => void) => {
-    userClient.listUserWithUserIds(request, metadata, (err: any, res: UserListResponse) => {
+    userClient.listUserByUserIds(request, metadata, (err: any, res: UserListResponse) => {
       if (err) {
         reject(getGrpcError(err))
         return

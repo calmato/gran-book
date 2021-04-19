@@ -29,7 +29,7 @@ service AdminService {
 
 service UserService {
   rpc ListUser (ListUserRequest) returns (UserListResponse);
-  rpc ListUserWithUserIds (ListUserWithUserIdsRequest) returns (UserListResponse);
+  rpc ListUserByUserIds (ListUserByUserIdsRequest) returns (UserListResponse);
   rpc ListFollow (ListFollowRequest) returns (FollowListResponse);
   rpc ListFollower (ListFollowerRequest) returns (FollowerListResponse);
   rpc SearchUser (SearchUserRequest) returns (UserListResponse);
@@ -168,8 +168,8 @@ message ListUserRequest {
   Order order = 3;
 }
 
-message ListUserWithUserIdsRequest {
-  repeated string users = 1;
+message ListUserByUserIdsRequest {
+  repeated string user_ids = 1;
 }
 
 message ListFollowRequest {
