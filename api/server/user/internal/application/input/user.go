@@ -8,6 +8,11 @@ type ListUser struct {
 	Direction string `json:"direction" validate:"omitempty,oneof=asc desc"`
 }
 
+// ListUserByUserIDs - ユーザー一覧のリクエスト
+type ListUserByUserIDs struct {
+	UserIDs []string `json:"userIds" validate:"unique,dive,required,max=36"`
+}
+
 // ListFollow - フォローユーザ一覧のリクエスト
 type ListFollow struct {
 	Limit     int    `json:"limit" validate:"gte=0,lte=1000"`

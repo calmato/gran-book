@@ -14,6 +14,7 @@ import (
 // UserApplication - Userアプリケーションのインターフェース
 type UserApplication interface {
 	List(ctx context.Context, in *input.ListUser) ([]*user.User, *output.ListQuery, error)
+	ListByUserIDs(ctx context.Context, in *input.ListUserByUserIDs) ([]*user.User, error)
 	ListFollow(
 		ctx context.Context, in *input.ListFollow, uid string, cuid string,
 	) ([]*user.Follow, *output.ListQuery, error)
@@ -87,6 +88,27 @@ func (a *userApplication) List(ctx context.Context, in *input.ListUser) ([]*user
 	}
 
 	return us, out, nil
+}
+
+func (a *userApplication) ListByUserIDs(ctx context.Context, in *input.ListUserByUserIDs) ([]*user.User, error) {
+	err := a.userRequestValidation.ListUserByUserIDs(in)
+	if err != nil {
+		return nil, err
+	}
+
+	q := &domain.ListQuery{
+		Limit:  0,
+		Offset: 0,
+		Conditions: []*domain.QueryCondition{
+			{
+				Field:    "id",
+				Operator: "IN",
+				Value:    in.UserIDs,
+			},
+		},
+	}
+
+	return a.userService.List(ctx, q)
 }
 
 func (a *userApplication) ListFollow(

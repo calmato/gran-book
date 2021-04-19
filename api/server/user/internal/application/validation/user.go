@@ -9,6 +9,7 @@ import (
 // UserRequestValidation - User関連のリクエストバリデータ
 type UserRequestValidation interface {
 	ListUser(in *input.ListUser) error
+	ListUserByUserIDs(in *input.ListUserByUserIDs) error
 	ListFollow(in *input.ListFollow) error
 	ListFollower(in *input.ListFollower) error
 	SearchUser(in *input.SearchUser) error
@@ -34,6 +35,16 @@ func (v *userRequestValidation) ListUser(in *input.ListUser) error {
 	}
 
 	err := xerrors.New("Failed to ListUser for RequestValidation")
+	return exception.InvalidRequestValidation.New(err, ves...)
+}
+
+func (v *userRequestValidation) ListUserByUserIDs(in *input.ListUserByUserIDs) error {
+	ves := v.validator.Run(in, "")
+	if len(ves) == 0 {
+		return nil
+	}
+
+	err := xerrors.New("Failed to ListUserByUserIDs for RequestValidation")
 	return exception.InvalidRequestValidation.New(err, ves...)
 }
 
