@@ -47,6 +47,20 @@ func (mr *MockUserRequestValidationMockRecorder) ListUser(in interface{}) *gomoc
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListUser", reflect.TypeOf((*MockUserRequestValidation)(nil).ListUser), in)
 }
 
+// ListUserByUserIDs mocks base method
+func (m *MockUserRequestValidation) ListUserByUserIDs(in *input.ListUserByUserIDs) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListUserByUserIDs", in)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// ListUserByUserIDs indicates an expected call of ListUserByUserIDs
+func (mr *MockUserRequestValidationMockRecorder) ListUserByUserIDs(in interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListUserByUserIDs", reflect.TypeOf((*MockUserRequestValidation)(nil).ListUserByUserIDs), in)
+}
+
 // ListFollow mocks base method
 func (m *MockUserRequestValidation) ListFollow(in *input.ListFollow) error {
 	m.ctrl.T.Helper()
