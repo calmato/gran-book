@@ -23,13 +23,14 @@ interface Props {
   actions: {
     signInWithEmail: (email: string, password: string) => Promise<void>;
     getAuth: () => Promise<void>;
+    registerForPushNotifications: () => Promise<void>;
   };
 }
 
 const SignIn = function SignIn(props: Props): ReactElement {
   const navigation = useNavigation();
   const { setApplicationState } = React.useContext(UiContext);
-  const { signInWithEmail, getAuth } = props.actions;
+  const { signInWithEmail, getAuth, registerForPushNotifications } = props.actions;
 
   const [formData, setValue] = useState<SignInForm>({
     email: '',
@@ -57,6 +58,9 @@ const SignIn = function SignIn(props: Props): ReactElement {
 
   const handleSubmit = React.useCallback(async () => {
     await signInWithEmail(formData.email, formData.password)
+      .then(() => {
+        return registerForPushNotifications();
+      })
       .then(() => {
         return getAuth();
       })

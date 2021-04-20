@@ -1,3 +1,4 @@
 import * as AuthStorage from './auth-storage';
+import * as DeviceStorage from './device-storage';
 
-export { AuthStorage };
+export { AuthStorage, DeviceStorage };
