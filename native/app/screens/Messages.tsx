@@ -51,9 +51,9 @@ export const MessagesScreen = () => {
           returnKeyType="done"
         />
         <Ionicons
+          style={styles.sendButton}
           name="send"
           size={24}
-          color={COLOR.PRIMARY}
           disabled={!canSubmit}
           onPress={() => {
             sendMessage(formData.newText);
@@ -78,9 +78,9 @@ const styles = StyleSheet.create({
     backgroundColor: COLOR.BACKGROUND_GREY,
     height: '50%',
     marginLeft: '10%',
-    marginRight: '5%',
+    marginRight: '7%',
     flex: 1,
-    borderRadius: 5,
+    borderRadius: 10,
     paddingHorizontal: 10,
   },
 
@@ -88,11 +88,16 @@ const styles = StyleSheet.create({
 
   },
 
+  sendButton: {
+    marginRight: '2%',
+    color: COLOR.PRIMARY
+  },
+
   chatFooter: {
     flex: 1,
     backgroundColor: COLOR.BACKGROUND_WHITE,
     height: '10%',
-    width: '100%',
+    width: '98%',
     flexDirection: 'row',
     alignItems: 'center',
     position: 'absolute',
