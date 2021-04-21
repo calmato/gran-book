@@ -4,7 +4,7 @@ import { StatusBar as ExpoStatusBar } from 'expo-status-bar';
 import firebase from '~/lib/firebase';
 import { getMessageDocRef } from '~/store/usecases/auth';
 import { COLOR } from '~~/constants/theme';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { MessageForm } from '~/types/forms';
 import { Header } from 'react-native-elements';
 
@@ -38,6 +38,11 @@ export const MessagesScreen = () => {
 
       </Header>
       <View style={styles.chatFooter}>
+        <MaterialCommunityIcons
+          style={styles.inputImage}
+          name="image-plus"
+          size={32}
+        />
         <TextInput
           style={styles.inputText}
           onChangeText={(value) => {
@@ -53,7 +58,7 @@ export const MessagesScreen = () => {
         <Ionicons
           style={styles.sendButton}
           name="send"
-          size={24}
+          size={32}
           disabled={!canSubmit}
           onPress={() => {
             sendMessage(formData.newText);
@@ -77,19 +82,20 @@ const styles = StyleSheet.create({
     borderColor: COLOR.BACKGROUND_GREY,
     backgroundColor: COLOR.BACKGROUND_GREY,
     height: '50%',
-    marginLeft: '10%',
-    marginRight: '7%',
+    marginLeft: '5%',
+    marginRight: '5%',
     flex: 1,
     borderRadius: 10,
     paddingHorizontal: 10,
   },
 
   inputImage:{
-
+    marginLeft: '3%',
+    color: COLOR.TEXT_GRAY
   },
 
   sendButton: {
-    marginRight: '2%',
+    marginRight: '3%',
     color: COLOR.PRIMARY
   },
 
