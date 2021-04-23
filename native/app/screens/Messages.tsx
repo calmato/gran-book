@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, SafeAreaView, TextInput, Text } from 'react-native';
+import React, { useState, useMemo } from 'react';
+import { View, StyleSheet, SafeAreaView, TextInput, Text, KeyboardAvoidingView } from 'react-native';
 import { StatusBar as ExpoStatusBar } from 'expo-status-bar';
 import firebase from '~/lib/firebase';
 import { getMessageDocRef } from '~/store/usecases/auth';
 import { COLOR } from '~~/constants/theme';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { MessageForm } from '~/types/forms';
-import { useMemo } from 'react';
+import { Header } from 'react-native-elements';
 
 export const MessagesScreen = () => {
   const [formData, setText] = useState<MessageForm>({
@@ -34,7 +34,15 @@ export const MessagesScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <ExpoStatusBar style="light" />
-      <View style={styles.inputTextContainer}>
+      <Header>
+
+      </Header>
+      <View style={styles.chatFooter}>
+        <MaterialCommunityIcons
+          style={styles.inputImage}
+          name="image-plus"
+          size={32}
+        />
         <TextInput
           style={styles.inputText}
           onChangeText={(value) => {
@@ -48,9 +56,9 @@ export const MessagesScreen = () => {
           returnKeyType="done"
         />
         <Ionicons
+          style={styles.sendButton}
           name="send"
-          size={24}
-          color={COLOR.PRIMARY}
+          size={32}
           disabled={!canSubmit}
           onPress={() => {
             sendMessage(formData.newText);
@@ -64,23 +72,44 @@ export const MessagesScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLOR.BACKGROUND_WHITE,
+    backgroundColor: COLOR.BACKGROUND_GREY,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  inputTextContainer: {
-    width: '100%',
-    flexDirection: 'row',
-    alignItems: 'center',
   },
   inputText: {
     color: COLOR.TEXT_DEFAULT,
     borderWidth: 1,
     borderColor: COLOR.BACKGROUND_GREY,
     backgroundColor: COLOR.BACKGROUND_GREY,
-    height: 32,
+    height: '50%',
+    marginLeft: '5%',
+    marginRight: '5%',
     flex: 1,
-    borderRadius: 5,
+    borderRadius: 10,
     paddingHorizontal: 10,
   },
+
+  inputImage:{
+    marginLeft: '3%',
+    color: COLOR.TEXT_GRAY
+  },
+
+  sendButton: {
+    marginRight: '3%',
+    color: COLOR.PRIMARY
+  },
+
+  chatFooter: {
+    flex: 1,
+    backgroundColor: COLOR.BACKGROUND_WHITE,
+    height: '10%',
+    width: '98%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    position: 'absolute',
+    bottom: 0
+  },
+
 });
+
+export default MessagesScreen;
