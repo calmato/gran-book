@@ -4,7 +4,7 @@ import { StatusBar as ExpoStatusBar } from 'expo-status-bar';
 import firebase from '~/lib/firebase';
 import { getMessageDocRef } from '~/store/usecases/auth';
 import { COLOR } from '~~/constants/theme';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialIcons, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { MessageForm } from '~/types/forms';
 import { Header } from 'react-native-elements';
 
@@ -32,11 +32,16 @@ export const MessagesScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <ExpoStatusBar style="light" />
-      <Header>
+      <Header
+        leftComponent={
+          <MaterialIcons
+            name="keyboard-arrow-left"
+            size={24}
+          />
 
-      </Header>
+        }/>
       <View style={styles.chatFooter}>
         <MaterialCommunityIcons
           style={styles.inputImage}
@@ -65,17 +70,17 @@ export const MessagesScreen = () => {
           }}
         />
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+
   container: {
     flex: 1,
     backgroundColor: COLOR.BACKGROUND_GREY,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
+
   inputText: {
     color: COLOR.TEXT_DEFAULT,
     borderWidth: 1,
