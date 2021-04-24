@@ -26,6 +26,17 @@ function deserialize_proto_AdminResponse(buffer_arg) {
   return proto_user_apiv1_pb.AdminResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_proto_AdminThumbnailResponse(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.AdminThumbnailResponse)) {
+    throw new Error('Expected argument of type proto.AdminThumbnailResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_AdminThumbnailResponse(buffer_arg) {
+  return proto_user_apiv1_pb.AdminThumbnailResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_proto_AuthResponse(arg) {
   if (!(arg instanceof proto_user_apiv1_pb.AuthResponse)) {
     throw new Error('Expected argument of type proto.AuthResponse');
@@ -35,6 +46,17 @@ function serialize_proto_AuthResponse(arg) {
 
 function deserialize_proto_AuthResponse(buffer_arg) {
   return proto_user_apiv1_pb.AuthResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_proto_AuthThumbnailResponse(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.AuthThumbnailResponse)) {
+    throw new Error('Expected argument of type proto.AuthThumbnailResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_AuthThumbnailResponse(buffer_arg) {
+  return proto_user_apiv1_pb.AuthThumbnailResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 function serialize_proto_CreateAdminRequest(arg) {
@@ -57,6 +79,17 @@ function serialize_proto_CreateAuthRequest(arg) {
 
 function deserialize_proto_CreateAuthRequest(buffer_arg) {
   return proto_user_apiv1_pb.CreateAuthRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_proto_DeleteAdminRequest(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.DeleteAdminRequest)) {
+    throw new Error('Expected argument of type proto.DeleteAdminRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_DeleteAdminRequest(buffer_arg) {
+  return proto_user_apiv1_pb.DeleteAdminRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 function serialize_proto_EmptyUser(arg) {
@@ -114,6 +147,17 @@ function deserialize_proto_GetUserProfileRequest(buffer_arg) {
   return proto_user_apiv1_pb.GetUserProfileRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_proto_GetUserRequest(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.GetUserRequest)) {
+    throw new Error('Expected argument of type proto.GetUserRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_GetUserRequest(buffer_arg) {
+  return proto_user_apiv1_pb.GetUserRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_proto_ListAdminRequest(arg) {
   if (!(arg instanceof proto_user_apiv1_pb.ListAdminRequest)) {
     throw new Error('Expected argument of type proto.ListAdminRequest');
@@ -145,6 +189,17 @@ function serialize_proto_ListFollowerRequest(arg) {
 
 function deserialize_proto_ListFollowerRequest(buffer_arg) {
   return proto_user_apiv1_pb.ListFollowerRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_proto_RegisterAuthDeviceRequest(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.RegisterAuthDeviceRequest)) {
+    throw new Error('Expected argument of type proto.RegisterAuthDeviceRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_RegisterAuthDeviceRequest(buffer_arg) {
+  return proto_user_apiv1_pb.RegisterAuthDeviceRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 function serialize_proto_RegisterFollowRequest(arg) {
@@ -257,6 +312,28 @@ function deserialize_proto_UpdateAuthProfileRequest(buffer_arg) {
   return proto_user_apiv1_pb.UpdateAuthProfileRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_proto_UploadAdminThumbnailRequest(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.UploadAdminThumbnailRequest)) {
+    throw new Error('Expected argument of type proto.UploadAdminThumbnailRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_UploadAdminThumbnailRequest(buffer_arg) {
+  return proto_user_apiv1_pb.UploadAdminThumbnailRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_proto_UploadAuthThumbnailRequest(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.UploadAuthThumbnailRequest)) {
+    throw new Error('Expected argument of type proto.UploadAuthThumbnailRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_UploadAuthThumbnailRequest(buffer_arg) {
+  return proto_user_apiv1_pb.UploadAuthThumbnailRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_proto_UserProfileResponse(arg) {
   if (!(arg instanceof proto_user_apiv1_pb.UserProfileResponse)) {
     throw new Error('Expected argument of type proto.UserProfileResponse');
@@ -266,6 +343,17 @@ function serialize_proto_UserProfileResponse(arg) {
 
 function deserialize_proto_UserProfileResponse(buffer_arg) {
   return proto_user_apiv1_pb.UserProfileResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_proto_UserResponse(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.UserResponse)) {
+    throw new Error('Expected argument of type proto.UserResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_UserResponse(buffer_arg) {
+  return proto_user_apiv1_pb.UserResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 
@@ -333,6 +421,39 @@ var AuthServiceService = exports.AuthServiceService = {
     responseType: proto_user_apiv1_pb.AuthResponse,
     requestSerialize: serialize_proto_UpdateAuthAddressRequest,
     requestDeserialize: deserialize_proto_UpdateAuthAddressRequest,
+    responseSerialize: serialize_proto_AuthResponse,
+    responseDeserialize: deserialize_proto_AuthResponse,
+  },
+  uploadAuthThumbnail: {
+    path: '/proto.AuthService/UploadAuthThumbnail',
+    requestStream: true,
+    responseStream: false,
+    requestType: proto_user_apiv1_pb.UploadAuthThumbnailRequest,
+    responseType: proto_user_apiv1_pb.AuthThumbnailResponse,
+    requestSerialize: serialize_proto_UploadAuthThumbnailRequest,
+    requestDeserialize: deserialize_proto_UploadAuthThumbnailRequest,
+    responseSerialize: serialize_proto_AuthThumbnailResponse,
+    responseDeserialize: deserialize_proto_AuthThumbnailResponse,
+  },
+  deleteAuth: {
+    path: '/proto.AuthService/DeleteAuth',
+    requestStream: false,
+    responseStream: false,
+    requestType: proto_user_apiv1_pb.EmptyUser,
+    responseType: proto_user_apiv1_pb.EmptyUser,
+    requestSerialize: serialize_proto_EmptyUser,
+    requestDeserialize: deserialize_proto_EmptyUser,
+    responseSerialize: serialize_proto_EmptyUser,
+    responseDeserialize: deserialize_proto_EmptyUser,
+  },
+  registerAuthDevice: {
+    path: '/proto.AuthService/RegisterAuthDevice',
+    requestStream: false,
+    responseStream: false,
+    requestType: proto_user_apiv1_pb.RegisterAuthDeviceRequest,
+    responseType: proto_user_apiv1_pb.AuthResponse,
+    requestSerialize: serialize_proto_RegisterAuthDeviceRequest,
+    requestDeserialize: deserialize_proto_RegisterAuthDeviceRequest,
     responseSerialize: serialize_proto_AuthResponse,
     responseDeserialize: deserialize_proto_AuthResponse,
   },
@@ -417,6 +538,28 @@ var AdminServiceService = exports.AdminServiceService = {
     responseSerialize: serialize_proto_AdminResponse,
     responseDeserialize: deserialize_proto_AdminResponse,
   },
+  uploadAdminThumbnail: {
+    path: '/proto.AdminService/UploadAdminThumbnail',
+    requestStream: true,
+    responseStream: false,
+    requestType: proto_user_apiv1_pb.UploadAdminThumbnailRequest,
+    responseType: proto_user_apiv1_pb.AdminThumbnailResponse,
+    requestSerialize: serialize_proto_UploadAdminThumbnailRequest,
+    requestDeserialize: deserialize_proto_UploadAdminThumbnailRequest,
+    responseSerialize: serialize_proto_AdminThumbnailResponse,
+    responseDeserialize: deserialize_proto_AdminThumbnailResponse,
+  },
+  deleteAdmin: {
+    path: '/proto.AdminService/DeleteAdmin',
+    requestStream: false,
+    responseStream: false,
+    requestType: proto_user_apiv1_pb.DeleteAdminRequest,
+    responseType: proto_user_apiv1_pb.EmptyUser,
+    requestSerialize: serialize_proto_DeleteAdminRequest,
+    requestDeserialize: deserialize_proto_DeleteAdminRequest,
+    responseSerialize: serialize_proto_EmptyUser,
+    responseDeserialize: deserialize_proto_EmptyUser,
+  },
 };
 
 exports.AdminServiceClient = grpc.makeGenericClientConstructor(AdminServiceService);
@@ -442,6 +585,17 @@ var UserServiceService = exports.UserServiceService = {
     requestDeserialize: deserialize_proto_ListFollowerRequest,
     responseSerialize: serialize_proto_FollowerListResponse,
     responseDeserialize: deserialize_proto_FollowerListResponse,
+  },
+  getUser: {
+    path: '/proto.UserService/GetUser',
+    requestStream: false,
+    responseStream: false,
+    requestType: proto_user_apiv1_pb.GetUserRequest,
+    responseType: proto_user_apiv1_pb.UserResponse,
+    requestSerialize: serialize_proto_GetUserRequest,
+    requestDeserialize: deserialize_proto_GetUserRequest,
+    responseSerialize: serialize_proto_UserResponse,
+    responseDeserialize: deserialize_proto_UserResponse,
   },
   getUserProfile: {
     path: '/proto.UserService/GetUserProfile',

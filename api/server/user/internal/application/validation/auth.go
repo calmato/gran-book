@@ -13,6 +13,8 @@ type AuthRequestValidation interface {
 	UpdateAuthPassword(in *input.UpdateAuthPassword) error
 	UpdateAuthProfile(in *input.UpdateAuthProfile) error
 	UpdateAuthAddress(in *input.UpdateAuthAddress) error
+	UploadAuthThumbnail(in *input.UploadAuthThumbnail) error
+	RegisterAuthDevice(in *input.RegisterAuthDevice) error
 }
 
 type authRequestValidation struct {
@@ -75,5 +77,25 @@ func (v *authRequestValidation) UpdateAuthAddress(in *input.UpdateAuthAddress) e
 	}
 
 	err := xerrors.New("Failed to UpdateAuthAddress for RequestValidation")
+	return exception.InvalidRequestValidation.New(err, ves...)
+}
+
+func (v *authRequestValidation) UploadAuthThumbnail(in *input.UploadAuthThumbnail) error {
+	ves := v.validator.Run(in, "")
+	if len(ves) == 0 {
+		return nil
+	}
+
+	err := xerrors.New("Failed to UploadAuthThumbnail for RequestValidation")
+	return exception.InvalidRequestValidation.New(err, ves...)
+}
+
+func (v *authRequestValidation) RegisterAuthDevice(in *input.RegisterAuthDevice) error {
+	ves := v.validator.Run(in, "")
+	if len(ves) == 0 {
+		return nil
+	}
+
+	err := xerrors.New("Failed to RegisterAuthDevice for RequestValidation")
 	return exception.InvalidRequestValidation.New(err, ves...)
 }

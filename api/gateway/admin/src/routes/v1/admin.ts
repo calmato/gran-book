@@ -1,29 +1,37 @@
 import express, { Request, Response, NextFunction } from 'express'
+import multer from '~/plugins/multer'
 import {
   createAdmin,
+  deleteAdmin,
+  getAdmin,
   listAdmin,
   searchAdmin,
   updateAdminPassword,
   updateAdminProfile,
   updateAdminRole,
+  uploadAdminThumbnail,
 } from '~/api/admin'
+import { badRequest } from '~/lib/http-exception'
 import { GrpcError } from '~/types/exception'
 import {
   ICreateAdminInput,
+  IDeleteAdminInput,
+  IGetAdminInput,
   IListAdminInput,
   ISearchAdminInput,
   IUpdateAdminPasswordInput,
   IUpdateAdminProfileInput,
   IUpdateAdminRoleInput,
+  IUploadAdminThumbnailInput,
 } from '~/types/input'
-import { IAdminListOutput, IAdminListOutputUser, IAdminOutput } from '~/types/output'
+import { IAdminListOutput, IAdminListOutputUser, IAdminOutput, IAdminThumbnailOutput } from '~/types/output'
 import {
   ICreateAdminRequest,
   IUpdateAdminPasswordRequest,
   IUpdateAdminProfileRequest,
   IUpdateAdminRoleRequest,
 } from '~/types/request'
-import { IAdminListResponse, IAdminListResponseUser, IAdminResponse } from '~/types/response'
+import { IAdminListResponse, IAdminListResponseUser, IAdminResponse, IAdminThumbnailResponse } from '~/types/response'
 
 const router = express.Router()
 
@@ -102,6 +110,41 @@ router.post(
   }
 )
 
+router.get(
+  '/:userId',
+  async (req: Request, res: Response<IAdminResponse>, next: NextFunction): Promise<void> => {
+    const { userId } = req.params
+
+    const input: IGetAdminInput = {
+      id: userId,
+    }
+
+    await getAdmin(req, input)
+      .then((output: IAdminOutput) => {
+        const response: IAdminResponse = setAdminResponse(output)
+        res.status(200).json(response)
+      })
+      .catch((err: GrpcError) => next(err))
+  }
+)
+
+router.delete(
+  '/:userId',
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    const { userId } = req.params
+
+    const input: IDeleteAdminInput = {
+      userId,
+    }
+
+    await deleteAdmin(req, input)
+      .then(() => {
+        res.status(200).json({ status: 'ok' })
+      })
+      .catch((err: GrpcError) => next(err))
+  }
+)
+
 router.patch(
   '/:userId/role',
   async (req: Request, res: Response<IAdminResponse>, next: NextFunction): Promise<void> => {
@@ -162,6 +205,31 @@ router.patch(
     await updateAdminProfile(req, input)
       .then((output: IAdminOutput) => {
         const response: IAdminResponse = setAdminResponse(output)
+        res.status(200).json(response)
+      })
+      .catch((err: GrpcError) => next(err))
+  }
+)
+
+router.post(
+  '/thumbnail',
+  multer.single('thumbnail'),
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    const { userId } = req.params
+
+    if (!req.file) {
+      next(badRequest([{ message: 'thumbnail is not exists' }]))
+      return
+    }
+
+    const input: IUploadAdminThumbnailInput = {
+      userId,
+      path: req.file.path,
+    }
+
+    await uploadAdminThumbnail(req, input)
+      .then((output: IAdminThumbnailOutput) => {
+        const response: IAdminThumbnailResponse = { thumbnailUrl: output.thumbnailUrl }
         res.status(200).json(response)
       })
       .catch((err: GrpcError) => next(err))

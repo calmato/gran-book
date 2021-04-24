@@ -16,7 +16,10 @@ export interface IAuthOutput {
   city: string
   addressLine1: string
   addressLine2: string
-  activated: boolean
   createdAt: string
   updatedAt: string
+}
+
+export interface IAuthThumbnailOutput {
+  thumbnailUrl: string
 }

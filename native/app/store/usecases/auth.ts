@@ -1,7 +1,10 @@
 import { Dispatch } from 'redux';
+import { Platform } from 'react-native';
 import { AxiosResponse } from 'axios';
+import * as Notifications from 'expo-notifications';
+import Constants from 'expo-constants';
 import Firebase from 'firebase';
-import { internal, external } from '~/lib/axios';
+import { internal } from '~/lib/axios';
 import firebase from '~/lib/firebase';
 import * as LocalStorage from '~/lib/local-storage';
 import { Auth } from '~/store/models';
@@ -40,6 +43,58 @@ export function authenticationAsync() {
       })
       .catch((err: Error) => {
         throw err;
+      });
+  };
+}
+
+export function registerForPushNotificationsAsync() {
+  return async (): Promise<void> => {
+    const deviceId: string = await LocalStorage.DeviceStorage.retrieve();
+    if (deviceId !== '') {
+      return Promise.resolve();
+    }
+
+    if (!Constants.isDevice) {
+      alert('Must use physical device for Push Notifications');
+      return Promise.resolve();
+    }
+
+    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== 'granted') {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+
+    if (finalStatus !== 'granted') {
+      return Promise.resolve();
+    }
+
+    if (Platform.OS === 'android') {
+      // TODO: refactor
+      Notifications.setNotificationChannelAsync('default', {
+        name: 'default',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
+      });
+    }
+
+    await Notifications.getExpoPushTokenAsync()
+      .then((res: Notifications.ExpoPushToken) => {
+        const token: string = res.data;
+
+        return internal
+          .post('/v1/auth/device', { instanceId: token })
+          .then(async () => {
+            await LocalStorage.DeviceStorage.save(token);
+          })
+          .catch((err: Error) => {
+            return Promise.reject(err);
+          });
+      })
+      .catch((err: Error) => {
+        return Promise.reject(err);
       });
   };
 }
@@ -351,3 +406,7 @@ export function profileEditAsync(
       });
   };
 }
+
+export const getMessageDocRef = async () => {
+  return await firebase.firestore().collection('messages');
+};

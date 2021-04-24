@@ -2,6 +2,7 @@ package v1
 
 import (
 	"context"
+	"io"
 
 	"github.com/calmato/gran-book/api/server/user/internal/application"
 	"github.com/calmato/gran-book/api/server/user/internal/application/input"
@@ -100,7 +101,7 @@ func (s *AuthServer) UpdateAuthProfile(
 	in := &input.UpdateAuthProfile{
 		Username:         req.GetUsername(),
 		Gender:           int(req.GetGender()),
-		Thumbnail:        req.GetThumbnail(),
+		ThumbnailURL:     req.GetThumbnailUrl(),
 		SelfIntroduction: req.GetSelfIntroduction(),
 	}
 
@@ -144,6 +145,86 @@ func (s *AuthServer) UpdateAuthAddress(
 	return res, nil
 }
 
+// UploadAuthThumbnail - サムネイルアップロード
+func (s *AuthServer) UploadAuthThumbnail(stream pb.AuthService_UploadAuthThumbnailServer) error {
+	ctx := stream.Context()
+	thumbnailBytes := map[int][]byte{}
+	for {
+		req, err := stream.Recv()
+		if err == io.EOF {
+			u, err := s.AuthApplication.Authentication(ctx)
+			if err != nil {
+				return errorHandling(err)
+			}
+
+			// 分割して送信されてきたサムネイルのバイナリをまとめる
+			thumbnail := []byte{}
+			for i := 0; i < len(thumbnailBytes); i++ {
+				thumbnail = append(thumbnail, thumbnailBytes[i]...)
+			}
+
+			in := &input.UploadAuthThumbnail{
+				Thumbnail: thumbnail,
+			}
+
+			thumbnailURL, err := s.AuthApplication.UploadThumbnail(ctx, in, u)
+			if err != nil {
+				return errorHandling(err)
+			}
+
+			res := &pb.AuthThumbnailResponse{
+				ThumbnailUrl: thumbnailURL,
+			}
+
+			return stream.SendAndClose(res)
+		}
+
+		if err != nil {
+			return errorHandling(err)
+		}
+
+		num := int(req.GetPosition())
+		thumbnailBytes[num] = req.GetThumbnail()
+	}
+}
+
+// DeleteAuth - ユーザ退会
+func (s *AuthServer) DeleteAuth(ctx context.Context, _ *pb.EmptyUser) (*pb.EmptyUser, error) {
+	u, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	err = s.AuthApplication.Delete(ctx, u)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	return &pb.EmptyUser{}, nil
+}
+
+// RegisterAuthDevice - デバイス登録
+func (s *AuthServer) RegisterAuthDevice(
+	ctx context.Context, req *pb.RegisterAuthDeviceRequest,
+) (*pb.AuthResponse, error) {
+	u, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	in := &input.RegisterAuthDevice{
+		InstanceID: req.GetInstanceId(),
+	}
+
+	err = s.AuthApplication.RegisterDevice(ctx, in, u)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	res := getAuthResponse(u)
+	return res, nil
+}
+
 func getAuthResponse(u *user.User) *pb.AuthResponse {
 	return &pb.AuthResponse{
 		Id:               u.ID,
@@ -163,7 +244,6 @@ func getAuthResponse(u *user.User) *pb.AuthResponse {
 		City:             u.City,
 		AddressLine1:     u.AddressLine1,
 		AddressLine2:     u.AddressLine2,
-		Activated:        u.Activated,
 		CreatedAt:        datetime.TimeToString(u.CreatedAt),
 		UpdatedAt:        datetime.TimeToString(u.UpdatedAt),
 	}

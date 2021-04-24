@@ -6,7 +6,7 @@ import { Header } from 'react-native-elements';
 import HeaderText from '~/components/atoms/HeaderText';
 import BookList from '~/components/molecules/BookList';
 import SearchBar from '~/components/molecules/SearchBar';
-import { searchBook } from '~/lib/GoogleBooksAPI';
+import { searchBookByTitle } from '~/lib/rakuten-books';
 import { HomeTabStackPramList } from '~/types/navigation';
 
 interface Props {
@@ -19,9 +19,9 @@ const Home = function Home(props: Props): ReactElement {
 
   const onSubmitEditingCallback = useCallback(() => {
     (async () => {
-      if (keyword !== '') {
-        const res = await searchBook(keyword);
-        if (res) navigation?.navigate('SearchResult', { keyword, results: res });
+      if (keyword !== '') { // TODO: titleに変更する？
+        const res = await searchBookByTitle(keyword);
+        if (res) navigation?.navigate('SearchResult', { keyword, results: res.data });
       }
     })();
   }, [keyword, navigation]);

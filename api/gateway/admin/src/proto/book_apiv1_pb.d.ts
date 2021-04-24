@@ -6,6 +6,23 @@
 
 import * as jspb from "google-protobuf";
 
+export class EmptyBook extends jspb.Message { 
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): EmptyBook.AsObject;
+    static toObject(includeInstance: boolean, msg: EmptyBook): EmptyBook.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: EmptyBook, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): EmptyBook;
+    static deserializeBinaryFromReader(message: EmptyBook, reader: jspb.BinaryReader): EmptyBook;
+}
+
+export namespace EmptyBook {
+    export type AsObject = {
+    }
+}
+
 export class ShowBookRequest extends jspb.Message { 
     getIsbn(): string;
     setIsbn(value: string): ShowBookRequest;
@@ -197,6 +214,48 @@ export namespace UpdateBookRequest {
         }
     }
 
+}
+
+export class DeleteBookRequest extends jspb.Message { 
+    getBookId(): number;
+    setBookId(value: number): DeleteBookRequest;
+
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): DeleteBookRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: DeleteBookRequest): DeleteBookRequest.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: DeleteBookRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): DeleteBookRequest;
+    static deserializeBinaryFromReader(message: DeleteBookRequest, reader: jspb.BinaryReader): DeleteBookRequest;
+}
+
+export namespace DeleteBookRequest {
+    export type AsObject = {
+        bookId: number,
+    }
+}
+
+export class DeleteBookshelfRequest extends jspb.Message { 
+    getBookId(): number;
+    setBookId(value: number): DeleteBookshelfRequest;
+
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): DeleteBookshelfRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: DeleteBookshelfRequest): DeleteBookshelfRequest.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: DeleteBookshelfRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): DeleteBookshelfRequest;
+    static deserializeBinaryFromReader(message: DeleteBookshelfRequest, reader: jspb.BinaryReader): DeleteBookshelfRequest;
+}
+
+export namespace DeleteBookshelfRequest {
+    export type AsObject = {
+        bookId: number,
+    }
 }
 
 export class ReadBookshelfRequest extends jspb.Message { 

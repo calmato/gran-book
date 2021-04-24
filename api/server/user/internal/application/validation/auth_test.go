@@ -282,7 +282,7 @@ func TestAuthRequestValidation_UpdateAuthProfile(t *testing.T) {
 			Input: &input.UpdateAuthProfile{
 				Username:         "test-user",
 				Gender:           0,
-				Thumbnail:        "",
+				ThumbnailURL:     "",
 				SelfIntroduction: "自己紹介",
 			},
 			Expected: true,
@@ -291,7 +291,7 @@ func TestAuthRequestValidation_UpdateAuthProfile(t *testing.T) {
 			Input: &input.UpdateAuthProfile{
 				Username:         "",
 				Gender:           0,
-				Thumbnail:        "",
+				ThumbnailURL:     "",
 				SelfIntroduction: "自己紹介",
 			},
 			Expected: false,
@@ -300,7 +300,7 @@ func TestAuthRequestValidation_UpdateAuthProfile(t *testing.T) {
 			Input: &input.UpdateAuthProfile{
 				Username:         strings.Repeat("x", 33),
 				Gender:           0,
-				Thumbnail:        "",
+				ThumbnailURL:     "",
 				SelfIntroduction: "自己紹介",
 			},
 			Expected: false,
@@ -309,7 +309,7 @@ func TestAuthRequestValidation_UpdateAuthProfile(t *testing.T) {
 			Input: &input.UpdateAuthProfile{
 				Username:         "test-user",
 				Gender:           -1,
-				Thumbnail:        "",
+				ThumbnailURL:     "",
 				SelfIntroduction: "自己紹介",
 			},
 			Expected: false,
@@ -318,7 +318,7 @@ func TestAuthRequestValidation_UpdateAuthProfile(t *testing.T) {
 			Input: &input.UpdateAuthProfile{
 				Username:         "test-user",
 				Gender:           3,
-				Thumbnail:        "",
+				ThumbnailURL:     "",
 				SelfIntroduction: "自己紹介",
 			},
 			Expected: false,
@@ -327,7 +327,7 @@ func TestAuthRequestValidation_UpdateAuthProfile(t *testing.T) {
 			Input: &input.UpdateAuthProfile{
 				Username:         "test-user",
 				Gender:           0,
-				Thumbnail:        "",
+				ThumbnailURL:     "",
 				SelfIntroduction: strings.Repeat("x", 257),
 			},
 			Expected: false,
@@ -696,6 +696,86 @@ func TestAuthRequestValidation_UpdateAuthAddress(t *testing.T) {
 			target := NewAuthRequestValidation()
 
 			got := target.UpdateAuthAddress(tc.Input)
+			if tc.Expected {
+				if got != nil {
+					t.Fatalf("Incorrect result: %#v", got)
+				}
+			} else {
+				if got == nil {
+					t.Fatalf("Incorrect result: result is nil")
+				}
+			}
+		})
+	}
+}
+
+func TestAuthRequestValidation_UploadAuthThumbnail(t *testing.T) {
+	testCases := map[string]struct {
+		Input    *input.UploadAuthThumbnail
+		Expected bool
+	}{
+		"ok": {
+			Input: &input.UploadAuthThumbnail{
+				Thumbnail: []byte("あいうえお"),
+			},
+			Expected: true,
+		},
+		"ng_thumbnail_required": {
+			Input: &input.UploadAuthThumbnail{
+				Thumbnail: nil,
+			},
+			Expected: false,
+		},
+	}
+
+	for result, tc := range testCases {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		t.Run(result, func(t *testing.T) {
+			target := NewAuthRequestValidation()
+
+			got := target.UploadAuthThumbnail(tc.Input)
+			if tc.Expected {
+				if got != nil {
+					t.Fatalf("Incorrect result: %#v", got)
+				}
+			} else {
+				if got == nil {
+					t.Fatalf("Incorrect result: result is nil")
+				}
+			}
+		})
+	}
+}
+
+func TestAuthRequestValidation_RegisterDevice(t *testing.T) {
+	testCases := map[string]struct {
+		Input    *input.RegisterAuthDevice
+		Expected bool
+	}{
+		"ok": {
+			Input: &input.RegisterAuthDevice{
+				InstanceID: "cTP0f6Y_Q26VG9TbTjReZz:APA91bG6Ns9A5DsXaMcImyyNImS4VD",
+			},
+			Expected: true,
+		},
+		"ng_instanceId_required": {
+			Input: &input.RegisterAuthDevice{
+				InstanceID: "",
+			},
+			Expected: false,
+		},
+	}
+
+	for result, tc := range testCases {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		t.Run(result, func(t *testing.T) {
+			target := NewAuthRequestValidation()
+
+			got := target.RegisterAuthDevice(tc.Input)
 			if tc.Expected {
 				if got != nil {
 					t.Fatalf("Incorrect result: %#v", got)

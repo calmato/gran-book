@@ -23,6 +23,9 @@ type AuthServiceClient interface {
 	UpdateAuthPassword(ctx context.Context, in *UpdateAuthPasswordRequest, opts ...grpc.CallOption) (*AuthResponse, error)
 	UpdateAuthProfile(ctx context.Context, in *UpdateAuthProfileRequest, opts ...grpc.CallOption) (*AuthResponse, error)
 	UpdateAuthAddress(ctx context.Context, in *UpdateAuthAddressRequest, opts ...grpc.CallOption) (*AuthResponse, error)
+	UploadAuthThumbnail(ctx context.Context, opts ...grpc.CallOption) (AuthService_UploadAuthThumbnailClient, error)
+	DeleteAuth(ctx context.Context, in *EmptyUser, opts ...grpc.CallOption) (*EmptyUser, error)
+	RegisterAuthDevice(ctx context.Context, in *RegisterAuthDeviceRequest, opts ...grpc.CallOption) (*AuthResponse, error)
 }
 
 type authServiceClient struct {
@@ -87,6 +90,58 @@ func (c *authServiceClient) UpdateAuthAddress(ctx context.Context, in *UpdateAut
 	return out, nil
 }
 
+func (c *authServiceClient) UploadAuthThumbnail(ctx context.Context, opts ...grpc.CallOption) (AuthService_UploadAuthThumbnailClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_AuthService_serviceDesc.Streams[0], "/proto.AuthService/UploadAuthThumbnail", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &authServiceUploadAuthThumbnailClient{stream}
+	return x, nil
+}
+
+type AuthService_UploadAuthThumbnailClient interface {
+	Send(*UploadAuthThumbnailRequest) error
+	CloseAndRecv() (*AuthThumbnailResponse, error)
+	grpc.ClientStream
+}
+
+type authServiceUploadAuthThumbnailClient struct {
+	grpc.ClientStream
+}
+
+func (x *authServiceUploadAuthThumbnailClient) Send(m *UploadAuthThumbnailRequest) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *authServiceUploadAuthThumbnailClient) CloseAndRecv() (*AuthThumbnailResponse, error) {
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	m := new(AuthThumbnailResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func (c *authServiceClient) DeleteAuth(ctx context.Context, in *EmptyUser, opts ...grpc.CallOption) (*EmptyUser, error) {
+	out := new(EmptyUser)
+	err := c.cc.Invoke(ctx, "/proto.AuthService/DeleteAuth", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) RegisterAuthDevice(ctx context.Context, in *RegisterAuthDeviceRequest, opts ...grpc.CallOption) (*AuthResponse, error) {
+	out := new(AuthResponse)
+	err := c.cc.Invoke(ctx, "/proto.AuthService/RegisterAuthDevice", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuthServiceServer is the server API for AuthService service.
 // All implementations must embed UnimplementedAuthServiceServer
 // for forward compatibility
@@ -97,6 +152,9 @@ type AuthServiceServer interface {
 	UpdateAuthPassword(context.Context, *UpdateAuthPasswordRequest) (*AuthResponse, error)
 	UpdateAuthProfile(context.Context, *UpdateAuthProfileRequest) (*AuthResponse, error)
 	UpdateAuthAddress(context.Context, *UpdateAuthAddressRequest) (*AuthResponse, error)
+	UploadAuthThumbnail(AuthService_UploadAuthThumbnailServer) error
+	DeleteAuth(context.Context, *EmptyUser) (*EmptyUser, error)
+	RegisterAuthDevice(context.Context, *RegisterAuthDeviceRequest) (*AuthResponse, error)
 	mustEmbedUnimplementedAuthServiceServer()
 }
 
@@ -121,6 +179,15 @@ func (UnimplementedAuthServiceServer) UpdateAuthProfile(context.Context, *Update
 }
 func (UnimplementedAuthServiceServer) UpdateAuthAddress(context.Context, *UpdateAuthAddressRequest) (*AuthResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateAuthAddress not implemented")
+}
+func (UnimplementedAuthServiceServer) UploadAuthThumbnail(AuthService_UploadAuthThumbnailServer) error {
+	return status.Errorf(codes.Unimplemented, "method UploadAuthThumbnail not implemented")
+}
+func (UnimplementedAuthServiceServer) DeleteAuth(context.Context, *EmptyUser) (*EmptyUser, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteAuth not implemented")
+}
+func (UnimplementedAuthServiceServer) RegisterAuthDevice(context.Context, *RegisterAuthDeviceRequest) (*AuthResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RegisterAuthDevice not implemented")
 }
 func (UnimplementedAuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {}
 
@@ -243,6 +310,68 @@ func _AuthService_UpdateAuthAddress_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthService_UploadAuthThumbnail_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(AuthServiceServer).UploadAuthThumbnail(&authServiceUploadAuthThumbnailServer{stream})
+}
+
+type AuthService_UploadAuthThumbnailServer interface {
+	SendAndClose(*AuthThumbnailResponse) error
+	Recv() (*UploadAuthThumbnailRequest, error)
+	grpc.ServerStream
+}
+
+type authServiceUploadAuthThumbnailServer struct {
+	grpc.ServerStream
+}
+
+func (x *authServiceUploadAuthThumbnailServer) SendAndClose(m *AuthThumbnailResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *authServiceUploadAuthThumbnailServer) Recv() (*UploadAuthThumbnailRequest, error) {
+	m := new(UploadAuthThumbnailRequest)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func _AuthService_DeleteAuth_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EmptyUser)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).DeleteAuth(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.AuthService/DeleteAuth",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).DeleteAuth(ctx, req.(*EmptyUser))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_RegisterAuthDevice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RegisterAuthDeviceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).RegisterAuthDevice(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.AuthService/RegisterAuthDevice",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).RegisterAuthDevice(ctx, req.(*RegisterAuthDeviceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _AuthService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "proto.AuthService",
 	HandlerType: (*AuthServiceServer)(nil),
@@ -271,8 +400,22 @@ var _AuthService_serviceDesc = grpc.ServiceDesc{
 			MethodName: "UpdateAuthAddress",
 			Handler:    _AuthService_UpdateAuthAddress_Handler,
 		},
+		{
+			MethodName: "DeleteAuth",
+			Handler:    _AuthService_DeleteAuth_Handler,
+		},
+		{
+			MethodName: "RegisterAuthDevice",
+			Handler:    _AuthService_RegisterAuthDevice_Handler,
+		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "UploadAuthThumbnail",
+			Handler:       _AuthService_UploadAuthThumbnail_Handler,
+			ClientStreams: true,
+		},
+	},
 	Metadata: "proto/user_apiv1.proto",
 }
 
@@ -287,6 +430,8 @@ type AdminServiceClient interface {
 	UpdateAdminRole(ctx context.Context, in *UpdateAdminRoleRequest, opts ...grpc.CallOption) (*AdminResponse, error)
 	UpdateAdminPassword(ctx context.Context, in *UpdateAdminPasswordRequest, opts ...grpc.CallOption) (*AdminResponse, error)
 	UpdateAdminProfile(ctx context.Context, in *UpdateAdminProfileRequest, opts ...grpc.CallOption) (*AdminResponse, error)
+	UploadAdminThumbnail(ctx context.Context, opts ...grpc.CallOption) (AdminService_UploadAdminThumbnailClient, error)
+	DeleteAdmin(ctx context.Context, in *DeleteAdminRequest, opts ...grpc.CallOption) (*EmptyUser, error)
 }
 
 type adminServiceClient struct {
@@ -360,6 +505,49 @@ func (c *adminServiceClient) UpdateAdminProfile(ctx context.Context, in *UpdateA
 	return out, nil
 }
 
+func (c *adminServiceClient) UploadAdminThumbnail(ctx context.Context, opts ...grpc.CallOption) (AdminService_UploadAdminThumbnailClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_AdminService_serviceDesc.Streams[0], "/proto.AdminService/UploadAdminThumbnail", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &adminServiceUploadAdminThumbnailClient{stream}
+	return x, nil
+}
+
+type AdminService_UploadAdminThumbnailClient interface {
+	Send(*UploadAdminThumbnailRequest) error
+	CloseAndRecv() (*AdminThumbnailResponse, error)
+	grpc.ClientStream
+}
+
+type adminServiceUploadAdminThumbnailClient struct {
+	grpc.ClientStream
+}
+
+func (x *adminServiceUploadAdminThumbnailClient) Send(m *UploadAdminThumbnailRequest) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *adminServiceUploadAdminThumbnailClient) CloseAndRecv() (*AdminThumbnailResponse, error) {
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	m := new(AdminThumbnailResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func (c *adminServiceClient) DeleteAdmin(ctx context.Context, in *DeleteAdminRequest, opts ...grpc.CallOption) (*EmptyUser, error) {
+	out := new(EmptyUser)
+	err := c.cc.Invoke(ctx, "/proto.AdminService/DeleteAdmin", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AdminServiceServer is the server API for AdminService service.
 // All implementations must embed UnimplementedAdminServiceServer
 // for forward compatibility
@@ -371,6 +559,8 @@ type AdminServiceServer interface {
 	UpdateAdminRole(context.Context, *UpdateAdminRoleRequest) (*AdminResponse, error)
 	UpdateAdminPassword(context.Context, *UpdateAdminPasswordRequest) (*AdminResponse, error)
 	UpdateAdminProfile(context.Context, *UpdateAdminProfileRequest) (*AdminResponse, error)
+	UploadAdminThumbnail(AdminService_UploadAdminThumbnailServer) error
+	DeleteAdmin(context.Context, *DeleteAdminRequest) (*EmptyUser, error)
 	mustEmbedUnimplementedAdminServiceServer()
 }
 
@@ -398,6 +588,12 @@ func (UnimplementedAdminServiceServer) UpdateAdminPassword(context.Context, *Upd
 }
 func (UnimplementedAdminServiceServer) UpdateAdminProfile(context.Context, *UpdateAdminProfileRequest) (*AdminResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateAdminProfile not implemented")
+}
+func (UnimplementedAdminServiceServer) UploadAdminThumbnail(AdminService_UploadAdminThumbnailServer) error {
+	return status.Errorf(codes.Unimplemented, "method UploadAdminThumbnail not implemented")
+}
+func (UnimplementedAdminServiceServer) DeleteAdmin(context.Context, *DeleteAdminRequest) (*EmptyUser, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteAdmin not implemented")
 }
 func (UnimplementedAdminServiceServer) mustEmbedUnimplementedAdminServiceServer() {}
 
@@ -538,6 +734,50 @@ func _AdminService_UpdateAdminProfile_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AdminService_UploadAdminThumbnail_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(AdminServiceServer).UploadAdminThumbnail(&adminServiceUploadAdminThumbnailServer{stream})
+}
+
+type AdminService_UploadAdminThumbnailServer interface {
+	SendAndClose(*AdminThumbnailResponse) error
+	Recv() (*UploadAdminThumbnailRequest, error)
+	grpc.ServerStream
+}
+
+type adminServiceUploadAdminThumbnailServer struct {
+	grpc.ServerStream
+}
+
+func (x *adminServiceUploadAdminThumbnailServer) SendAndClose(m *AdminThumbnailResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *adminServiceUploadAdminThumbnailServer) Recv() (*UploadAdminThumbnailRequest, error) {
+	m := new(UploadAdminThumbnailRequest)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func _AdminService_DeleteAdmin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteAdminRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServiceServer).DeleteAdmin(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.AdminService/DeleteAdmin",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServiceServer).DeleteAdmin(ctx, req.(*DeleteAdminRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _AdminService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "proto.AdminService",
 	HandlerType: (*AdminServiceServer)(nil),
@@ -570,8 +810,18 @@ var _AdminService_serviceDesc = grpc.ServiceDesc{
 			MethodName: "UpdateAdminProfile",
 			Handler:    _AdminService_UpdateAdminProfile_Handler,
 		},
+		{
+			MethodName: "DeleteAdmin",
+			Handler:    _AdminService_DeleteAdmin_Handler,
+		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "UploadAdminThumbnail",
+			Handler:       _AdminService_UploadAdminThumbnail_Handler,
+			ClientStreams: true,
+		},
+	},
 	Metadata: "proto/user_apiv1.proto",
 }
 
@@ -581,6 +831,7 @@ var _AdminService_serviceDesc = grpc.ServiceDesc{
 type UserServiceClient interface {
 	ListFollow(ctx context.Context, in *ListFollowRequest, opts ...grpc.CallOption) (*FollowListResponse, error)
 	ListFollower(ctx context.Context, in *ListFollowerRequest, opts ...grpc.CallOption) (*FollowerListResponse, error)
+	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*UserResponse, error)
 	GetUserProfile(ctx context.Context, in *GetUserProfileRequest, opts ...grpc.CallOption) (*UserProfileResponse, error)
 	RegisterFollow(ctx context.Context, in *RegisterFollowRequest, opts ...grpc.CallOption) (*UserProfileResponse, error)
 	UnregisterFollow(ctx context.Context, in *UnregisterFollowRequest, opts ...grpc.CallOption) (*UserProfileResponse, error)
@@ -606,6 +857,15 @@ func (c *userServiceClient) ListFollow(ctx context.Context, in *ListFollowReques
 func (c *userServiceClient) ListFollower(ctx context.Context, in *ListFollowerRequest, opts ...grpc.CallOption) (*FollowerListResponse, error) {
 	out := new(FollowerListResponse)
 	err := c.cc.Invoke(ctx, "/proto.UserService/ListFollower", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*UserResponse, error) {
+	out := new(UserResponse)
+	err := c.cc.Invoke(ctx, "/proto.UserService/GetUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -645,6 +905,7 @@ func (c *userServiceClient) UnregisterFollow(ctx context.Context, in *Unregister
 type UserServiceServer interface {
 	ListFollow(context.Context, *ListFollowRequest) (*FollowListResponse, error)
 	ListFollower(context.Context, *ListFollowerRequest) (*FollowerListResponse, error)
+	GetUser(context.Context, *GetUserRequest) (*UserResponse, error)
 	GetUserProfile(context.Context, *GetUserProfileRequest) (*UserProfileResponse, error)
 	RegisterFollow(context.Context, *RegisterFollowRequest) (*UserProfileResponse, error)
 	UnregisterFollow(context.Context, *UnregisterFollowRequest) (*UserProfileResponse, error)
@@ -660,6 +921,9 @@ func (UnimplementedUserServiceServer) ListFollow(context.Context, *ListFollowReq
 }
 func (UnimplementedUserServiceServer) ListFollower(context.Context, *ListFollowerRequest) (*FollowerListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListFollower not implemented")
+}
+func (UnimplementedUserServiceServer) GetUser(context.Context, *GetUserRequest) (*UserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
 }
 func (UnimplementedUserServiceServer) GetUserProfile(context.Context, *GetUserProfileRequest) (*UserProfileResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserProfile not implemented")
@@ -715,6 +979,24 @@ func _UserService_ListFollower_Handler(srv interface{}, ctx context.Context, dec
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServiceServer).ListFollower(ctx, req.(*ListFollowerRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_GetUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).GetUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.UserService/GetUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).GetUser(ctx, req.(*GetUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -784,6 +1066,10 @@ var _UserService_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListFollower",
 			Handler:    _UserService_ListFollower_Handler,
+		},
+		{
+			MethodName: "GetUser",
+			Handler:    _UserService_GetUser_Handler,
 		},
 		{
 			MethodName: "GetUserProfile",

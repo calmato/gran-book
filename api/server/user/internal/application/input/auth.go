@@ -23,7 +23,7 @@ type UpdateAuthPassword struct {
 type UpdateAuthProfile struct {
 	Username         string `json:"username" validate:"required,max=32"`
 	Gender           int    `json:"gender" validate:"gte=0,lte=2"`
-	Thumbnail        string `json:"thumbnail"`
+	ThumbnailURL     string `json:"thumbnailUrl"`
 	SelfIntroduction string `json:"selfIntroduction" validate:"max=256"`
 }
 
@@ -39,4 +39,14 @@ type UpdateAuthAddress struct {
 	City          string `json:"city" validate:"required,max=32"`
 	AddressLine1  string `json:"addressLine1" validate:"required,max=64"`
 	AddressLine2  string `json:"addressLine2" validate:"max=64"`
+}
+
+// UploadAuthThumbnail - サムネイルアップロードのリクエスト
+type UploadAuthThumbnail struct {
+	Thumbnail []byte `json:"thumbnail" validate:"required"`
+}
+
+// RegisterAuthDevice - デバイス登録のリクエスト
+type RegisterAuthDevice struct {
+	InstanceID string `json:"instanceId" validate:"required"`
 }

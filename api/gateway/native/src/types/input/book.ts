@@ -54,3 +54,7 @@ export interface IWantBookshelfInput {
 export interface IReleaseBookshelfInput {
   bookId: number
 }
+
+export interface IDeleteBookshelfInput {
+  bookId: number
+}

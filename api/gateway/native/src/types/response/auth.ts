@@ -19,3 +19,7 @@ export interface IAuthResponse {
   createdAt: string
   updatedAt: string
 }
+
+export interface IAuthThumbnailResponse {
+  thumbnailUrl: string
+}

@@ -32,3 +32,5 @@ tmp/
 
 # node_modlues
 node_modlues/
+
+.DS_Store

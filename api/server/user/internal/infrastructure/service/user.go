@@ -5,9 +5,11 @@ import (
 	"time"
 
 	"github.com/calmato/gran-book/api/server/user/internal/domain"
+	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/user"
 	"github.com/calmato/gran-book/api/server/user/lib/array"
 	"github.com/google/uuid"
+	"golang.org/x/xerrors"
 )
 
 type userService struct {
@@ -178,6 +180,20 @@ func (s *userService) Create(ctx context.Context, u *user.User) error {
 	return s.userRepository.Create(ctx, u)
 }
 
+func (s *userService) CreateWithOAuth(ctx context.Context, u *user.User) error {
+	if u == nil || u.ID == "" {
+		err := xerrors.New("User is nil")
+		return exception.NotFound.New(err)
+	}
+
+	current := time.Now().Local()
+
+	u.CreatedAt = current
+	u.UpdatedAt = current
+
+	return s.userRepository.CreateWithOAuth(ctx, u)
+}
+
 func (s *userService) CreateRelationship(ctx context.Context, r *user.Relationship) error {
 	current := time.Now().Local()
 
@@ -195,6 +211,10 @@ func (s *userService) Update(ctx context.Context, u *user.User) error {
 
 func (s *userService) UpdatePassword(ctx context.Context, uid string, password string) error {
 	return s.userRepository.UpdatePassword(ctx, uid, password)
+}
+
+func (s *userService) Delete(ctx context.Context, uid string) error {
+	return s.userRepository.Delete(ctx, uid)
 }
 
 func (s *userService) DeleteRelationship(ctx context.Context, id int) error {
