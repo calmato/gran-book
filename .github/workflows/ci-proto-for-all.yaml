@@ -29,8 +29,8 @@ jobs:
       - name: Configure prototool
         run: |
           curl -fSLO "https://github.com/uber/prototool/releases/download/v${PROTOTOOL_VERSION}/prototool-$(uname -s)-$(uname -m)"
-          mv ./prototool-$(uname -s)-$(uname -m) /usr/local/bin/prototool
-          chmod +x /usr/local/bin/prototool
+          sudo mv ./prototool-$(uname -s)-$(uname -m) /usr/local/bin/prototool
+          sudo chmod +x /usr/local/bin/prototool
 
       - name: Lint
         run: make format
