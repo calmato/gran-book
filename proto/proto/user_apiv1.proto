@@ -1,42 +1,43 @@
 syntax = "proto3";
 
 package proto;
+
 option go_package = "github.com/calmato/gran-book/proto";
 
 service AuthService {
-  rpc GetAuth (EmptyUser) returns (AuthResponse);
-  rpc CreateAuth (CreateAuthRequest) returns (AuthResponse);
-  rpc UpdateAuthEmail (UpdateAuthEmailRequest) returns (AuthResponse);
-  rpc UpdateAuthPassword (UpdateAuthPasswordRequest) returns (AuthResponse);
-  rpc UpdateAuthProfile (UpdateAuthProfileRequest) returns (AuthResponse);
-  rpc UpdateAuthAddress (UpdateAuthAddressRequest) returns (AuthResponse);
-  rpc UploadAuthThumbnail (stream UploadAuthThumbnailRequest) returns (AuthThumbnailResponse);
-  rpc DeleteAuth (EmptyUser) returns (EmptyUser);
-  rpc RegisterAuthDevice (RegisterAuthDeviceRequest) returns (AuthResponse);
+  rpc GetAuth(EmptyUser) returns (AuthResponse);
+  rpc CreateAuth(CreateAuthRequest) returns (AuthResponse);
+  rpc UpdateAuthEmail(UpdateAuthEmailRequest) returns (AuthResponse);
+  rpc UpdateAuthPassword(UpdateAuthPasswordRequest) returns (AuthResponse);
+  rpc UpdateAuthProfile(UpdateAuthProfileRequest) returns (AuthResponse);
+  rpc UpdateAuthAddress(UpdateAuthAddressRequest) returns (AuthResponse);
+  rpc UploadAuthThumbnail(stream UploadAuthThumbnailRequest) returns (AuthThumbnailResponse);
+  rpc DeleteAuth(EmptyUser) returns (EmptyUser);
+  rpc RegisterAuthDevice(RegisterAuthDeviceRequest) returns (AuthResponse);
 }
 
 service AdminService {
-  rpc ListAdmin (ListAdminRequest) returns (AdminListResponse);
-  rpc SearchAdmin (SearchAdminRequest) returns (AdminListResponse);
-  rpc GetAdmin (GetAdminRequest) returns (AdminResponse);
-  rpc CreateAdmin (CreateAdminRequest) returns (AdminResponse);
-  rpc UpdateAdminRole (UpdateAdminRoleRequest) returns (AdminResponse);
-  rpc UpdateAdminPassword (UpdateAdminPasswordRequest) returns (AdminResponse);
-  rpc UpdateAdminProfile (UpdateAdminProfileRequest) returns (AdminResponse);
-  rpc UploadAdminThumbnail (stream UploadAdminThumbnailRequest) returns (AdminThumbnailResponse);
+  rpc ListAdmin(ListAdminRequest) returns (AdminListResponse);
+  rpc SearchAdmin(SearchAdminRequest) returns (AdminListResponse);
+  rpc GetAdmin(GetAdminRequest) returns (AdminResponse);
+  rpc CreateAdmin(CreateAdminRequest) returns (AdminResponse);
+  rpc UpdateAdminRole(UpdateAdminRoleRequest) returns (AdminResponse);
+  rpc UpdateAdminPassword(UpdateAdminPasswordRequest) returns (AdminResponse);
+  rpc UpdateAdminProfile(UpdateAdminProfileRequest) returns (AdminResponse);
+  rpc UploadAdminThumbnail(stream UploadAdminThumbnailRequest) returns (AdminThumbnailResponse);
   rpc DeleteAdmin(DeleteAdminRequest) returns (EmptyUser);
 }
 
 service UserService {
-  rpc ListUser (ListUserRequest) returns (UserListResponse);
-  rpc ListUserByUserIds (ListUserByUserIdsRequest) returns (UserListResponse);
-  rpc ListFollow (ListFollowRequest) returns (FollowListResponse);
-  rpc ListFollower (ListFollowerRequest) returns (FollowerListResponse);
-  rpc SearchUser (SearchUserRequest) returns (UserListResponse);
-  rpc GetUser (GetUserRequest) returns (UserResponse);
-  rpc GetUserProfile (GetUserProfileRequest) returns (UserProfileResponse);
-  rpc RegisterFollow (RegisterFollowRequest) returns (UserProfileResponse);
-  rpc UnregisterFollow (UnregisterFollowRequest) returns (UserProfileResponse);
+  rpc ListUser(ListUserRequest) returns (UserListResponse);
+  rpc ListUserByUserIds(ListUserByUserIdsRequest) returns (UserListResponse);
+  rpc ListFollow(ListFollowRequest) returns (FollowListResponse);
+  rpc ListFollower(ListFollowerRequest) returns (FollowerListResponse);
+  rpc SearchUser(SearchUserRequest) returns (UserListResponse);
+  rpc GetUser(GetUserRequest) returns (UserResponse);
+  rpc GetUserProfile(GetUserProfileRequest) returns (UserProfileResponse);
+  rpc RegisterFollow(RegisterFollowRequest) returns (UserProfileResponse);
+  rpc UnregisterFollow(UnregisterFollowRequest) returns (UserProfileResponse);
 }
 
 message EmptyUser {}

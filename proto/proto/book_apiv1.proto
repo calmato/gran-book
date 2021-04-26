@@ -1,19 +1,20 @@
 syntax = "proto3";
 
 package proto;
+
 option go_package = "github.com/calmato/gran-book/proto";
 
 service BookService {
-  rpc ShowBook (ShowBookRequest) returns (BookResponse);
-  rpc CreateBook (CreateBookRequest) returns (BookResponse);
-  rpc UpdateBook (UpdateBookRequest) returns (BookResponse);
-  rpc ReadBookshelf (ReadBookshelfRequest) returns (BookshelfResponse);
-  rpc ReadingBookshelf (ReadingBookshelfRequest) returns (BookshelfResponse);
-  rpc StackBookshelf (StackBookshelfRequest) returns (BookshelfResponse);
-  rpc WantBookshelf (WantBookshelfRequest) returns (BookshelfResponse);
-  rpc ReleaseBookshelf (ReleaseBookshelfRequest) returns (BookshelfResponse);
-  rpc DeleteBook (DeleteBookRequest) returns (EmptyBook);
-  rpc DeleteBookshelf (DeleteBookshelfRequest) returns (EmptyBook);
+  rpc ShowBook(ShowBookRequest) returns (BookResponse);
+  rpc CreateBook(CreateBookRequest) returns (BookResponse);
+  rpc UpdateBook(UpdateBookRequest) returns (BookResponse);
+  rpc ReadBookshelf(ReadBookshelfRequest) returns (BookshelfResponse);
+  rpc ReadingBookshelf(ReadingBookshelfRequest) returns (BookshelfResponse);
+  rpc StackBookshelf(StackBookshelfRequest) returns (BookshelfResponse);
+  rpc WantBookshelf(WantBookshelfRequest) returns (BookshelfResponse);
+  rpc ReleaseBookshelf(ReleaseBookshelfRequest) returns (BookshelfResponse);
+  rpc DeleteBook(DeleteBookRequest) returns (EmptyBook);
+  rpc DeleteBookshelf(DeleteBookshelfRequest) returns (EmptyBook);
 }
 
 message EmptyBook {}
