@@ -449,6 +449,18 @@ paths:
             type: string
           required: true
           description: ISBN
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          required: false
+          description: 取得上限数
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          required: false
+          description: 取得開始位置
       responses:
         '200':
           description: A successful response.
@@ -456,6 +468,34 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/bookResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+  /v1/users/{userId}/books:
+    get:
+      summary: 本棚の書籍一覧
+      tags:
+        - BookService
+        - UserService
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: string
+          required: true
+          description: ユーザID
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/bookshelfListResponse'
         default:
           description: An unexpected error response.
           content:
@@ -1059,6 +1099,74 @@ components:
           type: string
         updatedAt:
           type: string
+    bookshelfListResponse:
+      type: object
+      properties:
+        bookshelves:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                format: int64
+              bookId:
+                type: integer
+                format: int64
+              userId:
+                type: string
+              status:
+                type: integer
+                format: int32
+              impression:
+                type: string
+              readOn:
+                type: string
+              createdAt:
+                type: string
+              updatedAt:
+                type: string
+              book:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    format: int64
+                  title:
+                    type: string
+                  titleKana:
+                    type: string
+                  description:
+                    type: string
+                  isbn:
+                    type: string
+                  publisher:
+                    type: string
+                  publishedOn:
+                    type: string
+                  thumbnailUrl:
+                    type: string
+                  rakutenUrl:
+                    type: string
+                  rakutenGenreId:
+                    type: string
+                  author:
+                    type: string
+                  authorKana:
+                    type: string
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+        limit:
+          type: integer
+          format: int64
+        offset:
+          type: integer
+          format: int64
+        total:
+          type: integer
+          format: int64
     errorResponse:
       type: object
       properties:
