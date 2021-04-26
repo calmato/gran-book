@@ -1,0 +1,36 @@
+name: Proto Test
+
+on:
+  push:
+    paths:
+      - '.github/workflows/ci-proto-for-all.yaml'
+      - 'proto/**'
+
+env:
+  PROTOTOOL_VERSION: 1.10.0
+
+jobs:
+  test:
+    name: Test
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./proto
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Configure prototool
+        run: |
+          curl -fSLO "https://github.com/uber/prototool/releases/download/v${PROTOTOOL_VERSION}/prototool-$(uname -s)-$(uname -m)"
+          mv ./prototool-$(uname -s)-$(uname -m) /usr/local/bin/prototool
+          chmod +x /usr/local/bin/prototool
+
+      - name: Lint
+        run: make format
