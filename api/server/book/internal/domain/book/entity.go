@@ -10,7 +10,7 @@ type Book struct {
 	Description    string     `gorm:"size:2000"`
 	Isbn           string     `gorm:"size:16;not null"`
 	Publisher      string     `gorm:"size:64;not null"`
-	PublishedOn    time.Time  `gorm:"not null"`
+	PublishedOn    string     `gorm:""`
 	ThumbnailURL   string     `gorm:""`
 	RakutenURL     string     `gorm:""`
 	RakutenGenreID string     `gorm:""`
