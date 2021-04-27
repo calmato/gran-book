@@ -1102,7 +1102,7 @@ components:
     bookshelfListResponse:
       type: object
       properties:
-        bookshelves:
+        books:
           type: array
           items:
             type: object
@@ -1110,11 +1110,6 @@ components:
               id:
                 type: integer
                 format: int64
-              bookId:
-                type: integer
-                format: int64
-              userId:
-                type: string
               status:
                 type: integer
                 format: int32
@@ -1126,7 +1121,7 @@ components:
                 type: string
               updatedAt:
                 type: string
-              book:
+              detail:
                 type: object
                 properties:
                   id:
