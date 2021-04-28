@@ -1,6 +1,7 @@
 import express, { NextFunction, Request, Response } from 'express'
 import {
   deleteBookshelf,
+  listBookshelf,
   readBookshelf,
   readingBookshelf,
   releaseBookshelf,
@@ -10,17 +11,39 @@ import {
 import { GrpcError } from '~/types/exception'
 import {
   IDeleteBookshelfInput,
+  IListBookshelfInput,
   IReadBookshelfInput,
   IReadingBookshelfInput,
   IReleaseBookshelfInput,
   IStackBookshelfInput,
   IWantBookshelfInput,
 } from '~/types/input'
-import { IBookshelfOutput } from '~/types/output'
+import { IBookshelfListOutput, IBookshelfListOutputAuthor, IBookshelfListOutputBookshelf, IBookshelfOutput } from '~/types/output'
 import { IReadBookshelfRequest } from '~/types/request'
-import { IBookshelfResponse } from '~/types/response'
+import { IBookshelfListResponse, IBookshelfListResponseBook, IBookshelfListResponseDetail, IBookshelfResponse } from '~/types/response'
 
 const router = express.Router()
+
+router.get(
+  '/',
+  async (req: Request, res: Response<IBookshelfListResponse>, next: NextFunction): Promise<void> => {
+    const { userId } = req.params
+    const { limit, offset } = req.query as { [key: string]: string }
+
+    const input: IListBookshelfInput = {
+      userId,
+      limit: Number(limit) || 0,
+      offset: Number(offset) || 0,
+    }
+
+    await listBookshelf(req, input)
+      .then((output: IBookshelfListOutput) => {
+        const response: IBookshelfListResponse = setBookshelfListResponse(output)
+        res.status(200).json(response)
+      })
+      .catch((err: GrpcError) => next(err))
+  }
+)
 
 router.post(
   '/:bookId/read',
@@ -142,6 +165,58 @@ function setBookshelfResponse(output: IBookshelfOutput): IBookshelfResponse {
     readOn: output.readOn,
     createdAt: output.createdAt,
     updatedAt: output.updatedAt,
+  }
+
+  return response
+}
+
+function setBookshelfListResponse(output: IBookshelfListOutput): IBookshelfListResponse {
+  // const authorNameKanas: string[] = bookOutput.authors.map((item: IBookOutputAuthor) => {
+  //   return item.nameKana
+  // })
+
+  const books: IBookshelfListResponseBook[] = output.bookshelves.map((bs: IBookshelfListOutputBookshelf) => {
+    const authorNames: string[] = bs.book.authors.map((item: IBookshelfListOutputAuthor) => {
+      return item.name
+    })
+
+    const authorNameKanas: string[] = bs.book.authors.map((item: IBookshelfListOutputAuthor) => {
+      return item.nameKana
+    })
+
+    const detail: IBookshelfListResponseDetail = {
+      id: bs.book.id,
+      title: bs.book.title,
+      titleKana: bs.book.titleKana,
+      description: bs.book.description,
+      isbn: bs.book.isbn,
+      publisher: bs.book.publisher,
+      publishedOn: bs.book.publishedOn,
+      thumbnailUrl: bs.book.thumbnailUrl,
+      rakutenUrl: bs.book.rakutenUrl,
+      rakutenGenreId: bs.book.rakutenGenreId,
+      author: authorNames.join('/'),
+      authorKana: authorNameKanas.join('/'),
+      createdAt: bs.book.createdAt,
+      updatedAt: bs.book.updatedAt,
+    }
+
+    return {
+      id: bs.id,
+      status: bs.status,
+      impression: bs.impression,
+      readOn: bs.readOn,
+      createdAt: bs.createdAt,
+      updatedAt: bs.updatedAt,
+      detail,
+    }
+  })
+
+  const response: IBookshelfListResponse = {
+    books,
+    limit: output.limit,
+    offset: output.offset,
+    total: output.total,
   }
 
   return response
