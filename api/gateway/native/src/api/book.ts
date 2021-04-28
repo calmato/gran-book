@@ -4,10 +4,12 @@ import { getGrpcMetadata } from '~/lib/grpc-metadata'
 import { bookClient } from '~/plugins/grpc'
 import {
   BookResponse,
+  BookshelfListResponse,
   BookshelfResponse,
   CreateBookRequest,
   DeleteBookshelfRequest,
   EmptyBook,
+  ListBookshelfRequest,
   ReadBookshelfRequest,
   ReadingBookshelfRequest,
   ReleaseBookshelfRequest,
@@ -20,6 +22,7 @@ import {
   IBookInputAuthor,
   ICreateBookInput,
   IDeleteBookshelfInput,
+  IListBookshelfInput,
   IReadBookshelfInput,
   IReadingBookshelfInput,
   IReleaseBookshelfInput,
@@ -33,8 +36,33 @@ import {
   IBookOutputAuthor,
   IBookOutputBookshelf,
   IBookOutputReview,
+  IBookshelfListOutput,
+  IBookshelfListOutputAuthor,
+  IBookshelfListOutputBook,
+  IBookshelfListOutputBookshelf,
   IBookshelfOutput,
 } from '~/types/output'
+
+export function listBookshelf(req: Request<any>, input: IListBookshelfInput): Promise<IBookshelfListOutput> {
+  const request = new ListBookshelfRequest()
+  const metadata = getGrpcMetadata(req)
+
+  request.setUserId(input.userId)
+  request.setLimit(input.limit)
+  request.setOffset(input.offset)
+
+  return new Promise((resolve: (output: IBookshelfListOutput) => void, reject: (reason: Error) => void) => {
+    bookClient.listBookshelf(request, metadata, (err: any, res: BookshelfListResponse) => {
+      if (err) {
+        reject(getGrpcError(err))
+        return
+      }
+
+      const output: IBookshelfListOutput = setBookshelfListOutput(res)
+      resolve(output)
+    })
+  })
+}
 
 export function showBook(req: Request<any>, input: IShowBookInput): Promise<IBookOutput> {
   const request = new ShowBookRequest()
@@ -306,6 +334,62 @@ function setBookshelfOutput(res: BookshelfResponse): IBookshelfOutput {
     readOn: res.getReadOn(),
     createdAt: res.getCreatedAt(),
     updatedAt: res.getUpdatedAt(),
+  }
+
+  return output
+}
+
+function setBookshelfListOutput(res: BookshelfListResponse): IBookshelfListOutput {
+  const bookshelves: Array<IBookshelfListOutputBookshelf> = res
+    .getBookshelvesList()
+    .map((bs: BookshelfListResponse.Bookshelf): IBookshelfListOutputBookshelf | undefined => {
+      const b = bs.getBook()
+      if (!b) {
+        return
+      }
+
+      const authors = b.getAuthorsList().map(
+        (a: BookshelfListResponse.Author): IBookshelfListOutputAuthor => ({
+          name: a.getName(),
+          nameKana: a.getNameKana(),
+        })
+      )
+
+      const book: IBookshelfListOutputBook = {
+        id: b.getId(),
+        title: b.getTitle(),
+        titleKana: b.getTitleKana(),
+        description: b.getDescription(),
+        isbn: b.getIsbn(),
+        publisher: b.getPublisher(),
+        publishedOn: b.getPublishedOn(),
+        thumbnailUrl: b.getThumbnailUrl(),
+        rakutenUrl: b.getRakutenUrl(),
+        rakutenGenreId: b.getRakutenGenreId(),
+        createdAt: b.getCreatedAt(),
+        updatedAt: b.getUpdatedAt(),
+        authors,
+      }
+
+      return {
+        id: bs.getId(),
+        bookId: bs.getBookId(),
+        userId: bs.getUserId(),
+        status: bs.getStatus(),
+        impression: bs.getImpression(),
+        readOn: bs.getReadOn(),
+        createdAt: bs.getCreatedAt(),
+        updatedAt: bs.getUpdatedAt(),
+        book,
+      }
+    })
+    .filter((item): item is NonNullable<typeof item> => !!item)
+
+  const output: IBookshelfListOutput = {
+    bookshelves,
+    limit: res.getLimit(),
+    offset: res.getOffset(),
+    total: res.getTotal(),
   }
 
   return output
