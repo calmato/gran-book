@@ -279,7 +279,7 @@ func getBookResponse(b *book.Book) *pb.BookResponse {
 		Description:    b.Description,
 		Isbn:           b.Isbn,
 		Publisher:      b.Publisher,
-		PublishedOn:    datetime.DateToString(b.PublishedOn),
+		PublishedOn:    b.PublishedOn,
 		ThumbnailUrl:   b.ThumbnailURL,
 		RakutenUrl:     b.RakutenURL,
 		RakutenGenreId: b.RakutenGenreID,

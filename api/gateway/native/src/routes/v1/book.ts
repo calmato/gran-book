@@ -49,9 +49,6 @@ router.post(
     const authorNames: string[] = author.split('/')
     const authorNameKanas: string[] = authorKana.split('/')
 
-    // 出版日のフォーマット: 2020年01月01日頃 -> 2020-01-01
-    const publishedOn: string = salesDate?.replace(/[年月]/g, '-').replace(/[日頃]/g, '') || ''
-
     const authors: IBookInputAuthor[] = authorNames.map((val: string, i: number) => {
       const item: IBookInputAuthor = {
         name: val,
@@ -67,7 +64,7 @@ router.post(
       description: itemCaption,
       isbn,
       publisher: publisherName,
-      publishedOn,
+      publishedOn: salesDate,
       thumbnailUrl: mediumImageUrl || smallImageUrl || largeImageUrl,
       rakutenUrl: itemUrl,
       rakutenGenreId: booksGenreId,
@@ -106,9 +103,6 @@ router.patch(
     const authorNames: string[] = author.split('/')
     const authorNameKanas: string[] = authorKana.split('/')
 
-    // 出版日のフォーマット: 2020年01月01日頃 -> 2020-01-01
-    const publishedOn: string = salesDate?.replace(/[年月]/g, '-').replace(/[日頃]/g, '') || ''
-
     const authors: IBookInputAuthor[] = authorNames.map((val: string, i: number) => {
       const item: IBookInputAuthor = {
         name: val,
@@ -124,7 +118,7 @@ router.patch(
       description: itemCaption,
       isbn,
       publisher: publisherName,
-      publishedOn,
+      publishedOn: salesDate,
       thumbnailUrl: mediumImageUrl || smallImageUrl || largeImageUrl,
       rakutenUrl: itemUrl,
       rakutenGenreId: booksGenreId,
