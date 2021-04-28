@@ -18,9 +18,19 @@ import {
   IStackBookshelfInput,
   IWantBookshelfInput,
 } from '~/types/input'
-import { IBookshelfListOutput, IBookshelfListOutputAuthor, IBookshelfListOutputBookshelf, IBookshelfOutput } from '~/types/output'
+import {
+  IBookshelfListOutput,
+  IBookshelfListOutputAuthor,
+  IBookshelfListOutputBookshelf,
+  IBookshelfOutput,
+} from '~/types/output'
 import { IReadBookshelfRequest } from '~/types/request'
-import { IBookshelfListResponse, IBookshelfListResponseBook, IBookshelfListResponseDetail, IBookshelfResponse } from '~/types/response'
+import {
+  IBookshelfListResponse,
+  IBookshelfListResponseBook,
+  IBookshelfListResponseDetail,
+  IBookshelfResponse,
+} from '~/types/response'
 
 const router = express.Router()
 
