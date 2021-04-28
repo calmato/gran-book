@@ -100,21 +100,13 @@ func (r *bookRepository) Create(ctx context.Context, b *book.Book) error {
 		return err
 	}
 
-	if b.PublishedOn.IsZero() {
-		err := tx.Omit(clause.Associations, "published_on").Create(&b).Error
-		if err != nil {
-			tx.Rollback()
-			return exception.ErrorInDatastore.New(err)
-		}
-	} else {
-		err := tx.Omit(clause.Associations).Create(&b).Error
-		if err != nil {
-			tx.Rollback()
-			return exception.ErrorInDatastore.New(err)
-		}
+	err := tx.Omit(clause.Associations).Create(&b).Error
+	if err != nil {
+		tx.Rollback()
+		return exception.ErrorInDatastore.New(err)
 	}
 
-	err := associate(tx, b)
+	err = associate(tx, b)
 	if err != nil {
 		tx.Rollback()
 		return err
@@ -151,21 +143,13 @@ func (r *bookRepository) Update(ctx context.Context, b *book.Book) error {
 		return err
 	}
 
-	if b.PublishedOn.IsZero() {
-		err := tx.Omit(clause.Associations, "published_on").Save(&b).Error
-		if err != nil {
-			tx.Rollback()
-			return exception.ErrorInDatastore.New(err)
-		}
-	} else {
-		err := tx.Omit(clause.Associations).Save(&b).Error
-		if err != nil {
-			tx.Rollback()
-			return exception.ErrorInDatastore.New(err)
-		}
+	err := tx.Omit(clause.Associations).Save(&b).Error
+	if err != nil {
+		tx.Rollback()
+		return exception.ErrorInDatastore.New(err)
 	}
 
-	err := associate(tx, b)
+	err = associate(tx, b)
 	if err != nil {
 		tx.Rollback()
 		return err
@@ -203,21 +187,13 @@ func (r *bookRepository) MultipleCreate(ctx context.Context, bs []*book.Book) er
 	}
 
 	for _, b := range bs {
-		if b.PublishedOn.IsZero() {
-			err := tx.Omit(clause.Associations, "published_on").Create(b).Error
-			if err != nil {
-				tx.Rollback()
-				return exception.ErrorInDatastore.New(err)
-			}
-		} else {
-			err := tx.Omit(clause.Associations).Create(b).Error
-			if err != nil {
-				tx.Rollback()
-				return exception.ErrorInDatastore.New(err)
-			}
+		err := tx.Omit(clause.Associations).Create(b).Error
+		if err != nil {
+			tx.Rollback()
+			return exception.ErrorInDatastore.New(err)
 		}
 
-		err := associate(tx, b)
+		err = associate(tx, b)
 		if err != nil {
 			tx.Rollback()
 			return err
@@ -240,21 +216,13 @@ func (r *bookRepository) MultipleUpdate(ctx context.Context, bs []*book.Book) er
 	}
 
 	for _, b := range bs {
-		if b.PublishedOn.IsZero() {
-			err := tx.Omit(clause.Associations, "published_on").Save(b).Error
-			if err != nil {
-				tx.Rollback()
-				return exception.ErrorInDatastore.New(err)
-			}
-		} else {
-			err := tx.Omit(clause.Associations).Save(b).Error
-			if err != nil {
-				tx.Rollback()
-				return exception.ErrorInDatastore.New(err)
-			}
+		err := tx.Omit(clause.Associations).Save(b).Error
+		if err != nil {
+			tx.Rollback()
+			return exception.ErrorInDatastore.New(err)
 		}
 
-		err := associate(tx, b)
+		err = associate(tx, b)
 		if err != nil {
 			tx.Rollback()
 			return err

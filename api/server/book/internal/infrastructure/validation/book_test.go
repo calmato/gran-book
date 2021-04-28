@@ -25,7 +25,7 @@ func TestBookService_Book(t *testing.T) {
 				Description:  "本の説明です",
 				Isbn:         "1234567890123",
 				Publisher:    "テスト著者",
-				PublishedOn:  time.Date(2020, 1, 1, 0, 0, 0, 0, time.Local),
+				PublishedOn:  "2021年12月24日",
 				ThumbnailURL: "",
 				CreatedAt:    time.Time{},
 				UpdatedAt:    time.Time{},
