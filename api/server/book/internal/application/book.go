@@ -63,7 +63,7 @@ func (a *bookApplication) Create(ctx context.Context, in *input.Book) (*book.Boo
 		Description:    in.Description,
 		Isbn:           in.Isbn,
 		Publisher:      in.Publisher,
-		PublishedOn:    datetime.StringToDate(in.PublishedOn),
+		PublishedOn:    in.PublishedOn,
 		ThumbnailURL:   in.ThumbnailURL,
 		RakutenURL:     in.RakutenURL,
 		RakutenGenreID: in.RakutenGenreID,
@@ -114,7 +114,7 @@ func (a *bookApplication) Update(ctx context.Context, in *input.Book) (*book.Boo
 	b.Description = in.Description
 	b.Isbn = in.Isbn
 	b.Publisher = in.Publisher
-	b.PublishedOn = datetime.StringToDate(in.PublishedOn)
+	b.PublishedOn = in.PublishedOn
 	b.ThumbnailURL = in.ThumbnailURL
 	b.RakutenURL = in.RakutenURL
 	b.RakutenGenreID = in.RakutenGenreID

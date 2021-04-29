@@ -8,14 +8,17 @@ import {
   GetUserProfileRequest,
   ListFollowerRequest,
   ListFollowRequest,
+  ListUserByUserIdsRequest,
   RegisterFollowRequest,
   UnregisterFollowRequest,
+  UserListResponse,
   UserProfileResponse,
 } from '~/proto/user_apiv1_pb'
 import {
   IGetUserProfileInput,
   IListFollowerInput,
   IListFollowInput,
+  IListUserByUserIdsInput,
   IRegisterFollowInput,
   IUnregisterFollowInput,
 } from '~/types/input'
@@ -24,8 +27,29 @@ import {
   IFollowerListOutputUser,
   IFollowListOutput,
   IFollowListOutputUser,
+  IUserListOutput,
+  IUserListOutputOrder,
+  IUserListOutputUser,
   IUserProfileOutput,
 } from '~/types/output'
+
+export function listUserWithUserIds(req: Request<any>, input: IListUserByUserIdsInput): Promise<IUserListOutput> {
+  const request = new ListUserByUserIdsRequest()
+  const metadata = getGrpcMetadata(req)
+
+  request.setUserIdsList(input.ids)
+
+  return new Promise((resolve: (res: IUserListOutput) => void, reject: (reason: Error) => void) => {
+    userClient.listUserByUserIds(request, metadata, (err: any, res: UserListResponse) => {
+      if (err) {
+        reject(getGrpcError(err))
+        return
+      }
+
+      resolve(setUserListOutput(res))
+    })
+  })
+}
 
 export function listFollow(req: Request<any>, input: IListFollowInput): Promise<IFollowListOutput> {
   const request = new ListFollowRequest()
@@ -160,6 +184,45 @@ export function unregisterFollow(req: Request<any>, input: IUnregisterFollowInpu
       resolve(output)
     })
   })
+}
+
+function setUserListOutput(res: UserListResponse): IUserListOutput {
+  const users: IUserListOutputUser[] = res.getUsersList().map(
+    (u: UserListResponse.User): IUserListOutputUser => ({
+      id: u.getId(),
+      username: u.getUsername(),
+      email: u.getEmail(),
+      phoneNumber: u.getPhoneNumber(),
+      role: u.getRole(),
+      thumbnailUrl: u.getThumbnailUrl(),
+      selfIntroduction: u.getSelfIntroduction(),
+      lastName: u.getLastName(),
+      firstName: u.getFirstName(),
+      lastNameKana: u.getLastNameKana(),
+      firstNameKana: u.getFirstNameKana(),
+      createdAt: u.getCreatedAt(),
+      updatedAt: u.getUpdatedAt(),
+    })
+  )
+
+  const output: IUserListOutput = {
+    users,
+    limit: res.getLimit(),
+    offset: res.getOffset(),
+    total: res.getTotal(),
+  }
+
+  const orderRes: UserListResponse.Order | undefined = res.getOrder()
+  if (orderRes) {
+    const order: IUserListOutputOrder = {
+      by: orderRes.getBy(),
+      direction: orderRes.getDirection(),
+    }
+
+    output.order = order
+  }
+
+  return output
 }
 
 function setUserProfileOutput(res: UserProfileResponse): IUserProfileOutput {

@@ -13,12 +13,15 @@ import (
 
 // UserApplication - Userアプリケーションのインターフェース
 type UserApplication interface {
+	List(ctx context.Context, in *input.ListUser) ([]*user.User, *output.ListQuery, error)
+	ListByUserIDs(ctx context.Context, in *input.ListUserByUserIDs) ([]*user.User, error)
 	ListFollow(
 		ctx context.Context, in *input.ListFollow, uid string, cuid string,
 	) ([]*user.Follow, *output.ListQuery, error)
 	ListFollower(
 		ctx context.Context, in *input.ListFollower, uid string, cuid string,
 	) ([]*user.Follower, *output.ListQuery, error)
+	Search(ctx context.Context, in *input.SearchUser) ([]*user.User, *output.ListQuery, error)
 	Show(ctx context.Context, uid string) (*user.User, error)
 	GetUserProfile(ctx context.Context, uid string, cuid string) (*user.User, *output.UserProfile, error)
 	RegisterFollow(ctx context.Context, uid string, cuid string) (*user.User, *output.UserProfile, error)
@@ -36,6 +39,76 @@ func NewUserApplication(urv validation.UserRequestValidation, us user.Service) U
 		userRequestValidation: urv,
 		userService:           us,
 	}
+}
+
+func (a *userApplication) List(ctx context.Context, in *input.ListUser) ([]*user.User, *output.ListQuery, error) {
+	err := a.userRequestValidation.ListUser(in)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	query := &domain.ListQuery{
+		Limit:      in.Limit,
+		Offset:     in.Offset,
+		Conditions: []*domain.QueryCondition{},
+	}
+
+	if in.By != "" {
+		o := &domain.QueryOrder{
+			By:        in.By,
+			Direction: in.Direction,
+		}
+
+		query.Order = o
+	}
+
+	us, err := a.userService.List(ctx, query)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	total, err := a.userService.ListCount(ctx, query)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	out := &output.ListQuery{
+		Limit:  query.Limit,
+		Offset: query.Offset,
+		Total:  total,
+	}
+
+	if query.Order != nil {
+		o := &output.QueryOrder{
+			By:        query.Order.By,
+			Direction: query.Order.Direction,
+		}
+
+		out.Order = o
+	}
+
+	return us, out, nil
+}
+
+func (a *userApplication) ListByUserIDs(ctx context.Context, in *input.ListUserByUserIDs) ([]*user.User, error) {
+	err := a.userRequestValidation.ListUserByUserIDs(in)
+	if err != nil {
+		return nil, err
+	}
+
+	q := &domain.ListQuery{
+		Limit:  0,
+		Offset: 0,
+		Conditions: []*domain.QueryCondition{
+			{
+				Field:    "id",
+				Operator: "IN",
+				Value:    in.UserIDs,
+			},
+		},
+	}
+
+	return a.userService.List(ctx, q)
 }
 
 func (a *userApplication) ListFollow(
@@ -150,6 +223,61 @@ func (a *userApplication) ListFollower(
 	}
 
 	return fs, out, nil
+}
+
+func (a *userApplication) Search(ctx context.Context, in *input.SearchUser) ([]*user.User, *output.ListQuery, error) {
+	err := a.userRequestValidation.SearchUser(in)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	query := &domain.ListQuery{
+		Limit:  in.Limit,
+		Offset: in.Offset,
+		Conditions: []*domain.QueryCondition{
+			{
+				Field:    in.Field,
+				Operator: "LIKE",
+				Value:    in.Value,
+			},
+		},
+	}
+
+	if in.By != "" {
+		o := &domain.QueryOrder{
+			By:        in.By,
+			Direction: in.Direction,
+		}
+
+		query.Order = o
+	}
+
+	us, err := a.userService.List(ctx, query)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	total, err := a.userService.ListCount(ctx, query)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	out := &output.ListQuery{
+		Limit:  query.Limit,
+		Offset: query.Offset,
+		Total:  total,
+	}
+
+	if query.Order != nil {
+		o := &output.QueryOrder{
+			By:        query.Order.By,
+			Direction: query.Order.Direction,
+		}
+
+		out.Order = o
+	}
+
+	return us, out, nil
 }
 
 func (a *userApplication) Show(ctx context.Context, uid string) (*user.User, error) {
