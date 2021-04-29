@@ -40,8 +40,16 @@ export const MessagesScreen = () => {
             name="keyboard-arrow-left"
             size={24}
           />
+        }
+        centerComponent={{
+          text: '濵田',
+          style: styles.header
+        }}
+        centerContainerStyle={{
+          height: 75
+        }}
 
-        }/>
+      />
       <View style={styles.chatFooter}>
         <MaterialCommunityIcons
           style={styles.inputImage}
@@ -79,6 +87,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLOR.BACKGROUND_GREY,
+  },
+
+  header:{
+    color:COLOR.TEXT_TITLE,
+    fontSize: 20,
+    fontWeight: 'bold',
+    flexDirection: 'column',
+    justifyContent: 'flex-end',
   },
 
   inputText: {
