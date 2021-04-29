@@ -9,6 +9,7 @@ import { AppState } from '~/store/modules';
 import { setAuth, setProfile } from '~/store/modules/auth';
 import { IAuthResponse } from '~/types/response';
 import { AccountEditForm } from '~/types/forms';
+import * as Facebook from 'expo-facebook';
 
 interface IAuth {
   user: Firebase.User;
@@ -76,6 +77,53 @@ export function signInWithEmailAsync(email: string, password: string) {
         throw err;
       });
   };
+}
+
+export function signInWithFacebookAsync() {
+  return async (dispatch: Dispatch): Promise<void> => {
+  await Facebook.initializeAsync('155361053103586');
+
+  const response = await Facebook.logInWithReadPermissionsAsync({
+    permissions: ['public_profile', 'email'],
+  });
+
+  if (response.type === 'success') {
+    // Build Firebase credential with the Facebook access token.
+    const credential = Firebase.auth.FacebookAuthProvider.credential(response.token);
+    
+    // Sign in with credential from the Facebook user.
+    Firebase
+      .auth()
+      .signInWithCredential(credential)
+      .then(async () => {
+        return await onAuthStateChanged();
+      })
+      .then(async (res: IAuth) => {
+        const { user, token } = res;
+        const values: Auth.AuthValues = {
+          id: user.uid,
+          email: user.email || undefined,
+          emailVerified: user.emailVerified,
+          token,
+        };
+
+        const model: Auth.Model = {
+          ...Auth.initialState,
+          id: values.id,
+          token: values.token,
+          email: values.email || '',
+          emailVerified: values.emailVerified || false,
+        };
+
+        dispatch(setAuth(values));
+        await LocalStorage.AuthStorage.save(model);
+      })
+      .catch(error => {
+        console.log(error)
+        // Handle Errors here.
+      });
+  } ;
+};
 }
 
 export function signOutAsync() {

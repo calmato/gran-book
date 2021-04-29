@@ -16,6 +16,7 @@ const styles = StyleSheet.create({
 
 interface Props {
   style?: ViewStyle;
+  onPress: () => void;
 }
 
 const FacebookButton = function FacebookButton(props: Props): ReactElement {
@@ -25,6 +26,7 @@ const FacebookButton = function FacebookButton(props: Props): ReactElement {
       buttonStyle={styles.buttonStyle}
       containerStyle={props.style}
       title="Facebookでサインイン"
+      onPress={props.onPress}
     />
   );
 };

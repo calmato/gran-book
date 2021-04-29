@@ -34,6 +34,9 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "facebookScheme": "fb155361053103586",
+    "facebookAppId": "155361053103586",
+    "facebookDisplayName": "Granboook"
   }
 }
