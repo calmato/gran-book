@@ -1,3 +1,7 @@
+export interface IListUserByUserIdsInput {
+  ids: Array<string>
+}
+
 export interface IListFollowInput {
   id: string
   limit: number
