@@ -207,7 +207,7 @@ function setBookshelfListResponse(output: IBookshelfListOutput): IBookshelfListR
       updatedAt: bs.book.updatedAt,
     }
 
-    return {
+    const book: IBookshelfListResponseBook = {
       id: bs.id,
       status: bs.status,
       readOn: bs.readOn,
@@ -215,6 +215,8 @@ function setBookshelfListResponse(output: IBookshelfListOutput): IBookshelfListR
       updatedAt: bs.updatedAt,
       detail,
     }
+
+    return book
   })
 
   const response: IBookshelfListResponse = {
