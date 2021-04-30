@@ -39,14 +39,3 @@ export interface IBookResponseUser {
   username: string
   thumbnailUrl: string
 }
-
-export interface IBookshelfResponse {
-  id: number
-  bookId: number
-  userId: string
-  status: number
-  impression: string
-  readOn: string
-  createdAt: string
-  updatedAt: string
-}

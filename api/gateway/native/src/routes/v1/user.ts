@@ -26,7 +26,7 @@ import {
 const router = express.Router()
 
 router.get(
-  '/:userId/follow',
+  '/v1/users/:userId/follow',
   async (req: Request, res: Response<IFollowListResponse>, next: NextFunction): Promise<void> => {
     const { limit, offset } = req.query
     const { userId } = req.params
@@ -65,7 +65,7 @@ router.get(
 )
 
 router.post(
-  '/:userId/follow',
+  '/v1/users/:userId/follow',
   async (req: Request, res: Response<IUserProfileResponse>, next: NextFunction): Promise<void> => {
     const { userId } = req.params
 
@@ -83,7 +83,7 @@ router.post(
 )
 
 router.delete(
-  '/:userId/follow',
+  '/v1/users/:userId/follow',
   async (req: Request, res: Response<IUserProfileResponse>, next: NextFunction): Promise<void> => {
     const { userId } = req.params
 
@@ -101,7 +101,7 @@ router.delete(
 )
 
 router.get(
-  '/:userId/follower',
+  '/v1/users/:userId/follower',
   async (req: Request, res: Response<IFollowerListResponse>, next: NextFunction): Promise<void> => {
     const { limit, offset } = req.query
     const { userId } = req.params
@@ -140,7 +140,7 @@ router.get(
 )
 
 router.get(
-  '/:userId/profile',
+  '/v1/users/:userId/profile',
   async (req: Request, res: Response<IUserProfileResponse>, next: NextFunction): Promise<void> => {
     const { userId } = req.params
 

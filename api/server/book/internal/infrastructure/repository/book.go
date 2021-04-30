@@ -4,6 +4,7 @@ import (
 	"context"
 	"strings"
 
+	"github.com/calmato/gran-book/api/server/book/internal/domain"
 	"github.com/calmato/gran-book/api/server/book/internal/domain/book"
 	"github.com/calmato/gran-book/api/server/book/internal/domain/exception"
 	"gorm.io/gorm"
@@ -19,6 +20,20 @@ func NewBookRepository(c *Client) book.Repository {
 	return &bookRepository{
 		client: c,
 	}
+}
+
+func (r *bookRepository) ListBookshelf(ctx context.Context, q *domain.ListQuery) ([]*book.Bookshelf, error) {
+	bss := []*book.Bookshelf{}
+
+	sql := r.client.db.Preload("Book").Preload("Book.Authors")
+	db := r.client.getListQuery(sql, q)
+
+	err := db.Find(&bss).Error
+	if err != nil {
+		return nil, exception.ErrorInDatastore.New(err)
+	}
+
+	return bss, nil
 }
 
 func (r *bookRepository) ListAuthorByBookID(ctx context.Context, bookID int) ([]*book.Author, error) {
@@ -42,6 +57,11 @@ func (r *bookRepository) ListAuthorByBookID(ctx context.Context, bookID int) ([]
 	}
 
 	return as, nil
+}
+
+func (r *bookRepository) ListBookshelfCount(ctx context.Context, q *domain.ListQuery) (int, error) {
+	sql := r.client.db.Table("bookshelves")
+	return r.client.getListCount(sql, q)
 }
 
 func (r *bookRepository) Show(ctx context.Context, bookID int) (*book.Book, error) {
