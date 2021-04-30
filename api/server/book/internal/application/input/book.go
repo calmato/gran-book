@@ -28,7 +28,7 @@ type Bookshelf struct {
 	ReadOn string `json:"readOn" validate:"omitempty"`
 }
 
-// ListOnBookshelf - 本棚内の書籍一覧取得のリクエスト
+// ListBookshelf - 本棚内の書籍一覧取得のリクエスト
 type ListBookshelf struct {
 	UserID string `json:"userId" validate:"required"`
 	Limit  int    `json:"limit" validate:"gte=0,lte=1000"`
