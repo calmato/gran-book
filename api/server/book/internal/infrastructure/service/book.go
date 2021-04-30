@@ -6,8 +6,6 @@ import (
 
 	"github.com/calmato/gran-book/api/server/book/internal/domain"
 	"github.com/calmato/gran-book/api/server/book/internal/domain/book"
-	"github.com/calmato/gran-book/api/server/book/internal/domain/exception"
-	"golang.org/x/xerrors"
 )
 
 type bookService struct {
@@ -33,17 +31,17 @@ func (s *bookService) Show(ctx context.Context, bookID int) (*book.Book, error) 
 		return nil, err
 	}
 
-	if b == nil || b.ID == 0 {
-		err := xerrors.New("Book is nil.")
-		return nil, exception.NotFound.New(err)
-	}
+	// if b == nil || b.ID == 0 {
+	// 	err := xerrors.New("Book is nil.")
+	// 	return nil, exception.NotFound.New(err)
+	// }
 
-	as, err := s.bookRepository.ListAuthorByBookID(ctx, b.ID)
-	if err != nil {
-		return nil, err
-	}
+	// as, err := s.bookRepository.ListAuthorByBookID(ctx, b.ID)
+	// if err != nil {
+	// 	return nil, err
+	// }
 
-	b.Authors = as
+	// b.Authors = as
 
 	return b, nil
 }
@@ -58,17 +56,17 @@ func (s *bookService) ShowByIsbn(ctx context.Context, isbn string) (*book.Book, 
 		return nil, err
 	}
 
-	if b == nil || b.ID == 0 {
-		err := xerrors.New("Book is nil.")
-		return nil, exception.NotFound.New(err)
-	}
+	// if b == nil || b.ID == 0 {
+	// 	err := xerrors.New("Book is nil.")
+	// 	return nil, exception.NotFound.New(err)
+	// }
 
-	as, err := s.bookRepository.ListAuthorByBookID(ctx, b.ID)
-	if err != nil {
-		return nil, err
-	}
+	// as, err := s.bookRepository.ListAuthorByBookID(ctx, b.ID)
+	// if err != nil {
+	// 	return nil, err
+	// }
 
-	b.Authors = as
+	// b.Authors = as
 
 	return b, nil
 }

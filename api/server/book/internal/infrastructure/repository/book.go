@@ -67,7 +67,9 @@ func (r *bookRepository) ListBookshelfCount(ctx context.Context, q *domain.ListQ
 func (r *bookRepository) Show(ctx context.Context, bookID int) (*book.Book, error) {
 	b := &book.Book{}
 
-	err := r.client.db.First(b, "id = ?", bookID).Error
+	sql := r.client.db.Preload("Authors")
+
+	err := sql.First(b, "id = ?", bookID).Error
 	if err != nil {
 		return nil, exception.NotFound.New(err)
 	}
@@ -78,7 +80,9 @@ func (r *bookRepository) Show(ctx context.Context, bookID int) (*book.Book, erro
 func (r *bookRepository) ShowByIsbn(ctx context.Context, isbn string) (*book.Book, error) {
 	b := &book.Book{}
 
-	err := r.client.db.First(b, "isbn = ?", isbn).Error
+	sql := r.client.db.Preload("Authors")
+
+	err := sql.First(b, "isbn = ?", isbn).Error
 	if err != nil {
 		return nil, exception.NotFound.New(err)
 	}
@@ -91,7 +95,9 @@ func (r *bookRepository) ShowBookshelfByUserIDAndBookID(
 ) (*book.Bookshelf, error) {
 	b := &book.Bookshelf{}
 
-	err := r.client.db.First(b, "user_id = ? AND book_id = ?", userID, bookID).Error
+	sql := r.client.db.Preload("Book").Preload("Book.Authors")
+
+	err := sql.First(b, "user_id = ? AND book_id = ?", userID, bookID).Error
 	if err != nil {
 		return nil, exception.NotFound.New(err)
 	}
