@@ -39,6 +39,7 @@ type Bookshelf struct {
 	ReadOn    time.Time `gorm:""`
 	CreatedAt time.Time `gorm:"<-:create"`
 	UpdatedAt time.Time `gorm:""`
+	Book      *Book     `gorm:""`
 }
 
 // Review - レビューエンティティ
