@@ -38,18 +38,40 @@ func NewBookApplication(brv validation.BookRequestValidation, bs book.Service) B
 func (a *bookApplication) ListBookshelf(
 	ctx context.Context, in *input.ListBookshelf,
 ) ([]*book.Bookshelf, *output.ListQuery, error) {
-	query := &domain.ListQuery{
-		Limit:      in.Limit,
-		Offset:     in.Offset,
-		Conditions: []*domain.QueryCondition{},
-	}
-
-	bss, err := a.bookService.ListBookshelf(ctx, in.UserID, query)
+	err := a.bookRequestValidation.ListBookshelf(in)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	return bss, &output.ListQuery{}, nil
+	query := &domain.ListQuery{
+		Limit:  in.Limit,
+		Offset: in.Offset,
+		Conditions: []*domain.QueryCondition{
+			{
+				Field:    "user_id",
+				Operator: "==",
+				Value:    in.UserID,
+			},
+		},
+	}
+
+	bss, err := a.bookService.ListBookshelf(ctx, query)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	total, err := a.bookService.ListBookshelfCount(ctx, query)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	out := &output.ListQuery{
+		Limit:  in.Limit,
+		Offset: in.Offset,
+		Total:  total,
+	}
+
+	return bss, out, nil
 }
 
 func (a *bookApplication) Show(ctx context.Context, isbn string) (*book.Book, error) {
