@@ -1,3 +1,9 @@
+export interface IListBookshelfInput {
+  userId: string
+  limit: number
+  offset: number
+}
+
 export interface IShowBookInput {
   isbn: string
 }
