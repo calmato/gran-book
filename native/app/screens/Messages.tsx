@@ -46,7 +46,7 @@ export const MessagesScreen = () => {
           style: styles.header
         }}
         centerContainerStyle={{
-          height: 75
+          height: 50
         }}
 
       />
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLOR.BACKGROUND_WHITE,
     height: '10%',
-    width: '98%',
+    width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
     position: 'absolute',
