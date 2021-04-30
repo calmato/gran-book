@@ -35,7 +35,7 @@ import {
 const router = express.Router()
 
 router.get(
-  '/',
+  '/v1/users/:userId/books',
   async (req: Request, res: Response<IBookshelfListResponse>, next: NextFunction): Promise<void> => {
     const { userId } = req.params
     const { limit, offset } = req.query as { [key: string]: string }
@@ -56,7 +56,7 @@ router.get(
 )
 
 router.post(
-  '/:bookId/read',
+  '/v1/users/:userId/books/:bookId/read',
   async (req: Request, res: Response<IBookshelfResponse>, next: NextFunction): Promise<void> => {
     const { bookId } = req.params
     const { readOn, impression } = req.body as IReadBookshelfRequest
@@ -77,7 +77,7 @@ router.post(
 )
 
 router.post(
-  '/:bookId/reading',
+  '/v1/users/:userId/books/:bookId/reading',
   async (req: Request, res: Response<IBookshelfResponse>, next: NextFunction): Promise<void> => {
     const { bookId } = req.params
 
@@ -95,7 +95,7 @@ router.post(
 )
 
 router.post(
-  '/:bookId/stack',
+  '/v1/users/:userId/books/:bookId/stack',
   async (req: Request, res: Response<IBookshelfResponse>, next: NextFunction): Promise<void> => {
     const { bookId } = req.params
 
@@ -113,7 +113,7 @@ router.post(
 )
 
 router.post(
-  '/:bookId/want',
+  '/v1/users/:userId/books/:bookId/want',
   async (req: Request, res: Response<IBookshelfResponse>, next: NextFunction): Promise<void> => {
     const { bookId } = req.params
 
@@ -131,7 +131,7 @@ router.post(
 )
 
 router.post(
-  '/:bookId/release',
+  '/v1/users/:userId/books/:bookId/release',
   async (req: Request, res: Response<IBookshelfResponse>, next: NextFunction): Promise<void> => {
     const { bookId } = req.params
 
@@ -149,7 +149,7 @@ router.post(
 )
 
 router.delete(
-  '/:bookId',
+  '/v1/users/:userId/books/:bookId',
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const { bookId } = req.params
 
@@ -181,10 +181,6 @@ function setBookshelfResponse(output: IBookshelfOutput): IBookshelfResponse {
 }
 
 function setBookshelfListResponse(output: IBookshelfListOutput): IBookshelfListResponse {
-  // const authorNameKanas: string[] = bookOutput.authors.map((item: IBookOutputAuthor) => {
-  //   return item.nameKana
-  // })
-
   const books: IBookshelfListResponseBook[] = output.bookshelves.map((bs: IBookshelfListOutputBookshelf) => {
     const authorNames: string[] = bs.book.authors.map((item: IBookshelfListOutputAuthor) => {
       return item.name

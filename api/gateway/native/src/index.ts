@@ -18,11 +18,11 @@ app.use(cors(corsOptions))
 app.use(accessLogHandler)
 app.use(authentication)
 
-app.use('/', common)
-app.use('/v1/auth', v1Auth)
-app.use('/v1/books', v1Book)
-app.use('/v1/users', v1User)
-app.use('/v1/users/:userId/books', v1Bookshelf)
+app.use(common)
+app.use(v1Auth) // /v1/auth
+app.use(v1Book) // v1/books
+app.use(v1User) // /v1/users
+app.use(v1Bookshelf) // /v1/users/:userId/books
 
 app.use(notFoundErrorHandler)
 app.use(otherErrorHandler)
