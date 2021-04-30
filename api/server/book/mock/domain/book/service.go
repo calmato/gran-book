@@ -6,6 +6,7 @@ package mock_book
 
 import (
 	context "context"
+	domain "github.com/calmato/gran-book/api/server/book/internal/domain"
 	book "github.com/calmato/gran-book/api/server/book/internal/domain/book"
 	gomock "github.com/golang/mock/gomock"
 	reflect "reflect"
@@ -32,6 +33,36 @@ func NewMockService(ctrl *gomock.Controller) *MockService {
 // EXPECT returns an object that allows the caller to indicate expected use
 func (m *MockService) EXPECT() *MockServiceMockRecorder {
 	return m.recorder
+}
+
+// ListBookshelf mocks base method
+func (m *MockService) ListBookshelf(ctx context.Context, q *domain.ListQuery) ([]*book.Bookshelf, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListBookshelf", ctx, q)
+	ret0, _ := ret[0].([]*book.Bookshelf)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListBookshelf indicates an expected call of ListBookshelf
+func (mr *MockServiceMockRecorder) ListBookshelf(ctx, q interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListBookshelf", reflect.TypeOf((*MockService)(nil).ListBookshelf), ctx, q)
+}
+
+// ListBookshelfCount mocks base method
+func (m *MockService) ListBookshelfCount(ctx context.Context, q *domain.ListQuery) (int, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListBookshelfCount", ctx, q)
+	ret0, _ := ret[0].(int)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListBookshelfCount indicates an expected call of ListBookshelfCount
+func (mr *MockServiceMockRecorder) ListBookshelfCount(ctx, q interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListBookshelfCount", reflect.TypeOf((*MockService)(nil).ListBookshelfCount), ctx, q)
 }
 
 // Show mocks base method

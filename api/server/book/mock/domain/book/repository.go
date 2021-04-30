@@ -6,6 +6,7 @@ package mock_book
 
 import (
 	context "context"
+	domain "github.com/calmato/gran-book/api/server/book/internal/domain"
 	book "github.com/calmato/gran-book/api/server/book/internal/domain/book"
 	gomock "github.com/golang/mock/gomock"
 	reflect "reflect"
@@ -34,6 +35,21 @@ func (m *MockRepository) EXPECT() *MockRepositoryMockRecorder {
 	return m.recorder
 }
 
+// ListBookshelf mocks base method
+func (m *MockRepository) ListBookshelf(ctx context.Context, q *domain.ListQuery) ([]*book.Bookshelf, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListBookshelf", ctx, q)
+	ret0, _ := ret[0].([]*book.Bookshelf)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListBookshelf indicates an expected call of ListBookshelf
+func (mr *MockRepositoryMockRecorder) ListBookshelf(ctx, q interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListBookshelf", reflect.TypeOf((*MockRepository)(nil).ListBookshelf), ctx, q)
+}
+
 // ListAuthorByBookID mocks base method
 func (m *MockRepository) ListAuthorByBookID(ctx context.Context, bookID int) ([]*book.Author, error) {
 	m.ctrl.T.Helper()
@@ -47,6 +63,21 @@ func (m *MockRepository) ListAuthorByBookID(ctx context.Context, bookID int) ([]
 func (mr *MockRepositoryMockRecorder) ListAuthorByBookID(ctx, bookID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAuthorByBookID", reflect.TypeOf((*MockRepository)(nil).ListAuthorByBookID), ctx, bookID)
+}
+
+// ListBookshelfCount mocks base method
+func (m *MockRepository) ListBookshelfCount(ctx context.Context, q *domain.ListQuery) (int, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListBookshelfCount", ctx, q)
+	ret0, _ := ret[0].(int)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListBookshelfCount indicates an expected call of ListBookshelfCount
+func (mr *MockRepositoryMockRecorder) ListBookshelfCount(ctx, q interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListBookshelfCount", reflect.TypeOf((*MockRepository)(nil).ListBookshelfCount), ctx, q)
 }
 
 // Show mocks base method

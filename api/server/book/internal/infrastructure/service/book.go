@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/calmato/gran-book/api/server/book/internal/domain"
 	"github.com/calmato/gran-book/api/server/book/internal/domain/book"
 	"github.com/calmato/gran-book/api/server/book/internal/domain/exception"
 	"golang.org/x/xerrors"
@@ -20,6 +21,10 @@ func NewBookService(bdv book.Validation, br book.Repository) book.Service {
 		bookDomainValidation: bdv,
 		bookRepository:       br,
 	}
+}
+
+func (s *bookService) ListBookshelf(ctx context.Context, q *domain.ListQuery) ([]*book.Bookshelf, error) {
+	return s.bookRepository.ListBookshelf(ctx, q)
 }
 
 func (s *bookService) Show(ctx context.Context, bookID int) (*book.Book, error) {
@@ -41,6 +46,10 @@ func (s *bookService) Show(ctx context.Context, bookID int) (*book.Book, error) 
 	b.Authors = as
 
 	return b, nil
+}
+
+func (s *bookService) ListBookshelfCount(ctx context.Context, q *domain.ListQuery) (int, error) {
+	return s.bookRepository.ListBookshelfCount(ctx, q)
 }
 
 func (s *bookService) ShowByIsbn(ctx context.Context, isbn string) (*book.Book, error) {
