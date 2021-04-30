@@ -42,7 +42,7 @@ router.get(
 
     const input: IListBookshelfInput = {
       userId,
-      limit: Number(limit) || 0,
+      limit: Number(limit) || 100,
       offset: Number(offset) || 0,
     }
 
