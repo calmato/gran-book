@@ -210,7 +210,6 @@ function setBookshelfListResponse(output: IBookshelfListOutput): IBookshelfListR
     return {
       id: bs.id,
       status: bs.status,
-      impression: bs.impression,
       readOn: bs.readOn,
       createdAt: bs.createdAt,
       updatedAt: bs.updatedAt,

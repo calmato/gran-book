@@ -376,7 +376,6 @@ function setBookshelfListOutput(res: BookshelfListResponse): IBookshelfListOutpu
         bookId: bs.getBookId(),
         userId: bs.getUserId(),
         status: bs.getStatus(),
-        impression: bs.getImpression(),
         readOn: bs.getReadOn(),
         createdAt: bs.getCreatedAt(),
         updatedAt: bs.getUpdatedAt(),

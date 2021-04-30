@@ -371,15 +371,14 @@ func getBookshelfListResponse(bss []*book.Bookshelf, out *output.ListQuery) *pb.
 		}
 
 		bookshelf := &pb.BookshelfListResponse_Bookshelf{
-			Id:         int64(bs.ID),
-			BookId:     int64(bs.BookID),
-			UserId:     bs.UserID,
-			Status:     int32(bs.Status),
-			Impression: "",
-			ReadOn:     datetime.DateToString(bs.ReadOn),
-			CreatedAt:  datetime.TimeToString(bs.CreatedAt),
-			UpdatedAt:  datetime.TimeToString(bs.UpdatedAt),
-			Book:       book,
+			Id:        int64(bs.ID),
+			BookId:    int64(bs.BookID),
+			UserId:    bs.UserID,
+			Status:    int32(bs.Status),
+			ReadOn:    datetime.DateToString(bs.ReadOn),
+			CreatedAt: datetime.TimeToString(bs.CreatedAt),
+			UpdatedAt: datetime.TimeToString(bs.UpdatedAt),
+			Book:      book,
 		}
 
 		bookshelves[i] = bookshelf

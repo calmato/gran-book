@@ -82,7 +82,6 @@ export interface IBookshelfListOutputBookshelf {
   bookId: number
   userId: string
   status: number
-  impression: string
   readOn: string
   createdAt: string
   updatedAt: string
