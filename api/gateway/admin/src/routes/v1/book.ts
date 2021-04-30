@@ -6,7 +6,7 @@ import { IDeleteBookInput } from '~/types/input'
 const router = express.Router()
 
 router.delete(
-  '/:bookId',
+  '/v1/books/:bookId',
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const { bookId } = req.params
 

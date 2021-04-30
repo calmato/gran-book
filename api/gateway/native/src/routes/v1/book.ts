@@ -9,7 +9,7 @@ import { IBookResponse, IBookResponseBookshelf, IBookResponseReview, IBookRespon
 const router = express.Router()
 
 router.post(
-  '/v1/book',
+  '/v1/books',
   async (req: Request, res: Response<IBookResponse>, next: NextFunction): Promise<void> => {
     const {
       title,
@@ -63,7 +63,7 @@ router.post(
 )
 
 router.patch(
-  '/v1/book',
+  '/v1/books',
   async (req: Request, res: Response<IBookResponse>, next: NextFunction): Promise<void> => {
     const {
       title,
@@ -117,7 +117,7 @@ router.patch(
 )
 
 router.get(
-  '/v1/book/:isbn',
+  '/v1/books/:isbn',
   async (req: Request, res: Response<IBookResponse>, next: NextFunction): Promise<void> => {
     const { isbn } = req.params
 

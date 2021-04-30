@@ -179,7 +179,6 @@ func TestBookService_Show(t *testing.T) {
 
 			brm := mock_book.NewMockRepository(ctrl)
 			brm.EXPECT().Show(ctx, tc.BookID).Return(tc.Expected.Book, tc.Expected.Error)
-			brm.EXPECT().ListAuthorByBookID(ctx, tc.Expected.Book.ID).Return(tc.Expected.Book.Authors, nil)
 
 			t.Run(result, func(t *testing.T) {
 				target := NewBookService(bvm, brm)
@@ -245,7 +244,6 @@ func TestBookService_ShowByIsbn(t *testing.T) {
 
 			brm := mock_book.NewMockRepository(ctrl)
 			brm.EXPECT().ShowByIsbn(ctx, tc.Isbn).Return(tc.Expected.Book, tc.Expected.Error)
-			brm.EXPECT().ListAuthorByBookID(ctx, tc.Expected.Book.ID).Return(tc.Expected.Book.Authors, nil)
 
 			t.Run(result, func(t *testing.T) {
 				target := NewBookService(bvm, brm)
