@@ -686,8 +686,6 @@ export namespace BookshelfListResponse {
         setUserId(value: string): Bookshelf;
         getStatus(): number;
         setStatus(value: number): Bookshelf;
-        getImpression(): string;
-        setImpression(value: string): Bookshelf;
         getReadOn(): string;
         setReadOn(value: string): Bookshelf;
         getCreatedAt(): string;
@@ -716,7 +714,6 @@ export namespace BookshelfListResponse {
             bookId: number,
             userId: string,
             status: number,
-            impression: string,
             readOn: string,
             createdAt: string,
             updatedAt: string,

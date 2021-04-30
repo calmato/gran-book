@@ -5620,10 +5620,9 @@ proto.proto.BookshelfListResponse.Bookshelf.toObject = function(includeInstance,
     bookId: jspb.Message.getFieldWithDefault(msg, 2, 0),
     userId: jspb.Message.getFieldWithDefault(msg, 3, ""),
     status: jspb.Message.getFieldWithDefault(msg, 4, 0),
-    impression: jspb.Message.getFieldWithDefault(msg, 5, ""),
-    readOn: jspb.Message.getFieldWithDefault(msg, 6, ""),
-    createdAt: jspb.Message.getFieldWithDefault(msg, 7, ""),
-    updatedAt: jspb.Message.getFieldWithDefault(msg, 8, ""),
+    readOn: jspb.Message.getFieldWithDefault(msg, 5, ""),
+    createdAt: jspb.Message.getFieldWithDefault(msg, 6, ""),
+    updatedAt: jspb.Message.getFieldWithDefault(msg, 7, ""),
     book: (f = msg.getBook()) && proto.proto.BookshelfListResponse.Book.toObject(includeInstance, f)
   };
 
@@ -5679,21 +5678,17 @@ proto.proto.BookshelfListResponse.Bookshelf.deserializeBinaryFromReader = functi
       break;
     case 5:
       var value = /** @type {string} */ (reader.readString());
-      msg.setImpression(value);
+      msg.setReadOn(value);
       break;
     case 6:
       var value = /** @type {string} */ (reader.readString());
-      msg.setReadOn(value);
+      msg.setCreatedAt(value);
       break;
     case 7:
       var value = /** @type {string} */ (reader.readString());
-      msg.setCreatedAt(value);
-      break;
-    case 8:
-      var value = /** @type {string} */ (reader.readString());
       msg.setUpdatedAt(value);
       break;
-    case 9:
+    case 8:
       var value = new proto.proto.BookshelfListResponse.Book;
       reader.readMessage(value,proto.proto.BookshelfListResponse.Book.deserializeBinaryFromReader);
       msg.setBook(value);
@@ -5755,38 +5750,31 @@ proto.proto.BookshelfListResponse.Bookshelf.serializeBinaryToWriter = function(m
       f
     );
   }
-  f = message.getImpression();
+  f = message.getReadOn();
   if (f.length > 0) {
     writer.writeString(
       5,
       f
     );
   }
-  f = message.getReadOn();
+  f = message.getCreatedAt();
   if (f.length > 0) {
     writer.writeString(
       6,
       f
     );
   }
-  f = message.getCreatedAt();
+  f = message.getUpdatedAt();
   if (f.length > 0) {
     writer.writeString(
       7,
       f
     );
   }
-  f = message.getUpdatedAt();
-  if (f.length > 0) {
-    writer.writeString(
-      8,
-      f
-    );
-  }
   f = message.getBook();
   if (f != null) {
     writer.writeMessage(
-      9,
+      8,
       f,
       proto.proto.BookshelfListResponse.Book.serializeBinaryToWriter
     );
@@ -5867,10 +5855,10 @@ proto.proto.BookshelfListResponse.Bookshelf.prototype.setStatus = function(value
 
 
 /**
- * optional string impression = 5;
+ * optional string read_on = 5;
  * @return {string}
  */
-proto.proto.BookshelfListResponse.Bookshelf.prototype.getImpression = function() {
+proto.proto.BookshelfListResponse.Bookshelf.prototype.getReadOn = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 5, ""));
 };
 
@@ -5879,16 +5867,16 @@ proto.proto.BookshelfListResponse.Bookshelf.prototype.getImpression = function()
  * @param {string} value
  * @return {!proto.proto.BookshelfListResponse.Bookshelf} returns this
  */
-proto.proto.BookshelfListResponse.Bookshelf.prototype.setImpression = function(value) {
+proto.proto.BookshelfListResponse.Bookshelf.prototype.setReadOn = function(value) {
   return jspb.Message.setProto3StringField(this, 5, value);
 };
 
 
 /**
- * optional string read_on = 6;
+ * optional string created_at = 6;
  * @return {string}
  */
-proto.proto.BookshelfListResponse.Bookshelf.prototype.getReadOn = function() {
+proto.proto.BookshelfListResponse.Bookshelf.prototype.getCreatedAt = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 6, ""));
 };
 
@@ -5897,16 +5885,16 @@ proto.proto.BookshelfListResponse.Bookshelf.prototype.getReadOn = function() {
  * @param {string} value
  * @return {!proto.proto.BookshelfListResponse.Bookshelf} returns this
  */
-proto.proto.BookshelfListResponse.Bookshelf.prototype.setReadOn = function(value) {
+proto.proto.BookshelfListResponse.Bookshelf.prototype.setCreatedAt = function(value) {
   return jspb.Message.setProto3StringField(this, 6, value);
 };
 
 
 /**
- * optional string created_at = 7;
+ * optional string updated_at = 7;
  * @return {string}
  */
-proto.proto.BookshelfListResponse.Bookshelf.prototype.getCreatedAt = function() {
+proto.proto.BookshelfListResponse.Bookshelf.prototype.getUpdatedAt = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 7, ""));
 };
 
@@ -5915,36 +5903,18 @@ proto.proto.BookshelfListResponse.Bookshelf.prototype.getCreatedAt = function() 
  * @param {string} value
  * @return {!proto.proto.BookshelfListResponse.Bookshelf} returns this
  */
-proto.proto.BookshelfListResponse.Bookshelf.prototype.setCreatedAt = function(value) {
+proto.proto.BookshelfListResponse.Bookshelf.prototype.setUpdatedAt = function(value) {
   return jspb.Message.setProto3StringField(this, 7, value);
 };
 
 
 /**
- * optional string updated_at = 8;
- * @return {string}
- */
-proto.proto.BookshelfListResponse.Bookshelf.prototype.getUpdatedAt = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 8, ""));
-};
-
-
-/**
- * @param {string} value
- * @return {!proto.proto.BookshelfListResponse.Bookshelf} returns this
- */
-proto.proto.BookshelfListResponse.Bookshelf.prototype.setUpdatedAt = function(value) {
-  return jspb.Message.setProto3StringField(this, 8, value);
-};
-
-
-/**
- * optional Book book = 9;
+ * optional Book book = 8;
  * @return {?proto.proto.BookshelfListResponse.Book}
  */
 proto.proto.BookshelfListResponse.Bookshelf.prototype.getBook = function() {
   return /** @type{?proto.proto.BookshelfListResponse.Book} */ (
-    jspb.Message.getWrapperField(this, proto.proto.BookshelfListResponse.Book, 9));
+    jspb.Message.getWrapperField(this, proto.proto.BookshelfListResponse.Book, 8));
 };
 
 
@@ -5953,7 +5923,7 @@ proto.proto.BookshelfListResponse.Bookshelf.prototype.getBook = function() {
  * @return {!proto.proto.BookshelfListResponse.Bookshelf} returns this
 */
 proto.proto.BookshelfListResponse.Bookshelf.prototype.setBook = function(value) {
-  return jspb.Message.setWrapperField(this, 9, value);
+  return jspb.Message.setWrapperField(this, 8, value);
 };
 
 
@@ -5971,7 +5941,7 @@ proto.proto.BookshelfListResponse.Bookshelf.prototype.clearBook = function() {
  * @return {boolean}
  */
 proto.proto.BookshelfListResponse.Bookshelf.prototype.hasBook = function() {
-  return jspb.Message.getField(this, 9) != null;
+  return jspb.Message.getField(this, 8) != null;
 };
 
 

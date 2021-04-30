@@ -167,11 +167,10 @@ message BookshelfListResponse {
     int64 book_id = 2;
     string user_id = 3;
     int32 status = 4;
-    string impression = 5;
-    string read_on = 6;
-    string created_at = 7;
-    string updated_at = 8;
-    Book book = 9;
+    string read_on = 5;
+    string created_at = 6;
+    string updated_at = 7;
+    Book book = 8;
   }
   repeated Bookshelf bookshelves = 1;
   int64 limit = 2;
