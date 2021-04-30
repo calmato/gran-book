@@ -50,21 +50,6 @@ func (mr *MockRepositoryMockRecorder) ListBookshelf(ctx, q interface{}) *gomock.
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListBookshelf", reflect.TypeOf((*MockRepository)(nil).ListBookshelf), ctx, q)
 }
 
-// ListAuthorByBookID mocks base method
-func (m *MockRepository) ListAuthorByBookID(ctx context.Context, bookID int) ([]*book.Author, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListAuthorByBookID", ctx, bookID)
-	ret0, _ := ret[0].([]*book.Author)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// ListAuthorByBookID indicates an expected call of ListAuthorByBookID
-func (mr *MockRepositoryMockRecorder) ListAuthorByBookID(ctx, bookID interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAuthorByBookID", reflect.TypeOf((*MockRepository)(nil).ListAuthorByBookID), ctx, bookID)
-}
-
 // ListBookshelfCount mocks base method
 func (m *MockRepository) ListBookshelfCount(ctx context.Context, q *domain.ListQuery) (int, error) {
 	m.ctrl.T.Helper()

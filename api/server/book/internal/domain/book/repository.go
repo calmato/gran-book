@@ -9,7 +9,6 @@ import (
 // Repository - Bookリポジトリ
 type Repository interface {
 	ListBookshelf(ctx context.Context, q *domain.ListQuery) ([]*Bookshelf, error)
-	ListAuthorByBookID(ctx context.Context, bookID int) ([]*Author, error)
 	ListBookshelfCount(ctx context.Context, q *domain.ListQuery) (int, error)
 	Show(ctx context.Context, bookID int) (*Book, error)
 	ShowByIsbn(ctx context.Context, isbn string) (*Book, error)
