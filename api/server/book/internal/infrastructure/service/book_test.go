@@ -6,10 +6,132 @@ import (
 	"testing"
 	"time"
 
+	"github.com/calmato/gran-book/api/server/book/internal/domain"
 	"github.com/calmato/gran-book/api/server/book/internal/domain/book"
 	mock_book "github.com/calmato/gran-book/api/server/book/mock/domain/book"
 	"github.com/golang/mock/gomock"
 )
+
+func TestBookService_ListBookshelf(t *testing.T) {
+	testCases := map[string]struct {
+		Query    *domain.ListQuery
+		Expected struct {
+			Bookshelves []*book.Bookshelf
+			Error       error
+		}
+	}{
+		"ok": {
+			Query: &domain.ListQuery{
+				Limit:      100,
+				Offset:     0,
+				Order:      nil,
+				Conditions: []*domain.QueryCondition{},
+			},
+			Expected: struct {
+				Bookshelves []*book.Bookshelf
+				Error       error
+			}{
+				Bookshelves: []*book.Bookshelf{
+					{
+						ID:        0,
+						BookID:    1,
+						UserID:    "00000000-0000-0000-0000-000000000000",
+						Status:    5,
+						CreatedAt: time.Time{},
+						UpdatedAt: time.Time{},
+					},
+				},
+				Error: nil,
+			},
+		},
+	}
+
+	for result, tc := range testCases {
+		t.Run(result, func(t *testing.T) {
+			ctx, cancel := context.WithCancel(context.Background())
+			defer cancel()
+
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			bvm := mock_book.NewMockValidation(ctrl)
+
+			brm := mock_book.NewMockRepository(ctrl)
+			brm.EXPECT().ListBookshelf(ctx, tc.Query).Return(tc.Expected.Bookshelves, tc.Expected.Error)
+
+			t.Run(result, func(t *testing.T) {
+				target := NewBookService(bvm, brm)
+
+				got, err := target.ListBookshelf(ctx, tc.Query)
+				if !reflect.DeepEqual(err, tc.Expected.Error) {
+					t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+					return
+				}
+
+				if !reflect.DeepEqual(got, tc.Expected.Bookshelves) {
+					t.Fatalf("want %#v, but %#v", tc.Expected.Bookshelves, got)
+					return
+				}
+			})
+		})
+	}
+}
+
+func TestUserService_ListCount(t *testing.T) {
+	testCases := map[string]struct {
+		Query    *domain.ListQuery
+		Expected struct {
+			Count int
+			Error error
+		}
+	}{
+		"ok": {
+			Query: &domain.ListQuery{
+				Limit:      100,
+				Offset:     0,
+				Order:      nil,
+				Conditions: []*domain.QueryCondition{},
+			},
+			Expected: struct {
+				Count int
+				Error error
+			}{
+				Count: 1,
+				Error: nil,
+			},
+		},
+	}
+
+	for result, tc := range testCases {
+		t.Run(result, func(t *testing.T) {
+			ctx, cancel := context.WithCancel(context.Background())
+			defer cancel()
+
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			bvm := mock_book.NewMockValidation(ctrl)
+
+			brm := mock_book.NewMockRepository(ctrl)
+			brm.EXPECT().ListBookshelfCount(ctx, tc.Query).Return(tc.Expected.Count, tc.Expected.Error)
+
+			t.Run(result, func(t *testing.T) {
+				target := NewBookService(bvm, brm)
+
+				got, err := target.ListBookshelfCount(ctx, tc.Query)
+				if !reflect.DeepEqual(err, tc.Expected.Error) {
+					t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+					return
+				}
+
+				if !reflect.DeepEqual(got, tc.Expected.Count) {
+					t.Fatalf("want %#v, but %#v", tc.Expected.Count, got)
+					return
+				}
+			})
+		})
+	}
+}
 
 func TestBookService_Show(t *testing.T) {
 	testCases := map[string]struct {

@@ -7,12 +7,102 @@ import (
 	"time"
 
 	"github.com/calmato/gran-book/api/server/book/internal/application/input"
+	"github.com/calmato/gran-book/api/server/book/internal/application/output"
+	"github.com/calmato/gran-book/api/server/book/internal/domain"
 	"github.com/calmato/gran-book/api/server/book/internal/domain/book"
 	"github.com/calmato/gran-book/api/server/book/lib/datetime"
 	mock_validation "github.com/calmato/gran-book/api/server/book/mock/application/validation"
 	mock_book "github.com/calmato/gran-book/api/server/book/mock/domain/book"
 	"github.com/golang/mock/gomock"
 )
+
+func TestBookApplication_ListBookshelf(t *testing.T) {
+	current := time.Now()
+
+	testCases := map[string]struct {
+		Input    *input.ListBookshelf
+		Expected struct {
+			Bookshelves []*book.Bookshelf
+			Output      *output.ListQuery
+			Error       error
+		}
+	}{
+		"ok": {
+			Input: &input.ListBookshelf{
+				UserID: "00000000-0000-0000-0000-000000000000",
+				Limit:  100,
+				Offset: 0,
+			},
+			Expected: struct {
+				Bookshelves []*book.Bookshelf
+				Output      *output.ListQuery
+				Error       error
+			}{
+				Bookshelves: []*book.Bookshelf{
+					{
+						ID:        1,
+						UserID:    "00000000-0000-0000-0000-000000000000",
+						BookID:    1,
+						Status:    1,
+						ReadOn:    datetime.StringToDate("2020-01-01"),
+						CreatedAt: current,
+						UpdatedAt: current,
+					},
+				},
+				Output: &output.ListQuery{
+					Limit:  100,
+					Offset: 0,
+					Total:  1,
+				},
+				Error: nil,
+			},
+		},
+	}
+
+	for result, tc := range testCases {
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		cs := []*domain.QueryCondition{
+			{
+				Field:    "user_id",
+				Operator: "==",
+				Value:    tc.Input.UserID,
+			},
+		}
+
+		q := &domain.ListQuery{
+			Limit:      tc.Input.Limit,
+			Offset:     tc.Input.Offset,
+			Conditions: cs,
+		}
+
+		brv := mock_validation.NewMockBookRequestValidation(ctrl)
+		brv.EXPECT().ListBookshelf(tc.Input).Return(nil)
+
+		bsm := mock_book.NewMockService(ctrl)
+		bsm.EXPECT().ListBookshelf(ctx, q).Return(tc.Expected.Bookshelves, tc.Expected.Error)
+		bsm.EXPECT().ListBookshelfCount(ctx, q).Return(tc.Expected.Output.Total, tc.Expected.Error)
+
+		t.Run(result, func(t *testing.T) {
+			target := NewBookApplication(brv, bsm)
+
+			bss, _, err := target.ListBookshelf(ctx, tc.Input)
+			if !reflect.DeepEqual(err, tc.Expected.Error) {
+				t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+				return
+			}
+
+			if !reflect.DeepEqual(bss, tc.Expected.Bookshelves) {
+				t.Fatalf("want %#v, but %#v", tc.Expected.Bookshelves, bss)
+				return
+			}
+		})
+	}
+}
 
 func TestBookApplication_Show(t *testing.T) {
 	testCases := map[string]struct {
