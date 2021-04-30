@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/calmato/gran-book/api/server/book/internal/domain"
 	"github.com/calmato/gran-book/api/server/book/internal/domain/book"
 	"github.com/calmato/gran-book/api/server/book/internal/domain/exception"
 	"golang.org/x/xerrors"
@@ -20,6 +21,20 @@ func NewBookService(bdv book.Validation, br book.Repository) book.Service {
 		bookDomainValidation: bdv,
 		bookRepository:       br,
 	}
+}
+
+func (s *bookService) ListBookshelf(
+	ctx context.Context, userID string, q *domain.ListQuery,
+) ([]*book.Bookshelf, error) {
+	c := &domain.QueryCondition{
+		Field:    "user_id",
+		Operator: "==",
+		Value:    userID,
+	}
+
+	q.Conditions = append(q.Conditions, c)
+
+	return s.bookRepository.ListBookshelf(ctx, q)
 }
 
 func (s *bookService) Show(ctx context.Context, bookID int) (*book.Book, error) {
