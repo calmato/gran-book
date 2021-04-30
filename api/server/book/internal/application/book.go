@@ -4,13 +4,16 @@ import (
 	"context"
 
 	"github.com/calmato/gran-book/api/server/book/internal/application/input"
+	"github.com/calmato/gran-book/api/server/book/internal/application/output"
 	"github.com/calmato/gran-book/api/server/book/internal/application/validation"
+	"github.com/calmato/gran-book/api/server/book/internal/domain"
 	"github.com/calmato/gran-book/api/server/book/internal/domain/book"
 	"github.com/calmato/gran-book/api/server/book/lib/datetime"
 )
 
 // BookApplication - Bookアプリケーションのインターフェース
 type BookApplication interface {
+	ListBookshelf(ctx context.Context, in *input.ListBookshelf) ([]*book.Bookshelf, *output.ListQuery, error)
 	Show(ctx context.Context, isbn string) (*book.Book, error)
 	Create(ctx context.Context, in *input.Book) (*book.Book, error)
 	Update(ctx context.Context, in *input.Book) (*book.Book, error)
@@ -30,6 +33,23 @@ func NewBookApplication(brv validation.BookRequestValidation, bs book.Service) B
 		bookRequestValidation: brv,
 		bookService:           bs,
 	}
+}
+
+func (a *bookApplication) ListBookshelf(
+	ctx context.Context, in *input.ListBookshelf,
+) ([]*book.Bookshelf, *output.ListQuery, error) {
+	query := &domain.ListQuery{
+		Limit:      in.Limit,
+		Offset:     in.Offset,
+		Conditions: []*domain.QueryCondition{},
+	}
+
+	bss, err := a.bookService.ListBookshelf(ctx, in.UserID, query)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return bss, &output.ListQuery{}, nil
 }
 
 func (a *bookApplication) Show(ctx context.Context, isbn string) (*book.Book, error) {

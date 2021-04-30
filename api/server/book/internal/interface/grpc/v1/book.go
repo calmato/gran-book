@@ -5,6 +5,7 @@ import (
 
 	"github.com/calmato/gran-book/api/server/book/internal/application"
 	"github.com/calmato/gran-book/api/server/book/internal/application/input"
+	"github.com/calmato/gran-book/api/server/book/internal/application/output"
 	"github.com/calmato/gran-book/api/server/book/internal/domain/book"
 	"github.com/calmato/gran-book/api/server/book/lib/datetime"
 	pb "github.com/calmato/gran-book/api/server/book/proto"
@@ -15,6 +16,29 @@ type BookServer struct {
 	pb.UnimplementedBookServiceServer
 	AuthApplication application.AuthApplication
 	BookApplication application.BookApplication
+}
+
+func (s *BookServer) ListBookshelf(
+	ctx context.Context, req *pb.ListBookshelfRequest,
+) (*pb.BookshelfListResponse, error) {
+	_, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	in := &input.ListBookshelf{
+		UserID: req.GetUserId(),
+		Limit:  int(req.GetLimit()),
+		Offset: int(req.GetOffset()),
+	}
+
+	bss, out, err := s.BookApplication.ListBookshelf(ctx, in)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	res := getBookshelfListResponse(bss, out)
+	return res, nil
 }
 
 func (s *BookServer) ShowBook(ctx context.Context, req *pb.ShowBookRequest) (*pb.BookResponse, error) {
@@ -314,5 +338,57 @@ func getBookshelfResponse(bs *book.Bookshelf) *pb.BookshelfResponse {
 		ReadOn:    datetime.DateToString(bs.ReadOn),
 		CreatedAt: datetime.TimeToString(bs.CreatedAt),
 		UpdatedAt: datetime.TimeToString(bs.UpdatedAt),
+	}
+}
+
+func getBookshelfListResponse(bss []*book.Bookshelf, out *output.ListQuery) *pb.BookshelfListResponse {
+	bookshelves := make([]*pb.BookshelfListResponse_Bookshelf, len(bss))
+	for i, bs := range bss {
+		authors := make([]*pb.BookshelfListResponse_Author, len(bs.Book.Authors))
+		for j, a := range bs.Book.Authors {
+			author := &pb.BookshelfListResponse_Author{
+				Name:     a.Name,
+				NameKana: a.NameKana,
+			}
+
+			authors[j] = author
+		}
+
+		book := &pb.BookshelfListResponse_Book{
+			Id:             int64(bs.Book.ID),
+			Title:          bs.Book.Title,
+			TitleKana:      bs.Book.TitleKana,
+			Description:    bs.Book.Description,
+			Isbn:           bs.Book.Isbn,
+			Publisher:      bs.Book.Publisher,
+			PublishedOn:    bs.Book.PublishedOn,
+			ThumbnailUrl:   bs.Book.ThumbnailURL,
+			RakutenUrl:     bs.Book.RakutenURL,
+			RakutenGenreId: bs.Book.RakutenGenreID,
+			CreatedAt:      datetime.TimeToString(bs.CreatedAt),
+			UpdatedAt:      datetime.TimeToString(bs.UpdatedAt),
+			Authors:        authors,
+		}
+
+		bookshelf := &pb.BookshelfListResponse_Bookshelf{
+			Id:         int64(bs.ID),
+			BookId:     int64(bs.BookID),
+			UserId:     bs.UserID,
+			Status:     int32(bs.Status),
+			Impression: "",
+			ReadOn:     datetime.DateToString(bs.ReadOn),
+			CreatedAt:  datetime.TimeToString(bs.CreatedAt),
+			UpdatedAt:  datetime.TimeToString(bs.UpdatedAt),
+			Book:       book,
+		}
+
+		bookshelves[i] = bookshelf
+	}
+
+	return &pb.BookshelfListResponse{
+		Bookshelves: bookshelves,
+		Limit:       int64(out.Limit),
+		Offset:      int64(out.Offset),
+		Total:       int64(out.Total),
 	}
 }

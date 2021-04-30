@@ -1,5 +1,12 @@
 package input
 
+// ListOnBookshelf - 本棚ないの書籍一覧取得のリクエスト
+type ListBookshelf struct {
+	UserID string `json:"userId" validate:"required"`
+	Limit  int    `json:"limit" validate:"gte=0,lte=1000"`
+	Offset int    `json:"offset" validate:"gte=0"`
+}
+
 // Book - 書籍登録/更新のリクエスト
 type Book struct {
 	Title          string        `json:"title" validate:"required,max=64"`
