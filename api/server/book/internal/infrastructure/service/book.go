@@ -23,17 +23,7 @@ func NewBookService(bdv book.Validation, br book.Repository) book.Service {
 	}
 }
 
-func (s *bookService) ListBookshelf(
-	ctx context.Context, userID string, q *domain.ListQuery,
-) ([]*book.Bookshelf, error) {
-	c := &domain.QueryCondition{
-		Field:    "user_id",
-		Operator: "==",
-		Value:    userID,
-	}
-
-	q.Conditions = append(q.Conditions, c)
-
+func (s *bookService) ListBookshelf(ctx context.Context, q *domain.ListQuery) ([]*book.Bookshelf, error) {
 	return s.bookRepository.ListBookshelf(ctx, q)
 }
 
@@ -56,6 +46,10 @@ func (s *bookService) Show(ctx context.Context, bookID int) (*book.Book, error) 
 	b.Authors = as
 
 	return b, nil
+}
+
+func (s *bookService) ListBookshelfCount(ctx context.Context, q *domain.ListQuery) (int, error) {
+	return s.bookRepository.ListBookshelfCount(ctx, q)
 }
 
 func (s *bookService) ShowByIsbn(ctx context.Context, isbn string) (*book.Book, error) {

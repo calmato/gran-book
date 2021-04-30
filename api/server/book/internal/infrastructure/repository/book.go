@@ -59,6 +59,11 @@ func (r *bookRepository) ListAuthorByBookID(ctx context.Context, bookID int) ([]
 	return as, nil
 }
 
+func (r *bookRepository) ListBookshelfCount(ctx context.Context, q *domain.ListQuery) (int, error) {
+	sql := r.client.db.Table("bookshelves")
+	return r.client.getListCount(sql, q)
+}
+
 func (r *bookRepository) Show(ctx context.Context, bookID int) (*book.Book, error) {
 	b := &book.Book{}
 
