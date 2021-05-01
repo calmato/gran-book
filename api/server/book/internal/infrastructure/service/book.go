@@ -149,6 +149,10 @@ func (s *bookService) ValidationBookshelf(ctx context.Context, b *book.Bookshelf
 	return s.bookDomainValidation.Bookshelf(ctx, b)
 }
 
+func (s *bookService) ValidationReview(ctx context.Context, rv *book.Review) error {
+	return s.bookDomainValidation.Review(ctx, rv)
+}
+
 func (s *bookService) associate(ctx context.Context, b *book.Book) error {
 	current := time.Now().Local()
 

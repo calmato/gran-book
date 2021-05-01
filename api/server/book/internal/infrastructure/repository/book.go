@@ -356,6 +356,19 @@ func (r *bookRepository) GetBookshelfIDByUserIDAndBookID(
 	return b.ID, nil
 }
 
+func (r *bookRepository) GetReviewIDByUserIDAndBookID(
+	ctx context.Context, userID string, bookID int,
+) (int, error) {
+	rv := &book.Review{}
+
+	err := r.client.db.Select("id").First(rv, "user_id = ? AND book_id = ?", userID, bookID).Error
+	if err != nil {
+		return 0, exception.NotFound.New(err)
+	}
+
+	return rv.ID, nil
+}
+
 func associateBook(tx *gorm.DB, b *book.Book) error {
 	err := associateAuthor(tx, b)
 	if err != nil {
