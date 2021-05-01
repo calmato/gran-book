@@ -68,9 +68,10 @@ const SignInSelect = function SignInSelect(props: Props): ReactElement {
           return registerForPushNotifications();
         })
         .then(async() => {
-          const token = await firebase.auth().currentUser?.getIdToken(true)
+          await firebase.auth().currentUser?.getIdToken(true)
             .then(async(token)=>{
               const user = firebase.auth().currentUser!;
+
               const values: Auth.AuthValues = {
                 id: user.uid,
                 email: user.email || undefined,
