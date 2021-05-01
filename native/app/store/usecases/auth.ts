@@ -109,6 +109,7 @@ export function signInWithEmailAsync(email: string, password: string) {
       })
       .then(async (res: IAuth) => {
         const { user, token } = res;
+        console.log(token)
         const values: Auth.AuthValues = {
           id: user.uid,
           email: user.email || undefined,
@@ -246,8 +247,6 @@ export function getAuthAsync() {
           createdAt,
           updatedAt,
         };
-        
-        alert(values)
 
         dispatch(setProfile(values));
 

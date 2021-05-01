@@ -18,6 +18,7 @@ import { useReduxDispatch } from '~/store/modules';
 import { setAuth, setProfile } from '~/store/modules/auth';
 import * as LocalStorage from '~/lib/local-storage';
 import { getAuthAsync } from '~/store/usecases';
+import firebase from '~/lib/firebase';
 
 type AuthSignInNavigationProp = StackNavigationProp<AuthStackParamList, 'SignUp'>;
 
@@ -77,42 +78,85 @@ const SignInSelect = function SignInSelect(props: Props): ReactElement {
       });
   };
 
+  const dispatch = useReduxDispatch();
+
   React.useEffect(() => {
     if (response?.type === 'success') {
       const { id_token } = response.params;
-      
-      const credential = Firebase.auth.GoogleAuthProvider.credential(id_token);
-      Firebase.auth().signInWithCredential(credential)
-      .then(() => async (res: IAuth) => {
-        const { user, token } = res;
-        alert(user)
-        alert(token)
-        const values: Auth.AuthValues = {
-          id: user.uid,
-          email: user.email || undefined,
-          emailVerified: user.emailVerified,
-          token,
-        };
-
-        const model: Auth.Model = {
-          ...Auth.initialState,
-          id: values.id,
-          token: values.token,
-          email: values.email || '',
-          emailVerified: values.emailVerified || false,
-        };
-        const dispatch = useReduxDispatch();
-        dispatch(setAuth(values));
-        await LocalStorage.AuthStorage.save(model);
-      })
+      const credential = firebase.auth.GoogleAuthProvider.credential(id_token);
+      firebase.auth().signInWithCredential(credential)
       .then(async() => {
-        await getAuthAsync()
-      })      
-      .then(() => {
-        setApplicationState(Status.AUTHORIZED);
+        const token = await firebase.auth().currentUser?.getIdToken(true)
+        .then(async(token)=>{
+          console.log(token)
+          const user = firebase.auth().currentUser
+            const values: Auth.AuthValues = {
+              id: user?.uid!,
+              email: user?.email || undefined,
+              emailVerified: true,
+              token: token,
+            };
+    
+            const model: Auth.Model = {
+              ...Auth.initialState,
+              id: values.id,
+              token: values.token,
+              email: values.email || '',
+              emailVerified: values.emailVerified || false,
+            };
+            console.log(model)
+            dispatch(setAuth(values));
+            await LocalStorage.AuthStorage.save(model);
+        }
+        )
       })
+
+      // .then(() => async (res: IAuth) => {
+      //   const { user, token } = res;
+      //   console.log('koko')
+      //   const values: Auth.AuthValues = {
+      //     id: user.uid,
+      //     email: user.email || undefined,
+      //     emailVerified: user.emailVerified,
+      //     token,
+      //   }})
+
+      
+      // .then((res) => async () => {
+      //   console.log('koko')
+      //   const user = res.user;
+      //   await firebase
+      //   .auth()
+      //   .currentUser?.getIdToken(true)
+      //   .then(async(token)=>{
+      //     console.log(token)
+      //     const values: Auth.AuthValues = {
+      //       id: user?.uid!,
+      //       email: user?.email || undefined,
+      //       emailVerified: true,
+      //       token: token!,
+      //     };
+  
+      //     const model: Auth.Model = {
+      //       ...Auth.initialState,
+      //       id: values.id,
+      //       token: values.token,
+      //       email: values.email || '',
+      //       emailVerified: values.emailVerified || false,
+      //     };
+      //     const dispatch = useReduxDispatch();
+      //     dispatch(setAuth(values));
+      //     await LocalStorage.AuthStorage.save(model);
+      //   })
+      // })
+      .then(async() => {
+        await getAuth()
+      })      
+      // .then(() => {
+      //   setApplicationState(Status.AUTHORIZED);
+      // })
       .catch((err) => {
-        alert(err)
+        console.log(err)
       });
     }
   }, [response]);
