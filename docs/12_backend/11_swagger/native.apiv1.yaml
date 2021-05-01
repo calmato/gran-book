@@ -1057,8 +1057,6 @@ components:
             status:
               type: integer
               format: int32
-            impression:
-              type: string
             readOn:
               type: string
             createdAt:
