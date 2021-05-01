@@ -8,7 +8,7 @@ import { IUserListResponse, IUserListResponseUser, IUserResponse } from '~/types
 const router = express.Router()
 
 router.get(
-  '/',
+  '/v1/users',
   async (req: Request, res: Response<IUserListResponse>, next: NextFunction): Promise<void> => {
     const { limit, offset, by, direction, field, value } = req.query as { [key: string]: string }
 
@@ -47,7 +47,7 @@ router.get(
 )
 
 router.get(
-  '/:userId',
+  '/v1/users/:userId',
   async (req: Request, res: Response<IUserResponse>, next: NextFunction): Promise<void> => {
     const { userId } = req.params
 

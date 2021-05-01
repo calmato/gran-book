@@ -36,7 +36,7 @@ import { IAdminListResponse, IAdminListResponseUser, IAdminResponse, IAdminThumb
 const router = express.Router()
 
 router.get(
-  '/',
+  '/v1/admin',
   async (req: Request, res: Response<IAdminListResponse>, next: NextFunction): Promise<void> => {
     const { limit, offset, by, direction, field, value } = req.query as { [key: string]: string }
 
@@ -75,7 +75,7 @@ router.get(
 )
 
 router.post(
-  '/',
+  '/v1/admin',
   async (req: Request, res: Response<IAdminResponse>, next: NextFunction): Promise<void> => {
     const {
       username,
@@ -111,7 +111,7 @@ router.post(
 )
 
 router.get(
-  '/:userId',
+  '/v1/admin/:userId',
   async (req: Request, res: Response<IAdminResponse>, next: NextFunction): Promise<void> => {
     const { userId } = req.params
 
@@ -129,7 +129,7 @@ router.get(
 )
 
 router.delete(
-  '/:userId',
+  '/v1/admin/:userId',
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const { userId } = req.params
 
@@ -146,7 +146,7 @@ router.delete(
 )
 
 router.patch(
-  '/:userId/role',
+  '/v1/admin/:userId/role',
   async (req: Request, res: Response<IAdminResponse>, next: NextFunction): Promise<void> => {
     const { userId } = req.params
     const { role } = req.body as IUpdateAdminRoleRequest
@@ -166,7 +166,7 @@ router.patch(
 )
 
 router.patch(
-  '/:userId/password',
+  '/v1/admin/:userId/password',
   async (req: Request, res: Response<IAdminResponse>, next: NextFunction): Promise<void> => {
     const { userId } = req.params
     const { password, passwordConfirmation } = req.body as IUpdateAdminPasswordRequest
@@ -187,7 +187,7 @@ router.patch(
 )
 
 router.patch(
-  '/:userId/profile',
+  '/v1/admin/:userId/profile',
   async (req: Request, res: Response<IAdminResponse>, next: NextFunction): Promise<void> => {
     const { userId } = req.params
     const { username, email, lastName, lastNameKana, firstName, firstNameKana } = req.body as IUpdateAdminProfileRequest
@@ -212,7 +212,7 @@ router.patch(
 )
 
 router.post(
-  '/thumbnail',
+  '/v1/admin/thumbnail',
   multer.single('thumbnail'),
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const { userId } = req.params

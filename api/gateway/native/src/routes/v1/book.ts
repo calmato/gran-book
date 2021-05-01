@@ -8,27 +8,8 @@ import { IBookResponse, IBookResponseBookshelf, IBookResponseReview, IBookRespon
 
 const router = express.Router()
 
-router.get(
-  '/:isbn',
-  async (req: Request, res: Response<IBookResponse>, next: NextFunction): Promise<void> => {
-    const { isbn } = req.params
-
-    const input: IShowBookInput = {
-      isbn,
-    }
-
-    await showBook(req, input)
-      .then((output: IBookOutput) => {
-        // TODO: User情報の取得
-        const response: IBookResponse = setBookResponse(output)
-        res.status(200).json(response)
-      })
-      .catch((err: GrpcError) => next(err))
-  }
-)
-
 router.post(
-  '/',
+  '/v1/books',
   async (req: Request, res: Response<IBookResponse>, next: NextFunction): Promise<void> => {
     const {
       title,
@@ -82,7 +63,7 @@ router.post(
 )
 
 router.patch(
-  '/',
+  '/v1/books',
   async (req: Request, res: Response<IBookResponse>, next: NextFunction): Promise<void> => {
     const {
       title,
@@ -126,6 +107,25 @@ router.patch(
     }
 
     await updateBook(req, input)
+      .then((output: IBookOutput) => {
+        // TODO: User情報の取得
+        const response: IBookResponse = setBookResponse(output)
+        res.status(200).json(response)
+      })
+      .catch((err: GrpcError) => next(err))
+  }
+)
+
+router.get(
+  '/v1/books/:isbn',
+  async (req: Request, res: Response<IBookResponse>, next: NextFunction): Promise<void> => {
+    const { isbn } = req.params
+
+    const input: IShowBookInput = {
+      isbn,
+    }
+
+    await showBook(req, input)
       .then((output: IBookOutput) => {
         // TODO: User情報の取得
         const response: IBookResponse = setBookResponse(output)

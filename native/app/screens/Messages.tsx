@@ -48,8 +48,8 @@ export const MessagesScreen = () => {
         centerContainerStyle={{
           height: 50
         }}
-
       />
+
       <View style={styles.chatFooter}>
         <MaterialCommunityIcons
           style={styles.inputImage}
@@ -83,12 +83,10 @@ export const MessagesScreen = () => {
 };
 
 const styles = StyleSheet.create({
-
   container: {
     flex: 1,
     backgroundColor: COLOR.BACKGROUND_GREY,
   },
-
   header:{
     color:COLOR.TEXT_TITLE,
     fontSize: 20,
@@ -96,7 +94,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'flex-end',
   },
-
   inputText: {
     color: COLOR.TEXT_DEFAULT,
     borderWidth: 1,
@@ -109,17 +106,14 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 10,
   },
-
   inputImage:{
     marginLeft: '3%',
     color: COLOR.TEXT_GRAY
   },
-
   sendButton: {
     marginRight: '3%',
     color: COLOR.PRIMARY
   },
-
   chatFooter: {
     flex: 1,
     backgroundColor: COLOR.BACKGROUND_WHITE,
@@ -130,7 +124,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0
   },
-
 });
 
 export default MessagesScreen;

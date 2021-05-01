@@ -2,7 +2,11 @@ package repository
 
 import (
 	"fmt"
+	"strings"
 
+	"github.com/calmato/gran-book/api/server/book/internal/domain"
+	"github.com/calmato/gran-book/api/server/book/internal/domain/exception"
+	"github.com/calmato/gran-book/api/server/book/lib/array"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -51,98 +55,98 @@ func getDBConfig(socket, host, port, database, username, password string) string
 }
 
 // getListQuery - SELECT SQL文作成用メソッド
-// func (c *Client) getListQuery(db *gorm.DB, q *domain.ListQuery) *gorm.DB {
-// 	if q == nil {
-// 		return db
-// 	}
+func (c *Client) getListQuery(db *gorm.DB, q *domain.ListQuery) *gorm.DB {
+	if q == nil {
+		return db
+	}
 
-// 	// WHERE句の追加
-// 	for _, c := range q.Conditions {
-// 		db = setWhere(db, c)
-// 	}
+	// WHERE句の追加
+	for _, c := range q.Conditions {
+		db = setWhere(db, c)
+	}
 
-// 	db = setOrder(db, q.Order)
-// 	db = setLimit(db, q.Limit)
-// 	db = setOffset(db, q.Offset)
+	db = setOrder(db, q.Order)
+	db = setLimit(db, q.Limit)
+	db = setOffset(db, q.Offset)
 
-// 	return db
-// }
+	return db
+}
 
-// func (c *Client) getListCount(db *gorm.DB, q *domain.ListQuery) (int, error) {
-// 	var count int64
+func (c *Client) getListCount(db *gorm.DB, q *domain.ListQuery) (int, error) {
+	var count int64
 
-// 	if q != nil {
-// 		// WHERE句の追加
-// 		for _, c := range q.Conditions {
-// 			db = setWhere(db, c)
-// 		}
-// 	}
+	if q != nil {
+		// WHERE句の追加
+		for _, c := range q.Conditions {
+			db = setWhere(db, c)
+		}
+	}
 
-// 	err := db.Count(&count).Error
-// 	if err != nil {
-// 		return 0, exception.ErrorInDatastore.New(err)
-// 	}
+	err := db.Count(&count).Error
+	if err != nil {
+		return 0, exception.ErrorInDatastore.New(err)
+	}
 
-// 	return int(count), nil
-// }
+	return int(count), nil
+}
 
-// func setWhere(db *gorm.DB, c *domain.QueryCondition) *gorm.DB {
-// 	if c == nil {
-// 		return db
-// 	}
+func setWhere(db *gorm.DB, c *domain.QueryCondition) *gorm.DB {
+	if c == nil {
+		return db
+	}
 
-// 	switch c.Operator {
-// 	case "==":
-// 		q := fmt.Sprintf("%s = ?", c.Field)
-// 		return db.Where(q, c.Value)
-// 	case "!=":
-// 		q := fmt.Sprintf("%s <> ?", c.Field)
-// 		return db.Where(q, c.Value)
-// 	case ">", "<", ">=", "<=":
-// 		q := fmt.Sprintf("%s %s ?", c.Field, c.Operator)
-// 		return db.Where(q, c.Value)
-// 	case "IN":
-// 		q := fmt.Sprintf("%s IN ?", c.Field)
-// 		vals, _ := array.ConvertStrings(c)
-// 		return db.Where(q, strings.Join(vals, ", "))
-// 	case "LIKE":
-// 		q := fmt.Sprintf("%s LIKE ?", c.Field)
-// 		n := fmt.Sprintf("%%%s%%", c.Value) // e.g.) あいうえお -> %あいうえお%
-// 		return db.Where(q, n)
-// 	case "BETWEEN":
-// 		q := fmt.Sprintf("%s BETWEEN ? AND ?", c.Field)
-// 		vals, _ := array.ConvertStrings(c)
-// 		return db.Where(q, vals[0], vals[1])
-// 	default:
-// 		return db
-// 	}
-// }
+	switch c.Operator {
+	case "==":
+		q := fmt.Sprintf("%s = ?", c.Field)
+		return db.Where(q, c.Value)
+	case "!=":
+		q := fmt.Sprintf("%s <> ?", c.Field)
+		return db.Where(q, c.Value)
+	case ">", "<", ">=", "<=":
+		q := fmt.Sprintf("%s %s ?", c.Field, c.Operator)
+		return db.Where(q, c.Value)
+	case "IN":
+		q := fmt.Sprintf("%s IN ?", c.Field)
+		vals, _ := array.ConvertStrings(c)
+		return db.Where(q, strings.Join(vals, ", "))
+	case "LIKE":
+		q := fmt.Sprintf("%s LIKE ?", c.Field)
+		n := fmt.Sprintf("%%%s%%", c.Value) // e.g.) あいうえお -> %あいうえお%
+		return db.Where(q, n)
+	case "BETWEEN":
+		q := fmt.Sprintf("%s BETWEEN ? AND ?", c.Field)
+		vals, _ := array.ConvertStrings(c)
+		return db.Where(q, vals[0], vals[1])
+	default:
+		return db
+	}
+}
 
-// func setOrder(db *gorm.DB, o *domain.QueryOrder) *gorm.DB {
-// 	if o == nil || o.By == "" {
-// 		return db
-// 	}
+func setOrder(db *gorm.DB, o *domain.QueryOrder) *gorm.DB {
+	if o == nil || o.By == "" {
+		return db
+	}
 
-// 	switch strings.ToLower(o.Direction) {
-// 	case "asc":
-// 		q := fmt.Sprintf("%s asc", o.By)
-// 		return db.Order(q)
-// 	case "desc":
-// 		q := fmt.Sprintf("%s desc", o.By)
-// 		return db.Order(q)
-// 	default:
-// 		return db
-// 	}
-// }
+	switch strings.ToLower(o.Direction) {
+	case "asc":
+		q := fmt.Sprintf("%s asc", o.By)
+		return db.Order(q)
+	case "desc":
+		q := fmt.Sprintf("%s desc", o.By)
+		return db.Order(q)
+	default:
+		return db
+	}
+}
 
-// func setLimit(db *gorm.DB, limit int) *gorm.DB {
-// 	if limit > 0 {
-// 		return db.Limit(limit)
-// 	}
+func setLimit(db *gorm.DB, limit int) *gorm.DB {
+	if limit > 0 {
+		return db.Limit(limit)
+	}
 
-// 	return db
-// }
+	return db
+}
 
-// func setOffset(db *gorm.DB, offset int) *gorm.DB {
-// 	return db.Offset(offset)
-// }
+func setOffset(db *gorm.DB, offset int) *gorm.DB {
+	return db.Offset(offset)
+}
