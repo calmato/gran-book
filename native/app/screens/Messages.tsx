@@ -46,7 +46,7 @@ export const MessagesScreen = () => {
           style: styles.header
         }}
         centerContainerStyle={{
-          height: 50
+          height: 40
         }}
       />
 
