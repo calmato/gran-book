@@ -278,3 +278,17 @@ func (mr *MockServiceMockRecorder) ValidationBookshelf(ctx, b interface{}) *gomo
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ValidationBookshelf", reflect.TypeOf((*MockService)(nil).ValidationBookshelf), ctx, b)
 }
+
+// ValidationReview mocks base method
+func (m *MockService) ValidationReview(ctx context.Context, b *book.Review) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ValidationReview", ctx, b)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// ValidationReview indicates an expected call of ValidationReview
+func (mr *MockServiceMockRecorder) ValidationReview(ctx, b interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ValidationReview", reflect.TypeOf((*MockService)(nil).ValidationReview), ctx, b)
+}
