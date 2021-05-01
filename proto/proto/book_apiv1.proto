@@ -115,14 +115,38 @@ message BookResponse {
 }
 
 message BookshelfResponse {
+  message Author {
+    string name = 1;
+    string name_kana = 2;
+  }
+  message Book {
+    int64 id = 1;
+    string title = 2;
+    string title_kana = 3;
+    string description = 4;
+    string isbn = 5;
+    string publisher = 6;
+    string published_on = 7;
+    string thumbnail_url = 8;
+    string rakuten_url = 9;
+    string rakuten_genre_id = 10;
+    string created_at = 11;
+    string updated_at = 12;
+    repeated Author authors = 13;
+  }
+  message Review {
+    int32 score = 1;
+    string impression = 2;
+  }
   int64 id = 1;
   int64 book_id = 2;
   string user_id = 3;
   int32 status = 4;
-  string impression = 5;
-  string read_on = 6;
-  string created_at = 7;
-  string updated_at = 8;
+  string read_on = 5;
+  string created_at = 8;
+  string updated_at = 9;
+  Book book = 10;
+  Review review = 11;
 }
 
 message BookshelfListResponse {
