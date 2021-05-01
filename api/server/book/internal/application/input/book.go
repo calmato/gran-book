@@ -27,3 +27,10 @@ type Bookshelf struct {
 	Status int    `json:"status" validate:"required,gte=0,lte=5"`
 	ReadOn string `json:"readOn" validate:"omitempty"`
 }
+
+// ListBookshelf - 本棚内の書籍一覧取得のリクエスト
+type ListBookshelf struct {
+	UserID string `json:"userId" validate:"required"`
+	Limit  int    `json:"limit" validate:"gte=0,lte=1000"`
+	Offset int    `json:"offset" validate:"gte=0"`
+}

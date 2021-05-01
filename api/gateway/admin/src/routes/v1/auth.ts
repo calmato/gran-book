@@ -24,7 +24,7 @@ import { badRequest } from '~/lib/http-exception'
 const router = express.Router()
 
 router.get(
-  '/',
+  '/v1/auth',
   async (req: Request, res: Response<IAuthResponse>, next: NextFunction): Promise<void> => {
     await getAuth(req)
       .then((output: IAuthOutput) => {
@@ -36,7 +36,7 @@ router.get(
 )
 
 router.patch(
-  '/email',
+  '/v1/auth/email',
   async (req: Request<IUpdateAuthEmailRequest>, res: Response<IAuthResponse>, next: NextFunction): Promise<void> => {
     const { email } = req.body as IUpdateAuthEmailRequest
 
@@ -54,7 +54,7 @@ router.patch(
 )
 
 router.patch(
-  '/password',
+  '/v1/auth/password',
   async (req: Request<IUpdateAuthPasswordRequest>, res: Response<IAuthResponse>, next: NextFunction): Promise<void> => {
     const { password, passwordConfirmation } = req.body as IUpdateAuthPasswordRequest
 
@@ -73,7 +73,7 @@ router.patch(
 )
 
 router.patch(
-  '/profile',
+  '/v1/auth/profile',
   async (req: Request<IUpdateAuthRequest>, res: Response<IAuthResponse>, next: NextFunction): Promise<void> => {
     const {
       username,
@@ -126,7 +126,7 @@ router.patch(
 )
 
 router.post(
-  '/thumbnail',
+  '/v1/auth/thumbnail',
   multer.single('thumbnail'),
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     if (!req.file) {

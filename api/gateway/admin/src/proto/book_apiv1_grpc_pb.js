@@ -15,6 +15,17 @@ function deserialize_proto_BookResponse(buffer_arg) {
   return proto_book_apiv1_pb.BookResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_proto_BookshelfListResponse(arg) {
+  if (!(arg instanceof proto_book_apiv1_pb.BookshelfListResponse)) {
+    throw new Error('Expected argument of type proto.BookshelfListResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_BookshelfListResponse(buffer_arg) {
+  return proto_book_apiv1_pb.BookshelfListResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_proto_BookshelfResponse(arg) {
   if (!(arg instanceof proto_book_apiv1_pb.BookshelfResponse)) {
     throw new Error('Expected argument of type proto.BookshelfResponse');
@@ -68,6 +79,17 @@ function serialize_proto_EmptyBook(arg) {
 
 function deserialize_proto_EmptyBook(buffer_arg) {
   return proto_book_apiv1_pb.EmptyBook.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_proto_ListBookshelfRequest(arg) {
+  if (!(arg instanceof proto_book_apiv1_pb.ListBookshelfRequest)) {
+    throw new Error('Expected argument of type proto.ListBookshelfRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_ListBookshelfRequest(buffer_arg) {
+  return proto_book_apiv1_pb.ListBookshelfRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 function serialize_proto_ReadBookshelfRequest(arg) {
@@ -149,6 +171,17 @@ function deserialize_proto_WantBookshelfRequest(buffer_arg) {
 
 
 var BookServiceService = exports.BookServiceService = {
+  listBookshelf: {
+    path: '/proto.BookService/ListBookshelf',
+    requestStream: false,
+    responseStream: false,
+    requestType: proto_book_apiv1_pb.ListBookshelfRequest,
+    responseType: proto_book_apiv1_pb.BookshelfListResponse,
+    requestSerialize: serialize_proto_ListBookshelfRequest,
+    requestDeserialize: deserialize_proto_ListBookshelfRequest,
+    responseSerialize: serialize_proto_BookshelfListResponse,
+    responseDeserialize: deserialize_proto_BookshelfListResponse,
+  },
   showBook: {
     path: '/proto.BookService/ShowBook',
     requestStream: false,

@@ -4,13 +4,16 @@ import (
 	"context"
 
 	"github.com/calmato/gran-book/api/server/book/internal/application/input"
+	"github.com/calmato/gran-book/api/server/book/internal/application/output"
 	"github.com/calmato/gran-book/api/server/book/internal/application/validation"
+	"github.com/calmato/gran-book/api/server/book/internal/domain"
 	"github.com/calmato/gran-book/api/server/book/internal/domain/book"
 	"github.com/calmato/gran-book/api/server/book/lib/datetime"
 )
 
 // BookApplication - Bookアプリケーションのインターフェース
 type BookApplication interface {
+	ListBookshelf(ctx context.Context, in *input.ListBookshelf) ([]*book.Bookshelf, *output.ListQuery, error)
 	Show(ctx context.Context, isbn string) (*book.Book, error)
 	Create(ctx context.Context, in *input.Book) (*book.Book, error)
 	Update(ctx context.Context, in *input.Book) (*book.Book, error)
@@ -30,6 +33,45 @@ func NewBookApplication(brv validation.BookRequestValidation, bs book.Service) B
 		bookRequestValidation: brv,
 		bookService:           bs,
 	}
+}
+
+func (a *bookApplication) ListBookshelf(
+	ctx context.Context, in *input.ListBookshelf,
+) ([]*book.Bookshelf, *output.ListQuery, error) {
+	err := a.bookRequestValidation.ListBookshelf(in)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	query := &domain.ListQuery{
+		Limit:  in.Limit,
+		Offset: in.Offset,
+		Conditions: []*domain.QueryCondition{
+			{
+				Field:    "user_id",
+				Operator: "==",
+				Value:    in.UserID,
+			},
+		},
+	}
+
+	bss, err := a.bookService.ListBookshelf(ctx, query)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	total, err := a.bookService.ListBookshelfCount(ctx, query)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	out := &output.ListQuery{
+		Limit:  in.Limit,
+		Offset: in.Offset,
+		Total:  total,
+	}
+
+	return bss, out, nil
 }
 
 func (a *bookApplication) Show(ctx context.Context, isbn string) (*book.Book, error) {
@@ -63,7 +105,7 @@ func (a *bookApplication) Create(ctx context.Context, in *input.Book) (*book.Boo
 		Description:    in.Description,
 		Isbn:           in.Isbn,
 		Publisher:      in.Publisher,
-		PublishedOn:    datetime.StringToDate(in.PublishedOn),
+		PublishedOn:    in.PublishedOn,
 		ThumbnailURL:   in.ThumbnailURL,
 		RakutenURL:     in.RakutenURL,
 		RakutenGenreID: in.RakutenGenreID,
@@ -114,7 +156,7 @@ func (a *bookApplication) Update(ctx context.Context, in *input.Book) (*book.Boo
 	b.Description = in.Description
 	b.Isbn = in.Isbn
 	b.Publisher = in.Publisher
-	b.PublishedOn = datetime.StringToDate(in.PublishedOn)
+	b.PublishedOn = in.PublishedOn
 	b.ThumbnailURL = in.ThumbnailURL
 	b.RakutenURL = in.RakutenURL
 	b.RakutenGenreID = in.RakutenGenreID

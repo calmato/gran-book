@@ -477,3 +477,71 @@ func TestBookRequestValidation_Bookshelf(t *testing.T) {
 		})
 	}
 }
+
+func TestBookRequestValidation_ListBookshelf(t *testing.T) {
+	testCases := map[string]struct {
+		Input    *input.ListBookshelf
+		Expected bool
+	}{
+		"ok": {
+			Input: &input.ListBookshelf{
+				UserID: "00000000-0000-0000-0000-000000000000",
+				Limit:  0,
+				Offset: 0,
+			},
+			Expected: true,
+		},
+		"ng_userId_required": {
+			Input: &input.ListBookshelf{
+				UserID: "",
+				Limit:  0,
+				Offset: 0,
+			},
+			Expected: false,
+		},
+		"ng_limit_greater_than_equal": {
+			Input: &input.ListBookshelf{
+				UserID: "00000000-0000-0000-0000-000000000000",
+				Limit:  -1,
+				Offset: 0,
+			},
+			Expected: false,
+		},
+		"ng_limit_less_than_equal": {
+			Input: &input.ListBookshelf{
+				UserID: "00000000-0000-0000-0000-000000000000",
+				Limit:  1001,
+				Offset: 0,
+			},
+			Expected: false,
+		},
+		"ng_offset_greater_than_equal": {
+			Input: &input.ListBookshelf{
+				UserID: "00000000-0000-0000-0000-000000000000",
+				Limit:  0,
+				Offset: -1,
+			},
+			Expected: false,
+		},
+	}
+
+	for result, tc := range testCases {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		t.Run(result, func(t *testing.T) {
+			target := NewBookRequestValidation()
+
+			got := target.ListBookshelf(tc.Input)
+			if tc.Expected {
+				if got != nil {
+					t.Fatalf("Incorrect result: %#v", got)
+				}
+			} else {
+				if got == nil {
+					t.Fatalf("Incorrect result: result is nil")
+				}
+			}
+		})
+	}
+}

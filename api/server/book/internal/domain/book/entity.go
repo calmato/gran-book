@@ -4,18 +4,18 @@ import "time"
 
 // Book - 書籍エンティティ
 type Book struct {
-	ID             int        `gorm:"primaryKey;not null;<-:create"`
-	Title          string     `gorm:"size:64;not null;uniqueIndex:ui_books_01;uniqueIndex:ui_books_02"`
-	TitleKana      string     `gorm:"size:128"`
-	Description    string     `gorm:"size:2000"`
-	Isbn           string     `gorm:"size:16;not null"`
-	Publisher      string     `gorm:"size:64;not null"`
-	PublishedOn    time.Time  `gorm:"not null"`
+	ID             int        `gorm:"primaryKey;autoIncrement;<-:create"`
+	Title          string     `gorm:"uniqueIndex:ui_books_01;uniqueIndex:ui_books_02"`
+	TitleKana      string     `gorm:""`
+	Description    string     `gorm:""`
+	Isbn           string     `gorm:""`
+	Publisher      string     `gorm:""`
+	PublishedOn    string     `gorm:""`
 	ThumbnailURL   string     `gorm:""`
 	RakutenURL     string     `gorm:""`
 	RakutenGenreID string     `gorm:""`
-	CreatedAt      time.Time  `gorm:"not null;<-:create"`
-	UpdatedAt      time.Time  `gorm:"not null"`
+	CreatedAt      time.Time  `gorm:"<-:create"`
+	UpdatedAt      time.Time  `gorm:""`
 	Authors        []*Author  `gorm:"many2many:authors_books"`
 	Bookshelf      *Bookshelf `gorm:"foreignKey:BookID;constraint:OnDelete:CASCADE"`
 	Reviews        []*Review  `gorm:"foreignKey:BookID;constraint:OnDelete:CASCADE"`
@@ -23,42 +23,43 @@ type Book struct {
 
 // Author - 著者エンティティ
 type Author struct {
-	ID        int       `gorm:"primaryKey;not null;autoIncrement;<-:create"`
-	Name      string    `gorm:"size:32;not null;unique"`
-	NameKana  string    `gorm:"size:64;not null"`
-	CreatedAt time.Time `gorm:"not null;<-:create"`
-	UpdatedAt time.Time `gorm:"not null"`
+	ID        int       `gorm:"primaryKey;autoIncrement;<-:create"`
+	Name      string    `gorm:""`
+	NameKana  string    `gorm:""`
+	CreatedAt time.Time `gorm:"<-:create"`
+	UpdatedAt time.Time `gorm:""`
 }
 
 // Bookshelf - 本棚エンティティ
 type Bookshelf struct {
-	ID        int       `gorm:"primaryKey;not null;autoIncrement;<-:create"`
-	BookID    int       `gorm:"not null;uniqueIndex:ui_bookshelfs_01;uniqueIndex:ui_bookshelfs_02"`
-	UserID    string    `gorm:"not null;uniqueIndex:ui_bookshelfs_01;uniqueIndex:ui_bookshelfs_02"`
-	Status    int       `gorm:"not null;default:0"`
+	ID        int       `gorm:"primaryKey;autoIncrement;<-:create"`
+	BookID    int       `gorm:"uniqueIndex:ui_bookshelfs_01;uniqueIndex:ui_bookshelfs_02"`
+	UserID    string    `gorm:"uniqueIndex:ui_bookshelfs_01;uniqueIndex:ui_bookshelfs_02"`
+	Status    int       `gorm:""`
 	ReadOn    time.Time `gorm:""`
-	CreatedAt time.Time `gorm:"not null;<-:create"`
-	UpdatedAt time.Time `gorm:"not null"`
+	CreatedAt time.Time `gorm:"<-:create"`
+	UpdatedAt time.Time `gorm:""`
+	Book      *Book     `gorm:""`
 }
 
 // Review - レビューエンティティ
 type Review struct {
-	ID         int       `gorm:"primaryKey;not null;autoIncrement;<-:create"`
-	BookID     int       `gorm:"not null;uniqueIndex:ui_reviews_01;uniqueIndex:ui_reviews_02"`
+	ID         int       `gorm:"primaryKey;autoIncrement;<-:create"`
+	BookID     int       `gorm:"uniqueIndex:ui_reviews_01;uniqueIndex:ui_reviews_02"`
 	UserID     string    `gorm:"uniqueIndex:ui_reviews_01;uniqueIndex:ui_reviews_02"`
-	Score      int       `gorm:"not null"`
-	Impression string    `gorm:"size:2000;default:''"`
-	CreatedAt  time.Time `gorm:"not null;<-:create"`
-	UpdatedAt  time.Time `gorm:"not null"`
+	Score      int       `gorm:""`
+	Impression string    `gorm:""`
+	CreatedAt  time.Time `gorm:"<-:create"`
+	UpdatedAt  time.Time `gorm:""`
 }
 
 // BookAuthor - 中間テーブル用
 type BookAuthor struct {
-	ID        int       `gorm:"primaryKey;not null;autoIncrement;<-:create"`
-	BookID    int       `gorm:"not null;uniqueIndex:ui_authors_books_01;uniqueIndex:ui_authors_books_02"`
-	AuthorID  int       `gorm:"not null;uniqueIndex:ui_authors_books_01;uniqueIndex:ui_authors_books_02"`
-	CreatedAt time.Time `gorm:"not null;<-:create"`
-	UpdatedAt time.Time `gorm:"not null"`
+	ID        int       `gorm:"primaryKey;autoIncrement;<-:create"`
+	BookID    int       `gorm:"uniqueIndex:ui_authors_books_01;uniqueIndex:ui_authors_books_02"`
+	AuthorID  int       `gorm:"uniqueIndex:ui_authors_books_01;uniqueIndex:ui_authors_books_02"`
+	CreatedAt time.Time `gorm:"<-:create"`
+	UpdatedAt time.Time `gorm:""`
 }
 
 // 本棚に保存している書籍のステータス

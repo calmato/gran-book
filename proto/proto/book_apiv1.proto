@@ -1,22 +1,30 @@
 syntax = "proto3";
 
 package proto;
+
 option go_package = "github.com/calmato/gran-book/proto";
 
 service BookService {
-  rpc ShowBook (ShowBookRequest) returns (BookResponse);
-  rpc CreateBook (CreateBookRequest) returns (BookResponse);
-  rpc UpdateBook (UpdateBookRequest) returns (BookResponse);
-  rpc ReadBookshelf (ReadBookshelfRequest) returns (BookshelfResponse);
-  rpc ReadingBookshelf (ReadingBookshelfRequest) returns (BookshelfResponse);
-  rpc StackBookshelf (StackBookshelfRequest) returns (BookshelfResponse);
-  rpc WantBookshelf (WantBookshelfRequest) returns (BookshelfResponse);
-  rpc ReleaseBookshelf (ReleaseBookshelfRequest) returns (BookshelfResponse);
-  rpc DeleteBook (DeleteBookRequest) returns (EmptyBook);
-  rpc DeleteBookshelf (DeleteBookshelfRequest) returns (EmptyBook);
+  rpc ListBookshelf(ListBookshelfRequest) returns (BookshelfListResponse);
+  rpc ShowBook(ShowBookRequest) returns (BookResponse);
+  rpc CreateBook(CreateBookRequest) returns (BookResponse);
+  rpc UpdateBook(UpdateBookRequest) returns (BookResponse);
+  rpc ReadBookshelf(ReadBookshelfRequest) returns (BookshelfResponse);
+  rpc ReadingBookshelf(ReadingBookshelfRequest) returns (BookshelfResponse);
+  rpc StackBookshelf(StackBookshelfRequest) returns (BookshelfResponse);
+  rpc WantBookshelf(WantBookshelfRequest) returns (BookshelfResponse);
+  rpc ReleaseBookshelf(ReleaseBookshelfRequest) returns (BookshelfResponse);
+  rpc DeleteBook(DeleteBookRequest) returns (EmptyBook);
+  rpc DeleteBookshelf(DeleteBookshelfRequest) returns (EmptyBook);
 }
 
 message EmptyBook {}
+
+message ListBookshelfRequest {
+  string user_id = 1;
+  int64 limit = 2;
+  int64 offset = 3;
+}
 
 message ShowBookRequest {
   string isbn = 1;
@@ -132,4 +140,40 @@ message BookshelfResponse {
   string read_on = 6;
   string created_at = 7;
   string updated_at = 8;
+}
+
+message BookshelfListResponse {
+  message Author {
+    string name = 1;
+    string name_kana = 2;
+  }
+  message Book {
+    int64 id = 1;
+    string title = 2;
+    string title_kana = 3;
+    string description = 4;
+    string isbn = 5;
+    string publisher = 6;
+    string published_on = 7;
+    string thumbnail_url = 8;
+    string rakuten_url = 9;
+    string rakuten_genre_id = 10;
+    string created_at = 11;
+    string updated_at = 12;
+    repeated Author authors = 13;
+  }
+  message Bookshelf {
+    int64 id = 1;
+    int64 book_id = 2;
+    string user_id = 3;
+    int32 status = 4;
+    string read_on = 5;
+    string created_at = 6;
+    string updated_at = 7;
+    Book book = 8;
+  }
+  repeated Bookshelf bookshelves = 1;
+  int64 limit = 2;
+  int64 offset = 3;
+  int64 total = 4;
 }

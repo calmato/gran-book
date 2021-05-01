@@ -6,10 +6,132 @@ import (
 	"testing"
 	"time"
 
+	"github.com/calmato/gran-book/api/server/book/internal/domain"
 	"github.com/calmato/gran-book/api/server/book/internal/domain/book"
 	mock_book "github.com/calmato/gran-book/api/server/book/mock/domain/book"
 	"github.com/golang/mock/gomock"
 )
+
+func TestBookService_ListBookshelf(t *testing.T) {
+	testCases := map[string]struct {
+		Query    *domain.ListQuery
+		Expected struct {
+			Bookshelves []*book.Bookshelf
+			Error       error
+		}
+	}{
+		"ok": {
+			Query: &domain.ListQuery{
+				Limit:      100,
+				Offset:     0,
+				Order:      nil,
+				Conditions: []*domain.QueryCondition{},
+			},
+			Expected: struct {
+				Bookshelves []*book.Bookshelf
+				Error       error
+			}{
+				Bookshelves: []*book.Bookshelf{
+					{
+						ID:        0,
+						BookID:    1,
+						UserID:    "00000000-0000-0000-0000-000000000000",
+						Status:    5,
+						CreatedAt: time.Time{},
+						UpdatedAt: time.Time{},
+					},
+				},
+				Error: nil,
+			},
+		},
+	}
+
+	for result, tc := range testCases {
+		t.Run(result, func(t *testing.T) {
+			ctx, cancel := context.WithCancel(context.Background())
+			defer cancel()
+
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			bvm := mock_book.NewMockValidation(ctrl)
+
+			brm := mock_book.NewMockRepository(ctrl)
+			brm.EXPECT().ListBookshelf(ctx, tc.Query).Return(tc.Expected.Bookshelves, tc.Expected.Error)
+
+			t.Run(result, func(t *testing.T) {
+				target := NewBookService(bvm, brm)
+
+				got, err := target.ListBookshelf(ctx, tc.Query)
+				if !reflect.DeepEqual(err, tc.Expected.Error) {
+					t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+					return
+				}
+
+				if !reflect.DeepEqual(got, tc.Expected.Bookshelves) {
+					t.Fatalf("want %#v, but %#v", tc.Expected.Bookshelves, got)
+					return
+				}
+			})
+		})
+	}
+}
+
+func TestUserService_ListCount(t *testing.T) {
+	testCases := map[string]struct {
+		Query    *domain.ListQuery
+		Expected struct {
+			Count int
+			Error error
+		}
+	}{
+		"ok": {
+			Query: &domain.ListQuery{
+				Limit:      100,
+				Offset:     0,
+				Order:      nil,
+				Conditions: []*domain.QueryCondition{},
+			},
+			Expected: struct {
+				Count int
+				Error error
+			}{
+				Count: 1,
+				Error: nil,
+			},
+		},
+	}
+
+	for result, tc := range testCases {
+		t.Run(result, func(t *testing.T) {
+			ctx, cancel := context.WithCancel(context.Background())
+			defer cancel()
+
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			bvm := mock_book.NewMockValidation(ctrl)
+
+			brm := mock_book.NewMockRepository(ctrl)
+			brm.EXPECT().ListBookshelfCount(ctx, tc.Query).Return(tc.Expected.Count, tc.Expected.Error)
+
+			t.Run(result, func(t *testing.T) {
+				target := NewBookService(bvm, brm)
+
+				got, err := target.ListBookshelfCount(ctx, tc.Query)
+				if !reflect.DeepEqual(err, tc.Expected.Error) {
+					t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+					return
+				}
+
+				if !reflect.DeepEqual(got, tc.Expected.Count) {
+					t.Fatalf("want %#v, but %#v", tc.Expected.Count, got)
+					return
+				}
+			})
+		})
+	}
+}
 
 func TestBookService_Show(t *testing.T) {
 	testCases := map[string]struct {
@@ -32,7 +154,7 @@ func TestBookService_Show(t *testing.T) {
 					Description:  "本の説明です",
 					Isbn:         "1234567890123",
 					Publisher:    "テスト著者",
-					PublishedOn:  time.Date(2020, 1, 1, 0, 0, 0, 0, time.Local),
+					PublishedOn:  "2021年12月24日",
 					ThumbnailURL: "",
 					CreatedAt:    time.Time{},
 					UpdatedAt:    time.Time{},
@@ -57,7 +179,6 @@ func TestBookService_Show(t *testing.T) {
 
 			brm := mock_book.NewMockRepository(ctrl)
 			brm.EXPECT().Show(ctx, tc.BookID).Return(tc.Expected.Book, tc.Expected.Error)
-			brm.EXPECT().ListAuthorByBookID(ctx, tc.Expected.Book.ID).Return(tc.Expected.Book.Authors, nil)
 
 			t.Run(result, func(t *testing.T) {
 				target := NewBookService(bvm, brm)
@@ -98,7 +219,7 @@ func TestBookService_ShowByIsbn(t *testing.T) {
 					Description:  "本の説明です",
 					Isbn:         "1234567890123",
 					Publisher:    "テスト著者",
-					PublishedOn:  time.Date(2020, 1, 1, 0, 0, 0, 0, time.Local),
+					PublishedOn:  "2021年12月24日",
 					ThumbnailURL: "",
 					CreatedAt:    time.Time{},
 					UpdatedAt:    time.Time{},
@@ -123,7 +244,6 @@ func TestBookService_ShowByIsbn(t *testing.T) {
 
 			brm := mock_book.NewMockRepository(ctrl)
 			brm.EXPECT().ShowByIsbn(ctx, tc.Isbn).Return(tc.Expected.Book, tc.Expected.Error)
-			brm.EXPECT().ListAuthorByBookID(ctx, tc.Expected.Book.ID).Return(tc.Expected.Book.Authors, nil)
 
 			t.Run(result, func(t *testing.T) {
 				target := NewBookService(bvm, brm)
@@ -217,7 +337,7 @@ func TestBookService_Create(t *testing.T) {
 				Description:  "本の説明です",
 				Isbn:         "1234567890123",
 				Publisher:    "テスト著者",
-				PublishedOn:  time.Date(2020, 1, 1, 0, 0, 0, 0, time.Local),
+				PublishedOn:  "2021年12月24日",
 				ThumbnailURL: "",
 				Authors:      []*book.Author{},
 				Reviews:      []*book.Review{},
@@ -330,7 +450,7 @@ func TestBookService_Update(t *testing.T) {
 				Isbn:         "978-1-234-56789-7",
 				ThumbnailURL: "",
 				Publisher:    "テスト出版社",
-				PublishedOn:  time.Date(2020, 1, 1, 0, 0, 0, 0, time.Local),
+				PublishedOn:  "2021年12月24日",
 				Bookshelf:    &book.Bookshelf{},
 				Reviews:      []*book.Review{},
 				Authors: []*book.Author{{
@@ -437,7 +557,7 @@ func TestBookService_MultipleCreate(t *testing.T) {
 					Description:  "本の説明です",
 					Isbn:         "1234567890123",
 					Publisher:    "テスト著者",
-					PublishedOn:  time.Date(2020, 1, 1, 0, 0, 0, 0, time.Local),
+					PublishedOn:  "2021年12月24日",
 					ThumbnailURL: "",
 					Authors:      []*book.Author{},
 					Reviews:      []*book.Review{},
@@ -507,7 +627,7 @@ func TestBookService_MultipleUpdate(t *testing.T) {
 					Isbn:         "978-1-234-56789-7",
 					ThumbnailURL: "",
 					Publisher:    "テスト出版社",
-					PublishedOn:  time.Date(2020, 1, 1, 0, 0, 0, 0, time.Local),
+					PublishedOn:  "2021年12月24日",
 					CreatedAt:    current,
 					UpdatedAt:    current,
 					Bookshelf:    &book.Bookshelf{},
@@ -652,7 +772,7 @@ func TestBookService_Validation(t *testing.T) {
 				Isbn:         "978-1-234-56789-7",
 				ThumbnailURL: "",
 				Publisher:    "テスト出版社",
-				PublishedOn:  time.Date(2020, 1, 1, 0, 0, 0, 0, time.Local),
+				PublishedOn:  "2021年12月24日",
 				CreatedAt:    current,
 				UpdatedAt:    current,
 				Bookshelf:    &book.Bookshelf{},

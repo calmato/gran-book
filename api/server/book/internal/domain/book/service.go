@@ -1,9 +1,15 @@
 package book
 
-import "context"
+import (
+	"context"
+
+	"github.com/calmato/gran-book/api/server/book/internal/domain"
+)
 
 // Service - Bookサービス
 type Service interface {
+	ListBookshelf(ctx context.Context, q *domain.ListQuery) ([]*Bookshelf, error)
+	ListBookshelfCount(ctx context.Context, q *domain.ListQuery) (int, error)
 	Show(ctx context.Context, bookID int) (*Book, error)
 	ShowByIsbn(ctx context.Context, isbn string) (*Book, error)
 	ShowBookshelfByUserIDAndBookID(ctx context.Context, userID string, bookID int) (*Bookshelf, error)

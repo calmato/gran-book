@@ -7,12 +7,102 @@ import (
 	"time"
 
 	"github.com/calmato/gran-book/api/server/book/internal/application/input"
+	"github.com/calmato/gran-book/api/server/book/internal/application/output"
+	"github.com/calmato/gran-book/api/server/book/internal/domain"
 	"github.com/calmato/gran-book/api/server/book/internal/domain/book"
 	"github.com/calmato/gran-book/api/server/book/lib/datetime"
 	mock_validation "github.com/calmato/gran-book/api/server/book/mock/application/validation"
 	mock_book "github.com/calmato/gran-book/api/server/book/mock/domain/book"
 	"github.com/golang/mock/gomock"
 )
+
+func TestBookApplication_ListBookshelf(t *testing.T) {
+	current := time.Now()
+
+	testCases := map[string]struct {
+		Input    *input.ListBookshelf
+		Expected struct {
+			Bookshelves []*book.Bookshelf
+			Output      *output.ListQuery
+			Error       error
+		}
+	}{
+		"ok": {
+			Input: &input.ListBookshelf{
+				UserID: "00000000-0000-0000-0000-000000000000",
+				Limit:  100,
+				Offset: 0,
+			},
+			Expected: struct {
+				Bookshelves []*book.Bookshelf
+				Output      *output.ListQuery
+				Error       error
+			}{
+				Bookshelves: []*book.Bookshelf{
+					{
+						ID:        1,
+						UserID:    "00000000-0000-0000-0000-000000000000",
+						BookID:    1,
+						Status:    1,
+						ReadOn:    datetime.StringToDate("2020-01-01"),
+						CreatedAt: current,
+						UpdatedAt: current,
+					},
+				},
+				Output: &output.ListQuery{
+					Limit:  100,
+					Offset: 0,
+					Total:  1,
+				},
+				Error: nil,
+			},
+		},
+	}
+
+	for result, tc := range testCases {
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		cs := []*domain.QueryCondition{
+			{
+				Field:    "user_id",
+				Operator: "==",
+				Value:    tc.Input.UserID,
+			},
+		}
+
+		q := &domain.ListQuery{
+			Limit:      tc.Input.Limit,
+			Offset:     tc.Input.Offset,
+			Conditions: cs,
+		}
+
+		brv := mock_validation.NewMockBookRequestValidation(ctrl)
+		brv.EXPECT().ListBookshelf(tc.Input).Return(nil)
+
+		bsm := mock_book.NewMockService(ctrl)
+		bsm.EXPECT().ListBookshelf(ctx, q).Return(tc.Expected.Bookshelves, tc.Expected.Error)
+		bsm.EXPECT().ListBookshelfCount(ctx, q).Return(tc.Expected.Output.Total, tc.Expected.Error)
+
+		t.Run(result, func(t *testing.T) {
+			target := NewBookApplication(brv, bsm)
+
+			bss, _, err := target.ListBookshelf(ctx, tc.Input)
+			if !reflect.DeepEqual(err, tc.Expected.Error) {
+				t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+				return
+			}
+
+			if !reflect.DeepEqual(bss, tc.Expected.Bookshelves) {
+				t.Fatalf("want %#v, but %#v", tc.Expected.Bookshelves, bss)
+				return
+			}
+		})
+	}
+}
 
 func TestBookApplication_Show(t *testing.T) {
 	testCases := map[string]struct {
@@ -35,7 +125,7 @@ func TestBookApplication_Show(t *testing.T) {
 					Description:  "本の説明です",
 					Isbn:         "1234567890123",
 					Publisher:    "テスト著者",
-					PublishedOn:  time.Date(2020, 1, 1, 0, 0, 0, 0, time.Local),
+					PublishedOn:  "2021年12月24日",
 					ThumbnailURL: "",
 					CreatedAt:    time.Time{},
 					UpdatedAt:    time.Time{},
@@ -92,7 +182,7 @@ func TestBookApplication_Create(t *testing.T) {
 				Description:    "綾瀬千早は高校入学と同時に、競技かるた部を作ろうと奔走する。幼馴染の太一と仲間を集め、夏の全国大会に出場するためだ。強くなって、新と再会したい。幼い頃かるたを取り合った、新に寄せる千早の秘めた想いに気づきながらも、太一は千早を守り立てる。それぞれの青春を懸けた、一途な情熱の物語が幕開ける。",
 				Isbn:           "9784062938426",
 				Publisher:      "講談社",
-				PublishedOn:    "2018-01-16",
+				PublishedOn:    "2021年12月24日",
 				ThumbnailURL:   "https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/8426/9784062938426.jpg?_ex=120x120",
 				RakutenURL:     "https://books.rakuten.co.jp/rb/15271426/",
 				RakutenGenreID: "001004008001/001004008003/001019001",
@@ -117,7 +207,7 @@ func TestBookApplication_Create(t *testing.T) {
 					Description:    "綾瀬千早は高校入学と同時に、競技かるた部を作ろうと奔走する。幼馴染の太一と仲間を集め、夏の全国大会に出場するためだ。強くなって、新と再会したい。幼い頃かるたを取り合った、新に寄せる千早の秘めた想いに気づきながらも、太一は千早を守り立てる。それぞれの青春を懸けた、一途な情熱の物語が幕開ける。",
 					Isbn:           "9784062938426",
 					Publisher:      "講談社",
-					PublishedOn:    datetime.StringToDate("2018-01-16"),
+					PublishedOn:    "2021年12月24日",
 					ThumbnailURL:   "https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/8426/9784062938426.jpg?_ex=120x120",
 					RakutenURL:     "https://books.rakuten.co.jp/rb/15271426/",
 					RakutenGenreID: "001004008001/001004008003/001019001",
@@ -212,7 +302,7 @@ func TestBookApplication_Update(t *testing.T) {
 					Description:    "綾瀬千早は高校入学と同時に、競技かるた部を作ろうと奔走する。幼馴染の太一と仲間を集め、夏の全国大会に出場するためだ。強くなって、新と再会したい。幼い頃かるたを取り合った、新に寄せる千早の秘めた想いに気づきながらも、太一は千早を守り立てる。それぞれの青春を懸けた、一途な情熱の物語が幕開ける。",
 					Isbn:           "9784062938426",
 					Publisher:      "講談社",
-					PublishedOn:    datetime.StringToDate("2018-01-16"),
+					PublishedOn:    "2021年12月24日",
 					ThumbnailURL:   "https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/8426/9784062938426.jpg?_ex=120x120",
 					RakutenURL:     "https://books.rakuten.co.jp/rb/15271426/",
 					RakutenGenreID: "001004008001/001004008003/001019001",
@@ -305,7 +395,7 @@ func TestBookApplication_CreateOrUpdateBookshelf(t *testing.T) {
 					Description:  "本の説明です",
 					Isbn:         "1234567890123",
 					Publisher:    "テスト著者",
-					PublishedOn:  time.Date(2020, 1, 1, 0, 0, 0, 0, time.Local),
+					PublishedOn:  "2021年12月24日",
 					ThumbnailURL: "",
 					CreatedAt:    time.Time{},
 					UpdatedAt:    time.Time{},
@@ -342,7 +432,7 @@ func TestBookApplication_CreateOrUpdateBookshelf(t *testing.T) {
 					Description:  "本の説明です",
 					Isbn:         "1234567890123",
 					Publisher:    "テスト著者",
-					PublishedOn:  time.Date(2020, 1, 1, 0, 0, 0, 0, time.Local),
+					PublishedOn:  "2021年12月24日",
 					ThumbnailURL: "",
 					CreatedAt:    time.Time{},
 					UpdatedAt:    time.Time{},
