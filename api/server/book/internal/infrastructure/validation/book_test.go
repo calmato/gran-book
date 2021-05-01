@@ -144,3 +144,48 @@ func TestBookService_Bookshelf(t *testing.T) {
 		})
 	}
 }
+
+func TestBookService_Review(t *testing.T) {
+	testCases := map[string]struct {
+		Review   *book.Review
+		Expected error
+	}{
+		"ok": {
+			Review: &book.Review{
+				ID:         0,
+				BookID:     1,
+				UserID:     "00000000-0000-0000-0000-000000000000",
+				Score:      5,
+				Impression: "書籍の感想です。",
+				CreatedAt:  time.Time{},
+				UpdatedAt:  time.Time{},
+			},
+			Expected: nil,
+		},
+	}
+
+	for result, tc := range testCases {
+		t.Run(result, func(t *testing.T) {
+			ctx, cancel := context.WithCancel(context.Background())
+			defer cancel()
+
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			bvm := mock_book.NewMockRepository(ctrl)
+			bvm.EXPECT().
+				GetReviewIDByUserIDAndBookID(ctx, tc.Review.UserID, tc.Review.BookID).
+				Return(tc.Review.ID, nil)
+
+			t.Run(result, func(t *testing.T) {
+				target := NewBookDomainValidation(bvm)
+
+				err := target.Review(ctx, tc.Review)
+				if !reflect.DeepEqual(err, tc.Expected) {
+					t.Fatalf("want %#v, but %#v", tc.Expected, err)
+					return
+				}
+			})
+		})
+	}
+}

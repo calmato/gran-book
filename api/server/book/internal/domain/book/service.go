@@ -25,4 +25,5 @@ type Service interface {
 	Validation(ctx context.Context, b *Book) error
 	ValidationAuthor(ctx context.Context, a *Author) error
 	ValidationBookshelf(ctx context.Context, b *Bookshelf) error
+	ValidationReview(ctx context.Context, b *Review) error
 }

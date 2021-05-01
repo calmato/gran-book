@@ -27,4 +27,5 @@ type Repository interface {
 	DeleteBookshelf(ctx context.Context, bookshelfID int) error
 	GetIDByIsbn(ctx context.Context, isbn string) (int, error)
 	GetBookshelfIDByUserIDAndBookID(ctx context.Context, userID string, bookID int) (int, error)
+	GetReviewIDByUserIDAndBookID(ctx context.Context, userID string, bookID int) (int, error)
 }
