@@ -131,7 +131,6 @@ func TestBookApplication_Show(t *testing.T) {
 					UpdatedAt:    time.Time{},
 					Authors:      []*book.Author{},
 					Reviews:      []*book.Review{},
-					Bookshelf:    &book.Bookshelf{},
 				},
 				Error: nil,
 			},
@@ -401,7 +400,6 @@ func TestBookApplication_CreateOrUpdateBookshelf(t *testing.T) {
 					UpdatedAt:    time.Time{},
 					Authors:      []*book.Author{},
 					Reviews:      []*book.Review{},
-					Bookshelf:    &book.Bookshelf{},
 				},
 				Bookshelf: &book.Bookshelf{
 					UserID: "00000000-0000-0000-0000-000000000000",
@@ -438,7 +436,6 @@ func TestBookApplication_CreateOrUpdateBookshelf(t *testing.T) {
 					UpdatedAt:    time.Time{},
 					Authors:      []*book.Author{},
 					Reviews:      []*book.Review{},
-					Bookshelf:    &book.Bookshelf{},
 				},
 				Bookshelf: &book.Bookshelf{
 					ID:        1,

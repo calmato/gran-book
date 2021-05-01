@@ -31,7 +31,6 @@ func TestBookService_Book(t *testing.T) {
 				UpdatedAt:    time.Time{},
 				Authors:      []*book.Author{},
 				Reviews:      []*book.Review{},
-				Bookshelf:    &book.Bookshelf{},
 			},
 			Expected: nil,
 		},
