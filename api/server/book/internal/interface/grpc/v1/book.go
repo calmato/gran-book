@@ -41,7 +41,7 @@ func (s *BookServer) ListBookshelf(
 	return res, nil
 }
 
-func (s *BookServer) ShowBook(ctx context.Context, req *pb.ShowBookRequest) (*pb.BookResponse, error) {
+func (s *BookServer) GetBook(ctx context.Context, req *pb.GetBookRequest) (*pb.BookResponse, error) {
 	_, err := s.AuthApplication.Authentication(ctx)
 	if err != nil {
 		return nil, errorHandling(err)
@@ -287,29 +287,6 @@ func getBookResponse(b *book.Book) *pb.BookResponse {
 		as[i] = a
 	}
 
-	rs := make([]*pb.BookResponse_Review, len(b.Reviews))
-	for i, v := range b.Reviews {
-		r := &pb.BookResponse_Review{
-			Id:         int64(v.ID),
-			UserId:     v.UserID,
-			Score:      int32(v.Score),
-			Impression: v.Impression,
-			CreatedAt:  datetime.TimeToString(v.CreatedAt),
-			UpdatedAt:  datetime.TimeToString(v.UpdatedAt),
-		}
-
-		rs[i] = r
-	}
-
-	bs := &pb.BookResponse_Bookshelf{}
-	if b.Bookshelf != nil {
-		bs.Id = int64(b.Bookshelf.ID)
-		bs.Status = int32(b.Bookshelf.Status)
-		bs.ReadOn = datetime.DateToString(b.Bookshelf.ReadOn)
-		bs.CreatedAt = datetime.TimeToString(b.Bookshelf.CreatedAt)
-		bs.UpdatedAt = datetime.TimeToString(b.Bookshelf.UpdatedAt)
-	}
-
 	return &pb.BookResponse{
 		Id:             int64(b.ID),
 		Title:          b.Title,
@@ -324,20 +301,19 @@ func getBookResponse(b *book.Book) *pb.BookResponse {
 		CreatedAt:      datetime.TimeToString(b.CreatedAt),
 		UpdatedAt:      datetime.TimeToString(b.UpdatedAt),
 		Authors:        as,
-		Reviews:        rs,
-		Bookshelf:      bs,
 	}
 }
 
 func getBookshelfResponse(bs *book.Bookshelf) *pb.BookshelfResponse {
 	return &pb.BookshelfResponse{
-		Id:        int64(bs.ID),
-		BookId:    int64(bs.BookID),
-		UserId:    bs.UserID,
-		Status:    int32(bs.Status),
-		ReadOn:    datetime.DateToString(bs.ReadOn),
-		CreatedAt: datetime.TimeToString(bs.CreatedAt),
-		UpdatedAt: datetime.TimeToString(bs.UpdatedAt),
+		Id:         int64(bs.ID),
+		BookId:     int64(bs.BookID),
+		UserId:     bs.UserID,
+		Status:     int32(bs.Status),
+		Impression: "",
+		ReadOn:     datetime.DateToString(bs.ReadOn),
+		CreatedAt:  datetime.TimeToString(bs.CreatedAt),
+		UpdatedAt:  datetime.TimeToString(bs.UpdatedAt),
 	}
 }
 
