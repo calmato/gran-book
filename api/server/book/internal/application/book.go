@@ -215,6 +215,19 @@ func (a *bookApplication) CreateOrUpdateBookshelf(
 	bs.Book = b
 	bs.Review = rv
 
+	if bs.Status == book.ReadStatus && in.Impression != "" {
+		if bs.Review == nil {
+			bs.Review = &book.Review{}
+		}
+
+		bs.Review.Impression = in.Impression
+
+		err = a.bookService.ValidationReview(ctx, bs.Review)
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	err = a.bookService.ValidationBookshelf(ctx, bs)
 	if err != nil {
 		return nil, err
