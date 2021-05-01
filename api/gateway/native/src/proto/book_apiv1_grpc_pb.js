@@ -182,8 +182,8 @@ var BookServiceService = exports.BookServiceService = {
     responseSerialize: serialize_proto_BookshelfListResponse,
     responseDeserialize: deserialize_proto_BookshelfListResponse,
   },
-  showBook: {
-    path: '/proto.BookService/ShowBook',
+  getBook: {
+    path: '/proto.BookService/GetBook',
     requestStream: false,
     responseStream: false,
     requestType: proto_book_apiv1_pb.ShowBookRequest,

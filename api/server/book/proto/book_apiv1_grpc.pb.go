@@ -18,7 +18,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type BookServiceClient interface {
 	ListBookshelf(ctx context.Context, in *ListBookshelfRequest, opts ...grpc.CallOption) (*BookshelfListResponse, error)
-	ShowBook(ctx context.Context, in *ShowBookRequest, opts ...grpc.CallOption) (*BookResponse, error)
+	GetBook(ctx context.Context, in *ShowBookRequest, opts ...grpc.CallOption) (*BookResponse, error)
 	CreateBook(ctx context.Context, in *CreateBookRequest, opts ...grpc.CallOption) (*BookResponse, error)
 	UpdateBook(ctx context.Context, in *UpdateBookRequest, opts ...grpc.CallOption) (*BookResponse, error)
 	ReadBookshelf(ctx context.Context, in *ReadBookshelfRequest, opts ...grpc.CallOption) (*BookshelfResponse, error)
@@ -47,9 +47,9 @@ func (c *bookServiceClient) ListBookshelf(ctx context.Context, in *ListBookshelf
 	return out, nil
 }
 
-func (c *bookServiceClient) ShowBook(ctx context.Context, in *ShowBookRequest, opts ...grpc.CallOption) (*BookResponse, error) {
+func (c *bookServiceClient) GetBook(ctx context.Context, in *ShowBookRequest, opts ...grpc.CallOption) (*BookResponse, error) {
 	out := new(BookResponse)
-	err := c.cc.Invoke(ctx, "/proto.BookService/ShowBook", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/proto.BookService/GetBook", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -142,7 +142,7 @@ func (c *bookServiceClient) DeleteBookshelf(ctx context.Context, in *DeleteBooks
 // for forward compatibility
 type BookServiceServer interface {
 	ListBookshelf(context.Context, *ListBookshelfRequest) (*BookshelfListResponse, error)
-	ShowBook(context.Context, *ShowBookRequest) (*BookResponse, error)
+	GetBook(context.Context, *ShowBookRequest) (*BookResponse, error)
 	CreateBook(context.Context, *CreateBookRequest) (*BookResponse, error)
 	UpdateBook(context.Context, *UpdateBookRequest) (*BookResponse, error)
 	ReadBookshelf(context.Context, *ReadBookshelfRequest) (*BookshelfResponse, error)
@@ -162,8 +162,8 @@ type UnimplementedBookServiceServer struct {
 func (UnimplementedBookServiceServer) ListBookshelf(context.Context, *ListBookshelfRequest) (*BookshelfListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListBookshelf not implemented")
 }
-func (UnimplementedBookServiceServer) ShowBook(context.Context, *ShowBookRequest) (*BookResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ShowBook not implemented")
+func (UnimplementedBookServiceServer) GetBook(context.Context, *ShowBookRequest) (*BookResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetBook not implemented")
 }
 func (UnimplementedBookServiceServer) CreateBook(context.Context, *CreateBookRequest) (*BookResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateBook not implemented")
@@ -223,20 +223,20 @@ func _BookService_ListBookshelf_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
-func _BookService_ShowBook_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _BookService_GetBook_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ShowBookRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BookServiceServer).ShowBook(ctx, in)
+		return srv.(BookServiceServer).GetBook(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/proto.BookService/ShowBook",
+		FullMethod: "/proto.BookService/GetBook",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BookServiceServer).ShowBook(ctx, req.(*ShowBookRequest))
+		return srv.(BookServiceServer).GetBook(ctx, req.(*ShowBookRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -412,8 +412,8 @@ var _BookService_serviceDesc = grpc.ServiceDesc{
 			Handler:    _BookService_ListBookshelf_Handler,
 		},
 		{
-			MethodName: "ShowBook",
-			Handler:    _BookService_ShowBook_Handler,
+			MethodName: "GetBook",
+			Handler:    _BookService_GetBook_Handler,
 		},
 		{
 			MethodName: "CreateBook",
