@@ -156,10 +156,11 @@ func (s *BookServer) ReadBookshelf(
 	}
 
 	in := &input.Bookshelf{
-		UserID: cuid,
-		BookID: int(req.GetBookId()),
-		Status: book.ReadStatus,
-		ReadOn: req.GetReadOn(),
+		UserID:     cuid,
+		BookID:     int(req.GetBookId()),
+		Status:     book.ReadStatus,
+		ReadOn:     req.GetReadOn(),
+		Impression: req.GetImpression(),
 	}
 
 	bs, err := s.BookApplication.CreateOrUpdateBookshelf(ctx, in)
