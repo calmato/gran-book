@@ -13,7 +13,6 @@ import {
   ReadBookshelfRequest,
   ReadingBookshelfRequest,
   ReleaseBookshelfRequest,
-  ShowBookRequest,
   StackBookshelfRequest,
   UpdateBookRequest,
   WantBookshelfRequest,
@@ -26,7 +25,6 @@ import {
   IReadBookshelfInput,
   IReadingBookshelfInput,
   IReleaseBookshelfInput,
-  IShowBookInput,
   IStackBookshelfInput,
   IUpdateBookInput,
   IWantBookshelfInput,
@@ -64,8 +62,8 @@ export function listBookshelf(req: Request<any>, input: IListBookshelfInput): Pr
   })
 }
 
-export function showBook(req: Request<any>, input: IShowBookInput): Promise<IBookOutput> {
-  const request = new ShowBookRequest()
+export function getBook(req: Request<any>, input: IGetBookInput): Promise<IBookOutput> {
+  const request = new GetBookRequest()
   const metadata = getGrpcMetadata(req)
 
   request.setIsbn(input.isbn)

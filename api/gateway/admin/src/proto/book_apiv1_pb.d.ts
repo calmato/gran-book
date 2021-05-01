@@ -49,21 +49,21 @@ export namespace ListBookshelfRequest {
     }
 }
 
-export class ShowBookRequest extends jspb.Message { 
+export class GetBookRequest extends jspb.Message { 
     getIsbn(): string;
-    setIsbn(value: string): ShowBookRequest;
+    setIsbn(value: string): GetBookRequest;
 
     serializeBinary(): Uint8Array;
-    toObject(includeInstance?: boolean): ShowBookRequest.AsObject;
-    static toObject(includeInstance: boolean, msg: ShowBookRequest): ShowBookRequest.AsObject;
+    toObject(includeInstance?: boolean): GetBookRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: GetBookRequest): GetBookRequest.AsObject;
     static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
     static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-    static serializeBinaryToWriter(message: ShowBookRequest, writer: jspb.BinaryWriter): void;
-    static deserializeBinary(bytes: Uint8Array): ShowBookRequest;
-    static deserializeBinaryFromReader(message: ShowBookRequest, reader: jspb.BinaryReader): ShowBookRequest;
+    static serializeBinaryToWriter(message: GetBookRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): GetBookRequest;
+    static deserializeBinaryFromReader(message: GetBookRequest, reader: jspb.BinaryReader): GetBookRequest;
 }
 
-export namespace ShowBookRequest {
+export namespace GetBookRequest {
     export type AsObject = {
         isbn: string,
     }

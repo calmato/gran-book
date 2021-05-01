@@ -81,6 +81,17 @@ function deserialize_proto_EmptyBook(buffer_arg) {
   return proto_book_apiv1_pb.EmptyBook.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_proto_GetBookRequest(arg) {
+  if (!(arg instanceof proto_book_apiv1_pb.GetBookRequest)) {
+    throw new Error('Expected argument of type proto.GetBookRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_GetBookRequest(buffer_arg) {
+  return proto_book_apiv1_pb.GetBookRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_proto_ListBookshelfRequest(arg) {
   if (!(arg instanceof proto_book_apiv1_pb.ListBookshelfRequest)) {
     throw new Error('Expected argument of type proto.ListBookshelfRequest');
@@ -123,17 +134,6 @@ function serialize_proto_ReleaseBookshelfRequest(arg) {
 
 function deserialize_proto_ReleaseBookshelfRequest(buffer_arg) {
   return proto_book_apiv1_pb.ReleaseBookshelfRequest.deserializeBinary(new Uint8Array(buffer_arg));
-}
-
-function serialize_proto_ShowBookRequest(arg) {
-  if (!(arg instanceof proto_book_apiv1_pb.ShowBookRequest)) {
-    throw new Error('Expected argument of type proto.ShowBookRequest');
-  }
-  return Buffer.from(arg.serializeBinary());
-}
-
-function deserialize_proto_ShowBookRequest(buffer_arg) {
-  return proto_book_apiv1_pb.ShowBookRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 function serialize_proto_StackBookshelfRequest(arg) {
@@ -186,10 +186,10 @@ var BookServiceService = exports.BookServiceService = {
     path: '/proto.BookService/GetBook',
     requestStream: false,
     responseStream: false,
-    requestType: proto_book_apiv1_pb.ShowBookRequest,
+    requestType: proto_book_apiv1_pb.GetBookRequest,
     responseType: proto_book_apiv1_pb.BookResponse,
-    requestSerialize: serialize_proto_ShowBookRequest,
-    requestDeserialize: deserialize_proto_ShowBookRequest,
+    requestSerialize: serialize_proto_GetBookRequest,
+    requestDeserialize: deserialize_proto_GetBookRequest,
     responseSerialize: serialize_proto_BookResponse,
     responseDeserialize: deserialize_proto_BookResponse,
   },

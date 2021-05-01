@@ -6,7 +6,7 @@ option go_package = "github.com/calmato/gran-book/proto";
 
 service BookService {
   rpc ListBookshelf(ListBookshelfRequest) returns (BookshelfListResponse);
-  rpc GetBook(ShowBookRequest) returns (BookResponse);
+  rpc GetBook(GetBookRequest) returns (BookResponse);
   rpc CreateBook(CreateBookRequest) returns (BookResponse);
   rpc UpdateBook(UpdateBookRequest) returns (BookResponse);
   rpc ReadBookshelf(ReadBookshelfRequest) returns (BookshelfResponse);
@@ -26,7 +26,7 @@ message ListBookshelfRequest {
   int64 offset = 3;
 }
 
-message ShowBookRequest {
+message GetBookRequest {
   string isbn = 1;
 }
 

@@ -4,7 +4,7 @@ export interface IListBookshelfInput {
   offset: number
 }
 
-export interface IShowBookInput {
+export interface IGetBookInput {
   isbn: string
 }
 
