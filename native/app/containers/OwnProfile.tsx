@@ -17,7 +17,7 @@ export default function ConnectedOwnProfile(): JSX.Element {
         return dispatch(getOwnProfileAsync(auth.id));
       },
     }),
-    [dispatch],
+    [dispatch, auth.id],
   );
 
   return (

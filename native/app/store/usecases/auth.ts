@@ -109,7 +109,7 @@ export function signInWithEmailAsync(email: string, password: string) {
       })
       .then(async (res: IAuth) => {
         const { user, token } = res;
-        console.log(token)
+        console.log(token);
         const values: Auth.AuthValues = {
           id: user.uid,
           email: user.email || undefined,
@@ -254,7 +254,7 @@ export function getAuthAsync() {
         await LocalStorage.AuthStorage.save(auth);
       })
       .catch((err: Error) => {
-        alert(err)
+        alert(err);
         throw err;
       });
   };

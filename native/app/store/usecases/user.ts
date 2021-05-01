@@ -39,6 +39,8 @@ export function getOwnProfileAsync(id: string) {
           products,
         };
 
+        console.log(values);
+
         dispatch(setUser(values));
       })
       .catch((err: Error) => {
