@@ -61,7 +61,7 @@ const BookShow = function BookShow(props: Props): ReactElement {
   const { book } = props.route.params;
   const [_wbResult, setWbResult] = useState<WebBrowser.WebBrowserResult>();
   const [showMessage, setShowMessage] = useState<boolean>(false);
-  const [isRegister, _setIsRegister] = useState<boolean>(false);
+  const [isRegister, _setIsRegister] = useState<boolean>(true);
 
   // TODO: エラーハンドリング
   const handleAddBookButton = async () => {
@@ -134,6 +134,7 @@ const BookShow = function BookShow(props: Props): ReactElement {
         {
           isRegister ?
             <ButtonGroupBookFooter
+              status='読んだ本'
               handleNavigateToReadBoook={() => undefined}
               handleNavigateToReadingBoook={() => undefined}
               handleNavigateToTsundoku={() => undefined}
