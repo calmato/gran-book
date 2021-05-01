@@ -13,8 +13,18 @@ import { useNavigation } from '@react-navigation/native';
 import { UiContext } from '~/lib/context';
 import { Status } from '~/lib/context/ui';
 import { generateErrorMessage } from '~/lib/util/ErrorUtil';
+import { Auth } from '~/store/models';
+import { useReduxDispatch } from '~/store/modules';
+import { setAuth, setProfile } from '~/store/modules/auth';
+import * as LocalStorage from '~/lib/local-storage';
+import { getAuthAsync } from '~/store/usecases';
 
 type AuthSignInNavigationProp = StackNavigationProp<AuthStackParamList, 'SignUp'>;
+
+interface IAuth {
+  user: Firebase.User;
+  token: string;
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -59,16 +69,11 @@ const SignInSelect = function SignInSelect(props: Props): ReactElement {
   const handleSignInWithGoogle = () => {
     promptAsync()
       .then(() => {
-        console.log('loggedIn');
-        return getAuth();
-      })
-      .then(() => {
-        console.log('gotAuth');
-        setApplicationState(Status.AUTHORIZED);
+        // console.log('loggedIn');
+        // return getAuth();
       })
       .catch((err) => {
-        console.log(err);
-        createAlertNotifySignupError(err.code);
+        alert(err)
       });
   };
 
@@ -77,7 +82,38 @@ const SignInSelect = function SignInSelect(props: Props): ReactElement {
       const { id_token } = response.params;
       
       const credential = Firebase.auth.GoogleAuthProvider.credential(id_token);
-      Firebase.auth().signInWithCredential(credential);
+      Firebase.auth().signInWithCredential(credential)
+      .then(() => async (res: IAuth) => {
+        const { user, token } = res;
+        alert(user)
+        alert(token)
+        const values: Auth.AuthValues = {
+          id: user.uid,
+          email: user.email || undefined,
+          emailVerified: user.emailVerified,
+          token,
+        };
+
+        const model: Auth.Model = {
+          ...Auth.initialState,
+          id: values.id,
+          token: values.token,
+          email: values.email || '',
+          emailVerified: values.emailVerified || false,
+        };
+        const dispatch = useReduxDispatch();
+        dispatch(setAuth(values));
+        await LocalStorage.AuthStorage.save(model);
+      })
+      .then(async() => {
+        await getAuthAsync()
+      })      
+      .then(() => {
+        setApplicationState(Status.AUTHORIZED);
+      })
+      .catch((err) => {
+        alert(err)
+      });
     }
   }, [response]);
 

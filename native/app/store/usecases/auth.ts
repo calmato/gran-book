@@ -246,6 +246,8 @@ export function getAuthAsync() {
           createdAt,
           updatedAt,
         };
+        
+        alert(values)
 
         dispatch(setProfile(values));
 
@@ -253,6 +255,7 @@ export function getAuthAsync() {
         await LocalStorage.AuthStorage.save(auth);
       })
       .catch((err: Error) => {
+        alert(err)
         throw err;
       });
   };
