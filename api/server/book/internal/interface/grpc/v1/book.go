@@ -277,14 +277,14 @@ func (s *BookServer) DeleteBookshelf(ctx context.Context, req *pb.DeleteBookshel
 }
 
 func getBookResponse(b *book.Book) *pb.BookResponse {
-	as := make([]*pb.BookResponse_Author, len(b.Authors))
-	for i, v := range b.Authors {
-		a := &pb.BookResponse_Author{
-			Name:     v.Name,
-			NameKana: v.NameKana,
+	authors := make([]*pb.BookResponse_Author, len(b.Authors))
+	for i, a := range b.Authors {
+		author := &pb.BookResponse_Author{
+			Name:     a.Name,
+			NameKana: a.NameKana,
 		}
 
-		as[i] = a
+		authors[i] = author
 	}
 
 	return &pb.BookResponse{
@@ -300,21 +300,58 @@ func getBookResponse(b *book.Book) *pb.BookResponse {
 		RakutenGenreId: b.RakutenGenreID,
 		CreatedAt:      datetime.TimeToString(b.CreatedAt),
 		UpdatedAt:      datetime.TimeToString(b.UpdatedAt),
-		Authors:        as,
+		Authors:        authors,
 	}
 }
 
 func getBookshelfResponse(bs *book.Bookshelf) *pb.BookshelfResponse {
-	return &pb.BookshelfResponse{
-		Id:         int64(bs.ID),
-		BookId:     int64(bs.BookID),
-		UserId:     bs.UserID,
-		Status:     int32(bs.Status),
-		Impression: "",
-		ReadOn:     datetime.DateToString(bs.ReadOn),
-		CreatedAt:  datetime.TimeToString(bs.CreatedAt),
-		UpdatedAt:  datetime.TimeToString(bs.UpdatedAt),
+	authors := make([]*pb.BookshelfResponse_Author, len(bs.Book.Authors))
+	for i, a := range bs.Book.Authors {
+		author := &pb.BookshelfResponse_Author{
+			Name:     a.Name,
+			NameKana: a.NameKana,
+		}
+
+		authors[i] = author
 	}
+
+	book := &pb.BookshelfResponse_Book{
+		Id:             int64(bs.Book.ID),
+		Title:          bs.Book.Title,
+		TitleKana:      bs.Book.TitleKana,
+		Description:    bs.Book.Description,
+		Isbn:           bs.Book.Isbn,
+		Publisher:      bs.Book.Publisher,
+		PublishedOn:    bs.Book.PublishedOn,
+		ThumbnailUrl:   bs.Book.ThumbnailURL,
+		RakutenUrl:     bs.Book.RakutenURL,
+		RakutenGenreId: bs.Book.RakutenGenreID,
+		CreatedAt:      datetime.TimeToString(bs.Book.CreatedAt),
+		UpdatedAt:      datetime.TimeToString(bs.Book.UpdatedAt),
+		Authors:        authors,
+	}
+
+	res := &pb.BookshelfResponse{
+		Id:        int64(bs.ID),
+		BookId:    int64(bs.BookID),
+		UserId:    bs.UserID,
+		Status:    int32(bs.Status),
+		ReadOn:    datetime.DateToString(bs.ReadOn),
+		CreatedAt: datetime.TimeToString(bs.CreatedAt),
+		UpdatedAt: datetime.TimeToString(bs.UpdatedAt),
+		Book:      book,
+	}
+
+	if bs.Review != nil {
+		review := &pb.BookshelfResponse_Review{
+			Score:      int32(bs.Review.Score),
+			Impression: bs.Review.Impression,
+		}
+
+		res.Review = review
+	}
+
+	return res
 }
 
 func getBookshelfListResponse(bss []*book.Bookshelf, out *output.ListQuery) *pb.BookshelfListResponse {

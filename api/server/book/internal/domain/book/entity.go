@@ -4,21 +4,20 @@ import "time"
 
 // Book - 書籍エンティティ
 type Book struct {
-	ID             int        `gorm:"primaryKey;autoIncrement;<-:create"`
-	Title          string     `gorm:"uniqueIndex:ui_books_01;uniqueIndex:ui_books_02"`
-	TitleKana      string     `gorm:""`
-	Description    string     `gorm:""`
-	Isbn           string     `gorm:""`
-	Publisher      string     `gorm:""`
-	PublishedOn    string     `gorm:""`
-	ThumbnailURL   string     `gorm:""`
-	RakutenURL     string     `gorm:""`
-	RakutenGenreID string     `gorm:""`
-	CreatedAt      time.Time  `gorm:"<-:create"`
-	UpdatedAt      time.Time  `gorm:""`
-	Authors        []*Author  `gorm:"many2many:authors_books"`
-	Bookshelf      *Bookshelf `gorm:"foreignKey:BookID;constraint:OnDelete:CASCADE"`
-	Reviews        []*Review  `gorm:"foreignKey:BookID;constraint:OnDelete:CASCADE"`
+	ID             int       `gorm:"primaryKey;autoIncrement;<-:create"`
+	Title          string    `gorm:"uniqueIndex:ui_books_01;uniqueIndex:ui_books_02"`
+	TitleKana      string    `gorm:""`
+	Description    string    `gorm:""`
+	Isbn           string    `gorm:""`
+	Publisher      string    `gorm:""`
+	PublishedOn    string    `gorm:""`
+	ThumbnailURL   string    `gorm:""`
+	RakutenURL     string    `gorm:""`
+	RakutenGenreID string    `gorm:""`
+	CreatedAt      time.Time `gorm:"<-:create"`
+	UpdatedAt      time.Time `gorm:""`
+	Authors        []*Author `gorm:"many2many:authors_books"`
+	Reviews        []*Review `gorm:"foreignKey:BookID;constraint:OnDelete:CASCADE"`
 }
 
 // Author - 著者エンティティ
@@ -40,6 +39,7 @@ type Bookshelf struct {
 	CreatedAt time.Time `gorm:"<-:create"`
 	UpdatedAt time.Time `gorm:""`
 	Book      *Book     `gorm:""`
+	Review    *Review   `gorm:""`
 }
 
 // Review - レビューエンティティ

@@ -215,6 +215,8 @@ func (a *bookApplication) CreateOrUpdateBookshelf(
 		}
 	}
 
+	bs.Book = b
+
 	return bs, nil
 }
 
