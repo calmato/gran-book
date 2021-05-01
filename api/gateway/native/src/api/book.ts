@@ -9,6 +9,7 @@ import {
   CreateBookRequest,
   DeleteBookshelfRequest,
   EmptyBook,
+  GetBookRequest,
   ListBookshelfRequest,
   ReadBookshelfRequest,
   ReadingBookshelfRequest,
@@ -21,6 +22,7 @@ import {
   IBookInputAuthor,
   ICreateBookInput,
   IDeleteBookshelfInput,
+  IGetBookInput,
   IListBookshelfInput,
   IReadBookshelfInput,
   IReadingBookshelfInput,
@@ -69,7 +71,7 @@ export function getBook(req: Request<any>, input: IGetBookInput): Promise<IBookO
   request.setIsbn(input.isbn)
 
   return new Promise((resolve: (output: IBookOutput) => void, reject: (reason: Error) => void) => {
-    bookClient.showBook(request, metadata, (err: any, res: BookResponse) => {
+    bookClient.getBook(request, metadata, (err: any, res: BookResponse) => {
       if (err) {
         reject(getGrpcError(err))
         return

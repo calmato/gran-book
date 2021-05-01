@@ -1,7 +1,7 @@
 import express, { NextFunction, Request, Response } from 'express'
-import { createBook, showBook, updateBook } from '~/api'
+import { createBook, getBook, updateBook } from '~/api'
 import { GrpcError } from '~/types/exception'
-import { IBookInputAuthor, ICreateBookInput, IShowBookInput, IUpdateBookInput } from '~/types/input'
+import { IBookInputAuthor, ICreateBookInput, IGetBookInput, IUpdateBookInput } from '~/types/input'
 import { IBookOutput, IBookOutputAuthor, IBookOutputReview } from '~/types/output'
 import { ICreateBookRequest, IUpdateBookRequest } from '~/types/request'
 import { IBookResponse, IBookResponseBookshelf, IBookResponseReview, IBookResponseUser } from '~/types/response'
@@ -121,11 +121,11 @@ router.get(
   async (req: Request, res: Response<IBookResponse>, next: NextFunction): Promise<void> => {
     const { isbn } = req.params
 
-    const input: IShowBookInput = {
+    const input: IGetBookInput = {
       isbn,
     }
 
-    await showBook(req, input)
+    await getBook(req, input)
       .then((output: IBookOutput) => {
         // TODO: User情報の取得
         const response: IBookResponse = setBookResponse(output)
