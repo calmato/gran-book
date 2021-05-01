@@ -34,8 +34,6 @@ import {
 import {
   IBookOutput,
   IBookOutputAuthor,
-  IBookOutputBookshelf,
-  IBookOutputReview,
   IBookshelfListOutput,
   IBookshelfListOutputAuthor,
   IBookshelfListOutputBook,
@@ -273,14 +271,6 @@ export function deleteBookshelf(req: Request<any>, input: IDeleteBookshelfInput)
 }
 
 function setBookOutput(res: BookResponse): IBookOutput {
-  const bookshelf: IBookOutputBookshelf = {
-    id: res.getBookshelf()?.getId() || 0,
-    status: res.getBookshelf()?.getStatus() || 0,
-    readOn: res.getBookshelf()?.getReadOn() || '',
-    createdAt: res.getBookshelf()?.getCreatedAt() || '',
-    updatedAt: res.getBookshelf()?.getUpdatedAt() || '',
-  }
-
   const authors = res.getAuthorsList().map((item: BookResponse.Author) => {
     const author: IBookOutputAuthor = {
       name: item.getName(),
@@ -288,19 +278,6 @@ function setBookOutput(res: BookResponse): IBookOutput {
     }
 
     return author
-  })
-
-  const reviews = res.getReviewsList().map((item: BookResponse.Review) => {
-    const reviews: IBookOutputReview = {
-      id: item.getId(),
-      userId: item.getUserId(),
-      score: item.getScore(),
-      impression: item.getImpression(),
-      createdAt: item.getCreatedAt(),
-      updatedAt: item.getUpdatedAt(),
-    }
-
-    return reviews
   })
 
   const output: IBookOutput = {
@@ -316,9 +293,7 @@ function setBookOutput(res: BookResponse): IBookOutput {
     rakutenGenreId: res.getRakutenGenreId(),
     createdAt: res.getCreatedAt(),
     updatedAt: res.getUpdatedAt(),
-    bookshelf,
     authors,
-    reviews,
   }
 
   return output

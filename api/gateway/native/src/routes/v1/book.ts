@@ -2,9 +2,9 @@ import express, { NextFunction, Request, Response } from 'express'
 import { createBook, getBook, updateBook } from '~/api'
 import { GrpcError } from '~/types/exception'
 import { IBookInputAuthor, ICreateBookInput, IGetBookInput, IUpdateBookInput } from '~/types/input'
-import { IBookOutput, IBookOutputAuthor, IBookOutputReview } from '~/types/output'
+import { IBookOutput, IBookOutputAuthor } from '~/types/output'
 import { ICreateBookRequest, IUpdateBookRequest } from '~/types/request'
-import { IBookResponse, IBookResponseBookshelf, IBookResponseReview, IBookResponseUser } from '~/types/response'
+import { IBookResponse, IBookResponseBookshelf } from '~/types/response'
 
 const router = express.Router()
 
@@ -54,7 +54,6 @@ router.post(
 
     await createBook(req, input)
       .then((output: IBookOutput) => {
-        // TODO: User情報の取得
         const response: IBookResponse = setBookResponse(output)
         res.status(200).json(response)
       })
@@ -108,7 +107,6 @@ router.patch(
 
     await updateBook(req, input)
       .then((output: IBookOutput) => {
-        // TODO: User情報の取得
         const response: IBookResponse = setBookResponse(output)
         res.status(200).json(response)
       })
@@ -127,7 +125,7 @@ router.get(
 
     await getBook(req, input)
       .then((output: IBookOutput) => {
-        // TODO: User情報の取得
+        // TODO: Bookshelf情報の取得
         const response: IBookResponse = setBookResponse(output)
         res.status(200).json(response)
       })
@@ -135,34 +133,7 @@ router.get(
   }
 )
 
-function setBookResponse(bookOutput: IBookOutput): IBookResponse {
-  const bookshelf: IBookResponseBookshelf = {
-    id: bookOutput.bookshelf?.id,
-    status: bookOutput.bookshelf?.status,
-    readOn: bookOutput.bookshelf?.readOn,
-    createdAt: bookOutput.bookshelf?.createdAt,
-    updatedAt: bookOutput.bookshelf?.updatedAt,
-  }
-
-  const reviews: IBookResponseReview[] = bookOutput.reviews.map((item: IBookOutputReview) => {
-    const user: IBookResponseUser = {
-      id: '',
-      username: '',
-      thumbnailUrl: '',
-    }
-
-    const review: IBookResponseReview = {
-      id: item.id,
-      score: item.score,
-      impression: item.impression,
-      createdAt: item.createdAt,
-      updatedAt: item.updatedAt,
-      user,
-    }
-
-    return review
-  })
-
+function setBookResponse(bookOutput: IBookOutput, bookshelfOutput?: any): IBookResponse {
   const authorNames: string[] = bookOutput.authors.map((item: IBookOutputAuthor) => {
     return item.name
   })
@@ -186,8 +157,20 @@ function setBookResponse(bookOutput: IBookOutput): IBookResponse {
     authorKana: authorNameKanas.join('/'),
     createdAt: bookOutput.createdAt,
     updatedAt: bookOutput.updatedAt,
-    bookshelf,
-    reviews,
+    bookshelf: undefined,
+  }
+
+  if (bookshelfOutput) {
+    const bookshelf: IBookResponseBookshelf = {
+      id: 0,
+      status: 0,
+      impression: '',
+      readOn: '',
+      createdAt: '',
+      updatedAt: '',
+    }
+
+    response.bookshelf = bookshelf
   }
 
   return response

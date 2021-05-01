@@ -13,29 +13,14 @@ export interface IBookResponse {
   authorKana: string
   createdAt: string
   updatedAt: string
-  bookshelf: IBookResponseBookshelf
-  reviews: Array<IBookResponseReview>
+  bookshelf?: IBookResponseBookshelf
 }
 
 export interface IBookResponseBookshelf {
   id: number
   status: number
+  impression: string
   readOn: string
   createdAt: string
   updatedAt: string
-}
-
-export interface IBookResponseReview {
-  id: number
-  score: number
-  impression: string
-  createdAt: string
-  updatedAt: string
-  user: IBookResponseUser
-}
-
-export interface IBookResponseUser {
-  id: string
-  username: string
-  thumbnailUrl: string
 }
