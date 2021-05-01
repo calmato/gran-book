@@ -15,6 +15,7 @@ import (
 type BookApplication interface {
 	ListBookshelf(ctx context.Context, in *input.ListBookshelf) ([]*book.Bookshelf, *output.ListQuery, error)
 	Show(ctx context.Context, isbn string) (*book.Book, error)
+	ShowBookshelf(ctx context.Context, userID string, bookID int) (*book.Bookshelf, error)
 	Create(ctx context.Context, in *input.Book) (*book.Book, error)
 	Update(ctx context.Context, in *input.Book) (*book.Book, error)
 	CreateOrUpdateBookshelf(ctx context.Context, in *input.Bookshelf) (*book.Bookshelf, error)
@@ -76,6 +77,10 @@ func (a *bookApplication) ListBookshelf(
 
 func (a *bookApplication) Show(ctx context.Context, isbn string) (*book.Book, error) {
 	return a.bookService.ShowByIsbn(ctx, isbn)
+}
+
+func (a *bookApplication) ShowBookshelf(ctx context.Context, userID string, bookID int) (*book.Bookshelf, error) {
+	return a.bookService.ShowBookshelfByUserIDAndBookID(ctx, userID, bookID)
 }
 
 func (a *bookApplication) Create(ctx context.Context, in *input.Book) (*book.Book, error) {

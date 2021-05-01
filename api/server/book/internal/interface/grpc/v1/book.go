@@ -56,6 +56,21 @@ func (s *BookServer) GetBook(ctx context.Context, req *pb.GetBookRequest) (*pb.B
 	return res, nil
 }
 
+func (s *BookServer) GetBookshelf(ctx context.Context, req *pb.GetBookshelfRequest) (*pb.BookshelfResponse, error) {
+	_, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	bs, err := s.BookApplication.ShowBookshelf(ctx, req.GetUserId(), int(req.GetBookId()))
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	res := getBookshelfResponse(bs)
+	return res, nil
+}
+
 func (s *BookServer) CreateBook(ctx context.Context, req *pb.CreateBookRequest) (*pb.BookResponse, error) {
 	_, err := s.AuthApplication.Authentication(ctx)
 	if err != nil {
