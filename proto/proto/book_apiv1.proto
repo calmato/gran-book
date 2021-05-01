@@ -99,21 +99,6 @@ message BookResponse {
     string name = 1;
     string name_kana = 2;
   }
-  message Review {
-    int64 id = 1;
-    string user_id = 2;
-    int32 score = 3;
-    string impression = 4;
-    string created_at = 5;
-    string updated_at = 6;
-  }
-  message Bookshelf {
-    int64 id = 1;
-    int32 status = 2;
-    string read_on = 3;
-    string created_at = 4;
-    string updated_at = 5;
-  }
   int64 id = 1;
   string title = 2;
   string title_kana = 3;
@@ -126,9 +111,7 @@ message BookResponse {
   string rakuten_genre_id = 10;
   string created_at = 11;
   string updated_at = 12;
-  Bookshelf bookshelf = 13;
-  repeated Author authors = 14;
-  repeated Review reviews = 15;
+  repeated Author authors = 13;
 }
 
 message BookshelfResponse {

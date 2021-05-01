@@ -388,19 +388,10 @@ export class BookResponse extends jspb.Message {
     setCreatedAt(value: string): BookResponse;
     getUpdatedAt(): string;
     setUpdatedAt(value: string): BookResponse;
-
-    hasBookshelf(): boolean;
-    clearBookshelf(): void;
-    getBookshelf(): BookResponse.Bookshelf | undefined;
-    setBookshelf(value?: BookResponse.Bookshelf): BookResponse;
     clearAuthorsList(): void;
     getAuthorsList(): Array<BookResponse.Author>;
     setAuthorsList(value: Array<BookResponse.Author>): BookResponse;
     addAuthors(value?: BookResponse.Author, index?: number): BookResponse.Author;
-    clearReviewsList(): void;
-    getReviewsList(): Array<BookResponse.Review>;
-    setReviewsList(value: Array<BookResponse.Review>): BookResponse;
-    addReviews(value?: BookResponse.Review, index?: number): BookResponse.Review;
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): BookResponse.AsObject;
@@ -426,9 +417,7 @@ export namespace BookResponse {
         rakutenGenreId: string,
         createdAt: string,
         updatedAt: string,
-        bookshelf?: BookResponse.Bookshelf.AsObject,
         authorsList: Array<BookResponse.Author.AsObject>,
-        reviewsList: Array<BookResponse.Review.AsObject>,
     }
 
 
@@ -452,73 +441,6 @@ export namespace BookResponse {
         export type AsObject = {
             name: string,
             nameKana: string,
-        }
-    }
-
-    export class Review extends jspb.Message { 
-        getId(): number;
-        setId(value: number): Review;
-        getUserId(): string;
-        setUserId(value: string): Review;
-        getScore(): number;
-        setScore(value: number): Review;
-        getImpression(): string;
-        setImpression(value: string): Review;
-        getCreatedAt(): string;
-        setCreatedAt(value: string): Review;
-        getUpdatedAt(): string;
-        setUpdatedAt(value: string): Review;
-
-        serializeBinary(): Uint8Array;
-        toObject(includeInstance?: boolean): Review.AsObject;
-        static toObject(includeInstance: boolean, msg: Review): Review.AsObject;
-        static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-        static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-        static serializeBinaryToWriter(message: Review, writer: jspb.BinaryWriter): void;
-        static deserializeBinary(bytes: Uint8Array): Review;
-        static deserializeBinaryFromReader(message: Review, reader: jspb.BinaryReader): Review;
-    }
-
-    export namespace Review {
-        export type AsObject = {
-            id: number,
-            userId: string,
-            score: number,
-            impression: string,
-            createdAt: string,
-            updatedAt: string,
-        }
-    }
-
-    export class Bookshelf extends jspb.Message { 
-        getId(): number;
-        setId(value: number): Bookshelf;
-        getStatus(): number;
-        setStatus(value: number): Bookshelf;
-        getReadOn(): string;
-        setReadOn(value: string): Bookshelf;
-        getCreatedAt(): string;
-        setCreatedAt(value: string): Bookshelf;
-        getUpdatedAt(): string;
-        setUpdatedAt(value: string): Bookshelf;
-
-        serializeBinary(): Uint8Array;
-        toObject(includeInstance?: boolean): Bookshelf.AsObject;
-        static toObject(includeInstance: boolean, msg: Bookshelf): Bookshelf.AsObject;
-        static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-        static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-        static serializeBinaryToWriter(message: Bookshelf, writer: jspb.BinaryWriter): void;
-        static deserializeBinary(bytes: Uint8Array): Bookshelf;
-        static deserializeBinaryFromReader(message: Bookshelf, reader: jspb.BinaryReader): Bookshelf;
-    }
-
-    export namespace Bookshelf {
-        export type AsObject = {
-            id: number,
-            status: number,
-            readOn: string,
-            createdAt: string,
-            updatedAt: string,
         }
     }
 
