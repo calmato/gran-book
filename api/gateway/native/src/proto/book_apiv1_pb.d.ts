@@ -69,6 +69,29 @@ export namespace GetBookRequest {
     }
 }
 
+export class GetBookshelfRequest extends jspb.Message { 
+    getUserId(): string;
+    setUserId(value: string): GetBookshelfRequest;
+    getBookId(): number;
+    setBookId(value: number): GetBookshelfRequest;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): GetBookshelfRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: GetBookshelfRequest): GetBookshelfRequest.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: GetBookshelfRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): GetBookshelfRequest;
+    static deserializeBinaryFromReader(message: GetBookshelfRequest, reader: jspb.BinaryReader): GetBookshelfRequest;
+}
+
+export namespace GetBookshelfRequest {
+    export type AsObject = {
+        userId: string,
+        bookId: number,
+    }
+}
+
 export class CreateBookRequest extends jspb.Message { 
     getTitle(): string;
     setTitle(value: string): CreateBookRequest;
