@@ -110,6 +110,21 @@ func (mr *MockRepositoryMockRecorder) ShowBookshelfByUserIDAndBookID(ctx, userID
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ShowBookshelfByUserIDAndBookID", reflect.TypeOf((*MockRepository)(nil).ShowBookshelfByUserIDAndBookID), ctx, userID, bookID)
 }
 
+// ShowReviewByUserIDAndBookID mocks base method
+func (m *MockRepository) ShowReviewByUserIDAndBookID(ctx context.Context, userID string, bookID int) (*book.Review, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ShowReviewByUserIDAndBookID", ctx, userID, bookID)
+	ret0, _ := ret[0].(*book.Review)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ShowReviewByUserIDAndBookID indicates an expected call of ShowReviewByUserIDAndBookID
+func (mr *MockRepositoryMockRecorder) ShowReviewByUserIDAndBookID(ctx, userID, bookID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ShowReviewByUserIDAndBookID", reflect.TypeOf((*MockRepository)(nil).ShowReviewByUserIDAndBookID), ctx, userID, bookID)
+}
+
 // ShowOrCreateAuthor mocks base method
 func (m *MockRepository) ShowOrCreateAuthor(ctx context.Context, a *book.Author) error {
 	m.ctrl.T.Helper()

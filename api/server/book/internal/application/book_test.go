@@ -211,6 +211,9 @@ func TestBookApplication_ShowBookshelf(t *testing.T) {
 		bsm.EXPECT().
 			ShowBookshelfByUserIDAndBookID(ctx, tc.UserID, tc.BookID).
 			Return(tc.Expected.Bookshelf, tc.Expected.Error)
+		bsm.EXPECT().
+			ShowReviewByUserIDAndBookID(ctx, tc.UserID, tc.BookID).
+			Return(tc.Expected.Bookshelf.Review, tc.Expected.Error)
 
 		t.Run(result, func(t *testing.T) {
 			target := NewBookApplication(brv, bsm)
@@ -432,7 +435,6 @@ func TestBookApplication_CreateOrUpdateBookshelf(t *testing.T) {
 		Input    *input.Bookshelf
 		Action   string
 		Expected struct {
-			Book      *book.Book
 			Bookshelf *book.Bookshelf
 			Error     error
 		}
@@ -446,29 +448,28 @@ func TestBookApplication_CreateOrUpdateBookshelf(t *testing.T) {
 			},
 			Action: "create",
 			Expected: struct {
-				Book      *book.Book
 				Bookshelf *book.Bookshelf
 				Error     error
 			}{
-				Book: &book.Book{
-					ID:           1,
-					Title:        "テスト書籍",
-					TitleKana:    "てすとしょせき",
-					Description:  "本の説明です",
-					Isbn:         "1234567890123",
-					Publisher:    "テスト著者",
-					PublishedOn:  "2021年12月24日",
-					ThumbnailURL: "",
-					CreatedAt:    time.Time{},
-					UpdatedAt:    time.Time{},
-					Authors:      []*book.Author{},
-					Reviews:      []*book.Review{},
-				},
 				Bookshelf: &book.Bookshelf{
 					UserID: "00000000-0000-0000-0000-000000000000",
 					BookID: 1,
 					Status: 1,
 					ReadOn: datetime.StringToDate("2020-01-01"),
+					Book: &book.Book{
+						ID:           1,
+						Title:        "テスト書籍",
+						TitleKana:    "てすとしょせき",
+						Description:  "本の説明です",
+						Isbn:         "1234567890123",
+						Publisher:    "テスト著者",
+						PublishedOn:  "2021年12月24日",
+						ThumbnailURL: "",
+						CreatedAt:    time.Time{},
+						UpdatedAt:    time.Time{},
+						Authors:      []*book.Author{},
+						Reviews:      []*book.Review{},
+					},
 				},
 				Error: nil,
 			},
@@ -482,24 +483,9 @@ func TestBookApplication_CreateOrUpdateBookshelf(t *testing.T) {
 			},
 			Action: "update",
 			Expected: struct {
-				Book      *book.Book
 				Bookshelf *book.Bookshelf
 				Error     error
 			}{
-				Book: &book.Book{
-					ID:           1,
-					Title:        "テスト書籍",
-					TitleKana:    "てすとしょせき",
-					Description:  "本の説明です",
-					Isbn:         "1234567890123",
-					Publisher:    "テスト著者",
-					PublishedOn:  "2021年12月24日",
-					ThumbnailURL: "",
-					CreatedAt:    time.Time{},
-					UpdatedAt:    time.Time{},
-					Authors:      []*book.Author{},
-					Reviews:      []*book.Review{},
-				},
 				Bookshelf: &book.Bookshelf{
 					ID:        1,
 					UserID:    "00000000-0000-0000-0000-000000000000",
@@ -508,6 +494,20 @@ func TestBookApplication_CreateOrUpdateBookshelf(t *testing.T) {
 					ReadOn:    datetime.StringToDate("2020-01-01"),
 					CreatedAt: current,
 					UpdatedAt: current,
+					Book: &book.Book{
+						ID:           1,
+						Title:        "テスト書籍",
+						TitleKana:    "てすとしょせき",
+						Description:  "本の説明です",
+						Isbn:         "1234567890123",
+						Publisher:    "テスト著者",
+						PublishedOn:  "2021年12月24日",
+						ThumbnailURL: "",
+						CreatedAt:    time.Time{},
+						UpdatedAt:    time.Time{},
+						Authors:      []*book.Author{},
+						Reviews:      []*book.Review{},
+					},
 				},
 				Error: nil,
 			},
@@ -525,8 +525,11 @@ func TestBookApplication_CreateOrUpdateBookshelf(t *testing.T) {
 		brv.EXPECT().Bookshelf(tc.Input).Return(nil)
 
 		bsm := mock_book.NewMockService(ctrl)
-		bsm.EXPECT().Show(ctx, tc.Input.BookID).Return(tc.Expected.Book, tc.Expected.Error)
+		bsm.EXPECT().Show(ctx, tc.Input.BookID).Return(tc.Expected.Bookshelf.Book, tc.Expected.Error)
 		bsm.EXPECT().ValidationBookshelf(ctx, gomock.Any()).Return(tc.Expected.Error)
+		bsm.EXPECT().
+			ShowReviewByUserIDAndBookID(ctx, tc.Input.UserID, tc.Input.BookID).
+			Return(tc.Expected.Bookshelf.Review, tc.Expected.Error)
 
 		switch tc.Action {
 		case "create":

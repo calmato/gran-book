@@ -110,6 +110,21 @@ func (mr *MockServiceMockRecorder) ShowBookshelfByUserIDAndBookID(ctx, userID, b
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ShowBookshelfByUserIDAndBookID", reflect.TypeOf((*MockService)(nil).ShowBookshelfByUserIDAndBookID), ctx, userID, bookID)
 }
 
+// ShowReviewByUserIDAndBookID mocks base method
+func (m *MockService) ShowReviewByUserIDAndBookID(ctx context.Context, userID string, bookID int) (*book.Review, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ShowReviewByUserIDAndBookID", ctx, userID, bookID)
+	ret0, _ := ret[0].(*book.Review)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ShowReviewByUserIDAndBookID indicates an expected call of ShowReviewByUserIDAndBookID
+func (mr *MockServiceMockRecorder) ShowReviewByUserIDAndBookID(ctx, userID, bookID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ShowReviewByUserIDAndBookID", reflect.TypeOf((*MockService)(nil).ShowReviewByUserIDAndBookID), ctx, userID, bookID)
+}
+
 // Create mocks base method
 func (m *MockService) Create(ctx context.Context, b *book.Book) error {
 	m.ctrl.T.Helper()

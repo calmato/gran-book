@@ -212,6 +212,8 @@ func (a *bookApplication) CreateOrUpdateBookshelf(
 	bs.UserID = in.UserID
 	bs.Status = in.Status
 	bs.ReadOn = datetime.StringToDate(in.ReadOn)
+	bs.Book = b
+	bs.Review = rv
 
 	err = a.bookService.ValidationBookshelf(ctx, bs)
 	if err != nil {
@@ -229,9 +231,6 @@ func (a *bookApplication) CreateOrUpdateBookshelf(
 			return nil, err
 		}
 	}
-
-	bs.Book = b
-	bs.Review = rv
 
 	return bs, nil
 }
