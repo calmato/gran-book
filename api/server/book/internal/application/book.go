@@ -80,7 +80,16 @@ func (a *bookApplication) Show(ctx context.Context, isbn string) (*book.Book, er
 }
 
 func (a *bookApplication) ShowBookshelf(ctx context.Context, userID string, bookID int) (*book.Bookshelf, error) {
-	return a.bookService.ShowBookshelfByUserIDAndBookID(ctx, userID, bookID)
+	bs, err := a.bookService.ShowBookshelfByUserIDAndBookID(ctx, userID, bookID)
+	if err != nil {
+		return nil, err
+	}
+
+	rv, _ := a.bookService.ShowReviewByUserIDAndBookID(ctx, userID, bookID)
+
+	bs.Review = rv
+
+	return bs, nil
 }
 
 func (a *bookApplication) Create(ctx context.Context, in *input.Book) (*book.Book, error) {
@@ -193,6 +202,7 @@ func (a *bookApplication) CreateOrUpdateBookshelf(
 		return nil, err
 	}
 
+	rv, _ := a.bookService.ShowReviewByUserIDAndBookID(ctx, in.UserID, b.ID)
 	bs, _ := a.bookService.ShowBookshelfByUserIDAndBookID(ctx, in.UserID, b.ID)
 	if bs == nil {
 		bs = &book.Bookshelf{}
@@ -221,6 +231,7 @@ func (a *bookApplication) CreateOrUpdateBookshelf(
 	}
 
 	bs.Book = b
+	bs.Review = rv
 
 	return bs, nil
 }

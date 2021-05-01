@@ -83,6 +83,19 @@ func (r *bookRepository) ShowBookshelfByUserIDAndBookID(
 	return b, nil
 }
 
+func (r *bookRepository) ShowReviewByUserIDAndBookID(
+	ctx context.Context, userID string, bookID int,
+) (*book.Review, error) {
+	rv := &book.Review{}
+
+	err := r.client.db.First(rv, "user_id = ? AND book_id = ?", userID, bookID).Error
+	if err != nil {
+		return nil, exception.NotFound.New(err)
+	}
+
+	return rv, nil
+}
+
 func (r *bookRepository) ShowOrCreateAuthor(ctx context.Context, a *book.Author) error {
 	err := r.client.db.Table("authors").Where("name = ?", a.Name).FirstOrCreate(&a).Error
 	if err != nil {

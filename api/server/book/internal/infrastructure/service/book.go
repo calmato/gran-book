@@ -43,6 +43,12 @@ func (s *bookService) ShowBookshelfByUserIDAndBookID(
 	return s.bookRepository.ShowBookshelfByUserIDAndBookID(ctx, userID, bookID)
 }
 
+func (s *bookService) ShowReviewByUserIDAndBookID(
+	ctx context.Context, userID string, bookID int,
+) (*book.Review, error) {
+	return s.bookRepository.ShowReviewByUserIDAndBookID(ctx, userID, bookID)
+}
+
 func (s *bookService) Create(ctx context.Context, b *book.Book) error {
 	err := s.associate(ctx, b)
 	if err != nil {
