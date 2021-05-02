@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"log"
 
 	"github.com/calmato/gran-book/api/server/book/internal/domain"
 	"github.com/calmato/gran-book/api/server/book/internal/domain/book"
@@ -133,6 +134,8 @@ func (r *bookRepository) Create(ctx context.Context, b *book.Book) error {
 }
 
 func (r *bookRepository) CreateBookshelf(ctx context.Context, bs *book.Bookshelf) error {
+	log.Printf("debug: repository - 1")
+
 	tx := r.client.db.Begin()
 	defer func() {
 		if r := recover(); r != nil {
@@ -144,6 +147,8 @@ func (r *bookRepository) CreateBookshelf(ctx context.Context, bs *book.Bookshelf
 		return err
 	}
 
+	log.Printf("debug: repository - 2")
+
 	if bs.ReadOn.IsZero() {
 		err := tx.Omit(clause.Associations, "read_on").Create(&bs).Error
 		if err != nil {
@@ -151,11 +156,13 @@ func (r *bookRepository) CreateBookshelf(ctx context.Context, bs *book.Bookshelf
 			return exception.ErrorInDatastore.New(err)
 		}
 	} else {
+		log.Printf("debug: repository - 3")
 		err := tx.Omit(clause.Associations).Create(&bs).Error
 		if err != nil {
 			tx.Rollback()
 			return exception.ErrorInDatastore.New(err)
 		}
+		log.Printf("debug: repository - 4, %v", err)
 	}
 
 	err := associateBookshelf(tx, bs)
@@ -164,7 +171,9 @@ func (r *bookRepository) CreateBookshelf(ctx context.Context, bs *book.Bookshelf
 		return err
 	}
 
-	return nil
+	log.Printf("debug: repository - 5, %v", err)
+
+	return tx.Commit().Error
 }
 
 func (r *bookRepository) CreateReview(ctx context.Context, rv *book.Review) error {
@@ -233,7 +242,7 @@ func (r *bookRepository) UpdateBookshelf(ctx context.Context, bs *book.Bookshelf
 		return err
 	}
 
-	return nil
+	return tx.Commit().Error
 }
 
 func (r *bookRepository) UpdateReview(ctx context.Context, rv *book.Review) error {

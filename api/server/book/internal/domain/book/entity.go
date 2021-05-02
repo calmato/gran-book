@@ -17,7 +17,7 @@ type Book struct {
 	CreatedAt      time.Time `gorm:"<-:create"`
 	UpdatedAt      time.Time `gorm:""`
 	Authors        []*Author `gorm:"many2many:authors_books"`
-	Reviews        []*Review `gorm:"foreignKey:BookID;constraint:OnDelete:CASCADE"`
+	Reviews        []*Review `gorm:"foreignKey:BookID"`
 }
 
 // Author - 著者エンティティ
@@ -38,8 +38,8 @@ type Bookshelf struct {
 	ReadOn    time.Time `gorm:""`
 	CreatedAt time.Time `gorm:"<-:create"`
 	UpdatedAt time.Time `gorm:""`
-	Book      *Book     `gorm:""`
-	Review    *Review   `gorm:""`
+	Book      *Book     `gorm:"foreignKey:BookID"`
+	Review    *Review   `gorm:"-"`
 }
 
 // Review - レビューエンティティ
