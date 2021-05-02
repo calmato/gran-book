@@ -160,6 +160,11 @@ func (s *BookServer) ReadBookshelf(
 		return nil, errorHandling(err)
 	}
 
+	err = isCurrentUser(cuid, req.GetUserId())
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
 	in := &input.Bookshelf{
 		UserID:     cuid,
 		BookID:     int(req.GetBookId()),
@@ -181,6 +186,11 @@ func (s *BookServer) ReadingBookshelf(
 	ctx context.Context, req *pb.ReadingBookshelfRequest,
 ) (*pb.BookshelfResponse, error) {
 	cuid, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	err = isCurrentUser(cuid, req.GetUserId())
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -208,6 +218,11 @@ func (s *BookServer) StackBookshelf(
 		return nil, errorHandling(err)
 	}
 
+	err = isCurrentUser(cuid, req.GetUserId())
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
 	in := &input.Bookshelf{
 		UserID: cuid,
 		BookID: int(req.GetBookId()),
@@ -231,6 +246,11 @@ func (s *BookServer) WantBookshelf(
 		return nil, errorHandling(err)
 	}
 
+	err = isCurrentUser(cuid, req.GetUserId())
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
 	in := &input.Bookshelf{
 		UserID: cuid,
 		BookID: int(req.GetBookId()),
@@ -250,6 +270,11 @@ func (s *BookServer) ReleaseBookshelf(
 	ctx context.Context, req *pb.ReleaseBookshelfRequest,
 ) (*pb.BookshelfResponse, error) {
 	cuid, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	err = isCurrentUser(cuid, req.GetUserId())
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -285,6 +310,11 @@ func (s *BookServer) DeleteBook(ctx context.Context, req *pb.DeleteBookRequest) 
 
 func (s *BookServer) DeleteBookshelf(ctx context.Context, req *pb.DeleteBookshelfRequest) (*pb.EmptyBook, error) {
 	cuid, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	err = isCurrentUser(cuid, req.GetUserId())
 	if err != nil {
 		return nil, errorHandling(err)
 	}
