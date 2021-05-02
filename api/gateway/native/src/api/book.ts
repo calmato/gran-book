@@ -184,6 +184,7 @@ export function readBookshelf(req: Request<any>, input: IReadBookshelfInput): Pr
   const request = new ReadBookshelfRequest()
   const metadata = getGrpcMetadata(req)
 
+  request.setUserId(input.userId)
   request.setBookId(input.bookId)
   request.setImpression(input.impression)
   request.setReadOn(input.readOn)
@@ -205,6 +206,7 @@ export function readingBookshelf(req: Request<any>, input: IReadingBookshelfInpu
   const request = new ReadingBookshelfRequest()
   const metadata = getGrpcMetadata(req)
 
+  request.setUserId(input.userId)
   request.setBookId(input.bookId)
 
   return new Promise((resolve: (output: IBookshelfOutput) => void, reject: (reason: Error) => void) => {
@@ -224,6 +226,7 @@ export function stackBookshelf(req: Request<any>, input: IStackBookshelfInput): 
   const request = new StackBookshelfRequest()
   const metadata = getGrpcMetadata(req)
 
+  request.setUserId(input.userId)
   request.setBookId(input.bookId)
 
   return new Promise((resolve: (output: IBookshelfOutput) => void, reject: (reason: Error) => void) => {
@@ -243,6 +246,7 @@ export function wantBookshelf(req: Request<any>, input: IWantBookshelfInput): Pr
   const request = new WantBookshelfRequest()
   const metadata = getGrpcMetadata(req)
 
+  request.setUserId(input.userId)
   request.setBookId(input.bookId)
 
   return new Promise((resolve: (output: IBookshelfOutput) => void, reject: (reason: Error) => void) => {
@@ -262,6 +266,7 @@ export function releaseBookshelf(req: Request<any>, input: IReleaseBookshelfInpu
   const request = new ReleaseBookshelfRequest()
   const metadata = getGrpcMetadata(req)
 
+  request.setUserId(input.userId)
   request.setBookId(input.bookId)
 
   return new Promise((resolve: (output: IBookshelfOutput) => void, reject: (reason: Error) => void) => {
@@ -281,6 +286,7 @@ export function deleteBookshelf(req: Request<any>, input: IDeleteBookshelfInput)
   const request = new DeleteBookshelfRequest()
   const metadata = getGrpcMetadata(req)
 
+  request.setUserId(input.userId)
   request.setBookId(input.bookId)
 
   return new Promise((resolve: () => void, reject: (reason: Error) => void) => {

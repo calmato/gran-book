@@ -107,6 +107,7 @@ router.post(
     await getUser(req, userInput)
       .then(async () => {
         const bookshelfInput: IReadBookshelfInput = {
+          userId,
           bookId: Number(bookId) || 0,
           impression,
           readOn,
@@ -134,6 +135,7 @@ router.post(
     await getUser(req, userInput)
       .then(async () => {
         const bookshelfInput: IReadingBookshelfInput = {
+          userId,
           bookId: Number(bookId) || 0,
         }
 
@@ -159,6 +161,7 @@ router.post(
     await getUser(req, userInput)
       .then(async () => {
         const bookshelfInput: IStackBookshelfInput = {
+          userId,
           bookId: Number(bookId) || 0,
         }
 
@@ -184,6 +187,7 @@ router.post(
     await getUser(req, userInput)
       .then(async () => {
         const bookshelfInput: IWantBookshelfInput = {
+          userId,
           bookId: Number(bookId) || 0,
         }
 
@@ -209,6 +213,7 @@ router.post(
     await getUser(req, userInput)
       .then(async () => {
         const bookshelfInput: IReleaseBookshelfInput = {
+          userId,
           bookId: Number(bookId) || 0,
         }
 
@@ -234,6 +239,7 @@ router.delete(
     await getUser(req, userInput)
       .then(async () => {
         const bookshelfInput: IDeleteBookshelfInput = {
+          userId,
           bookId: Number(bookId) || 0,
         }
 
