@@ -2,7 +2,6 @@ package application
 
 import (
 	"context"
-	"log"
 
 	"github.com/calmato/gran-book/api/server/book/internal/application/input"
 	"github.com/calmato/gran-book/api/server/book/internal/application/output"
@@ -231,14 +230,10 @@ func (a *bookApplication) CreateOrUpdateBookshelf(
 		}
 	}
 
-	log.Printf("debug: application - 1")
-
 	err = a.bookService.ValidationBookshelf(ctx, bs)
 	if err != nil {
 		return nil, err
 	}
-
-	log.Printf("debug: application - 2")
 
 	if bs.ID == 0 {
 		err = a.bookService.CreateBookshelf(ctx, bs)
@@ -251,8 +246,6 @@ func (a *bookApplication) CreateOrUpdateBookshelf(
 			return nil, err
 		}
 	}
-
-	log.Printf("debug: application - 3, %v", bs.Review)
 
 	return bs, nil
 }
