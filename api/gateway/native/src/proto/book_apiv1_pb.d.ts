@@ -241,6 +241,8 @@ export namespace UpdateBookRequest {
 }
 
 export class DeleteBookRequest extends jspb.Message { 
+    getUserId(): string;
+    setUserId(value: string): DeleteBookRequest;
     getBookId(): number;
     setBookId(value: number): DeleteBookRequest;
 
@@ -256,11 +258,14 @@ export class DeleteBookRequest extends jspb.Message {
 
 export namespace DeleteBookRequest {
     export type AsObject = {
+        userId: string,
         bookId: number,
     }
 }
 
 export class DeleteBookshelfRequest extends jspb.Message { 
+    getUserId(): string;
+    setUserId(value: string): DeleteBookshelfRequest;
     getBookId(): number;
     setBookId(value: number): DeleteBookshelfRequest;
 
@@ -276,11 +281,14 @@ export class DeleteBookshelfRequest extends jspb.Message {
 
 export namespace DeleteBookshelfRequest {
     export type AsObject = {
+        userId: string,
         bookId: number,
     }
 }
 
 export class ReadBookshelfRequest extends jspb.Message { 
+    getUserId(): string;
+    setUserId(value: string): ReadBookshelfRequest;
     getBookId(): number;
     setBookId(value: number): ReadBookshelfRequest;
     getImpression(): string;
@@ -300,6 +308,7 @@ export class ReadBookshelfRequest extends jspb.Message {
 
 export namespace ReadBookshelfRequest {
     export type AsObject = {
+        userId: string,
         bookId: number,
         impression: string,
         readOn: string,
@@ -307,6 +316,8 @@ export namespace ReadBookshelfRequest {
 }
 
 export class ReadingBookshelfRequest extends jspb.Message { 
+    getUserId(): string;
+    setUserId(value: string): ReadingBookshelfRequest;
     getBookId(): number;
     setBookId(value: number): ReadingBookshelfRequest;
 
@@ -322,11 +333,14 @@ export class ReadingBookshelfRequest extends jspb.Message {
 
 export namespace ReadingBookshelfRequest {
     export type AsObject = {
+        userId: string,
         bookId: number,
     }
 }
 
 export class StackBookshelfRequest extends jspb.Message { 
+    getUserId(): string;
+    setUserId(value: string): StackBookshelfRequest;
     getBookId(): number;
     setBookId(value: number): StackBookshelfRequest;
 
@@ -342,11 +356,14 @@ export class StackBookshelfRequest extends jspb.Message {
 
 export namespace StackBookshelfRequest {
     export type AsObject = {
+        userId: string,
         bookId: number,
     }
 }
 
 export class WantBookshelfRequest extends jspb.Message { 
+    getUserId(): string;
+    setUserId(value: string): WantBookshelfRequest;
     getBookId(): number;
     setBookId(value: number): WantBookshelfRequest;
 
@@ -362,11 +379,14 @@ export class WantBookshelfRequest extends jspb.Message {
 
 export namespace WantBookshelfRequest {
     export type AsObject = {
+        userId: string,
         bookId: number,
     }
 }
 
 export class ReleaseBookshelfRequest extends jspb.Message { 
+    getUserId(): string;
+    setUserId(value: string): ReleaseBookshelfRequest;
     getBookId(): number;
     setBookId(value: number): ReleaseBookshelfRequest;
 
@@ -382,6 +402,7 @@ export class ReleaseBookshelfRequest extends jspb.Message {
 
 export namespace ReleaseBookshelfRequest {
     export type AsObject = {
+        userId: string,
         bookId: number,
     }
 }

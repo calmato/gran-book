@@ -71,33 +71,40 @@ message UpdateBookRequest {
 }
 
 message DeleteBookRequest {
-  int64 book_id = 1;
+  string user_id = 1;
+  int64 book_id = 2;
 }
 
 message DeleteBookshelfRequest {
-  int64 book_id = 1;
+  string user_id = 1;
+  int64 book_id = 2;
 }
 
 message ReadBookshelfRequest {
-  int64 book_id = 1;
-  string impression = 2;
-  string read_on = 3;
+  string user_id = 1;
+  int64 book_id = 2;
+  string impression = 3;
+  string read_on = 4;
 }
 
 message ReadingBookshelfRequest {
-  int64 book_id = 1;
+  string user_id = 1;
+  int64 book_id = 2;
 }
 
 message StackBookshelfRequest {
-  int64 book_id = 1;
+  string user_id = 1;
+  int64 book_id = 2;
 }
 
 message WantBookshelfRequest {
-  int64 book_id = 1;
+  string user_id = 1;
+  int64 book_id = 2;
 }
 
 message ReleaseBookshelfRequest {
-  int64 book_id = 1;
+  string user_id = 1;
+  int64 book_id = 2;
 }
 
 message BookResponse {

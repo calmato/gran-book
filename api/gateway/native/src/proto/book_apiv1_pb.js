@@ -2358,7 +2358,8 @@ proto.proto.DeleteBookRequest.prototype.toObject = function(opt_includeInstance)
  */
 proto.proto.DeleteBookRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    bookId: jspb.Message.getFieldWithDefault(msg, 1, 0)
+    userId: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    bookId: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -2396,6 +2397,10 @@ proto.proto.DeleteBookRequest.deserializeBinaryFromReader = function(msg, reader
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setUserId(value);
+      break;
+    case 2:
       var value = /** @type {number} */ (reader.readInt64());
       msg.setBookId(value);
       break;
@@ -2428,10 +2433,17 @@ proto.proto.DeleteBookRequest.prototype.serializeBinary = function() {
  */
 proto.proto.DeleteBookRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
+  f = message.getUserId();
+  if (f.length > 0) {
+    writer.writeString(
+      1,
+      f
+    );
+  }
   f = message.getBookId();
   if (f !== 0) {
     writer.writeInt64(
-      1,
+      2,
       f
     );
   }
@@ -2439,11 +2451,29 @@ proto.proto.DeleteBookRequest.serializeBinaryToWriter = function(message, writer
 
 
 /**
- * optional int64 book_id = 1;
+ * optional string user_id = 1;
+ * @return {string}
+ */
+proto.proto.DeleteBookRequest.prototype.getUserId = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.proto.DeleteBookRequest} returns this
+ */
+proto.proto.DeleteBookRequest.prototype.setUserId = function(value) {
+  return jspb.Message.setProto3StringField(this, 1, value);
+};
+
+
+/**
+ * optional int64 book_id = 2;
  * @return {number}
  */
 proto.proto.DeleteBookRequest.prototype.getBookId = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
 };
 
 
@@ -2452,7 +2482,7 @@ proto.proto.DeleteBookRequest.prototype.getBookId = function() {
  * @return {!proto.proto.DeleteBookRequest} returns this
  */
 proto.proto.DeleteBookRequest.prototype.setBookId = function(value) {
-  return jspb.Message.setProto3IntField(this, 1, value);
+  return jspb.Message.setProto3IntField(this, 2, value);
 };
 
 
@@ -2488,7 +2518,8 @@ proto.proto.DeleteBookshelfRequest.prototype.toObject = function(opt_includeInst
  */
 proto.proto.DeleteBookshelfRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    bookId: jspb.Message.getFieldWithDefault(msg, 1, 0)
+    userId: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    bookId: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -2526,6 +2557,10 @@ proto.proto.DeleteBookshelfRequest.deserializeBinaryFromReader = function(msg, r
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setUserId(value);
+      break;
+    case 2:
       var value = /** @type {number} */ (reader.readInt64());
       msg.setBookId(value);
       break;
@@ -2558,10 +2593,17 @@ proto.proto.DeleteBookshelfRequest.prototype.serializeBinary = function() {
  */
 proto.proto.DeleteBookshelfRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
+  f = message.getUserId();
+  if (f.length > 0) {
+    writer.writeString(
+      1,
+      f
+    );
+  }
   f = message.getBookId();
   if (f !== 0) {
     writer.writeInt64(
-      1,
+      2,
       f
     );
   }
@@ -2569,11 +2611,29 @@ proto.proto.DeleteBookshelfRequest.serializeBinaryToWriter = function(message, w
 
 
 /**
- * optional int64 book_id = 1;
+ * optional string user_id = 1;
+ * @return {string}
+ */
+proto.proto.DeleteBookshelfRequest.prototype.getUserId = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.proto.DeleteBookshelfRequest} returns this
+ */
+proto.proto.DeleteBookshelfRequest.prototype.setUserId = function(value) {
+  return jspb.Message.setProto3StringField(this, 1, value);
+};
+
+
+/**
+ * optional int64 book_id = 2;
  * @return {number}
  */
 proto.proto.DeleteBookshelfRequest.prototype.getBookId = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
 };
 
 
@@ -2582,7 +2642,7 @@ proto.proto.DeleteBookshelfRequest.prototype.getBookId = function() {
  * @return {!proto.proto.DeleteBookshelfRequest} returns this
  */
 proto.proto.DeleteBookshelfRequest.prototype.setBookId = function(value) {
-  return jspb.Message.setProto3IntField(this, 1, value);
+  return jspb.Message.setProto3IntField(this, 2, value);
 };
 
 
@@ -2618,9 +2678,10 @@ proto.proto.ReadBookshelfRequest.prototype.toObject = function(opt_includeInstan
  */
 proto.proto.ReadBookshelfRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    bookId: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    impression: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    readOn: jspb.Message.getFieldWithDefault(msg, 3, "")
+    userId: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    bookId: jspb.Message.getFieldWithDefault(msg, 2, 0),
+    impression: jspb.Message.getFieldWithDefault(msg, 3, ""),
+    readOn: jspb.Message.getFieldWithDefault(msg, 4, "")
   };
 
   if (includeInstance) {
@@ -2658,14 +2719,18 @@ proto.proto.ReadBookshelfRequest.deserializeBinaryFromReader = function(msg, rea
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setUserId(value);
+      break;
+    case 2:
       var value = /** @type {number} */ (reader.readInt64());
       msg.setBookId(value);
       break;
-    case 2:
+    case 3:
       var value = /** @type {string} */ (reader.readString());
       msg.setImpression(value);
       break;
-    case 3:
+    case 4:
       var value = /** @type {string} */ (reader.readString());
       msg.setReadOn(value);
       break;
@@ -2698,24 +2763,31 @@ proto.proto.ReadBookshelfRequest.prototype.serializeBinary = function() {
  */
 proto.proto.ReadBookshelfRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
+  f = message.getUserId();
+  if (f.length > 0) {
+    writer.writeString(
+      1,
+      f
+    );
+  }
   f = message.getBookId();
   if (f !== 0) {
     writer.writeInt64(
-      1,
+      2,
       f
     );
   }
   f = message.getImpression();
   if (f.length > 0) {
     writer.writeString(
-      2,
+      3,
       f
     );
   }
   f = message.getReadOn();
   if (f.length > 0) {
     writer.writeString(
-      3,
+      4,
       f
     );
   }
@@ -2723,11 +2795,29 @@ proto.proto.ReadBookshelfRequest.serializeBinaryToWriter = function(message, wri
 
 
 /**
- * optional int64 book_id = 1;
+ * optional string user_id = 1;
+ * @return {string}
+ */
+proto.proto.ReadBookshelfRequest.prototype.getUserId = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.proto.ReadBookshelfRequest} returns this
+ */
+proto.proto.ReadBookshelfRequest.prototype.setUserId = function(value) {
+  return jspb.Message.setProto3StringField(this, 1, value);
+};
+
+
+/**
+ * optional int64 book_id = 2;
  * @return {number}
  */
 proto.proto.ReadBookshelfRequest.prototype.getBookId = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
 };
 
 
@@ -2736,33 +2826,15 @@ proto.proto.ReadBookshelfRequest.prototype.getBookId = function() {
  * @return {!proto.proto.ReadBookshelfRequest} returns this
  */
 proto.proto.ReadBookshelfRequest.prototype.setBookId = function(value) {
-  return jspb.Message.setProto3IntField(this, 1, value);
+  return jspb.Message.setProto3IntField(this, 2, value);
 };
 
 
 /**
- * optional string impression = 2;
+ * optional string impression = 3;
  * @return {string}
  */
 proto.proto.ReadBookshelfRequest.prototype.getImpression = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
-};
-
-
-/**
- * @param {string} value
- * @return {!proto.proto.ReadBookshelfRequest} returns this
- */
-proto.proto.ReadBookshelfRequest.prototype.setImpression = function(value) {
-  return jspb.Message.setProto3StringField(this, 2, value);
-};
-
-
-/**
- * optional string read_on = 3;
- * @return {string}
- */
-proto.proto.ReadBookshelfRequest.prototype.getReadOn = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
 };
 
@@ -2771,8 +2843,26 @@ proto.proto.ReadBookshelfRequest.prototype.getReadOn = function() {
  * @param {string} value
  * @return {!proto.proto.ReadBookshelfRequest} returns this
  */
-proto.proto.ReadBookshelfRequest.prototype.setReadOn = function(value) {
+proto.proto.ReadBookshelfRequest.prototype.setImpression = function(value) {
   return jspb.Message.setProto3StringField(this, 3, value);
+};
+
+
+/**
+ * optional string read_on = 4;
+ * @return {string}
+ */
+proto.proto.ReadBookshelfRequest.prototype.getReadOn = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.proto.ReadBookshelfRequest} returns this
+ */
+proto.proto.ReadBookshelfRequest.prototype.setReadOn = function(value) {
+  return jspb.Message.setProto3StringField(this, 4, value);
 };
 
 
@@ -2808,7 +2898,8 @@ proto.proto.ReadingBookshelfRequest.prototype.toObject = function(opt_includeIns
  */
 proto.proto.ReadingBookshelfRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    bookId: jspb.Message.getFieldWithDefault(msg, 1, 0)
+    userId: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    bookId: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -2846,6 +2937,10 @@ proto.proto.ReadingBookshelfRequest.deserializeBinaryFromReader = function(msg, 
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setUserId(value);
+      break;
+    case 2:
       var value = /** @type {number} */ (reader.readInt64());
       msg.setBookId(value);
       break;
@@ -2878,10 +2973,17 @@ proto.proto.ReadingBookshelfRequest.prototype.serializeBinary = function() {
  */
 proto.proto.ReadingBookshelfRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
+  f = message.getUserId();
+  if (f.length > 0) {
+    writer.writeString(
+      1,
+      f
+    );
+  }
   f = message.getBookId();
   if (f !== 0) {
     writer.writeInt64(
-      1,
+      2,
       f
     );
   }
@@ -2889,11 +2991,29 @@ proto.proto.ReadingBookshelfRequest.serializeBinaryToWriter = function(message, 
 
 
 /**
- * optional int64 book_id = 1;
+ * optional string user_id = 1;
+ * @return {string}
+ */
+proto.proto.ReadingBookshelfRequest.prototype.getUserId = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.proto.ReadingBookshelfRequest} returns this
+ */
+proto.proto.ReadingBookshelfRequest.prototype.setUserId = function(value) {
+  return jspb.Message.setProto3StringField(this, 1, value);
+};
+
+
+/**
+ * optional int64 book_id = 2;
  * @return {number}
  */
 proto.proto.ReadingBookshelfRequest.prototype.getBookId = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
 };
 
 
@@ -2902,7 +3022,7 @@ proto.proto.ReadingBookshelfRequest.prototype.getBookId = function() {
  * @return {!proto.proto.ReadingBookshelfRequest} returns this
  */
 proto.proto.ReadingBookshelfRequest.prototype.setBookId = function(value) {
-  return jspb.Message.setProto3IntField(this, 1, value);
+  return jspb.Message.setProto3IntField(this, 2, value);
 };
 
 
@@ -2938,7 +3058,8 @@ proto.proto.StackBookshelfRequest.prototype.toObject = function(opt_includeInsta
  */
 proto.proto.StackBookshelfRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    bookId: jspb.Message.getFieldWithDefault(msg, 1, 0)
+    userId: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    bookId: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -2976,6 +3097,10 @@ proto.proto.StackBookshelfRequest.deserializeBinaryFromReader = function(msg, re
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setUserId(value);
+      break;
+    case 2:
       var value = /** @type {number} */ (reader.readInt64());
       msg.setBookId(value);
       break;
@@ -3008,10 +3133,17 @@ proto.proto.StackBookshelfRequest.prototype.serializeBinary = function() {
  */
 proto.proto.StackBookshelfRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
+  f = message.getUserId();
+  if (f.length > 0) {
+    writer.writeString(
+      1,
+      f
+    );
+  }
   f = message.getBookId();
   if (f !== 0) {
     writer.writeInt64(
-      1,
+      2,
       f
     );
   }
@@ -3019,11 +3151,29 @@ proto.proto.StackBookshelfRequest.serializeBinaryToWriter = function(message, wr
 
 
 /**
- * optional int64 book_id = 1;
+ * optional string user_id = 1;
+ * @return {string}
+ */
+proto.proto.StackBookshelfRequest.prototype.getUserId = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.proto.StackBookshelfRequest} returns this
+ */
+proto.proto.StackBookshelfRequest.prototype.setUserId = function(value) {
+  return jspb.Message.setProto3StringField(this, 1, value);
+};
+
+
+/**
+ * optional int64 book_id = 2;
  * @return {number}
  */
 proto.proto.StackBookshelfRequest.prototype.getBookId = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
 };
 
 
@@ -3032,7 +3182,7 @@ proto.proto.StackBookshelfRequest.prototype.getBookId = function() {
  * @return {!proto.proto.StackBookshelfRequest} returns this
  */
 proto.proto.StackBookshelfRequest.prototype.setBookId = function(value) {
-  return jspb.Message.setProto3IntField(this, 1, value);
+  return jspb.Message.setProto3IntField(this, 2, value);
 };
 
 
@@ -3068,7 +3218,8 @@ proto.proto.WantBookshelfRequest.prototype.toObject = function(opt_includeInstan
  */
 proto.proto.WantBookshelfRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    bookId: jspb.Message.getFieldWithDefault(msg, 1, 0)
+    userId: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    bookId: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -3106,6 +3257,10 @@ proto.proto.WantBookshelfRequest.deserializeBinaryFromReader = function(msg, rea
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setUserId(value);
+      break;
+    case 2:
       var value = /** @type {number} */ (reader.readInt64());
       msg.setBookId(value);
       break;
@@ -3138,10 +3293,17 @@ proto.proto.WantBookshelfRequest.prototype.serializeBinary = function() {
  */
 proto.proto.WantBookshelfRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
+  f = message.getUserId();
+  if (f.length > 0) {
+    writer.writeString(
+      1,
+      f
+    );
+  }
   f = message.getBookId();
   if (f !== 0) {
     writer.writeInt64(
-      1,
+      2,
       f
     );
   }
@@ -3149,11 +3311,29 @@ proto.proto.WantBookshelfRequest.serializeBinaryToWriter = function(message, wri
 
 
 /**
- * optional int64 book_id = 1;
+ * optional string user_id = 1;
+ * @return {string}
+ */
+proto.proto.WantBookshelfRequest.prototype.getUserId = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.proto.WantBookshelfRequest} returns this
+ */
+proto.proto.WantBookshelfRequest.prototype.setUserId = function(value) {
+  return jspb.Message.setProto3StringField(this, 1, value);
+};
+
+
+/**
+ * optional int64 book_id = 2;
  * @return {number}
  */
 proto.proto.WantBookshelfRequest.prototype.getBookId = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
 };
 
 
@@ -3162,7 +3342,7 @@ proto.proto.WantBookshelfRequest.prototype.getBookId = function() {
  * @return {!proto.proto.WantBookshelfRequest} returns this
  */
 proto.proto.WantBookshelfRequest.prototype.setBookId = function(value) {
-  return jspb.Message.setProto3IntField(this, 1, value);
+  return jspb.Message.setProto3IntField(this, 2, value);
 };
 
 
@@ -3198,7 +3378,8 @@ proto.proto.ReleaseBookshelfRequest.prototype.toObject = function(opt_includeIns
  */
 proto.proto.ReleaseBookshelfRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    bookId: jspb.Message.getFieldWithDefault(msg, 1, 0)
+    userId: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    bookId: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -3236,6 +3417,10 @@ proto.proto.ReleaseBookshelfRequest.deserializeBinaryFromReader = function(msg, 
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setUserId(value);
+      break;
+    case 2:
       var value = /** @type {number} */ (reader.readInt64());
       msg.setBookId(value);
       break;
@@ -3268,10 +3453,17 @@ proto.proto.ReleaseBookshelfRequest.prototype.serializeBinary = function() {
  */
 proto.proto.ReleaseBookshelfRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
+  f = message.getUserId();
+  if (f.length > 0) {
+    writer.writeString(
+      1,
+      f
+    );
+  }
   f = message.getBookId();
   if (f !== 0) {
     writer.writeInt64(
-      1,
+      2,
       f
     );
   }
@@ -3279,11 +3471,29 @@ proto.proto.ReleaseBookshelfRequest.serializeBinaryToWriter = function(message, 
 
 
 /**
- * optional int64 book_id = 1;
+ * optional string user_id = 1;
+ * @return {string}
+ */
+proto.proto.ReleaseBookshelfRequest.prototype.getUserId = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.proto.ReleaseBookshelfRequest} returns this
+ */
+proto.proto.ReleaseBookshelfRequest.prototype.setUserId = function(value) {
+  return jspb.Message.setProto3StringField(this, 1, value);
+};
+
+
+/**
+ * optional int64 book_id = 2;
  * @return {number}
  */
 proto.proto.ReleaseBookshelfRequest.prototype.getBookId = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
 };
 
 
@@ -3292,7 +3502,7 @@ proto.proto.ReleaseBookshelfRequest.prototype.getBookId = function() {
  * @return {!proto.proto.ReleaseBookshelfRequest} returns this
  */
 proto.proto.ReleaseBookshelfRequest.prototype.setBookId = function(value) {
-  return jspb.Message.setProto3IntField(this, 1, value);
+  return jspb.Message.setProto3IntField(this, 2, value);
 };
 
 
