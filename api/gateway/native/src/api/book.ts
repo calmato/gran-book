@@ -10,6 +10,7 @@ import {
   DeleteBookshelfRequest,
   EmptyBook,
   GetBookRequest,
+  GetBookshelfRequest,
   ListBookshelfRequest,
   ReadBookshelfRequest,
   ReadingBookshelfRequest,
@@ -23,6 +24,7 @@ import {
   ICreateBookInput,
   IDeleteBookshelfInput,
   IGetBookInput,
+  IGetBookshelfInput,
   IListBookshelfInput,
   IReadBookshelfInput,
   IReadingBookshelfInput,
@@ -79,6 +81,26 @@ export function getBook(req: Request<any>, input: IGetBookInput): Promise<IBookO
       }
 
       const output: IBookOutput = setBookOutput(res)
+      resolve(output)
+    })
+  })
+}
+
+export function getBookshelf(req: Request<any>, input: IGetBookshelfInput): Promise<IBookshelfOutput> {
+  const request = new GetBookshelfRequest()
+  const metadata = getGrpcMetadata(req)
+
+  request.setUserId(input.userId)
+  request.setBookId(input.bookId)
+
+  return new Promise((resolve: (output: IBookshelfOutput) => void, reject: (reason: Error) => void) => {
+    bookClient.getBookshelf(request, metadata, (err: any, res: BookshelfResponse) => {
+      if (err) {
+        reject(getGrpcError(err))
+        return
+      }
+
+      const output: IBookshelfOutput = setBookshelfOutput(res)
       resolve(output)
     })
   })

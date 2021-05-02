@@ -1,8 +1,8 @@
 import express, { NextFunction, Request, Response } from 'express'
-import { createBook, getBook, updateBook } from '~/api'
+import { createBook, getBook, getBookshelf, updateBook } from '~/api'
 import { GrpcError } from '~/types/exception'
-import { IBookInputAuthor, ICreateBookInput, IGetBookInput, IUpdateBookInput } from '~/types/input'
-import { IBookOutput, IBookOutputAuthor } from '~/types/output'
+import { IBookInputAuthor, ICreateBookInput, IGetBookInput, IGetBookshelfInput, IUpdateBookInput } from '~/types/input'
+import { IBookOutput, IBookOutputAuthor, IBookshelfOutput } from '~/types/output'
 import { ICreateBookRequest, IUpdateBookRequest } from '~/types/request'
 import { IBookResponse, IBookResponseBookshelf } from '~/types/response'
 
@@ -119,14 +119,26 @@ router.get(
   async (req: Request, res: Response<IBookResponse>, next: NextFunction): Promise<void> => {
     const { isbn } = req.params
 
-    const input: IGetBookInput = {
+    const bookInput: IGetBookInput = {
       isbn,
     }
 
-    await getBook(req, input)
-      .then((output: IBookOutput) => {
-        // TODO: Bookshelf情報の取得
-        const response: IBookResponse = setBookResponse(output)
+    await getBook(req, bookInput)
+      .then(async (bookOutput: IBookOutput) => {
+        const bookshelfInput: IGetBookshelfInput = {
+          userId: '',
+          bookId: bookOutput.id,
+        }
+
+        return getBookshelf(req, bookshelfInput)
+          .then((bookshelfOutput: IBookshelfOutput) => {
+            return setBookResponse(bookOutput, bookshelfOutput)
+          })
+          .catch(() => {
+            return setBookResponse(bookOutput)
+          })
+      })
+      .then((response: IBookResponse) => {
         res.status(200).json(response)
       })
       .catch((err: GrpcError) => next(err))

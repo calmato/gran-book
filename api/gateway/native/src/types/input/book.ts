@@ -8,6 +8,11 @@ export interface IGetBookInput {
   isbn: string
 }
 
+export interface IGetBookshelfInput {
+  userId: string
+  bookId: number
+}
+
 export interface ICreateBookInput {
   title: string
   titleKana: string

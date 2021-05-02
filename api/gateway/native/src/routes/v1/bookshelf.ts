@@ -1,6 +1,7 @@
 import express, { NextFunction, Request, Response } from 'express'
 import {
   deleteBookshelf,
+  getBookshelf,
   listBookshelf,
   readBookshelf,
   readingBookshelf,
@@ -11,6 +12,7 @@ import {
 import { GrpcError } from '~/types/exception'
 import {
   IDeleteBookshelfInput,
+  IGetBookshelfInput,
   IListBookshelfInput,
   IReadBookshelfInput,
   IReadingBookshelfInput,
@@ -51,6 +53,25 @@ router.get(
     await listBookshelf(req, input)
       .then((output: IBookshelfListOutput) => {
         const response: IBookshelfListResponse = setBookshelfListResponse(output)
+        res.status(200).json(response)
+      })
+      .catch((err: GrpcError) => next(err))
+  }
+)
+
+router.get(
+  '/v1/users/:userId/books/:bookId',
+  async (req: Request, res: Response<IBookshelfResponse>, next: NextFunction): Promise<void> => {
+    const { userId, bookId } = req.params
+
+    const input: IGetBookshelfInput = {
+      userId,
+      bookId: Number(bookId) || 0,
+    }
+
+    await getBookshelf(req, input)
+      .then((output: IBookshelfOutput) => {
+        const response: IBookshelfResponse = setBookshelfResponse(output)
         res.status(200).json(response)
       })
       .catch((err: GrpcError) => next(err))
