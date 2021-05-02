@@ -10,8 +10,11 @@ import * as proto_book_apiv1_pb from "../proto/book_apiv1_pb";
 
 interface IBookServiceService extends grpc.ServiceDefinition<grpc.UntypedServiceImplementation> {
     listBookshelf: IBookServiceService_IListBookshelf;
+    listBookReview: IBookServiceService_IListBookReview;
+    listUserReview: IBookServiceService_IListUserReview;
     getBook: IBookServiceService_IGetBook;
     getBookshelf: IBookServiceService_IGetBookshelf;
+    getReview: IBookServiceService_IGetReview;
     createBook: IBookServiceService_ICreateBook;
     updateBook: IBookServiceService_IUpdateBook;
     readBookshelf: IBookServiceService_IReadBookshelf;
@@ -32,6 +35,24 @@ interface IBookServiceService_IListBookshelf extends grpc.MethodDefinition<proto
     responseSerialize: grpc.serialize<proto_book_apiv1_pb.BookshelfListResponse>;
     responseDeserialize: grpc.deserialize<proto_book_apiv1_pb.BookshelfListResponse>;
 }
+interface IBookServiceService_IListBookReview extends grpc.MethodDefinition<proto_book_apiv1_pb.ListBookReviewRequest, proto_book_apiv1_pb.ReviewListResponse> {
+    path: "/proto.BookService/ListBookReview";
+    requestStream: false;
+    responseStream: false;
+    requestSerialize: grpc.serialize<proto_book_apiv1_pb.ListBookReviewRequest>;
+    requestDeserialize: grpc.deserialize<proto_book_apiv1_pb.ListBookReviewRequest>;
+    responseSerialize: grpc.serialize<proto_book_apiv1_pb.ReviewListResponse>;
+    responseDeserialize: grpc.deserialize<proto_book_apiv1_pb.ReviewListResponse>;
+}
+interface IBookServiceService_IListUserReview extends grpc.MethodDefinition<proto_book_apiv1_pb.ListUserReviewRequest, proto_book_apiv1_pb.ReviewListResponse> {
+    path: "/proto.BookService/ListUserReview";
+    requestStream: false;
+    responseStream: false;
+    requestSerialize: grpc.serialize<proto_book_apiv1_pb.ListUserReviewRequest>;
+    requestDeserialize: grpc.deserialize<proto_book_apiv1_pb.ListUserReviewRequest>;
+    responseSerialize: grpc.serialize<proto_book_apiv1_pb.ReviewListResponse>;
+    responseDeserialize: grpc.deserialize<proto_book_apiv1_pb.ReviewListResponse>;
+}
 interface IBookServiceService_IGetBook extends grpc.MethodDefinition<proto_book_apiv1_pb.GetBookRequest, proto_book_apiv1_pb.BookResponse> {
     path: "/proto.BookService/GetBook";
     requestStream: false;
@@ -49,6 +70,15 @@ interface IBookServiceService_IGetBookshelf extends grpc.MethodDefinition<proto_
     requestDeserialize: grpc.deserialize<proto_book_apiv1_pb.GetBookshelfRequest>;
     responseSerialize: grpc.serialize<proto_book_apiv1_pb.BookshelfResponse>;
     responseDeserialize: grpc.deserialize<proto_book_apiv1_pb.BookshelfResponse>;
+}
+interface IBookServiceService_IGetReview extends grpc.MethodDefinition<proto_book_apiv1_pb.GetReviewRequest, proto_book_apiv1_pb.ReviewResponse> {
+    path: "/proto.BookService/GetReview";
+    requestStream: false;
+    responseStream: false;
+    requestSerialize: grpc.serialize<proto_book_apiv1_pb.GetReviewRequest>;
+    requestDeserialize: grpc.deserialize<proto_book_apiv1_pb.GetReviewRequest>;
+    responseSerialize: grpc.serialize<proto_book_apiv1_pb.ReviewResponse>;
+    responseDeserialize: grpc.deserialize<proto_book_apiv1_pb.ReviewResponse>;
 }
 interface IBookServiceService_ICreateBook extends grpc.MethodDefinition<proto_book_apiv1_pb.CreateBookRequest, proto_book_apiv1_pb.BookResponse> {
     path: "/proto.BookService/CreateBook";
@@ -136,8 +166,11 @@ export const BookServiceService: IBookServiceService;
 
 export interface IBookServiceServer extends grpc.UntypedServiceImplementation {
     listBookshelf: grpc.handleUnaryCall<proto_book_apiv1_pb.ListBookshelfRequest, proto_book_apiv1_pb.BookshelfListResponse>;
+    listBookReview: grpc.handleUnaryCall<proto_book_apiv1_pb.ListBookReviewRequest, proto_book_apiv1_pb.ReviewListResponse>;
+    listUserReview: grpc.handleUnaryCall<proto_book_apiv1_pb.ListUserReviewRequest, proto_book_apiv1_pb.ReviewListResponse>;
     getBook: grpc.handleUnaryCall<proto_book_apiv1_pb.GetBookRequest, proto_book_apiv1_pb.BookResponse>;
     getBookshelf: grpc.handleUnaryCall<proto_book_apiv1_pb.GetBookshelfRequest, proto_book_apiv1_pb.BookshelfResponse>;
+    getReview: grpc.handleUnaryCall<proto_book_apiv1_pb.GetReviewRequest, proto_book_apiv1_pb.ReviewResponse>;
     createBook: grpc.handleUnaryCall<proto_book_apiv1_pb.CreateBookRequest, proto_book_apiv1_pb.BookResponse>;
     updateBook: grpc.handleUnaryCall<proto_book_apiv1_pb.UpdateBookRequest, proto_book_apiv1_pb.BookResponse>;
     readBookshelf: grpc.handleUnaryCall<proto_book_apiv1_pb.ReadBookshelfRequest, proto_book_apiv1_pb.BookshelfResponse>;
@@ -153,12 +186,21 @@ export interface IBookServiceClient {
     listBookshelf(request: proto_book_apiv1_pb.ListBookshelfRequest, callback: (error: grpc.ServiceError | null, response: proto_book_apiv1_pb.BookshelfListResponse) => void): grpc.ClientUnaryCall;
     listBookshelf(request: proto_book_apiv1_pb.ListBookshelfRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_book_apiv1_pb.BookshelfListResponse) => void): grpc.ClientUnaryCall;
     listBookshelf(request: proto_book_apiv1_pb.ListBookshelfRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_book_apiv1_pb.BookshelfListResponse) => void): grpc.ClientUnaryCall;
+    listBookReview(request: proto_book_apiv1_pb.ListBookReviewRequest, callback: (error: grpc.ServiceError | null, response: proto_book_apiv1_pb.ReviewListResponse) => void): grpc.ClientUnaryCall;
+    listBookReview(request: proto_book_apiv1_pb.ListBookReviewRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_book_apiv1_pb.ReviewListResponse) => void): grpc.ClientUnaryCall;
+    listBookReview(request: proto_book_apiv1_pb.ListBookReviewRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_book_apiv1_pb.ReviewListResponse) => void): grpc.ClientUnaryCall;
+    listUserReview(request: proto_book_apiv1_pb.ListUserReviewRequest, callback: (error: grpc.ServiceError | null, response: proto_book_apiv1_pb.ReviewListResponse) => void): grpc.ClientUnaryCall;
+    listUserReview(request: proto_book_apiv1_pb.ListUserReviewRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_book_apiv1_pb.ReviewListResponse) => void): grpc.ClientUnaryCall;
+    listUserReview(request: proto_book_apiv1_pb.ListUserReviewRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_book_apiv1_pb.ReviewListResponse) => void): grpc.ClientUnaryCall;
     getBook(request: proto_book_apiv1_pb.GetBookRequest, callback: (error: grpc.ServiceError | null, response: proto_book_apiv1_pb.BookResponse) => void): grpc.ClientUnaryCall;
     getBook(request: proto_book_apiv1_pb.GetBookRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_book_apiv1_pb.BookResponse) => void): grpc.ClientUnaryCall;
     getBook(request: proto_book_apiv1_pb.GetBookRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_book_apiv1_pb.BookResponse) => void): grpc.ClientUnaryCall;
     getBookshelf(request: proto_book_apiv1_pb.GetBookshelfRequest, callback: (error: grpc.ServiceError | null, response: proto_book_apiv1_pb.BookshelfResponse) => void): grpc.ClientUnaryCall;
     getBookshelf(request: proto_book_apiv1_pb.GetBookshelfRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_book_apiv1_pb.BookshelfResponse) => void): grpc.ClientUnaryCall;
     getBookshelf(request: proto_book_apiv1_pb.GetBookshelfRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_book_apiv1_pb.BookshelfResponse) => void): grpc.ClientUnaryCall;
+    getReview(request: proto_book_apiv1_pb.GetReviewRequest, callback: (error: grpc.ServiceError | null, response: proto_book_apiv1_pb.ReviewResponse) => void): grpc.ClientUnaryCall;
+    getReview(request: proto_book_apiv1_pb.GetReviewRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_book_apiv1_pb.ReviewResponse) => void): grpc.ClientUnaryCall;
+    getReview(request: proto_book_apiv1_pb.GetReviewRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_book_apiv1_pb.ReviewResponse) => void): grpc.ClientUnaryCall;
     createBook(request: proto_book_apiv1_pb.CreateBookRequest, callback: (error: grpc.ServiceError | null, response: proto_book_apiv1_pb.BookResponse) => void): grpc.ClientUnaryCall;
     createBook(request: proto_book_apiv1_pb.CreateBookRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_book_apiv1_pb.BookResponse) => void): grpc.ClientUnaryCall;
     createBook(request: proto_book_apiv1_pb.CreateBookRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_book_apiv1_pb.BookResponse) => void): grpc.ClientUnaryCall;
@@ -193,12 +235,21 @@ export class BookServiceClient extends grpc.Client implements IBookServiceClient
     public listBookshelf(request: proto_book_apiv1_pb.ListBookshelfRequest, callback: (error: grpc.ServiceError | null, response: proto_book_apiv1_pb.BookshelfListResponse) => void): grpc.ClientUnaryCall;
     public listBookshelf(request: proto_book_apiv1_pb.ListBookshelfRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_book_apiv1_pb.BookshelfListResponse) => void): grpc.ClientUnaryCall;
     public listBookshelf(request: proto_book_apiv1_pb.ListBookshelfRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_book_apiv1_pb.BookshelfListResponse) => void): grpc.ClientUnaryCall;
+    public listBookReview(request: proto_book_apiv1_pb.ListBookReviewRequest, callback: (error: grpc.ServiceError | null, response: proto_book_apiv1_pb.ReviewListResponse) => void): grpc.ClientUnaryCall;
+    public listBookReview(request: proto_book_apiv1_pb.ListBookReviewRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_book_apiv1_pb.ReviewListResponse) => void): grpc.ClientUnaryCall;
+    public listBookReview(request: proto_book_apiv1_pb.ListBookReviewRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_book_apiv1_pb.ReviewListResponse) => void): grpc.ClientUnaryCall;
+    public listUserReview(request: proto_book_apiv1_pb.ListUserReviewRequest, callback: (error: grpc.ServiceError | null, response: proto_book_apiv1_pb.ReviewListResponse) => void): grpc.ClientUnaryCall;
+    public listUserReview(request: proto_book_apiv1_pb.ListUserReviewRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_book_apiv1_pb.ReviewListResponse) => void): grpc.ClientUnaryCall;
+    public listUserReview(request: proto_book_apiv1_pb.ListUserReviewRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_book_apiv1_pb.ReviewListResponse) => void): grpc.ClientUnaryCall;
     public getBook(request: proto_book_apiv1_pb.GetBookRequest, callback: (error: grpc.ServiceError | null, response: proto_book_apiv1_pb.BookResponse) => void): grpc.ClientUnaryCall;
     public getBook(request: proto_book_apiv1_pb.GetBookRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_book_apiv1_pb.BookResponse) => void): grpc.ClientUnaryCall;
     public getBook(request: proto_book_apiv1_pb.GetBookRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_book_apiv1_pb.BookResponse) => void): grpc.ClientUnaryCall;
     public getBookshelf(request: proto_book_apiv1_pb.GetBookshelfRequest, callback: (error: grpc.ServiceError | null, response: proto_book_apiv1_pb.BookshelfResponse) => void): grpc.ClientUnaryCall;
     public getBookshelf(request: proto_book_apiv1_pb.GetBookshelfRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_book_apiv1_pb.BookshelfResponse) => void): grpc.ClientUnaryCall;
     public getBookshelf(request: proto_book_apiv1_pb.GetBookshelfRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_book_apiv1_pb.BookshelfResponse) => void): grpc.ClientUnaryCall;
+    public getReview(request: proto_book_apiv1_pb.GetReviewRequest, callback: (error: grpc.ServiceError | null, response: proto_book_apiv1_pb.ReviewResponse) => void): grpc.ClientUnaryCall;
+    public getReview(request: proto_book_apiv1_pb.GetReviewRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_book_apiv1_pb.ReviewResponse) => void): grpc.ClientUnaryCall;
+    public getReview(request: proto_book_apiv1_pb.GetReviewRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_book_apiv1_pb.ReviewResponse) => void): grpc.ClientUnaryCall;
     public createBook(request: proto_book_apiv1_pb.CreateBookRequest, callback: (error: grpc.ServiceError | null, response: proto_book_apiv1_pb.BookResponse) => void): grpc.ClientUnaryCall;
     public createBook(request: proto_book_apiv1_pb.CreateBookRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_book_apiv1_pb.BookResponse) => void): grpc.ClientUnaryCall;
     public createBook(request: proto_book_apiv1_pb.CreateBookRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_book_apiv1_pb.BookResponse) => void): grpc.ClientUnaryCall;

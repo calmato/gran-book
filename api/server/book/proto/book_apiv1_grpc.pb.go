@@ -18,8 +18,11 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type BookServiceClient interface {
 	ListBookshelf(ctx context.Context, in *ListBookshelfRequest, opts ...grpc.CallOption) (*BookshelfListResponse, error)
+	ListBookReview(ctx context.Context, in *ListBookReviewRequest, opts ...grpc.CallOption) (*ReviewListResponse, error)
+	ListUserReview(ctx context.Context, in *ListUserReviewRequest, opts ...grpc.CallOption) (*ReviewListResponse, error)
 	GetBook(ctx context.Context, in *GetBookRequest, opts ...grpc.CallOption) (*BookResponse, error)
 	GetBookshelf(ctx context.Context, in *GetBookshelfRequest, opts ...grpc.CallOption) (*BookshelfResponse, error)
+	GetReview(ctx context.Context, in *GetReviewRequest, opts ...grpc.CallOption) (*ReviewResponse, error)
 	CreateBook(ctx context.Context, in *CreateBookRequest, opts ...grpc.CallOption) (*BookResponse, error)
 	UpdateBook(ctx context.Context, in *UpdateBookRequest, opts ...grpc.CallOption) (*BookResponse, error)
 	ReadBookshelf(ctx context.Context, in *ReadBookshelfRequest, opts ...grpc.CallOption) (*BookshelfResponse, error)
@@ -48,6 +51,24 @@ func (c *bookServiceClient) ListBookshelf(ctx context.Context, in *ListBookshelf
 	return out, nil
 }
 
+func (c *bookServiceClient) ListBookReview(ctx context.Context, in *ListBookReviewRequest, opts ...grpc.CallOption) (*ReviewListResponse, error) {
+	out := new(ReviewListResponse)
+	err := c.cc.Invoke(ctx, "/proto.BookService/ListBookReview", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *bookServiceClient) ListUserReview(ctx context.Context, in *ListUserReviewRequest, opts ...grpc.CallOption) (*ReviewListResponse, error) {
+	out := new(ReviewListResponse)
+	err := c.cc.Invoke(ctx, "/proto.BookService/ListUserReview", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *bookServiceClient) GetBook(ctx context.Context, in *GetBookRequest, opts ...grpc.CallOption) (*BookResponse, error) {
 	out := new(BookResponse)
 	err := c.cc.Invoke(ctx, "/proto.BookService/GetBook", in, out, opts...)
@@ -60,6 +81,15 @@ func (c *bookServiceClient) GetBook(ctx context.Context, in *GetBookRequest, opt
 func (c *bookServiceClient) GetBookshelf(ctx context.Context, in *GetBookshelfRequest, opts ...grpc.CallOption) (*BookshelfResponse, error) {
 	out := new(BookshelfResponse)
 	err := c.cc.Invoke(ctx, "/proto.BookService/GetBookshelf", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *bookServiceClient) GetReview(ctx context.Context, in *GetReviewRequest, opts ...grpc.CallOption) (*ReviewResponse, error) {
+	out := new(ReviewResponse)
+	err := c.cc.Invoke(ctx, "/proto.BookService/GetReview", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -152,8 +182,11 @@ func (c *bookServiceClient) DeleteBookshelf(ctx context.Context, in *DeleteBooks
 // for forward compatibility
 type BookServiceServer interface {
 	ListBookshelf(context.Context, *ListBookshelfRequest) (*BookshelfListResponse, error)
+	ListBookReview(context.Context, *ListBookReviewRequest) (*ReviewListResponse, error)
+	ListUserReview(context.Context, *ListUserReviewRequest) (*ReviewListResponse, error)
 	GetBook(context.Context, *GetBookRequest) (*BookResponse, error)
 	GetBookshelf(context.Context, *GetBookshelfRequest) (*BookshelfResponse, error)
+	GetReview(context.Context, *GetReviewRequest) (*ReviewResponse, error)
 	CreateBook(context.Context, *CreateBookRequest) (*BookResponse, error)
 	UpdateBook(context.Context, *UpdateBookRequest) (*BookResponse, error)
 	ReadBookshelf(context.Context, *ReadBookshelfRequest) (*BookshelfResponse, error)
@@ -173,11 +206,20 @@ type UnimplementedBookServiceServer struct {
 func (UnimplementedBookServiceServer) ListBookshelf(context.Context, *ListBookshelfRequest) (*BookshelfListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListBookshelf not implemented")
 }
+func (UnimplementedBookServiceServer) ListBookReview(context.Context, *ListBookReviewRequest) (*ReviewListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListBookReview not implemented")
+}
+func (UnimplementedBookServiceServer) ListUserReview(context.Context, *ListUserReviewRequest) (*ReviewListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListUserReview not implemented")
+}
 func (UnimplementedBookServiceServer) GetBook(context.Context, *GetBookRequest) (*BookResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetBook not implemented")
 }
 func (UnimplementedBookServiceServer) GetBookshelf(context.Context, *GetBookshelfRequest) (*BookshelfResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetBookshelf not implemented")
+}
+func (UnimplementedBookServiceServer) GetReview(context.Context, *GetReviewRequest) (*ReviewResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetReview not implemented")
 }
 func (UnimplementedBookServiceServer) CreateBook(context.Context, *CreateBookRequest) (*BookResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateBook not implemented")
@@ -237,6 +279,42 @@ func _BookService_ListBookshelf_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _BookService_ListBookReview_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListBookReviewRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BookServiceServer).ListBookReview(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.BookService/ListBookReview",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BookServiceServer).ListBookReview(ctx, req.(*ListBookReviewRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BookService_ListUserReview_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListUserReviewRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BookServiceServer).ListUserReview(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.BookService/ListUserReview",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BookServiceServer).ListUserReview(ctx, req.(*ListUserReviewRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _BookService_GetBook_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetBookRequest)
 	if err := dec(in); err != nil {
@@ -269,6 +347,24 @@ func _BookService_GetBookshelf_Handler(srv interface{}, ctx context.Context, dec
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BookServiceServer).GetBookshelf(ctx, req.(*GetBookshelfRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BookService_GetReview_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetReviewRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BookServiceServer).GetReview(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.BookService/GetReview",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BookServiceServer).GetReview(ctx, req.(*GetReviewRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -444,12 +540,24 @@ var _BookService_serviceDesc = grpc.ServiceDesc{
 			Handler:    _BookService_ListBookshelf_Handler,
 		},
 		{
+			MethodName: "ListBookReview",
+			Handler:    _BookService_ListBookReview_Handler,
+		},
+		{
+			MethodName: "ListUserReview",
+			Handler:    _BookService_ListUserReview_Handler,
+		},
+		{
 			MethodName: "GetBook",
 			Handler:    _BookService_GetBook_Handler,
 		},
 		{
 			MethodName: "GetBookshelf",
 			Handler:    _BookService_GetBookshelf_Handler,
+		},
+		{
+			MethodName: "GetReview",
+			Handler:    _BookService_GetReview_Handler,
 		},
 		{
 			MethodName: "CreateBook",

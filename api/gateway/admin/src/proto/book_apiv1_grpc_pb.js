@@ -103,6 +103,28 @@ function deserialize_proto_GetBookshelfRequest(buffer_arg) {
   return proto_book_apiv1_pb.GetBookshelfRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_proto_GetReviewRequest(arg) {
+  if (!(arg instanceof proto_book_apiv1_pb.GetReviewRequest)) {
+    throw new Error('Expected argument of type proto.GetReviewRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_GetReviewRequest(buffer_arg) {
+  return proto_book_apiv1_pb.GetReviewRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_proto_ListBookReviewRequest(arg) {
+  if (!(arg instanceof proto_book_apiv1_pb.ListBookReviewRequest)) {
+    throw new Error('Expected argument of type proto.ListBookReviewRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_ListBookReviewRequest(buffer_arg) {
+  return proto_book_apiv1_pb.ListBookReviewRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_proto_ListBookshelfRequest(arg) {
   if (!(arg instanceof proto_book_apiv1_pb.ListBookshelfRequest)) {
     throw new Error('Expected argument of type proto.ListBookshelfRequest');
@@ -112,6 +134,17 @@ function serialize_proto_ListBookshelfRequest(arg) {
 
 function deserialize_proto_ListBookshelfRequest(buffer_arg) {
   return proto_book_apiv1_pb.ListBookshelfRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_proto_ListUserReviewRequest(arg) {
+  if (!(arg instanceof proto_book_apiv1_pb.ListUserReviewRequest)) {
+    throw new Error('Expected argument of type proto.ListUserReviewRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_ListUserReviewRequest(buffer_arg) {
+  return proto_book_apiv1_pb.ListUserReviewRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 function serialize_proto_ReadBookshelfRequest(arg) {
@@ -145,6 +178,28 @@ function serialize_proto_ReleaseBookshelfRequest(arg) {
 
 function deserialize_proto_ReleaseBookshelfRequest(buffer_arg) {
   return proto_book_apiv1_pb.ReleaseBookshelfRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_proto_ReviewListResponse(arg) {
+  if (!(arg instanceof proto_book_apiv1_pb.ReviewListResponse)) {
+    throw new Error('Expected argument of type proto.ReviewListResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_ReviewListResponse(buffer_arg) {
+  return proto_book_apiv1_pb.ReviewListResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_proto_ReviewResponse(arg) {
+  if (!(arg instanceof proto_book_apiv1_pb.ReviewResponse)) {
+    throw new Error('Expected argument of type proto.ReviewResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_ReviewResponse(buffer_arg) {
+  return proto_book_apiv1_pb.ReviewResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 function serialize_proto_StackBookshelfRequest(arg) {
@@ -193,6 +248,28 @@ var BookServiceService = exports.BookServiceService = {
     responseSerialize: serialize_proto_BookshelfListResponse,
     responseDeserialize: deserialize_proto_BookshelfListResponse,
   },
+  listBookReview: {
+    path: '/proto.BookService/ListBookReview',
+    requestStream: false,
+    responseStream: false,
+    requestType: proto_book_apiv1_pb.ListBookReviewRequest,
+    responseType: proto_book_apiv1_pb.ReviewListResponse,
+    requestSerialize: serialize_proto_ListBookReviewRequest,
+    requestDeserialize: deserialize_proto_ListBookReviewRequest,
+    responseSerialize: serialize_proto_ReviewListResponse,
+    responseDeserialize: deserialize_proto_ReviewListResponse,
+  },
+  listUserReview: {
+    path: '/proto.BookService/ListUserReview',
+    requestStream: false,
+    responseStream: false,
+    requestType: proto_book_apiv1_pb.ListUserReviewRequest,
+    responseType: proto_book_apiv1_pb.ReviewListResponse,
+    requestSerialize: serialize_proto_ListUserReviewRequest,
+    requestDeserialize: deserialize_proto_ListUserReviewRequest,
+    responseSerialize: serialize_proto_ReviewListResponse,
+    responseDeserialize: deserialize_proto_ReviewListResponse,
+  },
   getBook: {
     path: '/proto.BookService/GetBook',
     requestStream: false,
@@ -214,6 +291,17 @@ var BookServiceService = exports.BookServiceService = {
     requestDeserialize: deserialize_proto_GetBookshelfRequest,
     responseSerialize: serialize_proto_BookshelfResponse,
     responseDeserialize: deserialize_proto_BookshelfResponse,
+  },
+  getReview: {
+    path: '/proto.BookService/GetReview',
+    requestStream: false,
+    responseStream: false,
+    requestType: proto_book_apiv1_pb.GetReviewRequest,
+    responseType: proto_book_apiv1_pb.ReviewResponse,
+    requestSerialize: serialize_proto_GetReviewRequest,
+    requestDeserialize: deserialize_proto_GetReviewRequest,
+    responseSerialize: serialize_proto_ReviewResponse,
+    responseDeserialize: deserialize_proto_ReviewResponse,
   },
   createBook: {
     path: '/proto.BookService/CreateBook',
