@@ -39,6 +39,9 @@ import {
   IBookshelfListOutputBook,
   IBookshelfListOutputBookshelf,
   IBookshelfOutput,
+  IBookshelfOutputAuthor,
+  IBookshelfOutputBook,
+  IBookshelfOutputReview,
 } from '~/types/output'
 
 export function listBookshelf(req: Request<any>, input: IListBookshelfInput): Promise<IBookshelfListOutput> {
@@ -300,15 +303,50 @@ function setBookOutput(res: BookResponse): IBookOutput {
 }
 
 function setBookshelfOutput(res: BookshelfResponse): IBookshelfOutput {
+  const b: BookshelfResponse.Book = res.getBook() || ({} as BookshelfResponse.Book)
+
+  const authors = b.getAuthorsList().map(
+    (a: BookshelfResponse.Author): IBookshelfOutputAuthor => ({
+      name: a.getName(),
+      nameKana: a.getNameKana(),
+    })
+  )
+
+  const book: IBookshelfOutputBook = {
+    id: b.getId(),
+    title: b.getTitle(),
+    titleKana: b.getTitleKana(),
+    description: b.getDescription(),
+    isbn: b.getIsbn(),
+    publisher: b.getPublisher(),
+    publishedOn: b.getPublishedOn(),
+    thumbnailUrl: b.getThumbnailUrl(),
+    rakutenUrl: b.getRakutenUrl(),
+    rakutenGenreId: b.getRakutenGenreId(),
+    createdAt: b.getCreatedAt(),
+    updatedAt: b.getUpdatedAt(),
+    authors,
+  }
+
   const output: IBookshelfOutput = {
     id: res.getId(),
     bookId: res.getBookId(),
     userId: res.getUserId(),
     status: res.getStatus(),
-    impression: res.getImpression(),
     readOn: res.getReadOn(),
     createdAt: res.getCreatedAt(),
     updatedAt: res.getUpdatedAt(),
+    book,
+  }
+
+  const rv: BookshelfResponse.Review | undefined = res.getReview()
+  if (rv) {
+    const review: IBookshelfOutputReview = {
+      score: rv.getScore(),
+      impression: rv.getImpression(),
+    }
+
+    output.review = review
   }
 
   return output

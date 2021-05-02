@@ -23,6 +23,7 @@ import {
   IBookshelfListOutputAuthor,
   IBookshelfListOutputBookshelf,
   IBookshelfOutput,
+  IBookshelfOutputAuthor,
 } from '~/types/output'
 import { IReadBookshelfRequest } from '~/types/request'
 import {
@@ -30,6 +31,7 @@ import {
   IBookshelfListResponseBook,
   IBookshelfListResponseDetail,
   IBookshelfResponse,
+  IBookshelfResponseDetail,
 } from '~/types/response'
 
 const router = express.Router()
@@ -166,15 +168,44 @@ router.delete(
 )
 
 function setBookshelfResponse(output: IBookshelfOutput): IBookshelfResponse {
+  const authorNames: string[] = output.book.authors.map((item: IBookshelfOutputAuthor) => {
+    return item.name
+  })
+
+  const authorNameKanas: string[] = output.book.authors.map((item: IBookshelfOutputAuthor) => {
+    return item.nameKana
+  })
+
+  const detail: IBookshelfResponseDetail = {
+    id: output.book.id,
+    title: output.book.title,
+    titleKana: output.book.titleKana,
+    description: output.book.description,
+    isbn: output.book.isbn,
+    publisher: output.book.publisher,
+    publishedOn: output.book.publishedOn,
+    thumbnailUrl: output.book.thumbnailUrl,
+    rakutenUrl: output.book.rakutenUrl,
+    rakutenGenreId: output.book.rakutenGenreId,
+    author: authorNames.join('/'),
+    authorKana: authorNameKanas.join('/'),
+    createdAt: output.book.createdAt,
+    updatedAt: output.book.updatedAt,
+  }
+
   const response: IBookshelfResponse = {
     id: output.id,
-    bookId: output.bookId,
     userId: output.userId,
     status: output.status,
-    impression: output.impression,
+    impression: '',
     readOn: output.readOn,
     createdAt: output.createdAt,
     updatedAt: output.updatedAt,
+    detail,
+  }
+
+  if (output.review) {
+    response.impression = output.review.impression
   }
 
   return response

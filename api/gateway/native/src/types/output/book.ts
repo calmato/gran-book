@@ -24,10 +24,37 @@ export interface IBookshelfOutput {
   bookId: number
   userId: string
   status: number
-  impression: string
   readOn: string
   createdAt: string
   updatedAt: string
+  book: IBookshelfOutputBook
+  review?: IBookshelfOutputReview
+}
+
+export interface IBookshelfOutputBook {
+  id: number
+  title: string
+  titleKana: string
+  description: string
+  isbn: string
+  publisher: string
+  publishedOn: string
+  thumbnailUrl: string
+  rakutenUrl: string
+  rakutenGenreId: string
+  createdAt: string
+  updatedAt: string
+  authors: Array<IBookshelfOutputAuthor>
+}
+
+export interface IBookshelfOutputAuthor {
+  name: string
+  nameKana: string
+}
+
+export interface IBookshelfOutputReview {
+  score: number
+  impression: string
 }
 
 export interface IBookshelfListOutput {
