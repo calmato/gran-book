@@ -4,7 +4,7 @@ import { StatusBar as ExpoStatusBar } from 'expo-status-bar';
 import firebase from '~/lib/firebase';
 import { getMessageDocRef } from '~/store/usecases/auth';
 import { COLOR } from '~~/constants/theme';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialIcons, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { MessageForm } from '~/types/forms';
 import { Header } from 'react-native-elements';
 
@@ -32,11 +32,24 @@ export const MessagesScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <ExpoStatusBar style="light" />
-      <Header>
+      <Header
+        leftComponent={
+          <MaterialIcons
+            name="keyboard-arrow-left"
+            size={24}
+          />
+        }
+        centerComponent={{
+          text: '濵田',
+          style: styles.header
+        }}
+        centerContainerStyle={{
+          height: 40
+        }}
+      />
 
-      </Header>
       <View style={styles.chatFooter}>
         <MaterialCommunityIcons
           style={styles.inputImage}
@@ -65,7 +78,7 @@ export const MessagesScreen = () => {
           }}
         />
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -73,8 +86,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLOR.BACKGROUND_GREY,
-    alignItems: 'center',
-    justifyContent: 'center',
+  },
+  header:{
+    color:COLOR.TEXT_TITLE,
+    fontSize: 20,
+    fontWeight: 'bold',
+    flexDirection: 'column',
+    justifyContent: 'flex-end',
   },
   inputText: {
     color: COLOR.TEXT_DEFAULT,
@@ -88,28 +106,24 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 10,
   },
-
   inputImage:{
     marginLeft: '3%',
     color: COLOR.TEXT_GRAY
   },
-
   sendButton: {
     marginRight: '3%',
     color: COLOR.PRIMARY
   },
-
   chatFooter: {
     flex: 1,
     backgroundColor: COLOR.BACKGROUND_WHITE,
     height: '10%',
-    width: '98%',
+    width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
     position: 'absolute',
     bottom: 0
   },
-
 });
 
 export default MessagesScreen;
