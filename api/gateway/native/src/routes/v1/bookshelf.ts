@@ -2,6 +2,7 @@ import express, { NextFunction, Request, Response } from 'express'
 import {
   deleteBookshelf,
   getBookshelf,
+  getUser,
   listBookshelf,
   readBookshelf,
   readingBookshelf,
@@ -13,6 +14,7 @@ import { GrpcError } from '~/types/exception'
 import {
   IDeleteBookshelfInput,
   IGetBookshelfInput,
+  IGetUserInput,
   IListBookshelfInput,
   IReadBookshelfInput,
   IReadingBookshelfInput,
@@ -44,13 +46,20 @@ router.get(
     const { userId } = req.params
     const { limit, offset } = req.query as { [key: string]: string }
 
-    const input: IListBookshelfInput = {
-      userId,
-      limit: Number(limit) || 100,
-      offset: Number(offset) || 0,
+    const userInput: IGetUserInput = {
+      id: userId,
     }
 
-    await listBookshelf(req, input)
+    await getUser(req, userInput)
+      .then(async () => {
+        const bookshelfInput: IListBookshelfInput = {
+          userId,
+          limit: Number(limit) || 100,
+          offset: Number(offset) || 0,
+        }
+
+        return listBookshelf(req, bookshelfInput)
+      })
       .then((output: IBookshelfListOutput) => {
         const response: IBookshelfListResponse = setBookshelfListResponse(output)
         res.status(200).json(response)
@@ -64,12 +73,19 @@ router.get(
   async (req: Request, res: Response<IBookshelfResponse>, next: NextFunction): Promise<void> => {
     const { userId, bookId } = req.params
 
-    const input: IGetBookshelfInput = {
-      userId,
-      bookId: Number(bookId) || 0,
+    const userInput: IGetUserInput = {
+      id: userId,
     }
 
-    await getBookshelf(req, input)
+    await getUser(req, userInput)
+      .then(async () => {
+        const bookshelfInput: IGetBookshelfInput = {
+          userId,
+          bookId: Number(bookId) || 0,
+        }
+
+        return getBookshelf(req, bookshelfInput)
+      })
       .then((output: IBookshelfOutput) => {
         const response: IBookshelfResponse = setBookshelfResponse(output)
         res.status(200).json(response)
@@ -81,16 +97,23 @@ router.get(
 router.post(
   '/v1/users/:userId/books/:bookId/read',
   async (req: Request, res: Response<IBookshelfResponse>, next: NextFunction): Promise<void> => {
-    const { bookId } = req.params
+    const { userId, bookId } = req.params
     const { readOn, impression } = req.body as IReadBookshelfRequest
 
-    const input: IReadBookshelfInput = {
-      bookId: Number(bookId) || 0,
-      impression,
-      readOn,
+    const userInput: IGetUserInput = {
+      id: userId,
     }
 
-    await readBookshelf(req, input)
+    await getUser(req, userInput)
+      .then(async () => {
+        const bookshelfInput: IReadBookshelfInput = {
+          bookId: Number(bookId) || 0,
+          impression,
+          readOn,
+        }
+
+        return readBookshelf(req, bookshelfInput)
+      })
       .then((output: IBookshelfOutput) => {
         const response: IBookshelfResponse = setBookshelfResponse(output)
         res.status(200).json(response)
@@ -102,13 +125,20 @@ router.post(
 router.post(
   '/v1/users/:userId/books/:bookId/reading',
   async (req: Request, res: Response<IBookshelfResponse>, next: NextFunction): Promise<void> => {
-    const { bookId } = req.params
+    const { userId, bookId } = req.params
 
-    const input: IReadingBookshelfInput = {
-      bookId: Number(bookId) || 0,
+    const userInput: IGetUserInput = {
+      id: userId,
     }
 
-    await readingBookshelf(req, input)
+    await getUser(req, userInput)
+      .then(async () => {
+        const bookshelfInput: IReadingBookshelfInput = {
+          bookId: Number(bookId) || 0,
+        }
+
+        return readingBookshelf(req, bookshelfInput)
+      })
       .then((output: IBookshelfOutput) => {
         const response: IBookshelfResponse = setBookshelfResponse(output)
         res.status(200).json(response)
@@ -120,13 +150,20 @@ router.post(
 router.post(
   '/v1/users/:userId/books/:bookId/stack',
   async (req: Request, res: Response<IBookshelfResponse>, next: NextFunction): Promise<void> => {
-    const { bookId } = req.params
+    const { userId, bookId } = req.params
 
-    const input: IStackBookshelfInput = {
-      bookId: Number(bookId) || 0,
+    const userInput: IGetUserInput = {
+      id: userId,
     }
 
-    await stackBookshelf(req, input)
+    await getUser(req, userInput)
+      .then(async () => {
+        const bookshelfInput: IStackBookshelfInput = {
+          bookId: Number(bookId) || 0,
+        }
+
+        return stackBookshelf(req, bookshelfInput)
+      })
       .then((output: IBookshelfOutput) => {
         const response: IBookshelfResponse = setBookshelfResponse(output)
         res.status(200).json(response)
@@ -138,13 +175,20 @@ router.post(
 router.post(
   '/v1/users/:userId/books/:bookId/want',
   async (req: Request, res: Response<IBookshelfResponse>, next: NextFunction): Promise<void> => {
-    const { bookId } = req.params
+    const { userId, bookId } = req.params
 
-    const input: IWantBookshelfInput = {
-      bookId: Number(bookId) || 0,
+    const userInput: IGetUserInput = {
+      id: userId,
     }
 
-    await wantBookshelf(req, input)
+    await getUser(req, userInput)
+      .then(async () => {
+        const bookshelfInput: IWantBookshelfInput = {
+          bookId: Number(bookId) || 0,
+        }
+
+        return wantBookshelf(req, bookshelfInput)
+      })
       .then((output: IBookshelfOutput) => {
         const response: IBookshelfResponse = setBookshelfResponse(output)
         res.status(200).json(response)
@@ -156,13 +200,20 @@ router.post(
 router.post(
   '/v1/users/:userId/books/:bookId/release',
   async (req: Request, res: Response<IBookshelfResponse>, next: NextFunction): Promise<void> => {
-    const { bookId } = req.params
+    const { userId, bookId } = req.params
 
-    const input: IReleaseBookshelfInput = {
-      bookId: Number(bookId) || 0,
+    const userInput: IGetUserInput = {
+      id: userId,
     }
 
-    await releaseBookshelf(req, input)
+    await getUser(req, userInput)
+      .then(async () => {
+        const bookshelfInput: IReleaseBookshelfInput = {
+          bookId: Number(bookId) || 0,
+        }
+
+        return releaseBookshelf(req, bookshelfInput)
+      })
       .then((output: IBookshelfOutput) => {
         const response: IBookshelfResponse = setBookshelfResponse(output)
         res.status(200).json(response)
@@ -174,13 +225,20 @@ router.post(
 router.delete(
   '/v1/users/:userId/books/:bookId',
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    const { bookId } = req.params
+    const { userId, bookId } = req.params
 
-    const input: IDeleteBookshelfInput = {
-      bookId: Number(bookId) || 0,
+    const userInput: IGetUserInput = {
+      id: userId,
     }
 
-    await deleteBookshelf(req, input)
+    await getUser(req, userInput)
+      .then(async () => {
+        const bookshelfInput: IDeleteBookshelfInput = {
+          bookId: Number(bookId) || 0,
+        }
+
+        return deleteBookshelf(req, bookshelfInput)
+      })
       .then(() => {
         res.status(200).json({ status: 'ok' })
       })

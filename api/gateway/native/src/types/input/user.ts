@@ -14,6 +14,10 @@ export interface IListFollowerInput {
   offset: number
 }
 
+export interface IGetUserInput {
+  id: string
+}
+
 export interface IGetUserProfileInput {
   id: string
 }
