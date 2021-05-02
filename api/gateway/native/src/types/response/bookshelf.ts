@@ -1,10 +1,27 @@
 export interface IBookshelfResponse {
   id: number
-  bookId: number
   userId: string
   status: number
-  impression: string
   readOn: string
+  impression: string
+  createdAt: string
+  updatedAt: string
+  detail: IBookshelfResponseDetail
+}
+
+export interface IBookshelfResponseDetail {
+  id: number
+  title: string
+  titleKana: string
+  description: string
+  isbn: string
+  publisher: string
+  publishedOn: string
+  thumbnailUrl: string
+  rakutenUrl: string
+  rakutenGenreId: string
+  author: string
+  authorKana: string
   createdAt: string
   updatedAt: string
 }

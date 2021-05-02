@@ -43,6 +43,12 @@ func (s *bookService) ShowBookshelfByUserIDAndBookID(
 	return s.bookRepository.ShowBookshelfByUserIDAndBookID(ctx, userID, bookID)
 }
 
+func (s *bookService) ShowReviewByUserIDAndBookID(
+	ctx context.Context, userID string, bookID int,
+) (*book.Review, error) {
+	return s.bookRepository.ShowReviewByUserIDAndBookID(ctx, userID, bookID)
+}
+
 func (s *bookService) Create(ctx context.Context, b *book.Book) error {
 	err := s.associate(ctx, b)
 	if err != nil {
@@ -141,6 +147,10 @@ func (s *bookService) ValidationAuthor(ctx context.Context, a *book.Author) erro
 
 func (s *bookService) ValidationBookshelf(ctx context.Context, b *book.Bookshelf) error {
 	return s.bookDomainValidation.Bookshelf(ctx, b)
+}
+
+func (s *bookService) ValidationReview(ctx context.Context, rv *book.Review) error {
+	return s.bookDomainValidation.Review(ctx, rv)
 }
 
 func (s *bookService) associate(ctx context.Context, b *book.Book) error {

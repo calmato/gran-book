@@ -15,6 +15,7 @@ import (
 type BookApplication interface {
 	ListBookshelf(ctx context.Context, in *input.ListBookshelf) ([]*book.Bookshelf, *output.ListQuery, error)
 	Show(ctx context.Context, isbn string) (*book.Book, error)
+	ShowBookshelf(ctx context.Context, userID string, bookID int) (*book.Bookshelf, error)
 	Create(ctx context.Context, in *input.Book) (*book.Book, error)
 	Update(ctx context.Context, in *input.Book) (*book.Book, error)
 	CreateOrUpdateBookshelf(ctx context.Context, in *input.Bookshelf) (*book.Bookshelf, error)
@@ -76,6 +77,19 @@ func (a *bookApplication) ListBookshelf(
 
 func (a *bookApplication) Show(ctx context.Context, isbn string) (*book.Book, error) {
 	return a.bookService.ShowByIsbn(ctx, isbn)
+}
+
+func (a *bookApplication) ShowBookshelf(ctx context.Context, userID string, bookID int) (*book.Bookshelf, error) {
+	bs, err := a.bookService.ShowBookshelfByUserIDAndBookID(ctx, userID, bookID)
+	if err != nil {
+		return nil, err
+	}
+
+	rv, _ := a.bookService.ShowReviewByUserIDAndBookID(ctx, userID, bookID)
+
+	bs.Review = rv
+
+	return bs, nil
 }
 
 func (a *bookApplication) Create(ctx context.Context, in *input.Book) (*book.Book, error) {
@@ -188,6 +202,7 @@ func (a *bookApplication) CreateOrUpdateBookshelf(
 		return nil, err
 	}
 
+	rv, _ := a.bookService.ShowReviewByUserIDAndBookID(ctx, in.UserID, b.ID)
 	bs, _ := a.bookService.ShowBookshelfByUserIDAndBookID(ctx, in.UserID, b.ID)
 	if bs == nil {
 		bs = &book.Bookshelf{}
@@ -197,6 +212,23 @@ func (a *bookApplication) CreateOrUpdateBookshelf(
 	bs.UserID = in.UserID
 	bs.Status = in.Status
 	bs.ReadOn = datetime.StringToDate(in.ReadOn)
+	bs.Book = b
+	bs.Review = rv
+
+	if bs.Status == book.ReadStatus && in.Impression != "" {
+		if bs.Review == nil {
+			bs.Review = &book.Review{}
+		}
+
+		bs.Review.BookID = b.ID
+		bs.Review.UserID = in.UserID
+		bs.Review.Impression = in.Impression
+
+		err = a.bookService.ValidationReview(ctx, bs.Review)
+		if err != nil {
+			return nil, err
+		}
+	}
 
 	err = a.bookService.ValidationBookshelf(ctx, bs)
 	if err != nil {

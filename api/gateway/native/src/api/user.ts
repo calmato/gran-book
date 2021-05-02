@@ -6,6 +6,7 @@ import {
   FollowerListResponse,
   FollowListResponse,
   GetUserProfileRequest,
+  GetUserRequest,
   ListFollowerRequest,
   ListFollowRequest,
   ListUserByUserIdsRequest,
@@ -13,8 +14,10 @@ import {
   UnregisterFollowRequest,
   UserListResponse,
   UserProfileResponse,
+  UserResponse,
 } from '~/proto/user_apiv1_pb'
 import {
+  IGetUserInput,
   IGetUserProfileInput,
   IListFollowerInput,
   IListFollowInput,
@@ -30,6 +33,7 @@ import {
   IUserListOutput,
   IUserListOutputOrder,
   IUserListOutputUser,
+  IUserOutput,
   IUserProfileOutput,
 } from '~/types/output'
 
@@ -129,6 +133,25 @@ export function listFollower(req: Request<any>, input: IListFollowerInput): Prom
   })
 }
 
+export function getUser(req: Request<any>, input: IGetUserInput): Promise<IUserOutput> {
+  const request = new GetUserRequest()
+  const metadata = getGrpcMetadata(req)
+
+  request.setId(input.id)
+
+  return new Promise((resolve: (res: IUserOutput) => void, reject: (reason: Error) => void) => {
+    userClient.getUser(request, metadata, (err: any, res: UserResponse) => {
+      if (err) {
+        reject(getGrpcError(err))
+        return
+      }
+
+      const output: IUserOutput = setUserOutput(res)
+      resolve(output)
+    })
+  })
+}
+
 export function getUserProfile(req: Request<any>, input: IGetUserProfileInput): Promise<IUserProfileOutput> {
   const request = new GetUserProfileRequest()
   const metadata = getGrpcMetadata(req)
@@ -184,6 +207,26 @@ export function unregisterFollow(req: Request<any>, input: IUnregisterFollowInpu
       resolve(output)
     })
   })
+}
+
+function setUserOutput(res: UserResponse): IUserOutput {
+  const output: IUserOutput = {
+    id: res.getId(),
+    username: res.getUsername(),
+    email: res.getEmail(),
+    phoneNumber: res.getPhoneNumber(),
+    role: res.getRole(),
+    thumbnailUrl: res.getThumbnailUrl(),
+    selfIntroduction: res.getSelfIntroduction(),
+    lastName: res.getLastName(),
+    firstName: res.getFirstName(),
+    lastNameKana: res.getLastNameKana(),
+    firstNameKana: res.getFirstNameKana(),
+    createdAt: res.getCreatedAt(),
+    updatedAt: res.getUpdatedAt(),
+  }
+
+  return output
 }
 
 function setUserListOutput(res: UserListResponse): IUserListOutput {

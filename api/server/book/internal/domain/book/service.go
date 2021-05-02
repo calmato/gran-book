@@ -13,6 +13,7 @@ type Service interface {
 	Show(ctx context.Context, bookID int) (*Book, error)
 	ShowByIsbn(ctx context.Context, isbn string) (*Book, error)
 	ShowBookshelfByUserIDAndBookID(ctx context.Context, userID string, bookID int) (*Bookshelf, error)
+	ShowReviewByUserIDAndBookID(ctx context.Context, userID string, bookID int) (*Review, error)
 	Create(ctx context.Context, b *Book) error
 	CreateBookshelf(ctx context.Context, b *Bookshelf) error
 	Update(ctx context.Context, b *Book) error
@@ -24,4 +25,5 @@ type Service interface {
 	Validation(ctx context.Context, b *Book) error
 	ValidationAuthor(ctx context.Context, a *Author) error
 	ValidationBookshelf(ctx context.Context, b *Bookshelf) error
+	ValidationReview(ctx context.Context, b *Review) error
 }

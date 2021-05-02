@@ -49,23 +49,46 @@ export namespace ListBookshelfRequest {
     }
 }
 
-export class ShowBookRequest extends jspb.Message { 
+export class GetBookRequest extends jspb.Message { 
     getIsbn(): string;
-    setIsbn(value: string): ShowBookRequest;
+    setIsbn(value: string): GetBookRequest;
 
     serializeBinary(): Uint8Array;
-    toObject(includeInstance?: boolean): ShowBookRequest.AsObject;
-    static toObject(includeInstance: boolean, msg: ShowBookRequest): ShowBookRequest.AsObject;
+    toObject(includeInstance?: boolean): GetBookRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: GetBookRequest): GetBookRequest.AsObject;
     static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
     static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-    static serializeBinaryToWriter(message: ShowBookRequest, writer: jspb.BinaryWriter): void;
-    static deserializeBinary(bytes: Uint8Array): ShowBookRequest;
-    static deserializeBinaryFromReader(message: ShowBookRequest, reader: jspb.BinaryReader): ShowBookRequest;
+    static serializeBinaryToWriter(message: GetBookRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): GetBookRequest;
+    static deserializeBinaryFromReader(message: GetBookRequest, reader: jspb.BinaryReader): GetBookRequest;
 }
 
-export namespace ShowBookRequest {
+export namespace GetBookRequest {
     export type AsObject = {
         isbn: string,
+    }
+}
+
+export class GetBookshelfRequest extends jspb.Message { 
+    getUserId(): string;
+    setUserId(value: string): GetBookshelfRequest;
+    getBookId(): number;
+    setBookId(value: number): GetBookshelfRequest;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): GetBookshelfRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: GetBookshelfRequest): GetBookshelfRequest.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: GetBookshelfRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): GetBookshelfRequest;
+    static deserializeBinaryFromReader(message: GetBookshelfRequest, reader: jspb.BinaryReader): GetBookshelfRequest;
+}
+
+export namespace GetBookshelfRequest {
+    export type AsObject = {
+        userId: string,
+        bookId: number,
     }
 }
 
@@ -218,6 +241,8 @@ export namespace UpdateBookRequest {
 }
 
 export class DeleteBookRequest extends jspb.Message { 
+    getUserId(): string;
+    setUserId(value: string): DeleteBookRequest;
     getBookId(): number;
     setBookId(value: number): DeleteBookRequest;
 
@@ -233,11 +258,14 @@ export class DeleteBookRequest extends jspb.Message {
 
 export namespace DeleteBookRequest {
     export type AsObject = {
+        userId: string,
         bookId: number,
     }
 }
 
 export class DeleteBookshelfRequest extends jspb.Message { 
+    getUserId(): string;
+    setUserId(value: string): DeleteBookshelfRequest;
     getBookId(): number;
     setBookId(value: number): DeleteBookshelfRequest;
 
@@ -253,11 +281,14 @@ export class DeleteBookshelfRequest extends jspb.Message {
 
 export namespace DeleteBookshelfRequest {
     export type AsObject = {
+        userId: string,
         bookId: number,
     }
 }
 
 export class ReadBookshelfRequest extends jspb.Message { 
+    getUserId(): string;
+    setUserId(value: string): ReadBookshelfRequest;
     getBookId(): number;
     setBookId(value: number): ReadBookshelfRequest;
     getImpression(): string;
@@ -277,6 +308,7 @@ export class ReadBookshelfRequest extends jspb.Message {
 
 export namespace ReadBookshelfRequest {
     export type AsObject = {
+        userId: string,
         bookId: number,
         impression: string,
         readOn: string,
@@ -284,6 +316,8 @@ export namespace ReadBookshelfRequest {
 }
 
 export class ReadingBookshelfRequest extends jspb.Message { 
+    getUserId(): string;
+    setUserId(value: string): ReadingBookshelfRequest;
     getBookId(): number;
     setBookId(value: number): ReadingBookshelfRequest;
 
@@ -299,11 +333,14 @@ export class ReadingBookshelfRequest extends jspb.Message {
 
 export namespace ReadingBookshelfRequest {
     export type AsObject = {
+        userId: string,
         bookId: number,
     }
 }
 
 export class StackBookshelfRequest extends jspb.Message { 
+    getUserId(): string;
+    setUserId(value: string): StackBookshelfRequest;
     getBookId(): number;
     setBookId(value: number): StackBookshelfRequest;
 
@@ -319,11 +356,14 @@ export class StackBookshelfRequest extends jspb.Message {
 
 export namespace StackBookshelfRequest {
     export type AsObject = {
+        userId: string,
         bookId: number,
     }
 }
 
 export class WantBookshelfRequest extends jspb.Message { 
+    getUserId(): string;
+    setUserId(value: string): WantBookshelfRequest;
     getBookId(): number;
     setBookId(value: number): WantBookshelfRequest;
 
@@ -339,11 +379,14 @@ export class WantBookshelfRequest extends jspb.Message {
 
 export namespace WantBookshelfRequest {
     export type AsObject = {
+        userId: string,
         bookId: number,
     }
 }
 
 export class ReleaseBookshelfRequest extends jspb.Message { 
+    getUserId(): string;
+    setUserId(value: string): ReleaseBookshelfRequest;
     getBookId(): number;
     setBookId(value: number): ReleaseBookshelfRequest;
 
@@ -359,6 +402,7 @@ export class ReleaseBookshelfRequest extends jspb.Message {
 
 export namespace ReleaseBookshelfRequest {
     export type AsObject = {
+        userId: string,
         bookId: number,
     }
 }
@@ -388,19 +432,10 @@ export class BookResponse extends jspb.Message {
     setCreatedAt(value: string): BookResponse;
     getUpdatedAt(): string;
     setUpdatedAt(value: string): BookResponse;
-
-    hasBookshelf(): boolean;
-    clearBookshelf(): void;
-    getBookshelf(): BookResponse.Bookshelf | undefined;
-    setBookshelf(value?: BookResponse.Bookshelf): BookResponse;
     clearAuthorsList(): void;
     getAuthorsList(): Array<BookResponse.Author>;
     setAuthorsList(value: Array<BookResponse.Author>): BookResponse;
     addAuthors(value?: BookResponse.Author, index?: number): BookResponse.Author;
-    clearReviewsList(): void;
-    getReviewsList(): Array<BookResponse.Review>;
-    setReviewsList(value: Array<BookResponse.Review>): BookResponse;
-    addReviews(value?: BookResponse.Review, index?: number): BookResponse.Review;
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): BookResponse.AsObject;
@@ -426,9 +461,7 @@ export namespace BookResponse {
         rakutenGenreId: string,
         createdAt: string,
         updatedAt: string,
-        bookshelf?: BookResponse.Bookshelf.AsObject,
         authorsList: Array<BookResponse.Author.AsObject>,
-        reviewsList: Array<BookResponse.Review.AsObject>,
     }
 
 
@@ -455,73 +488,6 @@ export namespace BookResponse {
         }
     }
 
-    export class Review extends jspb.Message { 
-        getId(): number;
-        setId(value: number): Review;
-        getUserId(): string;
-        setUserId(value: string): Review;
-        getScore(): number;
-        setScore(value: number): Review;
-        getImpression(): string;
-        setImpression(value: string): Review;
-        getCreatedAt(): string;
-        setCreatedAt(value: string): Review;
-        getUpdatedAt(): string;
-        setUpdatedAt(value: string): Review;
-
-        serializeBinary(): Uint8Array;
-        toObject(includeInstance?: boolean): Review.AsObject;
-        static toObject(includeInstance: boolean, msg: Review): Review.AsObject;
-        static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-        static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-        static serializeBinaryToWriter(message: Review, writer: jspb.BinaryWriter): void;
-        static deserializeBinary(bytes: Uint8Array): Review;
-        static deserializeBinaryFromReader(message: Review, reader: jspb.BinaryReader): Review;
-    }
-
-    export namespace Review {
-        export type AsObject = {
-            id: number,
-            userId: string,
-            score: number,
-            impression: string,
-            createdAt: string,
-            updatedAt: string,
-        }
-    }
-
-    export class Bookshelf extends jspb.Message { 
-        getId(): number;
-        setId(value: number): Bookshelf;
-        getStatus(): number;
-        setStatus(value: number): Bookshelf;
-        getReadOn(): string;
-        setReadOn(value: string): Bookshelf;
-        getCreatedAt(): string;
-        setCreatedAt(value: string): Bookshelf;
-        getUpdatedAt(): string;
-        setUpdatedAt(value: string): Bookshelf;
-
-        serializeBinary(): Uint8Array;
-        toObject(includeInstance?: boolean): Bookshelf.AsObject;
-        static toObject(includeInstance: boolean, msg: Bookshelf): Bookshelf.AsObject;
-        static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-        static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-        static serializeBinaryToWriter(message: Bookshelf, writer: jspb.BinaryWriter): void;
-        static deserializeBinary(bytes: Uint8Array): Bookshelf;
-        static deserializeBinaryFromReader(message: Bookshelf, reader: jspb.BinaryReader): Bookshelf;
-    }
-
-    export namespace Bookshelf {
-        export type AsObject = {
-            id: number,
-            status: number,
-            readOn: string,
-            createdAt: string,
-            updatedAt: string,
-        }
-    }
-
 }
 
 export class BookshelfResponse extends jspb.Message { 
@@ -533,14 +499,22 @@ export class BookshelfResponse extends jspb.Message {
     setUserId(value: string): BookshelfResponse;
     getStatus(): number;
     setStatus(value: number): BookshelfResponse;
-    getImpression(): string;
-    setImpression(value: string): BookshelfResponse;
     getReadOn(): string;
     setReadOn(value: string): BookshelfResponse;
     getCreatedAt(): string;
     setCreatedAt(value: string): BookshelfResponse;
     getUpdatedAt(): string;
     setUpdatedAt(value: string): BookshelfResponse;
+
+    hasBook(): boolean;
+    clearBook(): void;
+    getBook(): BookshelfResponse.Book | undefined;
+    setBook(value?: BookshelfResponse.Book): BookshelfResponse;
+
+    hasReview(): boolean;
+    clearReview(): void;
+    getReview(): BookshelfResponse.Review | undefined;
+    setReview(value?: BookshelfResponse.Review): BookshelfResponse;
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): BookshelfResponse.AsObject;
@@ -558,11 +532,118 @@ export namespace BookshelfResponse {
         bookId: number,
         userId: string,
         status: number,
-        impression: string,
         readOn: string,
         createdAt: string,
         updatedAt: string,
+        book?: BookshelfResponse.Book.AsObject,
+        review?: BookshelfResponse.Review.AsObject,
     }
+
+
+    export class Author extends jspb.Message { 
+        getName(): string;
+        setName(value: string): Author;
+        getNameKana(): string;
+        setNameKana(value: string): Author;
+
+        serializeBinary(): Uint8Array;
+        toObject(includeInstance?: boolean): Author.AsObject;
+        static toObject(includeInstance: boolean, msg: Author): Author.AsObject;
+        static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+        static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+        static serializeBinaryToWriter(message: Author, writer: jspb.BinaryWriter): void;
+        static deserializeBinary(bytes: Uint8Array): Author;
+        static deserializeBinaryFromReader(message: Author, reader: jspb.BinaryReader): Author;
+    }
+
+    export namespace Author {
+        export type AsObject = {
+            name: string,
+            nameKana: string,
+        }
+    }
+
+    export class Book extends jspb.Message { 
+        getId(): number;
+        setId(value: number): Book;
+        getTitle(): string;
+        setTitle(value: string): Book;
+        getTitleKana(): string;
+        setTitleKana(value: string): Book;
+        getDescription(): string;
+        setDescription(value: string): Book;
+        getIsbn(): string;
+        setIsbn(value: string): Book;
+        getPublisher(): string;
+        setPublisher(value: string): Book;
+        getPublishedOn(): string;
+        setPublishedOn(value: string): Book;
+        getThumbnailUrl(): string;
+        setThumbnailUrl(value: string): Book;
+        getRakutenUrl(): string;
+        setRakutenUrl(value: string): Book;
+        getRakutenGenreId(): string;
+        setRakutenGenreId(value: string): Book;
+        getCreatedAt(): string;
+        setCreatedAt(value: string): Book;
+        getUpdatedAt(): string;
+        setUpdatedAt(value: string): Book;
+        clearAuthorsList(): void;
+        getAuthorsList(): Array<BookshelfResponse.Author>;
+        setAuthorsList(value: Array<BookshelfResponse.Author>): Book;
+        addAuthors(value?: BookshelfResponse.Author, index?: number): BookshelfResponse.Author;
+
+        serializeBinary(): Uint8Array;
+        toObject(includeInstance?: boolean): Book.AsObject;
+        static toObject(includeInstance: boolean, msg: Book): Book.AsObject;
+        static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+        static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+        static serializeBinaryToWriter(message: Book, writer: jspb.BinaryWriter): void;
+        static deserializeBinary(bytes: Uint8Array): Book;
+        static deserializeBinaryFromReader(message: Book, reader: jspb.BinaryReader): Book;
+    }
+
+    export namespace Book {
+        export type AsObject = {
+            id: number,
+            title: string,
+            titleKana: string,
+            description: string,
+            isbn: string,
+            publisher: string,
+            publishedOn: string,
+            thumbnailUrl: string,
+            rakutenUrl: string,
+            rakutenGenreId: string,
+            createdAt: string,
+            updatedAt: string,
+            authorsList: Array<BookshelfResponse.Author.AsObject>,
+        }
+    }
+
+    export class Review extends jspb.Message { 
+        getScore(): number;
+        setScore(value: number): Review;
+        getImpression(): string;
+        setImpression(value: string): Review;
+
+        serializeBinary(): Uint8Array;
+        toObject(includeInstance?: boolean): Review.AsObject;
+        static toObject(includeInstance: boolean, msg: Review): Review.AsObject;
+        static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+        static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+        static serializeBinaryToWriter(message: Review, writer: jspb.BinaryWriter): void;
+        static deserializeBinary(bytes: Uint8Array): Review;
+        static deserializeBinaryFromReader(message: Review, reader: jspb.BinaryReader): Review;
+    }
+
+    export namespace Review {
+        export type AsObject = {
+            score: number,
+            impression: string,
+        }
+    }
+
 }
 
 export class BookshelfListResponse extends jspb.Message { 

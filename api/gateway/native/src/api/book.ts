@@ -9,11 +9,12 @@ import {
   CreateBookRequest,
   DeleteBookshelfRequest,
   EmptyBook,
+  GetBookRequest,
+  GetBookshelfRequest,
   ListBookshelfRequest,
   ReadBookshelfRequest,
   ReadingBookshelfRequest,
   ReleaseBookshelfRequest,
-  ShowBookRequest,
   StackBookshelfRequest,
   UpdateBookRequest,
   WantBookshelfRequest,
@@ -22,11 +23,12 @@ import {
   IBookInputAuthor,
   ICreateBookInput,
   IDeleteBookshelfInput,
+  IGetBookInput,
+  IGetBookshelfInput,
   IListBookshelfInput,
   IReadBookshelfInput,
   IReadingBookshelfInput,
   IReleaseBookshelfInput,
-  IShowBookInput,
   IStackBookshelfInput,
   IUpdateBookInput,
   IWantBookshelfInput,
@@ -34,13 +36,14 @@ import {
 import {
   IBookOutput,
   IBookOutputAuthor,
-  IBookOutputBookshelf,
-  IBookOutputReview,
   IBookshelfListOutput,
   IBookshelfListOutputAuthor,
   IBookshelfListOutputBook,
   IBookshelfListOutputBookshelf,
   IBookshelfOutput,
+  IBookshelfOutputAuthor,
+  IBookshelfOutputBook,
+  IBookshelfOutputReview,
 } from '~/types/output'
 
 export function listBookshelf(req: Request<any>, input: IListBookshelfInput): Promise<IBookshelfListOutput> {
@@ -64,20 +67,40 @@ export function listBookshelf(req: Request<any>, input: IListBookshelfInput): Pr
   })
 }
 
-export function showBook(req: Request<any>, input: IShowBookInput): Promise<IBookOutput> {
-  const request = new ShowBookRequest()
+export function getBook(req: Request<any>, input: IGetBookInput): Promise<IBookOutput> {
+  const request = new GetBookRequest()
   const metadata = getGrpcMetadata(req)
 
   request.setIsbn(input.isbn)
 
   return new Promise((resolve: (output: IBookOutput) => void, reject: (reason: Error) => void) => {
-    bookClient.showBook(request, metadata, (err: any, res: BookResponse) => {
+    bookClient.getBook(request, metadata, (err: any, res: BookResponse) => {
       if (err) {
         reject(getGrpcError(err))
         return
       }
 
       const output: IBookOutput = setBookOutput(res)
+      resolve(output)
+    })
+  })
+}
+
+export function getBookshelf(req: Request<any>, input: IGetBookshelfInput): Promise<IBookshelfOutput> {
+  const request = new GetBookshelfRequest()
+  const metadata = getGrpcMetadata(req)
+
+  request.setUserId(input.userId)
+  request.setBookId(input.bookId)
+
+  return new Promise((resolve: (output: IBookshelfOutput) => void, reject: (reason: Error) => void) => {
+    bookClient.getBookshelf(request, metadata, (err: any, res: BookshelfResponse) => {
+      if (err) {
+        reject(getGrpcError(err))
+        return
+      }
+
+      const output: IBookshelfOutput = setBookshelfOutput(res)
       resolve(output)
     })
   })
@@ -161,6 +184,7 @@ export function readBookshelf(req: Request<any>, input: IReadBookshelfInput): Pr
   const request = new ReadBookshelfRequest()
   const metadata = getGrpcMetadata(req)
 
+  request.setUserId(input.userId)
   request.setBookId(input.bookId)
   request.setImpression(input.impression)
   request.setReadOn(input.readOn)
@@ -182,6 +206,7 @@ export function readingBookshelf(req: Request<any>, input: IReadingBookshelfInpu
   const request = new ReadingBookshelfRequest()
   const metadata = getGrpcMetadata(req)
 
+  request.setUserId(input.userId)
   request.setBookId(input.bookId)
 
   return new Promise((resolve: (output: IBookshelfOutput) => void, reject: (reason: Error) => void) => {
@@ -201,6 +226,7 @@ export function stackBookshelf(req: Request<any>, input: IStackBookshelfInput): 
   const request = new StackBookshelfRequest()
   const metadata = getGrpcMetadata(req)
 
+  request.setUserId(input.userId)
   request.setBookId(input.bookId)
 
   return new Promise((resolve: (output: IBookshelfOutput) => void, reject: (reason: Error) => void) => {
@@ -220,6 +246,7 @@ export function wantBookshelf(req: Request<any>, input: IWantBookshelfInput): Pr
   const request = new WantBookshelfRequest()
   const metadata = getGrpcMetadata(req)
 
+  request.setUserId(input.userId)
   request.setBookId(input.bookId)
 
   return new Promise((resolve: (output: IBookshelfOutput) => void, reject: (reason: Error) => void) => {
@@ -239,6 +266,7 @@ export function releaseBookshelf(req: Request<any>, input: IReleaseBookshelfInpu
   const request = new ReleaseBookshelfRequest()
   const metadata = getGrpcMetadata(req)
 
+  request.setUserId(input.userId)
   request.setBookId(input.bookId)
 
   return new Promise((resolve: (output: IBookshelfOutput) => void, reject: (reason: Error) => void) => {
@@ -258,6 +286,7 @@ export function deleteBookshelf(req: Request<any>, input: IDeleteBookshelfInput)
   const request = new DeleteBookshelfRequest()
   const metadata = getGrpcMetadata(req)
 
+  request.setUserId(input.userId)
   request.setBookId(input.bookId)
 
   return new Promise((resolve: () => void, reject: (reason: Error) => void) => {
@@ -273,14 +302,6 @@ export function deleteBookshelf(req: Request<any>, input: IDeleteBookshelfInput)
 }
 
 function setBookOutput(res: BookResponse): IBookOutput {
-  const bookshelf: IBookOutputBookshelf = {
-    id: res.getBookshelf()?.getId() || 0,
-    status: res.getBookshelf()?.getStatus() || 0,
-    readOn: res.getBookshelf()?.getReadOn() || '',
-    createdAt: res.getBookshelf()?.getCreatedAt() || '',
-    updatedAt: res.getBookshelf()?.getUpdatedAt() || '',
-  }
-
   const authors = res.getAuthorsList().map((item: BookResponse.Author) => {
     const author: IBookOutputAuthor = {
       name: item.getName(),
@@ -288,19 +309,6 @@ function setBookOutput(res: BookResponse): IBookOutput {
     }
 
     return author
-  })
-
-  const reviews = res.getReviewsList().map((item: BookResponse.Review) => {
-    const reviews: IBookOutputReview = {
-      id: item.getId(),
-      userId: item.getUserId(),
-      score: item.getScore(),
-      impression: item.getImpression(),
-      createdAt: item.getCreatedAt(),
-      updatedAt: item.getUpdatedAt(),
-    }
-
-    return reviews
   })
 
   const output: IBookOutput = {
@@ -316,24 +324,57 @@ function setBookOutput(res: BookResponse): IBookOutput {
     rakutenGenreId: res.getRakutenGenreId(),
     createdAt: res.getCreatedAt(),
     updatedAt: res.getUpdatedAt(),
-    bookshelf,
     authors,
-    reviews,
   }
 
   return output
 }
 
 function setBookshelfOutput(res: BookshelfResponse): IBookshelfOutput {
+  const b: BookshelfResponse.Book = res.getBook() || ({} as BookshelfResponse.Book)
+
+  const authors = b.getAuthorsList().map(
+    (a: BookshelfResponse.Author): IBookshelfOutputAuthor => ({
+      name: a.getName(),
+      nameKana: a.getNameKana(),
+    })
+  )
+
+  const book: IBookshelfOutputBook = {
+    id: b.getId(),
+    title: b.getTitle(),
+    titleKana: b.getTitleKana(),
+    description: b.getDescription(),
+    isbn: b.getIsbn(),
+    publisher: b.getPublisher(),
+    publishedOn: b.getPublishedOn(),
+    thumbnailUrl: b.getThumbnailUrl(),
+    rakutenUrl: b.getRakutenUrl(),
+    rakutenGenreId: b.getRakutenGenreId(),
+    createdAt: b.getCreatedAt(),
+    updatedAt: b.getUpdatedAt(),
+    authors,
+  }
+
   const output: IBookshelfOutput = {
     id: res.getId(),
     bookId: res.getBookId(),
     userId: res.getUserId(),
     status: res.getStatus(),
-    impression: res.getImpression(),
     readOn: res.getReadOn(),
     createdAt: res.getCreatedAt(),
     updatedAt: res.getUpdatedAt(),
+    book,
+  }
+
+  const rv: BookshelfResponse.Review | undefined = res.getReview()
+  if (rv) {
+    const review: IBookshelfOutputReview = {
+      score: rv.getScore(),
+      impression: rv.getImpression(),
+    }
+
+    output.review = review
   }
 
   return output
