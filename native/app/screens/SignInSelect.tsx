@@ -46,7 +46,7 @@ const SignInSelect = function SignInSelect(props: Props): ReactElement {
 
   const [_request, response, handleSignInWithGoogle] = Google.useIdTokenAuthRequest(
     {
-      clientId: '711103859602-pl5m005fp0bhhum9lm99fgoinneaar7m.apps.googleusercontent.com',
+      clientId: process.env.CLIENT_ID_FOR_GOOGLE,
     },
   );
 
@@ -64,9 +64,6 @@ const SignInSelect = function SignInSelect(props: Props): ReactElement {
       const { id_token } = response.params;
       const credential = firebase.auth.GoogleAuthProvider.credential(id_token);
       firebase.auth().signInWithCredential(credential)
-        .then(() => {
-          return registerForPushNotifications();
-        })
         .then(async() => {
           await firebase.auth().currentUser?.getIdToken(true)
             .then(async(token)=>{
@@ -89,6 +86,9 @@ const SignInSelect = function SignInSelect(props: Props): ReactElement {
               dispatch(setAuth(values));
               await LocalStorage.AuthStorage.save(model);
             });
+        })
+        .then(() => {
+          return registerForPushNotifications();
         })
         .then(async() => {
           await getAuth();
