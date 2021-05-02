@@ -4,8 +4,13 @@ export interface IListBookshelfInput {
   offset: number
 }
 
-export interface IShowBookInput {
+export interface IGetBookInput {
   isbn: string
+}
+
+export interface IGetBookshelfInput {
+  userId: string
+  bookId: number
 }
 
 export interface ICreateBookInput {
@@ -40,27 +45,33 @@ export interface IBookInputAuthor {
 }
 
 export interface IReadBookshelfInput {
+  userId: string
   bookId: number
   impression: string
   readOn: string
 }
 
 export interface IReadingBookshelfInput {
+  userId: string
   bookId: number
 }
 
 export interface IStackBookshelfInput {
+  userId: string
   bookId: number
 }
 
 export interface IWantBookshelfInput {
+  userId: string
   bookId: number
 }
 
 export interface IReleaseBookshelfInput {
+  userId: string
   bookId: number
 }
 
 export interface IDeleteBookshelfInput {
+  userId: string
   bookId: number
 }

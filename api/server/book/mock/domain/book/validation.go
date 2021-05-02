@@ -75,3 +75,17 @@ func (mr *MockValidationMockRecorder) Bookshelf(ctx, b interface{}) *gomock.Call
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Bookshelf", reflect.TypeOf((*MockValidation)(nil).Bookshelf), ctx, b)
 }
+
+// Review mocks base method
+func (m *MockValidation) Review(ctx context.Context, rv *book.Review) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Review", ctx, rv)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Review indicates an expected call of Review
+func (mr *MockValidationMockRecorder) Review(ctx, rv interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Review", reflect.TypeOf((*MockValidation)(nil).Review), ctx, rv)
+}

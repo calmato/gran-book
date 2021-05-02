@@ -160,7 +160,6 @@ func TestBookService_Show(t *testing.T) {
 					UpdatedAt:    time.Time{},
 					Authors:      []*book.Author{},
 					Reviews:      []*book.Review{},
-					Bookshelf:    &book.Bookshelf{},
 				},
 				Error: nil,
 			},
@@ -225,7 +224,6 @@ func TestBookService_ShowByIsbn(t *testing.T) {
 					UpdatedAt:    time.Time{},
 					Authors:      []*book.Author{},
 					Reviews:      []*book.Review{},
-					Bookshelf:    &book.Bookshelf{},
 				},
 				Error: nil,
 			},
@@ -325,6 +323,68 @@ func TestBookService_ShowBookshelfByUserIDAndBookID(t *testing.T) {
 	}
 }
 
+func TestBookService_ShowReviewByUserIDAndBookID(t *testing.T) {
+	testCases := map[string]struct {
+		UserID   string
+		BookID   int
+		Expected struct {
+			Review *book.Review
+			Error  error
+		}
+	}{
+		"ok": {
+			UserID: "00000000-0000-0000-0000-000000000000",
+			BookID: 1,
+			Expected: struct {
+				Review *book.Review
+				Error  error
+			}{
+				Review: &book.Review{
+					ID:         0,
+					BookID:     1,
+					UserID:     "00000000-0000-0000-0000-000000000000",
+					Score:      1,
+					Impression: "読んだ感想です。",
+					CreatedAt:  time.Time{},
+					UpdatedAt:  time.Time{},
+				},
+			},
+		},
+	}
+
+	for result, tc := range testCases {
+		t.Run(result, func(t *testing.T) {
+			ctx, cancel := context.WithCancel(context.Background())
+			defer cancel()
+
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			bvm := mock_book.NewMockValidation(ctrl)
+
+			brm := mock_book.NewMockRepository(ctrl)
+			brm.EXPECT().
+				ShowReviewByUserIDAndBookID(ctx, tc.UserID, tc.BookID).
+				Return(tc.Expected.Review, tc.Expected.Error)
+
+			t.Run(result, func(t *testing.T) {
+				target := NewBookService(bvm, brm)
+
+				got, err := target.ShowReviewByUserIDAndBookID(ctx, tc.UserID, tc.BookID)
+				if !reflect.DeepEqual(err, tc.Expected.Error) {
+					t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+					return
+				}
+
+				if !reflect.DeepEqual(got, tc.Expected.Review) {
+					t.Fatalf("want %#v, but %#v", tc.Expected.Review, got)
+					return
+				}
+			})
+		})
+	}
+}
+
 func TestBookService_Create(t *testing.T) {
 	testCases := map[string]struct {
 		Book     *book.Book
@@ -341,7 +401,6 @@ func TestBookService_Create(t *testing.T) {
 				ThumbnailURL: "",
 				Authors:      []*book.Author{},
 				Reviews:      []*book.Review{},
-				Bookshelf:    &book.Bookshelf{},
 			},
 			Expected: nil,
 		},
@@ -451,7 +510,6 @@ func TestBookService_Update(t *testing.T) {
 				ThumbnailURL: "",
 				Publisher:    "テスト出版社",
 				PublishedOn:  "2021年12月24日",
-				Bookshelf:    &book.Bookshelf{},
 				Reviews:      []*book.Review{},
 				Authors: []*book.Author{{
 					ID:       1,
@@ -561,7 +619,6 @@ func TestBookService_MultipleCreate(t *testing.T) {
 					ThumbnailURL: "",
 					Authors:      []*book.Author{},
 					Reviews:      []*book.Review{},
-					Bookshelf:    &book.Bookshelf{},
 				},
 			},
 			Expected: nil,
@@ -630,7 +687,6 @@ func TestBookService_MultipleUpdate(t *testing.T) {
 					PublishedOn:  "2021年12月24日",
 					CreatedAt:    current,
 					UpdatedAt:    current,
-					Bookshelf:    &book.Bookshelf{},
 					Reviews:      []*book.Review{},
 					Authors: []*book.Author{{
 						ID:        1,
@@ -775,7 +831,6 @@ func TestBookService_Validation(t *testing.T) {
 				PublishedOn:  "2021年12月24日",
 				CreatedAt:    current,
 				UpdatedAt:    current,
-				Bookshelf:    &book.Bookshelf{},
 				Reviews:      []*book.Review{},
 				Authors: []*book.Author{{
 					ID:        1,
@@ -889,6 +944,51 @@ func TestBookService_ValidationBookshelf(t *testing.T) {
 				target := NewBookService(bvm, brm)
 
 				err := target.ValidationBookshelf(ctx, tc.Bookshelf)
+				if !reflect.DeepEqual(err, tc.Expected) {
+					t.Fatalf("want %#v, but %#v", tc.Expected, err)
+					return
+				}
+			})
+		})
+	}
+}
+
+func TestBookService_ValidationReview(t *testing.T) {
+	testCases := map[string]struct {
+		Review   *book.Review
+		Expected error
+	}{
+		"ok": {
+			Review: &book.Review{
+				ID:         0,
+				BookID:     1,
+				UserID:     "00000000-0000-0000-0000-000000000000",
+				Score:      5,
+				Impression: "書籍の感想です。",
+				CreatedAt:  time.Time{},
+				UpdatedAt:  time.Time{},
+			},
+			Expected: nil,
+		},
+	}
+
+	for result, tc := range testCases {
+		t.Run(result, func(t *testing.T) {
+			ctx, cancel := context.WithCancel(context.Background())
+			defer cancel()
+
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			bvm := mock_book.NewMockValidation(ctrl)
+			bvm.EXPECT().Review(ctx, tc.Review).Return(tc.Expected)
+
+			brm := mock_book.NewMockRepository(ctrl)
+
+			t.Run(result, func(t *testing.T) {
+				target := NewBookService(bvm, brm)
+
+				err := target.ValidationReview(ctx, tc.Review)
 				if !reflect.DeepEqual(err, tc.Expected) {
 					t.Fatalf("want %#v, but %#v", tc.Expected, err)
 					return
