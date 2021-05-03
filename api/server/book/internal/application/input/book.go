@@ -40,3 +40,21 @@ type ListBookshelf struct {
 	Limit  int    `json:"limit" validate:"gte=0,lte=1000"`
 	Offset int    `json:"offset" validate:"gte=0"`
 }
+
+// ListBookReview - 任意の書籍のレビュー一覧取得のリクエスト
+type ListBookReview struct {
+	BookID    int    `json:"bookId" validate:"required,gte=1"`
+	Limit     int    `json:"limit" validate:"gte=0,lte=1000"`
+	Offset    int    `json:"offset" validate:"gte=0"`
+	By        string `json:"by" validate:"omitempty,oneof=id username email role"`
+	Direction string `json:"direction" validate:"omitempty,oneof=asc desc"`
+}
+
+// ListUserReview - 任意のユーザのレビュー一覧取得のリクエスト
+type ListUserReview struct {
+	UserID    string `json:"userId" validate:"required"`
+	Limit     int    `json:"limit" validate:"gte=0,lte=1000"`
+	Offset    int    `json:"offset" validate:"gte=0"`
+	By        string `json:"by" validate:"omitempty,oneof=id username email role"`
+	Direction string `json:"direction" validate:"omitempty,oneof=asc desc"`
+}

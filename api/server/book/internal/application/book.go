@@ -15,8 +15,11 @@ import (
 type BookApplication interface {
 	ListByBookIDs(ctx context.Context, in *input.ListBookByBookIDs) ([]*book.Book, error)
 	ListBookshelf(ctx context.Context, in *input.ListBookshelf) ([]*book.Bookshelf, *output.ListQuery, error)
+	ListBookReview(ctx context.Context, in *input.ListBookReview) ([]*book.Review, *output.ListQuery, error)
+	ListUserReview(ctx context.Context, in *input.ListUserReview) ([]*book.Review, *output.ListQuery, error)
 	Show(ctx context.Context, isbn string) (*book.Book, error)
 	ShowBookshelf(ctx context.Context, userID string, bookID int) (*book.Bookshelf, error)
+	ShowReview(ctx context.Context, reviewID int) (*book.Review, error)
 	Create(ctx context.Context, in *input.Book) (*book.Book, error)
 	Update(ctx context.Context, in *input.Book) (*book.Book, error)
 	CreateOrUpdateBookshelf(ctx context.Context, in *input.Bookshelf) (*book.Bookshelf, error)
@@ -97,6 +100,120 @@ func (a *bookApplication) ListBookshelf(
 	return bss, out, nil
 }
 
+func (a *bookApplication) ListBookReview(
+	ctx context.Context, in *input.ListBookReview,
+) ([]*book.Review, *output.ListQuery, error) {
+	err := a.bookRequestValidation.ListBookReview(in)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	q := &domain.ListQuery{
+		Limit:  in.Limit,
+		Offset: in.Offset,
+		Conditions: []*domain.QueryCondition{
+			{
+				Field:    "book_id",
+				Operator: "==",
+				Value:    in.BookID,
+			},
+		},
+	}
+
+	if in.By != "" {
+		o := &domain.QueryOrder{
+			By:        in.By,
+			Direction: in.Direction,
+		}
+
+		q.Order = o
+	}
+
+	rvs, err := a.bookService.ListReview(ctx, q)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	total, err := a.bookService.ListReviewCount(ctx, q)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	out := &output.ListQuery{
+		Limit:  q.Limit,
+		Offset: q.Offset,
+		Total:  total,
+	}
+
+	if q.Order != nil {
+		o := &output.QueryOrder{
+			By:        q.Order.By,
+			Direction: q.Order.Direction,
+		}
+
+		out.Order = o
+	}
+
+	return rvs, out, nil
+}
+
+func (a *bookApplication) ListUserReview(
+	ctx context.Context, in *input.ListUserReview,
+) ([]*book.Review, *output.ListQuery, error) {
+	err := a.bookRequestValidation.ListUserReview(in)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	q := &domain.ListQuery{
+		Limit:  in.Limit,
+		Offset: in.Offset,
+		Conditions: []*domain.QueryCondition{
+			{
+				Field:    "user_id",
+				Operator: "==",
+				Value:    in.UserID,
+			},
+		},
+	}
+
+	if in.By != "" {
+		o := &domain.QueryOrder{
+			By:        in.By,
+			Direction: in.Direction,
+		}
+
+		q.Order = o
+	}
+
+	rvs, err := a.bookService.ListReview(ctx, q)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	total, err := a.bookService.ListReviewCount(ctx, q)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	out := &output.ListQuery{
+		Limit:  q.Limit,
+		Offset: q.Offset,
+		Total:  total,
+	}
+
+	if q.Order != nil {
+		o := &output.QueryOrder{
+			By:        q.Order.By,
+			Direction: q.Order.Direction,
+		}
+
+		out.Order = o
+	}
+
+	return rvs, out, nil
+}
+
 func (a *bookApplication) Show(ctx context.Context, isbn string) (*book.Book, error) {
 	return a.bookService.ShowByIsbn(ctx, isbn)
 }
@@ -112,6 +229,10 @@ func (a *bookApplication) ShowBookshelf(ctx context.Context, userID string, book
 	bs.Review = rv
 
 	return bs, nil
+}
+
+func (a *bookApplication) ShowReview(ctx context.Context, reviewID int) (*book.Review, error) {
+	return a.bookService.ShowReview(ctx, reviewID)
 }
 
 func (a *bookApplication) Create(ctx context.Context, in *input.Book) (*book.Book, error) {
