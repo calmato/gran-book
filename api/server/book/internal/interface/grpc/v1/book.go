@@ -18,6 +18,38 @@ type BookServer struct {
 	BookApplication application.BookApplication
 }
 
+func (s *BookServer) ListBookByBookIds(
+	ctx context.Context, req *pb.ListBookByBookIdsRequest,
+) (*pb.BookListResponse, error) {
+	_, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	bookIDs := make([]int, len(req.GetBookIds()))
+	for i, v := range req.GetBookIds() {
+		bookIDs[i] = int(v)
+	}
+
+	in := &input.ListBookByBookIDs{
+		BookIDs: bookIDs,
+	}
+
+	bs, err := s.BookApplication.ListByBookIDs(ctx, in)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	out := &output.ListQuery{
+		Limit:  0,
+		Offset: 0,
+		Total:  len(bs),
+	}
+
+	res := getBookListResponse(bs, out)
+	return res, nil
+}
+
 func (s *BookServer) ListBookshelf(
 	ctx context.Context, req *pb.ListBookshelfRequest,
 ) (*pb.BookshelfListResponse, error) {
@@ -353,6 +385,48 @@ func getBookResponse(b *book.Book) *pb.BookResponse {
 		UpdatedAt:      datetime.TimeToString(b.UpdatedAt),
 		Authors:        authors,
 	}
+}
+
+func getBookListResponse(bs []*book.Book, out *output.ListQuery) *pb.BookListResponse {
+	books := make([]*pb.BookListResponse_Book, len(bs))
+	for i, b := range bs {
+		authors := make([]*pb.BookListResponse_Author, len(b.Authors))
+		for j, a := range b.Authors {
+			author := &pb.BookListResponse_Author{
+				Name:     a.Name,
+				NameKana: a.NameKana,
+			}
+
+			authors[j] = author
+		}
+
+		book := &pb.BookListResponse_Book{
+			Id:             int64(b.ID),
+			Title:          b.Title,
+			TitleKana:      b.TitleKana,
+			Description:    b.Description,
+			Isbn:           b.Isbn,
+			Publisher:      b.Publisher,
+			PublishedOn:    b.PublishedOn,
+			ThumbnailUrl:   b.ThumbnailURL,
+			RakutenUrl:     b.RakutenURL,
+			RakutenGenreId: b.RakutenGenreID,
+			CreatedAt:      datetime.TimeToString(b.CreatedAt),
+			UpdatedAt:      datetime.TimeToString(b.UpdatedAt),
+			Authors:        authors,
+		}
+
+		books[i] = book
+	}
+
+	res := &pb.BookListResponse{
+		Books:  books,
+		Limit:  int64(out.Limit),
+		Offset: int64(out.Offset),
+		Total:  int64(out.Total),
+	}
+
+	return res
 }
 
 func getBookshelfResponse(bs *book.Bookshelf) *pb.BookshelfResponse {
