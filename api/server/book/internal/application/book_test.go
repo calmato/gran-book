@@ -171,6 +171,196 @@ func TestBookApplication_ListBookshelf(t *testing.T) {
 	}
 }
 
+func TestBookApplication_ListBookReview(t *testing.T) {
+	testCases := map[string]struct {
+		Input    *input.ListBookReview
+		Expected struct {
+			Reviews []*book.Review
+			Output  *output.ListQuery
+			Error   error
+		}
+	}{
+		"ok": {
+			Input: &input.ListBookReview{
+				BookID:    1,
+				Limit:     0,
+				Offset:    0,
+				By:        "",
+				Direction: "",
+			},
+			Expected: struct {
+				Reviews []*book.Review
+				Output  *output.ListQuery
+				Error   error
+			}{
+				Reviews: []*book.Review{
+					{
+						ID:         1,
+						BookID:     1,
+						UserID:     "00000000-0000-0000-0000-000000000000",
+						Score:      5,
+						Impression: "書籍の感想です。",
+						CreatedAt:  time.Time{},
+						UpdatedAt:  time.Time{},
+					},
+				},
+				Output: &output.ListQuery{
+					Limit:  100,
+					Offset: 0,
+					Total:  1,
+				},
+				Error: nil,
+			},
+		},
+	}
+
+	for result, tc := range testCases {
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		q := &domain.ListQuery{
+			Limit:  tc.Input.Limit,
+			Offset: tc.Input.Offset,
+			Conditions: []*domain.QueryCondition{
+				{
+					Field:    "book_id",
+					Operator: "==",
+					Value:    tc.Input.BookID,
+				},
+			},
+		}
+
+		if tc.Input.By != "" {
+			o := &domain.QueryOrder{
+				By:        tc.Input.By,
+				Direction: tc.Input.Direction,
+			}
+
+			q.Order = o
+		}
+
+		brv := mock_validation.NewMockBookRequestValidation(ctrl)
+		brv.EXPECT().ListBookReview(tc.Input).Return(nil)
+
+		bsm := mock_book.NewMockService(ctrl)
+		bsm.EXPECT().ListReview(ctx, q).Return(tc.Expected.Reviews, tc.Expected.Error)
+		bsm.EXPECT().ListReviewCount(ctx, q).Return(tc.Expected.Output.Total, tc.Expected.Error)
+
+		t.Run(result, func(t *testing.T) {
+			target := NewBookApplication(brv, bsm)
+
+			rvs, _, err := target.ListBookReview(ctx, tc.Input)
+			if !reflect.DeepEqual(err, tc.Expected.Error) {
+				t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+				return
+			}
+
+			if !reflect.DeepEqual(rvs, tc.Expected.Reviews) {
+				t.Fatalf("want %#v, but %#v", tc.Expected.Reviews, rvs)
+				return
+			}
+		})
+	}
+}
+
+func TestBookApplication_ListUserReview(t *testing.T) {
+	testCases := map[string]struct {
+		Input    *input.ListUserReview
+		Expected struct {
+			Reviews []*book.Review
+			Output  *output.ListQuery
+			Error   error
+		}
+	}{
+		"ok": {
+			Input: &input.ListUserReview{
+				UserID:    "00000000-0000-0000-0000-000000000000",
+				Limit:     0,
+				Offset:    0,
+				By:        "",
+				Direction: "",
+			},
+			Expected: struct {
+				Reviews []*book.Review
+				Output  *output.ListQuery
+				Error   error
+			}{
+				Reviews: []*book.Review{
+					{
+						ID:         1,
+						BookID:     1,
+						UserID:     "00000000-0000-0000-0000-000000000000",
+						Score:      5,
+						Impression: "書籍の感想です。",
+						CreatedAt:  time.Time{},
+						UpdatedAt:  time.Time{},
+					},
+				},
+				Output: &output.ListQuery{
+					Limit:  100,
+					Offset: 0,
+					Total:  1,
+				},
+				Error: nil,
+			},
+		},
+	}
+
+	for result, tc := range testCases {
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		q := &domain.ListQuery{
+			Limit:  tc.Input.Limit,
+			Offset: tc.Input.Offset,
+			Conditions: []*domain.QueryCondition{
+				{
+					Field:    "user_id",
+					Operator: "==",
+					Value:    tc.Input.UserID,
+				},
+			},
+		}
+
+		if tc.Input.By != "" {
+			o := &domain.QueryOrder{
+				By:        tc.Input.By,
+				Direction: tc.Input.Direction,
+			}
+
+			q.Order = o
+		}
+
+		brv := mock_validation.NewMockBookRequestValidation(ctrl)
+		brv.EXPECT().ListUserReview(tc.Input).Return(nil)
+
+		bsm := mock_book.NewMockService(ctrl)
+		bsm.EXPECT().ListReview(ctx, q).Return(tc.Expected.Reviews, tc.Expected.Error)
+		bsm.EXPECT().ListReviewCount(ctx, q).Return(tc.Expected.Output.Total, tc.Expected.Error)
+
+		t.Run(result, func(t *testing.T) {
+			target := NewBookApplication(brv, bsm)
+
+			rvs, _, err := target.ListUserReview(ctx, tc.Input)
+			if !reflect.DeepEqual(err, tc.Expected.Error) {
+				t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+				return
+			}
+
+			if !reflect.DeepEqual(rvs, tc.Expected.Reviews) {
+				t.Fatalf("want %#v, but %#v", tc.Expected.Reviews, rvs)
+				return
+			}
+		})
+	}
+}
+
 func TestBookApplication_Show(t *testing.T) {
 	testCases := map[string]struct {
 		Isbn     string
@@ -293,6 +483,63 @@ func TestBookApplication_ShowBookshelf(t *testing.T) {
 
 			if !reflect.DeepEqual(bs, tc.Expected.Bookshelf) {
 				t.Fatalf("want %#v, but %#v", tc.Expected.Bookshelf, bs)
+				return
+			}
+		})
+	}
+}
+
+func TestBookApplication_ShowReview(t *testing.T) {
+	testCases := map[string]struct {
+		ReviewID int
+		Expected struct {
+			Review *book.Review
+			Error  error
+		}
+	}{
+		"ok": {
+			ReviewID: 1,
+			Expected: struct {
+				Review *book.Review
+				Error  error
+			}{
+				Review: &book.Review{
+					ID:         1,
+					BookID:     1,
+					UserID:     "00000000-0000-0000-0000-000000000000",
+					Score:      5,
+					Impression: "書籍の感想です。",
+					CreatedAt:  time.Time{},
+					UpdatedAt:  time.Time{},
+				},
+				Error: nil,
+			},
+		},
+	}
+
+	for result, tc := range testCases {
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		brv := mock_validation.NewMockBookRequestValidation(ctrl)
+
+		bsm := mock_book.NewMockService(ctrl)
+		bsm.EXPECT().ShowReview(ctx, tc.ReviewID).Return(tc.Expected.Review, tc.Expected.Error)
+
+		t.Run(result, func(t *testing.T) {
+			target := NewBookApplication(brv, bsm)
+
+			rv, err := target.ShowReview(ctx, tc.ReviewID)
+			if !reflect.DeepEqual(err, tc.Expected.Error) {
+				t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+				return
+			}
+
+			if !reflect.DeepEqual(rv, tc.Expected.Review) {
+				t.Fatalf("want %#v, but %#v", tc.Expected.Review, rv)
 				return
 			}
 		})

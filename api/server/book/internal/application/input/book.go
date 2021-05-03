@@ -46,7 +46,7 @@ type ListBookReview struct {
 	BookID    int    `json:"bookId" validate:"required,gte=1"`
 	Limit     int    `json:"limit" validate:"gte=0,lte=1000"`
 	Offset    int    `json:"offset" validate:"gte=0"`
-	By        string `json:"by" validate:"omitempty,oneof=id username email role"`
+	By        string `json:"by" validate:"omitempty,oneof=id score"`
 	Direction string `json:"direction" validate:"omitempty,oneof=asc desc"`
 }
 
@@ -55,6 +55,6 @@ type ListUserReview struct {
 	UserID    string `json:"userId" validate:"required"`
 	Limit     int    `json:"limit" validate:"gte=0,lte=1000"`
 	Offset    int    `json:"offset" validate:"gte=0"`
-	By        string `json:"by" validate:"omitempty,oneof=id username email role"`
+	By        string `json:"by" validate:"omitempty,oneof=id score"`
 	Direction string `json:"direction" validate:"omitempty,oneof=asc desc"`
 }
