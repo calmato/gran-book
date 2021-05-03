@@ -60,7 +60,7 @@ func (r *bookRepository) ListReview(ctx context.Context, q *domain.ListQuery) ([
 		return nil, exception.ErrorInDatastore.New(err)
 	}
 
-	return bss, nil
+	return rvs, nil
 }
 
 func (r *bookRepository) ListCount(ctx context.Context, q *domain.ListQuery) (int, error) {
