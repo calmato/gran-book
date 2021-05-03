@@ -35,6 +35,21 @@ func (m *MockService) EXPECT() *MockServiceMockRecorder {
 	return m.recorder
 }
 
+// List mocks base method
+func (m *MockService) List(ctx context.Context, q *domain.ListQuery) ([]*book.Book, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "List", ctx, q)
+	ret0, _ := ret[0].([]*book.Book)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// List indicates an expected call of List
+func (mr *MockServiceMockRecorder) List(ctx, q interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockService)(nil).List), ctx, q)
+}
+
 // ListBookshelf mocks base method
 func (m *MockService) ListBookshelf(ctx context.Context, q *domain.ListQuery) ([]*book.Bookshelf, error) {
 	m.ctrl.T.Helper()
@@ -48,6 +63,21 @@ func (m *MockService) ListBookshelf(ctx context.Context, q *domain.ListQuery) ([
 func (mr *MockServiceMockRecorder) ListBookshelf(ctx, q interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListBookshelf", reflect.TypeOf((*MockService)(nil).ListBookshelf), ctx, q)
+}
+
+// ListCount mocks base method
+func (m *MockService) ListCount(ctx context.Context, q *domain.ListQuery) (int, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListCount", ctx, q)
+	ret0, _ := ret[0].(int)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListCount indicates an expected call of ListCount
+func (mr *MockServiceMockRecorder) ListCount(ctx, q interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListCount", reflect.TypeOf((*MockService)(nil).ListCount), ctx, q)
 }
 
 // ListBookshelfCount mocks base method
