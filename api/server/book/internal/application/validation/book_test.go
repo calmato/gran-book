@@ -494,6 +494,58 @@ func TestBookRequestValidation_Bookshelf(t *testing.T) {
 	}
 }
 
+func TestBookRequestValidation_ListBookByBookIDs(t *testing.T) {
+	testCases := map[string]struct {
+		Input    *input.ListBookByBookIDs
+		Expected bool
+	}{
+		"ok": {
+			Input: &input.ListBookByBookIDs{
+				BookIDs: []int{1, 2},
+			},
+			Expected: true,
+		},
+		"ng_bookIds_unique": {
+			Input: &input.ListBookByBookIDs{
+				BookIDs: []int{1, 1},
+			},
+			Expected: false,
+		},
+		"ng_bookIds_required": {
+			Input: &input.ListBookByBookIDs{
+				BookIDs: []int{0, 1},
+			},
+			Expected: false,
+		},
+		"ng_bookIds_greater_than_equal": {
+			Input: &input.ListBookByBookIDs{
+				BookIDs: []int{0},
+			},
+			Expected: false,
+		},
+	}
+
+	for result, tc := range testCases {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		t.Run(result, func(t *testing.T) {
+			target := NewBookRequestValidation()
+
+			got := target.ListBookByBookIDs(tc.Input)
+			if tc.Expected {
+				if got != nil {
+					t.Fatalf("Incorrect result: %#v", got)
+				}
+			} else {
+				if got == nil {
+					t.Fatalf("Incorrect result: result is nil")
+				}
+			}
+		})
+	}
+}
+
 func TestBookRequestValidation_ListBookshelf(t *testing.T) {
 	testCases := map[string]struct {
 		Input    *input.ListBookshelf
