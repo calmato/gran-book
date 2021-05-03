@@ -65,6 +65,21 @@ func (mr *MockRepositoryMockRecorder) ListBookshelf(ctx, q interface{}) *gomock.
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListBookshelf", reflect.TypeOf((*MockRepository)(nil).ListBookshelf), ctx, q)
 }
 
+// ListReview mocks base method
+func (m *MockRepository) ListReview(ctx context.Context, q *domain.ListQuery) ([]*book.Review, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListReview", ctx, q)
+	ret0, _ := ret[0].([]*book.Review)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListReview indicates an expected call of ListReview
+func (mr *MockRepositoryMockRecorder) ListReview(ctx, q interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListReview", reflect.TypeOf((*MockRepository)(nil).ListReview), ctx, q)
+}
+
 // ListCount mocks base method
 func (m *MockRepository) ListCount(ctx context.Context, q *domain.ListQuery) (int, error) {
 	m.ctrl.T.Helper()
@@ -93,6 +108,21 @@ func (m *MockRepository) ListBookshelfCount(ctx context.Context, q *domain.ListQ
 func (mr *MockRepositoryMockRecorder) ListBookshelfCount(ctx, q interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListBookshelfCount", reflect.TypeOf((*MockRepository)(nil).ListBookshelfCount), ctx, q)
+}
+
+// ListReviewCount mocks base method
+func (m *MockRepository) ListReviewCount(ctx context.Context, q *domain.ListQuery) (int, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListReviewCount", ctx, q)
+	ret0, _ := ret[0].(int)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListReviewCount indicates an expected call of ListReviewCount
+func (mr *MockRepositoryMockRecorder) ListReviewCount(ctx, q interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListReviewCount", reflect.TypeOf((*MockRepository)(nil).ListReviewCount), ctx, q)
 }
 
 // Show mocks base method
@@ -138,6 +168,21 @@ func (m *MockRepository) ShowBookshelfByUserIDAndBookID(ctx context.Context, use
 func (mr *MockRepositoryMockRecorder) ShowBookshelfByUserIDAndBookID(ctx, userID, bookID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ShowBookshelfByUserIDAndBookID", reflect.TypeOf((*MockRepository)(nil).ShowBookshelfByUserIDAndBookID), ctx, userID, bookID)
+}
+
+// ShowReview mocks base method
+func (m *MockRepository) ShowReview(ctx context.Context, reviewID int) (*book.Review, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ShowReview", ctx, reviewID)
+	ret0, _ := ret[0].(*book.Review)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ShowReview indicates an expected call of ShowReview
+func (mr *MockRepositoryMockRecorder) ShowReview(ctx, reviewID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ShowReview", reflect.TypeOf((*MockRepository)(nil).ShowReview), ctx, reviewID)
 }
 
 // ShowReviewByUserIDAndBookID mocks base method
