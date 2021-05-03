@@ -21,12 +21,20 @@ func NewBookService(bdv book.Validation, br book.Repository) book.Service {
 	}
 }
 
+func (s *bookService) List(ctx context.Context, q *domain.ListQuery) ([]*book.Book, error) {
+	return s.bookRepository.List(ctx, q)
+}
+
 func (s *bookService) ListBookshelf(ctx context.Context, q *domain.ListQuery) ([]*book.Bookshelf, error) {
 	return s.bookRepository.ListBookshelf(ctx, q)
 }
 
 func (s *bookService) Show(ctx context.Context, bookID int) (*book.Book, error) {
 	return s.bookRepository.Show(ctx, bookID)
+}
+
+func (s *bookService) ListCount(ctx context.Context, q *domain.ListQuery) (int, error) {
+	return s.bookRepository.ListCount(ctx, q)
 }
 
 func (s *bookService) ListBookshelfCount(ctx context.Context, q *domain.ListQuery) (int, error) {

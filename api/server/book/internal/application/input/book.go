@@ -29,6 +29,11 @@ type Bookshelf struct {
 	Impression string `json:"impression" validate:"omitempty,max=1000"`
 }
 
+// ListBookByBookIDs - 書籍一覧取得のリクエスト
+type ListBookByBookIDs struct {
+	BookIDs []int `json:"bookIds" validate:"unique,dive,required,gte=1"`
+}
+
 // ListBookshelf - 本棚内の書籍一覧取得のリクエスト
 type ListBookshelf struct {
 	UserID string `json:"userId" validate:"required"`

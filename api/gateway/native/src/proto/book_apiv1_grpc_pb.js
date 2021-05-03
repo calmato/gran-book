@@ -4,6 +4,17 @@
 var grpc = require('@grpc/grpc-js');
 var proto_book_apiv1_pb = require('../proto/book_apiv1_pb.js');
 
+function serialize_proto_BookListResponse(arg) {
+  if (!(arg instanceof proto_book_apiv1_pb.BookListResponse)) {
+    throw new Error('Expected argument of type proto.BookListResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_BookListResponse(buffer_arg) {
+  return proto_book_apiv1_pb.BookListResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_proto_BookResponse(arg) {
   if (!(arg instanceof proto_book_apiv1_pb.BookResponse)) {
     throw new Error('Expected argument of type proto.BookResponse');
@@ -112,6 +123,17 @@ function serialize_proto_GetReviewRequest(arg) {
 
 function deserialize_proto_GetReviewRequest(buffer_arg) {
   return proto_book_apiv1_pb.GetReviewRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_proto_ListBookByBookIdsRequest(arg) {
+  if (!(arg instanceof proto_book_apiv1_pb.ListBookByBookIdsRequest)) {
+    throw new Error('Expected argument of type proto.ListBookByBookIdsRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_ListBookByBookIdsRequest(buffer_arg) {
+  return proto_book_apiv1_pb.ListBookByBookIdsRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 function serialize_proto_ListBookReviewRequest(arg) {
@@ -237,6 +259,17 @@ function deserialize_proto_WantBookshelfRequest(buffer_arg) {
 
 
 var BookServiceService = exports.BookServiceService = {
+  listBookByBookIds: {
+    path: '/proto.BookService/ListBookByBookIds',
+    requestStream: false,
+    responseStream: false,
+    requestType: proto_book_apiv1_pb.ListBookByBookIdsRequest,
+    responseType: proto_book_apiv1_pb.BookListResponse,
+    requestSerialize: serialize_proto_ListBookByBookIdsRequest,
+    requestDeserialize: deserialize_proto_ListBookByBookIdsRequest,
+    responseSerialize: serialize_proto_BookListResponse,
+    responseDeserialize: deserialize_proto_BookListResponse,
+  },
   listBookshelf: {
     path: '/proto.BookService/ListBookshelf',
     requestStream: false,

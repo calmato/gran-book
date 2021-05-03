@@ -8,7 +8,9 @@ import (
 
 // Service - Bookサービス
 type Service interface {
+	List(ctx context.Context, q *domain.ListQuery) ([]*Book, error)
 	ListBookshelf(ctx context.Context, q *domain.ListQuery) ([]*Bookshelf, error)
+	ListCount(ctx context.Context, q *domain.ListQuery) (int, error)
 	ListBookshelfCount(ctx context.Context, q *domain.ListQuery) (int, error)
 	Show(ctx context.Context, bookID int) (*Book, error)
 	ShowByIsbn(ctx context.Context, isbn string) (*Book, error)

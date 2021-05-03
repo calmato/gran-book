@@ -12,6 +12,7 @@ import (
 type BookRequestValidation interface {
 	Book(in *input.Book) error
 	Bookshelf(in *input.Bookshelf) error
+	ListBookByBookIDs(in *input.ListBookByBookIDs) error
 	ListBookshelf(in *input.ListBookshelf) error
 }
 
@@ -51,6 +52,16 @@ func (v *bookRequestValidation) Bookshelf(in *input.Bookshelf) error {
 	}
 
 	err := xerrors.New("Failed to Bookshelf for RequestValidation")
+	return exception.InvalidRequestValidation.New(err, ves...)
+}
+
+func (v *bookRequestValidation) ListBookByBookIDs(in *input.ListBookByBookIDs) error {
+	ves := v.validator.Run(in, "")
+	if len(ves) == 0 {
+		return nil
+	}
+
+	err := xerrors.New("Failed to ListBookByBookIDs for RequestValidation")
 	return exception.InvalidRequestValidation.New(err, ves...)
 }
 

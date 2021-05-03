@@ -13,6 +13,7 @@ import (
 
 // BookApplication - Bookアプリケーションのインターフェース
 type BookApplication interface {
+	ListByBookIDs(ctx context.Context, in *input.ListBookByBookIDs) ([]*book.Book, error)
 	ListBookshelf(ctx context.Context, in *input.ListBookshelf) ([]*book.Bookshelf, *output.ListQuery, error)
 	Show(ctx context.Context, isbn string) (*book.Book, error)
 	ShowBookshelf(ctx context.Context, userID string, bookID int) (*book.Bookshelf, error)
@@ -34,6 +35,27 @@ func NewBookApplication(brv validation.BookRequestValidation, bs book.Service) B
 		bookRequestValidation: brv,
 		bookService:           bs,
 	}
+}
+
+func (a *bookApplication) ListByBookIDs(ctx context.Context, in *input.ListBookByBookIDs) ([]*book.Book, error) {
+	err := a.bookRequestValidation.ListBookByBookIDs(in)
+	if err != nil {
+		return nil, err
+	}
+
+	q := &domain.ListQuery{
+		Limit:  0,
+		Offset: 0,
+		Conditions: []*domain.QueryCondition{
+			{
+				Field:    "id",
+				Operator: "IN",
+				Value:    in.BookIDs,
+			},
+		},
+	}
+
+	return a.bookService.List(ctx, q)
 }
 
 func (a *bookApplication) ListBookshelf(

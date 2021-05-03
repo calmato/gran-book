@@ -17,6 +17,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type BookServiceClient interface {
+	ListBookByBookIds(ctx context.Context, in *ListBookByBookIdsRequest, opts ...grpc.CallOption) (*BookListResponse, error)
 	ListBookshelf(ctx context.Context, in *ListBookshelfRequest, opts ...grpc.CallOption) (*BookshelfListResponse, error)
 	ListBookReview(ctx context.Context, in *ListBookReviewRequest, opts ...grpc.CallOption) (*ReviewListResponse, error)
 	ListUserReview(ctx context.Context, in *ListUserReviewRequest, opts ...grpc.CallOption) (*ReviewListResponse, error)
@@ -40,6 +41,15 @@ type bookServiceClient struct {
 
 func NewBookServiceClient(cc grpc.ClientConnInterface) BookServiceClient {
 	return &bookServiceClient{cc}
+}
+
+func (c *bookServiceClient) ListBookByBookIds(ctx context.Context, in *ListBookByBookIdsRequest, opts ...grpc.CallOption) (*BookListResponse, error) {
+	out := new(BookListResponse)
+	err := c.cc.Invoke(ctx, "/proto.BookService/ListBookByBookIds", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *bookServiceClient) ListBookshelf(ctx context.Context, in *ListBookshelfRequest, opts ...grpc.CallOption) (*BookshelfListResponse, error) {
@@ -181,6 +191,7 @@ func (c *bookServiceClient) DeleteBookshelf(ctx context.Context, in *DeleteBooks
 // All implementations must embed UnimplementedBookServiceServer
 // for forward compatibility
 type BookServiceServer interface {
+	ListBookByBookIds(context.Context, *ListBookByBookIdsRequest) (*BookListResponse, error)
 	ListBookshelf(context.Context, *ListBookshelfRequest) (*BookshelfListResponse, error)
 	ListBookReview(context.Context, *ListBookReviewRequest) (*ReviewListResponse, error)
 	ListUserReview(context.Context, *ListUserReviewRequest) (*ReviewListResponse, error)
@@ -203,6 +214,9 @@ type BookServiceServer interface {
 type UnimplementedBookServiceServer struct {
 }
 
+func (UnimplementedBookServiceServer) ListBookByBookIds(context.Context, *ListBookByBookIdsRequest) (*BookListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListBookByBookIds not implemented")
+}
 func (UnimplementedBookServiceServer) ListBookshelf(context.Context, *ListBookshelfRequest) (*BookshelfListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListBookshelf not implemented")
 }
@@ -259,6 +273,24 @@ type UnsafeBookServiceServer interface {
 
 func RegisterBookServiceServer(s grpc.ServiceRegistrar, srv BookServiceServer) {
 	s.RegisterService(&_BookService_serviceDesc, srv)
+}
+
+func _BookService_ListBookByBookIds_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListBookByBookIdsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BookServiceServer).ListBookByBookIds(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.BookService/ListBookByBookIds",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BookServiceServer).ListBookByBookIds(ctx, req.(*ListBookByBookIdsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _BookService_ListBookshelf_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -535,6 +567,10 @@ var _BookService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "proto.BookService",
 	HandlerType: (*BookServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "ListBookByBookIds",
+			Handler:    _BookService_ListBookByBookIds_Handler,
+		},
 		{
 			MethodName: "ListBookshelf",
 			Handler:    _BookService_ListBookshelf_Handler,
