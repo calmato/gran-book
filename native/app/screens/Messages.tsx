@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from 'react';
-import { View, StyleSheet, SafeAreaView, TextInput, Text, KeyboardAvoidingView } from 'react-native';
+import React, { useState, useMemo, useEffect } from 'react';
+import { View, StyleSheet, SafeAreaView, TextInput, Text, KeyboardAvoidingView, FlatList } from 'react-native';
 import { StatusBar as ExpoStatusBar } from 'expo-status-bar';
 import firebase from '~/lib/firebase';
 import { getMessageDocRef } from '~/store/usecases/auth';
@@ -7,17 +7,20 @@ import { COLOR } from '~~/constants/theme';
 import { MaterialIcons, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { MessageForm } from '~/types/forms';
 import { Header } from 'react-native-elements';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export const MessagesScreen = () => {
-  const [formData, setText] = useState<MessageForm>({
+  const [textData, setText] = useState<MessageForm>({
     newText: '',
     createdAt: firebase.firestore.Timestamp.now(),
     userId: '',
   });
+  const [messages, setMessages] = useState<MessageForm[]>([]);
+  const [userId, setUserId] = useState<MessageForm['userId'] | undefined>();
 
   const canSubmit: boolean = useMemo((): boolean => {
-    return formData.newText.length > 0;
-  }, [formData.newText]);
+    return textData.newText.length > 0;
+  }, [textData.newText]);
 
   const sendMessage = async (value: string) => {
     if (value !== '') {
@@ -30,6 +33,23 @@ export const MessagesScreen = () => {
       await docRef.add(newMessage);
     }
   };
+
+  const getMessage = async () => {
+    const messages = [] as MessageForm[];
+    await firebase.firestore().collection('messages').orderBy('createdAt', 'desc')
+      .onSnapshot((snapshot) => {
+        snapshot.docChanges().forEach((change) => {
+          if (change.type === 'added') {
+            messages.push(change.doc.data() as MessageForm);
+          }
+          setMessages(messages);
+        });
+      });
+  };
+
+  useEffect(() => {
+    getMessage();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -49,6 +69,17 @@ export const MessagesScreen = () => {
           height: 40
         }}
       />
+      <ScrollView>
+        <FlatList
+          style={styles.messagesContainer}
+          data={messages}
+          inverted={true}
+          renderItem={({ item }: { item: MessageForm }) => (
+            <Text style={{ color: COLOR.TEXT_DEFAULT}}>{item.newText}</Text>
+          )}
+          keyExtractor={(_, index)=> index.toString()}
+        />
+      </ScrollView>
 
       <View style={styles.chatFooter}>
         <MaterialCommunityIcons
@@ -59,9 +90,9 @@ export const MessagesScreen = () => {
         <TextInput
           style={styles.inputText}
           onChangeText={(value) => {
-            setText({ ...formData, newText: value });
+            setText({ ...textData, newText: value });
           }}
-          value={formData.newText}
+          value={textData.newText}
           placeholder="メッセージを入力してください"
           placeholderTextColor={COLOR.TEXT_GRAY}
           autoCapitalize="none"
@@ -74,7 +105,7 @@ export const MessagesScreen = () => {
           size={32}
           disabled={!canSubmit}
           onPress={() => {
-            sendMessage(formData.newText);
+            sendMessage(textData.newText);
           }}
         />
       </View>
@@ -87,13 +118,18 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLOR.BACKGROUND_GREY,
   },
-  header:{
+  header: {
     color:COLOR.TEXT_TITLE,
     fontSize: 20,
     fontWeight: 'bold',
     flexDirection: 'column',
     justifyContent: 'flex-end',
   },
+  messagesContainer: {
+    width: '100%',
+    padding: 10
+  },
+
   inputText: {
     color: COLOR.TEXT_DEFAULT,
     borderWidth: 1,
@@ -106,7 +142,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 10,
   },
-  inputImage:{
+  inputImage: {
     marginLeft: '3%',
     color: COLOR.TEXT_GRAY
   },
