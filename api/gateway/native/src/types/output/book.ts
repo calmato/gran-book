@@ -95,3 +95,36 @@ export interface IBookshelfListOutputBookshelf {
   updatedAt: string
   book: IBookshelfListOutputBook
 }
+
+export interface IReviewOutput {
+  id: number
+  bookId: number
+  userId: string
+  score: number
+  impression: string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface IReviewListOutput {
+  reviews: Array<IReviewListOutputReview>
+  limit: number
+  offset: number
+  total: number
+  order?: IReviewListOutputOrder
+}
+
+export interface IReviewListOutputReview {
+  id: number
+  bookId: number
+  userId: string
+  score: number
+  impression: string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface IReviewListOutputOrder {
+  by: string
+  direction: string
+}
