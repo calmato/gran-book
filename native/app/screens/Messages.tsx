@@ -8,6 +8,7 @@ import { MaterialIcons, Ionicons, MaterialCommunityIcons } from '@expo/vector-ic
 import { MessageForm } from '~/types/forms';
 import { Header } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
+import { MessageItem } from '~/components/organisms/MessageItem';
 
 export const MessagesScreen = () => {
   const [textData, setText] = useState<MessageForm>({
@@ -75,7 +76,7 @@ export const MessagesScreen = () => {
           data={messages}
           inverted={true}
           renderItem={({ item }: { item: MessageForm }) => (
-            <Text style={{ color: COLOR.TEXT_DEFAULT}}>{item.newText}</Text>
+            <MessageItem userId={userId} item={item} />
           )}
           keyExtractor={(_, index)=> index.toString()}
         />
