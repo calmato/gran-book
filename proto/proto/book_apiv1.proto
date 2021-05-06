@@ -10,6 +10,7 @@ service BookService {
   rpc ListBookReview(ListBookReviewRequest) returns (ReviewListResponse);
   rpc ListUserReview(ListUserReviewRequest) returns (ReviewListResponse);
   rpc GetBook(GetBookRequest) returns (BookResponse);
+  rpc GetBookByIsbn(GetBookByIsbnRequest) returns (BookResponse);
   rpc GetBookshelf(GetBookshelfRequest) returns (BookshelfResponse);
   rpc GetReview(GetReviewRequest) returns (ReviewResponse);
   rpc CreateBook(CreateBookRequest) returns (BookResponse);
@@ -58,6 +59,10 @@ message ListUserReviewRequest {
 }
 
 message GetBookRequest {
+  string isbn = 1;
+}
+
+message GetBookByIsbnRequest {
   string isbn = 1;
 }
 

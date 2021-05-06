@@ -363,6 +363,68 @@ func TestBookApplication_ListUserReview(t *testing.T) {
 
 func TestBookApplication_Show(t *testing.T) {
 	testCases := map[string]struct {
+		BookID   int
+		Expected struct {
+			Book  *book.Book
+			Error error
+		}
+	}{
+		"ok": {
+			BookID: 1,
+			Expected: struct {
+				Book  *book.Book
+				Error error
+			}{
+				Book: &book.Book{
+					ID:           0,
+					Title:        "テスト書籍",
+					TitleKana:    "てすとしょせき",
+					Description:  "本の説明です",
+					Isbn:         "1234567890123",
+					Publisher:    "テスト著者",
+					PublishedOn:  "2021年12月24日",
+					ThumbnailURL: "",
+					CreatedAt:    time.Time{},
+					UpdatedAt:    time.Time{},
+					Authors:      []*book.Author{},
+					Reviews:      []*book.Review{},
+				},
+				Error: nil,
+			},
+		},
+	}
+
+	for result, tc := range testCases {
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		brv := mock_validation.NewMockBookRequestValidation(ctrl)
+
+		bsm := mock_book.NewMockService(ctrl)
+		bsm.EXPECT().Show(ctx, tc.BookID).Return(tc.Expected.Book, tc.Expected.Error)
+
+		t.Run(result, func(t *testing.T) {
+			target := NewBookApplication(brv, bsm)
+
+			b, err := target.Show(ctx, tc.BookID)
+			if !reflect.DeepEqual(err, tc.Expected.Error) {
+				t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+				return
+			}
+
+			if !reflect.DeepEqual(b, tc.Expected.Book) {
+				t.Fatalf("want %#v, but %#v", tc.Expected.Book, b)
+				return
+			}
+		})
+	}
+}
+
+func TestBookApplication_ShowByIsbn(t *testing.T) {
+	testCases := map[string]struct {
 		Isbn     string
 		Expected struct {
 			Book  *book.Book
@@ -409,7 +471,7 @@ func TestBookApplication_Show(t *testing.T) {
 		t.Run(result, func(t *testing.T) {
 			target := NewBookApplication(brv, bsm)
 
-			b, err := target.Show(ctx, tc.Isbn)
+			b, err := target.ShowByIsbn(ctx, tc.Isbn)
 			if !reflect.DeepEqual(err, tc.Expected.Error) {
 				t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
 				return

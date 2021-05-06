@@ -205,6 +205,26 @@ export namespace GetBookRequest {
     }
 }
 
+export class GetBookByIsbnRequest extends jspb.Message { 
+    getIsbn(): string;
+    setIsbn(value: string): GetBookByIsbnRequest;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): GetBookByIsbnRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: GetBookByIsbnRequest): GetBookByIsbnRequest.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: GetBookByIsbnRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): GetBookByIsbnRequest;
+    static deserializeBinaryFromReader(message: GetBookByIsbnRequest, reader: jspb.BinaryReader): GetBookByIsbnRequest;
+}
+
+export namespace GetBookByIsbnRequest {
+    export type AsObject = {
+        isbn: string,
+    }
+}
+
 export class GetBookshelfRequest extends jspb.Message { 
     getUserId(): string;
     setUserId(value: string): GetBookshelfRequest;

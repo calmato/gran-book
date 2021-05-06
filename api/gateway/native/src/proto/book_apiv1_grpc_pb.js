@@ -92,6 +92,17 @@ function deserialize_proto_EmptyBook(buffer_arg) {
   return proto_book_apiv1_pb.EmptyBook.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_proto_GetBookByIsbnRequest(arg) {
+  if (!(arg instanceof proto_book_apiv1_pb.GetBookByIsbnRequest)) {
+    throw new Error('Expected argument of type proto.GetBookByIsbnRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_GetBookByIsbnRequest(buffer_arg) {
+  return proto_book_apiv1_pb.GetBookByIsbnRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_proto_GetBookRequest(arg) {
   if (!(arg instanceof proto_book_apiv1_pb.GetBookRequest)) {
     throw new Error('Expected argument of type proto.GetBookRequest');
@@ -311,6 +322,17 @@ var BookServiceService = exports.BookServiceService = {
     responseType: proto_book_apiv1_pb.BookResponse,
     requestSerialize: serialize_proto_GetBookRequest,
     requestDeserialize: deserialize_proto_GetBookRequest,
+    responseSerialize: serialize_proto_BookResponse,
+    responseDeserialize: deserialize_proto_BookResponse,
+  },
+  getBookByIsbn: {
+    path: '/proto.BookService/GetBookByIsbn',
+    requestStream: false,
+    responseStream: false,
+    requestType: proto_book_apiv1_pb.GetBookByIsbnRequest,
+    responseType: proto_book_apiv1_pb.BookResponse,
+    requestSerialize: serialize_proto_GetBookByIsbnRequest,
+    requestDeserialize: deserialize_proto_GetBookByIsbnRequest,
     responseSerialize: serialize_proto_BookResponse,
     responseDeserialize: deserialize_proto_BookResponse,
   },

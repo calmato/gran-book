@@ -17,7 +17,8 @@ type BookApplication interface {
 	ListBookshelf(ctx context.Context, in *input.ListBookshelf) ([]*book.Bookshelf, *output.ListQuery, error)
 	ListBookReview(ctx context.Context, in *input.ListBookReview) ([]*book.Review, *output.ListQuery, error)
 	ListUserReview(ctx context.Context, in *input.ListUserReview) ([]*book.Review, *output.ListQuery, error)
-	Show(ctx context.Context, isbn string) (*book.Book, error)
+	Show(ctx context.Context, id int) (*book.Book, error)
+	ShowByIsbn(ctx context.Context, isbn string) (*book.Book, error)
 	ShowBookshelf(ctx context.Context, userID string, bookID int) (*book.Bookshelf, error)
 	ShowReview(ctx context.Context, reviewID int) (*book.Review, error)
 	Create(ctx context.Context, in *input.Book) (*book.Book, error)
@@ -214,7 +215,11 @@ func (a *bookApplication) ListUserReview(
 	return rvs, out, nil
 }
 
-func (a *bookApplication) Show(ctx context.Context, isbn string) (*book.Book, error) {
+func (a *bookApplication) Show(ctx context.Context, id int) (*book.Book, error) {
+	return a.bookService.Show(ctx, id)
+}
+
+func (a *bookApplication) ShowByIsbn(ctx context.Context, isbn string) (*book.Book, error) {
 	return a.bookService.ShowByIsbn(ctx, isbn)
 }
 
