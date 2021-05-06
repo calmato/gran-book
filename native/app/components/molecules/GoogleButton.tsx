@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
 
 interface Props {
   style?: ViewStyle;
+  onPress: () => void;
 }
 
 const GoogleButton = function GoogleButton(props: Props): ReactElement {
@@ -32,6 +33,7 @@ const GoogleButton = function GoogleButton(props: Props): ReactElement {
       buttonStyle={styles.buttonStyle}
       titleStyle={styles.fontStyle}
       containerStyle={props.style}
+      onPress={props.onPress}
       title="Googleでサインイン"
     />
   );
