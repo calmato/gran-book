@@ -1,4 +1,4 @@
-export interface IListBookshelfByBookIdsInput {
+export interface IListBookByBookIdsInput {
   bookIds: Array<number>
 }
 
@@ -13,7 +13,7 @@ export interface IListBookReviewInput {
   limit: number
   offset: number
   by: string
-  directioon: string
+  direction: string
 }
 
 export interface IListUserReviewInput {
@@ -21,7 +21,7 @@ export interface IListUserReviewInput {
   limit: number
   offset: number
   by: string
-  directioon: string
+  direction: string
 }
 
 export interface IGetBookInput {

@@ -41,7 +41,7 @@ export interface IReviewResponseBook {
 }
 
 export interface IReviewResponseUser {
-  id: number
+  id: string
   username: string
   thumbnailUrl: string
 }
@@ -90,7 +90,7 @@ export interface IBookReviewListResponseReview {
 }
 
 export interface IBookReviewListResponseUser {
-  id: number
+  id: string
   username: string
   thumbnailUrl: string
 }

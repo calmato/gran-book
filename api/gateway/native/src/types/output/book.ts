@@ -19,6 +19,31 @@ export interface IBookOutputAuthor {
   nameKana: string
 }
 
+export interface IBookHashOutput {
+  [key: number]: IBookHashOutputBook
+}
+
+export interface IBookHashOutputBook {
+  id: number
+  title: string
+  titleKana: string
+  description: string
+  isbn: string
+  publisher: string
+  publishedOn: string
+  thumbnailUrl: string
+  rakutenUrl: string
+  rakutenGenreId: string
+  createdAt: string
+  updatedAt: string
+  authors: Array<IBookOutputAuthor>
+}
+
+export interface IBookHashOutputAuthor {
+  name: string
+  nameKana: string
+}
+
 export interface IBookshelfOutput {
   id: number
   bookId: number
