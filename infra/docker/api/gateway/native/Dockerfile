@@ -6,7 +6,7 @@ ENV TZ Asia/Tokyo
 
 WORKDIR /var/gateway
 
-RUN apk add \
+RUN apk add --update \
   g++ \
   make \
   python
