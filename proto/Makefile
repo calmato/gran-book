@@ -19,7 +19,13 @@ install:
 ##################################################
 # For Protocol Buffer
 ##################################################
-.PHONY: generate
+.PHONY: generate format
+
+format:
+	prototool format -d
+
+format-fix:
+	prototool format -w
 
 generate:
 	$(MAKE) install
