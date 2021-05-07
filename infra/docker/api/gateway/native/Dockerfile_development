@@ -1,4 +1,4 @@
-FROM node:15.4.0-alpine
+FROM node:16.1.0-alpine
 
 ENV LANG C.UTF-8
 ENV TZ Asia/Tokyo

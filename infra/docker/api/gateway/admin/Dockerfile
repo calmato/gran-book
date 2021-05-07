@@ -1,5 +1,5 @@
 # ビルド用コンテナ
-FROM node:15.4.0-alpine as builder
+FROM node:16.1.0-alpine as builder
 
 ENV LANG C.UTF-8
 ENV TZ Asia/Tokyo
@@ -17,7 +17,7 @@ RUN yarn install --production=false
 RUN yarn build
 
 # 実行用コンテナ
-FROM node:15.4.0-alpine
+FROM node:16.1.0-alpine
 
 ENV LANG C.UTF-8
 ENV TZ Asia/Tokyo
