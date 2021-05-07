@@ -8,11 +8,16 @@ import (
 
 // Repository - Bookリポジトリ
 type Repository interface {
+	List(ctx context.Context, q *domain.ListQuery) ([]*Book, error)
 	ListBookshelf(ctx context.Context, q *domain.ListQuery) ([]*Bookshelf, error)
+	ListReview(ctx context.Context, q *domain.ListQuery) ([]*Review, error)
+	ListCount(ctx context.Context, q *domain.ListQuery) (int, error)
 	ListBookshelfCount(ctx context.Context, q *domain.ListQuery) (int, error)
+	ListReviewCount(ctx context.Context, q *domain.ListQuery) (int, error)
 	Show(ctx context.Context, bookID int) (*Book, error)
 	ShowByIsbn(ctx context.Context, isbn string) (*Book, error)
 	ShowBookshelfByUserIDAndBookID(ctx context.Context, userID string, bookID int) (*Bookshelf, error)
+	ShowReview(ctx context.Context, reviewID int) (*Review, error)
 	ShowReviewByUserIDAndBookID(ctx context.Context, userID string, bookID int) (*Review, error)
 	ShowOrCreateAuthor(ctx context.Context, a *Author) error
 	Create(ctx context.Context, b *Book) error

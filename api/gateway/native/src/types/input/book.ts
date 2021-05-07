@@ -1,16 +1,44 @@
+export interface IListBookByBookIdsInput {
+  bookIds: Array<number>
+}
+
 export interface IListBookshelfInput {
   userId: string
   limit: number
   offset: number
 }
 
+export interface IListBookReviewInput {
+  bookId: number
+  limit: number
+  offset: number
+  by: string
+  direction: string
+}
+
+export interface IListUserReviewInput {
+  userId: string
+  limit: number
+  offset: number
+  by: string
+  direction: string
+}
+
 export interface IGetBookInput {
+  bookId: number
+}
+
+export interface IGetBookByIsbnInput {
   isbn: string
 }
 
 export interface IGetBookshelfInput {
   userId: string
   bookId: number
+}
+
+export interface IGetReviewInput {
+  reviewId: number
 }
 
 export interface ICreateBookInput {

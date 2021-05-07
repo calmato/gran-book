@@ -18,6 +18,38 @@ type BookServer struct {
 	BookApplication application.BookApplication
 }
 
+func (s *BookServer) ListBookByBookIds(
+	ctx context.Context, req *pb.ListBookByBookIdsRequest,
+) (*pb.BookListResponse, error) {
+	_, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	bookIDs := make([]int, len(req.GetBookIds()))
+	for i, v := range req.GetBookIds() {
+		bookIDs[i] = int(v)
+	}
+
+	in := &input.ListBookByBookIDs{
+		BookIDs: bookIDs,
+	}
+
+	bs, err := s.BookApplication.ListByBookIDs(ctx, in)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	out := &output.ListQuery{
+		Limit:  0,
+		Offset: 0,
+		Total:  len(bs),
+	}
+
+	res := getBookListResponse(bs, out)
+	return res, nil
+}
+
 func (s *BookServer) ListBookshelf(
 	ctx context.Context, req *pb.ListBookshelfRequest,
 ) (*pb.BookshelfListResponse, error) {
@@ -41,13 +73,84 @@ func (s *BookServer) ListBookshelf(
 	return res, nil
 }
 
+func (s *BookServer) ListBookReview(
+	ctx context.Context, req *pb.ListBookReviewRequest,
+) (*pb.ReviewListResponse, error) {
+	_, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	in := &input.ListBookReview{
+		BookID: int(req.GetBookId()),
+		Limit:  int(req.GetLimit()),
+		Offset: int(req.GetOffset()),
+	}
+
+	if o := req.GetOrder(); o != nil {
+		in.By = o.GetBy()
+		in.Direction = o.GetDirection()
+	}
+
+	rvs, out, err := s.BookApplication.ListBookReview(ctx, in)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	res := getReviewListResponse(rvs, out)
+	return res, nil
+}
+
+func (s *BookServer) ListUserReview(
+	ctx context.Context, req *pb.ListUserReviewRequest,
+) (*pb.ReviewListResponse, error) {
+	_, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	in := &input.ListUserReview{
+		UserID: req.GetUserId(),
+		Limit:  int(req.GetLimit()),
+		Offset: int(req.GetOffset()),
+	}
+
+	if o := req.GetOrder(); o != nil {
+		in.By = o.GetBy()
+		in.Direction = o.GetDirection()
+	}
+
+	rvs, out, err := s.BookApplication.ListUserReview(ctx, in)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	res := getReviewListResponse(rvs, out)
+	return res, nil
+}
+
 func (s *BookServer) GetBook(ctx context.Context, req *pb.GetBookRequest) (*pb.BookResponse, error) {
 	_, err := s.AuthApplication.Authentication(ctx)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
-	b, err := s.BookApplication.Show(ctx, req.GetIsbn())
+	b, err := s.BookApplication.Show(ctx, int(req.GetId()))
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	res := getBookResponse(b)
+	return res, nil
+}
+
+func (s *BookServer) GetBookByIsbn(ctx context.Context, req *pb.GetBookByIsbnRequest) (*pb.BookResponse, error) {
+	_, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	b, err := s.BookApplication.ShowByIsbn(ctx, req.GetIsbn())
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -73,6 +176,21 @@ func (s *BookServer) GetBookshelf(ctx context.Context, req *pb.GetBookshelfReque
 	}
 
 	res := getBookshelfResponse(bs)
+	return res, nil
+}
+
+func (s *BookServer) GetReview(ctx context.Context, req *pb.GetReviewRequest) (*pb.ReviewResponse, error) {
+	_, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	rv, err := s.BookApplication.ShowReview(ctx, int(req.GetReviewId()))
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	res := getReviewResponse(rv)
 	return res, nil
 }
 
@@ -355,6 +473,48 @@ func getBookResponse(b *book.Book) *pb.BookResponse {
 	}
 }
 
+func getBookListResponse(bs []*book.Book, out *output.ListQuery) *pb.BookListResponse {
+	books := make([]*pb.BookListResponse_Book, len(bs))
+	for i, b := range bs {
+		authors := make([]*pb.BookListResponse_Author, len(b.Authors))
+		for j, a := range b.Authors {
+			author := &pb.BookListResponse_Author{
+				Name:     a.Name,
+				NameKana: a.NameKana,
+			}
+
+			authors[j] = author
+		}
+
+		book := &pb.BookListResponse_Book{
+			Id:             int64(b.ID),
+			Title:          b.Title,
+			TitleKana:      b.TitleKana,
+			Description:    b.Description,
+			Isbn:           b.Isbn,
+			Publisher:      b.Publisher,
+			PublishedOn:    b.PublishedOn,
+			ThumbnailUrl:   b.ThumbnailURL,
+			RakutenUrl:     b.RakutenURL,
+			RakutenGenreId: b.RakutenGenreID,
+			CreatedAt:      datetime.TimeToString(b.CreatedAt),
+			UpdatedAt:      datetime.TimeToString(b.UpdatedAt),
+			Authors:        authors,
+		}
+
+		books[i] = book
+	}
+
+	res := &pb.BookListResponse{
+		Books:  books,
+		Limit:  int64(out.Limit),
+		Offset: int64(out.Offset),
+		Total:  int64(out.Total),
+	}
+
+	return res
+}
+
 func getBookshelfResponse(bs *book.Bookshelf) *pb.BookshelfResponse {
 	authors := make([]*pb.BookshelfResponse_Author, len(bs.Book.Authors))
 	for i, a := range bs.Book.Authors {
@@ -454,4 +614,51 @@ func getBookshelfListResponse(bss []*book.Bookshelf, out *output.ListQuery) *pb.
 		Offset:      int64(out.Offset),
 		Total:       int64(out.Total),
 	}
+}
+
+func getReviewResponse(rv *book.Review) *pb.ReviewResponse {
+	return &pb.ReviewResponse{
+		Id:         int64(rv.ID),
+		BookId:     int64(rv.BookID),
+		UserId:     rv.UserID,
+		Score:      int32(rv.Score),
+		Impression: rv.Impression,
+		CreatedAt:  datetime.TimeToString(rv.CreatedAt),
+		UpdatedAt:  datetime.TimeToString(rv.UpdatedAt),
+	}
+}
+
+func getReviewListResponse(rvs []*book.Review, out *output.ListQuery) *pb.ReviewListResponse {
+	reviews := make([]*pb.ReviewListResponse_Review, len(rvs))
+	for i, rv := range rvs {
+		review := &pb.ReviewListResponse_Review{
+			Id:         int64(rv.ID),
+			BookId:     int64(rv.BookID),
+			UserId:     rv.UserID,
+			Score:      int32(rv.Score),
+			Impression: rv.Impression,
+			CreatedAt:  datetime.TimeToString(rv.CreatedAt),
+			UpdatedAt:  datetime.TimeToString(rv.UpdatedAt),
+		}
+
+		reviews[i] = review
+	}
+
+	res := &pb.ReviewListResponse{
+		Reviews: reviews,
+		Limit:   int64(out.Limit),
+		Offset:  int64(out.Offset),
+		Total:   int64(out.Total),
+	}
+
+	if out.Order != nil {
+		order := &pb.ReviewListResponse_Order{
+			By:        out.Order.By,
+			Direction: out.Order.Direction,
+		}
+
+		res.Order = order
+	}
+
+	return res
 }

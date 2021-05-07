@@ -106,9 +106,9 @@ func setWhere(db *gorm.DB, c *domain.QueryCondition) *gorm.DB {
 		q := fmt.Sprintf("%s %s ?", c.Field, c.Operator)
 		return db.Where(q, c.Value)
 	case "IN":
-		q := fmt.Sprintf("%s IN ?", c.Field)
-		vals, _ := array.ConvertStrings(c)
-		return db.Where(q, strings.Join(vals, ", "))
+		q := fmt.Sprintf("%s IN (?)", c.Field)
+		vals, _ := array.ConvertStrings(c.Value)
+		return db.Where(q, vals)
 	case "LIKE":
 		q := fmt.Sprintf("%s LIKE ?", c.Field)
 		n := fmt.Sprintf("%%%s%%", c.Value) // e.g.) あいうえお -> %あいうえお%

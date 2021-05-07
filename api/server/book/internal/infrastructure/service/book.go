@@ -21,16 +21,32 @@ func NewBookService(bdv book.Validation, br book.Repository) book.Service {
 	}
 }
 
+func (s *bookService) List(ctx context.Context, q *domain.ListQuery) ([]*book.Book, error) {
+	return s.bookRepository.List(ctx, q)
+}
+
 func (s *bookService) ListBookshelf(ctx context.Context, q *domain.ListQuery) ([]*book.Bookshelf, error) {
 	return s.bookRepository.ListBookshelf(ctx, q)
+}
+
+func (s *bookService) ListReview(ctx context.Context, q *domain.ListQuery) ([]*book.Review, error) {
+	return s.bookRepository.ListReview(ctx, q)
 }
 
 func (s *bookService) Show(ctx context.Context, bookID int) (*book.Book, error) {
 	return s.bookRepository.Show(ctx, bookID)
 }
 
+func (s *bookService) ListCount(ctx context.Context, q *domain.ListQuery) (int, error) {
+	return s.bookRepository.ListCount(ctx, q)
+}
+
 func (s *bookService) ListBookshelfCount(ctx context.Context, q *domain.ListQuery) (int, error) {
 	return s.bookRepository.ListBookshelfCount(ctx, q)
+}
+
+func (s *bookService) ListReviewCount(ctx context.Context, q *domain.ListQuery) (int, error) {
+	return s.bookRepository.ListReviewCount(ctx, q)
 }
 
 func (s *bookService) ShowByIsbn(ctx context.Context, isbn string) (*book.Book, error) {
@@ -41,6 +57,10 @@ func (s *bookService) ShowBookshelfByUserIDAndBookID(
 	ctx context.Context, userID string, bookID int,
 ) (*book.Bookshelf, error) {
 	return s.bookRepository.ShowBookshelfByUserIDAndBookID(ctx, userID, bookID)
+}
+
+func (s *bookService) ShowReview(ctx context.Context, reviewID int) (*book.Review, error) {
+	return s.bookRepository.ShowReview(ctx, reviewID)
 }
 
 func (s *bookService) ShowReviewByUserIDAndBookID(
