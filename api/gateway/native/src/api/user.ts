@@ -30,27 +30,26 @@ import {
   IFollowerListOutputUser,
   IFollowListOutput,
   IFollowListOutputUser,
-  IUserListOutput,
-  IUserListOutputOrder,
-  IUserListOutputUser,
+  IUserHashOutput,
+  IUserHashOutputUser,
   IUserOutput,
   IUserProfileOutput,
 } from '~/types/output'
 
-export function listUserWithUserIds(req: Request<any>, input: IListUserByUserIdsInput): Promise<IUserListOutput> {
+export function listUserWithUserIds(req: Request<any>, input: IListUserByUserIdsInput): Promise<IUserHashOutput> {
   const request = new ListUserByUserIdsRequest()
   const metadata = getGrpcMetadata(req)
 
   request.setUserIdsList(input.ids)
 
-  return new Promise((resolve: (res: IUserListOutput) => void, reject: (reason: Error) => void) => {
+  return new Promise((resolve: (res: IUserHashOutput) => void, reject: (reason: Error) => void) => {
     userClient.listUserByUserIds(request, metadata, (err: any, res: UserListResponse) => {
       if (err) {
         reject(getGrpcError(err))
         return
       }
 
-      resolve(setUserListOutput(res))
+      resolve(setUserHashOutput(res))
     })
   })
 }
@@ -229,9 +228,11 @@ function setUserOutput(res: UserResponse): IUserOutput {
   return output
 }
 
-function setUserListOutput(res: UserListResponse): IUserListOutput {
-  const users: IUserListOutputUser[] = res.getUsersList().map(
-    (u: UserListResponse.User): IUserListOutputUser => ({
+function setUserHashOutput(res: UserListResponse): IUserHashOutput {
+  const output: IUserHashOutput = {}
+
+  res.getUsersList().forEach((u: UserListResponse.User) => {
+    const user: IUserHashOutputUser = {
       id: u.getId(),
       username: u.getUsername(),
       email: u.getEmail(),
@@ -245,25 +246,10 @@ function setUserListOutput(res: UserListResponse): IUserListOutput {
       firstNameKana: u.getFirstNameKana(),
       createdAt: u.getCreatedAt(),
       updatedAt: u.getUpdatedAt(),
-    })
-  )
-
-  const output: IUserListOutput = {
-    users,
-    limit: res.getLimit(),
-    offset: res.getOffset(),
-    total: res.getTotal(),
-  }
-
-  const orderRes: UserListResponse.Order | undefined = res.getOrder()
-  if (orderRes) {
-    const order: IUserListOutputOrder = {
-      by: orderRes.getBy(),
-      direction: orderRes.getDirection(),
     }
 
-    output.order = order
-  }
+    output[u.getId()] = user
+  })
 
   return output
 }

@@ -21,6 +21,20 @@ func NewBookRepository(c *Client) book.Repository {
 	}
 }
 
+func (r *bookRepository) List(ctx context.Context, q *domain.ListQuery) ([]*book.Book, error) {
+	bs := []*book.Book{}
+
+	sql := r.client.db.Preload("Authors")
+	db := r.client.getListQuery(sql, q)
+
+	err := db.Find(&bs).Error
+	if err != nil {
+		return nil, exception.ErrorInDatastore.New(err)
+	}
+
+	return bs, nil
+}
+
 func (r *bookRepository) ListBookshelf(ctx context.Context, q *domain.ListQuery) ([]*book.Bookshelf, error) {
 	bss := []*book.Bookshelf{}
 
@@ -35,8 +49,44 @@ func (r *bookRepository) ListBookshelf(ctx context.Context, q *domain.ListQuery)
 	return bss, nil
 }
 
+func (r *bookRepository) ListReview(ctx context.Context, q *domain.ListQuery) ([]*book.Review, error) {
+	rvs := []*book.Review{}
+
+	sql := r.client.db
+	db := r.client.getListQuery(sql, q)
+
+	err := db.Find(&rvs).Error
+	if err != nil {
+		return nil, exception.ErrorInDatastore.New(err)
+	}
+
+	return rvs, nil
+}
+
+func (r *bookRepository) ListCount(ctx context.Context, q *domain.ListQuery) (int, error) {
+	sql := r.client.db.Table("books")
+
+	total, err := r.client.getListCount(sql, q)
+	if err != nil {
+		return 0, exception.ErrorInDatastore.New(err)
+	}
+
+	return total, nil
+}
+
 func (r *bookRepository) ListBookshelfCount(ctx context.Context, q *domain.ListQuery) (int, error) {
 	sql := r.client.db.Table("bookshelves")
+
+	total, err := r.client.getListCount(sql, q)
+	if err != nil {
+		return 0, exception.ErrorInDatastore.New(err)
+	}
+
+	return total, nil
+}
+
+func (r *bookRepository) ListReviewCount(ctx context.Context, q *domain.ListQuery) (int, error) {
+	sql := r.client.db.Table("reviews")
 
 	total, err := r.client.getListCount(sql, q)
 	if err != nil {
@@ -81,6 +131,17 @@ func (r *bookRepository) ShowBookshelfByUserIDAndBookID(
 	}
 
 	return b, nil
+}
+
+func (r *bookRepository) ShowReview(ctx context.Context, reviewID int) (*book.Review, error) {
+	rv := &book.Review{}
+
+	err := r.client.db.First(rv, "id = ?", reviewID).Error
+	if err != nil {
+		return nil, exception.NotFound.New(err)
+	}
+
+	return rv, nil
 }
 
 func (r *bookRepository) ShowReviewByUserIDAndBookID(

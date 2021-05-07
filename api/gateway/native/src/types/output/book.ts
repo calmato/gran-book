@@ -19,6 +19,31 @@ export interface IBookOutputAuthor {
   nameKana: string
 }
 
+export interface IBookHashOutput {
+  [key: number]: IBookHashOutputBook
+}
+
+export interface IBookHashOutputBook {
+  id: number
+  title: string
+  titleKana: string
+  description: string
+  isbn: string
+  publisher: string
+  publishedOn: string
+  thumbnailUrl: string
+  rakutenUrl: string
+  rakutenGenreId: string
+  createdAt: string
+  updatedAt: string
+  authors: Array<IBookOutputAuthor>
+}
+
+export interface IBookHashOutputAuthor {
+  name: string
+  nameKana: string
+}
+
 export interface IBookshelfOutput {
   id: number
   bookId: number
@@ -94,4 +119,37 @@ export interface IBookshelfListOutputBookshelf {
   createdAt: string
   updatedAt: string
   book: IBookshelfListOutputBook
+}
+
+export interface IReviewOutput {
+  id: number
+  bookId: number
+  userId: string
+  score: number
+  impression: string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface IReviewListOutput {
+  reviews: Array<IReviewListOutputReview>
+  limit: number
+  offset: number
+  total: number
+  order?: IReviewListOutputOrder
+}
+
+export interface IReviewListOutputReview {
+  id: number
+  bookId: number
+  userId: string
+  score: number
+  impression: string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface IReviewListOutputOrder {
+  by: string
+  direction: string
 }

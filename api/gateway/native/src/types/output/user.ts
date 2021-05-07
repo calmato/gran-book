@@ -1,12 +1,8 @@
-export interface IUserListOutput {
-  users: Array<IUserListOutputUser>
-  limit: number
-  offset: number
-  total: number
-  order?: IUserListOutputOrder
+export interface IUserHashOutput {
+  [key: string]: IUserHashOutputUser
 }
 
-export interface IUserListOutputUser {
+export interface IUserHashOutputUser {
   id: string
   username: string
   email: string
@@ -20,11 +16,6 @@ export interface IUserListOutputUser {
   firstNameKana: string
   createdAt: string
   updatedAt: string
-}
-
-export interface IUserListOutputOrder {
-  by: string
-  direction: string
 }
 
 export interface IUserThumbnailOutput {

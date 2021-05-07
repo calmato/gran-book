@@ -1,10 +1,48 @@
 import express, { NextFunction, Request, Response } from 'express'
-import { createBook, getBook, getBookshelf, updateBook } from '~/api'
+import {
+  createBook,
+  getBook,
+  getBookByIsbn,
+  getBookshelf,
+  getReview,
+  getUser,
+  listBookReview,
+  listUserWithUserIds,
+  updateBook,
+} from '~/api'
 import { GrpcError } from '~/types/exception'
-import { IBookInputAuthor, ICreateBookInput, IGetBookInput, IGetBookshelfInput, IUpdateBookInput } from '~/types/input'
-import { IBookOutput, IBookOutputAuthor, IBookshelfOutput } from '~/types/output'
+import {
+  IBookInputAuthor,
+  ICreateBookInput,
+  IGetBookByIsbnInput,
+  IGetBookInput,
+  IGetBookshelfInput,
+  IGetReviewInput,
+  IGetUserInput,
+  IListBookReviewInput,
+  IListUserByUserIdsInput,
+  IUpdateBookInput,
+} from '~/types/input'
+import {
+  IBookOutput,
+  IBookOutputAuthor,
+  IBookshelfOutput,
+  IReviewListOutput,
+  IReviewListOutputReview,
+  IReviewOutput,
+  IUserHashOutput,
+  IUserOutput,
+} from '~/types/output'
 import { ICreateBookRequest, IUpdateBookRequest } from '~/types/request'
-import { IBookResponse, IBookResponseBookshelf } from '~/types/response'
+import {
+  IBookResponse,
+  IBookResponseBookshelf,
+  IBookReviewListResponse,
+  IBookReviewListResponseUser,
+  IReviewResponse,
+  IReviewResponseBook,
+  IReviewResponseUser,
+} from '~/types/response'
 
 const router = express.Router()
 
@@ -119,11 +157,11 @@ router.get(
   async (req: Request, res: Response<IBookResponse>, next: NextFunction): Promise<void> => {
     const { isbn } = req.params
 
-    const bookInput: IGetBookInput = {
+    const bookInput: IGetBookByIsbnInput = {
       isbn,
     }
 
-    await getBook(req, bookInput)
+    await getBookByIsbn(req, bookInput)
       .then(async (bookOutput: IBookOutput) => {
         const bookshelfInput: IGetBookshelfInput = {
           userId: '',
@@ -140,6 +178,90 @@ router.get(
       })
       .then((response: IBookResponse) => {
         res.status(200).json(response)
+      })
+      .catch((err: GrpcError) => next(err))
+  }
+)
+
+router.get(
+  '/v1/books/:bookId/reviews',
+  async (req: Request, res: Response<IBookReviewListResponse>, next: NextFunction): Promise<void> => {
+    const { bookId } = req.params
+    const { limit, offset } = req.query as { [key: string]: string }
+
+    const bookInput: IGetBookInput = {
+      bookId: Number(bookId) || 0,
+    }
+
+    await getBook(req, bookInput)
+      .then(async (_: IBookOutput) => {
+        const reviewListInput: IListBookReviewInput = {
+          bookId: Number(bookId) || 0,
+          limit: Number(limit) || 100,
+          offset: Number(offset) || 0,
+          by: '',
+          direction: '',
+        }
+
+        return listBookReview(req, reviewListInput)
+      })
+      .then(async (reviewsOutput: IReviewListOutput) => {
+        const usersIds: string[] = reviewsOutput.reviews.map((rv: IReviewListOutputReview) => {
+          return rv.userId
+        })
+
+        const userListInput: IListUserByUserIdsInput = {
+          ids: Array.from(new Set(usersIds)),
+        }
+
+        return listUserWithUserIds(req, userListInput)
+          .then((usersOutput: IUserHashOutput) => {
+            return setBookReviewListResponse(reviewsOutput, usersOutput)
+          })
+          .catch(() => {
+            return setBookReviewListResponse(reviewsOutput, {})
+          })
+      })
+      .then((response: IBookReviewListResponse) => {
+        res.status(200).json(response)
+      })
+      .catch((err: GrpcError) => next(err))
+  }
+)
+
+router.get(
+  '/v1/books/:bookId/reviews/:reviewId',
+  async (req: Request, res: Response<IReviewResponse>, next: NextFunction): Promise<void> => {
+    const { bookId, reviewId } = req.params
+
+    const bookInput: IGetBookInput = {
+      bookId: Number(bookId) || 0,
+    }
+
+    await getBook(req, bookInput)
+      .then(async (bookOutput: IBookOutput) => {
+        const reviewInput: IGetReviewInput = {
+          reviewId: Number(reviewId) || 0,
+        }
+
+        await getReview(req, reviewInput)
+          .then(async (reviewOutput: IReviewOutput) => {
+            const userInput: IGetUserInput = {
+              id: reviewOutput.userId,
+            }
+
+            await getUser(req, userInput)
+              .then((userOutput: IUserOutput) => {
+                const response: IReviewResponse = setReviewResponse(reviewOutput, bookOutput, userOutput)
+                res.status(200).json(response)
+              })
+              .catch((err: GrpcError) => {
+                throw err
+              })
+          })
+          .catch((err: GrpcError) => {
+            throw err
+          })
       })
       .catch((err: GrpcError) => next(err))
   }
@@ -183,6 +305,80 @@ function setBookResponse(bookOutput: IBookOutput, bookshelfOutput?: any): IBookR
     }
 
     response.bookshelf = bookshelf
+  }
+
+  return response
+}
+
+function setReviewResponse(
+  reviewOutput: IReviewOutput,
+  bookOutput: IBookOutput,
+  userOutput: IUserOutput
+): IReviewResponse {
+  const book: IReviewResponseBook = {
+    id: bookOutput.id,
+    title: bookOutput.title,
+    thumbnailUrl: bookOutput.thumbnailUrl,
+  }
+
+  const user: IReviewResponseUser = {
+    id: userOutput.id,
+    username: userOutput.username,
+    thumbnailUrl: userOutput.thumbnailUrl,
+  }
+
+  const response: IReviewResponse = {
+    id: reviewOutput.id,
+    impression: reviewOutput.impression,
+    createdAt: reviewOutput.createdAt,
+    updatedAt: reviewOutput.updatedAt,
+    book,
+    user,
+  }
+
+  return response
+}
+
+function setBookReviewListResponse(
+  reviewOutput: IReviewListOutput,
+  usersOutput: IUserHashOutput
+): IBookReviewListResponse {
+  const reviews = reviewOutput.reviews.map((rv: IReviewListOutputReview) => {
+    const user: IBookReviewListResponseUser = {
+      id: '',
+      username: 'unknown',
+      thumbnailUrl: '',
+    }
+
+    if (usersOutput[rv.userId]) {
+      const { id, username, thumbnailUrl } = usersOutput[rv.userId]
+
+      user.id = id
+      user.username = username
+      user.thumbnailUrl = thumbnailUrl
+    }
+
+    return {
+      id: rv.id,
+      impression: rv.impression,
+      createdAt: rv.createdAt,
+      updatedAt: rv.updatedAt,
+      user,
+    }
+  })
+
+  const response: IBookReviewListResponse = {
+    reviews,
+    limit: reviewOutput.limit,
+    offset: reviewOutput.offset,
+    total: reviewOutput.total,
+  }
+
+  if (reviewOutput.order) {
+    response.order = {
+      by: reviewOutput.order.by,
+      direction: reviewOutput.order.direction,
+    }
   }
 
   return response
