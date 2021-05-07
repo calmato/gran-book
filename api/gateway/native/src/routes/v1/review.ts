@@ -1,10 +1,29 @@
 import express, { NextFunction, Request, Response } from 'express'
 import { getBook, getReview, getUser, listBookByBookIds, listUserReview } from '~/api'
 import { GrpcError } from '~/types/exception'
-import { IGetBookInput, IGetReviewInput, IGetUserInput, IListBookByBookIdsInput, IListUserReviewInput } from '~/types/input'
-import { IBookHashOutput, IBookOutput, IReviewListOutput, IReviewListOutputReview, IReviewOutput, IUserOutput } from '~/types/output'
+import {
+  IGetBookInput,
+  IGetReviewInput,
+  IGetUserInput,
+  IListBookByBookIdsInput,
+  IListUserReviewInput,
+} from '~/types/input'
+import {
+  IBookHashOutput,
+  IBookOutput,
+  IReviewListOutput,
+  IReviewListOutputReview,
+  IReviewOutput,
+  IUserOutput,
+} from '~/types/output'
 import {} from '~/types/request'
-import { IReviewResponse, IReviewResponseBook, IReviewResponseUser, IUserReviewListResponse, IUserReviewListResponseBook } from '~/types/response'
+import {
+  IReviewResponse,
+  IReviewResponseBook,
+  IReviewResponseUser,
+  IUserReviewListResponse,
+  IUserReviewListResponseBook,
+} from '~/types/response'
 
 const router = express.Router()
 
@@ -69,26 +88,24 @@ router.get(
           reviewId: Number(reviewId) || 0,
         }
 
-        return getReview(req, reviewInput)
+        await getReview(req, reviewInput)
           .then(async (reviewOutput: IReviewOutput) => {
-            // const bookInput: IGetBookInput = { isbn: '' }
-            //
-            // getBook(req, reviewInput)
-            //   .then((booksOutput: IBookHashOutput) => {
-            //     return setReviewResponse(reviewOutput, {}, userOutput)
-            //   })
-            //   .catch(() => {
-            //     return setReviewResponse(reviewOutput, {}, userOutput)
-            //   })
+            const bookInput: IGetBookInput = {
+              bookId: reviewOutput.bookId,
+            }
 
-            return setReviewResponse(reviewOutput, {}, userOutput)
+            await getBook(req, bookInput)
+              .then((bookOutput: IBookOutput) => {
+                const response: IReviewResponse = setReviewResponse(reviewOutput, bookOutput, userOutput)
+                res.status(200).json(response)
+              })
+              .catch((err: GrpcError) => {
+                throw err
+              })
           })
           .catch((err: GrpcError) => {
             throw err
           })
-      })
-      .then((response: IReviewResponse) => {
-        res.status(200).json(response)
       })
       .catch((err: GrpcError) => next(err))
   }

@@ -186,8 +186,8 @@ export namespace ListUserReviewRequest {
 }
 
 export class GetBookRequest extends jspb.Message { 
-    getIsbn(): string;
-    setIsbn(value: string): GetBookRequest;
+    getId(): number;
+    setId(value: number): GetBookRequest;
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): GetBookRequest.AsObject;
@@ -201,7 +201,7 @@ export class GetBookRequest extends jspb.Message {
 
 export namespace GetBookRequest {
     export type AsObject = {
-        isbn: string,
+        id: number,
     }
 }
 

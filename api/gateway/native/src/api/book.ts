@@ -10,6 +10,7 @@ import {
   CreateBookRequest,
   DeleteBookshelfRequest,
   EmptyBook,
+  GetBookByIsbnRequest,
   GetBookRequest,
   GetBookshelfRequest,
   GetReviewRequest,
@@ -30,6 +31,7 @@ import {
   IBookInputAuthor,
   ICreateBookInput,
   IDeleteBookshelfInput,
+  IGetBookByIsbnInput,
   IGetBookInput,
   IGetBookshelfInput,
   IGetReviewInput,
@@ -159,10 +161,29 @@ export function getBook(req: Request<any>, input: IGetBookInput): Promise<IBookO
   const request = new GetBookRequest()
   const metadata = getGrpcMetadata(req)
 
-  request.setIsbn(input.isbn)
+  request.setId(input.bookId)
 
   return new Promise((resolve: (output: IBookOutput) => void, reject: (reason: Error) => void) => {
     bookClient.getBook(request, metadata, (err: any, res: BookResponse) => {
+      if (err) {
+        reject(getGrpcError(err))
+        return
+      }
+
+      const output: IBookOutput = setBookOutput(res)
+      resolve(output)
+    })
+  })
+}
+
+export function getBookByIsbn(req: Request<any>, input: IGetBookByIsbnInput): Promise<IBookOutput> {
+  const request = new GetBookByIsbnRequest()
+  const metadata = getGrpcMetadata(req)
+
+  request.setIsbn(input.isbn)
+
+  return new Promise((resolve: (output: IBookOutput) => void, reject: (reason: Error) => void) => {
+    bookClient.getBookByIsbn(request, metadata, (err: any, res: BookResponse) => {
       if (err) {
         reject(getGrpcError(err))
         return

@@ -25,6 +25,10 @@ export interface IListUserReviewInput {
 }
 
 export interface IGetBookInput {
+  bookId: number
+}
+
+export interface IGetBookByIsbnInput {
   isbn: string
 }
 

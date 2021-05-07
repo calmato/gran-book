@@ -135,7 +135,7 @@ func (s *BookServer) GetBook(ctx context.Context, req *pb.GetBookRequest) (*pb.B
 		return nil, errorHandling(err)
 	}
 
-	b, err := s.BookApplication.ShowByIsbn(ctx, req.GetIsbn())
+	b, err := s.BookApplication.Show(ctx, int(req.GetId()))
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -144,7 +144,7 @@ func (s *BookServer) GetBook(ctx context.Context, req *pb.GetBookRequest) (*pb.B
 	return res, nil
 }
 
-func (s *BookServer) GetBook(ctx context.Context, req *pb.GetBookRequest) (*pb.BookResponse, error) {
+func (s *BookServer) GetBookByIsbn(ctx context.Context, req *pb.GetBookByIsbnRequest) (*pb.BookResponse, error) {
 	_, err := s.AuthApplication.Authentication(ctx)
 	if err != nil {
 		return nil, errorHandling(err)

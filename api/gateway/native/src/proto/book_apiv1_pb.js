@@ -2156,7 +2156,7 @@ proto.proto.GetBookRequest.prototype.toObject = function(opt_includeInstance) {
  */
 proto.proto.GetBookRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    isbn: jspb.Message.getFieldWithDefault(msg, 1, "")
+    id: jspb.Message.getFieldWithDefault(msg, 1, 0)
   };
 
   if (includeInstance) {
@@ -2194,8 +2194,8 @@ proto.proto.GetBookRequest.deserializeBinaryFromReader = function(msg, reader) {
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setIsbn(value);
+      var value = /** @type {number} */ (reader.readInt64());
+      msg.setId(value);
       break;
     default:
       reader.skipField();
@@ -2226,9 +2226,9 @@ proto.proto.GetBookRequest.prototype.serializeBinary = function() {
  */
 proto.proto.GetBookRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getIsbn();
-  if (f.length > 0) {
-    writer.writeString(
+  f = message.getId();
+  if (f !== 0) {
+    writer.writeInt64(
       1,
       f
     );
@@ -2237,20 +2237,20 @@ proto.proto.GetBookRequest.serializeBinaryToWriter = function(message, writer) {
 
 
 /**
- * optional string isbn = 1;
- * @return {string}
+ * optional int64 id = 1;
+ * @return {number}
  */
-proto.proto.GetBookRequest.prototype.getIsbn = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
+proto.proto.GetBookRequest.prototype.getId = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
 };
 
 
 /**
- * @param {string} value
+ * @param {number} value
  * @return {!proto.proto.GetBookRequest} returns this
  */
-proto.proto.GetBookRequest.prototype.setIsbn = function(value) {
-  return jspb.Message.setProto3StringField(this, 1, value);
+proto.proto.GetBookRequest.prototype.setId = function(value) {
+  return jspb.Message.setProto3IntField(this, 1, value);
 };
 
 

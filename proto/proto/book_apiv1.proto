@@ -59,7 +59,7 @@ message ListUserReviewRequest {
 }
 
 message GetBookRequest {
-  string isbn = 1;
+  int64 id = 1;
 }
 
 message GetBookByIsbnRequest {
