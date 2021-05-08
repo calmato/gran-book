@@ -16,8 +16,8 @@ describe('components/organisms/CommonSidebarListItem', () => {
           expect(wrapper.props().item).toEqual({ icon: '', text: '', to: '' })
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({ item: { icon: 'mdi-home', text: 'ホーム画面', to: '/' } })
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ item: { icon: 'mdi-home', text: 'ホーム画面', to: '/' } })
           expect(wrapper.props().item).toEqual({ icon: 'mdi-home', text: 'ホーム画面', to: '/' })
         })
       })

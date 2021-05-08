@@ -25,8 +25,8 @@ describe('components/templates/SettingsEditEmail', () => {
           })
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({
+        it('値が代入されること', async () => {
+          await wrapper.setProps({
             form: {
               params: { email: 'test@calmato.com' },
               options: AuthEditEmailOptions,

@@ -26,8 +26,8 @@ describe('components/organisms/SettingsEditPasswordForm', () => {
           })
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({
+        it('値が代入されること', async () => {
+          await wrapper.setProps({
             form: {
               params: { password: '12345678', passwordConfirmation: '12345678' },
               options: AuthEditPasswordOptions,
