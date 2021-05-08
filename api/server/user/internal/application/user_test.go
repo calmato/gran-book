@@ -14,6 +14,172 @@ import (
 	"github.com/golang/mock/gomock"
 )
 
+func TestUserApplication_List(t *testing.T) {
+	current := time.Now()
+
+	testCases := map[string]struct {
+		Input    *input.ListUser
+		Expected struct {
+			Users  []*user.User
+			Output *output.ListQuery
+			Error  error
+		}
+	}{
+		"ok": {
+			Input: &input.ListUser{
+				Limit:  100,
+				Offset: 0,
+			},
+			Expected: struct {
+				Users  []*user.User
+				Output *output.ListQuery
+				Error  error
+			}{
+				Users: []*user.User{
+					{
+						ID:               "00000000-0000-0000-0000-000000000000",
+						Username:         "test-user",
+						Gender:           0,
+						Email:            "test-user@calmato.com",
+						PhoneNumber:      "000-0000-0000",
+						Role:             0,
+						ThumbnailURL:     "",
+						SelfIntroduction: "",
+						LastName:         "テスト",
+						FirstName:        "ユーザ",
+						LastNameKana:     "てすと",
+						FirstNameKana:    "ゆーざ",
+						PostalCode:       "000-0000",
+						Prefecture:       "東京都",
+						City:             "小金井市",
+						AddressLine1:     "貫井北町4-1-1",
+						AddressLine2:     "",
+						InstanceID:       "",
+						CreatedAt:        current,
+						UpdatedAt:        current,
+					},
+				},
+				Output: &output.ListQuery{
+					Limit:  100,
+					Offset: 0,
+					Total:  1,
+					Order:  nil,
+				},
+				Error: nil,
+			},
+		},
+	}
+
+	for result, tc := range testCases {
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		arvm := mock_validation.NewMockUserRequestValidation(ctrl)
+		arvm.EXPECT().ListUser(tc.Input).Return(nil)
+
+		usm := mock_user.NewMockService(ctrl)
+		usm.EXPECT().List(ctx, gomock.Any()).Return(tc.Expected.Users, tc.Expected.Error)
+		usm.EXPECT().ListCount(ctx, gomock.Any()).Return(tc.Expected.Output.Total, tc.Expected.Error)
+
+		t.Run(result, func(t *testing.T) {
+			target := NewUserApplication(arvm, usm)
+
+			users, _, err := target.List(ctx, tc.Input)
+			if !reflect.DeepEqual(err, tc.Expected.Error) {
+				t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+				return
+			}
+
+			if !reflect.DeepEqual(users, tc.Expected.Users) {
+				t.Fatalf("want %#v, but %#v", tc.Expected.Users, users)
+				return
+			}
+		})
+	}
+}
+
+func TestUserApplication_ListUserByIDs(t *testing.T) {
+	current := time.Now()
+
+	testCases := map[string]struct {
+		Input    *input.ListUserByUserIDs
+		Expected struct {
+			Users []*user.User
+			Error error
+		}
+	}{
+		"ok": {
+			Input: &input.ListUserByUserIDs{
+				UserIDs: []string{
+					"00000000-0000-0000-0000-000000000000",
+				},
+			},
+			Expected: struct {
+				Users []*user.User
+				Error error
+			}{
+				Users: []*user.User{
+					{
+						ID:               "00000000-0000-0000-0000-000000000000",
+						Username:         "test-user",
+						Gender:           0,
+						Email:            "test-user@calmato.com",
+						PhoneNumber:      "000-0000-0000",
+						Role:             0,
+						ThumbnailURL:     "",
+						SelfIntroduction: "",
+						LastName:         "テスト",
+						FirstName:        "ユーザ",
+						LastNameKana:     "てすと",
+						FirstNameKana:    "ゆーざ",
+						PostalCode:       "000-0000",
+						Prefecture:       "東京都",
+						City:             "小金井市",
+						AddressLine1:     "貫井北町4-1-1",
+						AddressLine2:     "",
+						InstanceID:       "",
+						CreatedAt:        current,
+						UpdatedAt:        current,
+					},
+				},
+				Error: nil,
+			},
+		},
+	}
+
+	for result, tc := range testCases {
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		arvm := mock_validation.NewMockUserRequestValidation(ctrl)
+		arvm.EXPECT().ListUserByUserIDs(tc.Input).Return(nil)
+
+		usm := mock_user.NewMockService(ctrl)
+		usm.EXPECT().List(ctx, gomock.Any()).Return(tc.Expected.Users, tc.Expected.Error)
+
+		t.Run(result, func(t *testing.T) {
+			target := NewUserApplication(arvm, usm)
+
+			users, err := target.ListByUserIDs(ctx, tc.Input)
+			if !reflect.DeepEqual(err, tc.Expected.Error) {
+				t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+				return
+			}
+
+			if !reflect.DeepEqual(users, tc.Expected.Users) {
+				t.Fatalf("want %#v, but %#v", tc.Expected.Users, users)
+				return
+			}
+		})
+	}
+}
+
 func TestUserApplication_ListFollow(t *testing.T) {
 	testCases := map[string]struct {
 		UID      string
@@ -188,6 +354,167 @@ func TestUserApplication_ListFollower(t *testing.T) {
 	}
 }
 
+func TestUserApplication_Search(t *testing.T) {
+	current := time.Now()
+
+	testCases := map[string]struct {
+		Input    *input.SearchUser
+		Expected struct {
+			Users  []*user.User
+			Output *output.ListQuery
+			Error  error
+		}
+	}{
+		"ok": {
+			Input: &input.SearchUser{
+				Limit:  100,
+				Offset: 0,
+				Field:  "email",
+				Value:  "test-user@calmato.com",
+			},
+			Expected: struct {
+				Users  []*user.User
+				Output *output.ListQuery
+				Error  error
+			}{
+				Users: []*user.User{
+					{
+						ID:               "00000000-0000-0000-0000-000000000000",
+						Username:         "test-user",
+						Gender:           0,
+						Email:            "test-user@calmato.com",
+						PhoneNumber:      "000-0000-0000",
+						Role:             0,
+						ThumbnailURL:     "",
+						SelfIntroduction: "",
+						LastName:         "テスト",
+						FirstName:        "ユーザ",
+						LastNameKana:     "てすと",
+						FirstNameKana:    "ゆーざ",
+						PostalCode:       "000-0000",
+						Prefecture:       "東京都",
+						City:             "小金井市",
+						AddressLine1:     "貫井北町4-1-1",
+						AddressLine2:     "",
+						InstanceID:       "",
+						CreatedAt:        current,
+						UpdatedAt:        current,
+					},
+				},
+				Output: &output.ListQuery{
+					Limit:  100,
+					Offset: 0,
+					Total:  1,
+					Order:  nil,
+				},
+				Error: nil,
+			},
+		},
+	}
+
+	for result, tc := range testCases {
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		arvm := mock_validation.NewMockUserRequestValidation(ctrl)
+		arvm.EXPECT().SearchUser(tc.Input).Return(nil)
+
+		usm := mock_user.NewMockService(ctrl)
+		usm.EXPECT().List(ctx, gomock.Any()).Return(tc.Expected.Users, tc.Expected.Error)
+		usm.EXPECT().ListCount(ctx, gomock.Any()).Return(tc.Expected.Output.Total, tc.Expected.Error)
+
+		t.Run(result, func(t *testing.T) {
+			target := NewUserApplication(arvm, usm)
+
+			users, _, err := target.Search(ctx, tc.Input)
+			if !reflect.DeepEqual(err, tc.Expected.Error) {
+				t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+				return
+			}
+
+			if !reflect.DeepEqual(users, tc.Expected.Users) {
+				t.Fatalf("want %#v, but %#v", tc.Expected.Users, users)
+				return
+			}
+		})
+	}
+}
+
+func TestUserApplication_Show(t *testing.T) {
+	current := time.Now()
+
+	testCases := map[string]struct {
+		UID      string
+		Expected struct {
+			User  *user.User
+			Error error
+		}
+	}{
+		"ok": {
+			UID: "00000000-0000-0000-0000-000000000000",
+			Expected: struct {
+				User  *user.User
+				Error error
+			}{
+				User: &user.User{
+					ID:               "00000000-0000-0000-0000-000000000000",
+					Username:         "test-user",
+					Gender:           0,
+					Email:            "test-user@calmato.com",
+					PhoneNumber:      "000-0000-0000",
+					Role:             0,
+					ThumbnailURL:     "",
+					SelfIntroduction: "",
+					LastName:         "テスト",
+					FirstName:        "ユーザ",
+					LastNameKana:     "てすと",
+					FirstNameKana:    "ゆーざ",
+					PostalCode:       "000-0000",
+					Prefecture:       "東京都",
+					City:             "小金井市",
+					AddressLine1:     "貫井北町4-1-1",
+					AddressLine2:     "",
+					InstanceID:       "",
+					CreatedAt:        current,
+					UpdatedAt:        current,
+				},
+				Error: nil,
+			},
+		},
+	}
+
+	for result, tc := range testCases {
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		urvm := mock_validation.NewMockUserRequestValidation(ctrl)
+
+		usm := mock_user.NewMockService(ctrl)
+		usm.EXPECT().Show(ctx, tc.UID).Return(tc.Expected.User, tc.Expected.Error)
+
+		t.Run(result, func(t *testing.T) {
+			target := NewUserApplication(urvm, usm)
+
+			user, err := target.Show(ctx, tc.UID)
+			if !reflect.DeepEqual(err, tc.Expected.Error) {
+				t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+				return
+			}
+
+			if !reflect.DeepEqual(user, tc.Expected.User) {
+				t.Fatalf("want %#v, but %#v", tc.Expected.User, user)
+				return
+			}
+		})
+	}
+}
+
 func TestUserApplication_GetUserProfile(t *testing.T) {
 	current := time.Now()
 
@@ -227,7 +554,6 @@ func TestUserApplication_GetUserProfile(t *testing.T) {
 					AddressLine1:     "貫井北町4-1-1",
 					AddressLine2:     "",
 					InstanceID:       "",
-					Activated:        true,
 					CreatedAt:        current,
 					UpdatedAt:        current,
 				},
@@ -321,7 +647,6 @@ func TestUserApplication_RegisterFollow(t *testing.T) {
 					AddressLine1:     "貫井北町4-1-1",
 					AddressLine2:     "",
 					InstanceID:       "",
-					Activated:        true,
 					CreatedAt:        current,
 					UpdatedAt:        current,
 				},
@@ -422,7 +747,6 @@ func TestUserApplication_UnregisterFollow(t *testing.T) {
 					AddressLine1:     "貫井北町4-1-1",
 					AddressLine2:     "",
 					InstanceID:       "",
-					Activated:        true,
 					CreatedAt:        current,
 					UpdatedAt:        current,
 				},

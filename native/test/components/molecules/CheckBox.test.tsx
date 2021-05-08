@@ -2,7 +2,7 @@ import 'jest';
 import React from 'react';
 
 import { shallow, configure } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16.1';
+import Adapter from 'enzyme-adapter-react-16';
 import CheckBox from '~/components/molecules/CheckBox';
 import { Text, View, ViewStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -19,7 +19,9 @@ describe('<CheckBox />', () => {
       alignItems: 'center',
     };
 
-    const wrapper = shallow(<CheckBox title={title} checked={checked} onPress={() => console.log('test')} />);
+    const wrapper = shallow(
+      <CheckBox title={title} checked={checked} onPress={() => console.log('test')} />,
+    );
 
     const view = wrapper.find(View).get(0);
     const icon = wrapper.find(Ionicons).get(0);

@@ -17,8 +17,8 @@ describe('components/organisms/AdminListTable', () => {
           expect(wrapper.props().loading).toBeFalsy()
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({ loading: true })
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ loading: true })
           expect(wrapper.props().loading).toBeTruthy()
         })
       })
@@ -28,8 +28,8 @@ describe('components/organisms/AdminListTable', () => {
           expect(wrapper.props().page).toBe(1)
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({ page: 2 })
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ page: 2 })
           expect(wrapper.props().page).toBe(2)
         })
       })
@@ -39,8 +39,8 @@ describe('components/organisms/AdminListTable', () => {
           expect(wrapper.props().itemsPerPage).toBe(20)
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({ itemsPerPage: 30 })
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ itemsPerPage: 30 })
           expect(wrapper.props().itemsPerPage).toBe(30)
         })
       })
@@ -50,8 +50,8 @@ describe('components/organisms/AdminListTable', () => {
           expect(wrapper.props().sortBy).toBeUndefined()
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({ sortBy: 'email' })
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ sortBy: 'email' })
           expect(wrapper.props().sortBy).toBe('email')
         })
       })
@@ -61,8 +61,8 @@ describe('components/organisms/AdminListTable', () => {
           expect(wrapper.props().sortDesc).toBeUndefined()
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({ sortDesc: true })
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ sortDesc: true })
           expect(wrapper.props().sortDesc).toBeTruthy()
         })
       })
@@ -72,8 +72,8 @@ describe('components/organisms/AdminListTable', () => {
           expect(wrapper.props().search).toBe('')
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({ search: 'test' })
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ search: 'test' })
           expect(wrapper.props().search).toBe('test')
         })
       })
@@ -83,8 +83,8 @@ describe('components/organisms/AdminListTable', () => {
           expect(wrapper.props().users).toEqual([])
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({
+        it('値が代入されること', async () => {
+          await wrapper.setProps({
             users: [
               {
                 id: '5',
@@ -128,8 +128,8 @@ describe('components/organisms/AdminListTable', () => {
           expect(wrapper.props().total).toBe(0)
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({ total: 10 })
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ total: 10 })
           expect(wrapper.props().total).toBe(10)
         })
       })
@@ -156,8 +156,8 @@ describe('components/organisms/AdminListTable', () => {
 
     describe('computed', () => {
       describe('items', () => {
-        it('change props', () => {
-          wrapper.setProps({
+        it('change props', async () => {
+          await wrapper.setProps({
             users: [
               {
                 id: '5',
@@ -267,7 +267,7 @@ describe('components/organisms/AdminListTable', () => {
             createdAt: '2020-01-01 00:00:00',
             updatedAt: '2020-01-01 00:00:00',
           }
-          wrapper.setProps({ users: [user] })
+          await wrapper.setProps({ users: [user] })
           await wrapper.vm.onClickEdit(wrapper.vm.items[0])
           expect(wrapper.emitted('edit')).toBeTruthy()
           expect(wrapper.emitted('edit')[0][0]).toBe(0)
@@ -291,7 +291,7 @@ describe('components/organisms/AdminListTable', () => {
             createdAt: '2020-01-01 00:00:00',
             updatedAt: '2020-01-01 00:00:00',
           }
-          wrapper.setProps({ users: [user] })
+          await wrapper.setProps({ users: [user] })
           await wrapper.vm.onClickDelete(wrapper.vm.items[0])
           expect(wrapper.emitted('delete')).toBeTruthy()
           expect(wrapper.emitted('delete')[0][0]).toEqual(0)

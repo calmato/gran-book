@@ -14,6 +14,10 @@ export interface ISearchAdminInput {
   value: string
 }
 
+export interface IGetAdminInput {
+  id: string
+}
+
 export interface ICreateAdminInput {
   username: string
   email: string
@@ -45,4 +49,13 @@ export interface IUpdateAdminProfileInput {
   firstName: string
   lastNameKana: string
   firstNameKana: string
+}
+
+export interface IUploadAdminThumbnailInput {
+  userId: string
+  path: string
+}
+
+export interface IDeleteAdminInput {
+  userId: string
 }

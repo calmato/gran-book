@@ -2,7 +2,7 @@ import 'jest';
 import React from 'react';
 
 import { shallow, configure } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16.1';
+import Adapter from 'enzyme-adapter-react-16';
 import TitleLogoText from '~/components/atoms/TitleLogoText';
 import { View, ViewStyle } from 'react-native';
 import { Text } from 'react-native-elements';
@@ -10,7 +10,6 @@ import { Text } from 'react-native-elements';
 configure({ adapter: new Adapter() });
 
 describe('<TitleLogoText />', () => {
-
   it('has default props', () => {
     const text = 'test';
     const wrapper = shallow(<TitleLogoText text={text} />);

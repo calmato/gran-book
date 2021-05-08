@@ -1,29 +1,23 @@
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
 import React, { ReactElement } from 'react';
+import { Provider } from 'react-redux';
 import { ThemeProvider } from 'react-native-elements';
-import Onboarding from '~/screens/Onboarding';
-import { RootStackParamList } from '~/types/navigation';
 import { THEME } from '~~/constants/theme';
-import AuthRoute from '~/routes/AuthRoute';
-
-const Stack = createStackNavigator<RootStackParamList>();
+import { UiContext } from '~/lib/context';
+import { createApplicationInitialState } from '~/lib/context/ui';
+import store from '~/store';
+import MainRoute from '~/routes';
 
 const App = function App(): ReactElement {
+  const [applicationState, setApplicationState] = React.useState(createApplicationInitialState());
+
   return (
-    <ThemeProvider theme={THEME}>
-      <NavigationContainer>
-        <Stack.Navigator
-          mode='modal'
-          screenOptions={{
-            headerShown: false
-          }}
-        >
-          <Stack.Screen name="Onboarding" component={Onboarding} />
-          <Stack.Screen name="SignInSelect" component={AuthRoute} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </ThemeProvider>
+    <Provider store={store}>
+      <ThemeProvider theme={THEME}>
+        <UiContext.Provider value={{ applicationState, setApplicationState }}>
+          <MainRoute />
+        </UiContext.Provider>
+      </ThemeProvider>
+    </Provider>
   );
 };
 

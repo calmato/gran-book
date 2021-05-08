@@ -44,8 +44,8 @@ describe('components/organisms/SettingsEditProfileForm', () => {
           })
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({
+        it('値が代入されること', async () => {
+          await wrapper.setProps({
             form: {
               params: {
                 username: 'test-user',

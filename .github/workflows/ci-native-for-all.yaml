@@ -6,6 +6,9 @@ on:
       - '.github/workflows/ci-native-for-all.yaml'
       - 'native/**'
 
+env:
+  RAKUTEN_BOOKS_APPLICATION_ID: ${{ secrets.RAKUTEN_BOOKS_APPLICATION_ID }}
+
 jobs:
   build_and_test:
     name: Build and Test
@@ -18,8 +21,8 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest] # exclude: macos-latest, windows-latest
-        node: ['15.4']
-        expo: ['3.x']
+        node: [16.1]
+        expo: ['4.x']
 
     steps:
       - name: Check out code

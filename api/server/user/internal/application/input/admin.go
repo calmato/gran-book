@@ -51,3 +51,8 @@ type UpdateAdminProfile struct {
 	LastNameKana  string `json:"lastNameKana" validate:"required,hiragana,max=32"`
 	FirstNameKana string `json:"firstNameKana" validate:"required,hiragana,max=32"`
 }
+
+// UploadAdminThumbnail - サムネイルアップロードのリクエスト
+type UploadAdminThumbnail struct {
+	Thumbnail []byte `json:"thumbnail" validate:"required"`
+}

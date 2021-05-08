@@ -21,8 +21,8 @@ describe('components/atoms/TheAlert', () => {
           expect(wrapper.props().type).toBe('info')
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({ type: 'warning' })
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ type: 'warning' })
           expect(wrapper.props().type).toBe('warning')
         })
       })
@@ -32,8 +32,8 @@ describe('components/atoms/TheAlert', () => {
           expect(wrapper.props().show).toBeFalsy()
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({ show: true })
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ show: true })
           expect(wrapper.props().show).toBeTruthy()
         })
       })

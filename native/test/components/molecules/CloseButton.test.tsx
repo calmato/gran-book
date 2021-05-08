@@ -2,7 +2,7 @@ import 'jest';
 import React from 'react';
 
 import { shallow, configure } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16.1';
+import Adapter from 'enzyme-adapter-react-16';
 import CloseButton from '~/components/molecules/CloseButton';
 import CloseIcon from '~/components/atoms/CloseIcon';
 import { colors } from 'react-native-elements';
@@ -23,12 +23,8 @@ describe('<CloseButton />', () => {
     const size = 24;
 
     const wrapper = shallow(
-      <CloseButton
-        size={size}
-        color={colors.black}
-        onPress={() => console.log('test')
-        }
-      />);
+      <CloseButton size={size} color={colors.black} onPress={() => console.log('test')} />,
+    );
 
     const closeIcon = wrapper.find(CloseIcon).get(0);
 

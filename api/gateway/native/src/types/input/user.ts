@@ -1,3 +1,7 @@
+export interface IListUserByUserIdsInput {
+  ids: Array<string>
+}
+
 export interface IListFollowInput {
   id: string
   limit: number
@@ -8,6 +12,10 @@ export interface IListFollowerInput {
   id: string
   limit: number
   offset: number
+}
+
+export interface IGetUserInput {
+  id: string
 }
 
 export interface IGetUserProfileInput {

@@ -44,7 +44,23 @@ func (v *bookDomainValidation) Bookshelf(ctx context.Context, b *book.Bookshelf)
 	if err != nil {
 		ves := []*exception.ValidationError{
 			{
-				Field:   "isbn",
+				Field:   "bookshelf",
+				Message: exception.CustomUniqueMessage,
+			},
+		}
+
+		return exception.Conflict.New(err, ves...)
+	}
+
+	return nil
+}
+
+func (v *bookDomainValidation) Review(ctx context.Context, rv *book.Review) error {
+	err := v.uniqueCheckReview(ctx, rv.ID, rv.UserID, rv.BookID)
+	if err != nil {
+		ves := []*exception.ValidationError{
+			{
+				Field:   "review",
 				Message: exception.CustomUniqueMessage,
 			},
 		}
@@ -79,4 +95,17 @@ func (v *bookDomainValidation) uniqueCheckBookshelf(ctx context.Context, id int,
 	}
 
 	return xerrors.New("This bookshelf is already exists.")
+}
+
+func (v *bookDomainValidation) uniqueCheckReview(ctx context.Context, id int, userID string, bookID int) error {
+	if userID == "" || bookID == 0 {
+		return nil
+	}
+
+	reviewID, _ := v.bookRepository.GetReviewIDByUserIDAndBookID(ctx, userID, bookID)
+	if reviewID == 0 || reviewID == id {
+		return nil
+	}
+
+	return xerrors.New("This review is already exists.")
 }

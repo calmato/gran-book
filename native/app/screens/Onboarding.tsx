@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   subTitleStyle: {
-    margin: 12
+    margin: 12,
   },
   registerButton: {
     width: 300,
@@ -34,14 +34,14 @@ const styles = StyleSheet.create({
   },
   signInButtonFont: {
     fontSize: 14,
-    color: colors.grey0
-  }
+    color: colors.grey0,
+  },
 });
 
 type OnboardingNavigationProp = StackNavigationProp<RootStackParamList, 'SignInSelect'>;
 
 interface Props {
-  navigation: OnboardingNavigationProp
+  navigation: OnboardingNavigationProp;
 }
 
 const Onboarding = function Onboarding(props: Props): ReactElement {
@@ -51,15 +51,20 @@ const Onboarding = function Onboarding(props: Props): ReactElement {
     <View style={styles.container}>
       <TitleLogoText style={styles.titleStyle} text="Gran Book" />
       <Text style={styles.subTitleStyle}>読書管理・本専用のフリマアプリ</Text>
-      <Image style={styles.logo} source={logo}/>
+      <Image style={styles.logo} source={logo} />
       <Button
-        onPress={()=> navigation.navigate('SignInSelect')}
+        onPress={() => navigation.navigate('SignInSelect')}
         title="新規登録する"
         buttonStyle={styles.registerButton}
       />
-      <Text style={{marginTop: 30, marginBottom: 12}}>既にIDをお持ちの方はこちら</Text>
-      <Button title="サインイン" buttonStyle={styles.signInButton} titleStyle={styles.signInButtonFont} type="outline" />
-      <Text style={{margin:30}}>利用規約</Text>
+      <Text style={{ marginTop: 30, marginBottom: 12 }}>既にIDをお持ちの方はこちら</Text>
+      <Button
+        title="サインイン"
+        buttonStyle={styles.signInButton}
+        titleStyle={styles.signInButtonFont}
+        type="outline"
+      />
+      <Text style={{ margin: 30 }}>利用規約</Text>
     </View>
   );
 };

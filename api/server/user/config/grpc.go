@@ -80,7 +80,7 @@ func (s *grpcServer) Stop() {
  * ServerOptions
  */
 func grpcServerOptions(logPath, logLevel string) ([]grpc.ServerOption, error) {
-	streamInterceptors, err := grpcStreamServerInterceptors()
+	streamInterceptors, err := grpcStreamServerInterceptors(logPath, logLevel)
 	if err != nil {
 		return nil, err
 	}
@@ -101,8 +101,20 @@ func grpcServerOptions(logPath, logLevel string) ([]grpc.ServerOption, error) {
 /*
  * ServerOptions - StremServerInterceptor
  */
-func grpcStreamServerInterceptors() ([]grpc.StreamServerInterceptor, error) {
-	interceptors := []grpc.StreamServerInterceptor{}
+func grpcStreamServerInterceptors(logPath, logLevel string) ([]grpc.StreamServerInterceptor, error) {
+	logger, err := newLogger(logPath, logLevel)
+	if err != nil {
+		return nil, err
+	}
+
+	opts := []grpc_zap.Option{}
+
+	interceptors := []grpc.StreamServerInterceptor{
+		grpc_ctxtags.StreamServerInterceptor(),
+		grpc_prometheus.StreamServerInterceptor,
+		grpc_zap.StreamServerInterceptor(logger, opts...),
+		grpc_recovery.StreamServerInterceptor(),
+	}
 
 	return interceptors, nil
 }
