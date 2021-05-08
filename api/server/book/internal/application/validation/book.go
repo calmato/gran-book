@@ -12,7 +12,10 @@ import (
 type BookRequestValidation interface {
 	Book(in *input.Book) error
 	Bookshelf(in *input.Bookshelf) error
+	ListBookByBookIDs(in *input.ListBookByBookIDs) error
 	ListBookshelf(in *input.ListBookshelf) error
+	ListBookReview(in *input.ListBookReview) error
+	ListUserReview(in *input.ListUserReview) error
 }
 
 type bookRequestValidation struct {
@@ -54,6 +57,16 @@ func (v *bookRequestValidation) Bookshelf(in *input.Bookshelf) error {
 	return exception.InvalidRequestValidation.New(err, ves...)
 }
 
+func (v *bookRequestValidation) ListBookByBookIDs(in *input.ListBookByBookIDs) error {
+	ves := v.validator.Run(in, "")
+	if len(ves) == 0 {
+		return nil
+	}
+
+	err := xerrors.New("Failed to ListBookByBookIDs for RequestValidation")
+	return exception.InvalidRequestValidation.New(err, ves...)
+}
+
 func (v *bookRequestValidation) ListBookshelf(in *input.ListBookshelf) error {
 	ves := v.validator.Run(in, "")
 	if len(ves) == 0 {
@@ -61,5 +74,25 @@ func (v *bookRequestValidation) ListBookshelf(in *input.ListBookshelf) error {
 	}
 
 	err := xerrors.New("Failed to ListBookshelf for RequestValidation")
+	return exception.InvalidRequestValidation.New(err, ves...)
+}
+
+func (v *bookRequestValidation) ListBookReview(in *input.ListBookReview) error {
+	ves := v.validator.Run(in, "")
+	if len(ves) == 0 {
+		return nil
+	}
+
+	err := xerrors.New("Failed to ListBookReview for RequestValidation")
+	return exception.InvalidRequestValidation.New(err, ves...)
+}
+
+func (v *bookRequestValidation) ListUserReview(in *input.ListUserReview) error {
+	ves := v.validator.Run(in, "")
+	if len(ves) == 0 {
+		return nil
+	}
+
+	err := xerrors.New("Failed to ListUserReview for RequestValidation")
 	return exception.InvalidRequestValidation.New(err, ves...)
 }

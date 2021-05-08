@@ -16,8 +16,8 @@ describe('components/organisms/CommonHeader', () => {
           expect(wrapper.props().thumbnailUrl).toBe('')
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({ thumbnailUrl: '/thumbnail.png' })
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ thumbnailUrl: '/thumbnail.png' })
           expect(wrapper.props().thumbnailUrl).toBe('/thumbnail.png')
         })
       })

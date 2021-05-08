@@ -6,6 +6,7 @@ import {
   FollowerListResponse,
   FollowListResponse,
   GetUserProfileRequest,
+  GetUserRequest,
   ListFollowerRequest,
   ListFollowRequest,
   ListUserByUserIdsRequest,
@@ -13,8 +14,10 @@ import {
   UnregisterFollowRequest,
   UserListResponse,
   UserProfileResponse,
+  UserResponse,
 } from '~/proto/user_apiv1_pb'
 import {
+  IGetUserInput,
   IGetUserProfileInput,
   IListFollowerInput,
   IListFollowInput,
@@ -27,26 +30,26 @@ import {
   IFollowerListOutputUser,
   IFollowListOutput,
   IFollowListOutputUser,
-  IUserListOutput,
-  IUserListOutputOrder,
-  IUserListOutputUser,
+  IUserHashOutput,
+  IUserHashOutputUser,
+  IUserOutput,
   IUserProfileOutput,
 } from '~/types/output'
 
-export function listUserWithUserIds(req: Request<any>, input: IListUserByUserIdsInput): Promise<IUserListOutput> {
+export function listUserWithUserIds(req: Request<any>, input: IListUserByUserIdsInput): Promise<IUserHashOutput> {
   const request = new ListUserByUserIdsRequest()
   const metadata = getGrpcMetadata(req)
 
   request.setUserIdsList(input.ids)
 
-  return new Promise((resolve: (res: IUserListOutput) => void, reject: (reason: Error) => void) => {
+  return new Promise((resolve: (res: IUserHashOutput) => void, reject: (reason: Error) => void) => {
     userClient.listUserByUserIds(request, metadata, (err: any, res: UserListResponse) => {
       if (err) {
         reject(getGrpcError(err))
         return
       }
 
-      resolve(setUserListOutput(res))
+      resolve(setUserHashOutput(res))
     })
   })
 }
@@ -129,6 +132,25 @@ export function listFollower(req: Request<any>, input: IListFollowerInput): Prom
   })
 }
 
+export function getUser(req: Request<any>, input: IGetUserInput): Promise<IUserOutput> {
+  const request = new GetUserRequest()
+  const metadata = getGrpcMetadata(req)
+
+  request.setId(input.id)
+
+  return new Promise((resolve: (res: IUserOutput) => void, reject: (reason: Error) => void) => {
+    userClient.getUser(request, metadata, (err: any, res: UserResponse) => {
+      if (err) {
+        reject(getGrpcError(err))
+        return
+      }
+
+      const output: IUserOutput = setUserOutput(res)
+      resolve(output)
+    })
+  })
+}
+
 export function getUserProfile(req: Request<any>, input: IGetUserProfileInput): Promise<IUserProfileOutput> {
   const request = new GetUserProfileRequest()
   const metadata = getGrpcMetadata(req)
@@ -186,9 +208,31 @@ export function unregisterFollow(req: Request<any>, input: IUnregisterFollowInpu
   })
 }
 
-function setUserListOutput(res: UserListResponse): IUserListOutput {
-  const users: IUserListOutputUser[] = res.getUsersList().map(
-    (u: UserListResponse.User): IUserListOutputUser => ({
+function setUserOutput(res: UserResponse): IUserOutput {
+  const output: IUserOutput = {
+    id: res.getId(),
+    username: res.getUsername(),
+    email: res.getEmail(),
+    phoneNumber: res.getPhoneNumber(),
+    role: res.getRole(),
+    thumbnailUrl: res.getThumbnailUrl(),
+    selfIntroduction: res.getSelfIntroduction(),
+    lastName: res.getLastName(),
+    firstName: res.getFirstName(),
+    lastNameKana: res.getLastNameKana(),
+    firstNameKana: res.getFirstNameKana(),
+    createdAt: res.getCreatedAt(),
+    updatedAt: res.getUpdatedAt(),
+  }
+
+  return output
+}
+
+function setUserHashOutput(res: UserListResponse): IUserHashOutput {
+  const output: IUserHashOutput = {}
+
+  res.getUsersList().forEach((u: UserListResponse.User) => {
+    const user: IUserHashOutputUser = {
       id: u.getId(),
       username: u.getUsername(),
       email: u.getEmail(),
@@ -202,25 +246,10 @@ function setUserListOutput(res: UserListResponse): IUserListOutput {
       firstNameKana: u.getFirstNameKana(),
       createdAt: u.getCreatedAt(),
       updatedAt: u.getUpdatedAt(),
-    })
-  )
-
-  const output: IUserListOutput = {
-    users,
-    limit: res.getLimit(),
-    offset: res.getOffset(),
-    total: res.getTotal(),
-  }
-
-  const orderRes: UserListResponse.Order | undefined = res.getOrder()
-  if (orderRes) {
-    const order: IUserListOutputOrder = {
-      by: orderRes.getBy(),
-      direction: orderRes.getDirection(),
     }
 
-    output.order = order
-  }
+    output[u.getId()] = user
+  })
 
   return output
 }

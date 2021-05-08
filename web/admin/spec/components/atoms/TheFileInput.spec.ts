@@ -16,8 +16,8 @@ describe('components/atoms/TheFileInput', () => {
           expect(wrapper.props().accept).toBe('image/*')
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({ accept: 'video/*' })
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ accept: 'video/*' })
           expect(wrapper.props().accept).toBe('video/*')
         })
       })
@@ -27,8 +27,8 @@ describe('components/atoms/TheFileInput', () => {
           expect(wrapper.props().label).toBe('')
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({ label: 'テスト' })
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ label: 'テスト' })
           expect(wrapper.props().label).toBe('テスト')
         })
       })
@@ -38,8 +38,8 @@ describe('components/atoms/TheFileInput', () => {
           expect(wrapper.props().limit).toBe(10000000)
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({ limit: 5000000 })
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ limit: 5000000 })
           expect(wrapper.props().limit).toBe(5000000)
         })
       })
@@ -49,8 +49,8 @@ describe('components/atoms/TheFileInput', () => {
           expect(wrapper.props().name).toBe('')
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({ name: 'test' })
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ name: 'test' })
           expect(wrapper.props().name).toBe('test')
         })
       })
@@ -60,8 +60,8 @@ describe('components/atoms/TheFileInput', () => {
           expect(wrapper.props().rules).toEqual({})
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({ rules: { required: true } })
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ rules: { required: true } })
           expect(wrapper.props().rules).toEqual({ required: true })
         })
       })
@@ -71,8 +71,8 @@ describe('components/atoms/TheFileInput', () => {
           expect(wrapper.props().value).toBe('')
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({ value: 'test' })
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ value: 'test' })
           expect(wrapper.props().value).toBe('test')
         })
       })

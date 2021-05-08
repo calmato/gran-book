@@ -403,55 +403,71 @@ func TestBookRequestValidation_Bookshelf(t *testing.T) {
 	}{
 		"ok": {
 			Input: &input.Bookshelf{
-				UserID: "00000000-0000-0000-0000-000000000000",
-				BookID: 1,
-				Status: 1,
-				ReadOn: "2020-01-01",
+				UserID:     "00000000-0000-0000-0000-000000000000",
+				BookID:     1,
+				Status:     1,
+				ReadOn:     "2020-01-01",
+				Impression: "本の感想です。",
 			},
 			Expected: true,
 		},
 		"ng_userId_required": {
 			Input: &input.Bookshelf{
-				UserID: "",
-				BookID: 1,
-				Status: 1,
-				ReadOn: "2020-01-01",
+				UserID:     "",
+				BookID:     1,
+				Status:     1,
+				ReadOn:     "2020-01-01",
+				Impression: "本の感想です。",
 			},
 			Expected: false,
 		},
 		"ng_bookId_required": {
 			Input: &input.Bookshelf{
-				UserID: "00000000-0000-0000-0000-000000000000",
-				BookID: 0,
-				Status: 1,
-				ReadOn: "2020-01-01",
+				UserID:     "00000000-0000-0000-0000-000000000000",
+				BookID:     0,
+				Status:     1,
+				ReadOn:     "2020-01-01",
+				Impression: "本の感想です。",
 			},
 			Expected: false,
 		},
 		"ng_bookId_greater_than_equal": {
 			Input: &input.Bookshelf{
-				UserID: "00000000-0000-0000-0000-000000000000",
-				BookID: 0,
-				Status: 1,
-				ReadOn: "2020-01-01",
+				UserID:     "00000000-0000-0000-0000-000000000000",
+				BookID:     0,
+				Status:     1,
+				ReadOn:     "2020-01-01",
+				Impression: "本の感想です。",
 			},
 			Expected: false,
 		},
 		"ng_status_greater_than_equal": {
 			Input: &input.Bookshelf{
-				UserID: "00000000-0000-0000-0000-000000000000",
-				BookID: 1,
-				Status: -1,
-				ReadOn: "2020-01-01",
+				UserID:     "00000000-0000-0000-0000-000000000000",
+				BookID:     1,
+				Status:     -1,
+				ReadOn:     "2020-01-01",
+				Impression: "本の感想です。",
 			},
 			Expected: false,
 		},
 		"ng_status_less_than_equal": {
 			Input: &input.Bookshelf{
-				UserID: "00000000-0000-0000-0000-000000000000",
-				BookID: 1,
-				Status: 6,
-				ReadOn: "2020-01-01",
+				UserID:     "00000000-0000-0000-0000-000000000000",
+				BookID:     1,
+				Status:     6,
+				ReadOn:     "2020-01-01",
+				Impression: "本の感想です。",
+			},
+			Expected: false,
+		},
+		"ng_impression_max": {
+			Input: &input.Bookshelf{
+				UserID:     "00000000-0000-0000-0000-000000000000",
+				BookID:     1,
+				Status:     6,
+				ReadOn:     "2020-01-01",
+				Impression: strings.Repeat("x", 1001),
 			},
 			Expected: false,
 		},
@@ -465,6 +481,58 @@ func TestBookRequestValidation_Bookshelf(t *testing.T) {
 			target := NewBookRequestValidation()
 
 			got := target.Bookshelf(tc.Input)
+			if tc.Expected {
+				if got != nil {
+					t.Fatalf("Incorrect result: %#v", got)
+				}
+			} else {
+				if got == nil {
+					t.Fatalf("Incorrect result: result is nil")
+				}
+			}
+		})
+	}
+}
+
+func TestBookRequestValidation_ListBookByBookIDs(t *testing.T) {
+	testCases := map[string]struct {
+		Input    *input.ListBookByBookIDs
+		Expected bool
+	}{
+		"ok": {
+			Input: &input.ListBookByBookIDs{
+				BookIDs: []int{1, 2},
+			},
+			Expected: true,
+		},
+		"ng_bookIds_unique": {
+			Input: &input.ListBookByBookIDs{
+				BookIDs: []int{1, 1},
+			},
+			Expected: false,
+		},
+		"ng_bookIds_required": {
+			Input: &input.ListBookByBookIDs{
+				BookIDs: []int{0, 1},
+			},
+			Expected: false,
+		},
+		"ng_bookIds_greater_than_equal": {
+			Input: &input.ListBookByBookIDs{
+				BookIDs: []int{0},
+			},
+			Expected: false,
+		},
+	}
+
+	for result, tc := range testCases {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		t.Run(result, func(t *testing.T) {
+			target := NewBookRequestValidation()
+
+			got := target.ListBookByBookIDs(tc.Input)
 			if tc.Expected {
 				if got != nil {
 					t.Fatalf("Incorrect result: %#v", got)
@@ -533,6 +601,212 @@ func TestBookRequestValidation_ListBookshelf(t *testing.T) {
 			target := NewBookRequestValidation()
 
 			got := target.ListBookshelf(tc.Input)
+			if tc.Expected {
+				if got != nil {
+					t.Fatalf("Incorrect result: %#v", got)
+				}
+			} else {
+				if got == nil {
+					t.Fatalf("Incorrect result: result is nil")
+				}
+			}
+		})
+	}
+}
+
+func TestBookRequestValidation_ListBookReview(t *testing.T) {
+	testCases := map[string]struct {
+		Input    *input.ListBookReview
+		Expected bool
+	}{
+		"ok": {
+			Input: &input.ListBookReview{
+				BookID:    1,
+				Limit:     0,
+				Offset:    0,
+				By:        "",
+				Direction: "",
+			},
+			Expected: true,
+		},
+		"ng_bookId_required": {
+			Input: &input.ListBookReview{
+				BookID:    0,
+				Limit:     0,
+				Offset:    0,
+				By:        "",
+				Direction: "",
+			},
+			Expected: false,
+		},
+		"ng_bookId_greater_than_equal": {
+			Input: &input.ListBookReview{
+				BookID:    0,
+				Limit:     0,
+				Offset:    0,
+				By:        "",
+				Direction: "",
+			},
+			Expected: false,
+		},
+		"ng_limit_greater_than_equal": {
+			Input: &input.ListBookReview{
+				BookID:    1,
+				Limit:     -1,
+				Offset:    0,
+				By:        "",
+				Direction: "",
+			},
+			Expected: false,
+		},
+		"ng_limit_less_than_equal": {
+			Input: &input.ListBookReview{
+				BookID:    1,
+				Limit:     1001,
+				Offset:    0,
+				By:        "",
+				Direction: "",
+			},
+			Expected: false,
+		},
+		"ng_offset_greater_than_equal": {
+			Input: &input.ListBookReview{
+				BookID:    1,
+				Limit:     0,
+				Offset:    -1,
+				By:        "",
+				Direction: "",
+			},
+			Expected: false,
+		},
+		"ng_by_oneof": {
+			Input: &input.ListBookReview{
+				BookID:    1,
+				Limit:     0,
+				Offset:    -1,
+				By:        "userId",
+				Direction: "asc",
+			},
+			Expected: false,
+		},
+		"ng_direction_oneof": {
+			Input: &input.ListBookReview{
+				BookID:    1,
+				Limit:     0,
+				Offset:    -1,
+				By:        "id",
+				Direction: "test",
+			},
+			Expected: false,
+		},
+	}
+
+	for result, tc := range testCases {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		t.Run(result, func(t *testing.T) {
+			target := NewBookRequestValidation()
+
+			got := target.ListBookReview(tc.Input)
+			if tc.Expected {
+				if got != nil {
+					t.Fatalf("Incorrect result: %#v", got)
+				}
+			} else {
+				if got == nil {
+					t.Fatalf("Incorrect result: result is nil")
+				}
+			}
+		})
+	}
+}
+
+func TestBookRequestValidation_ListUserReview(t *testing.T) {
+	testCases := map[string]struct {
+		Input    *input.ListUserReview
+		Expected bool
+	}{
+		"ok": {
+			Input: &input.ListUserReview{
+				UserID:    "00000000-0000-0000-0000-000000000000",
+				Limit:     0,
+				Offset:    0,
+				By:        "",
+				Direction: "",
+			},
+			Expected: true,
+		},
+		"ng_userId_required": {
+			Input: &input.ListUserReview{
+				UserID:    "",
+				Limit:     0,
+				Offset:    0,
+				By:        "",
+				Direction: "",
+			},
+			Expected: false,
+		},
+		"ng_limit_greater_than_equal": {
+			Input: &input.ListUserReview{
+				UserID:    "00000000-0000-0000-0000-000000000000",
+				Limit:     -1,
+				Offset:    0,
+				By:        "",
+				Direction: "",
+			},
+			Expected: false,
+		},
+		"ng_limit_less_than_equal": {
+			Input: &input.ListUserReview{
+				UserID:    "00000000-0000-0000-0000-000000000000",
+				Limit:     1001,
+				Offset:    0,
+				By:        "",
+				Direction: "",
+			},
+			Expected: false,
+		},
+		"ng_offset_greater_than_equal": {
+			Input: &input.ListUserReview{
+				UserID:    "00000000-0000-0000-0000-000000000000",
+				Limit:     0,
+				Offset:    -1,
+				By:        "",
+				Direction: "",
+			},
+			Expected: false,
+		},
+		"ng_by_oneof": {
+			Input: &input.ListUserReview{
+				UserID:    "00000000-0000-0000-0000-000000000000",
+				Limit:     0,
+				Offset:    -1,
+				By:        "userId",
+				Direction: "asc",
+			},
+			Expected: false,
+		},
+		"ng_direction_oneof": {
+			Input: &input.ListUserReview{
+				UserID:    "00000000-0000-0000-0000-000000000000",
+				Limit:     0,
+				Offset:    -1,
+				By:        "id",
+				Direction: "test",
+			},
+			Expected: false,
+		},
+	}
+
+	for result, tc := range testCases {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		t.Run(result, func(t *testing.T) {
+			target := NewBookRequestValidation()
+
+			got := target.ListUserReview(tc.Input)
 			if tc.Expected {
 				if got != nil {
 					t.Fatalf("Incorrect result: %#v", got)
