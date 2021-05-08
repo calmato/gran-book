@@ -3,9 +3,10 @@ FROM node:16.1.0-alpine
 ENV LANG C.UTF-8
 ENV TZ Asia/Tokyo
 
-RUN apk add --update \
+RUN apk add --update --no-cache \
   g++ \
   make \
-  python
+  python3 \
+  && ln -fs python3 /usr/bin/python
 
 RUN yarn global add expo-cli

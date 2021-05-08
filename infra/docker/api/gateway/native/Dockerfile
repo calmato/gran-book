@@ -9,7 +9,8 @@ WORKDIR /var/gateway
 RUN apk add --update \
   g++ \
   make \
-  python
+  python3 \
+  && ln -fs python3 /usr/bin/python
 
 ADD ./api/gateway/native ./
 RUN yarn install --production=false
@@ -25,10 +26,11 @@ ENV NODE_ENV production
 
 WORKDIR /var/gateway
 
-RUN apk add \
+RUN apk add --update \
   g++ \
   make \
-  python
+  python3 \
+  && ln -fs python3 /usr/bin/python
 
 COPY --from=builder /var/gateway/package.json ./package.json
 RUN yarn install --production=true
