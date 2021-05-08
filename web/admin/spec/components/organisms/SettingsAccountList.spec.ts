@@ -16,8 +16,8 @@ describe('components/organisms/SettingsAccountList', () => {
           expect(wrapper.props().lists).toEqual([])
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({ lists: [{ title: 'パスワード', content: '************', to: '/settings/password' }] })
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ lists: [{ title: 'パスワード', content: '************', to: '/settings/password' }] })
           expect(wrapper.props().lists).toEqual([
             { title: 'パスワード', content: '************', to: '/settings/password' },
           ])
@@ -26,9 +26,9 @@ describe('components/organisms/SettingsAccountList', () => {
     })
 
     describe('methods', () => {
-      describe('onClick', () => {
+      describe('onClick', async () => {
         it('emitが実行されること', async () => {
-          wrapper.setProps({ lists: [{ title: 'パスワード', content: '************', to: '/settings/password' }] })
+          await wrapper.setProps({ lists: [{ title: 'パスワード', content: '************', to: '/settings/password' }] })
           await wrapper.vm.onClick('/settings/password')
           expect(wrapper.emitted('click')).toBeTruthy()
           expect(wrapper.emitted('click')[0][0]).toBe('/settings/password')

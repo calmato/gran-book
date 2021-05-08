@@ -16,8 +16,8 @@ describe('components/organisms/CommonSnackbar', () => {
           expect(wrapper.props().color).toBe('info')
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({ color: 'error' })
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ color: 'error' })
           expect(wrapper.props().color).toBe('error')
         })
       })
@@ -27,8 +27,8 @@ describe('components/organisms/CommonSnackbar', () => {
           expect(wrapper.props().message).toBe('')
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({ message: 'メッセージが変更されました' })
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ message: 'メッセージが変更されました' })
           expect(wrapper.props().message).toBe('メッセージが変更されました')
         })
       })
@@ -38,8 +38,8 @@ describe('components/organisms/CommonSnackbar', () => {
           expect(wrapper.props().snackbar).toBeFalsy()
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({ snackbar: true })
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ snackbar: true })
           expect(wrapper.props().snackbar).toBeTruthy()
         })
       })
