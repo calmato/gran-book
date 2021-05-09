@@ -1,0 +1,99 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fluent-bit-config
+  namespace: logging
+data:
+  fluent-bit.conf: |
+    [SERVICE]
+        Flush        5
+        Grace        120
+        Log_Level    info
+        Log_File     /var/log/fluent-bit.log
+        Daemon       off
+        Parsers_File parsers.conf
+        HTTP_Server  On
+        HTTP_Listen  0.0.0.0
+        HTTP_Port    2020
+
+    @INCLUDE inputs.conf
+    @INCLUDE filters.conf
+    @INCLUDE outputs.conf
+  input.conf: |
+    # ------------------------------------------------------------------------------
+    # Container Logs - Other
+    # ------------------------------------------------------------------------------
+    [INPUT]
+        Name             tail
+        Alias            kube_containers
+        Tag              kube_<namespace_name>_<pod_name>_<container_name>
+        Tag_Regex        (?<pod_name>[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*)_(?<namespace_name>[^_]+)_(?<container_name>.+)-
+        Path             /var/log/containers/*.log
+        Exclude_Path     /var/log/containers/*_gke-system_*.log,/var/log/containers/*_istio-system_*.log,/var/log/containers/*_knative-serving_*.log,/var/log/containers/*_kube-system_*.log
+        DB               /var/run/fluent-bit/pos-files/flb_kube.db
+        Buffer_Max_Size  1MB
+        Mem_Buf_Limit    5MB
+        Skip_Long_Lines  On
+        Refresh_Interval 5
+  parsers.conf: |
+    # ------------------------------------------------------------------------------
+    # Parser - docker
+    # ------------------------------------------------------------------------------
+    [PARSER]
+        Name        docker
+        Format      json
+        Time_Key    time
+        Time_Format %Y-%m-%dT%H:%M:%S.%L%z
+
+    # ------------------------------------------------------------------------------
+    # Parser - containerd
+    # ------------------------------------------------------------------------------
+    [PARSER]
+        Name        containerd
+        Format      regex
+        Regex       ^(?<time>.+) (?<stream>stdout|stderr) [^ ]* (?<log>.*)$
+        Time_Key    time
+        Time_Format %Y-%m-%dT%H:%M:%S.%L%z
+
+    # ------------------------------------------------------------------------------
+    # Parser - json
+    # ------------------------------------------------------------------------------
+    [PARSER]
+        Name        json
+        Format      json
+
+    # ------------------------------------------------------------------------------
+    # Parser - network-log
+    # ------------------------------------------------------------------------------
+    [PARSER]
+        Name        nginx
+        Format      regex
+        Regex       ^(?<remote>[^ ]*) (?<host>[^ ]*) (?<user>[^ ]*) \[(?<time>[^\]]*)\] "(?<method>\S+)(?: +(?<path>[^\"]*?)(?: +\S*)?)?" (?<code>[^ ]*) (?<size>[^ ]*)(?: "(?<referer>[^\"]*)" "(?<agent>[^\"]*)")
+        Time_Key    time
+        Time_Format %d/%b/%Y:%H:%M:%S %z
+  filters.conf: |
+    # ------------------------------------------------------------------------------
+    # Filter - Modify
+    # ------------------------------------------------------------------------------
+    [FILTER]
+        Name        modify
+        Match       *
+        Hard_rename log message
+
+    # ------------------------------------------------------------------------------
+    # Filter - Parser
+    # ------------------------------------------------------------------------------
+    [FILTER]
+        Name         parser
+        Match        kube_*
+        Key_Name     message
+        Reserve_Data True
+        Parser       json
+  outputs.conf: |
+    # ------------------------------------------------------------------------------
+    # Output - stdout
+    # ------------------------------------------------------------------------------
+    [OUTPUT]
+        Name          stdout
+        Match         *
+        Format        json_lines
