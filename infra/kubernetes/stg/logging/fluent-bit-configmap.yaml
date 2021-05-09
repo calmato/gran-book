@@ -19,7 +19,7 @@ data:
     @INCLUDE inputs.conf
     @INCLUDE filters.conf
     @INCLUDE outputs.conf
-  input.conf: |
+  inputs.conf: |
     # ------------------------------------------------------------------------------
     # Container Logs - Other
     # ------------------------------------------------------------------------------
@@ -63,7 +63,7 @@ data:
         Format      json
 
     # ------------------------------------------------------------------------------
-    # Parser - network-log
+    # Parser - nginx
     # ------------------------------------------------------------------------------
     [PARSER]
         Name        nginx
@@ -96,4 +96,3 @@ data:
     [OUTPUT]
         Name          stdout
         Match         *
-        Format        json_lines
