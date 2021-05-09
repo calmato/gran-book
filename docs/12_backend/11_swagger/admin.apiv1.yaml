@@ -165,6 +165,18 @@ paths:
             type: string
           required: false
           description: 検索値
+        - in: query
+          name: by
+          schema:
+            type: string
+          required: false
+          description: 並び替え対象のカラム
+        - in: query
+          name: direction
+          schema:
+            type: string
+          required: false
+          description: 並び替え順 (asc or desc)
       responses:
         '200':
           description: A successful response.
@@ -420,6 +432,18 @@ paths:
             type: string
           required: false
           description: 検索値
+        - in: query
+          name: by
+          schema:
+            type: string
+          required: false
+          description: 並び替え対象のカラム
+        - in: query
+          name: direction
+          schema:
+            type: string
+          required: false
+          description: 並び替え順 (asc or desc)
       responses:
         '200':
           description: A successful response.

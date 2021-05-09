@@ -16,8 +16,8 @@ describe('components/atoms/TheSelect', () => {
           expect(wrapper.props().autofocus).toBeFalsy()
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({ autofocus: true })
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ autofocus: true })
           expect(wrapper.props().autofocus).toBeTruthy()
         })
       })
@@ -27,8 +27,8 @@ describe('components/atoms/TheSelect', () => {
           expect(wrapper.props().label).toBe('')
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({ label: 'テスト' })
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ label: 'テスト' })
           expect(wrapper.props().label).toBe('テスト')
         })
       })
@@ -38,8 +38,8 @@ describe('components/atoms/TheSelect', () => {
           expect(wrapper.props().name).toBe('')
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({ name: 'test' })
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ name: 'test' })
           expect(wrapper.props().name).toBe('test')
         })
       })
@@ -49,8 +49,8 @@ describe('components/atoms/TheSelect', () => {
           expect(wrapper.props().outlined).toBeFalsy()
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({ outlined: true })
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ outlined: true })
           expect(wrapper.props().outlined).toBeTruthy()
         })
       })
@@ -60,8 +60,8 @@ describe('components/atoms/TheSelect', () => {
           expect(wrapper.props().rules).toEqual({})
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({ rules: { required: true } })
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ rules: { required: true } })
           expect(wrapper.props().rules).toEqual({ required: true })
         })
       })
@@ -71,8 +71,8 @@ describe('components/atoms/TheSelect', () => {
           expect(wrapper.props().items).toEqual([])
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({ items: [{ text: 'test', value: 0 }] })
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ items: [{ text: 'test', value: 0 }] })
           expect(wrapper.props().items).toEqual([{ text: 'test', value: 0 }])
         })
       })
@@ -82,8 +82,8 @@ describe('components/atoms/TheSelect', () => {
           expect(wrapper.props().value).toBeUndefined()
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({ value: 'test' })
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ value: 'test' })
           expect(wrapper.props().value).toBe('test')
         })
       })

@@ -11,9 +11,7 @@ export interface IBookOutput {
   rakutenGenreId: string
   createdAt: string
   updatedAt: string
-  bookshelf: IBookOutputBookshelf
   authors: Array<IBookOutputAuthor>
-  reviews: Array<IBookOutputReview>
 }
 
 export interface IBookOutputAuthor {
@@ -21,21 +19,29 @@ export interface IBookOutputAuthor {
   nameKana: string
 }
 
-export interface IBookOutputReview {
-  id: number
-  userId: string
-  score: number
-  impression: string
-  createdAt: string
-  updatedAt: string
+export interface IBookHashOutput {
+  [key: number]: IBookHashOutputBook
 }
 
-export interface IBookOutputBookshelf {
+export interface IBookHashOutputBook {
   id: number
-  status: number
-  readOn: string
+  title: string
+  titleKana: string
+  description: string
+  isbn: string
+  publisher: string
+  publishedOn: string
+  thumbnailUrl: string
+  rakutenUrl: string
+  rakutenGenreId: string
   createdAt: string
   updatedAt: string
+  authors: Array<IBookOutputAuthor>
+}
+
+export interface IBookHashOutputAuthor {
+  name: string
+  nameKana: string
 }
 
 export interface IBookshelfOutput {
@@ -43,10 +49,37 @@ export interface IBookshelfOutput {
   bookId: number
   userId: string
   status: number
-  impression: string
   readOn: string
   createdAt: string
   updatedAt: string
+  book: IBookshelfOutputBook
+  review?: IBookshelfOutputReview
+}
+
+export interface IBookshelfOutputBook {
+  id: number
+  title: string
+  titleKana: string
+  description: string
+  isbn: string
+  publisher: string
+  publishedOn: string
+  thumbnailUrl: string
+  rakutenUrl: string
+  rakutenGenreId: string
+  createdAt: string
+  updatedAt: string
+  authors: Array<IBookshelfOutputAuthor>
+}
+
+export interface IBookshelfOutputAuthor {
+  name: string
+  nameKana: string
+}
+
+export interface IBookshelfOutputReview {
+  score: number
+  impression: string
 }
 
 export interface IBookshelfListOutput {
@@ -86,4 +119,37 @@ export interface IBookshelfListOutputBookshelf {
   createdAt: string
   updatedAt: string
   book: IBookshelfListOutputBook
+}
+
+export interface IReviewOutput {
+  id: number
+  bookId: number
+  userId: string
+  score: number
+  impression: string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface IReviewListOutput {
+  reviews: Array<IReviewListOutputReview>
+  limit: number
+  offset: number
+  total: number
+  order?: IReviewListOutputOrder
+}
+
+export interface IReviewListOutputReview {
+  id: number
+  bookId: number
+  userId: string
+  score: number
+  impression: string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface IReviewListOutputOrder {
+  by: string
+  direction: string
 }

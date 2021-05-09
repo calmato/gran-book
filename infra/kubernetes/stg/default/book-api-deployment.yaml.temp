@@ -6,7 +6,7 @@ metadata:
     app: book-api
     version: v1
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: book-api
@@ -28,6 +28,11 @@ spec:
         ports:
         - name: default
           containerPort: 8080
+        livenessProbe:
+          tcpSocket:
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 5
         # TODO: readinessProbe
         env:
         - name: PORT

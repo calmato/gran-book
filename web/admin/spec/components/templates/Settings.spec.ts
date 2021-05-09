@@ -16,8 +16,8 @@ describe('components/templates/Settings', () => {
           expect(wrapper.props().username).toBe('')
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({ username: 'test-user' })
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ username: 'test-user' })
           expect(wrapper.props().username).toBe('test-user')
         })
       })
@@ -27,8 +27,8 @@ describe('components/templates/Settings', () => {
           expect(wrapper.props().name).toBe('')
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({ name: 'Calmato 管理者' })
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ name: 'Calmato 管理者' })
           expect(wrapper.props().name).toBe('Calmato 管理者')
         })
       })
@@ -38,8 +38,8 @@ describe('components/templates/Settings', () => {
           expect(wrapper.props().nameKana).toBe('')
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({ nameKana: 'かるまーと かんりしゃ' })
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ nameKana: 'かるまーと かんりしゃ' })
           expect(wrapper.props().nameKana).toBe('かるまーと かんりしゃ')
         })
       })
@@ -49,8 +49,8 @@ describe('components/templates/Settings', () => {
           expect(wrapper.props().thumbnailUrl).toBe('')
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({ thumbnailUrl: '/thumbnail.png' })
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ thumbnailUrl: '/thumbnail.png' })
           expect(wrapper.props().thumbnailUrl).toBe('/thumbnail.png')
         })
       })
@@ -60,8 +60,8 @@ describe('components/templates/Settings', () => {
           expect(wrapper.props().selfIntroduction).toBe('')
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({ selfIntroduction: 'よろしくお願いします' })
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ selfIntroduction: 'よろしくお願いします' })
           expect(wrapper.props().selfIntroduction).toBe('よろしくお願いします')
         })
       })
@@ -71,8 +71,8 @@ describe('components/templates/Settings', () => {
           expect(wrapper.props().phoneNumber).toBe('')
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({ phoneNumber: '000-0000-0000' })
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ phoneNumber: '000-0000-0000' })
           expect(wrapper.props().phoneNumber).toBe('000-0000-0000')
         })
       })
@@ -82,8 +82,8 @@ describe('components/templates/Settings', () => {
           expect(wrapper.props().email).toBe('')
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({ email: 'test@calmato.com' })
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ email: 'test@calmato.com' })
           expect(wrapper.props().email).toBe('test@calmato.com')
         })
       })
