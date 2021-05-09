@@ -4,6 +4,8 @@ import { AxiosResponse } from 'axios';
 import { internal } from '~/lib/axios';
 import { IErrorResponse, ISearchResultItem } from '~/types/response/external/rakuten-books';
 import { IBookResponse } from '~/types/response';
+import { setBooks } from '../modules/book';
+import { BookValues } from '../models/book';
 
 
 /**
@@ -85,13 +87,18 @@ export async function getAllBookByUserId(userId: string) {
     .then((res: AxiosResponse<IBookResponse>) => {
       return res;
     }).catch((err: AxiosResponse<IErrorResponse>) => {
+      console.log('Called');
       return Promise.reject(err);
     });
 }
 
-export async function getAllBookAsync() {
+export function getAllBookAsync() {
   return async (dispatch: Dispatch, getState: () => AppState) => {
     const user = getState().user;
-    return getAllBookByUserId(user.id);
+    console.log('[DEBUG]', user);
+    const res = await getAllBookByUserId(user.id);
+    console.log('[DEBUG]', res);
+    const books = res.data.books;
+    dispatch(setBooks({books}));
   };
 }
