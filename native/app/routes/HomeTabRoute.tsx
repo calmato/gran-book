@@ -1,6 +1,6 @@
 ﻿import React, { ReactElement } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import Home from '~/screens/Home';
+import Home from '~/containers/Home';
 import SearchResult from '~/screens/SearchResult';
 import { HomeTabStackPramList } from '~/types/navigation';
 import BookShow from '~/screens/BookShow';

@@ -8,17 +8,21 @@ import BookList from '~/components/molecules/BookList';
 import SearchBar from '~/components/molecules/SearchBar';
 import { searchBookByTitle } from '~/lib/rakuten-books';
 import { HomeTabStackPramList } from '~/types/navigation';
-import { getAllBookAsync, getAllBookByUserId, registerReadBookAsync } from '~/store/usecases';
-import { IBookResponse } from '~/types/response';
+import { IBook, IBookResponse } from '~/types/response';
 
 interface Props {
   navigation?: StackNavigationProp<HomeTabStackPramList, 'Home'>;
+  actions: {
+    getAllBook: () => Promise<void>
+  }
+  books?: IBook[],
 }
 
 const Home = function Home(props: Props): ReactElement {
   const navigation = props.navigation;
   const [keyword, setValue] = useState('');
-  const [books, setBooks] = useState<IBookResponse>();
+  // const [books, setBooks] = useState<IBookResponse>();
+  const books = props.books;
 
   const onSubmitEditingCallback = useCallback(() => {
     (async () => {
@@ -34,11 +38,8 @@ const Home = function Home(props: Props): ReactElement {
   }, [setValue]);
 
   useEffect(() => {
-    const f = async () => await getAllBookByUserId('e7ce84b7-dc23-440b-8e7f-025402195a92')
-      .then((res) => { console.log(res.data); setBooks(res.data);})
-      .catch((err) => console.log(err));
-    f();
-  }, []);
+    props.actions?.getAllBook();
+  }, [props.actions]);
 
   return (
     <View>
@@ -54,7 +55,7 @@ const Home = function Home(props: Props): ReactElement {
           onSubmitEditing={onSubmitEditingCallback}
         />
         {
-          books? <BookList books={books?.books} />: null
+          books? <BookList books={books} />: null
         }
       </ScrollView>
     </View>
