@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   messagesContainer: {
-    width: '70%',
+    width: '67%',
     padding: 10
   },
 
