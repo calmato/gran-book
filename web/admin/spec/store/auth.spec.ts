@@ -23,6 +23,10 @@ describe('store/auth', () => {
   })
 
   describe('getters', () => {
+    it('getId', () => {
+      expect(AuthStore.getId).toBe('')
+    })
+
     it('getEmail', () => {
       expect(AuthStore.getEmail).toBe('')
     })
