@@ -70,6 +70,7 @@ export const MessagesScreen = () => {
           height: 40
         }}
       />
+
       <ScrollView>
         <FlatList
           style={styles.messagesContainer}
@@ -127,7 +128,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   messagesContainer: {
-    width: '100%',
+    width: '70%',
     padding: 10
   },
 
