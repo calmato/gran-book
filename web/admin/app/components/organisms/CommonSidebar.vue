@@ -91,6 +91,7 @@ export default defineComponent({
     const systemItems: ISidebarListItem[] = [
       { icon: 'mdi-shield-account', text: '管理者管理', to: '/admin' },
       { icon: 'mdi-cog', text: 'システム設定', to: '/system' },
+      { icon: 'mdi-developer-board', text: 'デバッグ用', to: '/debug' },
     ]
 
     const items: ISidebarListItem[] = commonItems.concat(maintenanceItems, developerItems, systemItems)
