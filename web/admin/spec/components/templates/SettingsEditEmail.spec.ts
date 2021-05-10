@@ -44,8 +44,8 @@ describe('components/templates/SettingsEditEmail', () => {
           expect(wrapper.props().loading).toBeFalsy()
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({ loading: true })
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ loading: true })
           expect(wrapper.props().loading).toBeTruthy()
         })
       })
