@@ -1,8 +1,6 @@
-import { ImageURISource } from "react-native";
-
 export interface IBookResponse {
-  limit: number;                                                                                                                           │
-  offset: number;                                                                                                                            │
+  limit: number;
+  offset: number;
   total: number;
   books: Array<IBook>;
 }
