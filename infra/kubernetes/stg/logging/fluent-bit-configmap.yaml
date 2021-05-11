@@ -15,84 +15,74 @@ data:
         HTTP_Server  On
         HTTP_Listen  0.0.0.0
         HTTP_Port    2020
-
     @INCLUDE inputs.conf
     @INCLUDE filters.conf
     @INCLUDE outputs.conf
   inputs.conf: |
-    # ------------------------------------------------------------------------------
-    # Container Logs - Other
-    # ------------------------------------------------------------------------------
     [INPUT]
         Name             tail
-        Alias            kube_containers
+        Alias            kube_containers_gateway
         Tag              kube_<namespace_name>_<pod_name>_<container_name>
         Tag_Regex        (?<pod_name>[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*)_(?<namespace_name>[^_]+)_(?<container_name>.+)-
-        Path             /var/log/containers/*.log
-        Exclude_Path     /var/log/containers/*_gke-system_*.log,/var/log/containers/*_istio-system_*.log,/var/log/containers/*_knative-serving_*.log,/var/log/containers/*_kube-system_*.log
-        DB               /var/run/fluent-bit/pos-files/flb_kube.db
+        Path             /var/log/containers/*_gateway_*.log
+        Path_Key         log_file_path
+        DB               /var/run/fluent-bit/pos-files/flb_kube_gateway.db
         Buffer_Max_Size  1MB
         Mem_Buf_Limit    5MB
         Skip_Long_Lines  On
         Refresh_Interval 5
-  parsers.conf: |
-    # ------------------------------------------------------------------------------
-    # Parser - docker
-    # ------------------------------------------------------------------------------
-    [PARSER]
-        Name        docker
-        Format      json
-        Time_Key    time
-        Time_Format %Y-%m-%dT%H:%M:%S.%L%z
-
-    # ------------------------------------------------------------------------------
-    # Parser - containerd
-    # ------------------------------------------------------------------------------
-    [PARSER]
-        Name        containerd
-        Format      regex
-        Regex       ^(?<time>.+) (?<stream>stdout|stderr) [^ ]* (?<log>.*)$
-        Time_Key    time
-        Time_Format %Y-%m-%dT%H:%M:%S.%L%z
-
-    # ------------------------------------------------------------------------------
-    # Parser - json
-    # ------------------------------------------------------------------------------
-    [PARSER]
-        Name        json
-        Format      json
-
-    # ------------------------------------------------------------------------------
-    # Parser - nginx
-    # ------------------------------------------------------------------------------
-    [PARSER]
-        Name        nginx
-        Format      regex
-        Regex       ^(?<remote>[^ ]*) (?<host>[^ ]*) (?<user>[^ ]*) \[(?<time>[^\]]*)\] "(?<method>\S+)(?: +(?<path>[^\"]*?)(?: +\S*)?)?" (?<code>[^ ]*) (?<size>[^ ]*)(?: "(?<referer>[^\"]*)" "(?<agent>[^\"]*)")
-        Time_Key    time
-        Time_Format %d/%b/%Y:%H:%M:%S %z
+    [INPUT]
+        Name             tail
+        Alias            kube_containers_default
+        Tag              kube_<namespace_name>_<pod_name>_<container_name>
+        Tag_Regex        (?<pod_name>[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*)_(?<namespace_name>[^_]+)_(?<container_name>.+)-
+        Path             /var/log/containers/*_default_*.log
+        Path_Key         log_file_path
+        DB               /var/run/fluent-bit/pos-files/flb_kube_default.db
+        Buffer_Max_Size  1MB
+        Mem_Buf_Limit    5MB
+        Skip_Long_Lines  On
+        Refresh_Interval 5
   filters.conf: |
-    # ------------------------------------------------------------------------------
-    # Filter - Modify
-    # ------------------------------------------------------------------------------
     [FILTER]
-        Name        modify
-        Match       *
-        Hard_rename log message
-
-    # ------------------------------------------------------------------------------
-    # Filter - Parser
-    # ------------------------------------------------------------------------------
+        Name         parser
+        Match        kube_default_*_*-gateway
+        Key_Name     log
+        Parser       bff
+        Reserve_Data True
+        Preserve_Key False
+    [FILTER]
+        Name         parser
+        Match        kube_gateway_*_nginx
+        Key_Name     log
+        Parser       nginx
+        Reserve_Data True
+        Preserve_Key False
     [FILTER]
         Name         parser
         Match        kube_*
-        Key_Name     message
+        Key_Name     log_file_path
+        Parser       pod
         Reserve_Data True
-        Parser       json
+        Preserve_Key False
   outputs.conf: |
-    # ------------------------------------------------------------------------------
-    # Output - stdout
-    # ------------------------------------------------------------------------------
     [OUTPUT]
-        Name          stdout
-        Match         *
+        Name  stdout
+        Match *
+  parsers.conf: |
+    [PARSER]
+        Name        bff
+        Format      regex
+        Regex       ^\\u001b\[32m\[(?<time>[^ ]*)\] \[(?<level>[^ ]*)\] (?<type>[^ ]*) - \\u001b\[39m(?<data>.*)$
+        Time_Key    time
+        Time_Format %d/%b/%Y:%H:%M:%S %z
+    [PARSER]
+        Name        nginx
+        Format      regex
+        Regex       ^(?<remote>[^ ]*) - (?<user>[^ ]*) \[(?<time>[^\]]*)\] \\"(?<method>\S+)(?: +(?<path>[^\"]*?)(?: +\S*)?)?\\" (?<status>[^ ]*) (?<size>[^ ]*) \\"(?<referer>[^ ]*)\\" \\"(?<agent>[^"]*)\\" \\"(?<ratio>[^ ]*)\\".*$
+        Time_Key    time
+        Time_Format %d/%b/%Y:%H:%M:%S %z
+    [PARSER]
+        Name        pod
+        Format      regex
+        Regex       ^/var/log/containers/(?<pod_id>[^_]*).*.log$
