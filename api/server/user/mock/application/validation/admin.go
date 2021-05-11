@@ -116,3 +116,17 @@ func (mr *MockAdminRequestValidationMockRecorder) UpdateAdminProfile(in interfac
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAdminProfile", reflect.TypeOf((*MockAdminRequestValidation)(nil).UpdateAdminProfile), in)
 }
+
+// UploadAdminThumbnail mocks base method
+func (m *MockAdminRequestValidation) UploadAdminThumbnail(in *input.UploadAdminThumbnail) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UploadAdminThumbnail", in)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UploadAdminThumbnail indicates an expected call of UploadAdminThumbnail
+func (mr *MockAdminRequestValidationMockRecorder) UploadAdminThumbnail(in interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UploadAdminThumbnail", reflect.TypeOf((*MockAdminRequestValidation)(nil).UploadAdminThumbnail), in)
+}

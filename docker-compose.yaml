@@ -46,11 +46,13 @@ services:
     volumes:
       - ./api/gateway/native:/var/gateway:cached
       - ./tmp/logs/native_gateway:/var/log/gateway:delegated
+      - ./tmp/uploads/native_gateway:/var/gateway/tmp/uploads:delegated
     environment:
       - HOST=0.0.0.0
       - PORT=8080
       - LOG_PATH=/var/log/gateway
       - USER_API_URL=${USER_API_URL}
+      - BOOK_API_URL=${BOOK_API_URL}
       - FIREBASE_PROJECT_ID=${FIREBASE_PROJECT_ID}
       - FIREBASE_CLIENT_EMAIL=${FIREBASE_CLIENT_EMAIL}
       - FIREBASE_PRIVATE_KEY=${FIREBASE_PRIVATE_KEY}
@@ -70,11 +72,13 @@ services:
     volumes:
       - ./api/gateway/admin:/var/gateway:cached
       - ./tmp/logs/admin_gateway:/var/log/gateway:delegated
+      - ./tmp/uploads/admin_gateway:/var/gateway/tmp/uploads:delegated
     environment:
       - HOST=0.0.0.0
       - PORT=8080
       - LOG_PATH=/var/log/gateway
       - USER_API_URL=${USER_API_URL}
+      - BOOK_API_URL=${BOOK_API_URL}
       - FIREBASE_PROJECT_ID=${FIREBASE_PROJECT_ID}
       - FIREBASE_CLIENT_EMAIL=${FIREBASE_CLIENT_EMAIL}
       - FIREBASE_PRIVATE_KEY=${FIREBASE_PRIVATE_KEY}

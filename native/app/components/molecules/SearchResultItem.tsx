@@ -1,7 +1,7 @@
 ﻿import React, { ReactElement } from 'react';
 import { StyleSheet, Image } from 'react-native';
 import { ListItem } from 'react-native-elements';
-import { ISearchResultItem } from '~/types/response/search';
+import { ISearchResultItem } from '~/types/response/external/rakuten-books';
 import { COLOR } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
@@ -34,8 +34,9 @@ const SearchResultItem = function SearchResultItem(props: Props): ReactElement {
     <ListItem bottomDivider onPress={props.onPress}>
       <Image
         source={
-          book.volumeInfo?.imageLinks?.smallThumbnail
-            ? { uri: book.volumeInfo?.imageLinks?.smallThumbnail }
+          book.largeImageUrl
+            ? { uri: book.largeImageUrl }
+
             : require('assets/logo.png')
         }
         style={styles.bookCoverStyle}
@@ -44,10 +45,10 @@ const SearchResultItem = function SearchResultItem(props: Props): ReactElement {
       />
       <ListItem.Content>
         <ListItem.Title style={styles.bookTitle} allowFontScaling>
-          {book.volumeInfo?.title}
+          {book.title}
         </ListItem.Title>
         <ListItem.Subtitle style={styles.authors}>
-          {book.volumeInfo?.authors ? book.volumeInfo?.authors.join(' ') : '著者情報がありません'}
+          {book.author ? book.author : '著者情報がありません'}
         </ListItem.Subtitle>
       </ListItem.Content>
     </ListItem>

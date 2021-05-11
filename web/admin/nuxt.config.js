@@ -27,7 +27,7 @@ export default {
     '~/plugins/persisted-state',
     '~/plugins/vee-validate',
   ],
-  buildModules: ['@nuxt/typescript-build', '@nuxtjs/composition-api', '@nuxtjs/vuetify'],
+  buildModules: ['@nuxt/typescript-build', '@nuxtjs/composition-api/module', '@nuxtjs/vuetify'],
   modules: ['@nuxtjs/axios', '@nuxt/content'],
 
   router: {
@@ -69,5 +69,9 @@ export default {
     apiURL: process.env.API_URL,
   },
 
-  build: {},
+  build: {
+    babel: {
+      plugins: [['@babel/plugin-proposal-private-methods', { loose: true }]],
+    },
+  },
 }

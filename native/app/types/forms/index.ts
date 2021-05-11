@@ -1,3 +1,5 @@
+import firebase from 'firebase';
+
 export type SingUpForm = {
   email: string;
   password: string;
@@ -43,3 +45,9 @@ export type AccountEditForm = {
   addressLine1: string;
   addressLine2: string;
 };
+
+export interface MessageForm {
+  newText: string;
+  createdAt: firebase.firestore.Timestamp;
+  userId: string;
+}

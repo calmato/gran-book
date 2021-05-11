@@ -21,6 +21,8 @@ type AdminApplication interface {
 	UpdateRole(ctx context.Context, in *input.UpdateAdminRole, uid string) (*user.User, error)
 	UpdatePassword(ctx context.Context, in *input.UpdateAdminPassword, uid string) (*user.User, error)
 	UpdateProfile(ctx context.Context, in *input.UpdateAdminProfile, uid string) (*user.User, error)
+	UploadThumbnail(ctx context.Context, in *input.UploadAdminThumbnail, uid string) (string, error)
+	Delete(ctx context.Context, uid string) error
 }
 
 type adminApplication struct {
@@ -176,7 +178,11 @@ func (a *adminApplication) Create(ctx context.Context, in *input.CreateAdmin) (*
 		FirstName:     in.FirstName,
 		LastNameKana:  in.LastNameKana,
 		FirstNameKana: in.FirstNameKana,
-		Activated:     true,
+	}
+
+	err = a.userService.Validation(ctx, u)
+	if err != nil {
+		return nil, err
 	}
 
 	err = a.userService.Create(ctx, u)
@@ -199,6 +205,11 @@ func (a *adminApplication) UpdateRole(ctx context.Context, in *input.UpdateAdmin
 	}
 
 	u.Role = in.Role
+
+	err = a.userService.Validation(ctx, u)
+	if err != nil {
+		return nil, err
+	}
 
 	err = a.userService.Update(ctx, u)
 	if err != nil {
@@ -249,10 +260,37 @@ func (a *adminApplication) UpdateProfile(
 	u.LastNameKana = in.LastNameKana
 	u.FirstNameKana = in.FirstNameKana
 
+	err = a.userService.Validation(ctx, u)
+	if err != nil {
+		return nil, err
+	}
+
 	err = a.userService.Update(ctx, u)
 	if err != nil {
 		return nil, err
 	}
 
 	return u, nil
+}
+
+func (a *adminApplication) UploadThumbnail(
+	ctx context.Context, in *input.UploadAdminThumbnail, uid string,
+) (string, error) {
+	err := a.adminRequestValidation.UploadAdminThumbnail(in)
+	if err != nil {
+		return "", err
+	}
+
+	return a.userService.UploadThumbnail(ctx, uid, in.Thumbnail)
+}
+
+func (a *adminApplication) Delete(ctx context.Context, uid string) error {
+	u, err := a.userService.Show(ctx, uid)
+	if err != nil {
+		return exception.NotFound.New(err)
+	}
+
+	u.Role = 0
+
+	return a.userService.Update(ctx, u)
 }

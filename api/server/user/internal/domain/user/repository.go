@@ -18,9 +18,11 @@ type Repository interface {
 	Show(ctx context.Context, uid string) (*User, error)
 	ShowRelationship(ctx context.Context, id int) (*Relationship, error)
 	Create(ctx context.Context, u *User) error
+	CreateWithOAuth(ctx context.Context, u *User) error
 	CreateRelationship(ctx context.Context, r *Relationship) error
 	Update(ctx context.Context, u *User) error
 	UpdatePassword(ctx context.Context, uid string, password string) error
+	Delete(ctx context.Context, uid string) error
 	DeleteRelationship(ctx context.Context, id int) error
 	GetUIDByEmail(ctx context.Context, email string) (string, error)
 	GetRelationshipIDByUID(ctx context.Context, followID string, followerID string) (int, error)

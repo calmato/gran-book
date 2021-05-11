@@ -55,7 +55,6 @@ func TestAdminApplication_List(t *testing.T) {
 						AddressLine1:     "貫井北町4-1-1",
 						AddressLine2:     "",
 						InstanceID:       "",
-						Activated:        true,
 						CreatedAt:        current,
 						UpdatedAt:        current,
 					},
@@ -145,7 +144,6 @@ func TestAdminApplication_Search(t *testing.T) {
 						AddressLine1:     "貫井北町4-1-1",
 						AddressLine2:     "",
 						InstanceID:       "",
-						Activated:        true,
 						CreatedAt:        current,
 						UpdatedAt:        current,
 					},
@@ -227,7 +225,6 @@ func TestAdminApplication_Show(t *testing.T) {
 					AddressLine1:     "貫井北町4-1-1",
 					AddressLine2:     "",
 					InstanceID:       "",
-					Activated:        true,
 					CreatedAt:        current,
 					UpdatedAt:        current,
 				},
@@ -298,7 +295,6 @@ func TestAdminApplication_Create(t *testing.T) {
 					FirstName:     "ユーザ",
 					LastNameKana:  "てすと",
 					FirstNameKana: "ゆーざ",
-					Activated:     true,
 				},
 				Error: nil,
 			},
@@ -316,6 +312,7 @@ func TestAdminApplication_Create(t *testing.T) {
 		arvm.EXPECT().CreateAdmin(tc.Input).Return(nil)
 
 		usm := mock_user.NewMockService(ctrl)
+		usm.EXPECT().Validation(ctx, gomock.Any()).Return(tc.Expected.Error)
 		usm.EXPECT().Create(ctx, gomock.Any()).Return(tc.Expected.Error)
 
 		t.Run(result, func(t *testing.T) {
@@ -373,6 +370,7 @@ func TestAdminApplication_UpdateRole(t *testing.T) {
 		arvm.EXPECT().UpdateAdminRole(tc.Input).Return(nil)
 
 		usm := mock_user.NewMockService(ctrl)
+		usm.EXPECT().Validation(ctx, gomock.Any()).Return(tc.Expected.Error)
 		usm.EXPECT().Show(ctx, tc.ID).Return(tc.Expected.User, tc.Expected.Error)
 		usm.EXPECT().Update(ctx, tc.Expected.User).Return(tc.Expected.Error)
 
@@ -500,6 +498,7 @@ func TestAdminApplication_UpdateProfile(t *testing.T) {
 		arvm.EXPECT().UpdateAdminProfile(tc.Input).Return(nil)
 
 		usm := mock_user.NewMockService(ctrl)
+		usm.EXPECT().Validation(ctx, gomock.Any()).Return(tc.Expected.Error)
 		usm.EXPECT().Show(ctx, tc.ID).Return(tc.Expected.User, tc.Expected.Error)
 		usm.EXPECT().Update(ctx, tc.Expected.User).Return(tc.Expected.Error)
 
@@ -514,6 +513,46 @@ func TestAdminApplication_UpdateProfile(t *testing.T) {
 
 			if !reflect.DeepEqual(got, tc.Expected.User) {
 				t.Fatalf("want %#v, but %#v", tc.Expected.User, got)
+				return
+			}
+		})
+	}
+}
+
+func TestAdminApplication_Delete(t *testing.T) {
+	testCases := map[string]struct {
+		UID      string
+		Expected error
+	}{
+		"ok": {
+			UID:      "00000000-0000-0000-0000-000000000000",
+			Expected: nil,
+		},
+	}
+
+	for result, tc := range testCases {
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		u := &user.User{
+			ID: tc.UID,
+		}
+
+		arvm := mock_validation.NewMockAdminRequestValidation(ctrl)
+
+		usm := mock_user.NewMockService(ctrl)
+		usm.EXPECT().Show(ctx, tc.UID).Return(u, nil)
+		usm.EXPECT().Update(ctx, u).Return(tc.Expected)
+
+		t.Run(result, func(t *testing.T) {
+			target := NewAdminApplication(arvm, usm)
+
+			err := target.Delete(ctx, tc.UID)
+			if !reflect.DeepEqual(err, tc.Expected) {
+				t.Fatalf("want %#v, but %#v", tc.Expected, err)
 				return
 			}
 		})

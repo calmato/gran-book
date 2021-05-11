@@ -112,7 +112,6 @@ func TestUserService_List(t *testing.T) {
 						AddressLine1:     "貫井北町4-1-1",
 						AddressLine2:     "",
 						InstanceID:       "",
-						Activated:        true,
 						CreatedAt:        current,
 						UpdatedAt:        current,
 					},
@@ -460,7 +459,6 @@ func TestUserService_Show(t *testing.T) {
 					AddressLine1:     "貫井北町4-1-1",
 					AddressLine2:     "",
 					InstanceID:       "",
-					Activated:        true,
 					CreatedAt:        current,
 					UpdatedAt:        current,
 				},
@@ -684,7 +682,6 @@ func TestUserService_Create(t *testing.T) {
 				AddressLine1:     "貫井北町4-1-1",
 				AddressLine2:     "",
 				InstanceID:       "",
-				Activated:        true,
 				CreatedAt:        time.Time{},
 				UpdatedAt:        time.Time{},
 			},
@@ -700,7 +697,6 @@ func TestUserService_Create(t *testing.T) {
 		defer ctrl.Finish()
 
 		uvm := mock_user.NewMockValidation(ctrl)
-		uvm.EXPECT().User(ctx, tc.User).Return(nil)
 
 		urm := mock_user.NewMockRepository(ctrl)
 		urm.EXPECT().Create(ctx, tc.User).Return(tc.Expected)
@@ -759,7 +755,6 @@ func TestUserService_CreateRelationship(t *testing.T) {
 		defer ctrl.Finish()
 
 		uvm := mock_user.NewMockValidation(ctrl)
-		uvm.EXPECT().Relationship(ctx, tc.Relationship).Return(nil)
 
 		urm := mock_user.NewMockRepository(ctrl)
 		urm.EXPECT().CreateRelationship(ctx, tc.Relationship).Return(tc.Expected)
@@ -815,7 +810,6 @@ func TestUserService_Update(t *testing.T) {
 				AddressLine1:     "貫井北町4-1-1",
 				AddressLine2:     "",
 				InstanceID:       "",
-				Activated:        true,
 				CreatedAt:        current,
 				UpdatedAt:        current,
 			},
@@ -831,7 +825,6 @@ func TestUserService_Update(t *testing.T) {
 		defer ctrl.Finish()
 
 		uvm := mock_user.NewMockValidation(ctrl)
-		uvm.EXPECT().User(ctx, tc.User).Return(nil)
 
 		urm := mock_user.NewMockRepository(ctrl)
 		urm.EXPECT().Update(ctx, tc.User).Return(tc.Expected)
@@ -886,6 +879,43 @@ func TestUserService_UpdatePassword(t *testing.T) {
 			target := NewUserService(uvm, urm, uum)
 
 			got := target.UpdatePassword(ctx, tc.UID, tc.Password)
+			if !reflect.DeepEqual(got, tc.Expected) {
+				t.Fatalf("want %#v, but %#v", tc.Expected, got)
+				return
+			}
+		})
+	}
+}
+
+func TestUserService_Delete(t *testing.T) {
+	testCases := map[string]struct {
+		UID      string
+		Expected error
+	}{
+		"ok": {
+			UID:      "00000000-0000-0000-0000-000000000000",
+			Expected: nil,
+		},
+	}
+
+	for result, tc := range testCases {
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		uvm := mock_user.NewMockValidation(ctrl)
+
+		urm := mock_user.NewMockRepository(ctrl)
+		urm.EXPECT().Delete(ctx, tc.UID).Return(tc.Expected)
+
+		uum := mock_user.NewMockUploader(ctrl)
+
+		t.Run(result, func(t *testing.T) {
+			target := NewUserService(uvm, urm, uum)
+
+			got := target.Delete(ctx, tc.UID)
 			if !reflect.DeepEqual(got, tc.Expected) {
 				t.Fatalf("want %#v, but %#v", tc.Expected, got)
 				return
@@ -1043,6 +1073,107 @@ func TestUserService_IsFriend(t *testing.T) {
 
 			if !reflect.DeepEqual(isFollower, tc.Expected.IsFollower) {
 				t.Fatalf("want %#v, but %#v", tc.Expected.IsFollower, isFollower)
+				return
+			}
+		})
+	}
+}
+
+func TestUserService_Validation(t *testing.T) {
+	testCases := map[string]struct {
+		User     *user.User
+		Expected error
+	}{
+		"ok": {
+			User: &user.User{
+				ID:               "",
+				Username:         "test-user",
+				Gender:           0,
+				Email:            "test-user@calmato.com",
+				PhoneNumber:      "000-0000-0000",
+				Role:             0,
+				ThumbnailURL:     "",
+				SelfIntroduction: "",
+				LastName:         "テスト",
+				FirstName:        "ユーザ",
+				LastNameKana:     "てすと",
+				FirstNameKana:    "ゆーざ",
+				PostalCode:       "000-0000",
+				Prefecture:       "東京都",
+				City:             "小金井市",
+				AddressLine1:     "貫井北町4-1-1",
+				AddressLine2:     "",
+				InstanceID:       "",
+				CreatedAt:        time.Time{},
+				UpdatedAt:        time.Time{},
+			},
+			Expected: nil,
+		},
+	}
+
+	for result, tc := range testCases {
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		uvm := mock_user.NewMockValidation(ctrl)
+		uvm.EXPECT().User(ctx, tc.User).Return(tc.Expected)
+
+		urm := mock_user.NewMockRepository(ctrl)
+
+		uum := mock_user.NewMockUploader(ctrl)
+
+		t.Run(result, func(t *testing.T) {
+			target := NewUserService(uvm, urm, uum)
+
+			got := target.Validation(ctx, tc.User)
+			if !reflect.DeepEqual(got, tc.Expected) {
+				t.Fatalf("want %#v, but %#v", tc.Expected, got)
+				return
+			}
+		})
+	}
+}
+
+func TestUserService_ValidationRelationship(t *testing.T) {
+	testCases := map[string]struct {
+		Relationship *user.Relationship
+		Expected     error
+	}{
+		"ok": {
+			Relationship: &user.Relationship{
+				ID:         0,
+				FollowID:   "00000000-0000-0000-0000-000000000000",
+				FollowerID: "11111111-1111-1111-1111-111111111111",
+				CreatedAt:  time.Time{},
+				UpdatedAt:  time.Time{},
+			},
+			Expected: nil,
+		},
+	}
+
+	for result, tc := range testCases {
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		uvm := mock_user.NewMockValidation(ctrl)
+		uvm.EXPECT().Relationship(ctx, tc.Relationship).Return(tc.Expected)
+
+		urm := mock_user.NewMockRepository(ctrl)
+
+		uum := mock_user.NewMockUploader(ctrl)
+
+		t.Run(result, func(t *testing.T) {
+			target := NewUserService(uvm, urm, uum)
+
+			got := target.ValidationRelationship(ctx, tc.Relationship)
+			if !reflect.DeepEqual(got, tc.Expected) {
+				t.Fatalf("want %#v, but %#v", tc.Expected, got)
 				return
 			}
 		})

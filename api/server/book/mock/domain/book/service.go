@@ -6,6 +6,7 @@ package mock_book
 
 import (
 	context "context"
+	domain "github.com/calmato/gran-book/api/server/book/internal/domain"
 	book "github.com/calmato/gran-book/api/server/book/internal/domain/book"
 	gomock "github.com/golang/mock/gomock"
 	reflect "reflect"
@@ -34,6 +35,111 @@ func (m *MockService) EXPECT() *MockServiceMockRecorder {
 	return m.recorder
 }
 
+// List mocks base method
+func (m *MockService) List(ctx context.Context, q *domain.ListQuery) ([]*book.Book, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "List", ctx, q)
+	ret0, _ := ret[0].([]*book.Book)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// List indicates an expected call of List
+func (mr *MockServiceMockRecorder) List(ctx, q interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockService)(nil).List), ctx, q)
+}
+
+// ListBookshelf mocks base method
+func (m *MockService) ListBookshelf(ctx context.Context, q *domain.ListQuery) ([]*book.Bookshelf, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListBookshelf", ctx, q)
+	ret0, _ := ret[0].([]*book.Bookshelf)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListBookshelf indicates an expected call of ListBookshelf
+func (mr *MockServiceMockRecorder) ListBookshelf(ctx, q interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListBookshelf", reflect.TypeOf((*MockService)(nil).ListBookshelf), ctx, q)
+}
+
+// ListReview mocks base method
+func (m *MockService) ListReview(ctx context.Context, q *domain.ListQuery) ([]*book.Review, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListReview", ctx, q)
+	ret0, _ := ret[0].([]*book.Review)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListReview indicates an expected call of ListReview
+func (mr *MockServiceMockRecorder) ListReview(ctx, q interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListReview", reflect.TypeOf((*MockService)(nil).ListReview), ctx, q)
+}
+
+// ListCount mocks base method
+func (m *MockService) ListCount(ctx context.Context, q *domain.ListQuery) (int, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListCount", ctx, q)
+	ret0, _ := ret[0].(int)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListCount indicates an expected call of ListCount
+func (mr *MockServiceMockRecorder) ListCount(ctx, q interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListCount", reflect.TypeOf((*MockService)(nil).ListCount), ctx, q)
+}
+
+// ListBookshelfCount mocks base method
+func (m *MockService) ListBookshelfCount(ctx context.Context, q *domain.ListQuery) (int, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListBookshelfCount", ctx, q)
+	ret0, _ := ret[0].(int)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListBookshelfCount indicates an expected call of ListBookshelfCount
+func (mr *MockServiceMockRecorder) ListBookshelfCount(ctx, q interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListBookshelfCount", reflect.TypeOf((*MockService)(nil).ListBookshelfCount), ctx, q)
+}
+
+// ListReviewCount mocks base method
+func (m *MockService) ListReviewCount(ctx context.Context, q *domain.ListQuery) (int, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListReviewCount", ctx, q)
+	ret0, _ := ret[0].(int)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListReviewCount indicates an expected call of ListReviewCount
+func (mr *MockServiceMockRecorder) ListReviewCount(ctx, q interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListReviewCount", reflect.TypeOf((*MockService)(nil).ListReviewCount), ctx, q)
+}
+
+// Show mocks base method
+func (m *MockService) Show(ctx context.Context, bookID int) (*book.Book, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Show", ctx, bookID)
+	ret0, _ := ret[0].(*book.Book)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Show indicates an expected call of Show
+func (mr *MockServiceMockRecorder) Show(ctx, bookID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Show", reflect.TypeOf((*MockService)(nil).Show), ctx, bookID)
+}
+
 // ShowByIsbn mocks base method
 func (m *MockService) ShowByIsbn(ctx context.Context, isbn string) (*book.Book, error) {
 	m.ctrl.T.Helper()
@@ -47,6 +153,51 @@ func (m *MockService) ShowByIsbn(ctx context.Context, isbn string) (*book.Book, 
 func (mr *MockServiceMockRecorder) ShowByIsbn(ctx, isbn interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ShowByIsbn", reflect.TypeOf((*MockService)(nil).ShowByIsbn), ctx, isbn)
+}
+
+// ShowBookshelfByUserIDAndBookID mocks base method
+func (m *MockService) ShowBookshelfByUserIDAndBookID(ctx context.Context, userID string, bookID int) (*book.Bookshelf, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ShowBookshelfByUserIDAndBookID", ctx, userID, bookID)
+	ret0, _ := ret[0].(*book.Bookshelf)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ShowBookshelfByUserIDAndBookID indicates an expected call of ShowBookshelfByUserIDAndBookID
+func (mr *MockServiceMockRecorder) ShowBookshelfByUserIDAndBookID(ctx, userID, bookID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ShowBookshelfByUserIDAndBookID", reflect.TypeOf((*MockService)(nil).ShowBookshelfByUserIDAndBookID), ctx, userID, bookID)
+}
+
+// ShowReview mocks base method
+func (m *MockService) ShowReview(ctx context.Context, reviewID int) (*book.Review, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ShowReview", ctx, reviewID)
+	ret0, _ := ret[0].(*book.Review)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ShowReview indicates an expected call of ShowReview
+func (mr *MockServiceMockRecorder) ShowReview(ctx, reviewID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ShowReview", reflect.TypeOf((*MockService)(nil).ShowReview), ctx, reviewID)
+}
+
+// ShowReviewByUserIDAndBookID mocks base method
+func (m *MockService) ShowReviewByUserIDAndBookID(ctx context.Context, userID string, bookID int) (*book.Review, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ShowReviewByUserIDAndBookID", ctx, userID, bookID)
+	ret0, _ := ret[0].(*book.Review)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ShowReviewByUserIDAndBookID indicates an expected call of ShowReviewByUserIDAndBookID
+func (mr *MockServiceMockRecorder) ShowReviewByUserIDAndBookID(ctx, userID, bookID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ShowReviewByUserIDAndBookID", reflect.TypeOf((*MockService)(nil).ShowReviewByUserIDAndBookID), ctx, userID, bookID)
 }
 
 // Create mocks base method
@@ -63,20 +214,6 @@ func (mr *MockServiceMockRecorder) Create(ctx, b interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockService)(nil).Create), ctx, b)
 }
 
-// CreateAuthor mocks base method
-func (m *MockService) CreateAuthor(ctx context.Context, b *book.Author) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateAuthor", ctx, b)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// CreateAuthor indicates an expected call of CreateAuthor
-func (mr *MockServiceMockRecorder) CreateAuthor(ctx, b interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAuthor", reflect.TypeOf((*MockService)(nil).CreateAuthor), ctx, b)
-}
-
 // CreateBookshelf mocks base method
 func (m *MockService) CreateBookshelf(ctx context.Context, b *book.Bookshelf) error {
 	m.ctrl.T.Helper()
@@ -91,20 +228,6 @@ func (mr *MockServiceMockRecorder) CreateBookshelf(ctx, b interface{}) *gomock.C
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateBookshelf", reflect.TypeOf((*MockService)(nil).CreateBookshelf), ctx, b)
 }
 
-// CreateCategory mocks base method
-func (m *MockService) CreateCategory(ctx context.Context, b *book.Category) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateCategory", ctx, b)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// CreateCategory indicates an expected call of CreateCategory
-func (mr *MockServiceMockRecorder) CreateCategory(ctx, b interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateCategory", reflect.TypeOf((*MockService)(nil).CreateCategory), ctx, b)
-}
-
 // Update mocks base method
 func (m *MockService) Update(ctx context.Context, b *book.Book) error {
 	m.ctrl.T.Helper()
@@ -117,6 +240,20 @@ func (m *MockService) Update(ctx context.Context, b *book.Book) error {
 func (mr *MockServiceMockRecorder) Update(ctx, b interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockService)(nil).Update), ctx, b)
+}
+
+// UpdateBookshelf mocks base method
+func (m *MockService) UpdateBookshelf(ctx context.Context, b *book.Bookshelf) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateBookshelf", ctx, b)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpdateBookshelf indicates an expected call of UpdateBookshelf
+func (mr *MockServiceMockRecorder) UpdateBookshelf(ctx, b interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateBookshelf", reflect.TypeOf((*MockService)(nil).UpdateBookshelf), ctx, b)
 }
 
 // MultipleCreate mocks base method
@@ -147,6 +284,34 @@ func (mr *MockServiceMockRecorder) MultipleUpdate(ctx, bs interface{}) *gomock.C
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MultipleUpdate", reflect.TypeOf((*MockService)(nil).MultipleUpdate), ctx, bs)
 }
 
+// Delete mocks base method
+func (m *MockService) Delete(ctx context.Context, bookID int) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Delete", ctx, bookID)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Delete indicates an expected call of Delete
+func (mr *MockServiceMockRecorder) Delete(ctx, bookID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockService)(nil).Delete), ctx, bookID)
+}
+
+// DeleteBookshelf mocks base method
+func (m *MockService) DeleteBookshelf(ctx context.Context, bookshelfID int) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteBookshelf", ctx, bookshelfID)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteBookshelf indicates an expected call of DeleteBookshelf
+func (mr *MockServiceMockRecorder) DeleteBookshelf(ctx, bookshelfID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteBookshelf", reflect.TypeOf((*MockService)(nil).DeleteBookshelf), ctx, bookshelfID)
+}
+
 // Validation mocks base method
 func (m *MockService) Validation(ctx context.Context, b *book.Book) error {
 	m.ctrl.T.Helper()
@@ -175,16 +340,30 @@ func (mr *MockServiceMockRecorder) ValidationAuthor(ctx, a interface{}) *gomock.
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ValidationAuthor", reflect.TypeOf((*MockService)(nil).ValidationAuthor), ctx, a)
 }
 
-// ValidationCategory mocks base method
-func (m *MockService) ValidationCategory(ctx context.Context, c *book.Category) error {
+// ValidationBookshelf mocks base method
+func (m *MockService) ValidationBookshelf(ctx context.Context, b *book.Bookshelf) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ValidationCategory", ctx, c)
+	ret := m.ctrl.Call(m, "ValidationBookshelf", ctx, b)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// ValidationCategory indicates an expected call of ValidationCategory
-func (mr *MockServiceMockRecorder) ValidationCategory(ctx, c interface{}) *gomock.Call {
+// ValidationBookshelf indicates an expected call of ValidationBookshelf
+func (mr *MockServiceMockRecorder) ValidationBookshelf(ctx, b interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ValidationCategory", reflect.TypeOf((*MockService)(nil).ValidationCategory), ctx, c)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ValidationBookshelf", reflect.TypeOf((*MockService)(nil).ValidationBookshelf), ctx, b)
+}
+
+// ValidationReview mocks base method
+func (m *MockService) ValidationReview(ctx context.Context, b *book.Review) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ValidationReview", ctx, b)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// ValidationReview indicates an expected call of ValidationReview
+func (mr *MockServiceMockRecorder) ValidationReview(ctx, b interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ValidationReview", reflect.TypeOf((*MockService)(nil).ValidationReview), ctx, b)
 }

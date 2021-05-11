@@ -184,6 +184,20 @@ func (mr *MockRepositoryMockRecorder) Create(ctx, u interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockRepository)(nil).Create), ctx, u)
 }
 
+// CreateWithOAuth mocks base method
+func (m *MockRepository) CreateWithOAuth(ctx context.Context, u *user.User) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateWithOAuth", ctx, u)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CreateWithOAuth indicates an expected call of CreateWithOAuth
+func (mr *MockRepositoryMockRecorder) CreateWithOAuth(ctx, u interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateWithOAuth", reflect.TypeOf((*MockRepository)(nil).CreateWithOAuth), ctx, u)
+}
+
 // CreateRelationship mocks base method
 func (m *MockRepository) CreateRelationship(ctx context.Context, r *user.Relationship) error {
 	m.ctrl.T.Helper()
@@ -224,6 +238,20 @@ func (m *MockRepository) UpdatePassword(ctx context.Context, uid, password strin
 func (mr *MockRepositoryMockRecorder) UpdatePassword(ctx, uid, password interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdatePassword", reflect.TypeOf((*MockRepository)(nil).UpdatePassword), ctx, uid, password)
+}
+
+// Delete mocks base method
+func (m *MockRepository) Delete(ctx context.Context, uid string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Delete", ctx, uid)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Delete indicates an expected call of Delete
+func (mr *MockRepositoryMockRecorder) Delete(ctx, uid interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockRepository)(nil).Delete), ctx, uid)
 }
 
 // DeleteRelationship mocks base method

@@ -6,16 +6,22 @@ import {
   FollowerListResponse,
   FollowListResponse,
   GetUserProfileRequest,
+  GetUserRequest,
   ListFollowerRequest,
   ListFollowRequest,
+  ListUserByUserIdsRequest,
   RegisterFollowRequest,
   UnregisterFollowRequest,
+  UserListResponse,
   UserProfileResponse,
+  UserResponse,
 } from '~/proto/user_apiv1_pb'
 import {
+  IGetUserInput,
   IGetUserProfileInput,
   IListFollowerInput,
   IListFollowInput,
+  IListUserByUserIdsInput,
   IRegisterFollowInput,
   IUnregisterFollowInput,
 } from '~/types/input'
@@ -24,8 +30,29 @@ import {
   IFollowerListOutputUser,
   IFollowListOutput,
   IFollowListOutputUser,
+  IUserHashOutput,
+  IUserHashOutputUser,
+  IUserOutput,
   IUserProfileOutput,
 } from '~/types/output'
+
+export function listUserWithUserIds(req: Request<any>, input: IListUserByUserIdsInput): Promise<IUserHashOutput> {
+  const request = new ListUserByUserIdsRequest()
+  const metadata = getGrpcMetadata(req)
+
+  request.setUserIdsList(input.ids)
+
+  return new Promise((resolve: (res: IUserHashOutput) => void, reject: (reason: Error) => void) => {
+    userClient.listUserByUserIds(request, metadata, (err: any, res: UserListResponse) => {
+      if (err) {
+        reject(getGrpcError(err))
+        return
+      }
+
+      resolve(setUserHashOutput(res))
+    })
+  })
+}
 
 export function listFollow(req: Request<any>, input: IListFollowInput): Promise<IFollowListOutput> {
   const request = new ListFollowRequest()
@@ -105,6 +132,25 @@ export function listFollower(req: Request<any>, input: IListFollowerInput): Prom
   })
 }
 
+export function getUser(req: Request<any>, input: IGetUserInput): Promise<IUserOutput> {
+  const request = new GetUserRequest()
+  const metadata = getGrpcMetadata(req)
+
+  request.setId(input.id)
+
+  return new Promise((resolve: (res: IUserOutput) => void, reject: (reason: Error) => void) => {
+    userClient.getUser(request, metadata, (err: any, res: UserResponse) => {
+      if (err) {
+        reject(getGrpcError(err))
+        return
+      }
+
+      const output: IUserOutput = setUserOutput(res)
+      resolve(output)
+    })
+  })
+}
+
 export function getUserProfile(req: Request<any>, input: IGetUserProfileInput): Promise<IUserProfileOutput> {
   const request = new GetUserProfileRequest()
   const metadata = getGrpcMetadata(req)
@@ -160,6 +206,52 @@ export function unregisterFollow(req: Request<any>, input: IUnregisterFollowInpu
       resolve(output)
     })
   })
+}
+
+function setUserOutput(res: UserResponse): IUserOutput {
+  const output: IUserOutput = {
+    id: res.getId(),
+    username: res.getUsername(),
+    email: res.getEmail(),
+    phoneNumber: res.getPhoneNumber(),
+    role: res.getRole(),
+    thumbnailUrl: res.getThumbnailUrl(),
+    selfIntroduction: res.getSelfIntroduction(),
+    lastName: res.getLastName(),
+    firstName: res.getFirstName(),
+    lastNameKana: res.getLastNameKana(),
+    firstNameKana: res.getFirstNameKana(),
+    createdAt: res.getCreatedAt(),
+    updatedAt: res.getUpdatedAt(),
+  }
+
+  return output
+}
+
+function setUserHashOutput(res: UserListResponse): IUserHashOutput {
+  const output: IUserHashOutput = {}
+
+  res.getUsersList().forEach((u: UserListResponse.User) => {
+    const user: IUserHashOutputUser = {
+      id: u.getId(),
+      username: u.getUsername(),
+      email: u.getEmail(),
+      phoneNumber: u.getPhoneNumber(),
+      role: u.getRole(),
+      thumbnailUrl: u.getThumbnailUrl(),
+      selfIntroduction: u.getSelfIntroduction(),
+      lastName: u.getLastName(),
+      firstName: u.getFirstName(),
+      lastNameKana: u.getLastNameKana(),
+      firstNameKana: u.getFirstNameKana(),
+      createdAt: u.getCreatedAt(),
+      updatedAt: u.getUpdatedAt(),
+    }
+
+    output[u.getId()] = user
+  })
+
+  return output
 }
 
 function setUserProfileOutput(res: UserProfileResponse): IUserProfileOutput {

@@ -61,8 +61,8 @@ func (c *Client) getListQuery(db *gorm.DB, q *domain.ListQuery) *gorm.DB {
 	}
 
 	// WHERE句の追加
-	for _, c := range q.Conditions {
-		db = setWhere(db, c)
+	for _, v := range q.Conditions {
+		db = setWhere(db, v)
 	}
 
 	db = setOrder(db, q.Order)
@@ -77,8 +77,8 @@ func (c *Client) getListCount(db *gorm.DB, q *domain.ListQuery) (int, error) {
 
 	if q != nil {
 		// WHERE句の追加
-		for _, c := range q.Conditions {
-			db = setWhere(db, c)
+		for _, v := range q.Conditions {
+			db = setWhere(db, v)
 		}
 	}
 
@@ -106,9 +106,9 @@ func setWhere(db *gorm.DB, c *domain.QueryCondition) *gorm.DB {
 		q := fmt.Sprintf("%s %s ?", c.Field, c.Operator)
 		return db.Where(q, c.Value)
 	case "IN":
-		q := fmt.Sprintf("%s IN ?", c.Field)
+		q := fmt.Sprintf("%s IN (?)", c.Field)
 		vals, _ := array.ConvertStrings(c.Value)
-		return db.Where(q, strings.Join(vals, ", "))
+		return db.Where(q, vals)
 	case "LIKE":
 		q := fmt.Sprintf("%s LIKE ?", c.Field)
 		n := fmt.Sprintf("%%%s%%", c.Value) // e.g.) あいうえお -> %あいうえお%

@@ -896,3 +896,43 @@ func TestAdminRequestValidation_UpdateAdminProfile(t *testing.T) {
 		})
 	}
 }
+
+func TestAdminRequestValidation_UploadAdminThumbnail(t *testing.T) {
+	testCases := map[string]struct {
+		Input    *input.UploadAdminThumbnail
+		Expected bool
+	}{
+		"ok": {
+			Input: &input.UploadAdminThumbnail{
+				Thumbnail: []byte("あいうえお"),
+			},
+			Expected: true,
+		},
+		"ng_thumbnail_required": {
+			Input: &input.UploadAdminThumbnail{
+				Thumbnail: nil,
+			},
+			Expected: false,
+		},
+	}
+
+	for result, tc := range testCases {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		t.Run(result, func(t *testing.T) {
+			target := NewAdminRequestValidation()
+
+			got := target.UploadAdminThumbnail(tc.Input)
+			if tc.Expected {
+				if got != nil {
+					t.Fatalf("Incorrect result: %#v", got)
+				}
+			} else {
+				if got == nil {
+					t.Fatalf("Incorrect result: result is nil")
+				}
+			}
+		})
+	}
+}
