@@ -12,15 +12,6 @@
     @update:page="$emit('update:page', $event)"
     @update:items-per-page="$emit('update:items-per-page', $event)"
   >
-    <template v-slot:[`item.title`]="{ item }">
-      {{ item.title }}
-    </template>
-    <template v-slot:[`item.description`]="{ item }">
-      {{ item.description }}
-    </template>
-    <template v-slot:[`item.timestamp`]="{ item }">
-      {{ item.timestamp }}
-    </template>
     <template v-slot:[`item.category`]="{ item }">
       <v-chip :color="getColor(item.category)" dark>
         {{ getCategory(item.category) }}
@@ -103,21 +94,21 @@ export default defineComponent({
         description: 'Gran book公開に伴ってキャンペーンの開催',
         timestamp: '2022/01/01',
         category: 3,
-        importance: 2,
+        importance: 6,
       },
       {
         title: 'おすすめ本情報',
         description: '呪術廻戦１３巻販売開始',
         timestamp: '2022/01/03',
         category: 2,
-        importance: 3,
+        importance: 5,
       },
       {
         title: 'メンテナンス情報',
         description: 'メンテナンスに伴うサービスの一時停止',
         timestamp: '2022/01/02',
         category: 1,
-        importance: 1,
+        importance: 4,
       },
     ]
 
@@ -150,11 +141,11 @@ export default defineComponent({
 
     const getImportance = (role: number): string => {
       switch (role) {
-        case 1:
+        case 4:
           return 'High'
-        case 2:
+        case 5:
           return 'Middle'
-        case 3:
+        case 6:
           return 'Low'
         default:
           return 'Unknown'
@@ -164,11 +155,17 @@ export default defineComponent({
     const getColor = (role: number): string => {
       switch (role) {
         case 1:
-          return 'red'
+          return 'blue-grey'
         case 2:
-          return 'orange'
+          return 'purple lighten-3'
         case 3:
-          return 'green'
+          return 'light-green'
+        case 4:
+          return 'red'
+        case 5:
+          return 'amber'
+        case 6:
+          return 'light-blue'
         default:
           return ''
       }

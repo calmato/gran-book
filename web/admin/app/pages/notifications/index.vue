@@ -15,7 +15,7 @@
 <script lang="ts">
 import { defineComponent, SetupContext, ref, reactive, useAsync, computed, watch } from '@nuxtjs/composition-api'
 import { AdminStore, CommonStore } from '~/store'
-import { AdminNewOptions, IAdminListForm, IAdminNewForm, IAdminNewParams } from '~/types/forms'
+import { AdminNewOptions, IAdminNewForm, IAdminNewParams } from '~/types/forms'
 import { PromiseState } from '~/types/store'
 import Notification from '~/components/templates/Notification.vue'
 
@@ -112,22 +112,7 @@ export default defineComponent({
       console.log('debug', 'deleteItem', index)
     }
 
-    async function indexNotification(): Promise<void> {
-      CommonStore.startConnection()
-
-      const form: IAdminListForm = {
-        limit: itemsPerPage.value,
-        offset: itemsPerPage.value * (page.value - 1),
-        order: {
-          by: sortBy.value || '',
-          desc: sortDesc.value || false,
-        },
-      }
-
-      await AdminStore.indexNotification(form).finally(() => {
-        CommonStore.endConnection()
-      })
-    }
+    function indexNotification(): void {}
 
     return {
       loading,
