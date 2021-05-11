@@ -124,22 +124,6 @@ export default defineComponent({
     const footers: IAdminTableFooter = {
       itemsPerPageOptions: [10, 20, 30, 50, 100],
     }
-    const items = computed((): INotificationTableContent[] => {
-      return props.users.map(
-        (user: IAdminUser): INotificationTableContent => {
-          const space: string = user.lastName && user.firstName ? ' ' : ''
-          const name: string = user.lastName + space + user.firstName
-
-          return {
-            name,
-            email: user.email,
-            phoneNumber: user.phoneNumber,
-            thumbnailUrl: user.thumbnailUrl || '/thumbnail.png',
-            role: user.role,
-          }
-        }
-      )
-    })
 
     const sortByArray = computed({
       get: (): string[] => [props.sortBy],
@@ -190,28 +174,23 @@ export default defineComponent({
       }
     }
 
-    const onClickEdit = (item: INotificationTableContent): void => {
-      const index: number = items.value.indexOf(item)
-      emit('edit', index)
-    }
+    // TODO: editとdelete機能を実装する
 
-    const onClickDelete = (item: INotificationTableContent): void => {
-      const index: number = items.value.indexOf(item)
-      emit('delete', index)
-    }
+    // const onClickEdit = (item: INotificationTableContent): void => {
+    // }
+
+    // const onClickDelete = (item: INotificationTableContent): void => {
+    // }
 
     return {
       headers,
       footers,
-      items,
       item,
       sortByArray,
       sortDescArray,
       getCategory,
       getImportance,
       getColor,
-      onClickEdit,
-      onClickDelete,
     }
   },
 })

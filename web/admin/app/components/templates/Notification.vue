@@ -4,7 +4,7 @@
       <v-card>
         <v-toolbar color="primary" dark>お知らせ 追加</v-toolbar>
         <v-card-text>
-          <admin-new-form :form="newForm" />
+          <notification-new-form />
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -32,7 +32,6 @@
               :sort-by="sortBy"
               :sort-desc="sortDesc"
               :search="search"
-              :users="users"
               :total="total"
               @edit="onClickEditButton"
               @delete="onClickDeleteButton"
@@ -48,12 +47,93 @@
   </v-container>
 </template>
 
-<script>
-import { defineComponent } from '@vue/composition-api'
+<script lang="ts">
+import { defineComponent, ref, SetupContext } from '@nuxtjs/composition-api'
 import NotificationListTable from '~/components/organisms/NotificationListTable.vue'
+import AdminNewForm from '~/components/organisms/AdminNewForm.vue'
+import NotfiicationNewForm from '~/components/organisms/NotificationNewForm.vue'
 
 export default defineComponent({
-  components: { NotificationListTable },
-  setup() {},
+  components: {
+    NotificationListTable,
+    AdminNewForm,
+    NotfiicationNewForm,
+  },
+
+  props: {
+    loading: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+    page: {
+      type: Number,
+      required: false,
+      default: 1,
+    },
+    itemsPerPage: {
+      type: Number,
+      required: false,
+      default: 20,
+    },
+    sortBy: {
+      type: String,
+      required: false,
+      default: undefined,
+    },
+    sortDesc: {
+      type: Boolean,
+      required: false,
+      default: undefined,
+    },
+    search: {
+      type: String,
+      required: false,
+      default: '',
+    },
+    total: {
+      type: Number,
+      required: false,
+      default: 0,
+    },
+    newDialog: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+  },
+
+  setup(_, { emit }: SetupContext) {
+    const dialog = ref<boolean>(false)
+
+    const onClickNewButton = (): void => {
+      emit('new:open')
+    }
+
+    const onClickNewClose = (): void => {
+      emit('new:close')
+    }
+
+    const onClickCreateButton = (): void => {
+      emit('create')
+    }
+
+    const onClickEditButton = (index: number): void => {
+      emit('edit', index)
+    }
+
+    const onClickDeleteButton = (index: number): void => {
+      emit('delete', index)
+    }
+
+    return {
+      dialog,
+      onClickNewButton,
+      onClickNewClose,
+      onClickCreateButton,
+      onClickEditButton,
+      onClickDeleteButton,
+    }
+  },
 })
 </script>

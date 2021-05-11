@@ -7,7 +7,7 @@ export interface INotificationTableHeader {
 export interface INotificationTableContent {
   title: string
   description: string
-  timestmap: string
+  timestamp: string
   category: number
   importance: number
 }
