@@ -2,12 +2,10 @@ package application
 
 import (
 	"context"
-	"encoding/base64"
 	"strings"
 
 	"github.com/calmato/gran-book/api/server/user/internal/application/input"
 	"github.com/calmato/gran-book/api/server/user/internal/application/validation"
-	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/user"
 )
 
@@ -19,6 +17,9 @@ type AuthApplication interface {
 	UpdatePassword(ctx context.Context, in *input.UpdateAuthPassword, u *user.User) error
 	UpdateProfile(ctx context.Context, in *input.UpdateAuthProfile, u *user.User) error
 	UpdateAddress(ctx context.Context, in *input.UpdateAuthAddress, u *user.User) error
+	UploadThumbnail(ctx context.Context, in *input.UploadAuthThumbnail, u *user.User) (string, error)
+	Delete(ctx context.Context, u *user.User) error
+	RegisterDevice(ctx context.Context, in *input.RegisterAuthDevice, u *user.User) error
 }
 
 type authApplication struct {
@@ -41,11 +42,25 @@ func (a *authApplication) Authentication(ctx context.Context) (*user.User, error
 	}
 
 	u, err := a.userService.Show(ctx, uid)
-	if err != nil {
-		return nil, exception.ErrorInDatastore.New(err)
+	if err == nil {
+		return u, nil
 	}
 
-	return u, nil
+	// err: Auth APIにはデータがあるが、User DBにはレコードがない
+	// -> Auth APIのデータを基にUser DBに登録
+	ou := &user.User{
+		ID:     uid,
+		Gender: 0,
+		Role:   user.UserRole,
+	}
+
+	// TODO: domain validation
+	err = a.userService.CreateWithOAuth(ctx, ou)
+	if err != nil {
+		return nil, err
+	}
+
+	return ou, nil
 }
 
 func (a *authApplication) Create(ctx context.Context, in *input.CreateAuth) (*user.User, error) {
@@ -55,12 +70,16 @@ func (a *authApplication) Create(ctx context.Context, in *input.CreateAuth) (*us
 	}
 
 	u := &user.User{
-		Username:  in.Username,
-		Email:     strings.ToLower(in.Email),
-		Password:  in.Password,
-		Gender:    0,
-		Role:      user.UserRole,
-		Activated: true,
+		Username: in.Username,
+		Email:    strings.ToLower(in.Email),
+		Password: in.Password,
+		Gender:   0,
+		Role:     user.UserRole,
+	}
+
+	err = a.userService.Validation(ctx, u)
+	if err != nil {
+		return nil, err
 	}
 
 	err = a.userService.Create(ctx, u)
@@ -78,6 +97,11 @@ func (a *authApplication) UpdateEmail(ctx context.Context, in *input.UpdateAuthE
 	}
 
 	u.Email = strings.ToLower(in.Email)
+
+	err = a.userService.Validation(ctx, u)
+	if err != nil {
+		return err
+	}
 
 	return a.userService.Update(ctx, u)
 }
@@ -97,16 +121,17 @@ func (a *authApplication) UpdateProfile(ctx context.Context, in *input.UpdateAut
 		return err
 	}
 
-	thumbnailURL, err := a.getThumbnailURL(ctx, u.ID, in.Thumbnail)
+	u.Username = in.Username
+	u.Gender = in.Gender
+	u.ThumbnailURL = in.ThumbnailURL
+	u.SelfIntroduction = in.SelfIntroduction
+
+	err = a.userService.Validation(ctx, u)
 	if err != nil {
 		return err
 	}
 
-	u.Username = in.Username
-	u.Gender = in.Gender
-	u.ThumbnailURL = thumbnailURL
-	u.SelfIntroduction = in.SelfIntroduction
-
+	// TODO: 古いサムネイルを消す処理を挟みたい
 	return a.userService.Update(ctx, u)
 }
 
@@ -128,27 +153,36 @@ func (a *authApplication) UpdateAddress(ctx context.Context, in *input.UpdateAut
 	u.AddressLine1 = in.AddressLine1
 	u.AddressLine2 = in.AddressLine2
 
+	err = a.userService.Validation(ctx, u)
+	if err != nil {
+		return err
+	}
+
 	return a.userService.Update(ctx, u)
 }
 
-func (a *authApplication) getThumbnailURL(ctx context.Context, uid string, thumbnail string) (string, error) {
-	if thumbnail == "" {
-		return "", nil
-	}
-
-	// data:image/png;base64,iVBORw0KGgoAAAA... みたいなのうちの
-	// `data:image/png;base64,` の部分を無くした []byte を取得
-	b64data := thumbnail[strings.IndexByte(thumbnail, ',')+1:]
-
-	data, err := base64.StdEncoding.DecodeString(b64data)
+func (a *authApplication) UploadThumbnail(
+	ctx context.Context, in *input.UploadAuthThumbnail, u *user.User,
+) (string, error) {
+	err := a.authRequestValidation.UploadAuthThumbnail(in)
 	if err != nil {
-		ve := &exception.ValidationError{
-			Field:   "thumbnail",
-			Message: exception.UnableConvertBase64Massage,
-		}
-
-		return "", exception.UnableConvertBase64.New(err, ve)
+		return "", err
 	}
 
-	return a.userService.UploadThumbnail(ctx, uid, data)
+	return a.userService.UploadThumbnail(ctx, u.ID, in.Thumbnail)
+}
+
+func (a *authApplication) Delete(ctx context.Context, u *user.User) error {
+	return a.userService.Delete(ctx, u.ID)
+}
+
+func (a *authApplication) RegisterDevice(ctx context.Context, in *input.RegisterAuthDevice, u *user.User) error {
+	err := a.authRequestValidation.RegisterAuthDevice(in)
+	if err != nil {
+		return err
+	}
+
+	u.InstanceID = in.InstanceID
+
+	return a.userService.Update(ctx, u)
 }

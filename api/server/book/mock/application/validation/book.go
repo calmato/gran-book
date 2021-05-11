@@ -33,30 +33,86 @@ func (m *MockBookRequestValidation) EXPECT() *MockBookRequestValidationMockRecor
 	return m.recorder
 }
 
-// BookItem mocks base method
-func (m *MockBookRequestValidation) BookItem(in *input.BookItem) error {
+// Book mocks base method
+func (m *MockBookRequestValidation) Book(in *input.Book) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "BookItem", in)
+	ret := m.ctrl.Call(m, "Book", in)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// BookItem indicates an expected call of BookItem
-func (mr *MockBookRequestValidationMockRecorder) BookItem(in interface{}) *gomock.Call {
+// Book indicates an expected call of Book
+func (mr *MockBookRequestValidationMockRecorder) Book(in interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BookItem", reflect.TypeOf((*MockBookRequestValidation)(nil).BookItem), in)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Book", reflect.TypeOf((*MockBookRequestValidation)(nil).Book), in)
 }
 
-// CreateAndUpdateBooks mocks base method
-func (m *MockBookRequestValidation) CreateAndUpdateBooks(in *input.CreateAndUpdateBooks) error {
+// Bookshelf mocks base method
+func (m *MockBookRequestValidation) Bookshelf(in *input.Bookshelf) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateAndUpdateBooks", in)
+	ret := m.ctrl.Call(m, "Bookshelf", in)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// CreateAndUpdateBooks indicates an expected call of CreateAndUpdateBooks
-func (mr *MockBookRequestValidationMockRecorder) CreateAndUpdateBooks(in interface{}) *gomock.Call {
+// Bookshelf indicates an expected call of Bookshelf
+func (mr *MockBookRequestValidationMockRecorder) Bookshelf(in interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAndUpdateBooks", reflect.TypeOf((*MockBookRequestValidation)(nil).CreateAndUpdateBooks), in)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Bookshelf", reflect.TypeOf((*MockBookRequestValidation)(nil).Bookshelf), in)
+}
+
+// ListBookByBookIDs mocks base method
+func (m *MockBookRequestValidation) ListBookByBookIDs(in *input.ListBookByBookIDs) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListBookByBookIDs", in)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// ListBookByBookIDs indicates an expected call of ListBookByBookIDs
+func (mr *MockBookRequestValidationMockRecorder) ListBookByBookIDs(in interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListBookByBookIDs", reflect.TypeOf((*MockBookRequestValidation)(nil).ListBookByBookIDs), in)
+}
+
+// ListBookshelf mocks base method
+func (m *MockBookRequestValidation) ListBookshelf(in *input.ListBookshelf) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListBookshelf", in)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// ListBookshelf indicates an expected call of ListBookshelf
+func (mr *MockBookRequestValidationMockRecorder) ListBookshelf(in interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListBookshelf", reflect.TypeOf((*MockBookRequestValidation)(nil).ListBookshelf), in)
+}
+
+// ListBookReview mocks base method
+func (m *MockBookRequestValidation) ListBookReview(in *input.ListBookReview) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListBookReview", in)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// ListBookReview indicates an expected call of ListBookReview
+func (mr *MockBookRequestValidationMockRecorder) ListBookReview(in interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListBookReview", reflect.TypeOf((*MockBookRequestValidation)(nil).ListBookReview), in)
+}
+
+// ListUserReview mocks base method
+func (m *MockBookRequestValidation) ListUserReview(in *input.ListUserReview) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListUserReview", in)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// ListUserReview indicates an expected call of ListUserReview
+func (mr *MockBookRequestValidationMockRecorder) ListUserReview(in interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListUserReview", reflect.TypeOf((*MockBookRequestValidation)(nil).ListUserReview), in)
 }

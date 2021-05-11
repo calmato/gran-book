@@ -1,69 +1,295 @@
 syntax = "proto3";
 
 package proto;
+
 option go_package = "github.com/calmato/gran-book/proto";
 
 service BookService {
-  rpc CreateBook (CreateBookRequest) returns (BookResponse);
-  rpc CreateAndUpdateBooks (CreateAndUpdateBooksRequest) returns (BookListResponse);
+  rpc ListBookByBookIds(ListBookByBookIdsRequest) returns (BookListResponse);
+  rpc ListBookshelf(ListBookshelfRequest) returns (BookshelfListResponse);
+  rpc ListBookReview(ListBookReviewRequest) returns (ReviewListResponse);
+  rpc ListUserReview(ListUserReviewRequest) returns (ReviewListResponse);
+  rpc GetBook(GetBookRequest) returns (BookResponse);
+  rpc GetBookByIsbn(GetBookByIsbnRequest) returns (BookResponse);
+  rpc GetBookshelf(GetBookshelfRequest) returns (BookshelfResponse);
+  rpc GetReview(GetReviewRequest) returns (ReviewResponse);
+  rpc CreateBook(CreateBookRequest) returns (BookResponse);
+  rpc UpdateBook(UpdateBookRequest) returns (BookResponse);
+  rpc ReadBookshelf(ReadBookshelfRequest) returns (BookshelfResponse);
+  rpc ReadingBookshelf(ReadingBookshelfRequest) returns (BookshelfResponse);
+  rpc StackBookshelf(StackBookshelfRequest) returns (BookshelfResponse);
+  rpc WantBookshelf(WantBookshelfRequest) returns (BookshelfResponse);
+  rpc ReleaseBookshelf(ReleaseBookshelfRequest) returns (BookshelfResponse);
+  rpc DeleteBook(DeleteBookRequest) returns (EmptyBook);
+  rpc DeleteBookshelf(DeleteBookshelfRequest) returns (EmptyBook);
+}
+
+message EmptyBook {}
+
+message ListBookByBookIdsRequest {
+  repeated int64 book_ids = 1;
+}
+
+message ListBookshelfRequest {
+  string user_id = 1;
+  int64 limit = 2;
+  int64 offset = 3;
+}
+
+message ListBookReviewRequest {
+  message Order {
+    string by = 1;
+    string direction = 2;
+  }
+  int64 book_id = 1;
+  int64 limit = 2;
+  int64 offset = 3;
+  Order order = 4;
+}
+
+message ListUserReviewRequest {
+  message Order {
+    string by = 1;
+    string direction = 2;
+  }
+  string user_id = 1;
+  int64 limit = 2;
+  int64 offset = 3;
+  Order order = 4;
+}
+
+message GetBookRequest {
+  int64 id = 1;
+}
+
+message GetBookByIsbnRequest {
+  string isbn = 1;
+}
+
+message GetBookshelfRequest {
+  string user_id = 1;
+  int64 book_id = 2;
+}
+
+message GetReviewRequest {
+  int64 review_id = 1;
 }
 
 message CreateBookRequest {
+  message Author {
+    string name = 1;
+    string name_kana = 2;
+  }
   string title = 1;
-  string description = 2;
-  string isbn = 3;
-  string thumbnail_url = 4;
-  string version = 5;
-  string publisher = 6;
-  string published_on = 7;
-  repeated string authors = 8;
-  repeated string categories = 9;
+  string title_kana = 2;
+  string description = 3;
+  string isbn = 4;
+  string publisher = 5;
+  string published_on = 6;
+  string thumbnail_url = 7;
+  string rakuten_url = 8;
+  string rakuten_genre_id = 9;
+  repeated Author authors = 10;
 }
 
-message CreateAndUpdateBooksRequest {
-  message Book {
-    string title = 1;
-    string description = 2;
-    string isbn = 3;
-    string thumbnail_url = 4;
-    string version = 5;
-    string publisher = 6;
-    string published_on = 7;
-    repeated string authors = 8;
-    repeated string categories = 9;
+message UpdateBookRequest {
+  message Author {
+    string name = 1;
+    string name_kana = 2;
   }
-  repeated Book books = 1;
+  string title = 1;
+  string title_kana = 2;
+  string description = 3;
+  string isbn = 4;
+  string publisher = 5;
+  string published_on = 6;
+  string thumbnail_url = 7;
+  string rakuten_url = 8;
+  string rakuten_genre_id = 9;
+  repeated Author authors = 10;
+}
+
+message DeleteBookRequest {
+  string user_id = 1;
+  int64 book_id = 2;
+}
+
+message DeleteBookshelfRequest {
+  string user_id = 1;
+  int64 book_id = 2;
+}
+
+message ReadBookshelfRequest {
+  string user_id = 1;
+  int64 book_id = 2;
+  string impression = 3;
+  string read_on = 4;
+}
+
+message ReadingBookshelfRequest {
+  string user_id = 1;
+  int64 book_id = 2;
+}
+
+message StackBookshelfRequest {
+  string user_id = 1;
+  int64 book_id = 2;
+}
+
+message WantBookshelfRequest {
+  string user_id = 1;
+  int64 book_id = 2;
+}
+
+message ReleaseBookshelfRequest {
+  string user_id = 1;
+  int64 book_id = 2;
 }
 
 message BookResponse {
+  message Author {
+    string name = 1;
+    string name_kana = 2;
+  }
   int64 id = 1;
   string title = 2;
-  string description = 3;
-  string isbn = 4;
-  string thumbnail_url = 5;
-  string version = 6;
-  string publisher = 7;
-  string published_on = 8;
-  repeated string authors = 9;
-  repeated string categories = 10;
+  string title_kana = 3;
+  string description = 4;
+  string isbn = 5;
+  string publisher = 6;
+  string published_on = 7;
+  string thumbnail_url = 8;
+  string rakuten_url = 9;
+  string rakuten_genre_id = 10;
   string created_at = 11;
   string updated_at = 12;
+  repeated Author authors = 13;
 }
 
 message BookListResponse {
+  message Author {
+    string name = 1;
+    string name_kana = 2;
+  }
   message Book {
     int64 id = 1;
     string title = 2;
-    string description = 3;
-    string isbn = 4;
-    string thumbnail_url = 5;
-    string version = 6;
-    string publisher = 7;
-    string published_on = 8;
-    repeated string authors = 9;
-    repeated string categories = 10;
+    string title_kana = 3;
+    string description = 4;
+    string isbn = 5;
+    string publisher = 6;
+    string published_on = 7;
+    string thumbnail_url = 8;
+    string rakuten_url = 9;
+    string rakuten_genre_id = 10;
     string created_at = 11;
     string updated_at = 12;
+    repeated Author authors = 13;
   }
   repeated Book books = 1;
+  int64 limit = 2;
+  int64 offset = 3;
+  int64 total = 4;
+}
+
+message BookshelfResponse {
+  message Author {
+    string name = 1;
+    string name_kana = 2;
+  }
+  message Book {
+    int64 id = 1;
+    string title = 2;
+    string title_kana = 3;
+    string description = 4;
+    string isbn = 5;
+    string publisher = 6;
+    string published_on = 7;
+    string thumbnail_url = 8;
+    string rakuten_url = 9;
+    string rakuten_genre_id = 10;
+    string created_at = 11;
+    string updated_at = 12;
+    repeated Author authors = 13;
+  }
+  message Review {
+    int32 score = 1;
+    string impression = 2;
+  }
+  int64 id = 1;
+  int64 book_id = 2;
+  string user_id = 3;
+  int32 status = 4;
+  string read_on = 5;
+  string created_at = 8;
+  string updated_at = 9;
+  Book book = 10;
+  Review review = 11;
+}
+
+message BookshelfListResponse {
+  message Author {
+    string name = 1;
+    string name_kana = 2;
+  }
+  message Book {
+    int64 id = 1;
+    string title = 2;
+    string title_kana = 3;
+    string description = 4;
+    string isbn = 5;
+    string publisher = 6;
+    string published_on = 7;
+    string thumbnail_url = 8;
+    string rakuten_url = 9;
+    string rakuten_genre_id = 10;
+    string created_at = 11;
+    string updated_at = 12;
+    repeated Author authors = 13;
+  }
+  message Bookshelf {
+    int64 id = 1;
+    int64 book_id = 2;
+    string user_id = 3;
+    int32 status = 4;
+    string read_on = 5;
+    string created_at = 6;
+    string updated_at = 7;
+    Book book = 8;
+  }
+  repeated Bookshelf bookshelves = 1;
+  int64 limit = 2;
+  int64 offset = 3;
+  int64 total = 4;
+}
+
+message ReviewResponse {
+  int64 id = 1;
+  int64 book_id = 2;
+  string user_id = 3;
+  int32 score = 4;
+  string impression = 5;
+  string created_at = 6;
+  string updated_at = 7;
+}
+
+message ReviewListResponse {
+  message Review {
+    int64 id = 1;
+    int64 book_id = 2;
+    string user_id = 3;
+    int32 score = 4;
+    string impression = 5;
+    string created_at = 6;
+    string updated_at = 7;
+  }
+  message Order {
+    string by = 1;
+    string direction = 2;
+  }
+  repeated Review reviews = 1;
+  int64 limit = 2;
+  int64 offset = 3;
+  int64 total = 4;
+  Order order = 5;
 }

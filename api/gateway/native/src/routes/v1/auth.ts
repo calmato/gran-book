@@ -1,27 +1,42 @@
 import express, { NextFunction, Request, Response } from 'express'
-import { getAuth, createAuth, updateAuthProfile, updateAuthAddress, updateAuthEmail, UpdateAuthPassword } from '~/api'
+import multer from '~/plugins/multer'
+import {
+  getAuth,
+  createAuth,
+  updateAuthProfile,
+  updateAuthAddress,
+  updateAuthEmail,
+  updateAuthPassword,
+  uploadAuthThumbnail,
+  deleteAuth,
+  registerAuthDevice,
+} from '~/api'
 import {
   ICreateAuthRequest,
+  IRegisterAuthDeviceRequest,
   IUpdateAuthAddressRequest,
   IUpdateAuthEmailRequest,
   IUpdateAuthPasswordRequest,
   IUpdateAuthProfileRequest,
 } from '~/types/request'
-import { IAuthResponse } from '~/types/response'
+import { IAuthResponse, IAuthThumbnailResponse } from '~/types/response'
 import {
   ICreateAuthInput,
+  IRegisterAuthDeviceInput,
   IUpdateAuthAddressInput,
   IUpdateAuthEmailInput,
   IUpdateAuthPasswordInput,
   IUpdateAuthProfileInput,
+  IUploadAuthThumbnailInput,
 } from '~/types/input'
-import { IAuthOutput } from '~/types/output'
+import { IAuthOutput, IAuthThumbnailOutput } from '~/types/output'
 import { GrpcError } from '~/types/exception'
+import { badRequest } from '~/lib/http-exception'
 
 const router = express.Router()
 
 router.get(
-  '/',
+  '/v1/auth',
   async (req: Request, res: Response<IAuthResponse>, next: NextFunction): Promise<void> => {
     await getAuth(req)
       .then((output: IAuthOutput) => {
@@ -33,7 +48,7 @@ router.get(
 )
 
 router.post(
-  '/',
+  '/v1/auth',
   async (req: Request<ICreateAuthRequest>, res: Response<IAuthResponse>, next: NextFunction): Promise<void> => {
     const { username, email, password, passwordConfirmation } = req.body as ICreateAuthRequest
 
@@ -53,8 +68,19 @@ router.post(
   }
 )
 
+router.delete(
+  '/v1/auth',
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    await deleteAuth(req)
+      .then(() => {
+        res.status(200).json({ message: 'ok' })
+      })
+      .catch((err: GrpcError) => next(err))
+  }
+)
+
 router.patch(
-  '/email',
+  '/v1/auth/email',
   async (req: Request<IUpdateAuthEmailRequest>, res: Response<IAuthResponse>, next: NextFunction): Promise<void> => {
     const { email } = req.body as IUpdateAuthEmailRequest
 
@@ -72,7 +98,7 @@ router.patch(
 )
 
 router.patch(
-  '/password',
+  '/v1/auth/password',
   async (req: Request<IUpdateAuthPasswordRequest>, res: Response<IAuthResponse>, next: NextFunction): Promise<void> => {
     const { password, passwordConfirmation } = req.body as IUpdateAuthPasswordRequest
 
@@ -81,7 +107,7 @@ router.patch(
       passwordConfirmation,
     }
 
-    await UpdateAuthPassword(req, input)
+    await updateAuthPassword(req, input)
       .then((output: IAuthOutput) => {
         const response: IAuthResponse = setAuthResponse(output)
         res.status(200).json(response)
@@ -91,14 +117,14 @@ router.patch(
 )
 
 router.patch(
-  '/profile',
+  '/v1/auth/profile',
   async (req: Request<IUpdateAuthProfileRequest>, res: Response<IAuthResponse>, next: NextFunction): Promise<void> => {
-    const { username, gender, thumbnail, selfIntroduction } = req.body as IUpdateAuthProfileRequest
+    const { username, gender, thumbnailUrl, selfIntroduction } = req.body as IUpdateAuthProfileRequest
 
     const input: IUpdateAuthProfileInput = {
       username,
       gender,
-      thumbnail,
+      thumbnailUrl,
       selfIntroduction,
     }
 
@@ -112,7 +138,7 @@ router.patch(
 )
 
 router.patch(
-  '/address',
+  '/v1/auth/address',
   async (req: Request<IUpdateAuthAddressRequest>, res: Response<IAuthResponse>, next: NextFunction): Promise<void> => {
     const {
       lastName,
@@ -141,6 +167,46 @@ router.patch(
     }
 
     await updateAuthAddress(req, input)
+      .then((output: IAuthOutput) => {
+        const response: IAuthResponse = setAuthResponse(output)
+        res.status(200).json(response)
+      })
+      .catch((err: GrpcError) => next(err))
+  }
+)
+
+router.post(
+  '/v1/auth/thumbnail',
+  multer.single('thumbnail'),
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    if (!req.file) {
+      next(badRequest([{ message: 'thumbnail is not exists' }]))
+      return
+    }
+
+    const input: IUploadAuthThumbnailInput = {
+      path: req.file.path,
+    }
+
+    await uploadAuthThumbnail(req, input)
+      .then((output: IAuthThumbnailOutput) => {
+        const response: IAuthThumbnailResponse = { thumbnailUrl: output.thumbnailUrl }
+        res.status(200).json(response)
+      })
+      .catch((err: GrpcError) => next(err))
+  }
+)
+
+router.post(
+  '/v1/auth/device',
+  async (req: Request<IRegisterAuthDeviceRequest>, res: Response<IAuthResponse>, next: NextFunction): Promise<void> => {
+    const { instanceId } = req.body as IRegisterAuthDeviceRequest
+
+    const input: IRegisterAuthDeviceInput = {
+      instanceId,
+    }
+
+    await registerAuthDevice(req, input)
       .then((output: IAuthOutput) => {
         const response: IAuthResponse = setAuthResponse(output)
         res.status(200).json(response)

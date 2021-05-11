@@ -2,6 +2,7 @@ package v1
 
 import (
 	"context"
+	"io"
 
 	"github.com/calmato/gran-book/api/server/user/internal/application"
 	"github.com/calmato/gran-book/api/server/user/internal/application/input"
@@ -244,6 +245,74 @@ func (s *AdminServer) UpdateAdminProfile(
 	return res, nil
 }
 
+// UploadAdminThumbnail - サムネイルアップロード
+func (s *AdminServer) UploadAdminThumbnail(stream pb.AdminService_UploadAdminThumbnailServer) error {
+	ctx := stream.Context()
+	thumbnailBytes := map[int][]byte{}
+	for {
+		req, err := stream.Recv()
+		if err == io.EOF {
+			_, err := s.AuthApplication.Authentication(ctx)
+			if err != nil {
+				return errorHandling(err)
+			}
+
+			// 分割して送信されてきたサムネイルのバイナリをまとめる
+			thumbnail := []byte{}
+			for i := 0; i < len(thumbnailBytes); i++ {
+				thumbnail = append(thumbnail, thumbnailBytes[i]...)
+			}
+
+			in := &input.UploadAdminThumbnail{
+				Thumbnail: thumbnail,
+			}
+
+			thumbnailURL, err := s.AdminApplication.UploadThumbnail(ctx, in, req.GetUserId())
+			if err != nil {
+				return errorHandling(err)
+			}
+
+			res := &pb.AdminThumbnailResponse{
+				ThumbnailUrl: thumbnailURL,
+			}
+
+			return stream.SendAndClose(res)
+		}
+
+		if err != nil {
+			return errorHandling(err)
+		}
+
+		num := int(req.GetPosition())
+		thumbnailBytes[num] = req.GetThumbnail()
+	}
+}
+
+// DeleteAdmin - 管理者権限削除
+func (s *AdminServer) DeleteAdmin(ctx context.Context, req *pb.DeleteAdminRequest) (*pb.EmptyUser, error) {
+	cu, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	err = authorization(cu)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	err = hasAdminRole(cu, req.GetUserId())
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	err = s.AdminApplication.Delete(ctx, req.GetUserId())
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	return &pb.EmptyUser{}, nil
+}
+
 func getAdminResponse(u *user.User) *pb.AdminResponse {
 	return &pb.AdminResponse{
 		Id:               u.ID,
@@ -257,7 +326,6 @@ func getAdminResponse(u *user.User) *pb.AdminResponse {
 		FirstName:        u.FirstName,
 		LastNameKana:     u.LastNameKana,
 		FirstNameKana:    u.FirstNameKana,
-		Activated:        u.Activated,
 		CreatedAt:        datetime.TimeToString(u.CreatedAt),
 		UpdatedAt:        datetime.TimeToString(u.UpdatedAt),
 	}
@@ -278,7 +346,6 @@ func getAdminListResponse(us []*user.User, out *output.ListQuery) *pb.AdminListR
 			FirstName:        u.FirstName,
 			LastNameKana:     u.LastNameKana,
 			FirstNameKana:    u.FirstNameKana,
-			Activated:        u.Activated,
 			CreatedAt:        datetime.TimeToString(u.CreatedAt),
 			UpdatedAt:        datetime.TimeToString(u.UpdatedAt),
 		}

@@ -4,9 +4,8 @@ import (
 	"context"
 	"time"
 
+	"github.com/calmato/gran-book/api/server/book/internal/domain"
 	"github.com/calmato/gran-book/api/server/book/internal/domain/book"
-	"github.com/calmato/gran-book/api/server/book/internal/domain/exception"
-	"golang.org/x/xerrors"
 )
 
 type bookService struct {
@@ -22,54 +21,75 @@ func NewBookService(bdv book.Validation, br book.Repository) book.Service {
 	}
 }
 
+func (s *bookService) List(ctx context.Context, q *domain.ListQuery) ([]*book.Book, error) {
+	return s.bookRepository.List(ctx, q)
+}
+
+func (s *bookService) ListBookshelf(ctx context.Context, q *domain.ListQuery) ([]*book.Bookshelf, error) {
+	return s.bookRepository.ListBookshelf(ctx, q)
+}
+
+func (s *bookService) ListReview(ctx context.Context, q *domain.ListQuery) ([]*book.Review, error) {
+	return s.bookRepository.ListReview(ctx, q)
+}
+
+func (s *bookService) Show(ctx context.Context, bookID int) (*book.Book, error) {
+	return s.bookRepository.Show(ctx, bookID)
+}
+
+func (s *bookService) ListCount(ctx context.Context, q *domain.ListQuery) (int, error) {
+	return s.bookRepository.ListCount(ctx, q)
+}
+
+func (s *bookService) ListBookshelfCount(ctx context.Context, q *domain.ListQuery) (int, error) {
+	return s.bookRepository.ListBookshelfCount(ctx, q)
+}
+
+func (s *bookService) ListReviewCount(ctx context.Context, q *domain.ListQuery) (int, error) {
+	return s.bookRepository.ListReviewCount(ctx, q)
+}
+
 func (s *bookService) ShowByIsbn(ctx context.Context, isbn string) (*book.Book, error) {
-	b, err := s.bookRepository.ShowByIsbn(ctx, isbn)
-	if err != nil {
-		return nil, err
-	}
+	return s.bookRepository.ShowByIsbn(ctx, isbn)
+}
 
-	if b == nil || b.ID == 0 {
-		err := xerrors.New("Book is nil.")
-		return nil, exception.NotFound.New(err)
-	}
+func (s *bookService) ShowBookshelfByUserIDAndBookID(
+	ctx context.Context, userID string, bookID int,
+) (*book.Bookshelf, error) {
+	return s.bookRepository.ShowBookshelfByUserIDAndBookID(ctx, userID, bookID)
+}
 
-	as, err := s.bookRepository.ShowAuthorsByBookID(ctx, b.ID)
-	if err != nil {
-		return nil, err
-	}
+func (s *bookService) ShowReview(ctx context.Context, reviewID int) (*book.Review, error) {
+	return s.bookRepository.ShowReview(ctx, reviewID)
+}
 
-	cs, err := s.bookRepository.ShowCategoriesByBookID(ctx, b.ID)
-	if err != nil {
-		return nil, err
-	}
-
-	b.Authors = as
-	b.Categories = cs
-
-	return b, nil
+func (s *bookService) ShowReviewByUserIDAndBookID(
+	ctx context.Context, userID string, bookID int,
+) (*book.Review, error) {
+	return s.bookRepository.ShowReviewByUserIDAndBookID(ctx, userID, bookID)
 }
 
 func (s *bookService) Create(ctx context.Context, b *book.Book) error {
-	current := time.Now()
+	err := s.associate(ctx, b)
+	if err != nil {
+		return err
+	}
+
+	current := time.Now().Local()
 
 	b.CreatedAt = current
 	b.UpdatedAt = current
 
-	s.associate(ctx, b)
+	err = s.associate(ctx, b)
+	if err != nil {
+		return err
+	}
+
 	return s.bookRepository.Create(ctx, b)
 }
 
-func (s *bookService) CreateAuthor(ctx context.Context, a *book.Author) error {
-	current := time.Now()
-
-	a.CreatedAt = current
-	a.UpdatedAt = current
-
-	return s.bookRepository.CreateAuthor(ctx, a)
-}
-
 func (s *bookService) CreateBookshelf(ctx context.Context, b *book.Bookshelf) error {
-	current := time.Now()
+	current := time.Now().Local()
 
 	b.CreatedAt = current
 	b.UpdatedAt = current
@@ -77,47 +97,64 @@ func (s *bookService) CreateBookshelf(ctx context.Context, b *book.Bookshelf) er
 	return s.bookRepository.CreateBookshelf(ctx, b)
 }
 
-func (s *bookService) CreateCategory(ctx context.Context, c *book.Category) error {
-	current := time.Now()
-
-	c.CreatedAt = current
-	c.UpdatedAt = current
-
-	return s.bookRepository.CreateCategory(ctx, c)
-}
-
 func (s *bookService) Update(ctx context.Context, b *book.Book) error {
-	current := time.Now()
+	err := s.associate(ctx, b)
+	if err != nil {
+		return err
+	}
+
+	current := time.Now().Local()
 
 	b.UpdatedAt = current
 
-	s.associate(ctx, b)
 	return s.bookRepository.Update(ctx, b)
 }
 
+func (s *bookService) UpdateBookshelf(ctx context.Context, b *book.Bookshelf) error {
+	current := time.Now().Local()
+
+	b.UpdatedAt = current
+
+	return s.bookRepository.UpdateBookshelf(ctx, b)
+}
+
 func (s *bookService) MultipleCreate(ctx context.Context, bs []*book.Book) error {
-	current := time.Now()
+	current := time.Now().Local()
 
 	for _, b := range bs {
+		err := s.associate(ctx, b)
+		if err != nil {
+			return err
+		}
+
 		b.CreatedAt = current
 		b.UpdatedAt = current
-
-		s.associate(ctx, b)
 	}
 
 	return s.bookRepository.MultipleCreate(ctx, bs)
 }
 
 func (s *bookService) MultipleUpdate(ctx context.Context, bs []*book.Book) error {
-	current := time.Now()
+	current := time.Now().Local()
 
 	for _, b := range bs {
-		b.UpdatedAt = current
+		err := s.associate(ctx, b)
+		if err != nil {
+			return err
+		}
 
-		s.associate(ctx, b)
+		b.UpdatedAt = current
 	}
 
 	return s.bookRepository.MultipleUpdate(ctx, bs)
+}
+
+func (s *bookService) Delete(ctx context.Context, bookID int) error {
+	return s.bookRepository.Delete(ctx, bookID)
+}
+
+func (s *bookService) DeleteBookshelf(ctx context.Context, bookshelfID int) error {
+	return s.bookRepository.DeleteBookshelf(ctx, bookshelfID)
 }
 
 func (s *bookService) Validation(ctx context.Context, b *book.Book) error {
@@ -128,16 +165,26 @@ func (s *bookService) ValidationAuthor(ctx context.Context, a *book.Author) erro
 	return s.bookDomainValidation.Author(ctx, a)
 }
 
-func (s *bookService) ValidationCategory(ctx context.Context, c *book.Category) error {
-	return s.bookDomainValidation.Category(ctx, c)
+func (s *bookService) ValidationBookshelf(ctx context.Context, b *book.Bookshelf) error {
+	return s.bookDomainValidation.Bookshelf(ctx, b)
 }
 
-func (s *bookService) associate(ctx context.Context, b *book.Book) {
+func (s *bookService) ValidationReview(ctx context.Context, rv *book.Review) error {
+	return s.bookDomainValidation.Review(ctx, rv)
+}
+
+func (s *bookService) associate(ctx context.Context, b *book.Book) error {
+	current := time.Now().Local()
+
 	for _, a := range b.Authors {
-		_ = s.CreateAuthor(ctx, a)
+		a.CreatedAt = current
+		a.UpdatedAt = current
+
+		err := s.bookRepository.ShowOrCreateAuthor(ctx, a)
+		if err != nil {
+			return err
+		}
 	}
 
-	for _, c := range b.Categories {
-		_ = s.CreateCategory(ctx, c)
-	}
+	return nil
 }

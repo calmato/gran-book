@@ -42,3 +42,7 @@ export interface IAdminListResponseOrder {
   by: string
   direction: string
 }
+
+export interface IAdminThumbnailResponse {
+  thumbnailUrl: string
+}

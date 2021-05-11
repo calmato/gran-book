@@ -185,6 +185,20 @@ func (mr *MockServiceMockRecorder) Create(ctx, u interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockService)(nil).Create), ctx, u)
 }
 
+// CreateWithOAuth mocks base method
+func (m *MockService) CreateWithOAuth(ctx context.Context, u *user.User) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateWithOAuth", ctx, u)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CreateWithOAuth indicates an expected call of CreateWithOAuth
+func (mr *MockServiceMockRecorder) CreateWithOAuth(ctx, u interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateWithOAuth", reflect.TypeOf((*MockService)(nil).CreateWithOAuth), ctx, u)
+}
+
 // CreateRelationship mocks base method
 func (m *MockService) CreateRelationship(ctx context.Context, r *user.Relationship) error {
 	m.ctrl.T.Helper()
@@ -225,6 +239,20 @@ func (m *MockService) UpdatePassword(ctx context.Context, uid, password string) 
 func (mr *MockServiceMockRecorder) UpdatePassword(ctx, uid, password interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdatePassword", reflect.TypeOf((*MockService)(nil).UpdatePassword), ctx, uid, password)
+}
+
+// Delete mocks base method
+func (m *MockService) Delete(ctx context.Context, uid string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Delete", ctx, uid)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Delete indicates an expected call of Delete
+func (mr *MockServiceMockRecorder) Delete(ctx, uid interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockService)(nil).Delete), ctx, uid)
 }
 
 // DeleteRelationship mocks base method
@@ -269,4 +297,32 @@ func (m *MockService) IsFriend(ctx context.Context, friendID, uid string) (bool,
 func (mr *MockServiceMockRecorder) IsFriend(ctx, friendID, uid interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsFriend", reflect.TypeOf((*MockService)(nil).IsFriend), ctx, friendID, uid)
+}
+
+// Validation mocks base method
+func (m *MockService) Validation(ctx context.Context, u *user.User) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Validation", ctx, u)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Validation indicates an expected call of Validation
+func (mr *MockServiceMockRecorder) Validation(ctx, u interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Validation", reflect.TypeOf((*MockService)(nil).Validation), ctx, u)
+}
+
+// ValidationRelationship mocks base method
+func (m *MockService) ValidationRelationship(ctx context.Context, r *user.Relationship) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ValidationRelationship", ctx, r)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// ValidationRelationship indicates an expected call of ValidationRelationship
+func (mr *MockServiceMockRecorder) ValidationRelationship(ctx, r interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ValidationRelationship", reflect.TypeOf((*MockService)(nil).ValidationRelationship), ctx, r)
 }

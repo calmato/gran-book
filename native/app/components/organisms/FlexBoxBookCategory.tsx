@@ -15,6 +15,14 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     backgroundColor: COLOR.BACKGROUND_WHITE,
   },
+  text: {
+    color: COLOR.TEXT_GRAY,
+  },
+  name: {
+    marginLeft: 32,
+    color: COLOR.TEXT_WARNING,
+    textDecorationLine: 'underline',
+  }
 });
 
 interface Props {
@@ -24,8 +32,8 @@ interface Props {
 const FlexBoxBookCategory = function FlexBoxBookCategory(props: Props): ReactElement {
   return (
     <View style={styles.boxLayout}>
-      <Text>カテゴリ</Text>
-      <Text style={{ marginLeft: 45 }}>{props.category}</Text>
+      <Text style={styles.text}>カテゴリ</Text>
+      <Text style={styles.name}>{props.category}</Text>
     </View>
   );
 };

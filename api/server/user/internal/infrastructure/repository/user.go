@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/base64"
 	"encoding/json"
+	"fmt"
 	"strings"
 	"time"
 
@@ -174,6 +175,29 @@ func (r *userRepository) Create(ctx context.Context, u *user.User) error {
 	return nil
 }
 
+func (r *userRepository) CreateWithOAuth(ctx context.Context, u *user.User) error {
+	au, err := r.auth.GetUserByUID(ctx, u.ID)
+	if err != nil {
+		return exception.NotFound.New(err)
+	}
+
+	if au.UserInfo == nil {
+		err = xerrors.New("UserInfo is not exists in Firebase Authentication")
+		return exception.NotFound.New(err)
+	}
+
+	u.Username = getUsername(au.UserInfo.DisplayName, u.ID)
+	u.Email = au.UserInfo.Email
+	u.ThumbnailURL = au.UserInfo.PhotoURL
+
+	err = r.client.db.Create(&u).Error
+	if err != nil {
+		return exception.ErrorInOtherAPI.New(err)
+	}
+
+	return nil
+}
+
 func (r *userRepository) CreateRelationship(ctx context.Context, rs *user.Relationship) error {
 	err := r.client.db.Create(&rs).Error
 	if err != nil {
@@ -211,6 +235,20 @@ func (r *userRepository) Update(ctx context.Context, u *user.User) error {
 
 func (r *userRepository) UpdatePassword(ctx context.Context, uid string, password string) error {
 	err := r.auth.UpdatePassword(ctx, uid, password)
+	if err != nil {
+		return exception.ErrorInDatastore.New(err)
+	}
+
+	return nil
+}
+
+func (r *userRepository) Delete(ctx context.Context, uid string) error {
+	err := r.client.db.Where("id = ?", uid).Delete(&user.User{}).Error
+	if err != nil {
+		return exception.ErrorInDatastore.New(err)
+	}
+
+	err = r.auth.DeleteUser(ctx, uid)
 	if err != nil {
 		return exception.ErrorInDatastore.New(err)
 	}
@@ -312,4 +350,15 @@ func verifyToken(t *firebaseToken) error {
 	}
 
 	return nil
+}
+
+// OAuth認証による初回User登録時、UIDの先頭12文字を取得して作成
+// e.g.) 12345678-qwer-asdf-zxcv-uiophjklvbnm -> 12345678qwer
+func getUsername(displayName string, uid string) string {
+	if displayName != "" {
+		return displayName
+	}
+
+	str := strings.Replace(uid, "-", "", -1)
+	return fmt.Sprintf("user-%s", str[0:12])
 }

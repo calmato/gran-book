@@ -26,16 +26,12 @@ export namespace EmptyUser {
 export class CreateAuthRequest extends jspb.Message { 
     getUsername(): string;
     setUsername(value: string): CreateAuthRequest;
-
     getEmail(): string;
     setEmail(value: string): CreateAuthRequest;
-
     getPassword(): string;
     setPassword(value: string): CreateAuthRequest;
-
     getPasswordConfirmation(): string;
     setPasswordConfirmation(value: string): CreateAuthRequest;
-
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): CreateAuthRequest.AsObject;
@@ -60,7 +56,6 @@ export class UpdateAuthEmailRequest extends jspb.Message {
     getEmail(): string;
     setEmail(value: string): UpdateAuthEmailRequest;
 
-
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): UpdateAuthEmailRequest.AsObject;
     static toObject(includeInstance: boolean, msg: UpdateAuthEmailRequest): UpdateAuthEmailRequest.AsObject;
@@ -80,10 +75,8 @@ export namespace UpdateAuthEmailRequest {
 export class UpdateAuthPasswordRequest extends jspb.Message { 
     getPassword(): string;
     setPassword(value: string): UpdateAuthPasswordRequest;
-
     getPasswordConfirmation(): string;
     setPasswordConfirmation(value: string): UpdateAuthPasswordRequest;
-
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): UpdateAuthPasswordRequest.AsObject;
@@ -105,16 +98,12 @@ export namespace UpdateAuthPasswordRequest {
 export class UpdateAuthProfileRequest extends jspb.Message { 
     getUsername(): string;
     setUsername(value: string): UpdateAuthProfileRequest;
-
     getGender(): number;
     setGender(value: number): UpdateAuthProfileRequest;
-
-    getThumbnail(): string;
-    setThumbnail(value: string): UpdateAuthProfileRequest;
-
+    getThumbnailUrl(): string;
+    setThumbnailUrl(value: string): UpdateAuthProfileRequest;
     getSelfIntroduction(): string;
     setSelfIntroduction(value: string): UpdateAuthProfileRequest;
-
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): UpdateAuthProfileRequest.AsObject;
@@ -130,7 +119,7 @@ export namespace UpdateAuthProfileRequest {
     export type AsObject = {
         username: string,
         gender: number,
-        thumbnail: string,
+        thumbnailUrl: string,
         selfIntroduction: string,
     }
 }
@@ -138,34 +127,24 @@ export namespace UpdateAuthProfileRequest {
 export class UpdateAuthAddressRequest extends jspb.Message { 
     getLastName(): string;
     setLastName(value: string): UpdateAuthAddressRequest;
-
     getFirstName(): string;
     setFirstName(value: string): UpdateAuthAddressRequest;
-
     getLastNameKana(): string;
     setLastNameKana(value: string): UpdateAuthAddressRequest;
-
     getFirstNameKana(): string;
     setFirstNameKana(value: string): UpdateAuthAddressRequest;
-
     getPhoneNumber(): string;
     setPhoneNumber(value: string): UpdateAuthAddressRequest;
-
     getPostalCode(): string;
     setPostalCode(value: string): UpdateAuthAddressRequest;
-
     getPrefecture(): string;
     setPrefecture(value: string): UpdateAuthAddressRequest;
-
     getCity(): string;
     setCity(value: string): UpdateAuthAddressRequest;
-
     getAddressLine1(): string;
     setAddressLine1(value: string): UpdateAuthAddressRequest;
-
     getAddressLine2(): string;
     setAddressLine2(value: string): UpdateAuthAddressRequest;
-
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): UpdateAuthAddressRequest.AsObject;
@@ -192,19 +171,61 @@ export namespace UpdateAuthAddressRequest {
     }
 }
 
+export class UploadAuthThumbnailRequest extends jspb.Message { 
+    getThumbnail(): Uint8Array | string;
+    getThumbnail_asU8(): Uint8Array;
+    getThumbnail_asB64(): string;
+    setThumbnail(value: Uint8Array | string): UploadAuthThumbnailRequest;
+    getPosition(): number;
+    setPosition(value: number): UploadAuthThumbnailRequest;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): UploadAuthThumbnailRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: UploadAuthThumbnailRequest): UploadAuthThumbnailRequest.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: UploadAuthThumbnailRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): UploadAuthThumbnailRequest;
+    static deserializeBinaryFromReader(message: UploadAuthThumbnailRequest, reader: jspb.BinaryReader): UploadAuthThumbnailRequest;
+}
+
+export namespace UploadAuthThumbnailRequest {
+    export type AsObject = {
+        thumbnail: Uint8Array | string,
+        position: number,
+    }
+}
+
+export class RegisterAuthDeviceRequest extends jspb.Message { 
+    getInstanceId(): string;
+    setInstanceId(value: string): RegisterAuthDeviceRequest;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): RegisterAuthDeviceRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: RegisterAuthDeviceRequest): RegisterAuthDeviceRequest.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: RegisterAuthDeviceRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): RegisterAuthDeviceRequest;
+    static deserializeBinaryFromReader(message: RegisterAuthDeviceRequest, reader: jspb.BinaryReader): RegisterAuthDeviceRequest;
+}
+
+export namespace RegisterAuthDeviceRequest {
+    export type AsObject = {
+        instanceId: string,
+    }
+}
+
 export class ListAdminRequest extends jspb.Message { 
     getLimit(): number;
     setLimit(value: number): ListAdminRequest;
-
     getOffset(): number;
     setOffset(value: number): ListAdminRequest;
-
 
     hasOrder(): boolean;
     clearOrder(): void;
     getOrder(): ListAdminRequest.Order | undefined;
     setOrder(value?: ListAdminRequest.Order): ListAdminRequest;
-
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): ListAdminRequest.AsObject;
@@ -227,10 +248,8 @@ export namespace ListAdminRequest {
     export class Order extends jspb.Message { 
         getBy(): string;
         setBy(value: string): Order;
-
         getDirection(): string;
         setDirection(value: string): Order;
-
 
         serializeBinary(): Uint8Array;
         toObject(includeInstance?: boolean): Order.AsObject;
@@ -254,22 +273,18 @@ export namespace ListAdminRequest {
 export class SearchAdminRequest extends jspb.Message { 
     getLimit(): number;
     setLimit(value: number): SearchAdminRequest;
-
     getOffset(): number;
     setOffset(value: number): SearchAdminRequest;
-
 
     hasOrder(): boolean;
     clearOrder(): void;
     getOrder(): SearchAdminRequest.Order | undefined;
     setOrder(value?: SearchAdminRequest.Order): SearchAdminRequest;
 
-
     hasSearch(): boolean;
     clearSearch(): void;
     getSearch(): SearchAdminRequest.Search | undefined;
     setSearch(value?: SearchAdminRequest.Search): SearchAdminRequest;
-
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): SearchAdminRequest.AsObject;
@@ -293,10 +308,8 @@ export namespace SearchAdminRequest {
     export class Order extends jspb.Message { 
         getBy(): string;
         setBy(value: string): Order;
-
         getDirection(): string;
         setDirection(value: string): Order;
-
 
         serializeBinary(): Uint8Array;
         toObject(includeInstance?: boolean): Order.AsObject;
@@ -318,10 +331,8 @@ export namespace SearchAdminRequest {
     export class Search extends jspb.Message { 
         getField(): string;
         setField(value: string): Search;
-
         getValue(): string;
         setValue(value: string): Search;
-
 
         serializeBinary(): Uint8Array;
         toObject(includeInstance?: boolean): Search.AsObject;
@@ -346,7 +357,6 @@ export class GetAdminRequest extends jspb.Message {
     getId(): string;
     setId(value: string): GetAdminRequest;
 
-
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): GetAdminRequest.AsObject;
     static toObject(includeInstance: boolean, msg: GetAdminRequest): GetAdminRequest.AsObject;
@@ -366,31 +376,22 @@ export namespace GetAdminRequest {
 export class CreateAdminRequest extends jspb.Message { 
     getUsername(): string;
     setUsername(value: string): CreateAdminRequest;
-
     getEmail(): string;
     setEmail(value: string): CreateAdminRequest;
-
     getPassword(): string;
     setPassword(value: string): CreateAdminRequest;
-
     getPasswordConfirmation(): string;
     setPasswordConfirmation(value: string): CreateAdminRequest;
-
     getRole(): number;
     setRole(value: number): CreateAdminRequest;
-
     getLastName(): string;
     setLastName(value: string): CreateAdminRequest;
-
     getFirstName(): string;
     setFirstName(value: string): CreateAdminRequest;
-
     getLastNameKana(): string;
     setLastNameKana(value: string): CreateAdminRequest;
-
     getFirstNameKana(): string;
     setFirstNameKana(value: string): CreateAdminRequest;
-
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): CreateAdminRequest.AsObject;
@@ -419,10 +420,8 @@ export namespace CreateAdminRequest {
 export class UpdateAdminRoleRequest extends jspb.Message { 
     getId(): string;
     setId(value: string): UpdateAdminRoleRequest;
-
     getRole(): number;
     setRole(value: number): UpdateAdminRoleRequest;
-
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): UpdateAdminRoleRequest.AsObject;
@@ -444,13 +443,10 @@ export namespace UpdateAdminRoleRequest {
 export class UpdateAdminPasswordRequest extends jspb.Message { 
     getId(): string;
     setId(value: string): UpdateAdminPasswordRequest;
-
     getPassword(): string;
     setPassword(value: string): UpdateAdminPasswordRequest;
-
     getPasswordConfirmation(): string;
     setPasswordConfirmation(value: string): UpdateAdminPasswordRequest;
-
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): UpdateAdminPasswordRequest.AsObject;
@@ -473,25 +469,18 @@ export namespace UpdateAdminPasswordRequest {
 export class UpdateAdminProfileRequest extends jspb.Message { 
     getId(): string;
     setId(value: string): UpdateAdminProfileRequest;
-
     getUsername(): string;
     setUsername(value: string): UpdateAdminProfileRequest;
-
     getEmail(): string;
     setEmail(value: string): UpdateAdminProfileRequest;
-
     getLastName(): string;
     setLastName(value: string): UpdateAdminProfileRequest;
-
     getFirstName(): string;
     setFirstName(value: string): UpdateAdminProfileRequest;
-
     getLastNameKana(): string;
     setLastNameKana(value: string): UpdateAdminProfileRequest;
-
     getFirstNameKana(): string;
     setFirstNameKana(value: string): UpdateAdminProfileRequest;
-
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): UpdateAdminProfileRequest.AsObject;
@@ -515,16 +504,137 @@ export namespace UpdateAdminProfileRequest {
     }
 }
 
+export class UploadAdminThumbnailRequest extends jspb.Message { 
+    getUserId(): string;
+    setUserId(value: string): UploadAdminThumbnailRequest;
+    getThumbnail(): Uint8Array | string;
+    getThumbnail_asU8(): Uint8Array;
+    getThumbnail_asB64(): string;
+    setThumbnail(value: Uint8Array | string): UploadAdminThumbnailRequest;
+    getPosition(): number;
+    setPosition(value: number): UploadAdminThumbnailRequest;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): UploadAdminThumbnailRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: UploadAdminThumbnailRequest): UploadAdminThumbnailRequest.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: UploadAdminThumbnailRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): UploadAdminThumbnailRequest;
+    static deserializeBinaryFromReader(message: UploadAdminThumbnailRequest, reader: jspb.BinaryReader): UploadAdminThumbnailRequest;
+}
+
+export namespace UploadAdminThumbnailRequest {
+    export type AsObject = {
+        userId: string,
+        thumbnail: Uint8Array | string,
+        position: number,
+    }
+}
+
+export class DeleteAdminRequest extends jspb.Message { 
+    getUserId(): string;
+    setUserId(value: string): DeleteAdminRequest;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): DeleteAdminRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: DeleteAdminRequest): DeleteAdminRequest.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: DeleteAdminRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): DeleteAdminRequest;
+    static deserializeBinaryFromReader(message: DeleteAdminRequest, reader: jspb.BinaryReader): DeleteAdminRequest;
+}
+
+export namespace DeleteAdminRequest {
+    export type AsObject = {
+        userId: string,
+    }
+}
+
+export class ListUserRequest extends jspb.Message { 
+    getLimit(): number;
+    setLimit(value: number): ListUserRequest;
+    getOffset(): number;
+    setOffset(value: number): ListUserRequest;
+
+    hasOrder(): boolean;
+    clearOrder(): void;
+    getOrder(): ListUserRequest.Order | undefined;
+    setOrder(value?: ListUserRequest.Order): ListUserRequest;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): ListUserRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: ListUserRequest): ListUserRequest.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: ListUserRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): ListUserRequest;
+    static deserializeBinaryFromReader(message: ListUserRequest, reader: jspb.BinaryReader): ListUserRequest;
+}
+
+export namespace ListUserRequest {
+    export type AsObject = {
+        limit: number,
+        offset: number,
+        order?: ListUserRequest.Order.AsObject,
+    }
+
+
+    export class Order extends jspb.Message { 
+        getBy(): string;
+        setBy(value: string): Order;
+        getDirection(): string;
+        setDirection(value: string): Order;
+
+        serializeBinary(): Uint8Array;
+        toObject(includeInstance?: boolean): Order.AsObject;
+        static toObject(includeInstance: boolean, msg: Order): Order.AsObject;
+        static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+        static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+        static serializeBinaryToWriter(message: Order, writer: jspb.BinaryWriter): void;
+        static deserializeBinary(bytes: Uint8Array): Order;
+        static deserializeBinaryFromReader(message: Order, reader: jspb.BinaryReader): Order;
+    }
+
+    export namespace Order {
+        export type AsObject = {
+            by: string,
+            direction: string,
+        }
+    }
+
+}
+
+export class ListUserByUserIdsRequest extends jspb.Message { 
+    clearUserIdsList(): void;
+    getUserIdsList(): Array<string>;
+    setUserIdsList(value: Array<string>): ListUserByUserIdsRequest;
+    addUserIds(value: string, index?: number): string;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): ListUserByUserIdsRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: ListUserByUserIdsRequest): ListUserByUserIdsRequest.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: ListUserByUserIdsRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): ListUserByUserIdsRequest;
+    static deserializeBinaryFromReader(message: ListUserByUserIdsRequest, reader: jspb.BinaryReader): ListUserByUserIdsRequest;
+}
+
+export namespace ListUserByUserIdsRequest {
+    export type AsObject = {
+        userIdsList: Array<string>,
+    }
+}
+
 export class ListFollowRequest extends jspb.Message { 
     getId(): string;
     setId(value: string): ListFollowRequest;
-
     getLimit(): number;
     setLimit(value: number): ListFollowRequest;
-
     getOffset(): number;
     setOffset(value: number): ListFollowRequest;
-
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): ListFollowRequest.AsObject;
@@ -547,13 +657,10 @@ export namespace ListFollowRequest {
 export class ListFollowerRequest extends jspb.Message { 
     getId(): string;
     setId(value: string): ListFollowerRequest;
-
     getLimit(): number;
     setLimit(value: number): ListFollowerRequest;
-
     getOffset(): number;
     setOffset(value: number): ListFollowerRequest;
-
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): ListFollowerRequest.AsObject;
@@ -573,10 +680,112 @@ export namespace ListFollowerRequest {
     }
 }
 
+export class SearchUserRequest extends jspb.Message { 
+    getLimit(): number;
+    setLimit(value: number): SearchUserRequest;
+    getOffset(): number;
+    setOffset(value: number): SearchUserRequest;
+
+    hasOrder(): boolean;
+    clearOrder(): void;
+    getOrder(): SearchUserRequest.Order | undefined;
+    setOrder(value?: SearchUserRequest.Order): SearchUserRequest;
+
+    hasSearch(): boolean;
+    clearSearch(): void;
+    getSearch(): SearchUserRequest.Search | undefined;
+    setSearch(value?: SearchUserRequest.Search): SearchUserRequest;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): SearchUserRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: SearchUserRequest): SearchUserRequest.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: SearchUserRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): SearchUserRequest;
+    static deserializeBinaryFromReader(message: SearchUserRequest, reader: jspb.BinaryReader): SearchUserRequest;
+}
+
+export namespace SearchUserRequest {
+    export type AsObject = {
+        limit: number,
+        offset: number,
+        order?: SearchUserRequest.Order.AsObject,
+        search?: SearchUserRequest.Search.AsObject,
+    }
+
+
+    export class Order extends jspb.Message { 
+        getBy(): string;
+        setBy(value: string): Order;
+        getDirection(): string;
+        setDirection(value: string): Order;
+
+        serializeBinary(): Uint8Array;
+        toObject(includeInstance?: boolean): Order.AsObject;
+        static toObject(includeInstance: boolean, msg: Order): Order.AsObject;
+        static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+        static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+        static serializeBinaryToWriter(message: Order, writer: jspb.BinaryWriter): void;
+        static deserializeBinary(bytes: Uint8Array): Order;
+        static deserializeBinaryFromReader(message: Order, reader: jspb.BinaryReader): Order;
+    }
+
+    export namespace Order {
+        export type AsObject = {
+            by: string,
+            direction: string,
+        }
+    }
+
+    export class Search extends jspb.Message { 
+        getField(): string;
+        setField(value: string): Search;
+        getValue(): string;
+        setValue(value: string): Search;
+
+        serializeBinary(): Uint8Array;
+        toObject(includeInstance?: boolean): Search.AsObject;
+        static toObject(includeInstance: boolean, msg: Search): Search.AsObject;
+        static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+        static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+        static serializeBinaryToWriter(message: Search, writer: jspb.BinaryWriter): void;
+        static deserializeBinary(bytes: Uint8Array): Search;
+        static deserializeBinaryFromReader(message: Search, reader: jspb.BinaryReader): Search;
+    }
+
+    export namespace Search {
+        export type AsObject = {
+            field: string,
+            value: string,
+        }
+    }
+
+}
+
+export class GetUserRequest extends jspb.Message { 
+    getId(): string;
+    setId(value: string): GetUserRequest;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): GetUserRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: GetUserRequest): GetUserRequest.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: GetUserRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): GetUserRequest;
+    static deserializeBinaryFromReader(message: GetUserRequest, reader: jspb.BinaryReader): GetUserRequest;
+}
+
+export namespace GetUserRequest {
+    export type AsObject = {
+        id: string,
+    }
+}
+
 export class GetUserProfileRequest extends jspb.Message { 
     getId(): string;
     setId(value: string): GetUserProfileRequest;
-
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): GetUserProfileRequest.AsObject;
@@ -598,7 +807,6 @@ export class RegisterFollowRequest extends jspb.Message {
     getId(): string;
     setId(value: string): RegisterFollowRequest;
 
-
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): RegisterFollowRequest.AsObject;
     static toObject(includeInstance: boolean, msg: RegisterFollowRequest): RegisterFollowRequest.AsObject;
@@ -619,7 +827,6 @@ export class UnregisterFollowRequest extends jspb.Message {
     getId(): string;
     setId(value: string): UnregisterFollowRequest;
 
-
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): UnregisterFollowRequest.AsObject;
     static toObject(includeInstance: boolean, msg: UnregisterFollowRequest): UnregisterFollowRequest.AsObject;
@@ -639,64 +846,42 @@ export namespace UnregisterFollowRequest {
 export class AuthResponse extends jspb.Message { 
     getId(): string;
     setId(value: string): AuthResponse;
-
     getUsername(): string;
     setUsername(value: string): AuthResponse;
-
     getGender(): number;
     setGender(value: number): AuthResponse;
-
     getEmail(): string;
     setEmail(value: string): AuthResponse;
-
     getPhoneNumber(): string;
     setPhoneNumber(value: string): AuthResponse;
-
     getRole(): number;
     setRole(value: number): AuthResponse;
-
     getThumbnailUrl(): string;
     setThumbnailUrl(value: string): AuthResponse;
-
     getSelfIntroduction(): string;
     setSelfIntroduction(value: string): AuthResponse;
-
     getLastName(): string;
     setLastName(value: string): AuthResponse;
-
     getFirstName(): string;
     setFirstName(value: string): AuthResponse;
-
     getLastNameKana(): string;
     setLastNameKana(value: string): AuthResponse;
-
     getFirstNameKana(): string;
     setFirstNameKana(value: string): AuthResponse;
-
     getPostalCode(): string;
     setPostalCode(value: string): AuthResponse;
-
     getPrefecture(): string;
     setPrefecture(value: string): AuthResponse;
-
     getCity(): string;
     setCity(value: string): AuthResponse;
-
     getAddressLine1(): string;
     setAddressLine1(value: string): AuthResponse;
-
     getAddressLine2(): string;
     setAddressLine2(value: string): AuthResponse;
-
-    getActivated(): boolean;
-    setActivated(value: boolean): AuthResponse;
-
     getCreatedAt(): string;
     setCreatedAt(value: string): AuthResponse;
-
     getUpdatedAt(): string;
     setUpdatedAt(value: string): AuthResponse;
-
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): AuthResponse.AsObject;
@@ -727,55 +912,58 @@ export namespace AuthResponse {
         city: string,
         addressLine1: string,
         addressLine2: string,
-        activated: boolean,
         createdAt: string,
         updatedAt: string,
+    }
+}
+
+export class AuthThumbnailResponse extends jspb.Message { 
+    getThumbnailUrl(): string;
+    setThumbnailUrl(value: string): AuthThumbnailResponse;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): AuthThumbnailResponse.AsObject;
+    static toObject(includeInstance: boolean, msg: AuthThumbnailResponse): AuthThumbnailResponse.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: AuthThumbnailResponse, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): AuthThumbnailResponse;
+    static deserializeBinaryFromReader(message: AuthThumbnailResponse, reader: jspb.BinaryReader): AuthThumbnailResponse;
+}
+
+export namespace AuthThumbnailResponse {
+    export type AsObject = {
+        thumbnailUrl: string,
     }
 }
 
 export class AdminResponse extends jspb.Message { 
     getId(): string;
     setId(value: string): AdminResponse;
-
     getUsername(): string;
     setUsername(value: string): AdminResponse;
-
     getEmail(): string;
     setEmail(value: string): AdminResponse;
-
     getPhoneNumber(): string;
     setPhoneNumber(value: string): AdminResponse;
-
     getRole(): number;
     setRole(value: number): AdminResponse;
-
     getThumbnailUrl(): string;
     setThumbnailUrl(value: string): AdminResponse;
-
     getSelfIntroduction(): string;
     setSelfIntroduction(value: string): AdminResponse;
-
     getLastName(): string;
     setLastName(value: string): AdminResponse;
-
     getFirstName(): string;
     setFirstName(value: string): AdminResponse;
-
     getLastNameKana(): string;
     setLastNameKana(value: string): AdminResponse;
-
     getFirstNameKana(): string;
     setFirstNameKana(value: string): AdminResponse;
-
-    getActivated(): boolean;
-    setActivated(value: boolean): AdminResponse;
-
     getCreatedAt(): string;
     setCreatedAt(value: string): AdminResponse;
-
     getUpdatedAt(): string;
     setUpdatedAt(value: string): AdminResponse;
-
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): AdminResponse.AsObject;
@@ -800,7 +988,6 @@ export namespace AdminResponse {
         firstName: string,
         lastNameKana: string,
         firstNameKana: string,
-        activated: boolean,
         createdAt: string,
         updatedAt: string,
     }
@@ -811,22 +998,17 @@ export class AdminListResponse extends jspb.Message {
     getUsersList(): Array<AdminListResponse.User>;
     setUsersList(value: Array<AdminListResponse.User>): AdminListResponse;
     addUsers(value?: AdminListResponse.User, index?: number): AdminListResponse.User;
-
     getLimit(): number;
     setLimit(value: number): AdminListResponse;
-
     getOffset(): number;
     setOffset(value: number): AdminListResponse;
-
     getTotal(): number;
     setTotal(value: number): AdminListResponse;
-
 
     hasOrder(): boolean;
     clearOrder(): void;
     getOrder(): AdminListResponse.Order | undefined;
     setOrder(value?: AdminListResponse.Order): AdminListResponse;
-
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): AdminListResponse.AsObject;
@@ -851,46 +1033,30 @@ export namespace AdminListResponse {
     export class User extends jspb.Message { 
         getId(): string;
         setId(value: string): User;
-
         getUsername(): string;
         setUsername(value: string): User;
-
         getEmail(): string;
         setEmail(value: string): User;
-
         getPhoneNumber(): string;
         setPhoneNumber(value: string): User;
-
         getRole(): number;
         setRole(value: number): User;
-
         getThumbnailUrl(): string;
         setThumbnailUrl(value: string): User;
-
         getSelfIntroduction(): string;
         setSelfIntroduction(value: string): User;
-
         getLastName(): string;
         setLastName(value: string): User;
-
         getFirstName(): string;
         setFirstName(value: string): User;
-
         getLastNameKana(): string;
         setLastNameKana(value: string): User;
-
         getFirstNameKana(): string;
         setFirstNameKana(value: string): User;
-
-        getActivated(): boolean;
-        setActivated(value: boolean): User;
-
         getCreatedAt(): string;
         setCreatedAt(value: string): User;
-
         getUpdatedAt(): string;
         setUpdatedAt(value: string): User;
-
 
         serializeBinary(): Uint8Array;
         toObject(includeInstance?: boolean): User.AsObject;
@@ -915,7 +1081,6 @@ export namespace AdminListResponse {
             firstName: string,
             lastNameKana: string,
             firstNameKana: string,
-            activated: boolean,
             createdAt: string,
             updatedAt: string,
         }
@@ -924,10 +1089,202 @@ export namespace AdminListResponse {
     export class Order extends jspb.Message { 
         getBy(): string;
         setBy(value: string): Order;
-
         getDirection(): string;
         setDirection(value: string): Order;
 
+        serializeBinary(): Uint8Array;
+        toObject(includeInstance?: boolean): Order.AsObject;
+        static toObject(includeInstance: boolean, msg: Order): Order.AsObject;
+        static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+        static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+        static serializeBinaryToWriter(message: Order, writer: jspb.BinaryWriter): void;
+        static deserializeBinary(bytes: Uint8Array): Order;
+        static deserializeBinaryFromReader(message: Order, reader: jspb.BinaryReader): Order;
+    }
+
+    export namespace Order {
+        export type AsObject = {
+            by: string,
+            direction: string,
+        }
+    }
+
+}
+
+export class AdminThumbnailResponse extends jspb.Message { 
+    getThumbnailUrl(): string;
+    setThumbnailUrl(value: string): AdminThumbnailResponse;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): AdminThumbnailResponse.AsObject;
+    static toObject(includeInstance: boolean, msg: AdminThumbnailResponse): AdminThumbnailResponse.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: AdminThumbnailResponse, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): AdminThumbnailResponse;
+    static deserializeBinaryFromReader(message: AdminThumbnailResponse, reader: jspb.BinaryReader): AdminThumbnailResponse;
+}
+
+export namespace AdminThumbnailResponse {
+    export type AsObject = {
+        thumbnailUrl: string,
+    }
+}
+
+export class UserResponse extends jspb.Message { 
+    getId(): string;
+    setId(value: string): UserResponse;
+    getUsername(): string;
+    setUsername(value: string): UserResponse;
+    getEmail(): string;
+    setEmail(value: string): UserResponse;
+    getPhoneNumber(): string;
+    setPhoneNumber(value: string): UserResponse;
+    getRole(): number;
+    setRole(value: number): UserResponse;
+    getThumbnailUrl(): string;
+    setThumbnailUrl(value: string): UserResponse;
+    getSelfIntroduction(): string;
+    setSelfIntroduction(value: string): UserResponse;
+    getLastName(): string;
+    setLastName(value: string): UserResponse;
+    getFirstName(): string;
+    setFirstName(value: string): UserResponse;
+    getLastNameKana(): string;
+    setLastNameKana(value: string): UserResponse;
+    getFirstNameKana(): string;
+    setFirstNameKana(value: string): UserResponse;
+    getCreatedAt(): string;
+    setCreatedAt(value: string): UserResponse;
+    getUpdatedAt(): string;
+    setUpdatedAt(value: string): UserResponse;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): UserResponse.AsObject;
+    static toObject(includeInstance: boolean, msg: UserResponse): UserResponse.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: UserResponse, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): UserResponse;
+    static deserializeBinaryFromReader(message: UserResponse, reader: jspb.BinaryReader): UserResponse;
+}
+
+export namespace UserResponse {
+    export type AsObject = {
+        id: string,
+        username: string,
+        email: string,
+        phoneNumber: string,
+        role: number,
+        thumbnailUrl: string,
+        selfIntroduction: string,
+        lastName: string,
+        firstName: string,
+        lastNameKana: string,
+        firstNameKana: string,
+        createdAt: string,
+        updatedAt: string,
+    }
+}
+
+export class UserListResponse extends jspb.Message { 
+    clearUsersList(): void;
+    getUsersList(): Array<UserListResponse.User>;
+    setUsersList(value: Array<UserListResponse.User>): UserListResponse;
+    addUsers(value?: UserListResponse.User, index?: number): UserListResponse.User;
+    getLimit(): number;
+    setLimit(value: number): UserListResponse;
+    getOffset(): number;
+    setOffset(value: number): UserListResponse;
+    getTotal(): number;
+    setTotal(value: number): UserListResponse;
+
+    hasOrder(): boolean;
+    clearOrder(): void;
+    getOrder(): UserListResponse.Order | undefined;
+    setOrder(value?: UserListResponse.Order): UserListResponse;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): UserListResponse.AsObject;
+    static toObject(includeInstance: boolean, msg: UserListResponse): UserListResponse.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: UserListResponse, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): UserListResponse;
+    static deserializeBinaryFromReader(message: UserListResponse, reader: jspb.BinaryReader): UserListResponse;
+}
+
+export namespace UserListResponse {
+    export type AsObject = {
+        usersList: Array<UserListResponse.User.AsObject>,
+        limit: number,
+        offset: number,
+        total: number,
+        order?: UserListResponse.Order.AsObject,
+    }
+
+
+    export class User extends jspb.Message { 
+        getId(): string;
+        setId(value: string): User;
+        getUsername(): string;
+        setUsername(value: string): User;
+        getEmail(): string;
+        setEmail(value: string): User;
+        getPhoneNumber(): string;
+        setPhoneNumber(value: string): User;
+        getRole(): number;
+        setRole(value: number): User;
+        getThumbnailUrl(): string;
+        setThumbnailUrl(value: string): User;
+        getSelfIntroduction(): string;
+        setSelfIntroduction(value: string): User;
+        getLastName(): string;
+        setLastName(value: string): User;
+        getFirstName(): string;
+        setFirstName(value: string): User;
+        getLastNameKana(): string;
+        setLastNameKana(value: string): User;
+        getFirstNameKana(): string;
+        setFirstNameKana(value: string): User;
+        getCreatedAt(): string;
+        setCreatedAt(value: string): User;
+        getUpdatedAt(): string;
+        setUpdatedAt(value: string): User;
+
+        serializeBinary(): Uint8Array;
+        toObject(includeInstance?: boolean): User.AsObject;
+        static toObject(includeInstance: boolean, msg: User): User.AsObject;
+        static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+        static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+        static serializeBinaryToWriter(message: User, writer: jspb.BinaryWriter): void;
+        static deserializeBinary(bytes: Uint8Array): User;
+        static deserializeBinaryFromReader(message: User, reader: jspb.BinaryReader): User;
+    }
+
+    export namespace User {
+        export type AsObject = {
+            id: string,
+            username: string,
+            email: string,
+            phoneNumber: string,
+            role: number,
+            thumbnailUrl: string,
+            selfIntroduction: string,
+            lastName: string,
+            firstName: string,
+            lastNameKana: string,
+            firstNameKana: string,
+            createdAt: string,
+            updatedAt: string,
+        }
+    }
+
+    export class Order extends jspb.Message { 
+        getBy(): string;
+        setBy(value: string): Order;
+        getDirection(): string;
+        setDirection(value: string): Order;
 
         serializeBinary(): Uint8Array;
         toObject(includeInstance?: boolean): Order.AsObject;
@@ -951,28 +1308,20 @@ export namespace AdminListResponse {
 export class UserProfileResponse extends jspb.Message { 
     getId(): string;
     setId(value: string): UserProfileResponse;
-
     getUsername(): string;
     setUsername(value: string): UserProfileResponse;
-
     getThumbnailUrl(): string;
     setThumbnailUrl(value: string): UserProfileResponse;
-
     getSelfIntroduction(): string;
     setSelfIntroduction(value: string): UserProfileResponse;
-
     getIsFollow(): boolean;
     setIsFollow(value: boolean): UserProfileResponse;
-
     getIsFollower(): boolean;
     setIsFollower(value: boolean): UserProfileResponse;
-
     getFollowCount(): number;
     setFollowCount(value: number): UserProfileResponse;
-
     getFollowerCount(): number;
     setFollowerCount(value: number): UserProfileResponse;
-
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): UserProfileResponse.AsObject;
@@ -1002,16 +1351,12 @@ export class FollowListResponse extends jspb.Message {
     getUsersList(): Array<FollowListResponse.User>;
     setUsersList(value: Array<FollowListResponse.User>): FollowListResponse;
     addUsers(value?: FollowListResponse.User, index?: number): FollowListResponse.User;
-
     getLimit(): number;
     setLimit(value: number): FollowListResponse;
-
     getOffset(): number;
     setOffset(value: number): FollowListResponse;
-
     getTotal(): number;
     setTotal(value: number): FollowListResponse;
-
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): FollowListResponse.AsObject;
@@ -1035,19 +1380,14 @@ export namespace FollowListResponse {
     export class User extends jspb.Message { 
         getId(): string;
         setId(value: string): User;
-
         getUsername(): string;
         setUsername(value: string): User;
-
         getThumbnailUrl(): string;
         setThumbnailUrl(value: string): User;
-
         getSelfIntroduction(): string;
         setSelfIntroduction(value: string): User;
-
         getIsFollow(): boolean;
         setIsFollow(value: boolean): User;
-
 
         serializeBinary(): Uint8Array;
         toObject(includeInstance?: boolean): User.AsObject;
@@ -1076,16 +1416,12 @@ export class FollowerListResponse extends jspb.Message {
     getUsersList(): Array<FollowerListResponse.User>;
     setUsersList(value: Array<FollowerListResponse.User>): FollowerListResponse;
     addUsers(value?: FollowerListResponse.User, index?: number): FollowerListResponse.User;
-
     getLimit(): number;
     setLimit(value: number): FollowerListResponse;
-
     getOffset(): number;
     setOffset(value: number): FollowerListResponse;
-
     getTotal(): number;
     setTotal(value: number): FollowerListResponse;
-
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): FollowerListResponse.AsObject;
@@ -1109,19 +1445,14 @@ export namespace FollowerListResponse {
     export class User extends jspb.Message { 
         getId(): string;
         setId(value: string): User;
-
         getUsername(): string;
         setUsername(value: string): User;
-
         getThumbnailUrl(): string;
         setThumbnailUrl(value: string): User;
-
         getSelfIntroduction(): string;
         setSelfIntroduction(value: string): User;
-
         getIsFollow(): boolean;
         setIsFollow(value: boolean): User;
-
 
         serializeBinary(): Uint8Array;
         toObject(includeInstance?: boolean): User.AsObject;

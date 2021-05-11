@@ -10,7 +10,6 @@ export interface IAdminOutput {
   firstName: string
   lastNameKana: string
   firstNameKana: string
-  activated: boolean
   createdAt: string
   updatedAt: string
 }
@@ -35,7 +34,6 @@ export interface IAdminListOutputUser {
   firstName: string
   lastNameKana: string
   firstNameKana: string
-  activated: boolean
   createdAt: string
   updatedAt: string
 }
@@ -43,4 +41,8 @@ export interface IAdminListOutputUser {
 export interface IAdminListOutputOrder {
   by: string
   direction: string
+}
+
+export interface IAdminThumbnailOutput {
+  thumbnailUrl: string
 }

@@ -18,10 +18,14 @@ type Service interface {
 	ShowRelationship(ctx context.Context, id int) (*Relationship, error)
 	ShowRelationshipByUID(ctx context.Context, followID string, followerID string) (*Relationship, error)
 	Create(ctx context.Context, u *User) error
+	CreateWithOAuth(ctx context.Context, u *User) error
 	CreateRelationship(ctx context.Context, r *Relationship) error
 	Update(ctx context.Context, u *User) error
 	UpdatePassword(ctx context.Context, uid string, password string) error
+	Delete(ctx context.Context, uid string) error
 	DeleteRelationship(ctx context.Context, id int) error
 	UploadThumbnail(ctx context.Context, uid string, thumbnail []byte) (string, error)
 	IsFriend(ctx context.Context, friendID string, uid string) (bool, bool)
+	Validation(ctx context.Context, u *User) error
+	ValidationRelationship(ctx context.Context, r *Relationship) error
 }

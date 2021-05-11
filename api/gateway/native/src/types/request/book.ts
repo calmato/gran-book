@@ -1,41 +1,36 @@
 export interface ICreateBookRequest {
   title: string
-  authors: Array<string>
-  publisher: string
-  publishedDate: string
-  description: string
-  industryIdentifiers: Array<IBookIdentifier>
-  categories: Array<string>
-  contentVersion: string
-  imageLinks: IBookImage
+  titleKana: string
+  itemCaption: string
+  isbn: string
+  publisherName: string
+  salesDate: string
+  largeImageUrl: string
+  mediumImageUrl: string
+  smallImageUrl: string
+  itemUrl: string
+  booksGenreId: string
+  author: string
+  authorKana: string
 }
 
-export interface ICreateAndUpdateBooksRequest {
-  items: Array<IBookItem>
-}
-
-export interface IBookItem {
-  volumeInfo: IBookVolumeInfo
-}
-
-export interface IBookVolumeInfo {
+export interface IUpdateBookRequest {
   title: string
-  authors: Array<string>
-  publisher: string
-  publishedDate: string
-  description: string
-  industryIdentifiers: Array<IBookIdentifier>
-  categories: Array<string>
-  contentVersion: string
-  imageLinks: IBookImage
+  titleKana: string
+  itemCaption: string
+  isbn: string
+  publisherName: string
+  salesDate: string
+  largeImageUrl: string
+  mediumImageUrl: string
+  smallImageUrl: string
+  itemUrl: string
+  booksGenreId: string
+  author: string
+  authorKana: string
 }
 
-export interface IBookIdentifier {
-  type: string
-  identifier: string
-}
-
-export interface IBookImage {
-  smallThumbnail?: string
-  thumbnail: string
+export interface IReadBookshelfRequest {
+  impression: string
+  readOn: string
 }
