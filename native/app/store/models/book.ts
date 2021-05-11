@@ -1,5 +1,4 @@
 import { IBook } from '~/types/response';
-import { booksSampleData } from '~~/assets/sample/book';
 
 // Model
 export interface Model {
@@ -26,17 +25,21 @@ export function setBooks(books: Model, values: BookValues): Model {
   };
 }
 
+/**
+ * 読んでいる本の一覧を返すgetter関数
+ * @param books 登録されている全ての本
+ * @returns 読んでいる本の一覧
+ */
 export function readingBooks(books: IBook[]): IBook[] {
   return books.filter((book: IBook) => {
     return book.status == 0;
   });
 }
 
-
 /**
- * 読んだ本を返すgetter関数
- * @param books
- * @returns
+ * 読んだ本の一覧を返すgetter関数
+ * @param books 登録されている全ての本
+ * @returns 読んだ本の一覧
  */
 export function readBooks(books: IBook[]): IBook[] {
   return books.filter((book: IBook) => {
@@ -44,18 +47,33 @@ export function readBooks(books: IBook[]): IBook[] {
   });
 }
 
+/**
+ * 積読本の一覧を返すgetter関数
+ * @param books 登録されている全ての本
+ * @returns 積読本の一覧
+ */
 export function stackBooks(books: IBook[]): IBook[] {
   return books.filter((book: IBook) => {
     return book.status == 2;
   });
 }
 
+/**
+ * 手放したい本の一覧を返すgetter関数
+ * @param books 登録されている全ての本
+ * @returns 手放したい本の一覧
+ */
 export function releaseBooks(books: IBook[]): IBook[] {
   return books.filter((book: IBook) => {
     return book.status == 3;
   });
 }
 
+/**
+ * 欲しい本の一覧を返すgetter関数
+ * @param books 登録されている全ての本
+ * @returns 欲しい本の一覧
+ */
 export function wantBooks(books: IBook[]): IBook[] {
   return books.filter((book: IBook) => {
     return book.status == 4;
