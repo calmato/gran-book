@@ -22,10 +22,6 @@ resource "google_container_node_pool" "this" {
     disk_type    = each.value.disk_type
     disk_size_gb = each.value.disk_size_gb
 
-    oauth_scopes = [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/logging.write",
-      "https://www.googleapis.com/auth/monitoring",
-    ]
+    oauth_scopes = each.value.oauth_scopes
   }
 }
