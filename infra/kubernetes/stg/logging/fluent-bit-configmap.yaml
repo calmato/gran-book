@@ -11,7 +11,7 @@ data:
         Log_Level    info
         Log_File     /var/log/fluent-bit.log
         Daemon       off
-        Parsers_File parsers.conf
+        Parsers_File parsers-custom.conf
         HTTP_Server  On
         HTTP_Listen  0.0.0.0
         HTTP_Port    2020
@@ -46,6 +46,20 @@ data:
   filters.conf: |
     [FILTER]
         Name         parser
+        Match        kube_*
+        Key_Name     log
+        Parser       docker
+        Reserve_Data True
+        Preserve_Key False
+    [FILTER]
+        Name         parser
+        Match        kube_*
+        Key_Name     log_file_path
+        Parser       pod
+        Reserve_Data True
+        Preserve_Key False
+    [FILTER]
+        Name         parser
         Match        kube_default_*_*-gateway
         Key_Name     log
         Parser       bff
@@ -58,31 +72,33 @@ data:
         Parser       nginx
         Reserve_Data True
         Preserve_Key False
-    [FILTER]
-        Name         parser
-        Match        kube_*
-        Key_Name     log_file_path
-        Parser       pod
-        Reserve_Data True
-        Preserve_Key False
   outputs.conf: |
     [OUTPUT]
         Name  stdout
         Match *
-  parsers.conf: |
+  parsers-custom.conf: |
+    [PARSER]
+        Name        docker
+        Format      json
+        Time_Key    time
+        Time_Format %Y-%m-%dT%H:%M:%S %z
+        ## Command      | Decoder      | Field | Optional Action
+        ## =============|======================|=================
+        Decode_Field_As   escaped_utf8   log     do_next
+        Decode_Field_As   json           log
+    [PARSER]
+        Name        pod
+        Format      regex
+        Regex       ^/var/log/containers/(?<pod_id>[^_]*).*.log$
     [PARSER]
         Name        bff
         Format      regex
-        Regex       ^\\u001b\[32m\[(?<time>[^ ]*)\] \[(?<level>[^ ]*)\] (?<type>[^ ]*) - \\u001b\[39m(?<data>.*)$
+        Regex       \[(?<time>[^ ]*)\] \[(?<level>[^ ]*)\] (?<type>[^ ]*) - (?<data>.*)$
         Time_Key    time
         Time_Format %d/%b/%Y:%H:%M:%S %z
     [PARSER]
         Name        nginx
         Format      regex
-        Regex       ^(?<remote>[^ ]*) - (?<user>[^ ]*) \[(?<time>[^\]]*)\] \\"(?<method>\S+)(?: +(?<path>[^\"]*?)(?: +\S*)?)?\\" (?<status>[^ ]*) (?<size>[^ ]*) \\"(?<referer>[^ ]*)\\" \\"(?<agent>[^"]*)\\" \\"(?<ratio>[^ ]*)\\".*$
+        Regex       ^(?<remote>[^ ]*) (?<host>[^ ]*) (?<user>[^ ]*) \[(?<time>[^\]]*)\] "(?<method>\S+)(?: +(?<path>[^\"]*?)(?: +\S*)?)?" (?<code>[^ ]*) (?<size>[^ ]*)(?: "(?<referer>[^\"]*)" "(?<agent>[^\"]*)")
         Time_Key    time
         Time_Format %d/%b/%Y:%H:%M:%S %z
-    [PARSER]
-        Name        pod
-        Format      regex
-        Regex       ^/var/log/containers/(?<pod_id>[^_]*).*.log$
