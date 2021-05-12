@@ -37,11 +37,11 @@ export const MessagesScreen = () => {
 
   const getMessage = async () => {
     const messages = [] as MessageForm[];
-    await firebase.firestore().collection('messages').orderBy('createdAt', 'desc')
+    await firebase.firestore().collection('messages').orderBy('createdAt')
       .onSnapshot((snapshot) => {
         snapshot.docChanges().forEach((change) => {
           if (change.type === 'added') {
-            messages.push(change.doc.data() as MessageForm);
+            messages.unshift(change.doc.data() as MessageForm);
           }
           setMessages(messages);
         });
