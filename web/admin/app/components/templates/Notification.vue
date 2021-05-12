@@ -51,13 +51,13 @@
 import { defineComponent, ref, SetupContext } from '@nuxtjs/composition-api'
 import NotificationListTable from '~/components/organisms/NotificationListTable.vue'
 import AdminNewForm from '~/components/organisms/AdminNewForm.vue'
-import NotfiicationNewForm from '~/components/organisms/NotificationNewForm.vue'
+import NotificationNewForm from '~/components/organisms/NotificationNewForm.vue'
 
 export default defineComponent({
   components: {
     NotificationListTable,
     AdminNewForm,
-    NotfiicationNewForm,
+    NotificationNewForm,
   },
 
   props: {
