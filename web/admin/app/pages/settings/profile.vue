@@ -22,6 +22,7 @@ export default defineComponent({
       params: {
         username: store.getters['auth/getUsername'],
         thumbnail: undefined,
+        thumbnailUrl: store.getters['auth/getThumbnailUrl'],
         selfIntroduction: store.getters['auth/getSelfIntroduction'],
         lastName: store.getters['auth/getLastName'],
         firstName: store.getters['auth/getFirstName'],
@@ -39,9 +40,30 @@ export default defineComponent({
       return status === PromiseState.LOADING
     })
 
+    const uploadThumbnail = (file: File | undefined): Promise<string> => {
+      if (!file) {
+        return Promise.resolve('')
+      }
+
+      return AuthStore.uploadThumbnail(file)
+        .then((res: string) => {
+          return res
+        })
+        .catch((err: Error) => {
+          throw err
+        })
+    }
+
     const handleSubmit = async () => {
       CommonStore.startConnection()
-      await AuthStore.updateProfile(form)
+      await uploadThumbnail(form.params.thumbnail)
+        .then((res: string) => {
+          if (res !== '') {
+            form.params.thumbnailUrl
+          }
+
+          return AuthStore.updateProfile(form)
+        })
         .then(() => {
           CommonStore.showSnackbar({ color: 'info', message: 'プロフィールを変更しました。' })
           router.push('/settings')

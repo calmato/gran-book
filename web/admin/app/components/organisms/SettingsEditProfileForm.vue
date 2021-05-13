@@ -6,12 +6,20 @@
       :rules="form.options.username.rules"
       :autofocus="true"
     />
+    <v-img
+      v-if="fileData || form.params.thumbnailUrl"
+      :src="fileData || form.params.thumbnailUrl"
+      width="auto"
+      max-height="240"
+      contain
+    />
     <the-file-input
       v-model="form.params.thumbnail"
       :label="form.options.thumbnail.label"
       :rules="form.options.thumbnail.rules"
       :limit="form.options.thumbnail.rules.size"
       accept="image/*"
+      @input="onImagePicked"
     />
     <the-text-area
       v-model="form.params.selfIntroduction"
@@ -49,7 +57,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, SetupContext, PropType } from '@nuxtjs/composition-api'
+import { defineComponent, SetupContext, PropType, ref } from '@nuxtjs/composition-api'
 import { IAuthEditProfileForm } from '~/types/forms'
 import TheFileInput from '~/components/atoms/TheFileInput.vue'
 import TheFormGroup from '~/components/atoms/TheFormGroup.vue'
@@ -76,7 +84,27 @@ export default defineComponent({
     },
   },
 
-  setup(_, { emit }: SetupContext) {
+  setup(props, { emit }: SetupContext) {
+    const fileData = ref<string | ArrayBuffer | null>()
+
+    const onImagePicked = (file: File) => {
+      if (!file) {
+        props.form.params.thumbnailUrl = ''
+        return
+      }
+
+      if (file.name.lastIndexOf('.') === -1) {
+        return
+      }
+
+      const fr = new FileReader()
+
+      fr.readAsDataURL(file)
+      fr.addEventListener('load', () => {
+        fileData.value = fr.result
+      })
+    }
+
     const onClick = () => {
       emit('click')
     }
@@ -86,8 +114,10 @@ export default defineComponent({
     }
 
     return {
+      fileData,
       onClick,
       onClickCancel,
+      onImagePicked,
     }
   },
 })
