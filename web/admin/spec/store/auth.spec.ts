@@ -177,7 +177,7 @@ describe('store/auth', () => {
           const params: IAuthEditProfileParams = {
             username: 'test-user',
             thumbnail: undefined,
-              thumbnailUrl: '',
+            thumbnailUrl: '',
             selfIntroduction: 'よろしく',
             lastName: 'テスト',
             firstName: 'ユーザ',
@@ -200,7 +200,7 @@ describe('store/auth', () => {
           const params: IAuthEditProfileParams = {
             username: '',
             thumbnail: undefined,
-              thumbnailUrl: '',
+            thumbnailUrl: '',
             selfIntroduction: '',
             lastName: '',
             firstName: '',

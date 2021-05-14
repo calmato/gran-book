@@ -10,7 +10,7 @@ describe('components/templates/SettingsEditProfile', () => {
     const params: IAuthEditProfileParams = {
       username: '',
       thumbnail: undefined,
-              thumbnailUrl: '',
+      thumbnailUrl: '',
       selfIntroduction: '',
       lastName: '',
       firstName: '',
@@ -52,7 +52,7 @@ describe('components/templates/SettingsEditProfile', () => {
               params: {
                 username: 'test-user',
                 thumbnail: undefined,
-              thumbnailUrl: '',
+                thumbnailUrl: '',
                 selfIntroduction: 'よろしく',
                 lastName: 'テスト',
                 firstName: 'ユーザ',
