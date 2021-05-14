@@ -6,6 +6,7 @@
     :sort-by.sync="sortBy"
     :sort-desc.sync="sortDesc"
     :loading="loading"
+    :role="role"
     :users="users"
     :total="total"
     :new-form="newForm"
@@ -59,6 +60,7 @@ export default defineComponent({
       },
     })
 
+    const role = computed(() => store.getters['auth/getRole'])
     const users = computed(() => store.getters['admin/getUsers'])
     const total = computed(() => store.getters['admin/getTotal'])
     const loading = computed((): boolean => {
@@ -142,6 +144,7 @@ export default defineComponent({
       itemsPerPage,
       sortBy,
       sortDesc,
+      role,
       users,
       total,
       newForm,

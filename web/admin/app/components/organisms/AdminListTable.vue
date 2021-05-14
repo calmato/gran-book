@@ -26,7 +26,7 @@
         {{ getRole(item.role) }}
       </v-chip>
     </template>
-    <template v-slot:[`item.actions`]="{ item }">
+    <template v-if="role === 1" v-slot:[`item.actions`]="{ item }">
       <v-icon small class="mr-2" @click="onClickEdit(item)">mdi-pencil</v-icon>
       <v-icon small @click="onClickDelete(item)">mdi-delete</v-icon>
     </template>
@@ -69,6 +69,11 @@ export default defineComponent({
       type: String,
       required: false,
       default: '',
+    },
+    role: {
+      type: Number,
+      required: false,
+      default: 0,
     },
     users: {
       type: Array as PropType<IAdminUser[]>,

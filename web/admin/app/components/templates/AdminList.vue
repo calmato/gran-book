@@ -32,6 +32,7 @@
               :sort-by="sortBy"
               :sort-desc="sortDesc"
               :search="search"
+              :role="role"
               :users="users"
               :total="total"
               @edit="onClickEditButton"
@@ -97,6 +98,11 @@ export default defineComponent({
       type: String,
       required: false,
       default: '',
+    },
+    role: {
+      type: Number,
+      required: false,
+      default: 0,
     },
     users: {
       type: Array as PropType<IAdminUser[]>,

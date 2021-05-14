@@ -67,6 +67,10 @@ export default class AuthModule extends VuexModule {
     return this.phoneNumber
   }
 
+  public get getRole(): number {
+    return this.role
+  }
+
   public get getThumbnailUrl(): string {
     return this.thumbnailUrl || '/thumbnail.png'
   }
