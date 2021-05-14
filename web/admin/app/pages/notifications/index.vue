@@ -1,5 +1,5 @@
 <template>
-  <notification
+  <notification-list
     :search.sync="search"
     :page.sync="page"
     :items-per-page.sync="itemsPerPage"
@@ -17,11 +17,11 @@ import { defineComponent, SetupContext, ref, reactive, useAsync, computed, watch
 import { AdminStore, CommonStore } from '~/store'
 import { AdminNewOptions, IAdminNewForm, IAdminNewParams } from '~/types/forms'
 import { PromiseState } from '~/types/store'
-import Notification from '~/components/templates/Notification.vue'
+import NotificationList from '~/components/templates/NotificationList.vue'
 
 export default defineComponent({
   components: {
-    Notification,
+    NotificationList,
   },
 
   setup(_, { root }: SetupContext) {
