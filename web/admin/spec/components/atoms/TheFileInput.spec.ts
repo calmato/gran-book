@@ -35,12 +35,12 @@ describe('components/atoms/TheFileInput', () => {
 
       describe('limit', () => {
         it('初期値', () => {
-          expect(wrapper.props().limit).toBe(10000000)
+          expect(wrapper.props().limit).toBe(10)
         })
 
         it('値が代入されること', async () => {
-          await wrapper.setProps({ limit: 5000000 })
-          expect(wrapper.props().limit).toBe(5000000)
+          await wrapper.setProps({ limit: 50 })
+          expect(wrapper.props().limit).toBe(50)
         })
       })
 
@@ -68,12 +68,13 @@ describe('components/atoms/TheFileInput', () => {
 
       describe('value', () => {
         it('初期値', () => {
-          expect(wrapper.props().value).toBe('')
+          expect(wrapper.props().value).toBeUndefined()
         })
 
         it('値が代入されること', async () => {
-          await wrapper.setProps({ value: 'test' })
-          expect(wrapper.props().value).toBe('test')
+          const file = new File(['thumbnail'], 'thumbnail.png', { lastModified: Date.now(), type: 'image/png' })
+          await wrapper.setProps({ value: file })
+          expect(wrapper.props().value).toBe(file)
         })
       })
     })
@@ -85,14 +86,15 @@ describe('components/atoms/TheFileInput', () => {
             const file = new File(['thumbnail'], 'thumbnail.png', { lastModified: Date.now(), type: 'image/png' })
             await wrapper.vm.selectedFile(file)
             expect(wrapper.emitted('input')).toBeTruthy()
-            expect(wrapper.emitted('input')[0][0]).not.toBeUndefined()
+            expect(wrapper.emitted('input')[0][0]).toBe(file)
           })
         })
 
         describe('fileが入力されなかったとき', () => {
           it('emitが実行されないこと', async () => {
             await wrapper.vm.selectedFile()
-            expect(wrapper.emitted('input')).toBeFalsy()
+            expect(wrapper.emitted('input')).toBeTruthy()
+            expect(wrapper.emitted('input')[0][0]).toBeUndefined()
           })
         })
       })

@@ -29,7 +29,7 @@ export default defineComponent({
     limit: {
       type: Number,
       required: false,
-      default: 10000000, // 10MB
+      default: 10, // MB
     },
     name: {
       type: String,
@@ -60,7 +60,7 @@ export default defineComponent({
         return true
       }
 
-      return file.size <= props.limit * 1000 // KB -> MB
+      return file.size <= props.limit * 1024 * 1024 // file.size (B), limit (MB)
     }
 
     return {

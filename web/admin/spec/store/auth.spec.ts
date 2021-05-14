@@ -177,6 +177,7 @@ describe('store/auth', () => {
           const params: IAuthEditProfileParams = {
             username: 'test-user',
             thumbnail: undefined,
+              thumbnailUrl: '',
             selfIntroduction: 'よろしく',
             lastName: 'テスト',
             firstName: 'ユーザ',
@@ -199,6 +200,7 @@ describe('store/auth', () => {
           const params: IAuthEditProfileParams = {
             username: '',
             thumbnail: undefined,
+              thumbnailUrl: '',
             selfIntroduction: '',
             lastName: '',
             firstName: '',
@@ -212,6 +214,33 @@ describe('store/auth', () => {
         it('rejectが返されること', async () => {
           const err = new ApiError(400, 'api error', { status: 400, code: 0, message: 'api error', errors: [] })
           await expect(AuthStore.updateProfile(form)).rejects.toThrow(err)
+        })
+      })
+    })
+
+    describe('uploadThumbnail', () => {
+      describe('success', () => {
+        let file: File
+        beforeEach(() => {
+          setSafetyMode(true)
+          file = new File(['thumbnail'], 'thumbnail.png', { lastModified: Date.now(), type: 'image/png' })
+        })
+
+        it('resolveが返されること', async () => {
+          await expect(AuthStore.uploadThumbnail(file)).resolves.toBe('https://calmato.com/images/01')
+        })
+      })
+
+      describe('failure', () => {
+        let file: File
+        beforeEach(() => {
+          setSafetyMode(false)
+          file = new File(['thumbnail'], 'thumbnail.png', { lastModified: Date.now(), type: 'image/png' })
+        })
+
+        it('rejectが返されること', async () => {
+          const err = new ApiError(400, 'api error', { status: 400, code: 0, message: 'api error', errors: [] })
+          await expect(AuthStore.uploadThumbnail(file)).rejects.toThrow(err)
         })
       })
     })

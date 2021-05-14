@@ -114,7 +114,7 @@ export const AuthEditProfileOptions: IAuthEditProfileOptions = {
     label: 'サムネイル',
     rules: {
       image: true,
-      size: 10000, // 10MB
+      size: 3, // 3MB
     },
   } as IFileInput,
   selfIntroduction: {
