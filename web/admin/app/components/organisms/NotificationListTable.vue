@@ -7,18 +7,18 @@
     :sort-by.sync="sortByArray"
     :sort-desc.sync="sortDescArray"
     :headers="headers"
-    :items="item"
+    :items="items"
     :footer-props="footers"
     @update:page="$emit('update:page', $event)"
     @update:items-per-page="$emit('update:items-per-page', $event)"
   >
     <template v-slot:[`item.category`]="{ item }">
-      <v-chip :color="getColor(item.category)" dark>
+      <v-chip :color="getCategoryColor(item.category)" dark>
         {{ getCategory(item.category) }}
       </v-chip>
     </template>
     <template v-slot:[`item.importance`]="{ item }">
-      <v-chip :color="getColor(item.importance)" dark>
+      <v-chip :color="getImportanceColor(item.importance)" dark>
         {{ getImportance(item.importance) }}
       </v-chip>
     </template>
@@ -30,9 +30,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, SetupContext, PropType } from '@nuxtjs/composition-api'
+import { defineComponent, computed, SetupContext } from '@nuxtjs/composition-api'
 import { INotificationTableContent, IAdminTableFooter, INotificationTableHeader } from '~/types/props'
-import { IAdminUser } from '~/types/store'
 
 export default defineComponent({
   props: {
@@ -66,11 +65,6 @@ export default defineComponent({
       required: false,
       default: '',
     },
-    users: {
-      type: Array as PropType<IAdminUser[]>,
-      required: false,
-      default: () => [],
-    },
     total: {
       type: Number,
       required: false,
@@ -88,27 +82,27 @@ export default defineComponent({
       { text: 'Actions', value: 'actions', sortable: false },
     ]
 
-    const item: Array<INotificationTableContent> = [
+    const items: Array<INotificationTableContent> = [
       {
         title: 'Gran book公開日',
         description: 'Gran book公開に伴ってキャンペーンの開催',
         timestamp: '2022/01/01',
         category: 3,
-        importance: 6,
+        importance: 3,
       },
       {
         title: 'おすすめ本情報',
         description: '呪術廻戦１３巻販売開始',
         timestamp: '2022/01/03',
         category: 2,
-        importance: 5,
+        importance: 2,
       },
       {
         title: 'メンテナンス情報',
         description: 'メンテナンスに伴うサービスの一時停止',
         timestamp: '2022/01/02',
         category: 1,
-        importance: 4,
+        importance: 1,
       },
     ]
 
@@ -126,8 +120,8 @@ export default defineComponent({
       set: (vals: boolean[]) => emit('update:sort-desc', vals[0]),
     })
 
-    const getCategory = (role: number): string => {
-      switch (role) {
+    const getCategory = (category: number): string => {
+      switch (category) {
         case 1:
           return 'Maintenance'
         case 2:
@@ -139,32 +133,39 @@ export default defineComponent({
       }
     }
 
-    const getImportance = (role: number): string => {
-      switch (role) {
-        case 4:
+    const getImportance = (importance: number): string => {
+      switch (importance) {
+        case 1:
           return 'High'
-        case 5:
+        case 2:
           return 'Middle'
-        case 6:
+        case 3:
           return 'Low'
         default:
           return 'Unknown'
       }
     }
 
-    const getColor = (role: number): string => {
-      switch (role) {
+    const getCategoryColor = (category: number): string => {
+      switch (category) {
         case 1:
           return 'blue-grey'
         case 2:
           return 'purple lighten-3'
         case 3:
           return 'light-green'
-        case 4:
+        default:
+          return ''
+      }
+    }
+
+    const getImportanceColor = (importance: number): string => {
+      switch (importance) {
+        case 1:
           return 'red'
-        case 5:
+        case 2:
           return 'amber'
-        case 6:
+        case 3:
           return 'light-blue'
         default:
           return ''
@@ -172,22 +173,28 @@ export default defineComponent({
     }
 
     // TODO: editとdelete機能を実装する
+    const onClickEdit = (item: INotificationTableContent): void => {
+      const index: number = items.indexOf(item)
+      emit('edit', index)
+    }
 
-    // const onClickEdit = (item: INotificationTableContent): void => {
-    // }
-
-    // const onClickDelete = (item: INotificationTableContent): void => {
-    // }
+    const onClickDelete = (item: INotificationTableContent): void => {
+      const index: number = items.indexOf(item)
+      emit('delete', index)
+    }
 
     return {
       headers,
       footers,
-      item,
+      items,
       sortByArray,
       sortDescArray,
       getCategory,
       getImportance,
-      getColor,
+      getCategoryColor,
+      getImportanceColor,
+      onClickEdit,
+      onClickDelete,
     }
   },
 })
