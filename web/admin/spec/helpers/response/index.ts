@@ -20,6 +20,7 @@ export default {
   },
   post: {
     ...AdminStore.post,
+    ...AuthStore.post,
   },
   patch: {
     ...AuthStore.patch,

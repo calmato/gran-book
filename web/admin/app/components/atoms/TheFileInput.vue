@@ -29,7 +29,7 @@ export default defineComponent({
     limit: {
       type: Number,
       required: false,
-      default: 10000000, // 10MB
+      default: 10, // MB
     },
     name: {
       type: String,
@@ -42,35 +42,25 @@ export default defineComponent({
       default: () => ({}),
     },
     value: {
-      type: String,
+      type: File,
       required: false,
-      default: '',
+      default: undefined,
     },
   },
 
   setup(props, { emit }: SetupContext) {
-    const selectedFile = async (file: File): Promise<void> => {
+    const selectedFile = (file: File): void => {
       if (checkFile(file)) {
-        const picture = await getBase64(file)
-        emit('input', picture)
+        emit('input', file)
       }
     }
 
     function checkFile(file: File): boolean {
       if (!file) {
-        return false
+        return true
       }
 
-      return file.size <= props.limit * 1000 // KB -> MB
-    }
-
-    function getBase64(file: File): Promise<String | ArrayBuffer | null> {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader()
-        reader.onload = (event: ProgressEvent<FileReader>) => resolve(event.target ? event.target.result : '')
-        reader.onerror = (err: ProgressEvent<FileReader>) => reject(err)
-        reader.readAsDataURL(file)
-      })
+      return file.size <= props.limit * 1024 * 1024 // file.size (B), limit (MB)
     }
 
     return {
