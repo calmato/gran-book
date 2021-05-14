@@ -14,7 +14,7 @@ export const MessageItem: React.FC<Props> = ({ item, userId }: Props) => {
       userId == item.userId
         ? {
           alignSelf: 'flex-end',
-          backgroundColor: COLOR.BACKGROUND_WHITE,
+          backgroundColor: COLOR.MESSAGE_BACKGROUND,
           padding: 5,
           borderRadius: 5,
           borderBottomRightRadius: 0,
@@ -22,7 +22,7 @@ export const MessageItem: React.FC<Props> = ({ item, userId }: Props) => {
         }
         : {
           alignSelf: 'flex-start',
-          backgroundColor: COLOR.BACKGROUND_WHITE,
+          backgroundColor: COLOR.MESSAGE_BACKGROUND,
           padding: 5,
           borderRadius: 5,
           borderBottomLeftRadius: 0,
@@ -30,7 +30,7 @@ export const MessageItem: React.FC<Props> = ({ item, userId }: Props) => {
         }
     }
     >
-      <Text style={userId == item.userId ? { color:COLOR.TEXT_DEFAULT} : {}}>
+      <Text style={userId == item.userId ? { color:COLOR.TEXT_WHITE} : {color: COLOR.TEXT_WHITE}}>
         {item.newText}
       </Text>
     </View>

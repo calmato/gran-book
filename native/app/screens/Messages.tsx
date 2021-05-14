@@ -11,7 +11,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { MessageItem } from '~/components/organisms/MessageItem';
 
 export const MessagesScreen = () => {
-  const [textData, setText] = useState<MessageForm>({
+  const [textData, setText] = useState<MessageForm> ({
     newText: '',
     createdAt: firebase.firestore.Timestamp.now(),
     userId: '',
@@ -43,7 +43,9 @@ export const MessagesScreen = () => {
           if (change.type === 'added') {
             messages.unshift(change.doc.data() as MessageForm);
           }
-          setMessages(messages);
+          if (messages.length != 0) {
+            setMessages(messages);
+          }
         });
       });
   };
@@ -54,6 +56,7 @@ export const MessagesScreen = () => {
 
   return (
     <View style={styles.container}>
+
       <ExpoStatusBar style="light" />
       <Header
         leftComponent={
@@ -71,7 +74,7 @@ export const MessagesScreen = () => {
         }}
       />
 
-      <ScrollView>
+      <ScrollView style={{marginBottom: 'auto'}}>
         <FlatList
           style={styles.messagesContainer}
           data={messages}
@@ -100,6 +103,7 @@ export const MessagesScreen = () => {
           autoCapitalize="none"
           autoCorrect={false}
           returnKeyType="done"
+          multiline={true}
         />
         <Ionicons
           style={styles.sendButton}
@@ -137,30 +141,35 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLOR.BACKGROUND_GREY,
     backgroundColor: COLOR.BACKGROUND_GREY,
-    height: '50%',
+    height: 'auto',
+    minHeight: '20%',
+    width: '70%',
+    marginVertical: '5%',
     marginLeft: '5%',
     marginRight: '5%',
-    flex: 1,
     borderRadius: 10,
     paddingHorizontal: 10,
   },
   inputImage: {
     marginLeft: '3%',
+    marginBottom: '5%',
     color: COLOR.TEXT_GRAY
   },
   sendButton: {
     marginRight: '3%',
+    marginBottom: '5%',
     color: COLOR.PRIMARY
   },
   chatFooter: {
-    flex: 1,
     backgroundColor: COLOR.BACKGROUND_WHITE,
-    height: '10%',
+    height: 'auto',
     width: '100%',
     flexDirection: 'row',
-    alignItems: 'center',
-    position: 'absolute',
-    bottom: 0
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    bottom: 0,
+    minHeight: '10%',
+    maxHeight: '20%'
   },
 });
 
