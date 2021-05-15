@@ -10,10 +10,14 @@
     :total="total"
     :new-form="newForm"
     :new-dialog.sync="newDialog"
+    :edit-form="editForm"
+    :edit-dialog.sync="editDialog"
     @new:open="handleClickNewItem"
     @new:close="handleClickCloseNewItem"
-    @create="handleClickCreateItem"
     @edit="handleClickEditItem"
+    @edit:close="handleClickCloseEditItem"
+    @create="handleClickCreateItem"
+    @update="handleClickUpdateItem"
     @delete="handleClickDeleteItem"
   />
 </template>
@@ -44,18 +48,46 @@ export default defineComponent({
       firstNameKana: '',
     }
 
+    const initializeEditForm = {
+      email: '',
+      phoneNumber: '',
+      role: 2,
+      lastName: '',
+      firstName: '',
+      lastNameKana: '',
+      firstNameKana: '',
+      thumbnail: null,
+      thumbnailUrl: '',
+    }
+
     const search = ref<string>()
     const page = ref<number>(1)
     const itemsPerPage = ref<number>(20)
     const sortBy = ref<string>()
     const sortDesc = ref<boolean>()
     const newDialog = ref<boolean>(false)
+    const editDialog = ref<boolean>(false)
     const newForm = reactive<IAdminNewForm>({
       params: {
         ...initializeNewForm,
       },
       options: {
         ...AdminNewOptions,
+      },
+    })
+    const editForm = reactive({
+      params: {
+        ...initializeEditForm,
+      },
+      options: {
+        email: {},
+        phoneNumber: {},
+        role: {},
+        lastName: {},
+        firstName: {},
+        lastNameKana: {},
+        firstNameKana: {},
+        thumbnail: { rules: { size: 5 } },
       },
     })
 
@@ -111,7 +143,38 @@ export default defineComponent({
     }
 
     const handleClickEditItem = (index: number): void => {
-      console.log('debug', 'editItem', index)
+      if (!users.value || users.value.length <= index) {
+        // TODO: show alert
+        return
+      }
+
+      const user = users.value[index]
+      if (!user) {
+        // TODO: show alert
+        return
+      }
+
+      editDialog.value = true
+      editForm.params = {
+        ...initializeEditForm,
+        email: user.email,
+        phoneNumber: user.phoneNumber,
+        role: user.role,
+        lastName: user.lastName,
+        firstName: user.firstName,
+        lastNameKana: user.lastNameKana,
+        firstNameKana: user.firstNameKana,
+        thumbnailUrl: user.thumbnailUrl,
+      }
+    }
+
+    const handleClickCloseEditItem = (): void => {
+      editDialog.value = false
+    }
+
+    const handleClickUpdateItem = (): void => {
+      console.log('debug', 'update', editForm)
+      editDialog.value = false
     }
 
     const handleClickDeleteItem = (index: number): void => {
@@ -146,10 +209,14 @@ export default defineComponent({
       total,
       newForm,
       newDialog,
+      editForm,
+      editDialog,
       handleClickNewItem,
       handleClickCloseNewItem,
       handleClickCreateItem,
       handleClickEditItem,
+      handleClickCloseEditItem,
+      handleClickUpdateItem,
       handleClickDeleteItem,
     }
   },
