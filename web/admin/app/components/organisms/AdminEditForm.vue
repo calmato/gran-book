@@ -64,11 +64,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from '@nuxtjs/composition-api'
+import { defineComponent, PropType, ref } from '@nuxtjs/composition-api'
 import TheFileInput from '~/components/atoms/TheFileInput.vue'
 import TheFormGroup from '~/components/atoms/TheFormGroup.vue'
 import TheSelect from '~/components/atoms/TheSelect.vue'
 import TheTextField from '~/components/atoms/TheTextField.vue'
+import { IAdminEditForm } from '~/types/forms'
 
 export default defineComponent({
   components: {
@@ -80,7 +81,7 @@ export default defineComponent({
 
   props: {
     form: {
-      type: Object,
+      type: Object as PropType<IAdminEditForm>,
       required: true,
     },
   },

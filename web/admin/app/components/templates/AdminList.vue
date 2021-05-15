@@ -71,7 +71,7 @@ import TheTextField from '~/components/atoms/TheTextField.vue'
 import AdminEditForm from '~/components/organisms/AdminEditForm.vue'
 import AdminListTable from '~/components/organisms/AdminListTable.vue'
 import AdminNewForm from '~/components/organisms/AdminNewForm.vue'
-import { IAdminNewForm } from '~/types/forms'
+import { IAdminEditForm, IAdminNewForm } from '~/types/forms'
 import { IAdminUser } from '~/types/store'
 
 export default defineComponent({
@@ -136,7 +136,7 @@ export default defineComponent({
       default: false,
     },
     editForm: {
-      type: Object,
+      type: Object as PropType<IAdminEditForm>,
       required: false,
       default: () => ({}),
     },
