@@ -76,6 +76,7 @@ export default defineComponent({
     const sortDesc = ref<boolean>()
     const newDialog = ref<boolean>(false)
     const editDialog = ref<boolean>(false)
+    const editUserId = ref<string>('')
     const newForm = reactive<IAdminNewForm>({
       params: {
         ...initializeNewForm,
@@ -121,6 +122,20 @@ export default defineComponent({
       await indexAdmin()
     })
 
+    const uploadThumbnail = (file: File | null): Promise<string> => {
+      if (!file) {
+        return Promise.resolve('')
+      }
+
+      return AdminStore.uploadThumbnail({ userId: editUserId.value, file })
+        .then((res: string) => {
+          return res
+        })
+        .catch((err: Error) => {
+          throw err
+        })
+    }
+
     const handleClickNewItem = (): void => {
       newDialog.value = true
       newForm.params = { ...initializeNewForm }
@@ -158,6 +173,7 @@ export default defineComponent({
       }
 
       editDialog.value = true
+      editUserId.value = user.id
       editForm.params = {
         ...initializeEditForm,
         email: user.email,
@@ -175,9 +191,26 @@ export default defineComponent({
       editDialog.value = false
     }
 
-    const handleClickUpdateItem = (): void => {
-      console.log('debug', 'update', editForm)
-      editDialog.value = false
+    const handleClickUpdateItem = async (): Promise<void> => {
+      CommonStore.startConnection()
+      await uploadThumbnail(editForm.params.thumbnail)
+        .then((res: string) => {
+          if (res !== '') {
+            editForm.params.thumbnailUrl = res
+          }
+
+          return AdminStore.updateAdmin({ userId: editUserId.value, form: editForm })
+        })
+        .then(() => {
+          editDialog.value = false
+          CommonStore.showSnackbar({ color: 'info', message: '管理者を更新しました。' })
+        })
+        .catch((err: Error) => {
+          CommonStore.showErrorInSnackbar(err)
+        })
+        .finally(() => {
+          CommonStore.endConnection()
+        })
     }
 
     const handleClickDeleteItem = (index: number): void => {
