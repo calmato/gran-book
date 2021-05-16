@@ -76,8 +76,8 @@ const EmailEdit = function EmailEdit(props: Props): ReactElement {
     return emailForm === props.email;
   }, [emailForm, props.email]);
 
-  const createAlertNotifyEmailEditError = (code: number) =>
-    Alert.alert('メールアドレス変更に失敗', `${generateErrorMessage(code)}`, [
+  const createAlertNotifyEmailEditError = (errorMessage: string) =>
+    Alert.alert('メールアドレス変更に失敗', `${generateErrorMessage(errorMessage)}`, [
       {
         text: 'OK',
       },
@@ -91,9 +91,8 @@ const EmailEdit = function EmailEdit(props: Props): ReactElement {
       .then(() => {
         DevSettings.reload();
       })
-      .catch((err) => {
-        console.log('debug', err);
-        createAlertNotifyEmailEditError(err.staus);
+      .catch((err: Error) => {
+        createAlertNotifyEmailEditError(err.message);
       });
   }, [emailForm, emailEdit, signOut]);
 

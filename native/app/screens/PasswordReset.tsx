@@ -30,8 +30,8 @@ const PasswordReset = function PasswordReset(props: Props): ReactElement {
     email: '',
   });
 
-  const createAlertNotifyProfileEditError = (code: number) =>
-    Alert.alert('パスワード更新に失敗', `${generateErrorMessage(code)}`, [
+  const createAlertNotifyProfileEditError = (errorMessage: string) =>
+    Alert.alert('パスワード更新に失敗', `${generateErrorMessage(errorMessage)}`, [
       {
         text: 'OK',
       },
@@ -42,8 +42,8 @@ const PasswordReset = function PasswordReset(props: Props): ReactElement {
       .then((): void => {
         navigation.navigate('SignUpCheckEmail', { email: formData.email });
       })
-      .catch((err): void => {
-        throw createAlertNotifyProfileEditError(err);
+      .catch((err:Error): void => {
+        throw createAlertNotifyProfileEditError(err.message);
       });
   };
 

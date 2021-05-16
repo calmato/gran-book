@@ -85,8 +85,8 @@ const ProfileEdit = function ProfileEdit(props: Props): ReactElement {
     }
   };
 
-  const createAlertNotifyProfileEditError = (code: number) =>
-    Alert.alert('ユーザー登録に失敗', `${generateErrorMessage(code)}`, [
+  const createAlertNotifyProfileEditError = (errorMessage: string) =>
+    Alert.alert('ユーザー登録に失敗', `${generateErrorMessage(errorMessage)}`, [
       {
         text: 'OK',
       },
@@ -97,8 +97,8 @@ const ProfileEdit = function ProfileEdit(props: Props): ReactElement {
       .then(() => {
         navigation.navigate('OwnProfile');
       })
-      .catch((err) => {
-        createAlertNotifyProfileEditError(err.code);
+      .catch((err:Error) => {
+        createAlertNotifyProfileEditError(err.message);
       });
   }, [userInfo, profileEdit, navigation]);
 
