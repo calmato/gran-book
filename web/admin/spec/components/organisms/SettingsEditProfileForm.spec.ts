@@ -9,7 +9,7 @@ describe('components/organisms/SettingsEditProfileForm', () => {
   beforeEach(() => {
     const params: IAuthEditProfileParams = {
       username: '',
-      thumbnail: undefined,
+      thumbnail: null,
       thumbnailUrl: '',
       selfIntroduction: '',
       lastName: '',
@@ -33,7 +33,7 @@ describe('components/organisms/SettingsEditProfileForm', () => {
           expect(wrapper.props().form).toEqual({
             params: {
               username: '',
-              thumbnail: undefined,
+              thumbnail: null,
               thumbnailUrl: '',
               selfIntroduction: '',
               lastName: '',
@@ -51,7 +51,7 @@ describe('components/organisms/SettingsEditProfileForm', () => {
             form: {
               params: {
                 username: 'test-user',
-                thumbnail: undefined,
+                thumbnail: null,
                 thumbnailUrl: '',
                 selfIntroduction: 'よろしく',
                 lastName: 'テスト',
@@ -66,7 +66,7 @@ describe('components/organisms/SettingsEditProfileForm', () => {
           expect(wrapper.props().form).toEqual({
             params: {
               username: 'test-user',
-              thumbnail: undefined,
+              thumbnail: null,
               thumbnailUrl: '',
               selfIntroduction: 'よろしく',
               lastName: 'テスト',

@@ -180,7 +180,7 @@ describe('store/auth', () => {
           setSafetyMode(true)
           const params: IAuthEditProfileParams = {
             username: 'test-user',
-            thumbnail: undefined,
+            thumbnail: null,
             thumbnailUrl: '',
             selfIntroduction: 'よろしく',
             lastName: 'テスト',
@@ -203,7 +203,7 @@ describe('store/auth', () => {
           setSafetyMode(false)
           const params: IAuthEditProfileParams = {
             username: '',
-            thumbnail: undefined,
+            thumbnail: null,
             thumbnailUrl: '',
             selfIntroduction: '',
             lastName: '',
