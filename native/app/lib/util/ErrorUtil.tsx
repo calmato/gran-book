@@ -20,8 +20,6 @@ export const generateErrorMessage = function generateErrorMessage(code: string):
       return ERROR_MESSAGE.SERVER_ERROR;
     case 'Request failed with status code 504':
       return ERROR_MESSAGE.TIMEOUT;
-    case 'Network Error':
-      return ERROR_MESSAGE.NETWORK_ERROR;
     default:
       return ERROR_MESSAGE.UNEXPEXTED_ERROR;
   }
