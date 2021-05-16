@@ -2,7 +2,7 @@
 import Vue from 'vue'
 import { ValidationProvider, ValidationObserver, localize, extend } from 'vee-validate'
 import ja from 'vee-validate/dist/locale/ja.json'
-import { required, confirmed, max, min, email, image, alpha_dash } from 'vee-validate/dist/rules'
+import { required, confirmed, max, min, email, image, alpha_dash, size } from 'vee-validate/dist/rules'
 import { ValidationRule } from 'vee-validate/dist/types/types'
 
 Vue.component('ValidationProvider', ValidationProvider)
@@ -38,6 +38,7 @@ extend('min', { ...min })
 extend('email', { ...email })
 extend('image', { ...image })
 extend('alpha_dash', { ...alpha_dash })
+extend('size', { ...size })
 
 // Custom Rules
 extend('hiragana', { ...hiraganaCustomRule })
