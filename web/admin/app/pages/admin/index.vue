@@ -25,7 +25,15 @@
 <script lang="ts">
 import { defineComponent, SetupContext, ref, reactive, useAsync, computed, watch } from '@nuxtjs/composition-api'
 import { AdminStore, CommonStore } from '~/store'
-import { AdminNewOptions, IAdminListForm, IAdminNewForm, IAdminNewParams } from '~/types/forms'
+import {
+  AdminEditOptions,
+  AdminNewOptions,
+  IAdminEditForm,
+  IAdminEditParams,
+  IAdminListForm,
+  IAdminNewForm,
+  IAdminNewParams,
+} from '~/types/forms'
 import { PromiseState } from '~/types/store'
 import AdminList from '~/components/templates/AdminList.vue'
 
@@ -48,7 +56,7 @@ export default defineComponent({
       firstNameKana: '',
     }
 
-    const initializeEditForm = {
+    const initializeEditForm: IAdminEditParams = {
       email: '',
       phoneNumber: '',
       role: 2,
@@ -56,7 +64,7 @@ export default defineComponent({
       firstName: '',
       lastNameKana: '',
       firstNameKana: '',
-      thumbnail: null,
+      thumbnail: undefined,
       thumbnailUrl: '',
     }
 
@@ -75,19 +83,12 @@ export default defineComponent({
         ...AdminNewOptions,
       },
     })
-    const editForm = reactive({
+    const editForm = reactive<IAdminEditForm>({
       params: {
         ...initializeEditForm,
       },
       options: {
-        email: {},
-        phoneNumber: {},
-        role: {},
-        lastName: {},
-        firstName: {},
-        lastNameKana: {},
-        firstNameKana: {},
-        thumbnail: { rules: { size: 5 } },
+        ...AdminEditOptions,
       },
     })
 
