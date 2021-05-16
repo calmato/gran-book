@@ -118,8 +118,8 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
     formData.addressLine1,
   ]);
 
-  const createAlertNotifyEditPasswordError = (errorMessage: string) =>
-    Alert.alert('アカウントの編集に失敗', `${generateErrorMessage(errorMessage)}`, [
+  const createAlertNotifyEditPasswordError = (code: number) =>
+    Alert.alert('アカウントの編集に失敗', `${generateErrorMessage(code)}`, [
       {
         text: 'OK',
       },
@@ -148,8 +148,9 @@ const AccountEdit = function AccountEdit(props: Props): ReactElement {
       .then(() => {
         //  navigation.navigate('', { });
       })
-      .catch((err: Error) => {
-        createAlertNotifyEditPasswordError(err.message);
+      .catch((err) => {
+        console.log('debug', err);
+        createAlertNotifyEditPasswordError(err.code);
       });
   }, [formData, accountEdit]);
 
