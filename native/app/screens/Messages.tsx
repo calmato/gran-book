@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { View, StyleSheet, SafeAreaView, TextInput, Text, KeyboardAvoidingView, FlatList } from 'react-native';
+import { View, StyleSheet, SafeAreaView, TextInput, Text, KeyboardAvoidingView, FlatList, } from 'react-native';
 import { StatusBar as ExpoStatusBar } from 'expo-status-bar';
 import firebase from '~/lib/firebase';
 import { getMessageDocRef } from '~/store/usecases/auth';
@@ -7,7 +7,7 @@ import { COLOR } from '~~/constants/theme';
 import { MaterialIcons, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { MessageForm } from '~/types/forms';
 import { Header } from 'react-native-elements';
-import { ScrollView } from 'react-native-gesture-handler';
+import { ScrollView, } from 'react-native-gesture-handler';
 import { MessageItem } from '~/components/organisms/MessageItem';
 
 export const MessagesScreen = () => {
@@ -76,41 +76,46 @@ export const MessagesScreen = () => {
 
       <ScrollView style={{marginBottom: 'auto'}}>
         <FlatList
-          style={styles.messagesContainer}
-          data={messages}
-          inverted={true}
-          renderItem={({ item }: { item: MessageForm }) => (
-            <MessageItem userId={userId} item={item} />
+          style= {styles.messagesContainer}
+          data= {messages}
+          inverted= {true}
+          renderItem= {({ item }: { item: MessageForm }) => (
+            <MessageItem userId= {userId} item={item} />
           )}
-          keyExtractor={(_, index)=> index.toString()}
+          keyExtractor= {(_, index)=> index.toString()}
         />
       </ScrollView>
 
       <View style={styles.chatFooter}>
         <MaterialCommunityIcons
-          style={styles.inputImage}
-          name="image-plus"
-          size={32}
+          style= {styles.inputImage}
+          name= "image-plus"
+          size= {32}
         />
         <TextInput
-          style={styles.inputText}
-          onChangeText={(value) => {
+          style= {styles.inputText}
+          onChangeText= {(value) => {
             setText({ ...textData, newText: value });
           }}
-          value={textData.newText}
-          placeholder="メッセージを入力してください"
-          placeholderTextColor={COLOR.TEXT_GRAY}
-          autoCapitalize="none"
-          autoCorrect={false}
-          returnKeyType="done"
-          multiline={true}
+          value= {textData.newText}
+          placeholder= "メッセージを入力してください"
+          placeholderTextColor= {COLOR.TEXT_GRAY}
+          autoCapitalize= "none"
+          autoCorrect= {false}
+          returnKeyType= "done"
+          multiline= {true}
         />
+
         <Ionicons
-          style={styles.sendButton}
-          name="send"
-          size={32}
-          disabled={!canSubmit}
-          onPress={() => {
+          style={
+            (!canSubmit)
+              ? {...styles.sendButtonDisabled}
+              : styles.sendButton
+          }
+          name= "send"
+          size= {32}
+          disabled= {!canSubmit}
+          onPress= {() => {
             sendMessage(textData.newText);
           }}
         />
@@ -145,8 +150,7 @@ const styles = StyleSheet.create({
     minHeight: '20%',
     width: '70%',
     marginVertical: '5%',
-    marginLeft: '5%',
-    marginRight: '5%',
+    marginHorizontal: '5%',
     borderRadius: 10,
     paddingHorizontal: 10,
   },
@@ -159,6 +163,11 @@ const styles = StyleSheet.create({
     marginRight: '3%',
     marginBottom: '5%',
     color: COLOR.PRIMARY
+  },
+  sendButtonDisabled: {
+    marginRight: '3%',
+    marginBottom: '5%',
+    color: COLOR.LIGHT_GREY
   },
   chatFooter: {
     backgroundColor: COLOR.BACKGROUND_WHITE,
