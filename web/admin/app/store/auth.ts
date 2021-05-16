@@ -306,7 +306,7 @@ export default class AuthModule extends VuexModule {
 
     const req: IAuthUpdateProfileRequest = {
       username,
-      thumbnailUrl,
+      thumbnailUrl: String(thumbnailUrl) || '',
       selfIntroduction,
       lastName,
       firstName,

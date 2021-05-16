@@ -46,8 +46,8 @@ export interface IAdminEditParams {
   firstName: string
   lastNameKana: string
   firstNameKana: string
-  thumbnail?: File
-  thumbnailUrl: string
+  thumbnail: File | null
+  thumbnailUrl: string | ArrayBuffer | null
 }
 
 // ---------------------------
@@ -195,7 +195,7 @@ export const AdminEditOptions: IAdminEditOptions = {
     label: 'サムネイル',
     rules: {
       image: true,
-      size: 3, // 3MB
+      size: 3 * 1024, // KB
     },
   } as IFileInput,
 }
