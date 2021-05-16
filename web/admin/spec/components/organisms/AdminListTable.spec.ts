@@ -78,6 +78,17 @@ describe('components/organisms/AdminListTable', () => {
         })
       })
 
+      describe('role', () => {
+        it('初期値', () => {
+          expect(wrapper.props().role).toBe(0)
+        })
+
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ role: 1 })
+          expect(wrapper.props().role).toBe(1)
+        })
+      })
+
       describe('users', () => {
         it('初期値', () => {
           expect(wrapper.props().users).toEqual([])

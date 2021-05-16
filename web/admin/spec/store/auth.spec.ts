@@ -43,6 +43,10 @@ describe('store/auth', () => {
       expect(AuthStore.getPhoneNumber).toBe('')
     })
 
+    it('getRole', () => {
+      expect(AuthStore.getRole).toBe(0)
+    })
+
     it('getThumbnailUrl', () => {
       expect(AuthStore.getThumbnailUrl).toBe('/thumbnail.png')
     })
