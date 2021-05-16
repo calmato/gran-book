@@ -15,7 +15,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="editDialog" width="600px" scrollable @click:outside="$emit('update:new-dialog', false)">
+    <v-dialog v-model="editDialog" width="600px" scrollable @click:outside="$emit('update:edit-dialog', false)">
       <v-card>
         <v-toolbar color="primary" dark>管理者ユーザー 編集</v-toolbar>
         <v-card-text>

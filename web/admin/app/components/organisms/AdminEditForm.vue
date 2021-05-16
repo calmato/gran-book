@@ -45,26 +45,19 @@
       :rules="form.options.role.rules"
       :items="roleItems"
     />
-    <v-img
-      v-if="fileData || form.params.thumbnailUrl"
-      :src="fileData || form.params.thumbnailUrl"
-      width="auto"
-      max-height="240"
-      contain
-    />
+    <v-img v-if="form.params.thumbnailUrl" :src="form.params.thumbnailUrl" width="auto" max-height="240" contain />
     <the-file-input
-      v-model="form.params.thumbnail"
+      :file="form.params.thumbnail"
       :label="form.options.thumbnail.label"
       :rules="form.options.thumbnail.rules"
-      :limit="form.options.thumbnail.rules.size"
       accept="image/*"
-      @input="onImagePicked"
+      @change="onImagePicked"
     />
   </the-form-group>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref } from '@nuxtjs/composition-api'
+import { defineComponent, PropType } from '@nuxtjs/composition-api'
 import TheFileInput from '~/components/atoms/TheFileInput.vue'
 import TheFormGroup from '~/components/atoms/TheFormGroup.vue'
 import TheSelect from '~/components/atoms/TheSelect.vue'
@@ -93,8 +86,6 @@ export default defineComponent({
       { text: '運用者', value: 3 },
     ]
 
-    const fileData = ref<string | ArrayBuffer | null>()
-
     const onImagePicked = (file: File) => {
       if (!file) {
         props.form.params.thumbnailUrl = ''
@@ -109,12 +100,12 @@ export default defineComponent({
 
       fr.readAsDataURL(file)
       fr.addEventListener('load', () => {
-        fileData.value = fr.result
+        props.form.params.thumbnail = file
+        props.form.params.thumbnailUrl = fr.result
       })
     }
 
     return {
-      fileData,
       roleItems,
       onImagePicked,
     }

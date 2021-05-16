@@ -17,7 +17,6 @@
       v-model="form.params.thumbnail"
       :label="form.options.thumbnail.label"
       :rules="form.options.thumbnail.rules"
-      :limit="form.options.thumbnail.rules.size"
       accept="image/*"
       @input="onImagePicked"
     />

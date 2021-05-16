@@ -33,17 +33,6 @@ describe('components/atoms/TheFileInput', () => {
         })
       })
 
-      describe('limit', () => {
-        it('初期値', () => {
-          expect(wrapper.props().limit).toBe(10)
-        })
-
-        it('値が代入されること', async () => {
-          await wrapper.setProps({ limit: 50 })
-          expect(wrapper.props().limit).toBe(50)
-        })
-      })
-
       describe('name', () => {
         it('初期値', () => {
           expect(wrapper.props().name).toBe('')
@@ -66,35 +55,27 @@ describe('components/atoms/TheFileInput', () => {
         })
       })
 
-      describe('value', () => {
+      describe('file', () => {
         it('初期値', () => {
-          expect(wrapper.props().value).toBeUndefined()
+          expect(wrapper.props().file).toBeNull()
         })
 
         it('値が代入されること', async () => {
           const file = new File(['thumbnail'], 'thumbnail.png', { lastModified: Date.now(), type: 'image/png' })
-          await wrapper.setProps({ value: file })
-          expect(wrapper.props().value).toBe(file)
+          await wrapper.setProps({ file })
+          expect(wrapper.props().file).toBe(file)
         })
       })
     })
 
     describe('methods', () => {
-      describe('selectedFile', () => {
+      describe('onSelect', () => {
         describe('fileが入力されたとき', () => {
           it('emitが実行されること', async () => {
             const file = new File(['thumbnail'], 'thumbnail.png', { lastModified: Date.now(), type: 'image/png' })
-            await wrapper.vm.selectedFile(file)
-            expect(wrapper.emitted('input')).toBeTruthy()
-            expect(wrapper.emitted('input')[0][0]).toBe(file)
-          })
-        })
-
-        describe('fileが入力されなかったとき', () => {
-          it('emitが実行されないこと', async () => {
-            await wrapper.vm.selectedFile()
-            expect(wrapper.emitted('input')).toBeTruthy()
-            expect(wrapper.emitted('input')[0][0]).toBeUndefined()
+            await wrapper.vm.onSelect(file)
+            expect(wrapper.emitted('change')).toBeTruthy()
+            expect(wrapper.emitted('change')[0][0]).toBe(file)
           })
         })
       })

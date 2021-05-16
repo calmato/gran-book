@@ -65,7 +65,7 @@ export default defineComponent({
       firstName: '',
       lastNameKana: '',
       firstNameKana: '',
-      thumbnail: undefined,
+      thumbnail: null,
       thumbnailUrl: '',
     }
 

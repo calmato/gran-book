@@ -5,8 +5,9 @@
       :label="label"
       :error-messages="errors"
       :success="valid"
+      :value="file"
       show-size
-      @change="selectedFile"
+      @change="onSelect"
     />
   </validation-provider>
 </template>
@@ -26,11 +27,6 @@ export default defineComponent({
       required: false,
       default: '',
     },
-    limit: {
-      type: Number,
-      required: false,
-      default: 10, // MB
-    },
     name: {
       type: String,
       required: false,
@@ -41,30 +37,20 @@ export default defineComponent({
       required: false,
       default: () => ({}),
     },
-    value: {
+    file: {
       type: File,
       required: false,
-      default: undefined,
+      default: null,
     },
   },
 
-  setup(props, { emit }: SetupContext) {
-    const selectedFile = (file: File): void => {
-      if (checkFile(file)) {
-        emit('input', file)
-      }
-    }
-
-    function checkFile(file: File): boolean {
-      if (!file) {
-        return true
-      }
-
-      return file.size <= props.limit * 1024 * 1024 // file.size (B), limit (MB)
+  setup(_, { emit }: SetupContext) {
+    const onSelect = (file: File) => {
+      emit('change', file)
     }
 
     return {
-      selectedFile,
+      onSelect,
     }
   },
 })
