@@ -1,7 +1,7 @@
 import { shallowMount } from '@vue/test-utils'
 import * as Options from '~~/spec/helpers/component-helper'
 import AdminList from '~/components/templates/AdminList.vue'
-import { AdminNewOptions } from '~/types/forms'
+import { AdminEditOptions, AdminNewOptions } from '~/types/forms'
 
 describe('components/templates/AdminList', () => {
   let wrapper: any
@@ -192,6 +192,56 @@ describe('components/templates/AdminList', () => {
           expect(wrapper.props().total).toBe(10)
         })
       })
+
+      describe('editForm', () => {
+        it('初期値', () => {
+          expect(wrapper.props().editForm).toEqual({})
+        })
+
+        it('値が代入されること', async () => {
+          await wrapper.setProps({
+            editForm: {
+              params: {
+                email: 'test@calmato.com',
+                phoneNumber: '000-0000-0000',
+                role: 1,
+                lastName: 'テスト',
+                firstName: 'ユーザー',
+                lastNameKana: 'てすと',
+                firstNameKana: 'ゆーざー',
+                thumbnail: null,
+                thumbnailUrl: 'https://calmato.com/images/01',
+              },
+              options: AdminEditOptions,
+            },
+          })
+          expect(wrapper.props().editForm).toEqual({
+            params: {
+              email: 'test@calmato.com',
+              phoneNumber: '000-0000-0000',
+              role: 1,
+              lastName: 'テスト',
+              firstName: 'ユーザー',
+              lastNameKana: 'てすと',
+              firstNameKana: 'ゆーざー',
+              thumbnail: null,
+              thumbnailUrl: 'https://calmato.com/images/01',
+            },
+            options: AdminEditOptions,
+          })
+        })
+      })
+
+      describe('editDialog', () => {
+        it('初期値', () => {
+          expect(wrapper.props().editDialog).toBeFalsy()
+        })
+
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ editDialog: true })
+          expect(wrapper.props().editDialog).toBeTruthy()
+        })
+      })
     })
 
     describe('data', () => {
@@ -227,6 +277,20 @@ describe('components/templates/AdminList', () => {
           await wrapper.vm.onClickEditButton(1)
           expect(wrapper.emitted('edit')).toBeTruthy()
           expect(wrapper.emitted('edit')[0][0]).toBe(1)
+        })
+      })
+
+      describe('onClickEditClose', () => {
+        it('emitが実行されること', async () => {
+          await wrapper.vm.onClickEditClose()
+          expect(wrapper.emitted('edit:close')).toBeTruthy()
+        })
+      })
+
+      describe('onClickUpdateButton', () => {
+        it('emitが実行されること', async () => {
+          await wrapper.vm.onClickUpdateButton()
+          expect(wrapper.emitted('update')).toBeTruthy()
         })
       })
 
