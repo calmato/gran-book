@@ -47,6 +47,10 @@ export default class AuthModule extends VuexModule {
   private createdAt: string = initialState.createdAt
   private updatedAt: string = initialState.updatedAt
 
+  public get getId(): string {
+    return this.id
+  }
+
   public get getEmail(): string {
     return this.email
   }

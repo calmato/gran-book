@@ -43,12 +43,13 @@ variable "gke_cluster_istio_disabled" {
 variable "gke_node_configs" {
   description = "GKE ノード設定"
   type = list(object({
-    name         = string # ノード名
-    count        = number # ノード数
-    preemptible  = bool   # プリエンプティブの利用
-    machine_type = string # マシンタイプ e.g.) n1-standard-1, etc..
-    disk_type    = string # ディスクタイプ e.g.) pd-standard or pd-ssd
-    disk_size_gb = number # ディスクサイズ[GB] min: 10GB
+    name               = string # ノード名
+    count              = number # ノード数
+    preemptible        = bool   # プリエンプティブの利用
+    machine_type       = string # マシンタイプ e.g.) n1-standard-1, etc..
+    disk_type          = string # ディスクタイプ e.g.) pd-standard or pd-ssd
+    disk_size_gb       = number # ディスクサイズ[GB] min: 10GB
+    monitoring_enabled = bool   # モニタリングの許可
   }))
 }
 

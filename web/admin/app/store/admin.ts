@@ -44,6 +44,12 @@ export default class AdminModule extends VuexModule {
     this.total = total
   }
 
+  @Action({})
+  public factory(): void {
+    this.setUsers(initialState.users)
+    this.setTotal(initialState.total)
+  }
+
   @Action({ rawError: true })
   public indexAdmin(payload: IAdminListForm): Promise<void> {
     const { limit, offset, order } = payload
@@ -74,12 +80,6 @@ export default class AdminModule extends VuexModule {
           reject(new ApiError(status, data.message, data))
         })
     })
-  }
-
-  @Action({})
-  public factory(): void {
-    this.setUsers(initialState.users)
-    this.setTotal(initialState.total)
   }
 
   @Action({ rawError: true })

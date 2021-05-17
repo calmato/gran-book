@@ -1,6 +1,6 @@
 import { setup, refresh } from '~~/spec/helpers/store-helper'
 import { CommonStore } from '~/store'
-import { ISnackbar } from '~/types/store'
+import { ISnackbar, PromiseState } from '~/types/store'
 import { ApiError } from '~/types/exception'
 
 describe('store/common', () => {
@@ -19,6 +19,10 @@ describe('store/common', () => {
 
     it('getSnackbarMessage', () => {
       expect(CommonStore.getSnackbarMessage).toBe('')
+    })
+
+    it('getPromiseState', () => {
+      expect(CommonStore.getPromiseState).toBe(PromiseState.NONE)
     })
   })
 
@@ -145,6 +149,20 @@ describe('store/common', () => {
         CommonStore.hiddenSnackbar()
         expect(CommonStore.getSnackbarColor).toBe('info')
         expect(CommonStore.getSnackbarMessage).toBe('')
+      })
+    })
+
+    describe('startConnection', () => {
+      it('stateが更新されること', () => {
+        CommonStore.startConnection()
+        expect(CommonStore.getPromiseState).toBe(PromiseState.LOADING)
+      })
+    })
+
+    describe('endConnection', () => {
+      it('stateが更新されること', () => {
+        CommonStore.endConnection()
+        expect(CommonStore.getPromiseState).toBe(PromiseState.NONE)
       })
     })
   })

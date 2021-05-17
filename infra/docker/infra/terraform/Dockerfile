@@ -1,6 +1,6 @@
 FROM alpine:3.12.3
 
-ENV TERRAFORM_VERSION 0.14.4
+ENV TERRAFORM_VERSION 0.15.3
 
 RUN apk add --no-cache \
       ca-certificates \
