@@ -1,7 +1,15 @@
 import { setup, setSafetyMode, refresh } from '~~/spec/helpers/store-helper'
 import { AdminStore } from '~/store'
 import { ApiError } from '~/types/exception'
-import { AdminEditOptions, AdminNewOptions, IAdminEditForm, IAdminEditParams, IAdminListForm, IAdminNewForm, IAdminNewParams } from '~/types/forms'
+import {
+  AdminEditOptions,
+  AdminNewOptions,
+  IAdminEditForm,
+  IAdminEditParams,
+  IAdminListForm,
+  IAdminNewForm,
+  IAdminNewParams,
+} from '~/types/forms'
 
 describe('store/admin', () => {
   beforeEach(() => {
