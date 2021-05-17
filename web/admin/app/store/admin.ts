@@ -145,7 +145,7 @@ export default class AdminModule extends VuexModule {
 
     return new Promise((resolve: () => void, reject: (reason: ApiError) => void) => {
       $axios
-        .patch(`/v1/admin/${userId}`, req)
+        .$patch(`/v1/admin/${userId}`, req)
         .then(() => {
           // TODO: set user
           resolve()
