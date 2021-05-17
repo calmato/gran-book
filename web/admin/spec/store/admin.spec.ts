@@ -1,7 +1,15 @@
 import { setup, setSafetyMode, refresh } from '~~/spec/helpers/store-helper'
 import { AdminStore } from '~/store'
 import { ApiError } from '~/types/exception'
-import { AdminNewOptions, IAdminListForm, IAdminNewForm, IAdminNewParams } from '~/types/forms'
+import {
+  AdminEditOptions,
+  AdminNewOptions,
+  IAdminEditForm,
+  IAdminEditParams,
+  IAdminListForm,
+  IAdminNewForm,
+  IAdminNewParams,
+} from '~/types/forms'
 
 describe('store/admin', () => {
   beforeEach(() => {
@@ -163,6 +171,93 @@ describe('store/admin', () => {
         it('rejectが返されること', async () => {
           const err = new ApiError(400, 'api error', { status: 400, code: 0, message: 'api error', errors: [] })
           await expect(AdminStore.createAdmin(form)).rejects.toThrow(err)
+        })
+      })
+    })
+
+    describe('updateAdmin', () => {
+      describe('success', () => {
+        let form: IAdminEditForm
+        let payload: { userId: string; form: IAdminEditForm }
+        beforeEach(() => {
+          setSafetyMode(true)
+          const params: IAdminEditParams = {
+            email: 'test@calmato.com',
+            phoneNumber: '000-0000-0000',
+            role: 1,
+            lastName: 'テスト',
+            firstName: 'ユーザ',
+            lastNameKana: 'てすと',
+            firstNameKana: 'ゆーざ',
+            thumbnail: null,
+            thumbnailUrl: 'https://calmato.com/images/01',
+          }
+          form = { params, options: AdminEditOptions }
+          payload = { userId: '00000000-0000-0000-00000000', form }
+        })
+
+        // TODO: 実装後、テストを作成
+        // it('stateが更新されていること', async () => {})
+
+        it('resolveが返されること', async () => {
+          await expect(AdminStore.updateAdmin(payload)).resolves.toBeUndefined()
+        })
+      })
+
+      describe('failure', () => {
+        let form: IAdminEditForm
+        let payload: { userId: string; form: IAdminEditForm }
+        beforeEach(() => {
+          setSafetyMode(false)
+          const params: IAdminEditParams = {
+            email: '',
+            phoneNumber: '000-0000-0000',
+            role: 0,
+            lastName: '',
+            firstName: '',
+            lastNameKana: '',
+            firstNameKana: '',
+            thumbnail: null,
+            thumbnailUrl: '',
+          }
+          form = { params, options: AdminEditOptions }
+          payload = { userId: '00000000-0000-0000-00000000', form }
+        })
+
+        it('rejectが返されること', async () => {
+          const err = new ApiError(400, 'api error', { status: 400, code: 0, message: 'api error', errors: [] })
+          await expect(AdminStore.updateAdmin(payload)).rejects.toThrow(err)
+        })
+      })
+    })
+
+    describe('uploadThumbnail', () => {
+      describe('success', () => {
+        let file: File
+        let payload: { userId: string; file: File }
+        beforeEach(() => {
+          setSafetyMode(true)
+          file = new File(['thumbnail'], 'thumbnail.png', { lastModified: Date.now(), type: 'image/png' })
+          payload = { userId: '00000000-0000-0000-00000000', file }
+        })
+
+        it('resolveが返されること', async () => {
+          await expect(AdminStore.uploadThumbnail(payload)).resolves.toBe('https://calmato.com/images/01')
+        })
+      })
+
+      describe('failure', () => {
+        let file: File
+        let payload: { userId: string; file: File }
+        beforeEach(() => {
+          setSafetyMode(false)
+          file = new File(['thumbnail'], 'thumbnail.png', { lastModified: Date.now(), type: 'image/png' })
+          payload = { userId: '00000000-0000-0000-00000000', file }
+        })
+
+        it('rejectが返されること', async () => {
+          const err = new ApiError(400, 'api error', { status: 400, code: 0, message: 'api error', errors: [] })
+          await expect(AdminStore.uploadThumbnail(payload)).rejects.toThrow(err)
         })
       })
     })
