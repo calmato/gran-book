@@ -33,12 +33,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, SetupContext } from '@nuxtjs/composition-api'
+import { defineComponent, PropType, SetupContext } from '@nuxtjs/composition-api'
+import { IAdminEditProfileForm } from '~/types/forms'
 
 export default defineComponent({
   props: {
     form: {
-      type: Object, // TODO: define type
+      type: Object as PropType<IAdminEditProfileForm>,
       required: false,
       default: () => ({}),
     },

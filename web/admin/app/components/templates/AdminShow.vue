@@ -88,6 +88,7 @@ import AdminEditSecurityForm from '~/components/organisms/AdminEditSecurityForm.
 import AdminShowContactList from '~/components/organisms/AdminShowContactList.vue'
 import AdminShowProfileList from '~/components/organisms/AdminShowProfileList.vue'
 import AdminShowSecurityList from '~/components/organisms/AdminShowSecurityList.vue'
+import { IAdminEditContactForm, IAdminEditProfileForm, IAdminEditSecurityForm } from '~/types/forms'
 import { IAdminUser } from '~/types/store'
 
 export default defineComponent({
@@ -127,17 +128,17 @@ export default defineComponent({
       default: false,
     },
     editProfileForm: {
-      type: Object, // TODO: define type
+      type: Object as PropType<IAdminEditProfileForm>,
       required: false,
       default: () => ({}),
     },
     editContactForm: {
-      type: Object, // TODO: define type
+      type: Object as PropType<IAdminEditContactForm>,
       required: false,
       default: () => ({}),
     },
     editSecurityForm: {
-      type: Object, // TODO: define type
+      type: Object as PropType<IAdminEditSecurityForm>,
       required: false,
       default: () => ({}),
     },

@@ -19,6 +19,7 @@
 import { computed, defineComponent, reactive, ref, SetupContext, useAsync } from '@nuxtjs/composition-api'
 import AdminShow from '~/components/templates/AdminShow.vue'
 import { AdminStore } from '~/store'
+import { AdminEditContactOptions, AdminEditProfileOptions, AdminEditSecurityOptions, IAdminEditContactForm, IAdminEditContactParams, IAdminEditProfileForm, IAdminEditProfileParams, IAdminEditSecurityForm, IAdminEditSecurityParams } from '~/types/forms'
 
 export default defineComponent({
   components: {
@@ -29,7 +30,7 @@ export default defineComponent({
     const route = root.$route
     const store = root.$store
 
-    const initializeEditProfileForm = {
+    const initializeEditProfileForm: IAdminEditProfileParams = {
       role: 2,
       lastName: '',
       firstName: '',
@@ -39,12 +40,12 @@ export default defineComponent({
       thumbnailUrl: '',
     }
 
-    const initializeEditContactForm = {
+    const initializeEditContactForm: IAdminEditContactParams = {
       email: '',
       phoneNumber: '',
     }
 
-    const initializeEditSecurityForm = {
+    const initializeEditSecurityForm: IAdminEditSecurityParams = {
       password: '',
       passwordConfirmation: '',
     }
@@ -53,25 +54,31 @@ export default defineComponent({
     const editContact = ref<boolean>(false)
     const editSecurity = ref<boolean>(false)
 
-    const editProfileForm = reactive({
+    const editProfileForm = reactive<IAdminEditProfileForm>({
       params: {
         ...initializeEditProfileForm,
       },
-      options: {},
+      options: {
+        ...AdminEditProfileOptions,
+      },
     })
 
-    const editContactForm = reactive({
+    const editContactForm = reactive<IAdminEditContactForm>({
       params: {
         ...initializeEditContactForm,
       },
-      options: {},
+      options: {
+        ...AdminEditContactOptions,
+      },
     })
 
-    const editSecurityForm = reactive({
+    const editSecurityForm = reactive<IAdminEditSecurityForm>({
       params: {
         ...initializeEditSecurityForm,
       },
-      options: {},
+      options: {
+        ...AdminEditSecurityOptions,
+      },
     })
 
     const role = computed(() => store.getters['auth/getRole'])

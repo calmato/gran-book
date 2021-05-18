@@ -10,7 +10,7 @@ export interface IAdminCreateRequest {
   firstNameKana: string
 }
 
-export interface IAdminUpdateRequest {
+export interface IAdminUpdateProfileRequest {
   email: string
   phoneNumber: string
   role: number
@@ -19,4 +19,14 @@ export interface IAdminUpdateRequest {
   lastNameKana: string
   firstNameKana: string
   thumbnailUrl: string
+}
+
+export interface IAdminUpdateContactRequest {
+  email: string
+  phoneNumber: string
+}
+
+export interface IAdminUpdatePasswordRequest {
+  password: string
+  passwordConfirmation: string
 }
