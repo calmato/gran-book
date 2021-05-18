@@ -161,10 +161,12 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, reactive, ref, SetupContext } from '@vue/composition-api'
+import { computed, defineComponent, reactive, ref, SetupContext, useAsync } from '@nuxtjs/composition-api'
+import { AdminStore } from '~/store'
 
 export default defineComponent({
   setup(_, { root }: SetupContext) {
+    const route = root.$route
     const store = root.$store
 
     const roleItems = [
@@ -191,18 +193,6 @@ export default defineComponent({
     const editSecurity = ref<boolean>(false)
     const deleteDialog = ref<boolean>(false)
 
-    const user = reactive({
-      email: 'test-user@calmato.jp',
-      phoneNumber: '000-0000-0000',
-      lastName: 'Calmato',
-      firstName: '管理者',
-      lastNameKana: 'かるまーと',
-      firstNameKana: 'かんりしゃ',
-      role: 2,
-      thumbnail: null,
-      thumbnailUrl: '/thumbnail.png',
-      selfIntroduction: 'よろしくお願いします。',
-    })
     const editForm = reactive({
       params: {
         ...initializeEditForm,
@@ -211,6 +201,12 @@ export default defineComponent({
     })
 
     const role = computed(() => store.getters['auth/getRole'])
+    const user = computed(() => store.getters['admin/getUser'])
+
+    useAsync(async () => {
+      const { id } = route.params
+      await AdminStore.showAdmin(id)
+    })
 
     const getRole = (role: number): string => {
       switch (role) {

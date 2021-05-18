@@ -13,6 +13,21 @@ import {
 import { IAdminState, IAdminUser } from '~/types/store'
 
 const initialState: IAdminState = {
+  user: {
+    id: '',
+    username: '',
+    email: '',
+    phoneNumber: '',
+    role: 0,
+    thumbnailUrl: '',
+    selfIntroduction: '',
+    lastName: '',
+    firstName: '',
+    lastNameKana: '',
+    firstNameKana: '',
+    createdAt: '',
+    updatedAt: '',
+  },
   users: [],
   total: 0,
 }
@@ -23,8 +38,13 @@ const initialState: IAdminState = {
   namespaced: true,
 })
 export default class AdminModule extends VuexModule {
+  private user: IAdminUser = initialState.user
   private users: IAdminUser[] = initialState.users
   private total: number = initialState.total
+
+  public get getUser(): IAdminUser {
+    return this.user
+  }
 
   public get getUsers(): IAdminUser[] {
     return this.users
@@ -32,6 +52,11 @@ export default class AdminModule extends VuexModule {
 
   public get getTotal(): number {
     return this.total
+  }
+
+  @Mutation
+  private setUser(user: IAdminUser): void {
+    this.user = user
   }
 
   @Mutation
@@ -79,6 +104,23 @@ export default class AdminModule extends VuexModule {
           )
           this.setUsers(data)
           this.setTotal(total)
+          resolve()
+        })
+        .catch((err: any) => {
+          const { data, status }: IErrorResponse = err.response
+          reject(new ApiError(status, data.message, data))
+        })
+    })
+  }
+
+  @Action({ rawError: true })
+  public showAdmin(userId: string): Promise<void> {
+    return new Promise((resolve: () => void, reject: (reason: Error) => void) => {
+      $axios
+        .$get(`/v1/admin/${userId}`)
+        .then((res: IAdminResponse) => {
+          const data: IAdminUser = { ...res }
+          this.setUser(data)
           resolve()
         })
         .catch((err: any) => {
