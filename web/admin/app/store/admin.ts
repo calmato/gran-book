@@ -1,8 +1,19 @@
 import { Action, Module, Mutation, VuexModule } from 'vuex-module-decorators'
 import { $axios } from '~/plugins/axios'
 import { ApiError } from '~/types/exception'
-import { IAdminEditForm, IAdminListForm, IAdminNewForm } from '~/types/forms'
-import { IAdminCreateRequest, IAdminUpdateRequest } from '~/types/requests'
+import {
+  IAdminEditContactForm,
+  IAdminEditProfileForm,
+  IAdminEditSecurityForm,
+  IAdminListForm,
+  IAdminNewForm,
+} from '~/types/forms'
+import {
+  IAdminCreateRequest,
+  IAdminUpdateContactRequest,
+  IAdminUpdatePasswordRequest,
+  IAdminUpdateProfileRequest,
+} from '~/types/requests'
 import {
   IAdminListResponse,
   IAdminListResponseUser,
@@ -171,12 +182,10 @@ export default class AdminModule extends VuexModule {
   }
 
   @Action({ rawError: true })
-  public updateAdmin({ userId, form }: { userId: string; form: IAdminEditForm }): Promise<void> {
-    const { email, phoneNumber, role, lastName, firstName, lastNameKana, firstNameKana, thumbnailUrl } = form.params
+  public updateProfile({ userId, form }: { userId: string; form: IAdminEditProfileForm }): Promise<void> {
+    const { role, lastName, firstName, lastNameKana, firstNameKana, thumbnailUrl } = form.params
 
-    const req: IAdminUpdateRequest = {
-      email,
-      phoneNumber,
+    const req: IAdminUpdateProfileRequest = {
       role,
       lastName,
       firstName,
@@ -187,9 +196,58 @@ export default class AdminModule extends VuexModule {
 
     return new Promise((resolve: () => void, reject: (reason: ApiError) => void) => {
       $axios
-        .$patch(`/v1/admin/${userId}`, req)
-        .then(() => {
-          // TODO: set user
+        .$patch(`/v1/admin/${userId}/profile`, req)
+        .then((res: IAdminResponse) => {
+          const data: IAdminUser = { ...res }
+          this.addUser(data)
+          resolve()
+        })
+        .catch((err: any) => {
+          const { data, status }: IErrorResponse = err.response
+          reject(new ApiError(status, data.message, data))
+        })
+    })
+  }
+
+  @Action({ rawError: true })
+  public updateContact({ userId, form }: { userId: string; form: IAdminEditContactForm }): Promise<void> {
+    const { email, phoneNumber } = form.params
+
+    const req: IAdminUpdateContactRequest = {
+      email,
+      phoneNumber,
+    }
+
+    return new Promise((resolve: () => void, reject: (reason: ApiError) => void) => {
+      $axios
+        .$patch(`/v1/admin/${userId}/password`, req)
+        .then((res: IAdminResponse) => {
+          const data: IAdminUser = { ...res }
+          this.addUser(data)
+          resolve()
+        })
+        .catch((err: any) => {
+          const { data, status }: IErrorResponse = err.response
+          reject(new ApiError(status, data.message, data))
+        })
+    })
+  }
+
+  @Action({ rawError: true })
+  public updatePassword({ userId, form }: { userId: string; form: IAdminEditSecurityForm }): Promise<void> {
+    const { password, passwordConfirmation } = form.params
+
+    const req: IAdminUpdatePasswordRequest = {
+      password,
+      passwordConfirmation,
+    }
+
+    return new Promise((resolve: () => void, reject: (reason: ApiError) => void) => {
+      $axios
+        .$patch(`/v1/admin/${userId}/contact`, req)
+        .then((res: IAdminResponse) => {
+          const data: IAdminUser = { ...res }
+          this.addUser(data)
           resolve()
         })
         .catch((err: any) => {

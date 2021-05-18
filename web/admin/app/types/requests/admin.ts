@@ -11,8 +11,6 @@ export interface IAdminCreateRequest {
 }
 
 export interface IAdminUpdateProfileRequest {
-  email: string
-  phoneNumber: string
   role: number
   lastName: string
   firstName: string

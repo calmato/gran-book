@@ -19,7 +19,17 @@
 import { computed, defineComponent, reactive, ref, SetupContext, useAsync } from '@nuxtjs/composition-api'
 import AdminShow from '~/components/templates/AdminShow.vue'
 import { AdminStore } from '~/store'
-import { AdminEditContactOptions, AdminEditProfileOptions, AdminEditSecurityOptions, IAdminEditContactForm, IAdminEditContactParams, IAdminEditProfileForm, IAdminEditProfileParams, IAdminEditSecurityForm, IAdminEditSecurityParams } from '~/types/forms'
+import {
+  AdminEditContactOptions,
+  AdminEditProfileOptions,
+  AdminEditSecurityOptions,
+  IAdminEditContactForm,
+  IAdminEditContactParams,
+  IAdminEditProfileForm,
+  IAdminEditProfileParams,
+  IAdminEditSecurityForm,
+  IAdminEditSecurityParams,
+} from '~/types/forms'
 
 export default defineComponent({
   components: {
