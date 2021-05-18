@@ -1,4 +1,4 @@
-module github.com/calmato/gran-book/api/server/notification
+module github.com/calmato/gran-book/api/server/information
 
 go 1.15
 

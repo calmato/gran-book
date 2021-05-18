@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 
-	"github.com/calmato/gran-book/api/server/notification/internal/domain/auth"
+	"github.com/calmato/gran-book/api/server/information/internal/domain/auth"
 )
 
 type authService struct {

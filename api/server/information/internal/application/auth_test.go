@@ -1,16 +1,15 @@
-package service
+package application
 
 import (
 	"context"
 	"reflect"
 	"testing"
 
-	"github.com/calmato/gran-book/api/server/notification/internal/domain/exception"
-	mock_auth "github.com/calmato/gran-book/api/server/notification/mock/domain/auth"
+	mock_auth "github.com/calmato/gran-book/api/server/information/mock/domain/auth"
 	"github.com/golang/mock/gomock"
 )
 
-func TestAuthService_Authentication(t *testing.T) {
+func TestAuthApplication_Authentication(t *testing.T) {
 	testCases := map[string]struct {
 		Expected struct {
 			UID   string
@@ -26,15 +25,6 @@ func TestAuthService_Authentication(t *testing.T) {
 				Error: nil,
 			},
 		},
-		"ng_unauthorized": {
-			Expected: struct {
-				UID   string
-				Error error
-			}{
-				UID:   "",
-				Error: exception.Unauthorized.New(nil),
-			},
-		},
 	}
 
 	for result, tc := range testCases {
@@ -44,11 +34,11 @@ func TestAuthService_Authentication(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		arm := mock_auth.NewMockRepository(ctrl)
-		arm.EXPECT().Authentication(ctx).Return(tc.Expected.UID, tc.Expected.Error)
+		asm := mock_auth.NewMockService(ctrl)
+		asm.EXPECT().Authentication(ctx).Return(tc.Expected.UID, tc.Expected.Error)
 
 		t.Run(result, func(t *testing.T) {
-			target := NewAuthService(arm)
+			target := NewAuthApplication(asm)
 
 			got, err := target.Authentication(ctx)
 			if !reflect.DeepEqual(err, tc.Expected.Error) {

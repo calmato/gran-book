@@ -3,10 +3,10 @@ package config
 import (
 	"context"
 
-	"github.com/calmato/gran-book/api/server/notification/lib/firebase"
-	"github.com/calmato/gran-book/api/server/notification/lib/firebase/firestore"
-	"github.com/calmato/gran-book/api/server/notification/lib/firebase/storage"
-	"github.com/calmato/gran-book/api/server/notification/registry"
+	"github.com/calmato/gran-book/api/server/information/lib/firebase"
+	"github.com/calmato/gran-book/api/server/information/lib/firebase/firestore"
+	"github.com/calmato/gran-book/api/server/information/lib/firebase/storage"
+	"github.com/calmato/gran-book/api/server/information/registry"
 	"google.golang.org/api/option"
 )
 

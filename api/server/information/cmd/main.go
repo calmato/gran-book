@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/calmato/gran-book/api/server/notification/config"
+	"github.com/calmato/gran-book/api/server/information/config"
 )
 
 func main() {

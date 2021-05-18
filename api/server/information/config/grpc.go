@@ -7,7 +7,7 @@ import (
 	"net"
 	"strings"
 
-	"github.com/calmato/gran-book/api/server/notification/registry"
+	"github.com/calmato/gran-book/api/server/information/registry"
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
 	grpc_ctxzap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap/ctxzap"
@@ -37,9 +37,9 @@ func newGRPCServer(port, logPath, logLevel string, reg *registry.Registry) (*grp
 	}
 
 	s := grpc.NewServer(opts...)
-	// pb.RegisterNotificationServiceServer(s, &v1.NotificationServer{
+	// pb.RegisterinformationServiceServer(s, &v1.informationServer{
 	// 	AuthApplication: reg.AuthApplication,
-	// 	NotificationApplication: reg.NotificationApplication,
+	// 	informationApplication: reg.informationApplication,
 	// })
 
 	grpc_prometheus.Register(s)

@@ -11,7 +11,7 @@ settings:
       status: false
 
 schema:
-  - name: notification_api
+  - name: information_api
     path: .
     commands:
       install:

@@ -7,9 +7,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/calmato/gran-book/api/server/notification/internal/domain/auth"
-	"github.com/calmato/gran-book/api/server/notification/internal/domain/exception"
-	"github.com/calmato/gran-book/api/server/notification/lib/metadata"
+	"github.com/calmato/gran-book/api/server/information/internal/domain/auth"
+	"github.com/calmato/gran-book/api/server/information/internal/domain/exception"
+	"github.com/calmato/gran-book/api/server/information/lib/metadata"
 	"golang.org/x/xerrors"
 )
 

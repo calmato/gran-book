@@ -1,11 +1,11 @@
 package registry
 
 import (
-	"github.com/calmato/gran-book/api/server/notification/internal/application"
-	"github.com/calmato/gran-book/api/server/notification/internal/infrastructure/repository"
-	"github.com/calmato/gran-book/api/server/notification/internal/infrastructure/service"
-	"github.com/calmato/gran-book/api/server/notification/lib/firebase/firestore"
-	gcs "github.com/calmato/gran-book/api/server/notification/lib/firebase/storage"
+	"github.com/calmato/gran-book/api/server/information/internal/application"
+	"github.com/calmato/gran-book/api/server/information/internal/infrastructure/repository"
+	"github.com/calmato/gran-book/api/server/information/internal/infrastructure/service"
+	"github.com/calmato/gran-book/api/server/information/lib/firebase/firestore"
+	gcs "github.com/calmato/gran-book/api/server/information/lib/firebase/storage"
 )
 
 // Registry - DIコンテナ

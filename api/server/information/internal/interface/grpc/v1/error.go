@@ -3,7 +3,7 @@ package v1
 import (
 	"fmt"
 
-	"github.com/calmato/gran-book/api/server/notification/internal/domain/exception"
+	"github.com/calmato/gran-book/api/server/information/internal/domain/exception"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
