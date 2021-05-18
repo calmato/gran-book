@@ -15,21 +15,6 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="editDialog" width="600px" scrollable @click:outside="$emit('update:edit-dialog', false)">
-      <v-card>
-        <v-toolbar color="primary" dark>管理者ユーザー 編集</v-toolbar>
-        <v-card-text>
-          <admin-edit-form :form="editForm" />
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="onClickEditClose"> Close </v-btn>
-          <v-btn color="blue darken-1" text :loading="loading" :disabled="loading" @click="onClickUpdateButton">
-            Save
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
     <v-layout wrap>
       <v-row>
         <v-col cols="12">
@@ -38,7 +23,7 @@
             <v-card-title>
               <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details />
               <v-spacer />
-              <v-btn color="primary" dark class="mb-2" @click="onClickNewButton">New Item</v-btn>
+              <v-btn v-if="role === 1" color="primary" dark class="mb-2" @click="onClickNewButton">New Item</v-btn>
             </v-card-title>
             <admin-list-table
               :loading="loading"
@@ -50,8 +35,7 @@
               :role="role"
               :users="users"
               :total="total"
-              @edit="onClickEditButton"
-              @delete="onClickDeleteButton"
+              @show="onClickShowButton"
               @update:page="$emit('update:page', $event)"
               @update:items-per-page="$emit('update:items-per-page', $event)"
               @update:sort-by="$emit('update:sort-by', $event)"
@@ -65,7 +49,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, SetupContext, PropType } from '@nuxtjs/composition-api'
+import { defineComponent, SetupContext, PropType } from '@nuxtjs/composition-api'
 import TheFormGroup from '~/components/atoms/TheFormGroup.vue'
 import TheSelect from '~/components/atoms/TheSelect.vue'
 import TheTextField from '~/components/atoms/TheTextField.vue'
@@ -141,21 +125,9 @@ export default defineComponent({
       required: false,
       default: false,
     },
-    editForm: {
-      type: Object as PropType<IAdminEditForm>,
-      required: false,
-      default: () => ({}),
-    },
-    editDialog: {
-      type: Boolean,
-      required: false,
-      default: false,
-    },
   },
 
   setup(_, { emit }: SetupContext) {
-    const dialog = ref<boolean>(false)
-
     const onClickNewButton = (): void => {
       emit('new:open')
     }
@@ -168,31 +140,15 @@ export default defineComponent({
       emit('create')
     }
 
-    const onClickEditButton = (index: number): void => {
-      emit('edit', index)
-    }
-
-    const onClickEditClose = (): void => {
-      emit('edit:close')
-    }
-
-    const onClickUpdateButton = (): void => {
-      emit('update')
-    }
-
-    const onClickDeleteButton = (index: number): void => {
-      emit('delete', index)
+    const onClickShowButton = (userId: string): void => {
+      emit('show', userId)
     }
 
     return {
-      dialog,
       onClickNewButton,
       onClickNewClose,
       onClickCreateButton,
-      onClickEditButton,
-      onClickEditClose,
-      onClickUpdateButton,
-      onClickDeleteButton,
+      onClickShowButton,
     }
   },
 })
