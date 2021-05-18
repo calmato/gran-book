@@ -143,7 +143,7 @@ export default defineComponent({
     },
   },
 
-  setup(props, { emit }: SetupContext) {
+  setup(_, { emit }: SetupContext) {
     const roleItems = [
       { text: '管理者', value: 1 },
       { text: '開発者', value: 2 },
