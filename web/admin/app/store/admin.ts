@@ -220,7 +220,7 @@ export default class AdminModule extends VuexModule {
 
     return new Promise((resolve: () => void, reject: (reason: ApiError) => void) => {
       $axios
-        .$patch(`/v1/admin/${userId}/password`, req)
+        .$patch(`/v1/admin/${userId}/contact`, req)
         .then((res: IAdminResponse) => {
           const data: IAdminUser = { ...res }
           this.addUser(data)
@@ -244,7 +244,7 @@ export default class AdminModule extends VuexModule {
 
     return new Promise((resolve: () => void, reject: (reason: ApiError) => void) => {
       $axios
-        .$patch(`/v1/admin/${userId}/contact`, req)
+        .$patch(`/v1/admin/${userId}/password`, req)
         .then((res: IAdminResponse) => {
           const data: IAdminUser = { ...res }
           this.addUser(data)
@@ -273,6 +273,21 @@ export default class AdminModule extends VuexModule {
         .$post(`/v1/admin/${userId}/thumbnail`, params, config)
         .then((res: IAdminThumbnailResponse) => {
           resolve(res.thumbnailUrl)
+        })
+        .catch((err: any) => {
+          const { data, status }: IErrorResponse = err.response
+          reject(new ApiError(status, data.message, data))
+        })
+    })
+  }
+
+  @Action({ rawError: true })
+  public deleteAdmin(userId: string): Promise<void> {
+    return new Promise((resolve: () => void, reject: (reason: ApiError) => void) => {
+      $axios
+        .$delete(`/v1/admin/${userId}`)
+        .then(() => {
+          resolve()
         })
         .catch((err: any) => {
           const { data, status }: IErrorResponse = err.response

@@ -18,7 +18,7 @@
 <script lang="ts">
 import { computed, defineComponent, reactive, ref, SetupContext, useAsync } from '@nuxtjs/composition-api'
 import AdminShow from '~/components/templates/AdminShow.vue'
-import { AdminStore } from '~/store'
+import { AdminStore, CommonStore } from '~/store'
 import {
   AdminEditContactOptions,
   AdminEditProfileOptions,
@@ -38,6 +38,7 @@ export default defineComponent({
 
   setup(_, { root }: SetupContext) {
     const route = root.$route
+    const router = root.$router
     const store = root.$store
 
     const initializeEditProfileForm: IAdminEditProfileParams = {
@@ -117,24 +118,64 @@ export default defineComponent({
       })
     })
 
-    const handleClickUpdateProfile = (): void => {
-      console.log('debug', 'update profile', editProfileForm)
-      editProfile.value = false
+    const handleClickUpdateProfile = async (): Promise<void> => {
+      CommonStore.startConnection()
+      await AdminStore.updateProfile({ userId: user.value.id, form: editProfileForm })
+        .then(() => {
+          editProfile.value = false
+          CommonStore.showSnackbar({ color: 'info', message: '管理者情報を更新しました。' })
+        })
+        .catch((err: Error) => {
+          CommonStore.showErrorInSnackbar(err)
+        })
+        .finally(() => {
+          CommonStore.endConnection()
+        })
     }
 
-    const handleClickUpdateContact = (): void => {
-      console.log('debug', 'update contact', editContactForm)
-      editContact.value = false
+    const handleClickUpdateContact = async (): Promise<void> => {
+      CommonStore.startConnection()
+      await AdminStore.updateContact({ userId: user.value.id, form: editContactForm })
+        .then(() => {
+          editContact.value = false
+          CommonStore.showSnackbar({ color: 'info', message: '管理者情報を更新しました。' })
+        })
+        .catch((err: Error) => {
+          CommonStore.showErrorInSnackbar(err)
+        })
+        .finally(() => {
+          CommonStore.endConnection()
+        })
     }
 
-    const handleClickUpdateSecurity = (): void => {
-      console.log('debug', 'update security', editSecurityForm)
-      editSecurity.value = false
+    const handleClickUpdateSecurity = async (): Promise<void> => {
+      CommonStore.startConnection()
+      await AdminStore.updatePassword({ userId: user.value.id, form: editSecurityForm })
+        .then(() => {
+          editSecurity.value = false
+          CommonStore.showSnackbar({ color: 'info', message: '管理者情報を更新しました。' })
+        })
+        .catch((err: Error) => {
+          CommonStore.showErrorInSnackbar(err)
+        })
+        .finally(() => {
+          CommonStore.endConnection()
+        })
     }
 
-    const handleClickDelete = (): void => {
-      console.log('debug', 'delete')
-      editProfile.value = false
+    const handleClickDelete = async (): Promise<void> => {
+      CommonStore.startConnection()
+      await AdminStore.deleteAdmin(user.value.id)
+        .then(() => {
+          CommonStore.showSnackbar({ color: 'info', message: '管理者権限を削除しました。' })
+        })
+        .catch((err: Error) => {
+          CommonStore.showErrorInSnackbar(err)
+        })
+        .finally(() => {
+          router.push('/admin')
+          CommonStore.endConnection()
+        })
     }
 
     return {

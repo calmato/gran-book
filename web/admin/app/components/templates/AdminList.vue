@@ -53,7 +53,6 @@ import { defineComponent, SetupContext, PropType } from '@nuxtjs/composition-api
 import TheFormGroup from '~/components/atoms/TheFormGroup.vue'
 import TheSelect from '~/components/atoms/TheSelect.vue'
 import TheTextField from '~/components/atoms/TheTextField.vue'
-import AdminEditForm from '~/components/organisms/AdminEditForm.vue'
 import AdminListTable from '~/components/organisms/AdminListTable.vue'
 import AdminNewForm from '~/components/organisms/AdminNewForm.vue'
 import { IAdminNewForm } from '~/types/forms'
@@ -61,7 +60,6 @@ import { IAdminUser } from '~/types/store'
 
 export default defineComponent({
   components: {
-    AdminEditForm,
     AdminListTable,
     AdminNewForm,
     TheFormGroup,
