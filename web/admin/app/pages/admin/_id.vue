@@ -1,5 +1,6 @@
 <template>
   <admin-show
+    :cuid="cuid"
     :role="role"
     :user="user"
     :edit-profile.sync="editProfile"
@@ -92,6 +93,7 @@ export default defineComponent({
       },
     })
 
+    const cuid = computed(() => store.getters['auth/getId'])
     const role = computed(() => store.getters['auth/getRole'])
     const user = computed(() => store.getters['admin/getUser'])
 
@@ -179,6 +181,7 @@ export default defineComponent({
     }
 
     return {
+      cuid,
       role,
       user,
       editProfile,

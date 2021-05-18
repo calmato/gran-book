@@ -17,7 +17,7 @@
           <v-card-title>
             プロフィール
             <v-spacer />
-            <v-icon v-if="role === 1" @click="$emit('update:edit-profile', !editProfile)">
+            <v-icon v-if="canEdit()" @click="$emit('update:edit-profile', !editProfile)">
               {{ editProfile ? 'mdi-close' : 'mdi-pencil' }}
             </v-icon>
           </v-card-title>
@@ -39,7 +39,7 @@
           <v-card-title>
             連絡先
             <v-spacer />
-            <v-icon v-if="role === 1" @click="$emit('update:edit-contact', !editContact)">
+            <v-icon v-if="canEdit()" @click="$emit('update:edit-contact', !editContact)">
               {{ editContact ? 'mdi-close' : 'mdi-pencil' }}
             </v-icon>
           </v-card-title>
@@ -60,7 +60,7 @@
           <v-card-title>
             セキュリティ
             <v-spacer />
-            <v-icon v-if="role === 1" @click="$emit('update:edit-security', !editSecurity)">
+            <v-icon v-if="canEdit()" @click="$emit('update:edit-security', !editSecurity)">
               {{ editSecurity ? 'mdi-close' : 'mdi-pencil' }}
             </v-icon>
           </v-card-title>
@@ -102,6 +102,11 @@ export default defineComponent({
   },
 
   props: {
+    cuid: {
+      type: String,
+      required: false,
+      default: '',
+    },
     role: {
       type: Number,
       required: false,
@@ -144,7 +149,7 @@ export default defineComponent({
     },
   },
 
-  setup(_, { emit }: SetupContext) {
+  setup(props, { emit }: SetupContext) {
     const roleItems = [
       { text: '管理者', value: 1 },
       { text: '開発者', value: 2 },
@@ -159,6 +164,14 @@ export default defineComponent({
 
     const closeDeleteDialog = (): void => {
       deleteDialog.value = false
+    }
+
+    const canEdit = (): boolean => {
+      if (!props.user) {
+        return false
+      }
+
+      return props.role === 1 && props.cuid !== props.user.id
     }
 
     const onSubmitProfile = (): void => {
@@ -180,6 +193,7 @@ export default defineComponent({
 
     return {
       roleItems,
+      canEdit,
       deleteDialog,
       openDeleteDialog,
       closeDeleteDialog,
