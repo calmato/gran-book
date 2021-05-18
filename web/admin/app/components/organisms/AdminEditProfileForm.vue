@@ -1,12 +1,26 @@
 <template>
-  <the-form-group>
+  <v-form class="px-4">
+    <v-list-item>
+      <v-list-item-content class="col col-3">
+        <v-list-item-subtitle>サムネイル</v-list-item-subtitle>
+      </v-list-item-content>
+      <v-list-item-content>
+        <v-img v-if="form.params.thumbnailUrl" :src="form.params.thumbnailUrl" max-width="240" contain />
+      </v-list-item-content>
+    </v-list-item>
+    <the-file-input
+      :file="form.params.thumbnail"
+      :label="form.options.thumbnail.label"
+      :rules="form.options.thumbnail.rules"
+      accept="image/*"
+      @change="onImagePicked"
+    />
     <v-row>
       <v-col cols="12" md="6">
         <the-text-field
           v-model="form.params.lastName"
           :label="form.options.lastName.label"
           :rules="form.options.lastName.rules"
-          :autofocus="true"
         />
       </v-col>
       <v-col cols="12" md="6">
@@ -33,53 +47,41 @@
         />
       </v-col>
     </v-row>
-    <the-text-field v-model="form.params.email" :label="form.options.email.label" :rules="form.options.email.rules" />
-    <the-text-field
-      v-model="form.params.phoneNumber"
-      :label="form.options.phoneNumber.label"
-      :rules="form.options.phoneNumber.rules"
-    />
     <the-select
       v-model="form.params.role"
       :label="form.options.role.label"
       :rules="form.options.role.rules"
       :items="roleItems"
     />
-    <v-img v-if="form.params.thumbnailUrl" :src="form.params.thumbnailUrl" width="auto" max-height="240" contain />
-    <the-file-input
-      :file="form.params.thumbnail"
-      :label="form.options.thumbnail.label"
-      :rules="form.options.thumbnail.rules"
-      accept="image/*"
-      @change="onImagePicked"
-    />
-  </the-form-group>
+    <v-btn color="primary" class="mt-4 mr-4" @click="onSubmit">変更する</v-btn>
+    <v-btn color="warning" class="mt-4 mr-4" @click="onDelete">管理者権限を削除する</v-btn>
+    <v-btn class="mt-4" @click="onCancel">キャンセル</v-btn>
+  </v-form>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@nuxtjs/composition-api'
+import { defineComponent, PropType, SetupContext } from '@nuxtjs/composition-api'
 import TheFileInput from '~/components/atoms/TheFileInput.vue'
-import TheFormGroup from '~/components/atoms/TheFormGroup.vue'
 import TheSelect from '~/components/atoms/TheSelect.vue'
 import TheTextField from '~/components/atoms/TheTextField.vue'
-import { IAdminEditForm } from '~/types/forms'
+import { IAdminEditProfileForm } from '~/types/forms'
 
 export default defineComponent({
   components: {
     TheFileInput,
-    TheFormGroup,
     TheSelect,
     TheTextField,
   },
 
   props: {
     form: {
-      type: Object as PropType<IAdminEditForm>,
-      required: true,
+      type: Object as PropType<IAdminEditProfileForm>,
+      required: false,
+      default: () => ({}),
     },
   },
 
-  setup(props) {
+  setup(props, { emit }: SetupContext) {
     const roleItems = [
       { text: '管理者', value: 1 },
       { text: '開発者', value: 2 },
@@ -105,9 +107,24 @@ export default defineComponent({
       })
     }
 
+    const onSubmit = (): void => {
+      emit('submit')
+    }
+
+    const onCancel = (): void => {
+      emit('cancel')
+    }
+
+    const onDelete = (): void => {
+      emit('delete')
+    }
+
     return {
       roleItems,
       onImagePicked,
+      onSubmit,
+      onCancel,
+      onDelete,
     }
   },
 })

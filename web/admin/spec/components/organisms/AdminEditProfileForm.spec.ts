@@ -1,15 +1,13 @@
 import { shallowMount } from '@vue/test-utils'
 import * as Options from '~~/spec/helpers/component-helper'
-import AdminEditForm from '~/components/organisms/AdminEditForm.vue'
-import { AdminEditOptions, IAdminEditForm, IAdminEditParams } from '~/types/forms'
+import AdminEditProfileForm from '~/components/organisms/AdminEditProfileForm.vue'
+import { AdminEditProfileOptions, IAdminEditProfileForm, IAdminEditProfileParams } from '~/types/forms'
 
-describe('components/organisms/AdminEditForm', () => {
+describe('components/organisms/AdminEditProfileForm', () => {
   let wrapper: any
 
   beforeEach(() => {
-    const params: IAdminEditParams = {
-      email: '',
-      phoneNumber: '',
+    const params: IAdminEditProfileParams = {
       role: 2,
       lastName: '',
       firstName: '',
@@ -18,9 +16,9 @@ describe('components/organisms/AdminEditForm', () => {
       thumbnail: null,
       thumbnailUrl: '',
     }
-    const form: IAdminEditForm = { params, options: AdminEditOptions }
+    const form: IAdminEditProfileForm = { params, options: AdminEditProfileOptions }
 
-    wrapper = shallowMount(AdminEditForm, {
+    wrapper = shallowMount(AdminEditProfileForm, {
       ...Options,
       propsData: { form },
     })
@@ -32,8 +30,6 @@ describe('components/organisms/AdminEditForm', () => {
         it('初期値', () => {
           expect(wrapper.props().form).toEqual({
             params: {
-              email: '',
-              phoneNumber: '',
               role: 2,
               lastName: '',
               firstName: '',
@@ -42,7 +38,7 @@ describe('components/organisms/AdminEditForm', () => {
               thumbnail: null,
               thumbnailUrl: '',
             },
-            options: AdminEditOptions,
+            options: AdminEditProfileOptions,
           })
         })
 
@@ -50,8 +46,6 @@ describe('components/organisms/AdminEditForm', () => {
           await wrapper.setProps({
             form: {
               params: {
-                email: 'test@calmato.com',
-                phoneNumber: '000-0000-0000',
                 role: 1,
                 lastName: 'テスト',
                 firstName: 'ユーザー',
@@ -60,13 +54,11 @@ describe('components/organisms/AdminEditForm', () => {
                 thumbnail: null,
                 thumbnailUrl: 'https://calmato.com/images/01',
               },
-              options: AdminEditOptions,
+              options: AdminEditProfileOptions,
             },
           })
           expect(wrapper.props().form).toEqual({
             params: {
-              email: 'test@calmato.com',
-              phoneNumber: '000-0000-0000',
               role: 1,
               lastName: 'テスト',
               firstName: 'ユーザー',
@@ -75,7 +67,7 @@ describe('components/organisms/AdminEditForm', () => {
               thumbnail: null,
               thumbnailUrl: 'https://calmato.com/images/01',
             },
-            options: AdminEditOptions,
+            options: AdminEditProfileOptions,
           })
         })
       })
@@ -88,6 +80,29 @@ describe('components/organisms/AdminEditForm', () => {
           { text: '開発者', value: 2 },
           { text: '運用者', value: 3 },
         ])
+      })
+    })
+
+    describe('methods', () => {
+      describe('onSubmit', () => {
+        it('emitが実行されること', async () => {
+          await wrapper.vm.onSubmit()
+          expect(wrapper.emitted('submit')).toBeTruthy()
+        })
+      })
+
+      describe('onCancel', () => {
+        it('emitが実行されること', async () => {
+          await wrapper.vm.onCancel()
+          expect(wrapper.emitted('cancel')).toBeTruthy()
+        })
+      })
+
+      describe('onDelete', () => {
+        it('emitが実行されること', async () => {
+          await wrapper.vm.onDelete()
+          expect(wrapper.emitted('delete')).toBeTruthy()
+        })
       })
     })
   })

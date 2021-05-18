@@ -1,7 +1,7 @@
 import { shallowMount } from '@vue/test-utils'
 import * as Options from '~~/spec/helpers/component-helper'
 import AdminList from '~/components/templates/AdminList.vue'
-import { AdminEditOptions, AdminNewOptions } from '~/types/forms'
+import { AdminNewOptions } from '~/types/forms'
 
 describe('components/templates/AdminList', () => {
   let wrapper: any
@@ -134,6 +134,17 @@ describe('components/templates/AdminList', () => {
         })
       })
 
+      describe('total', () => {
+        it('初期値', () => {
+          expect(wrapper.props().total).toBe(0)
+        })
+
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ total: 10 })
+          expect(wrapper.props().total).toBe(10)
+        })
+      })
+
       describe('newForm', () => {
         it('初期値', () => {
           expect(wrapper.props().newForm).toEqual({})
@@ -181,73 +192,6 @@ describe('components/templates/AdminList', () => {
           expect(wrapper.props().newDialog).toBeTruthy()
         })
       })
-
-      describe('total', () => {
-        it('初期値', () => {
-          expect(wrapper.props().total).toBe(0)
-        })
-
-        it('値が代入されること', async () => {
-          await wrapper.setProps({ total: 10 })
-          expect(wrapper.props().total).toBe(10)
-        })
-      })
-
-      describe('editForm', () => {
-        it('初期値', () => {
-          expect(wrapper.props().editForm).toEqual({})
-        })
-
-        it('値が代入されること', async () => {
-          await wrapper.setProps({
-            editForm: {
-              params: {
-                email: 'test@calmato.com',
-                phoneNumber: '000-0000-0000',
-                role: 1,
-                lastName: 'テスト',
-                firstName: 'ユーザー',
-                lastNameKana: 'てすと',
-                firstNameKana: 'ゆーざー',
-                thumbnail: null,
-                thumbnailUrl: 'https://calmato.com/images/01',
-              },
-              options: AdminEditOptions,
-            },
-          })
-          expect(wrapper.props().editForm).toEqual({
-            params: {
-              email: 'test@calmato.com',
-              phoneNumber: '000-0000-0000',
-              role: 1,
-              lastName: 'テスト',
-              firstName: 'ユーザー',
-              lastNameKana: 'てすと',
-              firstNameKana: 'ゆーざー',
-              thumbnail: null,
-              thumbnailUrl: 'https://calmato.com/images/01',
-            },
-            options: AdminEditOptions,
-          })
-        })
-      })
-
-      describe('editDialog', () => {
-        it('初期値', () => {
-          expect(wrapper.props().editDialog).toBeFalsy()
-        })
-
-        it('値が代入されること', async () => {
-          await wrapper.setProps({ editDialog: true })
-          expect(wrapper.props().editDialog).toBeTruthy()
-        })
-      })
-    })
-
-    describe('data', () => {
-      it('dialog', () => {
-        expect(wrapper.vm.dialog).toBeFalsy()
-      })
     })
 
     describe('methods', () => {
@@ -272,33 +216,11 @@ describe('components/templates/AdminList', () => {
         })
       })
 
-      describe('onClickEditButton', () => {
+      describe('onClickShowButton', () => {
         it('emitが実行されること', async () => {
-          await wrapper.vm.onClickEditButton(1)
-          expect(wrapper.emitted('edit')).toBeTruthy()
-          expect(wrapper.emitted('edit')[0][0]).toBe(1)
-        })
-      })
-
-      describe('onClickEditClose', () => {
-        it('emitが実行されること', async () => {
-          await wrapper.vm.onClickEditClose()
-          expect(wrapper.emitted('edit:close')).toBeTruthy()
-        })
-      })
-
-      describe('onClickUpdateButton', () => {
-        it('emitが実行されること', async () => {
-          await wrapper.vm.onClickUpdateButton()
-          expect(wrapper.emitted('update')).toBeTruthy()
-        })
-      })
-
-      describe('onClickDeleteButton', () => {
-        it('emitが実行されること', async () => {
-          await wrapper.vm.onClickDeleteButton(1)
-          expect(wrapper.emitted('delete')).toBeTruthy()
-          expect(wrapper.emitted('delete')[0][0]).toBe(1)
+          await wrapper.vm.onClickShowButton('1')
+          expect(wrapper.emitted('show')).toBeTruthy()
+          expect(wrapper.emitted('show')[0][0]).toBe('1')
         })
       })
     })

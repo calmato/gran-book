@@ -9,6 +9,7 @@ export interface IAdminTableFooter {
 }
 
 export interface IAdminTableContent {
+  id: string
   name: string
   email: string
   phoneNumber: string

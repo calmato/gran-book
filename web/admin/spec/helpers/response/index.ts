@@ -27,6 +27,8 @@ export default {
     ...AuthStore.patch,
   },
   put: {},
-  delete: {},
+  delete: {
+    ...AdminStore.destroy,
+  },
   error: err,
 }
