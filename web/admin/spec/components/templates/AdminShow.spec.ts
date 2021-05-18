@@ -1,7 +1,7 @@
 import { shallowMount } from '@vue/test-utils'
 import * as Options from '~~/spec/helpers/component-helper'
 import AdminShow from '~/components/templates/AdminShow.vue'
-import { AdminEditContactOptions, AdminEditProfileOptions, AdminEditSecurityOptions, AdminNewOptions } from '~/types/forms'
+import { AdminEditContactOptions, AdminEditProfileOptions, AdminEditSecurityOptions } from '~/types/forms'
 
 describe('components/templates/AdminShow', () => {
   let wrapper: any
@@ -136,7 +136,7 @@ describe('components/templates/AdminShow', () => {
               lastNameKana: 'てすと',
               firstNameKana: 'ゆーざー',
               thumbnail: null,
-              thumbnailUrl: ''
+              thumbnailUrl: '',
             },
             options: AdminEditProfileOptions,
           })
