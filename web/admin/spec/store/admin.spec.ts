@@ -25,32 +25,66 @@ describe('store/admin', () => {
   describe('actions', () => {
     describe('indexAdmin', () => {
       describe('success', () => {
-        let form: IAdminListForm
         beforeEach(() => {
           setSafetyMode(true)
-          form = { limit: 20, offset: 0, order: { by: 'email', desc: false } }
         })
 
-        it('stateが更新されていること', async () => {
-          await AdminStore.indexAdmin(form)
-          expect(AdminStore.getUsers).toEqual([
-            {
-              id: '00000000-0000-0000-00000000',
-              username: 'test-user',
-              email: 'test@calmato.com',
-              phoneNumber: '000-0000-0000',
-              role: 0,
-              thumbnailUrl: 'https://calmato.com/images/01',
-              selfIntroduction: 'よろしくお願いします',
-              lastName: 'テスト',
-              firstName: 'ユーザ',
-              lastNameKana: 'てすと',
-              firstNameKana: 'ゆーざ',
-              createdAt: '2021-01-01 00:00:00',
-              updatedAt: '2021-01-01 00:00:00',
-            },
-          ])
-          expect(AdminStore.getTotal).toBe(1)
+        describe('order.by === ""のとき', () => {
+          let form: IAdminListForm
+          beforeEach(() => {
+            form = { limit: 20, offset: 0, order: { by: '', desc: false } }
+          })
+
+          it('stateが更新されていること', async () => {
+            await AdminStore.indexAdmin(form)
+            expect(AdminStore.getUsers).toEqual([
+              {
+                id: '00000000-0000-0000-00000000',
+                username: 'test-user',
+                email: 'test@calmato.com',
+                phoneNumber: '000-0000-0000',
+                role: 0,
+                thumbnailUrl: 'https://calmato.com/images/01',
+                selfIntroduction: 'よろしくお願いします',
+                lastName: 'テスト',
+                firstName: 'ユーザ',
+                lastNameKana: 'てすと',
+                firstNameKana: 'ゆーざ',
+                createdAt: '2021-01-01 00:00:00',
+                updatedAt: '2021-01-01 00:00:00',
+              },
+            ])
+            expect(AdminStore.getTotal).toBe(2)
+          })
+        })
+
+        describe('order.by !== ""のとき', () => {
+          let form: IAdminListForm
+          beforeEach(() => {
+            form = { limit: 20, offset: 0, order: { by: 'email', desc: false } }
+          })
+
+          it('stateが更新されていること', async () => {
+            await AdminStore.indexAdmin(form)
+            expect(AdminStore.getUsers).toEqual([
+              {
+                id: '00000000-0000-0000-00000000',
+                username: 'test-user',
+                email: 'test@calmato.com',
+                phoneNumber: '000-0000-0000',
+                role: 0,
+                thumbnailUrl: 'https://calmato.com/images/01',
+                selfIntroduction: 'よろしくお願いします',
+                lastName: 'テスト',
+                firstName: 'ユーザ',
+                lastNameKana: 'てすと',
+                firstNameKana: 'ゆーざ',
+                createdAt: '2021-01-01 00:00:00',
+                updatedAt: '2021-01-01 00:00:00',
+              },
+            ])
+            expect(AdminStore.getTotal).toBe(1)
+          })
         })
       })
 
