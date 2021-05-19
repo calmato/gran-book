@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import { Request, Response, NextFunction } from 'express'
+import dayjs from 'dayjs'
 import logger from '~/plugins/logger'
 import { HttpError } from '~/types/exception'
 
@@ -26,6 +27,7 @@ export function accessLogHandler(req: Request, _: Response, next: NextFunction):
     requestHeader: logFilter(req.headers),
     requestQuery: logFilter(req.query),
     requestBody: logFilter(req.body),
+    time: dayjs().format(),
   }
 
   logger.default.info(JSON.stringify(logs))
@@ -42,6 +44,7 @@ export function errorLogHandler(req: Request, err: HttpError): void {
     status: err.status,
     message: err.message,
     errors: err.details,
+    time: dayjs().format(),
   }
 
   logger.default.info(JSON.stringify(logs))
