@@ -4,7 +4,6 @@ import (
 	"github.com/calmato/gran-book/api/server/information/internal/application"
 	"github.com/calmato/gran-book/api/server/information/internal/infrastructure/repository"
 	"github.com/calmato/gran-book/api/server/information/internal/infrastructure/service"
-	"github.com/calmato/gran-book/api/server/information/lib/firebase/firestore"
 	gcs "github.com/calmato/gran-book/api/server/information/lib/firebase/storage"
 )
 
@@ -14,7 +13,7 @@ type Registry struct {
 }
 
 // NewRegistry - internalディレクトリ配下のファイルを読み込み
-func NewRegistry(fs *firestore.Client, s *gcs.Storage) *Registry {
+func NewRegistry(db *repository.Client, s *gcs.Storage) *Registry {
 	auth := authInjection()
 
 	return &Registry{

@@ -18,4 +18,6 @@ require (
 	google.golang.org/genproto v0.0.0-20210429181445-86c259c2b4ab
 	google.golang.org/grpc v1.37.0
 	google.golang.org/protobuf v1.26.0
+	gorm.io/driver/mysql v1.1.0
+	gorm.io/gorm v1.21.10
 )
