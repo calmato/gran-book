@@ -65,13 +65,6 @@ data:
         Parser       nginx
         Reserve_Data True
         Preserve_Key False
-    [FILTER]
-        Name         parser
-        Match        kube.default.*.*-gateway
-        Key_Name     log
-        Parser       bff
-        Reserve_Data True
-        Preserve_Key False
   outputs.conf: |
     [OUTPUT]
         Name  stackdriver
@@ -94,11 +87,5 @@ data:
         Name        nginx
         Format      regex
         Regex       ^(?<remote>[^ ]*) (?<host>[^ ]*) (?<user>[^ ]*) \[(?<time>[^\]]*)\] "(?<method>\S+)(?: +(?<path>[^\"]*?)(?: +\S*)?)?" (?<code>[^ ]*) (?<size>[^ ]*)(?: "(?<referer>[^\"]*)" "(?<agent>[^\"]*)")
-        Time_Key    time
-        Time_Format %d/%b/%Y:%H:%M:%S %z
-    [PARSER]
-        Name        bff
-        Format      regex
-        Regex       \[(?<time>[^ ]*)\] \[(?<level>[^ ]*)\] (?<type>[^ ]*) - (?<data>.*)$
         Time_Key    time
         Time_Format %d/%b/%Y:%H:%M:%S %z
