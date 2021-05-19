@@ -3,8 +3,8 @@ package config
 import (
 	"context"
 
+	"github.com/calmato/gran-book/api/server/information/internal/infrastructure/repository"
 	"github.com/calmato/gran-book/api/server/information/lib/firebase"
-	"github.com/calmato/gran-book/api/server/information/lib/firebase/firestore"
 	"github.com/calmato/gran-book/api/server/information/lib/firebase/storage"
 	"github.com/calmato/gran-book/api/server/information/registry"
 	"google.golang.org/api/option"
@@ -20,6 +20,14 @@ func Execute() error {
 		return err
 	}
 
+	// MySQL Clientの設定
+	db, err := repository.NewDBClient(
+		env.DBSocket, env.DBHost, env.DBPort, env.DBDatabase, env.DBUsername, env.DBPassword,
+	)
+	if err != nil {
+		return err
+	}
+
 	// Firebaseの設定
 	opt := option.WithCredentialsJSON([]byte(env.GCPServiceKeyJSON))
 
@@ -28,20 +36,13 @@ func Execute() error {
 		return err
 	}
 
-	// Firestoreの設定
-	fs, err := firestore.NewClient(ctx, fb.App)
-	if err != nil {
-		panic(err)
-	}
-	defer fs.Close()
-
 	// Cloud Storageの設定
 	gcs, err := storage.NewClient(ctx, fb.App, env.GCPStorageBucketName)
 	if err != nil {
 		return err
 	}
 
-	reg := registry.NewRegistry(fs, gcs)
+	reg := registry.NewRegistry(db, gcs)
 
 	// gRPC Serverの設定取得
 	gs, err := newGRPCServer(env.Port, env.LogPath, env.LogLevel, reg)
