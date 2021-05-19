@@ -10,8 +10,9 @@ export interface ICreateAdminRequest {
   firstNameKana: string
 }
 
-export interface IUpdateAdminRoleRequest {
-  role: number
+export interface IUpdateAdminContactRequest {
+  email: string
+  phoneNumber: string
 }
 
 export interface IUpdateAdminPasswordRequest {
@@ -20,10 +21,10 @@ export interface IUpdateAdminPasswordRequest {
 }
 
 export interface IUpdateAdminProfileRequest {
-  username: string
-  email: string
+  role: number
   lastName: string
   firstName: string
   lastNameKana: string
   firstNameKana: string
+  thumbnailUrl: string
 }

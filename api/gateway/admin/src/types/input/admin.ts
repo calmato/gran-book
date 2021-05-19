@@ -30,9 +30,10 @@ export interface ICreateAdminInput {
   firstNameKana: string
 }
 
-export interface IUpdateAdminRoleInput {
+export interface IUpdateAdminContactInput {
   id: string
-  role: number
+  email: string
+  phoneNumber: string
 }
 
 export interface IUpdateAdminPasswordInput {
@@ -44,11 +45,13 @@ export interface IUpdateAdminPasswordInput {
 export interface IUpdateAdminProfileInput {
   id: string
   username: string
+  role: number
   email: string
   lastName: string
   firstName: string
   lastNameKana: string
   firstNameKana: string
+  thumbnailUrl: string
 }
 
 export interface IUploadAdminThumbnailInput {
