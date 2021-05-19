@@ -1,3 +1,4 @@
+import { ViewBooks } from '~/types/models/book';
 import { IBook } from '~/types/response';
 
 // Model
@@ -26,11 +27,27 @@ export function setBooks(books: Model, values: BookValues): Model {
 }
 
 /**
+ * stateの本の情報を整形して取得するfilter関数
+ * @param model state
+ * @returns コンポーネントで表示に使用する書籍情報
+ */
+export function filterBooks(model: Model): ViewBooks {
+  return {
+    reading : readingBooks(model.books),
+    read : readBooks(model.books),
+    stack : stackBooks(model.books),
+    release : releaseBooks(model.books),
+    want : wantBooks(model.books),
+  };
+}
+
+
+/**
  * 読んでいる本の一覧を返すgetter関数
  * @param books 登録されている全ての本
  * @returns 読んでいる本の一覧
  */
-export function readingBooks(books: IBook[]): IBook[] {
+function readingBooks(books: IBook[]): IBook[] {
   return books.filter((book: IBook) => {
     return book.status == 0;
   });
@@ -41,7 +58,7 @@ export function readingBooks(books: IBook[]): IBook[] {
  * @param books 登録されている全ての本
  * @returns 読んだ本の一覧
  */
-export function readBooks(books: IBook[]): IBook[] {
+function readBooks(books: IBook[]): IBook[] {
   return books.filter((book: IBook) => {
     return book.status == 1;
   });
@@ -52,7 +69,7 @@ export function readBooks(books: IBook[]): IBook[] {
  * @param books 登録されている全ての本
  * @returns 積読本の一覧
  */
-export function stackBooks(books: IBook[]): IBook[] {
+function stackBooks(books: IBook[]): IBook[] {
   return books.filter((book: IBook) => {
     return book.status == 2;
   });
@@ -63,7 +80,7 @@ export function stackBooks(books: IBook[]): IBook[] {
  * @param books 登録されている全ての本
  * @returns 手放したい本の一覧
  */
-export function releaseBooks(books: IBook[]): IBook[] {
+function releaseBooks(books: IBook[]): IBook[] {
   return books.filter((book: IBook) => {
     return book.status == 3;
   });
@@ -74,7 +91,7 @@ export function releaseBooks(books: IBook[]): IBook[] {
  * @param books 登録されている全ての本
  * @returns 欲しい本の一覧
  */
-export function wantBooks(books: IBook[]): IBook[] {
+function wantBooks(books: IBook[]): IBook[] {
   return books.filter((book: IBook) => {
     return book.status == 4;
   });
