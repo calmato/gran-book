@@ -3,9 +3,10 @@ module github.com/calmato/gran-book/api/server/user
 go 1.15
 
 require (
-	cloud.google.com/go/firestore v1.2.0 // indirect
+	cloud.google.com/go/firestore v1.2.0
 	cloud.google.com/go/storage v1.6.0
 	firebase.google.com/go/v4 v4.1.0
+	github.com/calmato/gran/api/todo v0.0.0-20200511134047-18998a6ce8a1
 	github.com/go-playground/validator/v10 v10.2.0
 	github.com/golang/mock v1.4.3
 	github.com/golang/protobuf v1.4.3
