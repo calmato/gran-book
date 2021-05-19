@@ -21,7 +21,7 @@ service AdminService {
   rpc SearchAdmin(SearchAdminRequest) returns (AdminListResponse);
   rpc GetAdmin(GetAdminRequest) returns (AdminResponse);
   rpc CreateAdmin(CreateAdminRequest) returns (AdminResponse);
-  rpc UpdateAdminRole(UpdateAdminRoleRequest) returns (AdminResponse);
+  rpc UpdateAdminContact(UpdateAdminContactRequest) returns (AdminResponse);
   rpc UpdateAdminPassword(UpdateAdminPasswordRequest) returns (AdminResponse);
   rpc UpdateAdminProfile(UpdateAdminProfileRequest) returns (AdminResponse);
   rpc UploadAdminThumbnail(stream UploadAdminThumbnailRequest) returns (AdminThumbnailResponse);
@@ -128,9 +128,10 @@ message CreateAdminRequest {
   string first_name_kana = 9;
 }
 
-message UpdateAdminRoleRequest {
+message UpdateAdminContactRequest {
   string id = 1;
-  int32 role = 2;
+  string email = 2;
+  string phone_number = 3;
 }
 
 message UpdateAdminPasswordRequest {
@@ -142,11 +143,12 @@ message UpdateAdminPasswordRequest {
 message UpdateAdminProfileRequest {
   string id = 1;
   string username = 2;
-  string email = 3;
+  int32 role = 3;
   string last_name = 4;
   string first_name = 5;
   string last_name_kana = 6;
   string first_name_kana = 7;
+  string thumbnail_url = 8;
 }
 
 message UploadAdminThumbnailRequest {
