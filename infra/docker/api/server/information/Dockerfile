@@ -24,7 +24,7 @@ WORKDIR /var/api
 RUN apk add --update --no-cache \
       ca-certificates
 
-COPY --from=builder /go/src/github.com/calmato/gran-book/api/server/book/app ./app
+COPY --from=builder /go/src/github.com/calmato/gran-book/api/server/information/app ./app
 
 EXPOSE 8080
 CMD ["./app"]
