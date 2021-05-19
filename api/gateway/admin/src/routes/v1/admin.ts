@@ -6,9 +6,9 @@ import {
   getAdmin,
   listAdmin,
   searchAdmin,
+  updateAdminContact,
   updateAdminPassword,
   updateAdminProfile,
-  updateAdminRole,
   uploadAdminThumbnail,
 } from '~/api/admin'
 import { badRequest } from '~/lib/http-exception'
@@ -19,17 +19,17 @@ import {
   IGetAdminInput,
   IListAdminInput,
   ISearchAdminInput,
+  IUpdateAdminContactInput,
   IUpdateAdminPasswordInput,
   IUpdateAdminProfileInput,
-  IUpdateAdminRoleInput,
   IUploadAdminThumbnailInput,
 } from '~/types/input'
 import { IAdminListOutput, IAdminListOutputUser, IAdminOutput, IAdminThumbnailOutput } from '~/types/output'
 import {
   ICreateAdminRequest,
+  IUpdateAdminContactRequest,
   IUpdateAdminPasswordRequest,
   IUpdateAdminProfileRequest,
-  IUpdateAdminRoleRequest,
 } from '~/types/request'
 import { IAdminListResponse, IAdminListResponseUser, IAdminResponse, IAdminThumbnailResponse } from '~/types/response'
 
@@ -146,17 +146,25 @@ router.delete(
 )
 
 router.patch(
-  '/v1/admin/:userId/role',
+  '/v1/admin/:userId/contact',
   async (req: Request, res: Response<IAdminResponse>, next: NextFunction): Promise<void> => {
     const { userId } = req.params
-    const { role } = req.body as IUpdateAdminRoleRequest
+    const { email, phoneNumber } = req.body as IUpdateAdminContactRequest
 
-    const input: IUpdateAdminRoleInput = {
+    const getAdminInput: IGetAdminInput = {
       id: userId,
-      role,
     }
 
-    await updateAdminRole(req, input)
+    await getAdmin(req, getAdminInput)
+      .then(() => {
+        const updateAdminInput: IUpdateAdminContactInput = {
+          id: userId,
+          email,
+          phoneNumber,
+        }
+
+        return updateAdminContact(req, updateAdminInput)
+      })
       .then((output: IAdminOutput) => {
         const response: IAdminResponse = setAdminResponse(output)
         res.status(200).json(response)
@@ -171,13 +179,20 @@ router.patch(
     const { userId } = req.params
     const { password, passwordConfirmation } = req.body as IUpdateAdminPasswordRequest
 
-    const input: IUpdateAdminPasswordInput = {
+    const getAdminInput: IGetAdminInput = {
       id: userId,
-      password,
-      passwordConfirmation,
     }
 
-    await updateAdminPassword(req, input)
+    await getAdmin(req, getAdminInput)
+      .then(() => {
+        const updateAdminInput: IUpdateAdminPasswordInput = {
+          id: userId,
+          password,
+          passwordConfirmation,
+        }
+
+        return updateAdminPassword(req, updateAdminInput)
+      })
       .then((output: IAdminOutput) => {
         const response: IAdminResponse = setAdminResponse(output)
         res.status(200).json(response)
@@ -190,19 +205,34 @@ router.patch(
   '/v1/admin/:userId/profile',
   async (req: Request, res: Response<IAdminResponse>, next: NextFunction): Promise<void> => {
     const { userId } = req.params
-    const { username, email, lastName, lastNameKana, firstName, firstNameKana } = req.body as IUpdateAdminProfileRequest
-
-    const input: IUpdateAdminProfileInput = {
-      id: userId,
-      username,
-      email,
+    const {
       lastName,
-      firstName,
       lastNameKana,
+      firstName,
       firstNameKana,
+      role,
+      thumbnailUrl,
+    } = req.body as IUpdateAdminProfileRequest
+
+    const getAdminInput: IGetAdminInput = {
+      id: userId,
     }
 
-    await updateAdminProfile(req, input)
+    await getAdmin(req, getAdminInput)
+      .then((getAdminOutput: IAdminOutput) => {
+        const updateAdminInput: IUpdateAdminProfileInput = {
+          id: userId,
+          username: getAdminOutput.username,
+          lastName,
+          firstName,
+          lastNameKana,
+          firstNameKana,
+          role: Number(role) | 0,
+          thumbnailUrl,
+        }
+
+        return updateAdminProfile(req, updateAdminInput)
+      })
       .then((output: IAdminOutput) => {
         const response: IAdminResponse = setAdminResponse(output)
         res.status(200).json(response)
