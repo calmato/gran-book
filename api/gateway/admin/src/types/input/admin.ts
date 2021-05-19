@@ -46,7 +46,6 @@ export interface IUpdateAdminProfileInput {
   id: string
   username: string
   role: number
-  email: string
   lastName: string
   firstName: string
   lastNameKana: string
