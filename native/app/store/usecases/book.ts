@@ -92,12 +92,15 @@ export async function getAllBookByUserId(userId: string) {
     });
 }
 
+// TODO: 例外処理
+/**
+ * 書籍を全件取得しreduxのstateに保存する関数
+ * @returns Promise<void>
+ */
 export function getAllBookAsync() {
   return async (dispatch: Dispatch, getState: () => AppState) => {
-    const user = getState().user;
-    console.log('[DEBUG]', user);
+    const user = getState().auth;
     const res = await getAllBookByUserId(user.id);
-    console.log('[DEBUG]', res);
     const books = res.data.books;
     dispatch(setBooks({books}));
   };
