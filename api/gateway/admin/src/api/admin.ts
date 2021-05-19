@@ -14,9 +14,9 @@ import {
   GetAdminRequest,
   ListAdminRequest,
   SearchAdminRequest,
+  UpdateAdminContactRequest,
   UpdateAdminPasswordRequest,
   UpdateAdminProfileRequest,
-  UpdateAdminRoleRequest,
   UploadAdminThumbnailRequest,
 } from '~/proto/user_apiv1_pb'
 import {
@@ -25,9 +25,9 @@ import {
   IGetAdminInput,
   IListAdminInput,
   ISearchAdminInput,
+  IUpdateAdminContactInput,
   IUpdateAdminPasswordInput,
   IUpdateAdminProfileInput,
-  IUpdateAdminRoleInput,
   IUploadAdminThumbnailInput,
 } from '~/types/input'
 import {
@@ -138,15 +138,16 @@ export function createAdmin(req: Request<any>, input: ICreateAdminInput): Promis
   })
 }
 
-export function updateAdminRole(req: Request<any>, input: IUpdateAdminRoleInput): Promise<IAdminOutput> {
-  const request = new UpdateAdminRoleRequest()
+export function updateAdminContact(req: Request<any>, input: IUpdateAdminContactInput): Promise<IAdminOutput> {
+  const request = new UpdateAdminContactRequest()
   const metadata = getGrpcMetadata(req)
 
   request.setId(input.id)
-  request.setRole(input.role)
+  request.setEmail(input.email)
+  request.setPhoneNumber(input.phoneNumber)
 
   return new Promise((resolve: (res: IAdminOutput) => void, reject: (reason: Error) => void) => {
-    adminClient.updateAdminRole(request, metadata, (err: any, res: AdminResponse) => {
+    adminClient.updateAdminContact(request, metadata, (err: any, res: AdminResponse) => {
       if (err) {
         reject(getGrpcError(err))
         return
@@ -183,11 +184,12 @@ export function updateAdminProfile(req: Request<any>, input: IUpdateAdminProfile
 
   request.setId(input.id)
   request.setUsername(input.username)
-  request.setEmail(input.email)
   request.setLastName(input.lastName)
   request.setFirstName(input.firstName)
   request.setLastNameKana(input.lastNameKana)
   request.setFirstNameKana(input.firstNameKana)
+  request.setRole(input.role)
+  request.setThumbnailUrl(input.thumbnailUrl)
 
   return new Promise((resolve: (res: IAdminOutput) => void, reject: (reason: Error) => void) => {
     adminClient.updateAdminProfile(request, metadata, (err: any, res: AdminResponse) => {

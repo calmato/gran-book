@@ -268,6 +268,17 @@ function deserialize_proto_UnregisterFollowRequest(buffer_arg) {
   return proto_user_apiv1_pb.UnregisterFollowRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_proto_UpdateAdminContactRequest(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.UpdateAdminContactRequest)) {
+    throw new Error('Expected argument of type proto.UpdateAdminContactRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_UpdateAdminContactRequest(buffer_arg) {
+  return proto_user_apiv1_pb.UpdateAdminContactRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_proto_UpdateAdminPasswordRequest(arg) {
   if (!(arg instanceof proto_user_apiv1_pb.UpdateAdminPasswordRequest)) {
     throw new Error('Expected argument of type proto.UpdateAdminPasswordRequest');
@@ -288,17 +299,6 @@ function serialize_proto_UpdateAdminProfileRequest(arg) {
 
 function deserialize_proto_UpdateAdminProfileRequest(buffer_arg) {
   return proto_user_apiv1_pb.UpdateAdminProfileRequest.deserializeBinary(new Uint8Array(buffer_arg));
-}
-
-function serialize_proto_UpdateAdminRoleRequest(arg) {
-  if (!(arg instanceof proto_user_apiv1_pb.UpdateAdminRoleRequest)) {
-    throw new Error('Expected argument of type proto.UpdateAdminRoleRequest');
-  }
-  return Buffer.from(arg.serializeBinary());
-}
-
-function deserialize_proto_UpdateAdminRoleRequest(buffer_arg) {
-  return proto_user_apiv1_pb.UpdateAdminRoleRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 function serialize_proto_UpdateAuthAddressRequest(arg) {
@@ -549,14 +549,14 @@ var AdminServiceService = exports.AdminServiceService = {
     responseSerialize: serialize_proto_AdminResponse,
     responseDeserialize: deserialize_proto_AdminResponse,
   },
-  updateAdminRole: {
-    path: '/proto.AdminService/UpdateAdminRole',
+  updateAdminContact: {
+    path: '/proto.AdminService/UpdateAdminContact',
     requestStream: false,
     responseStream: false,
-    requestType: proto_user_apiv1_pb.UpdateAdminRoleRequest,
+    requestType: proto_user_apiv1_pb.UpdateAdminContactRequest,
     responseType: proto_user_apiv1_pb.AdminResponse,
-    requestSerialize: serialize_proto_UpdateAdminRoleRequest,
-    requestDeserialize: deserialize_proto_UpdateAdminRoleRequest,
+    requestSerialize: serialize_proto_UpdateAdminContactRequest,
+    requestDeserialize: deserialize_proto_UpdateAdminContactRequest,
     responseSerialize: serialize_proto_AdminResponse,
     responseDeserialize: deserialize_proto_AdminResponse,
   },

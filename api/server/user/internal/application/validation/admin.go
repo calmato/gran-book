@@ -11,7 +11,7 @@ type AdminRequestValidation interface {
 	ListAdmin(in *input.ListAdmin) error
 	SearchAdmin(in *input.SearchAdmin) error
 	CreateAdmin(in *input.CreateAdmin) error
-	UpdateAdminRole(in *input.UpdateAdminRole) error
+	UpdateAdminContact(in *input.UpdateAdminContact) error
 	UpdateAdminPassword(in *input.UpdateAdminPassword) error
 	UpdateAdminProfile(in *input.UpdateAdminProfile) error
 	UploadAdminThumbnail(in *input.UploadAdminThumbnail) error
@@ -60,13 +60,13 @@ func (v *adminRequestValidation) CreateAdmin(in *input.CreateAdmin) error {
 	return exception.InvalidRequestValidation.New(err, ves...)
 }
 
-func (v *adminRequestValidation) UpdateAdminRole(in *input.UpdateAdminRole) error {
+func (v *adminRequestValidation) UpdateAdminContact(in *input.UpdateAdminContact) error {
 	ves := v.validator.Run(in, "")
 	if len(ves) == 0 {
 		return nil
 	}
 
-	err := xerrors.New("Failed to UpdateAdminRole for RequestValidation")
+	err := xerrors.New("Failed to UpdateAdminContact for RequestValidation")
 	return exception.InvalidRequestValidation.New(err, ves...)
 }
 

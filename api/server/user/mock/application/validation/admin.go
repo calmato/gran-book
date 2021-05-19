@@ -75,18 +75,18 @@ func (mr *MockAdminRequestValidationMockRecorder) CreateAdmin(in interface{}) *g
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAdmin", reflect.TypeOf((*MockAdminRequestValidation)(nil).CreateAdmin), in)
 }
 
-// UpdateAdminRole mocks base method
-func (m *MockAdminRequestValidation) UpdateAdminRole(in *input.UpdateAdminRole) error {
+// UpdateAdminContact mocks base method
+func (m *MockAdminRequestValidation) UpdateAdminContact(in *input.UpdateAdminContact) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateAdminRole", in)
+	ret := m.ctrl.Call(m, "UpdateAdminContact", in)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// UpdateAdminRole indicates an expected call of UpdateAdminRole
-func (mr *MockAdminRequestValidationMockRecorder) UpdateAdminRole(in interface{}) *gomock.Call {
+// UpdateAdminContact indicates an expected call of UpdateAdminContact
+func (mr *MockAdminRequestValidationMockRecorder) UpdateAdminContact(in interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAdminRole", reflect.TypeOf((*MockAdminRequestValidation)(nil).UpdateAdminRole), in)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAdminContact", reflect.TypeOf((*MockAdminRequestValidation)(nil).UpdateAdminContact), in)
 }
 
 // UpdateAdminPassword mocks base method
