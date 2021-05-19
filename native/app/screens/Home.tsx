@@ -8,21 +8,20 @@ import BookList from '~/components/molecules/BookList';
 import SearchBar from '~/components/molecules/SearchBar';
 import { searchBookByTitle } from '~/lib/rakuten-books';
 import { HomeTabStackPramList } from '~/types/navigation';
-import { IBook, IBookResponse } from '~/types/response';
+import { ViewBooks } from '~/types/models/book';
 
 interface Props {
   navigation?: StackNavigationProp<HomeTabStackPramList, 'Home'>;
   actions: {
     getAllBook: () => Promise<void>
   }
-  books?: IBook[],
+  books: ViewBooks
 }
 
 const Home = function Home(props: Props): ReactElement {
   const navigation = props.navigation;
-  const [keyword, setValue] = useState('');
-  // const [books, setBooks] = useState<IBookResponse>();
   const books = props.books;
+  const [keyword, setValue] = useState('');
 
   const onSubmitEditingCallback = useCallback(() => {
     (async () => {
@@ -47,7 +46,7 @@ const Home = function Home(props: Props): ReactElement {
       <ScrollView
         stickyHeaderIndices={[0]}
         keyboardShouldPersistTaps="handled"
-        style={{ marginBottom: 'auto' }}>
+        style={{ marginBottom: 'auto', height: '100%' }}>
         <SearchBar
           onCancel={cancelCallback}
           keyword={keyword}
@@ -55,7 +54,7 @@ const Home = function Home(props: Props): ReactElement {
           onSubmitEditing={onSubmitEditingCallback}
         />
         {
-          books? <BookList books={books} />: null
+          books? <BookList books={books.read} />: null
         }
       </ScrollView>
     </View>

@@ -1,14 +1,14 @@
 import React, { useMemo } from 'react';
 import Home from '~/screens/Home';
-import { Book } from '~/store/models';
 import { useSelector } from 'react-redux';
 import { useReduxDispatch } from '~/store/modules';
 import { getAllBookAsync } from '~/store/usecases';
 import { bookSelector } from '~/store/selectors/book';
+import { ViewBooks } from '~/types/models/book';
 
 export default function ConnectedHome() {
   const dispatch = useReduxDispatch();
-  const books: Book.Model = useSelector(bookSelector);
+  const books: ViewBooks = useSelector(bookSelector);
 
   const actions = useMemo(
     () => ({
@@ -17,5 +17,5 @@ export default function ConnectedHome() {
       }
     }),[dispatch]);
 
-  return <Home actions={actions} books={books.books} />;
+  return <Home actions={actions} books={books} />;
 }
