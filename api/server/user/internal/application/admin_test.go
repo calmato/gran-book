@@ -332,9 +332,9 @@ func TestAdminApplication_Create(t *testing.T) {
 	}
 }
 
-func TestAdminApplication_UpdateRole(t *testing.T) {
+func TestAdminApplication_UpdateContact(t *testing.T) {
 	testCases := map[string]struct {
-		Input    *input.UpdateAdminRole
+		Input    *input.UpdateAdminContact
 		ID       string
 		Expected struct {
 			User  *user.User
@@ -342,8 +342,9 @@ func TestAdminApplication_UpdateRole(t *testing.T) {
 		}
 	}{
 		"ok": {
-			Input: &input.UpdateAdminRole{
-				Role: 2,
+			Input: &input.UpdateAdminContact{
+				Email:       "test-user@calmato.jp",
+				PhoneNumber: "000-0000-0000",
 			},
 			ID: "12345678-1234-1234-1234-12345678901234",
 			Expected: struct {
@@ -351,8 +352,9 @@ func TestAdminApplication_UpdateRole(t *testing.T) {
 				Error error
 			}{
 				User: &user.User{
-					ID:   "12345678-1234-1234-1234-12345678901234",
-					Role: 2,
+					ID:          "12345678-1234-1234-1234-12345678901234",
+					Email:       "test-user@calmato.jp",
+					PhoneNumber: "000-0000-0000",
 				},
 				Error: nil,
 			},
@@ -367,7 +369,7 @@ func TestAdminApplication_UpdateRole(t *testing.T) {
 		defer ctrl.Finish()
 
 		arvm := mock_validation.NewMockAdminRequestValidation(ctrl)
-		arvm.EXPECT().UpdateAdminRole(tc.Input).Return(nil)
+		arvm.EXPECT().UpdateAdminContact(tc.Input).Return(nil)
 
 		usm := mock_user.NewMockService(ctrl)
 		usm.EXPECT().Validation(ctx, gomock.Any()).Return(tc.Expected.Error)
@@ -377,7 +379,7 @@ func TestAdminApplication_UpdateRole(t *testing.T) {
 		t.Run(result, func(t *testing.T) {
 			target := NewAdminApplication(arvm, usm)
 
-			got, err := target.UpdateRole(ctx, tc.Input, tc.ID)
+			got, err := target.UpdateContact(ctx, tc.Input, tc.ID)
 			if !reflect.DeepEqual(err, tc.Expected.Error) {
 				t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
 				return
@@ -462,11 +464,12 @@ func TestAdminApplication_UpdateProfile(t *testing.T) {
 		"ok": {
 			Input: &input.UpdateAdminProfile{
 				Username:      "test-user",
-				Email:         "test@calmato.com",
 				LastName:      "テスト",
 				FirstName:     "ユーザ",
 				LastNameKana:  "てすと",
 				FirstNameKana: "ゆーざ",
+				Role:          1,
+				ThumbnailURL:  "https://www.google.co.jp",
 			},
 			ID: "12345678-1234-1234-1234-12345678901234",
 			Expected: struct {
@@ -481,6 +484,8 @@ func TestAdminApplication_UpdateProfile(t *testing.T) {
 					FirstName:     "ユーザ",
 					LastNameKana:  "てすと",
 					FirstNameKana: "ゆーざ",
+					Role:          1,
+					ThumbnailURL:  "https://www.google.co.jp",
 				},
 				Error: nil,
 			},

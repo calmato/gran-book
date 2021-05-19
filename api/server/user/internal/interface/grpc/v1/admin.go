@@ -145,8 +145,10 @@ func (s *AdminServer) CreateAdmin(ctx context.Context, req *pb.CreateAdminReques
 	return res, nil
 }
 
-// UpdateAdminRole - 管理者権限更新
-func (s *AdminServer) UpdateAdminRole(ctx context.Context, req *pb.UpdateAdminRoleRequest) (*pb.AdminResponse, error) {
+// UpdateAdminContact - 管理者連絡先更新
+func (s *AdminServer) UpdateAdminContact(
+	ctx context.Context, req *pb.UpdateAdminContactRequest,
+) (*pb.AdminResponse, error) {
 	cu, err := s.AuthApplication.Authentication(ctx)
 	if err != nil {
 		return nil, errorHandling(err)
@@ -162,11 +164,12 @@ func (s *AdminServer) UpdateAdminRole(ctx context.Context, req *pb.UpdateAdminRo
 		return nil, errorHandling(err)
 	}
 
-	in := &input.UpdateAdminRole{
-		Role: int(req.Role),
+	in := &input.UpdateAdminContact{
+		Email:       req.GetEmail(),
+		PhoneNumber: req.GetPhoneNumber(),
 	}
 
-	u, err := s.AdminApplication.UpdateRole(ctx, in, req.GetId())
+	u, err := s.AdminApplication.UpdateContact(ctx, in, req.GetId())
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -229,11 +232,12 @@ func (s *AdminServer) UpdateAdminProfile(
 
 	in := &input.UpdateAdminProfile{
 		Username:      req.GetUsername(),
-		Email:         req.GetEmail(),
 		LastName:      req.GetLastName(),
 		FirstName:     req.GetFirstName(),
 		LastNameKana:  req.GetLastNameKana(),
 		FirstNameKana: req.GetFirstNameKana(),
+		Role:          int(req.GetRole()),
+		ThumbnailURL:  req.GetThumbnailUrl(),
 	}
 
 	u, err := s.AdminApplication.UpdateProfile(ctx, in, req.GetId())
