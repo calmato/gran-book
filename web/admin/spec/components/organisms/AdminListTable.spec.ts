@@ -78,6 +78,17 @@ describe('components/organisms/AdminListTable', () => {
         })
       })
 
+      describe('role', () => {
+        it('初期値', () => {
+          expect(wrapper.props().role).toBe(0)
+        })
+
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ role: 1 })
+          expect(wrapper.props().role).toBe(1)
+        })
+      })
+
       describe('users', () => {
         it('初期値', () => {
           expect(wrapper.props().users).toEqual([])
@@ -143,7 +154,6 @@ describe('components/organisms/AdminListTable', () => {
           { text: 'メールアドレス', value: 'email', sortable: true },
           { text: '電話番号', value: 'phoneNumber', sortable: false },
           { text: '権限', value: 'role', sortable: true },
-          { text: 'Actions', value: 'actions', sortable: false },
         ])
       })
 
@@ -178,6 +188,7 @@ describe('components/organisms/AdminListTable', () => {
           })
           expect(wrapper.vm.items).toEqual([
             {
+              id: '5',
               name: 'テスト ユーザー',
               email: 'test@calmato.com',
               phoneNumber: '123-1234-1234',
@@ -250,7 +261,7 @@ describe('components/organisms/AdminListTable', () => {
         })
       })
 
-      describe('onClickEdit', () => {
+      describe('onClick', () => {
         it('emitが実行されること', async () => {
           const user: IAdminUser = {
             id: '5',
@@ -268,33 +279,9 @@ describe('components/organisms/AdminListTable', () => {
             updatedAt: '2020-01-01 00:00:00',
           }
           await wrapper.setProps({ users: [user] })
-          await wrapper.vm.onClickEdit(wrapper.vm.items[0])
-          expect(wrapper.emitted('edit')).toBeTruthy()
-          expect(wrapper.emitted('edit')[0][0]).toBe(0)
-        })
-      })
-
-      describe('onClickDelete', () => {
-        it('emitが実行されること', async () => {
-          const user: IAdminUser = {
-            id: '5',
-            username: 'test-user',
-            email: 'test@calmato.com',
-            phoneNumber: '123-1234-1234',
-            role: 3,
-            thumbnailUrl: '',
-            selfIntroduction: '',
-            lastName: 'テスト',
-            firstName: 'ユーザー',
-            lastNameKana: 'てすと',
-            firstNameKana: 'ゆーざー',
-            createdAt: '2020-01-01 00:00:00',
-            updatedAt: '2020-01-01 00:00:00',
-          }
-          await wrapper.setProps({ users: [user] })
-          await wrapper.vm.onClickDelete(wrapper.vm.items[0])
-          expect(wrapper.emitted('delete')).toBeTruthy()
-          expect(wrapper.emitted('delete')[0][0]).toEqual(0)
+          await wrapper.vm.onClick(wrapper.vm.items[0])
+          expect(wrapper.emitted('show')).toBeTruthy()
+          expect(wrapper.emitted('show')[0][0]).toBe('5')
         })
       })
     })

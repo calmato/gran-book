@@ -4,7 +4,7 @@ import firebase from '~/plugins/firebase'
 import { ApiError } from '~/types/exception'
 import { ISignInForm, IAuthEditEmailForm, IAuthEditPasswordForm, IAuthEditProfileForm } from '~/types/forms'
 import { IAuthUpdateEmailRequest, IAuthUpdatePasswordRequest, IAuthUpdateProfileRequest } from '~/types/requests'
-import { IAuthResponse, IErrorResponse } from '~/types/responses'
+import { IAuthResponse, IAuthThumbnailResponse, IErrorResponse } from '~/types/responses'
 import { IAuthState, IAuthProfile } from '~/types/store'
 
 const initialState: IAuthState = {
@@ -65,6 +65,10 @@ export default class AuthModule extends VuexModule {
 
   public get getPhoneNumber(): string {
     return this.phoneNumber
+  }
+
+  public get getRole(): number {
+    return this.role
   }
 
   public get getThumbnailUrl(): string {
@@ -139,6 +143,11 @@ export default class AuthModule extends VuexModule {
     this.firstNameKana = auth.firstNameKana
     this.createdAt = auth.createdAt
     this.updatedAt = auth.updatedAt
+  }
+
+  @Mutation
+  private setThumbnailUrl(thumbnailUrl: string): void {
+    this.thumbnailUrl = thumbnailUrl
   }
 
   @Action({})
@@ -286,7 +295,7 @@ export default class AuthModule extends VuexModule {
   public updateProfile(payload: IAuthEditProfileForm): Promise<void> {
     const {
       username,
-      thumbnail,
+      thumbnailUrl,
       selfIntroduction,
       lastName,
       firstName,
@@ -296,8 +305,8 @@ export default class AuthModule extends VuexModule {
     } = payload.params
 
     const req: IAuthUpdateProfileRequest = {
-      thumbnail: thumbnail || '',
       username,
+      thumbnailUrl: String(thumbnailUrl) || '',
       selfIntroduction,
       lastName,
       firstName,
@@ -313,6 +322,31 @@ export default class AuthModule extends VuexModule {
           const data: IAuthProfile = { ...res }
           this.setProfile(data)
           resolve()
+        })
+        .catch((err: any) => {
+          const { data, status }: IErrorResponse = err.response
+          reject(new ApiError(status, data.message, data))
+        })
+    })
+  }
+
+  @Action({ rawError: true })
+  public uploadThumbnail(payload: File): Promise<string> {
+    const config = {
+      headers: {
+        'content-type': 'multipart/form-data',
+      },
+    }
+
+    const params = new FormData()
+    params.append('thumbnail', payload)
+
+    return new Promise((resolve: (thumbnailUrl: string) => void, reject: (reason: ApiError) => void) => {
+      $axios
+        .$post('/v1/auth/thumbnail', params, config)
+        .then((res: IAuthThumbnailResponse) => {
+          this.setThumbnailUrl(res.thumbnailUrl)
+          resolve(res.thumbnailUrl)
         })
         .catch((err: any) => {
           const { data, status }: IErrorResponse = err.response

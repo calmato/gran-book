@@ -1,37 +1,30 @@
 <template>
-  <admin-list
+  <notification-list
     :search.sync="search"
     :page.sync="page"
     :items-per-page.sync="itemsPerPage"
     :sort-by.sync="sortBy"
-    :sort-desc.sync="sortDesc"
-    :loading="loading"
-    :role="role"
-    :users="users"
-    :total="total"
     :new-form="newForm"
     :new-dialog.sync="newDialog"
     @new:open="handleClickNewItem"
     @new:close="handleClickCloseNewItem"
     @create="handleClickCreateItem"
-    @show="handleClickShowItem"
   />
 </template>
 
 <script lang="ts">
 import { defineComponent, SetupContext, ref, reactive, useAsync, computed, watch } from '@nuxtjs/composition-api'
 import { AdminStore, CommonStore } from '~/store'
-import { AdminNewOptions, IAdminListForm, IAdminNewForm, IAdminNewParams } from '~/types/forms'
+import { AdminNewOptions, IAdminNewForm, IAdminNewParams } from '~/types/forms'
 import { PromiseState } from '~/types/store'
-import AdminList from '~/components/templates/AdminList.vue'
+import NotificationList from '~/components/templates/NotificationList.vue'
 
 export default defineComponent({
   components: {
-    AdminList,
+    NotificationList,
   },
 
   setup(_, { root }: SetupContext) {
-    const router = root.$router
     const store = root.$store
 
     const initializeNewForm: IAdminNewParams = {
@@ -60,7 +53,6 @@ export default defineComponent({
       },
     })
 
-    const role = computed(() => store.getters['auth/getRole'])
     const users = computed(() => store.getters['admin/getUsers'])
     const total = computed(() => store.getters['admin/getTotal'])
     const loading = computed((): boolean => {
@@ -69,23 +61,23 @@ export default defineComponent({
     })
 
     watch(page, (): void => {
-      indexAdmin()
+      indexNotification()
     })
 
     watch(itemsPerPage, (): void => {
-      indexAdmin()
+      indexNotification()
     })
 
     watch(sortBy, (): void => {
-      indexAdmin()
+      indexNotification()
     })
 
     watch(sortDesc, (): void => {
-      indexAdmin()
+      indexNotification()
     })
 
     useAsync(async () => {
-      await indexAdmin()
+      await indexNotification()
     })
 
     const handleClickNewItem = (): void => {
@@ -102,7 +94,7 @@ export default defineComponent({
       await AdminStore.createAdmin(newForm)
         .then(() => {
           newDialog.value = false
-          CommonStore.showSnackbar({ color: 'info', message: '管理者を新規登録しました。' })
+          CommonStore.showSnackbar({ color: 'info', message: 'お知らせを新規登録しました。' })
         })
         .catch((err: Error) => {
           CommonStore.showErrorInSnackbar(err)
@@ -112,30 +104,15 @@ export default defineComponent({
         })
     }
 
-    const handleClickShowItem = (userId: string): void => {
-      if (userId === '') {
-        CommonStore.showSnackbar({ color: 'error', message: 'ユーザーが見つかりません。' })
-      }
-
-      router.push(`/admin/${userId}`)
+    const handleClickEditItem = (index: number): void => {
+      console.log('debug', 'editItem', index)
     }
 
-    async function indexAdmin(): Promise<void> {
-      CommonStore.startConnection()
-
-      const form: IAdminListForm = {
-        limit: itemsPerPage.value,
-        offset: itemsPerPage.value * (page.value - 1),
-        order: {
-          by: sortBy.value || '',
-          desc: sortDesc.value || false,
-        },
-      }
-
-      await AdminStore.indexAdmin(form).finally(() => {
-        CommonStore.endConnection()
-      })
+    const handleClickDeleteItem = (index: number): void => {
+      console.log('debug', 'deleteItem', index)
     }
+
+    function indexNotification(): void {}
 
     return {
       loading,
@@ -144,7 +121,6 @@ export default defineComponent({
       itemsPerPage,
       sortBy,
       sortDesc,
-      role,
       users,
       total,
       newForm,
@@ -152,7 +128,8 @@ export default defineComponent({
       handleClickNewItem,
       handleClickCloseNewItem,
       handleClickCreateItem,
-      handleClickShowItem,
+      handleClickEditItem,
+      handleClickDeleteItem,
     }
   },
 })
