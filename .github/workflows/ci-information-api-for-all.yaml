@@ -1,4 +1,4 @@
-name: Backend(INFORMATION API) Build and Test
+name: Backend(Information API) Build and Test
 on:
   push:
     paths:
