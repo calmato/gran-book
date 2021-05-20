@@ -1,7 +1,6 @@
 ﻿import React, { ReactElement } from 'react';
 import { StyleSheet, View, Dimensions } from 'react-native';
 import { IBook } from '~/types/response';
-import { booksSampleData } from '~~/assets/sample/book';
 import Book from '../atoms/Book';
 
 const styles = StyleSheet.create({
@@ -18,7 +17,7 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  books: Array<IBook>
+  books: IBook[]
 }
 
 
