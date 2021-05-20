@@ -145,6 +145,34 @@ services:
     depends_on:
       - mysql
 
+  information_api:
+    container_name: gran_book_information_api
+    build:
+      context: ./infra/docker/api/server/information
+      dockerfile: Dockerfile_development
+    working_dir: /go/src/github.com/calmato/gran-book/api/server/information
+    volumes:
+      - ./api/server/information:/go/src/github.com/calmato/gran-book/api/server/information:cached
+      - ./tmp/data/go/pkg/mod:/go/pkg/mod:delegated
+      - ./tmp/logs/information_api:/var/log/api:delegated
+    environment:
+      - PORT=8080
+      - LOG_PATH=/var/log/api
+      - LOG_LEVEL=${LOG_LEVEL}
+      - DB_HOST=${MYSQL_HOST}
+      - DB_PORT=${MYSQL_PORT}
+      - DB_USERNAME=${MYSQL_USERNAME}
+      - DB_PASSWORD=${MYSQL_PASSWORD}
+      - DB_DATABASE=${MYSQL_INFORMATION_DATABASE}
+      - GCP_SERVICE_KEY_JSON=${GCP_SERVICE_KEY_JSON}
+      - GCP_STORAGE_BUCKET_NAME=${GCP_STORAGE_BUCKET_NAME}
+    networks:
+      - api
+      - monitoring
+    command: realize start
+    depends_on:
+      - mysql
+
   # Database
   mysql:
     container_name: gran_book_mysql
