@@ -5,8 +5,14 @@ import { useReduxDispatch } from '~/store/modules';
 import { getAllBookAsync } from '~/store/usecases';
 import { bookSelector } from '~/store/selectors/book';
 import { ViewBooks } from '~/types/models/book';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { HomeTabStackPramList } from '~/types/navigation';
 
-export default function ConnectedHome() {
+interface Props {
+  navigation?: StackNavigationProp<HomeTabStackPramList, 'Home'>;
+}
+
+export default function ConnectedHome(props: Props) {
   const dispatch = useReduxDispatch();
   const books: ViewBooks = useSelector(bookSelector);
 
@@ -17,5 +23,5 @@ export default function ConnectedHome() {
       }
     }),[dispatch]);
 
-  return <Home actions={actions} books={books} />;
+  return <Home actions={actions} books={books} navigation={props.navigation} />;
 }
