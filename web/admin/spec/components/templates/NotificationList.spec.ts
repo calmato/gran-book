@@ -1,13 +1,12 @@
 import { shallowMount } from '@vue/test-utils'
 import * as Options from '~~/spec/helpers/component-helper'
-import AdminList from '~/components/templates/AdminList.vue'
-import { AdminNewOptions } from '~/types/forms'
+import NotificationList from '~/components/templates/NotificationList.vue'
 
-describe('components/templates/AdminList', () => {
+describe('components/templates/NotificationList', () => {
   let wrapper: any
 
   beforeEach(() => {
-    wrapper = shallowMount(AdminList, { ...Options })
+    wrapper = shallowMount(NotificationList, { ...Options })
   })
 
   describe('script', () => {
@@ -78,62 +77,6 @@ describe('components/templates/AdminList', () => {
         })
       })
 
-      describe('role', () => {
-        it('初期値', () => {
-          expect(wrapper.props().role).toBe(0)
-        })
-
-        it('値が代入されること', async () => {
-          await wrapper.setProps({ role: 1 })
-          expect(wrapper.props().role).toBe(1)
-        })
-      })
-
-      describe('users', () => {
-        it('初期値', () => {
-          expect(wrapper.props().users).toEqual([])
-        })
-
-        it('値が代入されること', async () => {
-          await wrapper.setProps({
-            users: [
-              {
-                id: '5',
-                username: 'test-user',
-                email: 'test@calmato.com',
-                phoneNumber: '123-1234-1234',
-                role: 3,
-                thumbnailUrl: '',
-                selfIntroduction: '',
-                lastName: 'テスト',
-                firstName: 'ユーザー',
-                lastNameKana: 'てすと',
-                firstNameKana: 'ゆーざー',
-                createdAt: '2020-01-01 00:00:00',
-                updatedAt: '2020-01-01 00:00:00',
-              },
-            ],
-          })
-          expect(wrapper.props().users).toEqual([
-            {
-              id: '5',
-              username: 'test-user',
-              email: 'test@calmato.com',
-              phoneNumber: '123-1234-1234',
-              role: 3,
-              thumbnailUrl: '',
-              selfIntroduction: '',
-              lastName: 'テスト',
-              firstName: 'ユーザー',
-              lastNameKana: 'てすと',
-              firstNameKana: 'ゆーざー',
-              createdAt: '2020-01-01 00:00:00',
-              updatedAt: '2020-01-01 00:00:00',
-            },
-          ])
-        })
-      })
-
       describe('total', () => {
         it('初期値', () => {
           expect(wrapper.props().total).toBe(0)
@@ -142,43 +85,6 @@ describe('components/templates/AdminList', () => {
         it('値が代入されること', async () => {
           await wrapper.setProps({ total: 10 })
           expect(wrapper.props().total).toBe(10)
-        })
-      })
-
-      describe('newForm', () => {
-        it('初期値', () => {
-          expect(wrapper.props().newForm).toEqual({})
-        })
-
-        it('値が代入されること', async () => {
-          await wrapper.setProps({
-            newForm: {
-              params: {
-                email: 'test@calmato.com',
-                password: '12345678',
-                passwordConfirmation: '12345678',
-                role: 1,
-                lastName: 'テスト',
-                firstName: 'ユーザー',
-                lastNameKana: 'てすと',
-                firstNameKana: 'ゆーざー',
-              },
-              options: AdminNewOptions,
-            },
-          })
-          expect(wrapper.props().newForm).toEqual({
-            params: {
-              email: 'test@calmato.com',
-              password: '12345678',
-              passwordConfirmation: '12345678',
-              role: 1,
-              lastName: 'テスト',
-              firstName: 'ユーザー',
-              lastNameKana: 'てすと',
-              firstNameKana: 'ゆーざー',
-            },
-            options: AdminNewOptions,
-          })
         })
       })
 
@@ -191,6 +97,12 @@ describe('components/templates/AdminList', () => {
           await wrapper.setProps({ newDialog: true })
           expect(wrapper.props().newDialog).toBeTruthy()
         })
+      })
+    })
+
+    describe('data', () => {
+      it('dialog', () => {
+        expect(wrapper.vm.dialog).toBeFalsy()
       })
     })
 
@@ -216,11 +128,19 @@ describe('components/templates/AdminList', () => {
         })
       })
 
-      describe('onClickShowButton', () => {
+      describe('onClickEditButton', () => {
         it('emitが実行されること', async () => {
-          await wrapper.vm.onClickShowButton('1')
-          expect(wrapper.emitted('show')).toBeTruthy()
-          expect(wrapper.emitted('show')[0][0]).toBe('1')
+          await wrapper.vm.onClickEditButton(1)
+          expect(wrapper.emitted('edit')).toBeTruthy()
+          expect(wrapper.emitted('edit')[0][0]).toBe(1)
+        })
+      })
+
+      describe('onClickDeleteButton', () => {
+        it('emitが実行されること', async () => {
+          await wrapper.vm.onClickDeleteButton(1)
+          expect(wrapper.emitted('delete')).toBeTruthy()
+          expect(wrapper.emitted('delete')[0][0]).toBe(1)
         })
       })
     })

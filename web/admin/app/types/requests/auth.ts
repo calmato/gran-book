@@ -9,7 +9,7 @@ export interface IAuthUpdatePasswordRequest {
 
 export interface IAuthUpdateProfileRequest {
   username: string
-  thumbnail: string
+  thumbnailUrl: string
   selfIntroduction: string
   lastName: string
   firstName: string

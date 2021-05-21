@@ -2,9 +2,9 @@
   <v-container fill-height>
     <v-dialog v-model="newDialog" width="600px" scrollable @click:outside="$emit('update:new-dialog', false)">
       <v-card>
-        <v-toolbar color="primary" dark>管理者ユーザー 追加</v-toolbar>
+        <v-toolbar color="primary" dark>お知らせ 追加</v-toolbar>
         <v-card-text>
-          <admin-new-form :form="newForm" />
+          <notification-new-form />
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -19,23 +19,22 @@
       <v-row>
         <v-col cols="12">
           <v-card class="pa-4">
-            <v-subheader>管理者一覧</v-subheader>
+            <v-subheader>お知らせ一覧</v-subheader>
             <v-card-title>
               <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details />
               <v-spacer />
-              <v-btn v-if="role === 1" color="primary" dark class="mb-2" @click="onClickNewButton">New Item</v-btn>
+              <v-btn color="primary" dark class="mb-2" @click="onClickNewButton">New Item</v-btn>
             </v-card-title>
-            <admin-list-table
+            <notification-list-table
               :loading="loading"
               :page="page"
               :items-per-page="itemsPerPage"
               :sort-by="sortBy"
               :sort-desc="sortDesc"
               :search="search"
-              :role="role"
-              :users="users"
               :total="total"
-              @show="onClickShowButton"
+              @edit="onClickEditButton"
+              @delete="onClickDeleteButton"
               @update:page="$emit('update:page', $event)"
               @update:items-per-page="$emit('update:items-per-page', $event)"
               @update:sort-by="$emit('update:sort-by', $event)"
@@ -49,22 +48,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, SetupContext, PropType } from '@nuxtjs/composition-api'
-import TheFormGroup from '~/components/atoms/TheFormGroup.vue'
-import TheSelect from '~/components/atoms/TheSelect.vue'
-import TheTextField from '~/components/atoms/TheTextField.vue'
-import AdminListTable from '~/components/organisms/AdminListTable.vue'
+import { defineComponent, ref, SetupContext } from '@nuxtjs/composition-api'
+import NotificationListTable from '~/components/organisms/NotificationListTable.vue'
 import AdminNewForm from '~/components/organisms/AdminNewForm.vue'
-import { IAdminNewForm } from '~/types/forms'
-import { IAdminUser } from '~/types/store'
+import NotificationNewForm from '~/components/organisms/NotificationNewForm.vue'
 
 export default defineComponent({
   components: {
-    AdminListTable,
+    NotificationListTable,
     AdminNewForm,
-    TheFormGroup,
-    TheSelect,
-    TheTextField,
+    NotificationNewForm,
   },
 
   props: {
@@ -98,25 +91,10 @@ export default defineComponent({
       required: false,
       default: '',
     },
-    role: {
-      type: Number,
-      required: false,
-      default: 0,
-    },
-    users: {
-      type: Array as PropType<IAdminUser[]>,
-      required: false,
-      default: () => [],
-    },
     total: {
       type: Number,
       required: false,
       default: 0,
-    },
-    newForm: {
-      type: Object as PropType<IAdminNewForm>,
-      required: false,
-      default: () => ({}),
     },
     newDialog: {
       type: Boolean,
@@ -126,6 +104,8 @@ export default defineComponent({
   },
 
   setup(_, { emit }: SetupContext) {
+    const dialog = ref<boolean>(false)
+
     const onClickNewButton = (): void => {
       emit('new:open')
     }
@@ -138,15 +118,21 @@ export default defineComponent({
       emit('create')
     }
 
-    const onClickShowButton = (userId: string): void => {
-      emit('show', userId)
+    const onClickEditButton = (index: number): void => {
+      emit('edit', index)
+    }
+
+    const onClickDeleteButton = (index: number): void => {
+      emit('delete', index)
     }
 
     return {
+      dialog,
       onClickNewButton,
       onClickNewClose,
       onClickCreateButton,
-      onClickShowButton,
+      onClickEditButton,
+      onClickDeleteButton,
     }
   },
 })

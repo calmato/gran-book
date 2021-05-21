@@ -20,11 +20,15 @@ export default {
   },
   post: {
     ...AdminStore.post,
+    ...AuthStore.post,
   },
   patch: {
+    ...AdminStore.patch,
     ...AuthStore.patch,
   },
   put: {},
-  delete: {},
+  delete: {
+    ...AdminStore.destroy,
+  },
   error: err,
 }

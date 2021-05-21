@@ -1,4 +1,5 @@
 export interface IAdminState {
+  user: IAdminUser
   users: IAdminUser[]
   total: number
 }
