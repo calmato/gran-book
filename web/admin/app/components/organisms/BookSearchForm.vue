@@ -28,13 +28,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, SetupContext } from '@nuxtjs/composition-api'
+import { defineComponent, PropType, ref, SetupContext } from '@nuxtjs/composition-api'
+import { IBookSearchForm } from '~/types/forms'
 import { IBookSize } from '~/types/props/organisms'
 
 export default defineComponent({
   props: {
     form: {
-      type: Object, // TODO: define type
+      type: Object as PropType<IBookSearchForm>,
       required: false,
       default: () => ({}),
     },
