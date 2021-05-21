@@ -29,6 +29,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, SetupContext } from '@nuxtjs/composition-api'
+import { IBookSize } from '~/types/props/organisms'
 
 export default defineComponent({
   props: {
@@ -40,7 +41,7 @@ export default defineComponent({
   },
 
   setup(_, { emit }: SetupContext) {
-    const sizes = [
+    const sizes: IBookSize[] = [
       { text: '全て', value: 0 },
       { text: '単行本', value: 1 },
       { text: '文庫', value: 2 },

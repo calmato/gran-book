@@ -12,7 +12,7 @@ import { defineComponent, SetupContext } from '@nuxtjs/composition-api'
 export default defineComponent({
   props: {
     book: {
-      type: Object,
+      type: Object, // TODO: define type
       required: false,
       default: () => ({}),
     },
