@@ -2,7 +2,12 @@
   <v-container>
     <v-row>
       <v-col cols="12">
-        <book-list-form-card :form="searchForm" @submit="onSubmitSearchForm" @clear="onClearSearchForm" />
+        <v-card class="pa-4">
+          <v-subheader>書籍管理トップ</v-subheader>
+          <v-card-text>
+            <book-search-form :form="searchForm" @submit="onSubmitSearchForm" @clear="onClearSearchForm" />
+          </v-card-text>
+        </v-card>
       </v-col>
     </v-row>
     <v-row>
@@ -15,13 +20,13 @@
 
 <script lang="ts">
 import { defineComponent, SetupContext } from '@nuxtjs/composition-api'
-import BookListFormCard from '~/components/organisms/BookListFormCard.vue'
 import BookListItem from '~/components/organisms/BookListItem.vue'
+import BookSearchForm from '~/components/organisms/BookSearchForm.vue'
 
 export default defineComponent({
   components: {
-    BookListFormCard,
     BookListItem,
+    BookSearchForm,
   },
 
   props: {
