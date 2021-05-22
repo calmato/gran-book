@@ -36,7 +36,7 @@ import {
 import { ICreateBookRequest, IUpdateBookRequest } from '~/types/request'
 import {
   IBookResponse,
-  IBookResponseBookshelf,
+  IBookResponseDetail,
   IBookReviewListResponse,
   IBookReviewListResponseUser,
   IReviewResponse,
@@ -267,7 +267,7 @@ router.get(
   }
 )
 
-function setBookResponse(bookOutput: IBookOutput, bookshelfOutput?: any): IBookResponse {
+function setBookResponse(bookOutput: IBookOutput, bookshelfOutput?: IBookshelfOutput): IBookResponse {
   const authorNames: string[] = bookOutput.authors.map((item: IBookOutputAuthor) => {
     return item.name
   })
@@ -276,7 +276,7 @@ function setBookResponse(bookOutput: IBookOutput, bookshelfOutput?: any): IBookR
     return item.nameKana
   })
 
-  const response: IBookResponse = {
+  const detail: IBookResponseDetail = {
     id: bookOutput.id,
     title: bookOutput.title,
     titleKana: bookOutput.titleKana,
@@ -291,20 +291,16 @@ function setBookResponse(bookOutput: IBookOutput, bookshelfOutput?: any): IBookR
     authorKana: authorNameKanas.join('/'),
     createdAt: bookOutput.createdAt,
     updatedAt: bookOutput.updatedAt,
-    bookshelf: undefined,
   }
 
-  if (bookshelfOutput) {
-    const bookshelf: IBookResponseBookshelf = {
-      id: 0,
-      status: 0,
-      impression: '',
-      readOn: '',
-      createdAt: '',
-      updatedAt: '',
-    }
-
-    response.bookshelf = bookshelf
+  const response: IBookResponse = {
+    id: bookshelfOutput?.id || 0,
+    status: bookshelfOutput?.status || 0,
+    impression: '',
+    readOn: bookshelfOutput?.readOn || '',
+    createdAt: bookshelfOutput?.createdAt || '',
+    updatedAt: bookshelfOutput?.updatedAt || '',
+    detail,
   }
 
   return response

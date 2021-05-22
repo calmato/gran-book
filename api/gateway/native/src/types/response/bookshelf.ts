@@ -1,6 +1,5 @@
 export interface IBookshelfResponse {
   id: number
-  userId: string
   status: number
   readOn: string
   impression: string

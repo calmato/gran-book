@@ -280,7 +280,6 @@ function setBookshelfResponse(output: IBookshelfOutput): IBookshelfResponse {
 
   const response: IBookshelfResponse = {
     id: output.id,
-    userId: output.userId,
     status: output.status,
     impression: '',
     readOn: output.readOn,

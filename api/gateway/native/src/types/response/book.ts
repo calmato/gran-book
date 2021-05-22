@@ -1,5 +1,15 @@
 export interface IBookResponse {
   id: number
+  status: number
+  readOn: string
+  impression: string
+  createdAt: string
+  updatedAt: string
+  detail: IBookResponseDetail
+}
+
+export interface IBookResponseDetail {
+  id: number
   title: string
   titleKana: string
   description: string
@@ -11,16 +21,6 @@ export interface IBookResponse {
   rakutenGenreId: string
   author: string
   authorKana: string
-  createdAt: string
-  updatedAt: string
-  bookshelf?: IBookResponseBookshelf
-}
-
-export interface IBookResponseBookshelf {
-  id: number
-  status: number
-  impression: string
-  readOn: string
   createdAt: string
   updatedAt: string
 }
