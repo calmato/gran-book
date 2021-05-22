@@ -17,7 +17,8 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  books: IBook[]
+  books: IBook[];
+  handleClick : (book: IBook) => void;
 }
 
 
@@ -36,7 +37,7 @@ const BookList = function BookList(props: Props): ReactElement {
           author={book.detail.author}
           height={250}
           width={width / rowItem - 5}
-          onPress={() => console.log(book.detail.title)}
+          onPress={() => props.handleClick(book)}
           key={i}
         />
       ))}

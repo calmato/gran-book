@@ -33,12 +33,8 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  handleNavigateToReadBoook: () => void;
-  handleNavigateToReadingBoook: () => void;
-  handleNavigateToTsundoku: () => void;
-  handleNavigateToSellBoook: () => void;
-  handleNavigateToWishList: () => void;
-  status: string,
+  onPress: (status: number) => void;
+  status: number;
 }
 
 const IconComponents = {
@@ -63,35 +59,42 @@ const IconComponents = {
 const items = [
   {
     name: '読んでる本',
+    value: 0,
     icon: (color: string) => IconComponents.MaterialIcons('book-plus', color),
   },
   {
     name: '読んだ本',
+    value: 1,
     icon: (color: string) => IconComponents.MaterialIcons('book-open-page-variant', color),
   },
   {
     name: '積読本',
+    value: 2,
     icon: (color: string) => IconComponents.MaterialIcons('bookshelf', color),
   },
   {
     name: '手放したい本',
+    value: 3,
     icon: (color: string) => IconComponents.FontAwesome('people-carry', color),
   },
   {
     name: '欲しい本',
+    value: 4,
     icon: (color: string) => IconComponents.MaterialIcons('bookmark-plus', color),
   },
 ];
 
 const ButtonGroupBookFooter = function ButtonGroupBookFooter(props: Props): ReactElement {
 
+  const status = props.status;
+
   const renderItem = items.map((item) => {
-    const isActive: boolean = item.name === '読んだ本';
+    const isActive: boolean = item.value === status;
     return (
       <TouchableOpacity
         key={item.name}
         style={ styles.childStyle}
-        onPress={props.handleNavigateToReadBoook}
+        onPress={() => props.onPress(item.value)}
       >
         {item.icon(
           isActive? COLOR.PRIMARY : COLOR.TEXT_GRAY,
