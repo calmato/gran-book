@@ -228,6 +228,7 @@ services:
       - ./proto:/go/src/github.com/calmato/gran-book/proto:cached
       - ./api/server/book:/go/src/github.com/calmato/gran-book/api/server/book:cached
       - ./api/server/user:/go/src/github.com/calmato/gran-book/api/server/user:cached
+      - ./api/server/information:/go/src/github.com/calmato/gran-book/api/server/information:cached
       - ./api/gateway/admin:/go/src/github.com/calmato/gran-book/api/gateway/admin:cached
       - ./api/gateway/native:/go/src/github.com/calmato/gran-book/api/gateway/native:cached
       - ./tmp/data/go/pkg/mod:/go/pkg/mod:delegated
