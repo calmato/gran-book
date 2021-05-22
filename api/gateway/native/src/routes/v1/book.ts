@@ -296,7 +296,7 @@ function setBookResponse(bookOutput: IBookOutput, bookshelfOutput?: IBookshelfOu
   const response: IBookResponse = {
     id: bookshelfOutput?.id || 0,
     status: bookshelfOutput?.status || 0,
-    impression: '',
+    impression: bookshelfOutput?.review?.impression || '',
     readOn: bookshelfOutput?.readOn || '',
     createdAt: bookshelfOutput?.createdAt || '',
     updatedAt: bookshelfOutput?.updatedAt || '',

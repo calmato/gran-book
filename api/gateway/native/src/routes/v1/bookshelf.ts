@@ -281,15 +281,11 @@ function setBookshelfResponse(output: IBookshelfOutput): IBookshelfResponse {
   const response: IBookshelfResponse = {
     id: output.id,
     status: output.status,
-    impression: '',
+    impression: output.review?.impression || '',
     readOn: output.readOn,
     createdAt: output.createdAt,
     updatedAt: output.updatedAt,
     detail,
-  }
-
-  if (output.review) {
-    response.impression = output.review.impression
   }
 
   return response
