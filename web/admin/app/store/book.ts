@@ -26,6 +26,11 @@ export default class BookModule extends VuexModule {
     this.books = books
   }
 
+  @Action({})
+  public factory(): void {
+    this.setBooks(initialState.books)
+  }
+
   @Action({ rawError: true })
   public searchBookFromRakutenBooksAPI(payload: IBookSearchForm): Promise<void> {
     const url: string = getRakutenBooksURL(payload)
