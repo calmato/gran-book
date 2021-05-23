@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback, } from 'react';
 import { View, StyleSheet, SafeAreaView, TextInput, Text, KeyboardAvoidingView, FlatList, } from 'react-native';
 import { StatusBar as ExpoStatusBar } from 'expo-status-bar';
 import firebase from '~/lib/firebase';
@@ -7,52 +7,24 @@ import { COLOR } from '~~/constants/theme';
 import { MaterialIcons, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { MessageForm } from '~/types/forms';
 import { Header } from 'react-native-elements';
-import { ScrollView, } from 'react-native-gesture-handler';
 import { MessageItem } from '~/components/organisms/MessageItem';
+import { GiftedChat } from 'react-native-gifted-chat';
 
 export const MessagesScreen = () => {
-  const [textData, setText] = useState<MessageForm> ({
-    newText: '',
+  const [textData, setText] = useState ({
+    text: '',
     createdAt: firebase.firestore.Timestamp.now(),
-    userId: '',
+    _id: '',
   });
-  const [messages, setMessages] = useState<MessageForm[]>([]);
-  const [userId, setUserId] = useState<MessageForm['userId'] | undefined>();
+  const [messages, setMessages] = useState([]);
 
-  const canSubmit: boolean = useMemo((): boolean => {
-    return textData.newText.length > 0;
-  }, [textData.newText]);
+  const docRef = getMessageDocRef();
 
-  const sendMessage = async (value: string) => {
-    if (value !== '') {
-      const docRef = await getMessageDocRef();
-      const newMessage: MessageForm = {
-        newText: value,
-        createdAt: firebase.firestore.Timestamp.now(),
-        userId: '',
-      };
-      await docRef.add(newMessage);
-    }
+  const onSend = (messages = []) => {
+    messages.forEach(async (message) => {
+      (await docRef).add(message);
+    });
   };
-
-  const getMessage = async () => {
-    const messages = [] as MessageForm[];
-    await firebase.firestore().collection('messages').orderBy('createdAt')
-      .onSnapshot((snapshot) => {
-        snapshot.docChanges().forEach((change) => {
-          if (change.type === 'added') {
-            messages.unshift(change.doc.data() as MessageForm);
-          }
-          if (messages.length != 0) {
-            setMessages(messages);
-          }
-        });
-      });
-  };
-
-  useEffect(() => {
-    getMessage();
-  }, []);
 
   return (
     <View style={styles.container}>
@@ -73,53 +45,15 @@ export const MessagesScreen = () => {
           height: 40
         }}
       />
+      <GiftedChat
+        messages= {messages}
+        onSend={messages => onSend(messages)}
+        user={{
+          _id: 1,
+          name: 'Kaito'
+        }}
+      />
 
-      <ScrollView style={{marginBottom: 'auto'}}>
-        <FlatList
-          style= {styles.messagesContainer}
-          data= {messages}
-          inverted= {true}
-          renderItem= {({ item }: { item: MessageForm }) => (
-            <MessageItem userId= {userId} item={item} />
-          )}
-          keyExtractor= {(_, index)=> index.toString()}
-        />
-      </ScrollView>
-
-      <View style={styles.chatFooter}>
-        <MaterialCommunityIcons
-          style= {styles.inputImage}
-          name= "image-plus"
-          size= {32}
-        />
-        <TextInput
-          style= {styles.inputText}
-          onChangeText= {(value) => {
-            setText({ ...textData, newText: value });
-          }}
-          value= {textData.newText}
-          placeholder= "メッセージを入力してください"
-          placeholderTextColor= {COLOR.TEXT_GRAY}
-          autoCapitalize= "none"
-          autoCorrect= {false}
-          returnKeyType= "done"
-          multiline= {true}
-        />
-
-        <Ionicons
-          style={
-            (!canSubmit)
-              ? {...styles.sendButtonDisabled}
-              : styles.sendButton
-          }
-          name= "send"
-          size= {32}
-          disabled= {!canSubmit}
-          onPress= {() => {
-            sendMessage(textData.newText);
-          }}
-        />
-      </View>
     </View>
   );
 };
@@ -137,7 +71,8 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   messagesContainer: {
-    width: '67%',
+    marginBottom: 'auto',
+    width: 'auto',
     padding: 10
   },
 
