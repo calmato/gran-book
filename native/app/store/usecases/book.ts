@@ -3,7 +3,7 @@ import { AppState } from '~/store/modules';
 import { AxiosResponse } from 'axios';
 import { internal } from '~/lib/axios';
 import { IErrorResponse, ISearchResultItem } from '~/types/response/external/rakuten-books';
-import { IBookResponse } from '~/types/response';
+import { IBook, IBookResponse } from '~/types/response';
 import { setBooks } from '../modules/book';
 
 
@@ -23,6 +23,20 @@ export async function addBookAsync(book: Partial<ISearchResultItem>): Promise<Ax
     });
 }
 
+/**
+ * バックエンドAPIにアクセスし指定したISBNの書籍の情報を返す関数
+ * @param isbn 取得したい書籍のISBN
+ * @returns
+ */
+export async function getBookByISBNAsync(isbn: string) {
+  return internal.get(`/v1/books/${isbn}`)
+    .then((res: AxiosResponse<IBook>) => {
+      return res;
+    })
+    .catch((err: AxiosResponse<IErrorResponse>) => {
+      return Promise.reject(err);
+    });
+}
 
 // TODO: 例外処理
 /**
