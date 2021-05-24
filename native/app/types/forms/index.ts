@@ -47,7 +47,9 @@ export type AccountEditForm = {
 };
 
 export interface MessageForm {
-  newText: string;
+  text: string;
   createdAt: firebase.firestore.Timestamp;
-  userId: string;
+  _id: string;
+  name: string;
+
 }

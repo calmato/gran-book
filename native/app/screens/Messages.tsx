@@ -25,7 +25,23 @@ export const MessagesScreen = () => {
       (await docRef).add(message);
     });
   };
-
+  const getMessage = async () => {
+    const messages = [] as MessageForm[];
+    await firebase.firestore().collection('messages').orderBy('createdAt')
+      .onSnapshot((snapshot) => {
+        snapshot.docChanges().forEach((change) => {
+          if (change.type === 'added') {
+            messages.unshift(change.doc.data() as MessageForm);
+          }
+          if (messages.length != 0) {
+            setMessages(messages);
+          }
+        });
+      });
+  };
+  useEffect(() => {
+    getMessage();
+  }, []);
   return (
     <View style={styles.container}>
 
@@ -38,7 +54,7 @@ export const MessagesScreen = () => {
           />
         }
         centerComponent={{
-          text: '濵田',
+          text: 'Name',
           style: styles.header
         }}
         centerContainerStyle={{
