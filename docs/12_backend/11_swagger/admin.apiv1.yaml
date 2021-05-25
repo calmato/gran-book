@@ -583,6 +583,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorResponse'
+  /v1/notifications/{notificationId}:
     get:
       summary: お知らせ詳細の取得
       tags:
@@ -600,11 +601,17 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorResponse'
-  /v1/notifications/{notificationId}:
     patch:
       summary: お知らせの編集
       tags:
         - NotificationService
+      parameters:
+        - in: path
+          name: notificationId
+          schema:
+            type: integer
+          required: true
+          description: お知らせID
       responses:
         '200':
           description: A successful response.
@@ -622,6 +629,13 @@ paths:
       summary: お知らせの削除
       tags:
         - NotificationService
+      parameters:
+        - in: path
+          name: notificationId
+          schema:
+            type: integer
+          required: true
+          description: お知らせID
       responses:
         '200':
           description: A successful response.
@@ -975,7 +989,7 @@ components:
             type: object
             properties:
               id:
-                type: string
+                type: integer
               title:
                 type: string
               description:
@@ -1008,7 +1022,7 @@ components:
       type: object
       properties:
         id:
-          type: string
+          type: integer
         title:
           type: string
         description:
