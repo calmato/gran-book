@@ -1,16 +1,5 @@
 export interface IBookshelfResponse {
   id: number
-  userId: string
-  status: number
-  readOn: string
-  impression: string
-  createdAt: string
-  updatedAt: string
-  detail: IBookshelfResponseDetail
-}
-
-export interface IBookshelfResponseDetail {
-  id: number
   title: string
   titleKana: string
   description: string
@@ -22,6 +11,16 @@ export interface IBookshelfResponseDetail {
   rakutenGenreId: string
   author: string
   authorKana: string
+  createdAt: string
+  updatedAt: string
+  bookshelf?: IBookshelfResponseBookshelf
+}
+
+export interface IBookshelfResponseBookshelf {
+  id: number
+  status: string
+  readOn: string
+  impression: string
   createdAt: string
   updatedAt: string
 }
@@ -35,15 +34,6 @@ export interface IBookshelfListResponse {
 
 export interface IBookshelfListResponseBook {
   id: number
-  status: number
-  readOn: string
-  createdAt: string
-  updatedAt: string
-  detail: IBookshelfListResponseDetail
-}
-
-export interface IBookshelfListResponseDetail {
-  id: number
   title: string
   titleKana: string
   description: string
@@ -55,6 +45,15 @@ export interface IBookshelfListResponseDetail {
   rakutenGenreId: string
   author: string
   authorKana: string
+  createdAt: string
+  updatedAt: string
+  bookshelf?: IBookshelfListResponseBookshelf
+}
+
+export interface IBookshelfListResponseBookshelf {
+  id: number
+  status: string
+  readOn: string
   createdAt: string
   updatedAt: string
 }

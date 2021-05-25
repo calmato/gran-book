@@ -10,6 +10,7 @@ import {
   listUserWithUserIds,
   updateBook,
 } from '~/api'
+import { BookStatus } from '~/types/book'
 import { GrpcError } from '~/types/exception'
 import {
   IBookInputAuthor,
@@ -267,7 +268,7 @@ router.get(
   }
 )
 
-function setBookResponse(bookOutput: IBookOutput, bookshelfOutput?: any): IBookResponse {
+function setBookResponse(bookOutput: IBookOutput, bookshelfOutput?: IBookshelfOutput): IBookResponse {
   const authorNames: string[] = bookOutput.authors.map((item: IBookOutputAuthor) => {
     return item.name
   })
@@ -291,17 +292,16 @@ function setBookResponse(bookOutput: IBookOutput, bookshelfOutput?: any): IBookR
     authorKana: authorNameKanas.join('/'),
     createdAt: bookOutput.createdAt,
     updatedAt: bookOutput.updatedAt,
-    bookshelf: undefined,
   }
 
   if (bookshelfOutput) {
     const bookshelf: IBookResponseBookshelf = {
-      id: 0,
-      status: 0,
-      impression: '',
-      readOn: '',
-      createdAt: '',
-      updatedAt: '',
+      id: bookshelfOutput.id,
+      status: BookStatus[bookshelfOutput.status],
+      impression: bookshelfOutput.review?.impression || '',
+      readOn: bookshelfOutput.readOn,
+      createdAt: bookshelfOutput.createdAt,
+      updatedAt: bookshelfOutput.updatedAt,
     }
 
     response.bookshelf = bookshelf

@@ -18,7 +18,7 @@ export interface IBookResponse {
 
 export interface IBookResponseBookshelf {
   id: number
-  status: number
+  status: string
   impression: string
   readOn: string
   createdAt: string
