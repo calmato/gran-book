@@ -12,16 +12,18 @@
     </v-row>
     <v-row>
       <v-col v-for="item in books" :key="item.isbn" cols="6" sm="4" md="3">
-        <book-list-item :book="item" @click="onClickBookCard" />
+        <book-list-item :book="item" @click="onClickBookCard(item)" />
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script lang="ts">
-import { defineComponent, SetupContext } from '@nuxtjs/composition-api'
+import { defineComponent, PropType, SetupContext } from '@nuxtjs/composition-api'
 import BookListItem from '~/components/organisms/BookListItem.vue'
 import BookSearchForm from '~/components/organisms/BookSearchForm.vue'
+import { IBookSearchForm } from '~/types/forms'
+import { IBook } from '~/types/store'
 
 export default defineComponent({
   components: {
@@ -31,12 +33,12 @@ export default defineComponent({
 
   props: {
     books: {
-      type: Array, // TODO: define type
+      type: Array as PropType<IBook[]>,
       required: false,
       default: () => [],
     },
     searchForm: {
-      type: Object, // TODO: define type
+      type: Object as PropType<IBookSearchForm>,
       required: false,
       default: () => ({}),
     },
@@ -47,8 +49,7 @@ export default defineComponent({
       emit('submit')
     }
 
-    // TODO: define type
-    const onClickBookCard = (book: any) => {
+    const onClickBookCard = (book: IBook) => {
       emit('click', book)
     }
 

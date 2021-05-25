@@ -7,12 +7,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, SetupContext } from '@nuxtjs/composition-api'
+import { defineComponent, PropType, SetupContext } from '@nuxtjs/composition-api'
+import { IBook } from '~/types/store'
 
 export default defineComponent({
   props: {
     book: {
-      type: Object, // TODO: define type
+      type: Object as PropType<IBook>,
       required: false,
       default: () => ({}),
     },
