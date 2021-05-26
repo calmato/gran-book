@@ -32,10 +32,6 @@ type grpcServer struct {
 	lis net.Listener
 }
 
-const (
-	UNKNOWN_HEADER = "unknown"
-)
-
 func newGRPCServer(port, logPath, logLevel string, reg *registry.Registry) (*grpcServer, error) {
 	opts, err := grpcServerOptions(logPath, logLevel)
 	if err != nil {
@@ -129,19 +125,19 @@ func accessLogUnaryServerInterceptor() grpc.UnaryServerInterceptor {
 	return func(
 		ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler,
 	) (interface{}, error) {
-		clientIP := UNKNOWN_HEADER
+		clientIP := ""
 		if p, ok := peer.FromContext(ctx); ok {
 			clientIP = p.Addr.String()
 		}
 
-		requestID := UNKNOWN_HEADER
+		requestID := ""
 		if md, ok := metadata.FromIncomingContext(ctx); ok {
 			if id, ok := md["x-request-id"]; ok {
 				requestID = strings.Join(id, ",")
 			}
 		}
 
-		userAgent := UNKNOWN_HEADER
+		userAgent := ""
 		if md, ok := metadata.FromIncomingContext(ctx); ok {
 			if u, ok := md["user-agent"]; ok {
 				userAgent = strings.Join(u, ",")
