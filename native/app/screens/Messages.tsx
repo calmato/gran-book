@@ -5,7 +5,7 @@ import firebase from '~/lib/firebase';
 import { getMessageDocRef } from '~/store/usecases/auth';
 import { COLOR } from '~~/constants/theme';
 import { MaterialIcons, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { MessageForm } from '~/types/forms';
+import { MessageForm, transferMessageForm } from '~/types/forms';
 import { Header } from 'react-native-elements';
 import { MessageItem } from '~/components/organisms/MessageItem';
 import { GiftedChat } from 'react-native-gifted-chat';
@@ -17,7 +17,6 @@ export const MessagesScreen = () => {
     _id: '',
   });
   const [messages, setMessages] = useState([]);
-
   const docRef = getMessageDocRef();
 
   const onSend = (messages = []) => {
@@ -26,12 +25,18 @@ export const MessagesScreen = () => {
     });
   };
   const getMessage = async () => {
-    const messages = [] as MessageForm[];
+    const messages = [] as transferMessageForm[];
     await firebase.firestore().collection('messages').orderBy('createdAt')
       .onSnapshot((snapshot) => {
         snapshot.docChanges().forEach((change) => {
           if (change.type === 'added') {
-            messages.unshift(change.doc.data() as MessageForm);
+            const messageInfo = {
+              _id: change.doc.data()._id,
+              createdAt: change.doc.data().createdAt.toDate(),
+              text: change.doc.data().text,
+              user: change.doc.data().user,
+            };
+            messages.unshift(messageInfo as transferMessageForm);
           }
           if (messages.length != 0) {
             setMessages(messages);

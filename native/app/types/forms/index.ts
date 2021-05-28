@@ -1,4 +1,4 @@
-import firebase from 'firebase';
+import firebase from '~/lib/firebase';
 
 export type SingUpForm = {
   email: string;
@@ -51,5 +51,14 @@ export interface MessageForm {
   createdAt: firebase.firestore.Timestamp;
   _id: string;
   name: string;
+}
 
+export interface transferMessageForm {
+  text: string;
+  createdAt: any;
+  _id: string;
+  user:{
+    _id: string;
+    name: string;
+  };
 }
