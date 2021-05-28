@@ -575,7 +575,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/createNotificationRequest'
+              $ref: '#/components/schemas/notificationRequest'
       responses:
         '200':
           description: A successful response.
@@ -594,6 +594,13 @@ paths:
       summary: お知らせ詳細の取得
       tags:
         - NotificationService
+      parameters:
+        - in: path
+          name: notificationId
+          schema:
+            type: integer
+          required: true
+          description: お知らせID
       responses:
         '200':
           description: A successful response.
@@ -623,7 +630,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/createNotificationRequest'
+              $ref: '#/components/schemas/notificationRequest'
       responses:
         '200':
           description: A successful response.
@@ -991,7 +998,7 @@ components:
                 type: string
               reason:
                 type: string
-    createNotificationRequest:
+    notificationRequest:
       type: object
       properties:
         notifications:
