@@ -511,6 +511,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorResponse'
+  /v1/notifications:
     get:
       summary: お知らせ一覧取得
       tags:
@@ -565,7 +566,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorResponse'
-  /v1/notifications:
     post:
       summary: お知らせの登録
       tags:
