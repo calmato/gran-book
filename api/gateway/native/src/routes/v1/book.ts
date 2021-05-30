@@ -62,6 +62,7 @@ router.post(
       smallImageUrl,
       itemUrl,
       booksGenreId,
+      size,
       author,
       authorKana,
     } = req.body as ICreateBookRequest
@@ -87,6 +88,7 @@ router.post(
       publishedOn: salesDate,
       thumbnailUrl: mediumImageUrl || smallImageUrl || largeImageUrl,
       rakutenUrl: itemUrl,
+      rakutenSize: size,
       rakutenGenreId: booksGenreId,
       authors,
     }
@@ -115,6 +117,7 @@ router.patch(
       smallImageUrl,
       itemUrl,
       booksGenreId,
+      size,
       author,
       authorKana,
     } = req.body as IUpdateBookRequest
@@ -140,6 +143,7 @@ router.patch(
       publishedOn: salesDate,
       thumbnailUrl: mediumImageUrl || smallImageUrl || largeImageUrl,
       rakutenUrl: itemUrl,
+      rakutenSize: size,
       rakutenGenreId: booksGenreId,
       authors,
     }
@@ -287,7 +291,7 @@ function setBookResponse(bookOutput: IBookOutput, bookshelfOutput?: IBookshelfOu
     publishedOn: bookOutput.publishedOn,
     thumbnailUrl: bookOutput.thumbnailUrl,
     rakutenUrl: bookOutput.rakutenUrl,
-    rakutenGenreId: bookOutput.rakutenGenreId,
+    size: bookOutput.rakutenSize,
     author: authorNames.join('/'),
     authorKana: authorNameKanas.join('/'),
     createdAt: bookOutput.createdAt,

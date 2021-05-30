@@ -10,6 +10,7 @@ export interface ICreateBookRequest {
   smallImageUrl: string
   itemUrl: string
   booksGenreId: string
+  size: string
   author: string
   authorKana: string
 }
@@ -26,6 +27,7 @@ export interface IUpdateBookRequest {
   smallImageUrl: string
   itemUrl: string
   booksGenreId: string
+  size: string
   author: string
   authorKana: string
 }

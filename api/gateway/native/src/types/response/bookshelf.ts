@@ -8,7 +8,7 @@ export interface IBookshelfResponse {
   publishedOn: string
   thumbnailUrl: string
   rakutenUrl: string
-  rakutenGenreId: string
+  size: string
   author: string
   authorKana: string
   createdAt: string
@@ -42,7 +42,7 @@ export interface IBookshelfListResponseBook {
   publishedOn: string
   thumbnailUrl: string
   rakutenUrl: string
-  rakutenGenreId: string
+  size: string
   author: string
   authorKana: string
   createdAt: string
