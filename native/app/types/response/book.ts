@@ -24,10 +24,10 @@ export interface IBook {
 }
 
 interface IBookshelf {
-  id: number;
+  id?: number;
   status: string;
-  readOn: string;
-  impression: string;
-  createdAt: string; // TODO: 日付の扱いどうするか？
-  updatedAt: string;
+  readOn?: string;
+  impression?: string;
+  createdAt?: string; // TODO: 日付の扱いどうするか？
+  updatedAt?: string;
 }
