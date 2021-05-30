@@ -2680,7 +2680,7 @@ proto.proto.GetReviewRequest.prototype.setReviewId = function(value) {
  * @private {!Array<number>}
  * @const
  */
-proto.proto.CreateBookRequest.repeatedFields_ = [10];
+proto.proto.CreateBookRequest.repeatedFields_ = [11];
 
 
 
@@ -2721,7 +2721,8 @@ proto.proto.CreateBookRequest.toObject = function(includeInstance, msg) {
     publishedOn: jspb.Message.getFieldWithDefault(msg, 6, ""),
     thumbnailUrl: jspb.Message.getFieldWithDefault(msg, 7, ""),
     rakutenUrl: jspb.Message.getFieldWithDefault(msg, 8, ""),
-    rakutenGenreId: jspb.Message.getFieldWithDefault(msg, 9, ""),
+    rakutenSize: jspb.Message.getFieldWithDefault(msg, 9, ""),
+    rakutenGenreId: jspb.Message.getFieldWithDefault(msg, 10, ""),
     authorsList: jspb.Message.toObjectList(msg.getAuthorsList(),
     proto.proto.CreateBookRequest.Author.toObject, includeInstance)
   };
@@ -2794,9 +2795,13 @@ proto.proto.CreateBookRequest.deserializeBinaryFromReader = function(msg, reader
       break;
     case 9:
       var value = /** @type {string} */ (reader.readString());
-      msg.setRakutenGenreId(value);
+      msg.setRakutenSize(value);
       break;
     case 10:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setRakutenGenreId(value);
+      break;
+    case 11:
       var value = new proto.proto.CreateBookRequest.Author;
       reader.readMessage(value,proto.proto.CreateBookRequest.Author.deserializeBinaryFromReader);
       msg.addAuthors(value);
@@ -2886,17 +2891,24 @@ proto.proto.CreateBookRequest.serializeBinaryToWriter = function(message, writer
       f
     );
   }
-  f = message.getRakutenGenreId();
+  f = message.getRakutenSize();
   if (f.length > 0) {
     writer.writeString(
       9,
       f
     );
   }
+  f = message.getRakutenGenreId();
+  if (f.length > 0) {
+    writer.writeString(
+      10,
+      f
+    );
+  }
   f = message.getAuthorsList();
   if (f.length > 0) {
     writer.writeRepeatedMessage(
-      10,
+      11,
       f,
       proto.proto.CreateBookRequest.Author.serializeBinaryToWriter
     );
@@ -3209,10 +3221,10 @@ proto.proto.CreateBookRequest.prototype.setRakutenUrl = function(value) {
 
 
 /**
- * optional string rakuten_genre_id = 9;
+ * optional string rakuten_size = 9;
  * @return {string}
  */
-proto.proto.CreateBookRequest.prototype.getRakutenGenreId = function() {
+proto.proto.CreateBookRequest.prototype.getRakutenSize = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 9, ""));
 };
 
@@ -3221,18 +3233,36 @@ proto.proto.CreateBookRequest.prototype.getRakutenGenreId = function() {
  * @param {string} value
  * @return {!proto.proto.CreateBookRequest} returns this
  */
-proto.proto.CreateBookRequest.prototype.setRakutenGenreId = function(value) {
+proto.proto.CreateBookRequest.prototype.setRakutenSize = function(value) {
   return jspb.Message.setProto3StringField(this, 9, value);
 };
 
 
 /**
- * repeated Author authors = 10;
+ * optional string rakuten_genre_id = 10;
+ * @return {string}
+ */
+proto.proto.CreateBookRequest.prototype.getRakutenGenreId = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 10, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.proto.CreateBookRequest} returns this
+ */
+proto.proto.CreateBookRequest.prototype.setRakutenGenreId = function(value) {
+  return jspb.Message.setProto3StringField(this, 10, value);
+};
+
+
+/**
+ * repeated Author authors = 11;
  * @return {!Array<!proto.proto.CreateBookRequest.Author>}
  */
 proto.proto.CreateBookRequest.prototype.getAuthorsList = function() {
   return /** @type{!Array<!proto.proto.CreateBookRequest.Author>} */ (
-    jspb.Message.getRepeatedWrapperField(this, proto.proto.CreateBookRequest.Author, 10));
+    jspb.Message.getRepeatedWrapperField(this, proto.proto.CreateBookRequest.Author, 11));
 };
 
 
@@ -3241,7 +3271,7 @@ proto.proto.CreateBookRequest.prototype.getAuthorsList = function() {
  * @return {!proto.proto.CreateBookRequest} returns this
 */
 proto.proto.CreateBookRequest.prototype.setAuthorsList = function(value) {
-  return jspb.Message.setRepeatedWrapperField(this, 10, value);
+  return jspb.Message.setRepeatedWrapperField(this, 11, value);
 };
 
 
@@ -3251,7 +3281,7 @@ proto.proto.CreateBookRequest.prototype.setAuthorsList = function(value) {
  * @return {!proto.proto.CreateBookRequest.Author}
  */
 proto.proto.CreateBookRequest.prototype.addAuthors = function(opt_value, opt_index) {
-  return jspb.Message.addToRepeatedWrapperField(this, 10, opt_value, proto.proto.CreateBookRequest.Author, opt_index);
+  return jspb.Message.addToRepeatedWrapperField(this, 11, opt_value, proto.proto.CreateBookRequest.Author, opt_index);
 };
 
 
@@ -3270,7 +3300,7 @@ proto.proto.CreateBookRequest.prototype.clearAuthorsList = function() {
  * @private {!Array<number>}
  * @const
  */
-proto.proto.UpdateBookRequest.repeatedFields_ = [10];
+proto.proto.UpdateBookRequest.repeatedFields_ = [11];
 
 
 
@@ -3311,7 +3341,8 @@ proto.proto.UpdateBookRequest.toObject = function(includeInstance, msg) {
     publishedOn: jspb.Message.getFieldWithDefault(msg, 6, ""),
     thumbnailUrl: jspb.Message.getFieldWithDefault(msg, 7, ""),
     rakutenUrl: jspb.Message.getFieldWithDefault(msg, 8, ""),
-    rakutenGenreId: jspb.Message.getFieldWithDefault(msg, 9, ""),
+    rakutenSize: jspb.Message.getFieldWithDefault(msg, 9, ""),
+    rakutenGenreId: jspb.Message.getFieldWithDefault(msg, 10, ""),
     authorsList: jspb.Message.toObjectList(msg.getAuthorsList(),
     proto.proto.UpdateBookRequest.Author.toObject, includeInstance)
   };
@@ -3384,9 +3415,13 @@ proto.proto.UpdateBookRequest.deserializeBinaryFromReader = function(msg, reader
       break;
     case 9:
       var value = /** @type {string} */ (reader.readString());
-      msg.setRakutenGenreId(value);
+      msg.setRakutenSize(value);
       break;
     case 10:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setRakutenGenreId(value);
+      break;
+    case 11:
       var value = new proto.proto.UpdateBookRequest.Author;
       reader.readMessage(value,proto.proto.UpdateBookRequest.Author.deserializeBinaryFromReader);
       msg.addAuthors(value);
@@ -3476,17 +3511,24 @@ proto.proto.UpdateBookRequest.serializeBinaryToWriter = function(message, writer
       f
     );
   }
-  f = message.getRakutenGenreId();
+  f = message.getRakutenSize();
   if (f.length > 0) {
     writer.writeString(
       9,
       f
     );
   }
+  f = message.getRakutenGenreId();
+  if (f.length > 0) {
+    writer.writeString(
+      10,
+      f
+    );
+  }
   f = message.getAuthorsList();
   if (f.length > 0) {
     writer.writeRepeatedMessage(
-      10,
+      11,
       f,
       proto.proto.UpdateBookRequest.Author.serializeBinaryToWriter
     );
@@ -3799,10 +3841,10 @@ proto.proto.UpdateBookRequest.prototype.setRakutenUrl = function(value) {
 
 
 /**
- * optional string rakuten_genre_id = 9;
+ * optional string rakuten_size = 9;
  * @return {string}
  */
-proto.proto.UpdateBookRequest.prototype.getRakutenGenreId = function() {
+proto.proto.UpdateBookRequest.prototype.getRakutenSize = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 9, ""));
 };
 
@@ -3811,18 +3853,36 @@ proto.proto.UpdateBookRequest.prototype.getRakutenGenreId = function() {
  * @param {string} value
  * @return {!proto.proto.UpdateBookRequest} returns this
  */
-proto.proto.UpdateBookRequest.prototype.setRakutenGenreId = function(value) {
+proto.proto.UpdateBookRequest.prototype.setRakutenSize = function(value) {
   return jspb.Message.setProto3StringField(this, 9, value);
 };
 
 
 /**
- * repeated Author authors = 10;
+ * optional string rakuten_genre_id = 10;
+ * @return {string}
+ */
+proto.proto.UpdateBookRequest.prototype.getRakutenGenreId = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 10, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.proto.UpdateBookRequest} returns this
+ */
+proto.proto.UpdateBookRequest.prototype.setRakutenGenreId = function(value) {
+  return jspb.Message.setProto3StringField(this, 10, value);
+};
+
+
+/**
+ * repeated Author authors = 11;
  * @return {!Array<!proto.proto.UpdateBookRequest.Author>}
  */
 proto.proto.UpdateBookRequest.prototype.getAuthorsList = function() {
   return /** @type{!Array<!proto.proto.UpdateBookRequest.Author>} */ (
-    jspb.Message.getRepeatedWrapperField(this, proto.proto.UpdateBookRequest.Author, 10));
+    jspb.Message.getRepeatedWrapperField(this, proto.proto.UpdateBookRequest.Author, 11));
 };
 
 
@@ -3831,7 +3891,7 @@ proto.proto.UpdateBookRequest.prototype.getAuthorsList = function() {
  * @return {!proto.proto.UpdateBookRequest} returns this
 */
 proto.proto.UpdateBookRequest.prototype.setAuthorsList = function(value) {
-  return jspb.Message.setRepeatedWrapperField(this, 10, value);
+  return jspb.Message.setRepeatedWrapperField(this, 11, value);
 };
 
 
@@ -3841,7 +3901,7 @@ proto.proto.UpdateBookRequest.prototype.setAuthorsList = function(value) {
  * @return {!proto.proto.UpdateBookRequest.Author}
  */
 proto.proto.UpdateBookRequest.prototype.addAuthors = function(opt_value, opt_index) {
-  return jspb.Message.addToRepeatedWrapperField(this, 10, opt_value, proto.proto.UpdateBookRequest.Author, opt_index);
+  return jspb.Message.addToRepeatedWrapperField(this, 11, opt_value, proto.proto.UpdateBookRequest.Author, opt_index);
 };
 
 
@@ -5040,7 +5100,7 @@ proto.proto.ReleaseBookshelfRequest.prototype.setBookId = function(value) {
  * @private {!Array<number>}
  * @const
  */
-proto.proto.BookResponse.repeatedFields_ = [13];
+proto.proto.BookResponse.repeatedFields_ = [14];
 
 
 
@@ -5082,9 +5142,10 @@ proto.proto.BookResponse.toObject = function(includeInstance, msg) {
     publishedOn: jspb.Message.getFieldWithDefault(msg, 7, ""),
     thumbnailUrl: jspb.Message.getFieldWithDefault(msg, 8, ""),
     rakutenUrl: jspb.Message.getFieldWithDefault(msg, 9, ""),
-    rakutenGenreId: jspb.Message.getFieldWithDefault(msg, 10, ""),
-    createdAt: jspb.Message.getFieldWithDefault(msg, 11, ""),
-    updatedAt: jspb.Message.getFieldWithDefault(msg, 12, ""),
+    rakutenSize: jspb.Message.getFieldWithDefault(msg, 10, ""),
+    rakutenGenreId: jspb.Message.getFieldWithDefault(msg, 11, ""),
+    createdAt: jspb.Message.getFieldWithDefault(msg, 12, ""),
+    updatedAt: jspb.Message.getFieldWithDefault(msg, 13, ""),
     authorsList: jspb.Message.toObjectList(msg.getAuthorsList(),
     proto.proto.BookResponse.Author.toObject, includeInstance)
   };
@@ -5161,17 +5222,21 @@ proto.proto.BookResponse.deserializeBinaryFromReader = function(msg, reader) {
       break;
     case 10:
       var value = /** @type {string} */ (reader.readString());
-      msg.setRakutenGenreId(value);
+      msg.setRakutenSize(value);
       break;
     case 11:
       var value = /** @type {string} */ (reader.readString());
-      msg.setCreatedAt(value);
+      msg.setRakutenGenreId(value);
       break;
     case 12:
       var value = /** @type {string} */ (reader.readString());
-      msg.setUpdatedAt(value);
+      msg.setCreatedAt(value);
       break;
     case 13:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setUpdatedAt(value);
+      break;
+    case 14:
       var value = new proto.proto.BookResponse.Author;
       reader.readMessage(value,proto.proto.BookResponse.Author.deserializeBinaryFromReader);
       msg.addAuthors(value);
@@ -5268,31 +5333,38 @@ proto.proto.BookResponse.serializeBinaryToWriter = function(message, writer) {
       f
     );
   }
-  f = message.getRakutenGenreId();
+  f = message.getRakutenSize();
   if (f.length > 0) {
     writer.writeString(
       10,
       f
     );
   }
-  f = message.getCreatedAt();
+  f = message.getRakutenGenreId();
   if (f.length > 0) {
     writer.writeString(
       11,
       f
     );
   }
-  f = message.getUpdatedAt();
+  f = message.getCreatedAt();
   if (f.length > 0) {
     writer.writeString(
       12,
       f
     );
   }
+  f = message.getUpdatedAt();
+  if (f.length > 0) {
+    writer.writeString(
+      13,
+      f
+    );
+  }
   f = message.getAuthorsList();
   if (f.length > 0) {
     writer.writeRepeatedMessage(
-      13,
+      14,
       f,
       proto.proto.BookResponse.Author.serializeBinaryToWriter
     );
@@ -5623,10 +5695,10 @@ proto.proto.BookResponse.prototype.setRakutenUrl = function(value) {
 
 
 /**
- * optional string rakuten_genre_id = 10;
+ * optional string rakuten_size = 10;
  * @return {string}
  */
-proto.proto.BookResponse.prototype.getRakutenGenreId = function() {
+proto.proto.BookResponse.prototype.getRakutenSize = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 10, ""));
 };
 
@@ -5635,16 +5707,16 @@ proto.proto.BookResponse.prototype.getRakutenGenreId = function() {
  * @param {string} value
  * @return {!proto.proto.BookResponse} returns this
  */
-proto.proto.BookResponse.prototype.setRakutenGenreId = function(value) {
+proto.proto.BookResponse.prototype.setRakutenSize = function(value) {
   return jspb.Message.setProto3StringField(this, 10, value);
 };
 
 
 /**
- * optional string created_at = 11;
+ * optional string rakuten_genre_id = 11;
  * @return {string}
  */
-proto.proto.BookResponse.prototype.getCreatedAt = function() {
+proto.proto.BookResponse.prototype.getRakutenGenreId = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 11, ""));
 };
 
@@ -5653,16 +5725,16 @@ proto.proto.BookResponse.prototype.getCreatedAt = function() {
  * @param {string} value
  * @return {!proto.proto.BookResponse} returns this
  */
-proto.proto.BookResponse.prototype.setCreatedAt = function(value) {
+proto.proto.BookResponse.prototype.setRakutenGenreId = function(value) {
   return jspb.Message.setProto3StringField(this, 11, value);
 };
 
 
 /**
- * optional string updated_at = 12;
+ * optional string created_at = 12;
  * @return {string}
  */
-proto.proto.BookResponse.prototype.getUpdatedAt = function() {
+proto.proto.BookResponse.prototype.getCreatedAt = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 12, ""));
 };
 
@@ -5671,18 +5743,36 @@ proto.proto.BookResponse.prototype.getUpdatedAt = function() {
  * @param {string} value
  * @return {!proto.proto.BookResponse} returns this
  */
-proto.proto.BookResponse.prototype.setUpdatedAt = function(value) {
+proto.proto.BookResponse.prototype.setCreatedAt = function(value) {
   return jspb.Message.setProto3StringField(this, 12, value);
 };
 
 
 /**
- * repeated Author authors = 13;
+ * optional string updated_at = 13;
+ * @return {string}
+ */
+proto.proto.BookResponse.prototype.getUpdatedAt = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 13, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.proto.BookResponse} returns this
+ */
+proto.proto.BookResponse.prototype.setUpdatedAt = function(value) {
+  return jspb.Message.setProto3StringField(this, 13, value);
+};
+
+
+/**
+ * repeated Author authors = 14;
  * @return {!Array<!proto.proto.BookResponse.Author>}
  */
 proto.proto.BookResponse.prototype.getAuthorsList = function() {
   return /** @type{!Array<!proto.proto.BookResponse.Author>} */ (
-    jspb.Message.getRepeatedWrapperField(this, proto.proto.BookResponse.Author, 13));
+    jspb.Message.getRepeatedWrapperField(this, proto.proto.BookResponse.Author, 14));
 };
 
 
@@ -5691,7 +5781,7 @@ proto.proto.BookResponse.prototype.getAuthorsList = function() {
  * @return {!proto.proto.BookResponse} returns this
 */
 proto.proto.BookResponse.prototype.setAuthorsList = function(value) {
-  return jspb.Message.setRepeatedWrapperField(this, 13, value);
+  return jspb.Message.setRepeatedWrapperField(this, 14, value);
 };
 
 
@@ -5701,7 +5791,7 @@ proto.proto.BookResponse.prototype.setAuthorsList = function(value) {
  * @return {!proto.proto.BookResponse.Author}
  */
 proto.proto.BookResponse.prototype.addAuthors = function(opt_value, opt_index) {
-  return jspb.Message.addToRepeatedWrapperField(this, 13, opt_value, proto.proto.BookResponse.Author, opt_index);
+  return jspb.Message.addToRepeatedWrapperField(this, 14, opt_value, proto.proto.BookResponse.Author, opt_index);
 };
 
 
@@ -6038,7 +6128,7 @@ proto.proto.BookListResponse.Author.prototype.setNameKana = function(value) {
  * @private {!Array<number>}
  * @const
  */
-proto.proto.BookListResponse.Book.repeatedFields_ = [13];
+proto.proto.BookListResponse.Book.repeatedFields_ = [14];
 
 
 
@@ -6080,9 +6170,10 @@ proto.proto.BookListResponse.Book.toObject = function(includeInstance, msg) {
     publishedOn: jspb.Message.getFieldWithDefault(msg, 7, ""),
     thumbnailUrl: jspb.Message.getFieldWithDefault(msg, 8, ""),
     rakutenUrl: jspb.Message.getFieldWithDefault(msg, 9, ""),
-    rakutenGenreId: jspb.Message.getFieldWithDefault(msg, 10, ""),
-    createdAt: jspb.Message.getFieldWithDefault(msg, 11, ""),
-    updatedAt: jspb.Message.getFieldWithDefault(msg, 12, ""),
+    rakutenSize: jspb.Message.getFieldWithDefault(msg, 10, ""),
+    rakutenGenreId: jspb.Message.getFieldWithDefault(msg, 11, ""),
+    createdAt: jspb.Message.getFieldWithDefault(msg, 12, ""),
+    updatedAt: jspb.Message.getFieldWithDefault(msg, 13, ""),
     authorsList: jspb.Message.toObjectList(msg.getAuthorsList(),
     proto.proto.BookListResponse.Author.toObject, includeInstance)
   };
@@ -6159,17 +6250,21 @@ proto.proto.BookListResponse.Book.deserializeBinaryFromReader = function(msg, re
       break;
     case 10:
       var value = /** @type {string} */ (reader.readString());
-      msg.setRakutenGenreId(value);
+      msg.setRakutenSize(value);
       break;
     case 11:
       var value = /** @type {string} */ (reader.readString());
-      msg.setCreatedAt(value);
+      msg.setRakutenGenreId(value);
       break;
     case 12:
       var value = /** @type {string} */ (reader.readString());
-      msg.setUpdatedAt(value);
+      msg.setCreatedAt(value);
       break;
     case 13:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setUpdatedAt(value);
+      break;
+    case 14:
       var value = new proto.proto.BookListResponse.Author;
       reader.readMessage(value,proto.proto.BookListResponse.Author.deserializeBinaryFromReader);
       msg.addAuthors(value);
@@ -6266,31 +6361,38 @@ proto.proto.BookListResponse.Book.serializeBinaryToWriter = function(message, wr
       f
     );
   }
-  f = message.getRakutenGenreId();
+  f = message.getRakutenSize();
   if (f.length > 0) {
     writer.writeString(
       10,
       f
     );
   }
-  f = message.getCreatedAt();
+  f = message.getRakutenGenreId();
   if (f.length > 0) {
     writer.writeString(
       11,
       f
     );
   }
-  f = message.getUpdatedAt();
+  f = message.getCreatedAt();
   if (f.length > 0) {
     writer.writeString(
       12,
       f
     );
   }
+  f = message.getUpdatedAt();
+  if (f.length > 0) {
+    writer.writeString(
+      13,
+      f
+    );
+  }
   f = message.getAuthorsList();
   if (f.length > 0) {
     writer.writeRepeatedMessage(
-      13,
+      14,
       f,
       proto.proto.BookListResponse.Author.serializeBinaryToWriter
     );
@@ -6461,10 +6563,10 @@ proto.proto.BookListResponse.Book.prototype.setRakutenUrl = function(value) {
 
 
 /**
- * optional string rakuten_genre_id = 10;
+ * optional string rakuten_size = 10;
  * @return {string}
  */
-proto.proto.BookListResponse.Book.prototype.getRakutenGenreId = function() {
+proto.proto.BookListResponse.Book.prototype.getRakutenSize = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 10, ""));
 };
 
@@ -6473,16 +6575,16 @@ proto.proto.BookListResponse.Book.prototype.getRakutenGenreId = function() {
  * @param {string} value
  * @return {!proto.proto.BookListResponse.Book} returns this
  */
-proto.proto.BookListResponse.Book.prototype.setRakutenGenreId = function(value) {
+proto.proto.BookListResponse.Book.prototype.setRakutenSize = function(value) {
   return jspb.Message.setProto3StringField(this, 10, value);
 };
 
 
 /**
- * optional string created_at = 11;
+ * optional string rakuten_genre_id = 11;
  * @return {string}
  */
-proto.proto.BookListResponse.Book.prototype.getCreatedAt = function() {
+proto.proto.BookListResponse.Book.prototype.getRakutenGenreId = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 11, ""));
 };
 
@@ -6491,16 +6593,16 @@ proto.proto.BookListResponse.Book.prototype.getCreatedAt = function() {
  * @param {string} value
  * @return {!proto.proto.BookListResponse.Book} returns this
  */
-proto.proto.BookListResponse.Book.prototype.setCreatedAt = function(value) {
+proto.proto.BookListResponse.Book.prototype.setRakutenGenreId = function(value) {
   return jspb.Message.setProto3StringField(this, 11, value);
 };
 
 
 /**
- * optional string updated_at = 12;
+ * optional string created_at = 12;
  * @return {string}
  */
-proto.proto.BookListResponse.Book.prototype.getUpdatedAt = function() {
+proto.proto.BookListResponse.Book.prototype.getCreatedAt = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 12, ""));
 };
 
@@ -6509,18 +6611,36 @@ proto.proto.BookListResponse.Book.prototype.getUpdatedAt = function() {
  * @param {string} value
  * @return {!proto.proto.BookListResponse.Book} returns this
  */
-proto.proto.BookListResponse.Book.prototype.setUpdatedAt = function(value) {
+proto.proto.BookListResponse.Book.prototype.setCreatedAt = function(value) {
   return jspb.Message.setProto3StringField(this, 12, value);
 };
 
 
 /**
- * repeated Author authors = 13;
+ * optional string updated_at = 13;
+ * @return {string}
+ */
+proto.proto.BookListResponse.Book.prototype.getUpdatedAt = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 13, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.proto.BookListResponse.Book} returns this
+ */
+proto.proto.BookListResponse.Book.prototype.setUpdatedAt = function(value) {
+  return jspb.Message.setProto3StringField(this, 13, value);
+};
+
+
+/**
+ * repeated Author authors = 14;
  * @return {!Array<!proto.proto.BookListResponse.Author>}
  */
 proto.proto.BookListResponse.Book.prototype.getAuthorsList = function() {
   return /** @type{!Array<!proto.proto.BookListResponse.Author>} */ (
-    jspb.Message.getRepeatedWrapperField(this, proto.proto.BookListResponse.Author, 13));
+    jspb.Message.getRepeatedWrapperField(this, proto.proto.BookListResponse.Author, 14));
 };
 
 
@@ -6529,7 +6649,7 @@ proto.proto.BookListResponse.Book.prototype.getAuthorsList = function() {
  * @return {!proto.proto.BookListResponse.Book} returns this
 */
 proto.proto.BookListResponse.Book.prototype.setAuthorsList = function(value) {
-  return jspb.Message.setRepeatedWrapperField(this, 13, value);
+  return jspb.Message.setRepeatedWrapperField(this, 14, value);
 };
 
 
@@ -6539,7 +6659,7 @@ proto.proto.BookListResponse.Book.prototype.setAuthorsList = function(value) {
  * @return {!proto.proto.BookListResponse.Author}
  */
 proto.proto.BookListResponse.Book.prototype.addAuthors = function(opt_value, opt_index) {
-  return jspb.Message.addToRepeatedWrapperField(this, 13, opt_value, proto.proto.BookListResponse.Author, opt_index);
+  return jspb.Message.addToRepeatedWrapperField(this, 14, opt_value, proto.proto.BookListResponse.Author, opt_index);
 };
 
 
@@ -7022,7 +7142,7 @@ proto.proto.BookshelfResponse.Author.prototype.setNameKana = function(value) {
  * @private {!Array<number>}
  * @const
  */
-proto.proto.BookshelfResponse.Book.repeatedFields_ = [13];
+proto.proto.BookshelfResponse.Book.repeatedFields_ = [14];
 
 
 
@@ -7064,9 +7184,10 @@ proto.proto.BookshelfResponse.Book.toObject = function(includeInstance, msg) {
     publishedOn: jspb.Message.getFieldWithDefault(msg, 7, ""),
     thumbnailUrl: jspb.Message.getFieldWithDefault(msg, 8, ""),
     rakutenUrl: jspb.Message.getFieldWithDefault(msg, 9, ""),
-    rakutenGenreId: jspb.Message.getFieldWithDefault(msg, 10, ""),
-    createdAt: jspb.Message.getFieldWithDefault(msg, 11, ""),
-    updatedAt: jspb.Message.getFieldWithDefault(msg, 12, ""),
+    rakutenSize: jspb.Message.getFieldWithDefault(msg, 10, ""),
+    rakutenGenreId: jspb.Message.getFieldWithDefault(msg, 11, ""),
+    createdAt: jspb.Message.getFieldWithDefault(msg, 12, ""),
+    updatedAt: jspb.Message.getFieldWithDefault(msg, 13, ""),
     authorsList: jspb.Message.toObjectList(msg.getAuthorsList(),
     proto.proto.BookshelfResponse.Author.toObject, includeInstance)
   };
@@ -7143,17 +7264,21 @@ proto.proto.BookshelfResponse.Book.deserializeBinaryFromReader = function(msg, r
       break;
     case 10:
       var value = /** @type {string} */ (reader.readString());
-      msg.setRakutenGenreId(value);
+      msg.setRakutenSize(value);
       break;
     case 11:
       var value = /** @type {string} */ (reader.readString());
-      msg.setCreatedAt(value);
+      msg.setRakutenGenreId(value);
       break;
     case 12:
       var value = /** @type {string} */ (reader.readString());
-      msg.setUpdatedAt(value);
+      msg.setCreatedAt(value);
       break;
     case 13:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setUpdatedAt(value);
+      break;
+    case 14:
       var value = new proto.proto.BookshelfResponse.Author;
       reader.readMessage(value,proto.proto.BookshelfResponse.Author.deserializeBinaryFromReader);
       msg.addAuthors(value);
@@ -7250,31 +7375,38 @@ proto.proto.BookshelfResponse.Book.serializeBinaryToWriter = function(message, w
       f
     );
   }
-  f = message.getRakutenGenreId();
+  f = message.getRakutenSize();
   if (f.length > 0) {
     writer.writeString(
       10,
       f
     );
   }
-  f = message.getCreatedAt();
+  f = message.getRakutenGenreId();
   if (f.length > 0) {
     writer.writeString(
       11,
       f
     );
   }
-  f = message.getUpdatedAt();
+  f = message.getCreatedAt();
   if (f.length > 0) {
     writer.writeString(
       12,
       f
     );
   }
+  f = message.getUpdatedAt();
+  if (f.length > 0) {
+    writer.writeString(
+      13,
+      f
+    );
+  }
   f = message.getAuthorsList();
   if (f.length > 0) {
     writer.writeRepeatedMessage(
-      13,
+      14,
       f,
       proto.proto.BookshelfResponse.Author.serializeBinaryToWriter
     );
@@ -7445,10 +7577,10 @@ proto.proto.BookshelfResponse.Book.prototype.setRakutenUrl = function(value) {
 
 
 /**
- * optional string rakuten_genre_id = 10;
+ * optional string rakuten_size = 10;
  * @return {string}
  */
-proto.proto.BookshelfResponse.Book.prototype.getRakutenGenreId = function() {
+proto.proto.BookshelfResponse.Book.prototype.getRakutenSize = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 10, ""));
 };
 
@@ -7457,16 +7589,16 @@ proto.proto.BookshelfResponse.Book.prototype.getRakutenGenreId = function() {
  * @param {string} value
  * @return {!proto.proto.BookshelfResponse.Book} returns this
  */
-proto.proto.BookshelfResponse.Book.prototype.setRakutenGenreId = function(value) {
+proto.proto.BookshelfResponse.Book.prototype.setRakutenSize = function(value) {
   return jspb.Message.setProto3StringField(this, 10, value);
 };
 
 
 /**
- * optional string created_at = 11;
+ * optional string rakuten_genre_id = 11;
  * @return {string}
  */
-proto.proto.BookshelfResponse.Book.prototype.getCreatedAt = function() {
+proto.proto.BookshelfResponse.Book.prototype.getRakutenGenreId = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 11, ""));
 };
 
@@ -7475,16 +7607,16 @@ proto.proto.BookshelfResponse.Book.prototype.getCreatedAt = function() {
  * @param {string} value
  * @return {!proto.proto.BookshelfResponse.Book} returns this
  */
-proto.proto.BookshelfResponse.Book.prototype.setCreatedAt = function(value) {
+proto.proto.BookshelfResponse.Book.prototype.setRakutenGenreId = function(value) {
   return jspb.Message.setProto3StringField(this, 11, value);
 };
 
 
 /**
- * optional string updated_at = 12;
+ * optional string created_at = 12;
  * @return {string}
  */
-proto.proto.BookshelfResponse.Book.prototype.getUpdatedAt = function() {
+proto.proto.BookshelfResponse.Book.prototype.getCreatedAt = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 12, ""));
 };
 
@@ -7493,18 +7625,36 @@ proto.proto.BookshelfResponse.Book.prototype.getUpdatedAt = function() {
  * @param {string} value
  * @return {!proto.proto.BookshelfResponse.Book} returns this
  */
-proto.proto.BookshelfResponse.Book.prototype.setUpdatedAt = function(value) {
+proto.proto.BookshelfResponse.Book.prototype.setCreatedAt = function(value) {
   return jspb.Message.setProto3StringField(this, 12, value);
 };
 
 
 /**
- * repeated Author authors = 13;
+ * optional string updated_at = 13;
+ * @return {string}
+ */
+proto.proto.BookshelfResponse.Book.prototype.getUpdatedAt = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 13, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.proto.BookshelfResponse.Book} returns this
+ */
+proto.proto.BookshelfResponse.Book.prototype.setUpdatedAt = function(value) {
+  return jspb.Message.setProto3StringField(this, 13, value);
+};
+
+
+/**
+ * repeated Author authors = 14;
  * @return {!Array<!proto.proto.BookshelfResponse.Author>}
  */
 proto.proto.BookshelfResponse.Book.prototype.getAuthorsList = function() {
   return /** @type{!Array<!proto.proto.BookshelfResponse.Author>} */ (
-    jspb.Message.getRepeatedWrapperField(this, proto.proto.BookshelfResponse.Author, 13));
+    jspb.Message.getRepeatedWrapperField(this, proto.proto.BookshelfResponse.Author, 14));
 };
 
 
@@ -7513,7 +7663,7 @@ proto.proto.BookshelfResponse.Book.prototype.getAuthorsList = function() {
  * @return {!proto.proto.BookshelfResponse.Book} returns this
 */
 proto.proto.BookshelfResponse.Book.prototype.setAuthorsList = function(value) {
-  return jspb.Message.setRepeatedWrapperField(this, 13, value);
+  return jspb.Message.setRepeatedWrapperField(this, 14, value);
 };
 
 
@@ -7523,7 +7673,7 @@ proto.proto.BookshelfResponse.Book.prototype.setAuthorsList = function(value) {
  * @return {!proto.proto.BookshelfResponse.Author}
  */
 proto.proto.BookshelfResponse.Book.prototype.addAuthors = function(opt_value, opt_index) {
-  return jspb.Message.addToRepeatedWrapperField(this, 13, opt_value, proto.proto.BookshelfResponse.Author, opt_index);
+  return jspb.Message.addToRepeatedWrapperField(this, 14, opt_value, proto.proto.BookshelfResponse.Author, opt_index);
 };
 
 
@@ -8220,7 +8370,7 @@ proto.proto.BookshelfListResponse.Author.prototype.setNameKana = function(value)
  * @private {!Array<number>}
  * @const
  */
-proto.proto.BookshelfListResponse.Book.repeatedFields_ = [13];
+proto.proto.BookshelfListResponse.Book.repeatedFields_ = [14];
 
 
 
@@ -8262,9 +8412,10 @@ proto.proto.BookshelfListResponse.Book.toObject = function(includeInstance, msg)
     publishedOn: jspb.Message.getFieldWithDefault(msg, 7, ""),
     thumbnailUrl: jspb.Message.getFieldWithDefault(msg, 8, ""),
     rakutenUrl: jspb.Message.getFieldWithDefault(msg, 9, ""),
-    rakutenGenreId: jspb.Message.getFieldWithDefault(msg, 10, ""),
-    createdAt: jspb.Message.getFieldWithDefault(msg, 11, ""),
-    updatedAt: jspb.Message.getFieldWithDefault(msg, 12, ""),
+    rakutenSize: jspb.Message.getFieldWithDefault(msg, 10, ""),
+    rakutenGenreId: jspb.Message.getFieldWithDefault(msg, 11, ""),
+    createdAt: jspb.Message.getFieldWithDefault(msg, 12, ""),
+    updatedAt: jspb.Message.getFieldWithDefault(msg, 13, ""),
     authorsList: jspb.Message.toObjectList(msg.getAuthorsList(),
     proto.proto.BookshelfListResponse.Author.toObject, includeInstance)
   };
@@ -8341,17 +8492,21 @@ proto.proto.BookshelfListResponse.Book.deserializeBinaryFromReader = function(ms
       break;
     case 10:
       var value = /** @type {string} */ (reader.readString());
-      msg.setRakutenGenreId(value);
+      msg.setRakutenSize(value);
       break;
     case 11:
       var value = /** @type {string} */ (reader.readString());
-      msg.setCreatedAt(value);
+      msg.setRakutenGenreId(value);
       break;
     case 12:
       var value = /** @type {string} */ (reader.readString());
-      msg.setUpdatedAt(value);
+      msg.setCreatedAt(value);
       break;
     case 13:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setUpdatedAt(value);
+      break;
+    case 14:
       var value = new proto.proto.BookshelfListResponse.Author;
       reader.readMessage(value,proto.proto.BookshelfListResponse.Author.deserializeBinaryFromReader);
       msg.addAuthors(value);
@@ -8448,31 +8603,38 @@ proto.proto.BookshelfListResponse.Book.serializeBinaryToWriter = function(messag
       f
     );
   }
-  f = message.getRakutenGenreId();
+  f = message.getRakutenSize();
   if (f.length > 0) {
     writer.writeString(
       10,
       f
     );
   }
-  f = message.getCreatedAt();
+  f = message.getRakutenGenreId();
   if (f.length > 0) {
     writer.writeString(
       11,
       f
     );
   }
-  f = message.getUpdatedAt();
+  f = message.getCreatedAt();
   if (f.length > 0) {
     writer.writeString(
       12,
       f
     );
   }
+  f = message.getUpdatedAt();
+  if (f.length > 0) {
+    writer.writeString(
+      13,
+      f
+    );
+  }
   f = message.getAuthorsList();
   if (f.length > 0) {
     writer.writeRepeatedMessage(
-      13,
+      14,
       f,
       proto.proto.BookshelfListResponse.Author.serializeBinaryToWriter
     );
@@ -8643,10 +8805,10 @@ proto.proto.BookshelfListResponse.Book.prototype.setRakutenUrl = function(value)
 
 
 /**
- * optional string rakuten_genre_id = 10;
+ * optional string rakuten_size = 10;
  * @return {string}
  */
-proto.proto.BookshelfListResponse.Book.prototype.getRakutenGenreId = function() {
+proto.proto.BookshelfListResponse.Book.prototype.getRakutenSize = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 10, ""));
 };
 
@@ -8655,16 +8817,16 @@ proto.proto.BookshelfListResponse.Book.prototype.getRakutenGenreId = function() 
  * @param {string} value
  * @return {!proto.proto.BookshelfListResponse.Book} returns this
  */
-proto.proto.BookshelfListResponse.Book.prototype.setRakutenGenreId = function(value) {
+proto.proto.BookshelfListResponse.Book.prototype.setRakutenSize = function(value) {
   return jspb.Message.setProto3StringField(this, 10, value);
 };
 
 
 /**
- * optional string created_at = 11;
+ * optional string rakuten_genre_id = 11;
  * @return {string}
  */
-proto.proto.BookshelfListResponse.Book.prototype.getCreatedAt = function() {
+proto.proto.BookshelfListResponse.Book.prototype.getRakutenGenreId = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 11, ""));
 };
 
@@ -8673,16 +8835,16 @@ proto.proto.BookshelfListResponse.Book.prototype.getCreatedAt = function() {
  * @param {string} value
  * @return {!proto.proto.BookshelfListResponse.Book} returns this
  */
-proto.proto.BookshelfListResponse.Book.prototype.setCreatedAt = function(value) {
+proto.proto.BookshelfListResponse.Book.prototype.setRakutenGenreId = function(value) {
   return jspb.Message.setProto3StringField(this, 11, value);
 };
 
 
 /**
- * optional string updated_at = 12;
+ * optional string created_at = 12;
  * @return {string}
  */
-proto.proto.BookshelfListResponse.Book.prototype.getUpdatedAt = function() {
+proto.proto.BookshelfListResponse.Book.prototype.getCreatedAt = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 12, ""));
 };
 
@@ -8691,18 +8853,36 @@ proto.proto.BookshelfListResponse.Book.prototype.getUpdatedAt = function() {
  * @param {string} value
  * @return {!proto.proto.BookshelfListResponse.Book} returns this
  */
-proto.proto.BookshelfListResponse.Book.prototype.setUpdatedAt = function(value) {
+proto.proto.BookshelfListResponse.Book.prototype.setCreatedAt = function(value) {
   return jspb.Message.setProto3StringField(this, 12, value);
 };
 
 
 /**
- * repeated Author authors = 13;
+ * optional string updated_at = 13;
+ * @return {string}
+ */
+proto.proto.BookshelfListResponse.Book.prototype.getUpdatedAt = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 13, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.proto.BookshelfListResponse.Book} returns this
+ */
+proto.proto.BookshelfListResponse.Book.prototype.setUpdatedAt = function(value) {
+  return jspb.Message.setProto3StringField(this, 13, value);
+};
+
+
+/**
+ * repeated Author authors = 14;
  * @return {!Array<!proto.proto.BookshelfListResponse.Author>}
  */
 proto.proto.BookshelfListResponse.Book.prototype.getAuthorsList = function() {
   return /** @type{!Array<!proto.proto.BookshelfListResponse.Author>} */ (
-    jspb.Message.getRepeatedWrapperField(this, proto.proto.BookshelfListResponse.Author, 13));
+    jspb.Message.getRepeatedWrapperField(this, proto.proto.BookshelfListResponse.Author, 14));
 };
 
 
@@ -8711,7 +8891,7 @@ proto.proto.BookshelfListResponse.Book.prototype.getAuthorsList = function() {
  * @return {!proto.proto.BookshelfListResponse.Book} returns this
 */
 proto.proto.BookshelfListResponse.Book.prototype.setAuthorsList = function(value) {
-  return jspb.Message.setRepeatedWrapperField(this, 13, value);
+  return jspb.Message.setRepeatedWrapperField(this, 14, value);
 };
 
 
@@ -8721,7 +8901,7 @@ proto.proto.BookshelfListResponse.Book.prototype.setAuthorsList = function(value
  * @return {!proto.proto.BookshelfListResponse.Author}
  */
 proto.proto.BookshelfListResponse.Book.prototype.addAuthors = function(opt_value, opt_index) {
-  return jspb.Message.addToRepeatedWrapperField(this, 13, opt_value, proto.proto.BookshelfListResponse.Author, opt_index);
+  return jspb.Message.addToRepeatedWrapperField(this, 14, opt_value, proto.proto.BookshelfListResponse.Author, opt_index);
 };
 
 

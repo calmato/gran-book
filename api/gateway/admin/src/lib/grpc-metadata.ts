@@ -8,9 +8,16 @@ export function getGrpcMetadata(req: Request): grpc.Metadata {
     meta.set('Authorization', req.headers.authorization)
   }
 
-  const userAgent = req.headers['user-agent']
+  const requestId: string | string[] = req.headers['x-request-id'] || 'unknown'
+  if (Array.isArray(requestId)) {
+    meta.set('x-request-id', requestId.join(','))
+  } else {
+    meta.set('x-request-id', requestId)
+  }
 
-  meta.set('user-agent', userAgent || 'unknown')
+  const userAgent: string = req.headers['user-agent'] || 'unknown'
+
+  meta.set('user-agent', userAgent)
   meta.set('x-forwarded-for', req.ip)
 
   return meta

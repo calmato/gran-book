@@ -5,6 +5,7 @@ ADMIN_GATEWAY_PATH='./../api/gateway/admin/src'
 NATIVE_GATEWAY_PATH='./../api/gateway/native/src'
 USER_API_PATH='./../api/server/user'
 BOOK_API_PATH='./../api/server/book'
+INFORMATION_API_PATH='./../api/server/information'
 
 ##################################################
 # For Configuration
@@ -33,6 +34,7 @@ generate:
 	$(MAKE) generate-native-gateway
 	$(MAKE) generate-user-api
 	$(MAKE) generate-book-api
+	$(MAKE) generate-information-api
 
 generate-admin-gateway:
 	protoc -I . \
@@ -67,3 +69,11 @@ generate-book-api:
 		--go-grpc_out ${BOOK_API_PATH} \
 		--go-grpc_opt paths=source_relative \
 		./proto/book_apiv1.proto
+
+generate-information-api:
+	protoc -I . \
+		--go_out ${INFORMATION_API_PATH} \
+		--go_opt paths=source_relative \
+		--go-grpc_out ${INFORMATION_API_PATH} \
+		--go-grpc_opt paths=source_relative \
+		./proto/information_apiv1.proto
