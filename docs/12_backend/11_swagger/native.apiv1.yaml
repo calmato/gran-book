@@ -1037,6 +1037,8 @@ components:
           type: string
         booksGenreId:
           type: string
+        size:
+          type: string
         author:
           type: string
         authorKana:
@@ -1065,6 +1067,8 @@ components:
         itemUrl:
           type: string
         booksGenreId:
+          type: string
+        size:
           type: string
         author:
           type: string
@@ -1242,7 +1246,7 @@ components:
           type: string
         rakutenUrl:
           type: string
-        rakutenGenreId:
+        size:
           type: string
         author:
           type: string
@@ -1290,7 +1294,7 @@ components:
           type: string
         rakutenUrl:
           type: string
-        rakutenGenreId:
+        size:
           type: string
         author:
           type: string
@@ -1325,42 +1329,41 @@ components:
               id:
                 type: integer
                 format: int64
-              status:
-                type: integer
-                format: int32
-              readOn:
+              title:
+                type: string
+              titleKana:
+                type: string
+              description:
+                type: string
+              isbn:
+                type: string
+              publisher:
+                type: string
+              publishedOn:
+                type: string
+              thumbnailUrl:
+                type: string
+              rakutenUrl:
+                type: string
+              size:
+                type: string
+              author:
+                type: string
+              authorKana:
                 type: string
               createdAt:
                 type: string
               updatedAt:
                 type: string
-              detail:
+              bookshelf:
                 type: object
                 properties:
                   id:
                     type: integer
                     format: int64
-                  title:
+                  status:
                     type: string
-                  titleKana:
-                    type: string
-                  description:
-                    type: string
-                  isbn:
-                    type: string
-                  publisher:
-                    type: string
-                  publishedOn:
-                    type: string
-                  thumbnailUrl:
-                    type: string
-                  rakutenUrl:
-                    type: string
-                  rakutenGenreId:
-                    type: string
-                  author:
-                    type: string
-                  authorKana:
+                  readOn:
                     type: string
                   createdAt:
                     type: string
