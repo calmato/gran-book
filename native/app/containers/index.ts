@@ -10,4 +10,4 @@ export { default as ProfileEdit } from './ProfileEdit';
 export { default as OwnProfile } from './OwnProfile';
 export { default as SignInSelect } from './SignInSelect';
 export { default as Home } from './Home';
-export { default as Support } from './Support'
+export { default as Support } from './Support';
