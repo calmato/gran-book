@@ -10,10 +10,11 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { HomeTabStackPramList } from '~/types/navigation';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import * as WebBrowser from 'expo-web-browser';
-import { addBookAsync } from '~/store/usecases';
+import { addBookAsync, getBookByISBNAsync } from '~/store/usecases';
 import { fullWidth2halfWidth } from '~/lib/util';
 import { ISearchResultItem } from '~/types/response/external/rakuten-books';
 import { convertToIBook } from '~/lib/converter';
+import { IBook } from '~/types/response';
 
 const styles = StyleSheet.create({
   container: {
@@ -70,15 +71,18 @@ const BookShow = function BookShow(props: Props): ReactElement {
   const routeParam = props.route.params;
   const [_wbResult, setWbResult] = useState<WebBrowser.WebBrowserResult>();
   const [showMessage, setShowMessage] = useState<boolean>(false);
-  const [isRegister, _setIsRegister] = useState<boolean>('id' in routeParam.book);
-
-  const book = 'id' in routeParam.book ? routeParam.book : convertToIBook(routeParam.book);
+  const [isRegister, setIsRegister] = useState<boolean>('id' in routeParam.book);
+  const [book, setBook] = useState<IBook>(
+    'id' in routeParam.book ? routeParam.book : convertToIBook(routeParam.book),
+  );
 
   // TODO: エラーハンドリング
   const handleAddBookButton = async () => {
     return await addBookAsync(routeParam.book as ISearchResultItem)
       .then((res) => {
+        setBook(res.data);
         setShowMessage(true);
+        setIsRegister(true);
       })
       .catch((res) => console.log('登録に失敗しました.', res));
   };
@@ -86,14 +90,34 @@ const BookShow = function BookShow(props: Props): ReactElement {
   const handleBookStatusButton = useCallback(
     (status: string) => {
       props.actions.registerOwnBook(status, book.id);
+      setBook({
+        ...book,
+        bookshelf: {
+          ...book.bookshelf,
+          status: status,
+        },
+      });
     },
-    [props.actions, book.id],
+    [props.actions, book],
   );
 
   const _handleOpenRakutenPageButtonAsync = async (url: string) => {
     const r = await WebBrowser.openBrowserAsync(url);
     setWbResult(r);
   };
+
+  useEffect(() => {
+    const f = async () => {
+      try {
+        const res = await getBookByISBNAsync(book.isbn);
+        setBook(res.data);
+        setIsRegister(true);
+      } catch (err) {
+        setIsRegister(false);
+      }
+    };
+    f();
+  }, []);
 
   return (
     <View>
