@@ -54,11 +54,15 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  route: RouteProp<HomeTabStackPramList, 'SearchResultBookShow'> | RouteProp<HomeTabStackPramList, 'BookShow'>
-  navigation: StackNavigationProp<HomeTabStackPramList, 'SearchResultBookShow'> | StackNavigationProp<HomeTabStackPramList, 'BookShow'>;
+  route:
+    | RouteProp<HomeTabStackPramList, 'SearchResultBookShow'>
+    | RouteProp<HomeTabStackPramList, 'BookShow'>;
+  navigation:
+    | StackNavigationProp<HomeTabStackPramList, 'SearchResultBookShow'>
+    | StackNavigationProp<HomeTabStackPramList, 'BookShow'>;
   actions: {
-    registerOwnBook: (status: number, bookId: number) => Promise<void>,
-  }
+    registerOwnBook: (status: number, bookId: number) => Promise<void>;
+  };
 }
 
 const BookShow = function BookShow(props: Props): ReactElement {
@@ -68,7 +72,7 @@ const BookShow = function BookShow(props: Props): ReactElement {
   const [showMessage, setShowMessage] = useState<boolean>(false);
   const [isRegister, _setIsRegister] = useState<boolean>('id' in routeParam.book);
 
-  const book = 'id' in routeParam.book? routeParam.book : convertToIBook(routeParam.book);
+  const book = 'id' in routeParam.book ? routeParam.book : convertToIBook(routeParam.book);
 
   // TODO: エラーハンドリング
   const handleAddBookButton = async () => {
@@ -79,9 +83,12 @@ const BookShow = function BookShow(props: Props): ReactElement {
       .catch((res) => console.log('登録に失敗しました.', res));
   };
 
-  const handleBookStatusButton = useCallback((status: number) => {
-    props.actions.registerOwnBook(status, book.detail.id);
-  }, [props.actions, book.detail.id]);
+  const handleBookStatusButton = useCallback(
+    (status: number) => {
+      props.actions.registerOwnBook(status, book.detail.id);
+    },
+    [props.actions, book.detail.id],
+  );
 
   const _handleOpenRakutenPageButtonAsync = async (url: string) => {
     const r = await WebBrowser.openBrowserAsync(url);
@@ -95,20 +102,24 @@ const BookShow = function BookShow(props: Props): ReactElement {
           opacity: 0.8,
         }}
         isVisible={showMessage}
-        onBackdropPress={() => setShowMessage(false)}
-      >
-        <View style={{
-          width: 'auto',
-          height: 'auto',
-          justifyContent: 'center',
-          margin: 8,
-        }}>
-          <Text style={{fontSize: 16, color: COLOR.TEXT_TITLE, margin: 4}}>「{book.detail.title}」</Text>
+        onBackdropPress={() => setShowMessage(false)}>
+        <View
+          style={{
+            width: 'auto',
+            height: 'auto',
+            justifyContent: 'center',
+            margin: 8,
+          }}>
+          <Text style={{ fontSize: 16, color: COLOR.TEXT_TITLE, margin: 4 }}>
+            「{book.detail.title}」
+          </Text>
           <Text> を登録しました。</Text>
         </View>
       </Overlay>
       <HeaderWithBackButton onPress={() => navigation.goBack()} title={book.detail.title} />
-      <ScrollView contentContainerStyle={styles.container} style={{ marginBottom: 'auto', height: '100%' }}>
+      <ScrollView
+        contentContainerStyle={styles.container}
+        style={{ marginBottom: 'auto', height: '100%' }}>
         <View
           style={{
             alignSelf: 'stretch',
@@ -129,30 +140,19 @@ const BookShow = function BookShow(props: Props): ReactElement {
         <Text style={styles.authorContainer}>
           {book.detail.author ? book.detail.author : '著者情報がありません'}
         </Text>
-        {
-          book.detail.description !== '' ?
-            <Text style={styles.detailContainer}>
-              {fullWidth2halfWidth(book.detail.description)}
-            </Text> : null
-        }
+        {book.detail.description !== '' ? (
+          <Text style={styles.detailContainer}>{fullWidth2halfWidth(book.detail.description)}</Text>
+        ) : null}
         <FlexBoxBookCategory
           category={
-            book.detail.rakutenGenreId
-              ? book.detail.rakutenGenreId
-              : 'カテゴリ情報がありません'
+            book.detail.rakutenGenreId ? book.detail.rakutenGenreId : 'カテゴリ情報がありません'
           }
         />
-        {
-          isRegister ?
-            <ButtonGroupBookFooter
-              status={book.status}
-              onPress={handleBookStatusButton}
-            /> :
-            <Button
-              title="本を登録する"
-              onPress={() => handleAddBookButton()}
-            />
-        }
+        {isRegister ? (
+          <ButtonGroupBookFooter status={book.status} onPress={handleBookStatusButton} />
+        ) : (
+          <Button title="本を登録する" onPress={() => handleAddBookButton()} />
+        )}
         <Button
           onPress={() => _handleOpenRakutenPageButtonAsync(book.detail.rakutenUrl)}
           title="楽天で見る"

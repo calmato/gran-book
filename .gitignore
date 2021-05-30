@@ -34,3 +34,5 @@ tmp/
 node_modlues/
 
 .DS_Store
+
+!.vscode/settings.json

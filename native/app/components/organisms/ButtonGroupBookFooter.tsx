@@ -4,7 +4,6 @@ import { MaterialCommunityIcons, FontAwesome5 } from '@expo/vector-icons';
 import { COLOR } from '~~/constants/theme';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-
 const { width } = Dimensions.get('window');
 const iconSize = 25;
 
@@ -19,7 +18,7 @@ const styles = StyleSheet.create({
     width: width,
   },
   childStyle: {
-    width: width/5,
+    width: width / 5,
     height: 60,
     alignItems: 'center',
     justifyContent: 'center',
@@ -38,22 +37,24 @@ interface Props {
 }
 
 const IconComponents = {
-  MaterialIcons : function MaterialIcons(iconName: 'book-plus' | 'book-open-page-variant' | 'bookshelf' | 'bookmark-plus', color: string) {
-    return <MaterialCommunityIcons
-      name={iconName}
-      size={iconSize}
-      color={color}
-      style={{ marginBottom: 6 }}
-    />;
+  MaterialIcons: function MaterialIcons(
+    iconName: 'book-plus' | 'book-open-page-variant' | 'bookshelf' | 'bookmark-plus',
+    color: string,
+  ) {
+    return (
+      <MaterialCommunityIcons
+        name={iconName}
+        size={iconSize}
+        color={color}
+        style={{ marginBottom: 6 }}
+      />
+    );
   },
-  FontAwesome : function FontAwesome(iconName : string, color :string) {
-    return <FontAwesome5
-      name={iconName}
-      size={iconSize}
-      color={color}
-      style={{ marginBottom: 6 }}
-    />;
-  }
+  FontAwesome: function FontAwesome(iconName: string, color: string) {
+    return (
+      <FontAwesome5 name={iconName} size={iconSize} color={color} style={{ marginBottom: 6 }} />
+    );
+  },
 };
 
 const items = [
@@ -85,7 +86,6 @@ const items = [
 ];
 
 const ButtonGroupBookFooter = function ButtonGroupBookFooter(props: Props): ReactElement {
-
   const status = props.status;
 
   const renderItem = items.map((item) => {
@@ -93,27 +93,22 @@ const ButtonGroupBookFooter = function ButtonGroupBookFooter(props: Props): Reac
     return (
       <TouchableOpacity
         key={item.name}
-        style={ styles.childStyle}
-        onPress={() => props.onPress(item.value)}
-      >
-        {item.icon(
-          isActive? COLOR.PRIMARY : COLOR.TEXT_GRAY,
-        )}
-        <Text style={
-          isActive? {
-            ...styles.textStyle,
-            color: COLOR.TEXT_TITLE,
-            fontWeight: 'bold',
-          } : styles.textStyle}
-        >{item.name}</Text>
-      </TouchableOpacity>);
+        style={styles.childStyle}
+        onPress={() => props.onPress(item.value)}>
+        {item.icon(isActive ? COLOR.PRIMARY : COLOR.TEXT_GRAY)}
+        <Text
+          style={
+            isActive
+              ? { ...styles.textStyle, color: COLOR.TEXT_TITLE, fontWeight: 'bold' }
+              : styles.textStyle
+          }>
+          {item.name}
+        </Text>
+      </TouchableOpacity>
+    );
   });
 
-  return (
-    <View style={styles.parentStyle}>
-      {renderItem}
-    </View>
-  );
+  return <View style={styles.parentStyle}>{renderItem}</View>;
 };
 
 export default ButtonGroupBookFooter;

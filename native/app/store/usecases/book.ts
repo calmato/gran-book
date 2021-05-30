@@ -6,14 +6,16 @@ import { IErrorResponse, ISearchResultItem } from '~/types/response/external/rak
 import { IBook, IBookResponse } from '~/types/response';
 import { setBooks } from '../modules/book';
 
-
 /**
  * バックエンドAPIにアクセスし書籍登録を行う関数
  * @param  {Partial<ISearchResultItem>} 登録する書籍情報(楽天BooksAPIのレスポンス形式)
  * @return {Promise<AxiosResponse<any>|AxiosResponse<IErrorResponse> } 成功時:登録した書籍情報, 失敗時:HTTPエラーオブジェクト
  */
-export async function addBookAsync(book: Partial<ISearchResultItem>): Promise<AxiosResponse<any> | AxiosResponse<IErrorResponse>> {
-  return internal.post('/v1/books', book)
+export async function addBookAsync(
+  book: Partial<ISearchResultItem>,
+): Promise<AxiosResponse<any> | AxiosResponse<IErrorResponse>> {
+  return internal
+    .post('/v1/books', book)
     .then((res: AxiosResponse<any>) => {
       console.log('[success]', res.data);
       return res;
@@ -29,7 +31,8 @@ export async function addBookAsync(book: Partial<ISearchResultItem>): Promise<Ax
  * @returns
  */
 export async function getBookByISBNAsync(isbn: string) {
-  return internal.get(`/v1/books/${isbn}`)
+  return internal
+    .get(`/v1/books/${isbn}`)
     .then((res: AxiosResponse<IBook>) => {
       return res;
     })
@@ -48,10 +51,9 @@ export function getAllBookAsync() {
     const user = getState().auth;
     const res = await getAllBookByUserId(user.id);
     const books = res.data.books;
-    dispatch(setBooks({books}));
+    dispatch(setBooks({ books }));
   };
 }
-
 
 // TODO: 例外処理
 /**
@@ -86,24 +88,27 @@ export function registerOwnBookAsync(status: number, bookId: number) {
   };
 }
 
-
 /**
  * バックエンドAPIにアクセスし書籍を全件取得する関数
  * @param  {Partial<ISearchResultItem>} 登録する書籍情報(楽天BooksAPIのレスポンス形式)
  * @return {Promise<AxiosResponse<any>|AxiosResponse<IErrorResponse> } 成功時:登録した書籍情報, 失敗時:HTTPエラーオブジェクト
  */
-async function getAllBookByUserId(userId: string): Promise<AxiosResponse<any> | AxiosResponse<IErrorResponse>> {
-  return internal.get(`/v1/users/${userId}/books`)
+async function getAllBookByUserId(
+  userId: string,
+): Promise<AxiosResponse<any> | AxiosResponse<IErrorResponse>> {
+  return internal
+    .get(`/v1/users/${userId}/books`)
     .then((res: AxiosResponse<IBookResponse>) => {
       return res;
-    }).catch((err: AxiosResponse<IErrorResponse>) => {
+    })
+    .catch((err: AxiosResponse<IErrorResponse>) => {
       return Promise.reject(err);
     });
 }
 
-
 async function registerReadBookAsync(userId: string, bookId: number) {
-  return internal.post(`v1/users/${userId}/books/${bookId}/read`)
+  return internal
+    .post(`v1/users/${userId}/books/${bookId}/read`)
     .then((res) => {
       console.log('[success]', res.data);
     })
@@ -111,10 +116,10 @@ async function registerReadBookAsync(userId: string, bookId: number) {
       console.log('[error]', err);
     });
 }
-
 
 async function registerReadingBookAsync(userId: string, bookId: number) {
-  return internal.post(`v1/users/${userId}/books/${bookId}/reading`)
+  return internal
+    .post(`v1/users/${userId}/books/${bookId}/reading`)
     .then((res) => {
       console.log('[success]', res.data);
     })
@@ -123,9 +128,9 @@ async function registerReadingBookAsync(userId: string, bookId: number) {
     });
 }
 
-
 async function registerStackBookAsync(userId: string, bookId: number) {
-  return internal.post(`v1/users/${userId}/books/${bookId}/stack`)
+  return internal
+    .post(`v1/users/${userId}/books/${bookId}/stack`)
     .then((res) => {
       console.log('[success]', res.data);
     })
@@ -135,9 +140,9 @@ async function registerStackBookAsync(userId: string, bookId: number) {
     });
 }
 
-
 async function registerWantBookAsync(userId: string, bookId: number) {
-  return internal.post(`v1/users/${userId}/books/${bookId}/want`)
+  return internal
+    .post(`v1/users/${userId}/books/${bookId}/want`)
     .then((res) => {
       console.log('[success]', res.data);
     })
@@ -147,7 +152,8 @@ async function registerWantBookAsync(userId: string, bookId: number) {
 }
 
 async function registerReleaseBookAsync(userId: string, bookId: number) {
-  return internal.post(`v1/users/${userId}/books/${bookId}/release`)
+  return internal
+    .post(`v1/users/${userId}/books/${bookId}/release`)
     .then((res) => {
       console.log('[success]', res.data);
     })

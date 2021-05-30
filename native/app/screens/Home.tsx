@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
 interface Props {
   navigation?: StackNavigationProp<HomeTabStackPramList, 'Home'>;
   actions: {
-    getAllBook: () => Promise<void>
+    getAllBook: () => Promise<void>;
   };
   books: ViewBooks;
 }
@@ -62,20 +62,24 @@ const Home = function Home(props: Props): ReactElement {
 
   const onSubmitEditingCallback = useCallback(() => {
     (async () => {
-      if (keyword !== '') { // TODO: titleに変更する？
+      if (keyword !== '') {
+        // TODO: titleに変更する？
         const res = await searchBookByTitle(keyword);
         if (res) navigation?.navigate('SearchResult', { keyword, results: res.data });
       }
     })();
   }, [keyword, navigation]);
 
-  const handleBookClick = useCallback((book: IBook) => {
-    navigation?.navigate('BookShow', { book: book });
-  }, [ navigation ]);
+  const handleBookClick = useCallback(
+    (book: IBook) => {
+      navigation?.navigate('BookShow', { book: book });
+    },
+    [navigation],
+  );
 
   const handlePickerSelect = useCallback((value) => {
     setValue(value);
-  },[]);
+  }, []);
 
   const cancelCallback = useCallback(() => {
     return setKeyword('');
@@ -137,9 +141,7 @@ const Home = function Home(props: Props): ReactElement {
           items={pickerItems}
           Icon={iconComponent}
         />
-        {
-          books? <BookList books={books} handleClick={handleBookClick} />: null
-        }
+        {books ? <BookList books={books} handleClick={handleBookClick} /> : null}
       </ScrollView>
     </View>
   );

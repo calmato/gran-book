@@ -18,9 +18,8 @@ const styles = StyleSheet.create({
 
 interface Props {
   books: IBook[];
-  handleClick : (book: IBook) => void;
+  handleClick: (book: IBook) => void;
 }
-
 
 const BookList = function BookList(props: Props): ReactElement {
   const width = Dimensions.get('window').width;

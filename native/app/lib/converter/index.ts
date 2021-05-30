@@ -28,7 +28,7 @@ export function convertToIBook(i: ISearchResultItem): IBook {
       updatedAt: '',
       publishedOn: i.salesDate,
       publisher: i.publisherName,
-    }
+    },
   };
   return book;
 }

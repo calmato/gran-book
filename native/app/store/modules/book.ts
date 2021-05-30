@@ -15,8 +15,7 @@ export function setBooks(books: Book.BookValues) {
   };
 }
 
-export type Action =
-  | Readonly<ReturnType<typeof setBooks>>
+export type Action = Readonly<ReturnType<typeof setBooks>>;
 
 export default function reducer(state: State = createInitialState(), action: Action): Book.Model {
   const { payload } = action;

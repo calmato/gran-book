@@ -11,9 +11,12 @@ const hits = 30;
 const applicationId = process.env.RAKUTEN_BOOKS_APPLICATION_ID;
 
 export async function searchBookByTitle(title: string, page = 1) {
-  const url = `${baseUrl}/${version}?format=${format}&title=${encodeURI(title)}&formatVersion=${formatVersion}&applicationId=${applicationId}&page=${page}&hits=${hits}`;
+  const url = `${baseUrl}/${version}?format=${format}&title=${encodeURI(
+    title,
+  )}&formatVersion=${formatVersion}&applicationId=${applicationId}&page=${page}&hits=${hits}`;
 
-  return externalInstance.get(url)
+  return externalInstance
+    .get(url)
     .then((res: AxiosResponse<ISearchResponse>) => {
       return res;
     })

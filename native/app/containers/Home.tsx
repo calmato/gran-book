@@ -20,8 +20,10 @@ export default function ConnectedHome(props: Props) {
     () => ({
       getAllBook() {
         return dispatch(getAllBookAsync());
-      }
-    }),[dispatch]);
+      },
+    }),
+    [dispatch],
+  );
 
   return <Home actions={actions} books={books} navigation={props.navigation} />;
 }

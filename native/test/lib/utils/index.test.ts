@@ -2,7 +2,6 @@ import 'jest';
 import { fullWidth2halfWidth } from '~/lib/util';
 
 describe('fullWidth2halfWidth', () => {
-
   it('return react when ｒｅａｃｔ', () => {
     const str = 'ｒｅａｃｔ';
     const got = fullWidth2halfWidth(str);
@@ -20,5 +19,4 @@ describe('fullWidth2halfWidth', () => {
     const got = fullWidth2halfWidth(str);
     expect(got).toBe(',.');
   });
-
 });
