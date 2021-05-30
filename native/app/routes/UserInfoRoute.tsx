@@ -7,7 +7,7 @@ import { EmailEdit } from '~/containers';
 import { ContactEdit } from '~/containers';
 import { ProfileEdit } from '~/containers';
 import { AccountSetting } from '~/containers';
-import Support from '~/screens/Support';
+import { Support } from '~/containers';
 
 const UserInfoStack = createStackNavigator<UserInfoStackParamList>();
 

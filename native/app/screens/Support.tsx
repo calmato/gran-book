@@ -1,5 +1,5 @@
-import React, { ReactElement } from 'react';
-import { StyleSheet, View, ScrollView } from 'react-native';
+import React, { ReactElement, useState } from 'react';
+import { StyleSheet, View, ScrollView, Linking } from 'react-native';
 import { ListItem, Text, Avatar, Header } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -28,14 +28,22 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
+  auth: Auth.Model;
 }
 
 const Support = function Support(props: Props): ReactElement{
   const navigation = useNavigation();
+  const { auth } = props;
+  const [supportSubject, setsupportSubject] = useState('Default')
   return (
     <View>
       <HeaderWithBackButton title="お問い合わせ" onPress={() => navigation.goBack()} />
-      <ListItem bottomDivider>
+      <ListItem bottomDivider 
+        onPress={() => Linking.openURL(
+          'mailto:support@calmato.com?' + 
+          'subject=['+supportSubject+']お問い合わせ&'+
+          'body=不具合の詳細をご記入ください。\n\n---ここから下は変更しないで下さい---\n・お問い合わせ種別：'+supportSubject+'\n・情報：'+auth.id)}
+      >
         <ListItem.Content>
           <ListItem.Title>{'お問い合わせ（メールアプリを起動）'}</ListItem.Title>
         </ListItem.Content>
