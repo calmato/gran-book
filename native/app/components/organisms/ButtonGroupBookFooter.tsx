@@ -32,8 +32,8 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  onPress: (status: number) => void;
-  status: number;
+  onPress: (status: string) => void;
+  status: string;
 }
 
 const IconComponents = {
@@ -60,27 +60,27 @@ const IconComponents = {
 const items = [
   {
     name: '読んでる本',
-    value: 0,
+    value: 'read',
     icon: (color: string) => IconComponents.MaterialIcons('book-plus', color),
   },
   {
     name: '読んだ本',
-    value: 1,
+    value: 'reading',
     icon: (color: string) => IconComponents.MaterialIcons('book-open-page-variant', color),
   },
   {
     name: '積読本',
-    value: 2,
+    value: 'stack',
     icon: (color: string) => IconComponents.MaterialIcons('bookshelf', color),
   },
   {
     name: '手放したい本',
-    value: 3,
+    value: 'release',
     icon: (color: string) => IconComponents.FontAwesome('people-carry', color),
   },
   {
     name: '欲しい本',
-    value: 4,
+    value: 'want',
     icon: (color: string) => IconComponents.MaterialIcons('bookmark-plus', color),
   },
 ];
