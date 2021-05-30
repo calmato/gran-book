@@ -88,8 +88,9 @@ message CreateBookRequest {
   string published_on = 6;
   string thumbnail_url = 7;
   string rakuten_url = 8;
-  string rakuten_genre_id = 9;
-  repeated Author authors = 10;
+  string rakuten_size = 9;
+  string rakuten_genre_id = 10;
+  repeated Author authors = 11;
 }
 
 message UpdateBookRequest {
@@ -105,8 +106,9 @@ message UpdateBookRequest {
   string published_on = 6;
   string thumbnail_url = 7;
   string rakuten_url = 8;
-  string rakuten_genre_id = 9;
-  repeated Author authors = 10;
+  string rakuten_size = 9;
+  string rakuten_genre_id = 10;
+  repeated Author authors = 11;
 }
 
 message DeleteBookRequest {
@@ -160,10 +162,11 @@ message BookResponse {
   string published_on = 7;
   string thumbnail_url = 8;
   string rakuten_url = 9;
-  string rakuten_genre_id = 10;
-  string created_at = 11;
-  string updated_at = 12;
-  repeated Author authors = 13;
+  string rakuten_size = 10;
+  string rakuten_genre_id = 11;
+  string created_at = 12;
+  string updated_at = 13;
+  repeated Author authors = 14;
 }
 
 message BookListResponse {
@@ -181,10 +184,11 @@ message BookListResponse {
     string published_on = 7;
     string thumbnail_url = 8;
     string rakuten_url = 9;
-    string rakuten_genre_id = 10;
-    string created_at = 11;
-    string updated_at = 12;
-    repeated Author authors = 13;
+    string rakuten_size = 10;
+    string rakuten_genre_id = 11;
+    string created_at = 12;
+    string updated_at = 13;
+    repeated Author authors = 14;
   }
   repeated Book books = 1;
   int64 limit = 2;
@@ -207,10 +211,11 @@ message BookshelfResponse {
     string published_on = 7;
     string thumbnail_url = 8;
     string rakuten_url = 9;
-    string rakuten_genre_id = 10;
-    string created_at = 11;
-    string updated_at = 12;
-    repeated Author authors = 13;
+    string rakuten_size = 10;
+    string rakuten_genre_id = 11;
+    string created_at = 12;
+    string updated_at = 13;
+    repeated Author authors = 14;
   }
   message Review {
     int32 score = 1;
@@ -242,10 +247,11 @@ message BookshelfListResponse {
     string published_on = 7;
     string thumbnail_url = 8;
     string rakuten_url = 9;
-    string rakuten_genre_id = 10;
-    string created_at = 11;
-    string updated_at = 12;
-    repeated Author authors = 13;
+    string rakuten_size = 10;
+    string rakuten_genre_id = 11;
+    string created_at = 12;
+    string updated_at = 13;
+    repeated Author authors = 14;
   }
   message Bookshelf {
     int64 id = 1;
