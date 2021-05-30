@@ -13,6 +13,7 @@ type Book struct {
 	PublishedOn    string    `gorm:""`
 	ThumbnailURL   string    `gorm:""`
 	RakutenURL     string    `gorm:""`
+	RakutenSize    string    `gorm:""`
 	RakutenGenreID string    `gorm:""`
 	CreatedAt      time.Time `gorm:"<-:create"`
 	UpdatedAt      time.Time `gorm:""`

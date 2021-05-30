@@ -50,6 +50,7 @@ export interface ICreateBookInput {
   publishedOn: string
   thumbnailUrl: string
   rakutenUrl: string
+  rakutenSize: string
   rakutenGenreId: string
   authors: Array<IBookInputAuthor>
 }
@@ -63,6 +64,7 @@ export interface IUpdateBookInput {
   publishedOn: string
   thumbnailUrl: string
   rakutenUrl: string
+  rakutenSize: string
   rakutenGenreId: string
   authors: Array<IBookInputAuthor>
 }
