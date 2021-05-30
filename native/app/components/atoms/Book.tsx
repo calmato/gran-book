@@ -32,7 +32,7 @@ const imageProps: Partial<ImageProps> = {
 interface Props {
   title: string;
   author: string;
-  image: ImageURISource;
+  image: ImageURISource | string;
   width: number;
   height: number;
   onPress?: () => undefined | void;
@@ -48,7 +48,7 @@ const Book = function Book(props: Props): ReactElement {
         containerStyle={styles.containerStyle}
         contentContainerStyle={styles.contentContainerStyle}
         titleStyle={styles.titleStyle}
-        imageSrc={image}
+        imageSrc={typeof image === 'string'? {uri: image}: image}
         imageProps={imageProps}
         title={title}
         width={width}
