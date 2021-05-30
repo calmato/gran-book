@@ -62,24 +62,24 @@ export function getAllBookAsync() {
  * @param bookId バックエンドAPIに登録されている書籍のID
  * @returns Promise<void>
  */
-export function registerOwnBookAsync(status: number, bookId: number) {
+export function registerOwnBookAsync(status: string, bookId: number) {
   return async (_dispatch: Dispatch, getState: () => AppState) => {
     const user = getState().auth;
     let res: void;
     switch (status) {
-      case 0:
+      case 'read':
         res = await registerReadBookAsync(user.id, bookId);
         break;
-      case 1:
+      case 'reading':
         res = await registerReadingBookAsync(user.id, bookId);
         break;
-      case 2:
+      case 'stack':
         res = await registerStackBookAsync(user.id, bookId);
         break;
-      case 3:
+      case 'release':
         res = await registerReleaseBookAsync(user.id, bookId);
         break;
-      case 4:
+      case 'want':
         res = await registerWantBookAsync(user.id, bookId);
         break;
       default:
@@ -135,7 +135,6 @@ async function registerStackBookAsync(userId: string, bookId: number) {
       console.log('[success]', res.data);
     })
     .catch((err) => {
-      console.log(`v1/users/${userId}/books/${bookId}/stack`);
       console.log('[error]', err);
     });
 }
