@@ -48,7 +48,7 @@ const Book = function Book(props: Props): ReactElement {
         containerStyle={styles.containerStyle}
         contentContainerStyle={styles.contentContainerStyle}
         titleStyle={styles.titleStyle}
-        imageSrc={typeof image === 'string'? {uri: image}: image}
+        imageSrc={typeof image === 'string' ? { uri: image } : image}
         imageProps={imageProps}
         title={title}
         width={width}

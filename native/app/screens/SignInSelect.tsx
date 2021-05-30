@@ -44,11 +44,9 @@ const SignInSelect = function SignInSelect(props: Props): ReactElement {
   const { setApplicationState } = React.useContext(UiContext);
   const { getAuth, registerForPushNotifications } = props.actions;
 
-  const [_request, response, handleSignInWithGoogle] = Google.useIdTokenAuthRequest(
-    {
-      clientId: process.env.CLIENT_ID_FOR_GOOGLE,
-    },
-  );
+  const [_request, response, handleSignInWithGoogle] = Google.useIdTokenAuthRequest({
+    clientId: process.env.CLIENT_ID_FOR_GOOGLE,
+  });
 
   const createAlertNotifySignupError = (code: number) =>
     Alert.alert('サインインに失敗', `${generateErrorMessage(code)}`, [
@@ -63,10 +61,14 @@ const SignInSelect = function SignInSelect(props: Props): ReactElement {
     if (response?.type === 'success') {
       const { id_token } = response.params;
       const credential = firebase.auth.GoogleAuthProvider.credential(id_token);
-      firebase.auth().signInWithCredential(credential)
-        .then(async() => {
-          await firebase.auth().currentUser?.getIdToken(true)
-            .then(async(token)=>{
+      firebase
+        .auth()
+        .signInWithCredential(credential)
+        .then(async () => {
+          await firebase
+            .auth()
+            .currentUser?.getIdToken(true)
+            .then(async (token) => {
               const user = firebase.auth().currentUser!;
 
               const values: Auth.AuthValues = {
@@ -75,7 +77,7 @@ const SignInSelect = function SignInSelect(props: Props): ReactElement {
                 emailVerified: true,
                 token: token,
               };
-    
+
               const model: Auth.Model = {
                 ...Auth.initialState,
                 id: values.id,
@@ -90,9 +92,9 @@ const SignInSelect = function SignInSelect(props: Props): ReactElement {
         .then(() => {
           return registerForPushNotifications();
         })
-        .then(async() => {
+        .then(async () => {
           await getAuth();
-        })      
+        })
         .then(() => {
           setApplicationState(Status.AUTHORIZED);
         })

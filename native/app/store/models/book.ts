@@ -12,7 +12,7 @@ export const initialState: Model = {
 
 // input
 export interface BookValues {
-  books: IBook[]
+  books: IBook[];
 }
 
 export function factory(): Model {
@@ -33,14 +33,13 @@ export function setBooks(books: Model, values: BookValues): Model {
  */
 export function filterBooks(model: Model): ViewBooks {
   return {
-    reading : readingBooks(model.books),
-    read : readBooks(model.books),
-    stack : stackBooks(model.books),
-    release : releaseBooks(model.books),
-    want : wantBooks(model.books),
+    reading: readingBooks(model.books),
+    read: readBooks(model.books),
+    stack: stackBooks(model.books),
+    release: releaseBooks(model.books),
+    want: wantBooks(model.books),
   };
 }
-
 
 /**
  * 読んでいる本の一覧を返すgetter関数

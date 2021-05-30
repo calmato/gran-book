@@ -11,7 +11,7 @@ export interface IBook {
   status: number;
   createdAt: string; // TODO: 日付の扱いどうするか？
   updatedAt: string;
-  detail: IBooDetail
+  detail: IBooDetail;
 }
 
 interface IBooDetail {
@@ -27,6 +27,6 @@ interface IBooDetail {
   rakutenUrl: string;
   createdAt: string; // TODO: 日付の扱いどうするか？
   updatedAt: string;
-  publishedOn: string
+  publishedOn: string;
   publisher: string;
 }

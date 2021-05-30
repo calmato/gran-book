@@ -7,8 +7,12 @@ import { registerOwnBookAsync } from '~/store/usecases';
 import { HomeTabStackPramList } from '~/types/navigation';
 
 interface Props {
-  route: RouteProp<HomeTabStackPramList, 'SearchResultBookShow'> | RouteProp<HomeTabStackPramList, 'BookShow'>
-  navigation: StackNavigationProp<HomeTabStackPramList, 'SearchResultBookShow'> | StackNavigationProp<HomeTabStackPramList, 'BookShow'>;
+  route:
+    | RouteProp<HomeTabStackPramList, 'SearchResultBookShow'>
+    | RouteProp<HomeTabStackPramList, 'BookShow'>;
+  navigation:
+    | StackNavigationProp<HomeTabStackPramList, 'SearchResultBookShow'>
+    | StackNavigationProp<HomeTabStackPramList, 'BookShow'>;
 }
 
 export default function ConnectedBookShow(props: Props): ReactElement {
@@ -18,9 +22,9 @@ export default function ConnectedBookShow(props: Props): ReactElement {
     () => ({
       registerOwnBook(status: number, bookId: number) {
         return dispatch(registerOwnBookAsync(status, bookId));
-      }
+      },
     }),
-    [dispatch]
+    [dispatch],
   );
 
   return <BookShow route={props.route} navigation={props.navigation} actions={actions} />;
