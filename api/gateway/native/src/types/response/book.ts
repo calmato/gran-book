@@ -8,7 +8,7 @@ export interface IBookResponse {
   publishedOn: string
   thumbnailUrl: string
   rakutenUrl: string
-  rakutenGenreId: string
+  size: string
   author: string
   authorKana: string
   createdAt: string
@@ -18,7 +18,7 @@ export interface IBookResponse {
 
 export interface IBookResponseBookshelf {
   id: number
-  status: number
+  status: string
   impression: string
   readOn: string
   createdAt: string

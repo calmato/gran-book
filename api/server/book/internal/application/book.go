@@ -270,6 +270,7 @@ func (a *bookApplication) Create(ctx context.Context, in *input.Book) (*book.Boo
 		PublishedOn:    in.PublishedOn,
 		ThumbnailURL:   in.ThumbnailURL,
 		RakutenURL:     in.RakutenURL,
+		RakutenSize:    in.RakutenSize,
 		RakutenGenreID: in.RakutenGenreID,
 		Authors:        as,
 	}
@@ -321,6 +322,7 @@ func (a *bookApplication) Update(ctx context.Context, in *input.Book) (*book.Boo
 	b.PublishedOn = in.PublishedOn
 	b.ThumbnailURL = in.ThumbnailURL
 	b.RakutenURL = in.RakutenURL
+	b.RakutenSize = in.RakutenSize
 	b.RakutenGenreID = in.RakutenGenreID
 	b.Authors = as
 

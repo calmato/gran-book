@@ -10,6 +10,7 @@ import {
   stackBookshelf,
   wantBookshelf,
 } from '~/api'
+import { BookStatus } from '~/types/book'
 import { GrpcError } from '~/types/exception'
 import {
   IDeleteBookshelfInput,
@@ -33,9 +34,9 @@ import { IReadBookshelfRequest } from '~/types/request'
 import {
   IBookshelfListResponse,
   IBookshelfListResponseBook,
-  IBookshelfListResponseDetail,
+  IBookshelfListResponseBookshelf,
   IBookshelfResponse,
-  IBookshelfResponseDetail,
+  IBookshelfResponseBookshelf,
 } from '~/types/response'
 
 const router = express.Router()
@@ -261,7 +262,16 @@ function setBookshelfResponse(output: IBookshelfOutput): IBookshelfResponse {
     return item.nameKana
   })
 
-  const detail: IBookshelfResponseDetail = {
+  const bookshelf: IBookshelfResponseBookshelf = {
+    id: output.id,
+    status: BookStatus[output.status],
+    impression: output.review?.impression || '',
+    readOn: output.readOn,
+    createdAt: output.createdAt,
+    updatedAt: output.updatedAt,
+  }
+
+  const response: IBookshelfResponse = {
     id: output.book.id,
     title: output.book.title,
     titleKana: output.book.titleKana,
@@ -271,26 +281,12 @@ function setBookshelfResponse(output: IBookshelfOutput): IBookshelfResponse {
     publishedOn: output.book.publishedOn,
     thumbnailUrl: output.book.thumbnailUrl,
     rakutenUrl: output.book.rakutenUrl,
-    rakutenGenreId: output.book.rakutenGenreId,
+    size: output.book.rakutenSize,
     author: authorNames.join('/'),
     authorKana: authorNameKanas.join('/'),
     createdAt: output.book.createdAt,
     updatedAt: output.book.updatedAt,
-  }
-
-  const response: IBookshelfResponse = {
-    id: output.id,
-    userId: output.userId,
-    status: output.status,
-    impression: '',
-    readOn: output.readOn,
-    createdAt: output.createdAt,
-    updatedAt: output.updatedAt,
-    detail,
-  }
-
-  if (output.review) {
-    response.impression = output.review.impression
+    bookshelf,
   }
 
   return response
@@ -306,7 +302,15 @@ function setBookshelfListResponse(output: IBookshelfListOutput): IBookshelfListR
       return item.nameKana
     })
 
-    const detail: IBookshelfListResponseDetail = {
+    const bookshelf: IBookshelfListResponseBookshelf = {
+      id: bs.id,
+      status: BookStatus[bs.status],
+      readOn: bs.readOn,
+      createdAt: bs.createdAt,
+      updatedAt: bs.updatedAt,
+    }
+
+    const book: IBookshelfListResponseBook = {
       id: bs.book.id,
       title: bs.book.title,
       titleKana: bs.book.titleKana,
@@ -316,20 +320,12 @@ function setBookshelfListResponse(output: IBookshelfListOutput): IBookshelfListR
       publishedOn: bs.book.publishedOn,
       thumbnailUrl: bs.book.thumbnailUrl,
       rakutenUrl: bs.book.rakutenUrl,
-      rakutenGenreId: bs.book.rakutenGenreId,
+      size: bs.book.rakutenSize,
       author: authorNames.join('/'),
       authorKana: authorNameKanas.join('/'),
       createdAt: bs.book.createdAt,
       updatedAt: bs.book.updatedAt,
-    }
-
-    const book: IBookshelfListResponseBook = {
-      id: bs.id,
-      status: bs.status,
-      readOn: bs.readOn,
-      createdAt: bs.createdAt,
-      updatedAt: bs.updatedAt,
-      detail,
+      bookshelf,
     }
 
     return book

@@ -8,6 +8,7 @@ export interface IBookOutput {
   publishedOn: string
   thumbnailUrl: string
   rakutenUrl: string
+  rakutenSize: string
   rakutenGenreId: string
   createdAt: string
   updatedAt: string
@@ -33,6 +34,7 @@ export interface IBookHashOutputBook {
   publishedOn: string
   thumbnailUrl: string
   rakutenUrl: string
+  rakutenSize: string
   rakutenGenreId: string
   createdAt: string
   updatedAt: string
@@ -66,6 +68,7 @@ export interface IBookshelfOutputBook {
   publishedOn: string
   thumbnailUrl: string
   rakutenUrl: string
+  rakutenSize: string
   rakutenGenreId: string
   createdAt: string
   updatedAt: string
@@ -104,6 +107,7 @@ export interface IBookshelfListOutputBook {
   publishedOn: string
   thumbnailUrl: string
   rakutenUrl: string
+  rakutenSize: string
   rakutenGenreId: string
   createdAt: string
   updatedAt: string
