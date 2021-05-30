@@ -23,6 +23,10 @@ describe('store/auth', () => {
   })
 
   describe('getters', () => {
+    it('getId', () => {
+      expect(AuthStore.getId).toBe('')
+    })
+
     it('getEmail', () => {
       expect(AuthStore.getEmail).toBe('')
     })
@@ -37,6 +41,10 @@ describe('store/auth', () => {
 
     it('getPhoneNumber', () => {
       expect(AuthStore.getPhoneNumber).toBe('')
+    })
+
+    it('getRole', () => {
+      expect(AuthStore.getRole).toBe(0)
     })
 
     it('getThumbnailUrl', () => {
@@ -172,7 +180,8 @@ describe('store/auth', () => {
           setSafetyMode(true)
           const params: IAuthEditProfileParams = {
             username: 'test-user',
-            thumbnail: undefined,
+            thumbnail: null,
+            thumbnailUrl: '',
             selfIntroduction: 'よろしく',
             lastName: 'テスト',
             firstName: 'ユーザ',
@@ -194,7 +203,8 @@ describe('store/auth', () => {
           setSafetyMode(false)
           const params: IAuthEditProfileParams = {
             username: '',
-            thumbnail: undefined,
+            thumbnail: null,
+            thumbnailUrl: '',
             selfIntroduction: '',
             lastName: '',
             firstName: '',
@@ -208,6 +218,33 @@ describe('store/auth', () => {
         it('rejectが返されること', async () => {
           const err = new ApiError(400, 'api error', { status: 400, code: 0, message: 'api error', errors: [] })
           await expect(AuthStore.updateProfile(form)).rejects.toThrow(err)
+        })
+      })
+    })
+
+    describe('uploadThumbnail', () => {
+      describe('success', () => {
+        let file: File
+        beforeEach(() => {
+          setSafetyMode(true)
+          file = new File(['thumbnail'], 'thumbnail.png', { lastModified: Date.now(), type: 'image/png' })
+        })
+
+        it('resolveが返されること', async () => {
+          await expect(AuthStore.uploadThumbnail(file)).resolves.toBe('https://calmato.com/images/01')
+        })
+      })
+
+      describe('failure', () => {
+        let file: File
+        beforeEach(() => {
+          setSafetyMode(false)
+          file = new File(['thumbnail'], 'thumbnail.png', { lastModified: Date.now(), type: 'image/png' })
+        })
+
+        it('rejectが返されること', async () => {
+          const err = new ApiError(400, 'api error', { status: 400, code: 0, message: 'api error', errors: [] })
+          await expect(AuthStore.uploadThumbnail(file)).rejects.toThrow(err)
         })
       })
     })

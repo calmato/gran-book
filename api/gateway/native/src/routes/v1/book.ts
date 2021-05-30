@@ -10,6 +10,7 @@ import {
   listUserWithUserIds,
   updateBook,
 } from '~/api'
+import { BookStatus } from '~/types/book'
 import { GrpcError } from '~/types/exception'
 import {
   IBookInputAuthor,
@@ -61,6 +62,7 @@ router.post(
       smallImageUrl,
       itemUrl,
       booksGenreId,
+      size,
       author,
       authorKana,
     } = req.body as ICreateBookRequest
@@ -84,8 +86,9 @@ router.post(
       isbn,
       publisher: publisherName,
       publishedOn: salesDate,
-      thumbnailUrl: mediumImageUrl || smallImageUrl || largeImageUrl,
+      thumbnailUrl: largeImageUrl || mediumImageUrl || smallImageUrl,
       rakutenUrl: itemUrl,
+      rakutenSize: size,
       rakutenGenreId: booksGenreId,
       authors,
     }
@@ -114,6 +117,7 @@ router.patch(
       smallImageUrl,
       itemUrl,
       booksGenreId,
+      size,
       author,
       authorKana,
     } = req.body as IUpdateBookRequest
@@ -137,8 +141,9 @@ router.patch(
       isbn,
       publisher: publisherName,
       publishedOn: salesDate,
-      thumbnailUrl: mediumImageUrl || smallImageUrl || largeImageUrl,
+      thumbnailUrl: largeImageUrl || mediumImageUrl || smallImageUrl,
       rakutenUrl: itemUrl,
+      rakutenSize: size,
       rakutenGenreId: booksGenreId,
       authors,
     }
@@ -267,7 +272,7 @@ router.get(
   }
 )
 
-function setBookResponse(bookOutput: IBookOutput, bookshelfOutput?: any): IBookResponse {
+function setBookResponse(bookOutput: IBookOutput, bookshelfOutput?: IBookshelfOutput): IBookResponse {
   const authorNames: string[] = bookOutput.authors.map((item: IBookOutputAuthor) => {
     return item.name
   })
@@ -286,22 +291,21 @@ function setBookResponse(bookOutput: IBookOutput, bookshelfOutput?: any): IBookR
     publishedOn: bookOutput.publishedOn,
     thumbnailUrl: bookOutput.thumbnailUrl,
     rakutenUrl: bookOutput.rakutenUrl,
-    rakutenGenreId: bookOutput.rakutenGenreId,
+    size: bookOutput.rakutenSize,
     author: authorNames.join('/'),
     authorKana: authorNameKanas.join('/'),
     createdAt: bookOutput.createdAt,
     updatedAt: bookOutput.updatedAt,
-    bookshelf: undefined,
   }
 
   if (bookshelfOutput) {
     const bookshelf: IBookResponseBookshelf = {
-      id: 0,
-      status: 0,
-      impression: '',
-      readOn: '',
-      createdAt: '',
-      updatedAt: '',
+      id: bookshelfOutput.id,
+      status: BookStatus[bookshelfOutput.status],
+      impression: bookshelfOutput.review?.impression || '',
+      readOn: bookshelfOutput.readOn,
+      createdAt: bookshelfOutput.createdAt,
+      updatedAt: bookshelfOutput.updatedAt,
     }
 
     response.bookshelf = bookshelf

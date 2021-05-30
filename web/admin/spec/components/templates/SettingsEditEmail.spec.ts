@@ -38,6 +38,17 @@ describe('components/templates/SettingsEditEmail', () => {
           })
         })
       })
+
+      describe('loading', () => {
+        it('初期値', () => {
+          expect(wrapper.props().loading).toBeFalsy()
+        })
+
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ loading: true })
+          expect(wrapper.props().loading).toBeTruthy()
+        })
+      })
     })
 
     describe('methods', () => {

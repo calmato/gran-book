@@ -12,6 +12,7 @@
     :footer-props="footers"
     @update:page="$emit('update:page', $event)"
     @update:items-per-page="$emit('update:items-per-page', $event)"
+    @click:row="onClick"
   >
     <template v-slot:[`item.thumbnailUrl`]="{ item }">
       <v-avatar>
@@ -25,10 +26,6 @@
       <v-chip :color="getRoleColor(item.role)" dark>
         {{ getRole(item.role) }}
       </v-chip>
-    </template>
-    <template v-slot:[`item.actions`]="{ item }">
-      <v-icon small class="mr-2" @click="onClickEdit(item)">mdi-pencil</v-icon>
-      <v-icon small @click="onClickDelete(item)">mdi-delete</v-icon>
     </template>
   </v-data-table>
 </template>
@@ -70,6 +67,11 @@ export default defineComponent({
       required: false,
       default: '',
     },
+    role: {
+      type: Number,
+      required: false,
+      default: 0,
+    },
     users: {
       type: Array as PropType<IAdminUser[]>,
       required: false,
@@ -89,7 +91,6 @@ export default defineComponent({
       { text: 'メールアドレス', value: 'email', sortable: true },
       { text: '電話番号', value: 'phoneNumber', sortable: false },
       { text: '権限', value: 'role', sortable: true },
-      { text: 'Actions', value: 'actions', sortable: false },
     ]
     const footers: IAdminTableFooter = {
       itemsPerPageOptions: [10, 20, 30, 50, 100],
@@ -101,6 +102,7 @@ export default defineComponent({
           const name: string = user.lastName + space + user.firstName
 
           return {
+            id: user.id,
             name,
             email: user.email,
             phoneNumber: user.phoneNumber,
@@ -147,14 +149,8 @@ export default defineComponent({
       }
     }
 
-    const onClickEdit = (item: IAdminTableContent): void => {
-      const index: number = items.value.indexOf(item)
-      emit('edit', index)
-    }
-
-    const onClickDelete = (item: IAdminTableContent): void => {
-      const index: number = items.value.indexOf(item)
-      emit('delete', index)
+    const onClick = (item: IAdminTableContent): void => {
+      emit('show', item.id)
     }
 
     return {
@@ -165,8 +161,7 @@ export default defineComponent({
       sortDescArray,
       getRole,
       getRoleColor,
-      onClickEdit,
-      onClickDelete,
+      onClick,
     }
   },
 })

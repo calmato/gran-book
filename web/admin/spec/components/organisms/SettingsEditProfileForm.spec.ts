@@ -9,7 +9,8 @@ describe('components/organisms/SettingsEditProfileForm', () => {
   beforeEach(() => {
     const params: IAuthEditProfileParams = {
       username: '',
-      thumbnail: undefined,
+      thumbnail: null,
+      thumbnailUrl: '',
       selfIntroduction: '',
       lastName: '',
       firstName: '',
@@ -32,7 +33,8 @@ describe('components/organisms/SettingsEditProfileForm', () => {
           expect(wrapper.props().form).toEqual({
             params: {
               username: '',
-              thumbnail: undefined,
+              thumbnail: null,
+              thumbnailUrl: '',
               selfIntroduction: '',
               lastName: '',
               firstName: '',
@@ -49,7 +51,8 @@ describe('components/organisms/SettingsEditProfileForm', () => {
             form: {
               params: {
                 username: 'test-user',
-                thumbnail: undefined,
+                thumbnail: null,
+                thumbnailUrl: '',
                 selfIntroduction: 'よろしく',
                 lastName: 'テスト',
                 firstName: 'ユーザ',
@@ -63,7 +66,8 @@ describe('components/organisms/SettingsEditProfileForm', () => {
           expect(wrapper.props().form).toEqual({
             params: {
               username: 'test-user',
-              thumbnail: undefined,
+              thumbnail: null,
+              thumbnailUrl: '',
               selfIntroduction: 'よろしく',
               lastName: 'テスト',
               firstName: 'ユーザ',
@@ -73,6 +77,17 @@ describe('components/organisms/SettingsEditProfileForm', () => {
             },
             options: AuthEditProfileOptions,
           })
+        })
+      })
+
+      describe('loading', () => {
+        it('初期値', () => {
+          expect(wrapper.props().loading).toBeFalsy()
+        })
+
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ loading: true })
+          expect(wrapper.props().loading).toBeTruthy()
         })
       })
     })

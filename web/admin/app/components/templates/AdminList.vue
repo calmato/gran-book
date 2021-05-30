@@ -23,7 +23,7 @@
             <v-card-title>
               <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details />
               <v-spacer />
-              <v-btn color="primary" dark class="mb-2" @click="onClickNewButton">New Item</v-btn>
+              <v-btn v-if="role === 1" color="primary" dark class="mb-2" @click="onClickNewButton">New Item</v-btn>
             </v-card-title>
             <admin-list-table
               :loading="loading"
@@ -32,10 +32,10 @@
               :sort-by="sortBy"
               :sort-desc="sortDesc"
               :search="search"
+              :role="role"
               :users="users"
               :total="total"
-              @edit="onClickEditButton"
-              @delete="onClickDeleteButton"
+              @show="onClickShowButton"
               @update:page="$emit('update:page', $event)"
               @update:items-per-page="$emit('update:items-per-page', $event)"
               @update:sort-by="$emit('update:sort-by', $event)"
@@ -49,7 +49,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, SetupContext, PropType } from '@nuxtjs/composition-api'
+import { defineComponent, SetupContext, PropType } from '@nuxtjs/composition-api'
 import TheFormGroup from '~/components/atoms/TheFormGroup.vue'
 import TheSelect from '~/components/atoms/TheSelect.vue'
 import TheTextField from '~/components/atoms/TheTextField.vue'
@@ -98,6 +98,11 @@ export default defineComponent({
       required: false,
       default: '',
     },
+    role: {
+      type: Number,
+      required: false,
+      default: 0,
+    },
     users: {
       type: Array as PropType<IAdminUser[]>,
       required: false,
@@ -121,8 +126,6 @@ export default defineComponent({
   },
 
   setup(_, { emit }: SetupContext) {
-    const dialog = ref<boolean>(false)
-
     const onClickNewButton = (): void => {
       emit('new:open')
     }
@@ -135,21 +138,15 @@ export default defineComponent({
       emit('create')
     }
 
-    const onClickEditButton = (index: number): void => {
-      emit('edit', index)
-    }
-
-    const onClickDeleteButton = (index: number): void => {
-      emit('delete', index)
+    const onClickShowButton = (userId: string): void => {
+      emit('show', userId)
     }
 
     return {
-      dialog,
       onClickNewButton,
       onClickNewClose,
       onClickCreateButton,
-      onClickEditButton,
-      onClickDeleteButton,
+      onClickShowButton,
     }
   },
 })

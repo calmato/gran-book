@@ -80,7 +80,7 @@ export default defineComponent({
     const maintenanceItems: ISidebarListItem[] = [
       { icon: 'mdi-cart', text: 'お取り引き管理', to: '/' },
       { icon: 'mdi-forum', text: 'お問い合わせ管理', to: '/' },
-      { icon: 'mdi-bell-ring', text: 'お知らせ管理', to: '/' },
+      { icon: 'mdi-bell-ring', text: 'お知らせ管理', to: '/notifications' },
       { icon: 'mdi-cash-100', text: 'セール情報管理', to: '/' },
     ]
     const developerItems: ISidebarListItem[] = [
@@ -91,6 +91,7 @@ export default defineComponent({
     const systemItems: ISidebarListItem[] = [
       { icon: 'mdi-shield-account', text: '管理者管理', to: '/admin' },
       { icon: 'mdi-cog', text: 'システム設定', to: '/system' },
+      { icon: 'mdi-developer-board', text: 'デバッグ用', to: '/debug' },
     ]
 
     const items: ISidebarListItem[] = commonItems.concat(maintenanceItems, developerItems, systemItems)

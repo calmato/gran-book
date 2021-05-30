@@ -626,6 +626,7 @@ func TestBookApplication_Create(t *testing.T) {
 				PublishedOn:    "2021年12月24日",
 				ThumbnailURL:   "https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/8426/9784062938426.jpg?_ex=120x120",
 				RakutenURL:     "https://books.rakuten.co.jp/rb/15271426/",
+				RakutenSize:    "コミック",
 				RakutenGenreID: "001004008001/001004008003/001019001",
 				Authors: []*input.BookAuthor{
 					{
@@ -651,6 +652,7 @@ func TestBookApplication_Create(t *testing.T) {
 					PublishedOn:    "2021年12月24日",
 					ThumbnailURL:   "https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/8426/9784062938426.jpg?_ex=120x120",
 					RakutenURL:     "https://books.rakuten.co.jp/rb/15271426/",
+					RakutenSize:    "コミック",
 					RakutenGenreID: "001004008001/001004008003/001019001",
 					Authors: []*book.Author{
 						{
@@ -720,6 +722,7 @@ func TestBookApplication_Update(t *testing.T) {
 				PublishedOn:    "2018-01-16",
 				ThumbnailURL:   "https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/8426/9784062938426.jpg?_ex=120x120",
 				RakutenURL:     "https://books.rakuten.co.jp/rb/15271426/",
+				RakutenSize:    "コミック",
 				RakutenGenreID: "001004008001/001004008003/001019001",
 				Authors: []*input.BookAuthor{
 					{
@@ -746,6 +749,7 @@ func TestBookApplication_Update(t *testing.T) {
 					PublishedOn:    "2021年12月24日",
 					ThumbnailURL:   "https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/8426/9784062938426.jpg?_ex=120x120",
 					RakutenURL:     "https://books.rakuten.co.jp/rb/15271426/",
+					RakutenSize:    "コミック",
 					RakutenGenreID: "001004008001/001004008003/001019001",
 					CreatedAt:      current,
 					UpdatedAt:      current,

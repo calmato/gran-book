@@ -24,7 +24,7 @@ module "gke" {
   gke_cluster_name        = "gran-book-stg-cluster"
   gke_cluster_description = "gran-book-stg application cluster for staging"
 
-  gke_cluster_min_master_version = "1.17.14-gke.400"
+  gke_cluster_min_master_version = "1.19.8-gke.160"
   gke_cluster_istio_disabled     = true
 
   #################################################
@@ -32,20 +32,22 @@ module "gke" {
   #################################################
   gke_node_configs = [
     {
-      name         = "gran-book-stg-node"
-      count        = 1
-      preemptible  = false
-      machine_type = "e2-micro"
-      disk_type    = "pd-standard"
-      disk_size_gb = 10
+      name               = "gran-book-stg-node"
+      count              = 1
+      preemptible        = false
+      machine_type       = "e2-micro"
+      disk_type          = "pd-standard"
+      disk_size_gb       = 10
+      monitoring_enabled = true
     },
     {
-      name         = "gran-book-stg-spot-node"
-      count        = 3
-      preemptible  = true
-      machine_type = "e2-small"
-      disk_type    = "pd-standard"
-      disk_size_gb = 10
+      name               = "gran-book-stg-spot-node"
+      count              = 2
+      preemptible        = true
+      machine_type       = "e2-small"
+      disk_type          = "pd-standard"
+      disk_size_gb       = 10
+      monitoring_enabled = true
     },
   ]
 
