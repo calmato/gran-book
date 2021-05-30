@@ -5,7 +5,5 @@ import Support from '~/screens/Support';
 import { Auth } from '~/store/models';
 
 export default function ConnectedSupport(): JSX.Element {
-  const auth: Auth.Model = useSelector(authSelector);
-
-  return <Support auth={auth} />;
+  return <Support />;
 }
