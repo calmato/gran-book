@@ -1224,6 +1224,60 @@ components:
         total:
           type: integer
           format: int64
+    roomResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        users:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              username:
+                type: string
+              thumbnailUrl:
+                type: string
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+    roomListResponse:
+      type: object
+      properties:
+        rooms:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              users:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    username:
+                      type: string
+                    thumbnailUrl:
+                      type: string
+              latestMassage:
+                type: object
+                properties:
+                  userId:
+                    type: string
+                  content:
+                    type: string
+                  createdAt:
+                    type: string
+              createdAt:
+                type: string
+              updatedAt:
+                type: string
     bookResponse:
       type: object
       properties:
