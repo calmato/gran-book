@@ -5,10 +5,9 @@ import firebase from '~/lib/firebase';
 import { getMessageDocRef } from '~/store/usecases/auth';
 import { COLOR } from '~~/constants/theme';
 import { MaterialIcons, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { MessageForm, transferMessageForm } from '~/types/forms';
+import { MessageForm, TransferMessageForm } from '~/types/forms';
 import { Header } from 'react-native-elements';
-import { MessageItem } from '~/components/organisms/MessageItem';
-import { GiftedChat } from 'react-native-gifted-chat';
+import { GiftedChat, Send } from 'react-native-gifted-chat';
 
 export const MessagesScreen = () => {
   const [textData, setText] = useState ({
@@ -16,27 +15,27 @@ export const MessagesScreen = () => {
     createdAt: firebase.firestore.Timestamp.now(),
     _id: '',
   });
-  const [messages, setMessages] = useState<transferMessageForm[]>([]);
+  const [messages, setMessages] = useState<TransferMessageForm[]>([]);
   const docRef = getMessageDocRef();
 
-  const onSend = (messages = []) => {
-    messages.forEach(async (message) => {
-      (await docRef).add(message);
-    });
+  const onSend = (newMessage: TransferMessageForm[]) => {
+    messages.forEach(async (newmessage) => {
+      (await docRef).add(newmessage);});
+    setMessages((messages) => GiftedChat.append(messages, newMessage));
   };
   const getMessage = async () => {
-    const messages = [] as transferMessageForm[];
-    await firebase.firestore().collection('messages').orderBy('createdAt', 'desc')
+    const messages = [] as TransferMessageForm[];
+    await firebase.firestore().collection('messages').orderBy('createdAt', 'desc').limit(20)
       .onSnapshot((snapshot) => {
         snapshot.docChanges().forEach((change) => {
           if (change.type === 'added') {
-            const messageInfo = {
+            const messageInfo: TransferMessageForm = {
               _id: change.doc.data()._id,
               createdAt: change.doc.data().createdAt.toDate(),
               text: change.doc.data().text,
               user: change.doc.data().user,
             };
-            setMessages((messages)=>[...messages, messageInfo as transferMessageForm,]);
+            setMessages((messages)=>[...messages, messageInfo]);
           }
         });
       });
@@ -44,6 +43,7 @@ export const MessagesScreen = () => {
   useEffect(() => {
     getMessage();
   }, []);
+
   return (
     <View style={styles.container}>
 
@@ -65,6 +65,17 @@ export const MessagesScreen = () => {
       />
       <GiftedChat
         messages= {messages}
+        renderSend= {(props) => {
+          return (
+            <Send {...props} containerStyle={styles.sendContainer}>
+              <Ionicons
+                style={styles.sendButton}
+                name= "send"
+                size= {32}
+              />
+            </Send>
+          );
+        }}
         onSend={messages => onSend(messages)}
         user={{
           _id: 1,
@@ -92,6 +103,16 @@ const styles = StyleSheet.create({
     marginBottom: 'auto',
     width: 'auto',
     padding: 10
+  },
+
+  sendContainer: {
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    flexDirection: 'row',
+    height: 'auto',
+    minHeight: '10%',
+    marginRight: '3%',
+    bottom: 0,
   },
 
   inputText: {

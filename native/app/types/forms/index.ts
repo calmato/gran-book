@@ -53,7 +53,7 @@ export interface MessageForm {
   name: string;
 }
 
-export interface transferMessageForm {
+export interface TransferMessageForm {
   text: string;
   createdAt: any;
   _id: string;
