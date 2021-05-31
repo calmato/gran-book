@@ -943,6 +943,18 @@ paths:
             type: string
           required: true
           description: ユーザID
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          required: false
+          description: 取得上限数
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          required: false
+          description: 取得開始位置
       responses:
         '200':
           description: A successful response.
@@ -983,6 +995,74 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/chatRoomResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+  /v1/users/{userId}/chat/{chatId}/messages/text:
+    post:
+      summary: チャットメッセージ作成 (テキストメッセージの送信)
+      tags:
+        - UserService
+        - ChatService
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: string
+          required: true
+          description: ユーザID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createChatMessageRequest'
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/chatMessageResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+  /v1/users/{userId}/chat/{chatId}/messages/image:
+    post:
+      summary: チャットメッセージ作成 (画像のアップロード)
+      tags:
+        - UserService
+        - ChatService
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: string
+          required: true
+          description: ユーザID
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/uploadChatImageRequest'
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/chatMessageResponse'
         default:
           description: An unexpected error response.
           content:
@@ -1082,6 +1162,17 @@ components:
           type: array
           items:
             type: string
+    createChatMessageRequest:
+      type: object
+      properties:
+        text:
+          type: string
+    uploadChatImageRequest:
+      type: object
+      properties:
+        image:
+          type: string
+          format: binary
     createBookRequest:
       type: object
       properties:
@@ -1350,6 +1441,26 @@ components:
                 type: string
               updatedAt:
                 type: string
+    chatMessageResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        text:
+          type: string
+        image:
+          type: string
+        user:
+          type: object
+          properties:
+            id:
+              type: string
+            username:
+              type: string
+            thumbnailUrl:
+              type: string
+        createdAt:
+          type: string
     bookResponse:
       type: object
       properties:
