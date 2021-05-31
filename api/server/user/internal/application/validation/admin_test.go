@@ -570,26 +570,43 @@ func TestAdminRequestValidation_CreateAdmin(t *testing.T) {
 	}
 }
 
-func TestAdminRequestValidation_UpdateAdminRole(t *testing.T) {
+func TestAdminRequestValidation_UpdateAdminContact(t *testing.T) {
 	testCases := map[string]struct {
-		Input    *input.UpdateAdminRole
+		Input    *input.UpdateAdminContact
 		Expected bool
 	}{
 		"ok": {
-			Input: &input.UpdateAdminRole{
-				Role: 1,
+			Input: &input.UpdateAdminContact{
+				Email:       "test-user@calmato.com",
+				PhoneNumber: "000-0000-0000",
 			},
 			Expected: true,
 		},
-		"ng_role_greater_than": {
-			Input: &input.UpdateAdminRole{
-				Role: 0,
+		"ng_email_required": {
+			Input: &input.UpdateAdminContact{
+				Email:       strings.Repeat("x", 256) + "@calmato.com",
+				PhoneNumber: "000-0000-0000",
 			},
 			Expected: false,
 		},
-		"ng_role_less_than": {
-			Input: &input.UpdateAdminRole{
-				Role: 4,
+		"ng_email_format": {
+			Input: &input.UpdateAdminContact{
+				Email:       "test-user",
+				PhoneNumber: "000-0000-0000",
+			},
+			Expected: false,
+		},
+		"ng_phoneNumber_required": {
+			Input: &input.UpdateAdminContact{
+				Email:       "test-user@calmato.com",
+				PhoneNumber: "",
+			},
+			Expected: false,
+		},
+		"ng_phoneNumber_max": {
+			Input: &input.UpdateAdminContact{
+				Email:       "test-user@calmato.com",
+				PhoneNumber: strings.Repeat("x", 17),
 			},
 			Expected: false,
 		},
@@ -602,7 +619,7 @@ func TestAdminRequestValidation_UpdateAdminRole(t *testing.T) {
 		t.Run(result, func(t *testing.T) {
 			target := NewAdminRequestValidation()
 
-			got := target.UpdateAdminRole(tc.Input)
+			got := target.UpdateAdminContact(tc.Input)
 			if tc.Expected {
 				if got != nil {
 					t.Fatalf("Incorrect result: %#v", got)
@@ -701,176 +718,180 @@ func TestAdminRequestValidation_UpdateAdminProfile(t *testing.T) {
 		"ok": {
 			Input: &input.UpdateAdminProfile{
 				Username:      "test-user",
-				Email:         "test-user@calmato.com",
 				LastName:      "テスト",
 				FirstName:     "ユーザ",
 				LastNameKana:  "てすと",
 				FirstNameKana: "ゆーざ",
+				Role:          1,
+				ThumbnailURL:  "https://www.google.co.jp",
 			},
 			Expected: true,
 		},
 		"ng_username_required": {
 			Input: &input.UpdateAdminProfile{
 				Username:      "",
-				Email:         "test-user@calmato.com",
 				LastName:      "テスト",
 				FirstName:     "ユーザ",
 				LastNameKana:  "てすと",
 				FirstNameKana: "ゆーざ",
+				Role:          1,
+				ThumbnailURL:  "https://www.google.co.jp",
 			},
 			Expected: false,
 		},
 		"ng_username_max": {
 			Input: &input.UpdateAdminProfile{
 				Username:      strings.Repeat("x", 33),
-				Email:         "test-user@calmato.com",
 				LastName:      "テスト",
 				FirstName:     "ユーザ",
 				LastNameKana:  "てすと",
 				FirstNameKana: "ゆーざ",
-			},
-			Expected: false,
-		},
-		"ng_email_required": {
-			Input: &input.UpdateAdminProfile{
-				Username:      "test-user",
-				Email:         "",
-				LastName:      "テスト",
-				FirstName:     "ユーザ",
-				LastNameKana:  "てすと",
-				FirstNameKana: "ゆーざ",
-			},
-			Expected: false,
-		},
-		"ng_email_max": {
-			Input: &input.UpdateAdminProfile{
-				Username:      "test-user",
-				Email:         strings.Repeat("x", 256) + "@calmato.com",
-				LastName:      "テスト",
-				FirstName:     "ユーザ",
-				LastNameKana:  "てすと",
-				FirstNameKana: "ゆーざ",
-			},
-			Expected: false,
-		},
-		"ng_email_format": {
-			Input: &input.UpdateAdminProfile{
-				Username:      "test-user",
-				Email:         "test-user",
-				LastName:      "テスト",
-				FirstName:     "ユーザ",
-				LastNameKana:  "てすと",
-				FirstNameKana: "ゆーざ",
+				Role:          1,
+				ThumbnailURL:  "https://www.google.co.jp",
 			},
 			Expected: false,
 		},
 		"ng_lastName_required": {
 			Input: &input.UpdateAdminProfile{
 				Username:      "test-user",
-				Email:         "test-user@calmato.com",
 				LastName:      "",
 				FirstName:     "ユーザ",
 				LastNameKana:  "てすと",
 				FirstNameKana: "ゆーざ",
+				Role:          1,
+				ThumbnailURL:  "https://www.google.co.jp",
 			},
 			Expected: false,
 		},
 		"ng_lastName_max": {
 			Input: &input.UpdateAdminProfile{
 				Username:      "test-user",
-				Email:         "test-user@calmato.com",
 				LastName:      strings.Repeat("あ", 17),
 				FirstName:     "ユーザ",
 				LastNameKana:  "てすと",
 				FirstNameKana: "ゆーざ",
+				Role:          1,
+				ThumbnailURL:  "https://www.google.co.jp",
 			},
 			Expected: false,
 		},
 		"ng_firstName_required": {
 			Input: &input.UpdateAdminProfile{
 				Username:      "test-user",
-				Email:         "test-user@calmato.com",
 				LastName:      "テスト",
 				FirstName:     "",
 				LastNameKana:  "てすと",
 				FirstNameKana: "ゆーざ",
+				Role:          1,
+				ThumbnailURL:  "https://www.google.co.jp",
 			},
 			Expected: false,
 		},
 		"ng_firstName_max": {
 			Input: &input.UpdateAdminProfile{
 				Username:      "test-user",
-				Email:         "test-user@calmato.com",
 				LastName:      "テスト",
 				FirstName:     strings.Repeat("あ", 17),
 				LastNameKana:  "てすと",
 				FirstNameKana: "ゆーざ",
+				Role:          1,
+				ThumbnailURL:  "https://www.google.co.jp",
 			},
 			Expected: false,
 		},
 		"ng_lastNameKana_required": {
 			Input: &input.UpdateAdminProfile{
 				Username:      "test-user",
-				Email:         "test-user@calmato.com",
 				LastName:      "テスト",
 				FirstName:     "ユーザ",
 				LastNameKana:  "",
 				FirstNameKana: "ゆーざ",
+				Role:          1,
+				ThumbnailURL:  "https://www.google.co.jp",
 			},
 			Expected: false,
 		},
 		"ng_lastNameKana_max": {
 			Input: &input.UpdateAdminProfile{
 				Username:      "test-user",
-				Email:         "test-user@calmato.com",
 				LastName:      "テスト",
 				FirstName:     "ユーザ",
 				LastNameKana:  strings.Repeat("あ", 33),
 				FirstNameKana: "ゆーざ",
+				Role:          1,
+				ThumbnailURL:  "https://www.google.co.jp",
 			},
 			Expected: false,
 		},
 		"ng_lastNameKane_format": {
 			Input: &input.UpdateAdminProfile{
 				Username:      "test-user",
-				Email:         "test-user@calmato.com",
 				LastName:      "テスト",
 				FirstName:     "ユーザ",
 				LastNameKana:  "テスト",
 				FirstNameKana: "ゆーざ",
+				Role:          1,
+				ThumbnailURL:  "https://www.google.co.jp",
 			},
 			Expected: false,
 		},
 		"ng_firstNameKana_required": {
 			Input: &input.UpdateAdminProfile{
 				Username:      "test-user",
-				Email:         "test-user@calmato.com",
 				LastName:      "テスト",
 				FirstName:     "ユーザ",
 				LastNameKana:  "てすと",
 				FirstNameKana: "",
+				Role:          1,
+				ThumbnailURL:  "https://www.google.co.jp",
 			},
 			Expected: false,
 		},
 		"ng_firstNameKana_max": {
 			Input: &input.UpdateAdminProfile{
 				Username:      "test-user",
-				Email:         "test-user@calmato.com",
 				LastName:      "テスト",
 				FirstName:     "ユーザ",
 				LastNameKana:  "てすと",
 				FirstNameKana: strings.Repeat("あ", 33),
+				Role:          1,
+				ThumbnailURL:  "https://www.google.co.jp",
 			},
 			Expected: false,
 		},
 		"ng_firstNameKana_format": {
 			Input: &input.UpdateAdminProfile{
 				Username:      "test-user",
-				Email:         "test-user@calmato.com",
 				LastName:      "テスト",
 				FirstName:     "ユーザ",
 				LastNameKana:  "てすと",
 				FirstNameKana: "ユーザ",
+				Role:          1,
+				ThumbnailURL:  "https://www.google.co.jp",
+			},
+			Expected: false,
+		},
+		"ng_role_greater_than_equal": {
+			Input: &input.UpdateAdminProfile{
+				Username:      "test-user",
+				LastName:      "テスト",
+				FirstName:     "ユーザ",
+				LastNameKana:  "てすと",
+				FirstNameKana: "ゆーざ",
+				Role:          0,
+				ThumbnailURL:  "https://www.google.co.jp",
+			},
+			Expected: false,
+		},
+		"ng_role_less_than_equal": {
+			Input: &input.UpdateAdminProfile{
+				Username:      "test-user",
+				LastName:      "テスト",
+				FirstName:     "ユーザ",
+				LastNameKana:  "てすと",
+				FirstNameKana: "ゆーざ",
+				Role:          4,
+				ThumbnailURL:  "https://www.google.co.jp",
 			},
 			Expected: false,
 		},

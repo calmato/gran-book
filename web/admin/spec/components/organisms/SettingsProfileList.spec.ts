@@ -16,8 +16,8 @@ describe('components/organisms/SettingsProfileList', () => {
           expect(wrapper.props().lists).toEqual([])
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({ lists: [{ title: '表示名', content: 'calmato', contentType: 'text' }] })
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ lists: [{ title: '表示名', content: 'calmato', contentType: 'text' }] })
           expect(wrapper.props().lists).toEqual([{ title: '表示名', content: 'calmato', contentType: 'text' }])
         })
       })
@@ -26,7 +26,7 @@ describe('components/organisms/SettingsProfileList', () => {
     describe('methods', () => {
       describe('onClick', () => {
         it('emitが実行されること', async () => {
-          wrapper.setProps({ lists: [{ title: '表示名', content: 'calmato', contentType: 'text' }] })
+          await wrapper.setProps({ lists: [{ title: '表示名', content: 'calmato', contentType: 'text' }] })
           await wrapper.vm.onClick()
           expect(wrapper.emitted('click')).toBeTruthy()
         })

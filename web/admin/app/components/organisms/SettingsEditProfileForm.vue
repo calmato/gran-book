@@ -6,12 +6,13 @@
       :rules="form.options.username.rules"
       :autofocus="true"
     />
+    <v-img v-if="form.params.thumbnailUrl" :src="form.params.thumbnailUrl" width="auto" max-height="240" contain />
     <the-file-input
-      v-model="form.params.thumbnail"
+      :file="form.params.thumbnail"
       :label="form.options.thumbnail.label"
       :rules="form.options.thumbnail.rules"
-      :limit="form.options.thumbnail.rules.size"
       accept="image/*"
+      @input="onImagePicked"
     />
     <the-text-area
       v-model="form.params.selfIntroduction"
@@ -76,7 +77,26 @@ export default defineComponent({
     },
   },
 
-  setup(_, { emit }: SetupContext) {
+  setup(props, { emit }: SetupContext) {
+    const onImagePicked = (file: File) => {
+      if (!file) {
+        props.form.params.thumbnailUrl = ''
+        return
+      }
+
+      if (file.name.lastIndexOf('.') === -1) {
+        return
+      }
+
+      const fr = new FileReader()
+
+      fr.readAsDataURL(file)
+      fr.addEventListener('load', () => {
+        props.form.params.thumbnail = file
+        props.form.params.thumbnailUrl = fr.result
+      })
+    }
+
     const onClick = () => {
       emit('click')
     }
@@ -88,6 +108,7 @@ export default defineComponent({
     return {
       onClick,
       onClickCancel,
+      onImagePicked,
     }
   },
 })

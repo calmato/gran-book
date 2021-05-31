@@ -22,8 +22,8 @@ describe('components/ogranisms/CommonSidebar', () => {
           expect(wrapper.props().current).toBe('')
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({ current: '/' })
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ current: '/' })
           expect(wrapper.props().current).toBe('/')
         })
       })
@@ -33,8 +33,8 @@ describe('components/ogranisms/CommonSidebar', () => {
           expect(wrapper.props().drawer).toBeTruthy()
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({ drawer: false })
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ drawer: false })
           expect(wrapper.props().current).toBeFalsy()
         })
       })
@@ -44,8 +44,8 @@ describe('components/ogranisms/CommonSidebar', () => {
           expect(wrapper.props().username).toBe('Calmato 管理者')
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({ username: 'テストユーザ' })
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ username: 'テストユーザ' })
           expect(wrapper.props().username).toBe('テストユーザ')
         })
       })
@@ -55,8 +55,8 @@ describe('components/ogranisms/CommonSidebar', () => {
           expect(wrapper.props().email).toBe('support@calmato.com')
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({ email: 'test@calmato.com' })
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ email: 'test@calmato.com' })
           expect(wrapper.props().email).toBe('test@calmato.com')
         })
       })
@@ -66,8 +66,8 @@ describe('components/ogranisms/CommonSidebar', () => {
           expect(wrapper.props().thumbnailUrl).toBe('')
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({ thumbnailUrl: '/thumbnail.png' })
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ thumbnailUrl: '/thumbnail.png' })
           expect(wrapper.props().thumbnailUrl).toBe('/thumbnail.png')
         })
       })
@@ -86,7 +86,7 @@ describe('components/ogranisms/CommonSidebar', () => {
         expect(wrapper.vm.maintenanceItems).toEqual([
           { icon: 'mdi-cart', text: 'お取り引き管理', to: '/' },
           { icon: 'mdi-forum', text: 'お問い合わせ管理', to: '/' },
-          { icon: 'mdi-bell-ring', text: 'お知らせ管理', to: '/' },
+          { icon: 'mdi-bell-ring', text: 'お知らせ管理', to: '/notifications' },
           { icon: 'mdi-cash-100', text: 'セール情報管理', to: '/' },
         ])
       })
@@ -103,6 +103,7 @@ describe('components/ogranisms/CommonSidebar', () => {
         expect(wrapper.vm.systemItems).toEqual([
           { icon: 'mdi-shield-account', text: '管理者管理', to: '/admin' },
           { icon: 'mdi-cog', text: 'システム設定', to: '/system' },
+          { icon: 'mdi-developer-board', text: 'デバッグ用', to: '/debug' },
         ])
       })
     })

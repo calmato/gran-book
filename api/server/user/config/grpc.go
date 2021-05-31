@@ -145,12 +145,19 @@ func accessLogUnaryServerInterceptor() grpc.UnaryServerInterceptor {
 	return func(
 		ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler,
 	) (interface{}, error) {
-		clientIP := "unknown"
+		clientIP := ""
 		if p, ok := peer.FromContext(ctx); ok {
 			clientIP = p.Addr.String()
 		}
 
-		userAgent := "unknown"
+		requestID := ""
+		if md, ok := metadata.FromIncomingContext(ctx); ok {
+			if id, ok := md["x-request-id"]; ok {
+				requestID = strings.Join(id, ",")
+			}
+		}
+
+		userAgent := ""
 		if md, ok := metadata.FromIncomingContext(ctx); ok {
 			if u, ok := md["user-agent"]; ok {
 				userAgent = strings.Join(u, ",")
@@ -175,6 +182,7 @@ func accessLogUnaryServerInterceptor() grpc.UnaryServerInterceptor {
 		grpc_ctxzap.AddFields(
 			ctx,
 			zap.String("request.client_ip", clientIP),
+			zap.String("request.request_id", requestID),
 			zap.String("request.user_agent", userAgent),
 			zap.Reflect("request.content", reqParams),
 			zap.Reflect("response.content", resParams),

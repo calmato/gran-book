@@ -16,8 +16,8 @@ describe('components/atoms/TheFileInput', () => {
           expect(wrapper.props().accept).toBe('image/*')
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({ accept: 'video/*' })
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ accept: 'video/*' })
           expect(wrapper.props().accept).toBe('video/*')
         })
       })
@@ -27,20 +27,9 @@ describe('components/atoms/TheFileInput', () => {
           expect(wrapper.props().label).toBe('')
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({ label: 'テスト' })
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ label: 'テスト' })
           expect(wrapper.props().label).toBe('テスト')
-        })
-      })
-
-      describe('limit', () => {
-        it('初期値', () => {
-          expect(wrapper.props().limit).toBe(10000000)
-        })
-
-        it('値が代入されること', () => {
-          wrapper.setProps({ limit: 5000000 })
-          expect(wrapper.props().limit).toBe(5000000)
         })
       })
 
@@ -49,8 +38,8 @@ describe('components/atoms/TheFileInput', () => {
           expect(wrapper.props().name).toBe('')
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({ name: 'test' })
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ name: 'test' })
           expect(wrapper.props().name).toBe('test')
         })
       })
@@ -60,39 +49,33 @@ describe('components/atoms/TheFileInput', () => {
           expect(wrapper.props().rules).toEqual({})
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({ rules: { required: true } })
+        it('値が代入されること', async () => {
+          await wrapper.setProps({ rules: { required: true } })
           expect(wrapper.props().rules).toEqual({ required: true })
         })
       })
 
-      describe('value', () => {
+      describe('file', () => {
         it('初期値', () => {
-          expect(wrapper.props().value).toBe('')
+          expect(wrapper.props().file).toBeNull()
         })
 
-        it('値が代入されること', () => {
-          wrapper.setProps({ value: 'test' })
-          expect(wrapper.props().value).toBe('test')
+        it('値が代入されること', async () => {
+          const file = new File(['thumbnail'], 'thumbnail.png', { lastModified: Date.now(), type: 'image/png' })
+          await wrapper.setProps({ file })
+          expect(wrapper.props().file).toBe(file)
         })
       })
     })
 
     describe('methods', () => {
-      describe('selectedFile', () => {
+      describe('onSelect', () => {
         describe('fileが入力されたとき', () => {
           it('emitが実行されること', async () => {
             const file = new File(['thumbnail'], 'thumbnail.png', { lastModified: Date.now(), type: 'image/png' })
-            await wrapper.vm.selectedFile(file)
-            expect(wrapper.emitted('input')).toBeTruthy()
-            expect(wrapper.emitted('input')[0][0]).not.toBeUndefined()
-          })
-        })
-
-        describe('fileが入力されなかったとき', () => {
-          it('emitが実行されないこと', async () => {
-            await wrapper.vm.selectedFile()
-            expect(wrapper.emitted('input')).toBeFalsy()
+            await wrapper.vm.onSelect(file)
+            expect(wrapper.emitted('change')).toBeTruthy()
+            expect(wrapper.emitted('change')[0][0]).toBe(file)
           })
         })
       })

@@ -8,34 +8,94 @@ export interface IBookResponse {
   publishedOn: string
   thumbnailUrl: string
   rakutenUrl: string
-  rakutenGenreId: string
+  size: string
   author: string
   authorKana: string
   createdAt: string
   updatedAt: string
-  bookshelf: IBookResponseBookshelf
-  reviews: Array<IBookResponseReview>
+  bookshelf?: IBookResponseBookshelf
 }
 
 export interface IBookResponseBookshelf {
   id: number
-  status: number
+  status: string
+  impression: string
   readOn: string
   createdAt: string
   updatedAt: string
 }
 
-export interface IBookResponseReview {
+export interface IReviewResponse {
   id: number
-  score: number
   impression: string
   createdAt: string
   updatedAt: string
-  user: IBookResponseUser
+  book: IReviewResponseBook
+  user: IReviewResponseUser
 }
 
-export interface IBookResponseUser {
+export interface IReviewResponseBook {
+  id: number
+  title: string
+  thumbnailUrl: string
+}
+
+export interface IReviewResponseUser {
   id: string
   username: string
   thumbnailUrl: string
+}
+
+export interface IUserReviewListResponse {
+  reviews: Array<IUserReviewListResponseReview>
+  limit: number
+  offset: number
+  total: number
+  order?: IUserReviewListResponseOrder
+}
+
+export interface IUserReviewListResponseReview {
+  id: number
+  impression: string
+  createdAt: string
+  updatedAt: string
+  book: IUserReviewListResponseBook
+}
+
+export interface IUserReviewListResponseBook {
+  id: number
+  title: string
+  thumbnailUrl: string
+}
+
+export interface IUserReviewListResponseOrder {
+  by: string
+  direction: string
+}
+
+export interface IBookReviewListResponse {
+  reviews: Array<IBookReviewListResponseReview>
+  limit: number
+  offset: number
+  total: number
+  order?: IBookReviewListResponseOrder
+}
+
+export interface IBookReviewListResponseReview {
+  id: number
+  impression: string
+  createdAt: string
+  updatedAt: string
+  user: IBookReviewListResponseUser
+}
+
+export interface IBookReviewListResponseUser {
+  id: string
+  username: string
+  thumbnailUrl: string
+}
+
+export interface IBookReviewListResponseOrder {
+  by: string
+  direction: string
 }

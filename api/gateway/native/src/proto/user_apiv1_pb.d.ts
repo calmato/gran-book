@@ -417,26 +417,29 @@ export namespace CreateAdminRequest {
     }
 }
 
-export class UpdateAdminRoleRequest extends jspb.Message { 
+export class UpdateAdminContactRequest extends jspb.Message { 
     getId(): string;
-    setId(value: string): UpdateAdminRoleRequest;
-    getRole(): number;
-    setRole(value: number): UpdateAdminRoleRequest;
+    setId(value: string): UpdateAdminContactRequest;
+    getEmail(): string;
+    setEmail(value: string): UpdateAdminContactRequest;
+    getPhoneNumber(): string;
+    setPhoneNumber(value: string): UpdateAdminContactRequest;
 
     serializeBinary(): Uint8Array;
-    toObject(includeInstance?: boolean): UpdateAdminRoleRequest.AsObject;
-    static toObject(includeInstance: boolean, msg: UpdateAdminRoleRequest): UpdateAdminRoleRequest.AsObject;
+    toObject(includeInstance?: boolean): UpdateAdminContactRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: UpdateAdminContactRequest): UpdateAdminContactRequest.AsObject;
     static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
     static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-    static serializeBinaryToWriter(message: UpdateAdminRoleRequest, writer: jspb.BinaryWriter): void;
-    static deserializeBinary(bytes: Uint8Array): UpdateAdminRoleRequest;
-    static deserializeBinaryFromReader(message: UpdateAdminRoleRequest, reader: jspb.BinaryReader): UpdateAdminRoleRequest;
+    static serializeBinaryToWriter(message: UpdateAdminContactRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): UpdateAdminContactRequest;
+    static deserializeBinaryFromReader(message: UpdateAdminContactRequest, reader: jspb.BinaryReader): UpdateAdminContactRequest;
 }
 
-export namespace UpdateAdminRoleRequest {
+export namespace UpdateAdminContactRequest {
     export type AsObject = {
         id: string,
-        role: number,
+        email: string,
+        phoneNumber: string,
     }
 }
 
@@ -471,8 +474,8 @@ export class UpdateAdminProfileRequest extends jspb.Message {
     setId(value: string): UpdateAdminProfileRequest;
     getUsername(): string;
     setUsername(value: string): UpdateAdminProfileRequest;
-    getEmail(): string;
-    setEmail(value: string): UpdateAdminProfileRequest;
+    getRole(): number;
+    setRole(value: number): UpdateAdminProfileRequest;
     getLastName(): string;
     setLastName(value: string): UpdateAdminProfileRequest;
     getFirstName(): string;
@@ -481,6 +484,8 @@ export class UpdateAdminProfileRequest extends jspb.Message {
     setLastNameKana(value: string): UpdateAdminProfileRequest;
     getFirstNameKana(): string;
     setFirstNameKana(value: string): UpdateAdminProfileRequest;
+    getThumbnailUrl(): string;
+    setThumbnailUrl(value: string): UpdateAdminProfileRequest;
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): UpdateAdminProfileRequest.AsObject;
@@ -496,11 +501,12 @@ export namespace UpdateAdminProfileRequest {
     export type AsObject = {
         id: string,
         username: string,
-        email: string,
+        role: number,
         lastName: string,
         firstName: string,
         lastNameKana: string,
         firstNameKana: string,
+        thumbnailUrl: string,
     }
 }
 

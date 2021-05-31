@@ -6,6 +6,9 @@ const loggerConfig: Configuration = {
   appenders: {
     consoleLog: {
       type: 'console',
+      layout: {
+        type: 'messagePassThrough',
+      },
     },
     systemLog: {
       type: 'file',

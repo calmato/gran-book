@@ -31,20 +31,22 @@ module "gke" {
   #################################################
   gke_node_configs = [
     {
-      name         = "xxxxxx-node"
-      count        = 1
-      preemptible  = false
-      machine_type = "e2-micro"
-      disk_type    = "pd-standard"
-      disk_size_gb = 10
+      name               = "xxxxxx-node"
+      count              = 1
+      preemptible        = false
+      machine_type       = "e2-micro"
+      disk_type          = "pd-standard"
+      disk_size_gb       = 10
+      monitoring_enabled = false
     },
     {
-      name         = "xxxxxx-spot-node"
-      count        = 2
-      preemptible  = true
-      machine_type = "e2-small"
-      disk_type    = "pd-standard"
-      disk_size_gb = 10
+      name               = "xxxxxx-spot-node"
+      count              = 2
+      preemptible        = true
+      machine_type       = "e2-small"
+      disk_type          = "pd-standard"
+      disk_size_gb       = 10
+      monitoring_enabled = false
     },
   ]
 

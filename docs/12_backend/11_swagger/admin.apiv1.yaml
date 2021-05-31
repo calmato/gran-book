@@ -165,6 +165,18 @@ paths:
             type: string
           required: false
           description: 検索値
+        - in: query
+          name: by
+          schema:
+            type: string
+          required: false
+          description: 並び替え対象のカラム
+        - in: query
+          name: direction
+          schema:
+            type: string
+          required: false
+          description: 並び替え順 (asc or desc)
       responses:
         '200':
           description: A successful response.
@@ -256,9 +268,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorResponse'
-  /v1/admin/{userId}/role:
+  /v1/admin/{userId}/profile:
     patch:
-      summary: 管理者権限更新
+      summary: 管理者プロフィール更新
       tags:
         - AdminService
       security:
@@ -275,7 +287,40 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/updateAdminRoleRequest'
+              $ref: '#/components/schemas/updateAdminProfileRequest'
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/adminResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+  /v1/admin/{userId}/contact:
+    patch:
+      summary: 管理者連絡先更新
+      tags:
+        - AdminService
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: string
+          required: true
+          description: ユーザーID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/updateAdminContactRequest'
       responses:
         '200':
           description: A successful response.
@@ -309,39 +354,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/updateAdminPasswordRequest'
-      responses:
-        '200':
-          description: A successful response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/adminResponse'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/errorResponse'
-  /v1/admin/{userId}/profile:
-    patch:
-      summary: 管理者プロフィール更新
-      tags:
-        - AdminService
-      security:
-        - BearerAuth: []
-      parameters:
-        - in: path
-          name: userId
-          schema:
-            type: string
-          required: true
-          description: ユーザーID
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/updateAdminProfileRequest'
       responses:
         '200':
           description: A successful response.
@@ -420,6 +432,18 @@ paths:
             type: string
           required: false
           description: 検索値
+        - in: query
+          name: by
+          schema:
+            type: string
+          required: false
+          description: 並び替え対象のカラム
+        - in: query
+          name: direction
+          schema:
+            type: string
+          required: false
+          description: 並び替え順 (asc or desc)
       responses:
         '200':
           description: A successful response.
@@ -564,12 +588,13 @@ components:
           type: string
         firstNameKana:
           type: string
-    updateAdminRoleRequest:
+    updateAdminContactRequest:
       type: object
       properties:
-        role:
-          type: integer
-          format: int32
+        email:
+          type: string
+        phoneNumber:
+          type: string
     updateAdminPasswordRequest:
       type: object
       properties:
@@ -580,10 +605,6 @@ components:
     updateAdminProfileRequest:
       type: object
       properties:
-        username:
-          type: string
-        email:
-          type: string
         lastName:
           type: string
         firstName:
@@ -592,6 +613,11 @@ components:
           type: string
         firstNameKana:
           type: string
+        thumbnailUrl:
+          type: string
+        role:
+          type: integer
+          format: int32
     uploadAdminThumbnailRequest:
       type: object
       properties:

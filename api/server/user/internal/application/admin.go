@@ -18,7 +18,7 @@ type AdminApplication interface {
 	Search(ctx context.Context, in *input.SearchAdmin) ([]*user.User, *output.ListQuery, error)
 	Show(ctx context.Context, uid string) (*user.User, error)
 	Create(ctx context.Context, in *input.CreateAdmin) (*user.User, error)
-	UpdateRole(ctx context.Context, in *input.UpdateAdminRole, uid string) (*user.User, error)
+	UpdateContact(ctx context.Context, in *input.UpdateAdminContact, uid string) (*user.User, error)
 	UpdatePassword(ctx context.Context, in *input.UpdateAdminPassword, uid string) (*user.User, error)
 	UpdateProfile(ctx context.Context, in *input.UpdateAdminProfile, uid string) (*user.User, error)
 	UploadThumbnail(ctx context.Context, in *input.UploadAdminThumbnail, uid string) (string, error)
@@ -193,8 +193,10 @@ func (a *adminApplication) Create(ctx context.Context, in *input.CreateAdmin) (*
 	return u, nil
 }
 
-func (a *adminApplication) UpdateRole(ctx context.Context, in *input.UpdateAdminRole, uid string) (*user.User, error) {
-	err := a.adminRequestValidation.UpdateAdminRole(in)
+func (a *adminApplication) UpdateContact(
+	ctx context.Context, in *input.UpdateAdminContact, uid string,
+) (*user.User, error) {
+	err := a.adminRequestValidation.UpdateAdminContact(in)
 	if err != nil {
 		return nil, err
 	}
@@ -204,7 +206,8 @@ func (a *adminApplication) UpdateRole(ctx context.Context, in *input.UpdateAdmin
 		return nil, exception.NotFound.New(err)
 	}
 
-	u.Role = in.Role
+	u.Email = in.Email
+	u.PhoneNumber = in.PhoneNumber
 
 	err = a.userService.Validation(ctx, u)
 	if err != nil {
@@ -254,11 +257,12 @@ func (a *adminApplication) UpdateProfile(
 	}
 
 	u.Username = in.Username
-	u.Email = in.Email
 	u.LastName = in.LastName
 	u.FirstName = in.FirstName
 	u.LastNameKana = in.LastNameKana
 	u.FirstNameKana = in.FirstNameKana
+	u.Role = in.Role
+	u.ThumbnailURL = in.ThumbnailURL
 
 	err = a.userService.Validation(ctx, u)
 	if err != nil {
