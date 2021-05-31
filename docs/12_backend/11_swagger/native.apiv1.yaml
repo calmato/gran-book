@@ -928,11 +928,74 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorResponse'
+  /v1/users/{userId}/chat:
+    get:
+      summary: チャットルーム一覧
+      tags:
+        - UserService
+        - ChatService
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: string
+          required: true
+          description: ユーザID
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/chatRoomListResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+    post:
+      summary: チャットルーム作成
+      tags:
+        - UserService
+        - ChatService
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: string
+          required: true
+          description: ユーザID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createChatRoomRequest'
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/chatRoomResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
 tags:
   - name: AuthService
     description: 認証関連
   - name: UserService
     description: ユーザ関連
+  - name: ChatService
+    description: チャット関連
   - name: BookService
     description: 書籍関連
 components:
@@ -1012,6 +1075,13 @@ components:
         thumbnail:
           type: string
           format: binary
+    createChatRoomRequest:
+      type: object
+      properties:
+        users:
+          type: array
+          items:
+            type: string
     createBookRequest:
       type: object
       properties:
@@ -1224,7 +1294,7 @@ components:
         total:
           type: integer
           format: int64
-    roomResponse:
+    chatRoomResponse:
       type: object
       properties:
         id:
@@ -1244,7 +1314,7 @@ components:
           type: string
         updatedAt:
           type: string
-    roomListResponse:
+    chatRoomListResponse:
       type: object
       properties:
         rooms:
@@ -1270,7 +1340,9 @@ components:
                 properties:
                   userId:
                     type: string
-                  content:
+                  text:
+                    type: string
+                  image:
                     type: string
                   createdAt:
                     type: string
