@@ -19,7 +19,7 @@ export type AuthStackParamList = {
 
 export type HomeTabStackPramList = {
   Home: undefined;
-  SearchResult: { keyword: string; results: ISearchResponse };
+  SearchResult: { keyword: string; };
   SearchResultBookShow: { book: ISearchResultItem };
   BookShow: { book: IBook };
 };
