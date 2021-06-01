@@ -1013,6 +1013,12 @@ paths:
             type: string
           required: true
           description: ユーザID
+        - in: path
+          name: chatId
+          schema:
+            type: string
+          required: true
+          description: チャットルームID
       requestBody:
         required: true
         content:
@@ -1046,6 +1052,12 @@ paths:
             type: string
           required: true
           description: ユーザID
+        - in: path
+          name: chatId
+          schema:
+            type: string
+          required: true
+          description: チャットルームID
       requestBody:
         required: true
         content:
