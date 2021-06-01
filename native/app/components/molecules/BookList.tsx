@@ -1,7 +1,7 @@
 ﻿import React, { ReactElement } from 'react';
 import { StyleSheet, View, Dimensions } from 'react-native';
-import { IBook } from '~/types/response';
 import Book from '../atoms/Book';
+import { IBook } from '~/types/response';
 
 const styles = StyleSheet.create({
   containerStyle: {

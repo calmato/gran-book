@@ -2,8 +2,8 @@ import { useDispatch } from 'react-redux';
 import { combineReducers, Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import * as AuthState from './auth';
-import * as UserState from './user';
 import * as BookState from './book';
+import * as UserState from './user';
 import { Auth, Book, User } from '~/store/models';
 
 interface InitialState {

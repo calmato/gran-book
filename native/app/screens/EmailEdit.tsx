@@ -1,12 +1,12 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { ReactElement, useState, useMemo } from 'react';
 import { StyleSheet, View, Text, Alert, DevSettings } from 'react-native';
-import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
-import { COLOR } from '~~/constants/theme';
-import MailInput from '~/components/molecules/MailInput';
-import { emailValidation } from '~/lib/validation';
 import { Button } from 'react-native-elements';
-import { useNavigation } from '@react-navigation/native';
+import MailInput from '~/components/molecules/MailInput';
+import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import { generateErrorMessage } from '~/lib/util/ErrorUtil';
+import { emailValidation } from '~/lib/validation';
+import { COLOR } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
   container: {

@@ -1,5 +1,5 @@
-import { ISearchResponse, ISearchResultItem } from '~/types/response/external/rakuten-books';
 import { IBook } from '../response';
+import { ISearchResultItem } from '~/types/response/external/rakuten-books';
 
 export type RootStackParamList = {
   MyPage: undefined;

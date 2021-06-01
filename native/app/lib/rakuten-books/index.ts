@@ -1,5 +1,5 @@
-import externalInstance from '~/lib//axios/external';
 import { AxiosResponse } from 'axios';
+import externalInstance from '~/lib//axios/external';
 import { ISearchResponse } from '~/types/response/external/rakuten-books';
 
 const baseUrl = 'https://app.rakuten.co.jp/services/api/BooksBook/Search';

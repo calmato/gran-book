@@ -1,10 +1,10 @@
 import 'jest';
-import React from 'react';
 
 import { shallow, configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import MailInput from '~/components/molecules/MailInput';
+import React from 'react';
 import { Input } from 'react-native-elements';
+import MailInput from '~/components/molecules/MailInput';
 
 configure({ adapter: new Adapter() });
 

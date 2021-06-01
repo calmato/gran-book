@@ -1,20 +1,20 @@
+import { useNavigation } from '@react-navigation/native';
+import * as Google from 'expo-auth-session/providers/google';
+import * as WebBrowser from 'expo-web-browser';
 import React, { ReactElement } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-elements';
+import TitleLogoText from '~/components/atoms/TitleLogoText';
 import HeaderWithCloseButton from '~/components/organisms/HeaderWithCloseButton';
 import SignInButtonGroup from '~/components/organisms/SingInButtonGroup';
-import TitleLogoText from '~/components/atoms/TitleLogoText';
-import * as WebBrowser from 'expo-web-browser';
-import * as Google from 'expo-auth-session/providers/google';
-import { useNavigation } from '@react-navigation/native';
 import { UiContext } from '~/lib/context';
 import { Status } from '~/lib/context/ui';
+import firebase from '~/lib/firebase';
+import * as LocalStorage from '~/lib/local-storage';
 import { generateErrorMessage } from '~/lib/util/ErrorUtil';
 import { Auth } from '~/store/models';
 import { useReduxDispatch } from '~/store/modules';
 import { setAuth } from '~/store/modules/auth';
-import * as LocalStorage from '~/lib/local-storage';
-import firebase from '~/lib/firebase';
 
 const styles = StyleSheet.create({
   container: {

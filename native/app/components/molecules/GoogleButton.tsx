@@ -1,8 +1,8 @@
 import React, { ReactElement } from 'react';
 import { StyleSheet, ViewStyle, Image } from 'react-native';
 import { Button } from 'react-native-elements';
-import { COLOR, SOCIAL_BUTTON } from '~~/constants/theme';
 import google from '~~/assets/g-logo.png';
+import { COLOR, SOCIAL_BUTTON } from '~~/constants/theme';
 
 const color = 'rgba(0,0,0,0.54)';
 

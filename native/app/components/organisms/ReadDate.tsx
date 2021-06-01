@@ -1,11 +1,11 @@
+import { MaterialIcons } from '@expo/vector-icons';
+import dayjs from 'dayjs';
 import React, { ReactElement, useState } from 'react';
 import { StyleSheet, View, Text, Switch, Platform } from 'react-native';
 import { ListItem } from 'react-native-elements';
-import { COLOR } from '~~/constants/theme';
-import DefaultDataPicker from '~/components/molecules/DefaultDatePicker';
-import dayjs from 'dayjs';
-import { MaterialIcons } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import DefaultDataPicker from '~/components/molecules/DefaultDatePicker';
+import { COLOR } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
   containerStyle: {

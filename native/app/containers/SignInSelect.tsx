@@ -1,7 +1,7 @@
 import React from 'react';
+import SignInSelect from '~/screens/SignInSelect';
 import { useReduxDispatch } from '~/store/modules';
 import { getAuthAsync, registerForPushNotificationsAsync } from '~/store/usecases';
-import SignInSelect from '~/screens/SignInSelect';
 
 export default function ConnectedSignInSelect(): JSX.Element {
   const dispatch = useReduxDispatch();
