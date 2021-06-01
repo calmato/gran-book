@@ -932,7 +932,6 @@ paths:
     get:
       summary: チャットルーム一覧
       tags:
-        - UserService
         - ChatService
       security:
         - BearerAuth: []
@@ -971,7 +970,6 @@ paths:
     post:
       summary: チャットルーム作成
       tags:
-        - UserService
         - ChatService
       security:
         - BearerAuth: []
@@ -1005,7 +1003,6 @@ paths:
     post:
       summary: チャットメッセージ作成 (テキストメッセージの送信)
       tags:
-        - UserService
         - ChatService
       security:
         - BearerAuth: []
@@ -1039,7 +1036,6 @@ paths:
     post:
       summary: チャットメッセージ作成 (画像のアップロード)
       tags:
-        - UserService
         - ChatService
       security:
         - BearerAuth: []
