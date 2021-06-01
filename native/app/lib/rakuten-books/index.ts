@@ -1,6 +1,6 @@
 import externalInstance from '~/lib//axios/external';
 import { AxiosResponse } from 'axios';
-import { IErrorResponse, ISearchResponse } from '~/types/response/external/rakuten-books';
+import { ISearchResponse } from '~/types/response/external/rakuten-books';
 
 const baseUrl = 'https://app.rakuten.co.jp/services/api/BooksBook/Search';
 const version = '20170404';
@@ -26,7 +26,7 @@ export async function searchBookByTitle(title: string, page = 1) {
     .then((res: AxiosResponse<ISearchResponse>) => {
       return res;
     })
-    .catch((err: AxiosResponse<IErrorResponse>) => {
-      return Promise.reject(err);
+    .catch((err) => {
+      return Promise.reject(err.response);
     });
 }
