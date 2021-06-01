@@ -1,4 +1,5 @@
 import { ISearchResponse, ISearchResultItem } from '~/types/response/external/rakuten-books';
+import { IBook } from '../response';
 
 export type RootStackParamList = {
   MyPage: undefined;
@@ -20,6 +21,7 @@ export type HomeTabStackPramList = {
   Home: undefined;
   SearchResult: { keyword: string; results: ISearchResponse };
   SearchResultBookShow: { book: ISearchResultItem };
+  BookShow: { book: IBook };
 };
 
 export type UserInfoStackParamList = {

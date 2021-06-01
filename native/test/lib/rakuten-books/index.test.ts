@@ -1,15 +1,14 @@
 import 'jest';
-import {searchBookByTitle} from '~/lib/rakuten-books';
+import { searchBookByTitle } from '~/lib/rakuten-books';
 
 describe('search book', () => {
   it('[Normal](real-api) return 200 response when send valid request', async () => {
     const title = 'ちはやふる';
 
-    await searchBookByTitle(title)
-      .then((got) => {
-        expect(got).toBeTruthy;
-        expect(got.status).toEqual(200);
-      });
+    await searchBookByTitle(title).then((got) => {
+      expect(got).toBeTruthy;
+      expect(got.status).toEqual(200);
+    });
   });
 
   it('[Normal](real-api) send valid request with page', async () => {

@@ -70,7 +70,14 @@ const SignIn = function SignIn(props: Props): ReactElement {
       .catch((err) => {
         createAlertNotifySignupError(err.code);
       });
-  }, [formData.email, formData.password, signInWithEmail, getAuth, setApplicationState]);
+  }, [
+    formData.email,
+    formData.password,
+    registerForPushNotifications,
+    signInWithEmail,
+    getAuth,
+    setApplicationState,
+  ]);
 
   return (
     <View style={styles.container}>

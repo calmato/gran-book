@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement, useCallback, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button, Image, Overlay, Text } from 'react-native-elements';
 import FlexBoxBookCategory from '~/components/organisms/FlexBoxBookCategory';
@@ -10,8 +10,11 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { HomeTabStackPramList } from '~/types/navigation';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import * as WebBrowser from 'expo-web-browser';
-import { addBookAsync } from '~/store/usecases';
+import { addBookAsync, getBookByISBNAsync } from '~/store/usecases';
 import { fullWidth2halfWidth } from '~/lib/util';
+import { ISearchResultItem } from '~/types/response/external/rakuten-books';
+import { convertToIBook } from '~/lib/converter';
+import { IBook } from '~/types/response';
 
 const styles = StyleSheet.create({
   container: {
@@ -52,30 +55,69 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  route: RouteProp<HomeTabStackPramList, 'SearchResultBookShow'>;
-  navigation: StackNavigationProp<HomeTabStackPramList, 'SearchResultBookShow'>;
+  route:
+    | RouteProp<HomeTabStackPramList, 'SearchResultBookShow'>
+    | RouteProp<HomeTabStackPramList, 'BookShow'>;
+  navigation:
+    | StackNavigationProp<HomeTabStackPramList, 'SearchResultBookShow'>
+    | StackNavigationProp<HomeTabStackPramList, 'BookShow'>;
+  actions: {
+    registerOwnBook: (status: string, bookId: number) => Promise<void>;
+  };
 }
 
 const BookShow = function BookShow(props: Props): ReactElement {
   const navigation = props.navigation;
-  const { book } = props.route.params;
+  const routeParam = props.route.params;
   const [_wbResult, setWbResult] = useState<WebBrowser.WebBrowserResult>();
   const [showMessage, setShowMessage] = useState<boolean>(false);
-  const [isRegister, _setIsRegister] = useState<boolean>(false);
+  const [isRegister, setIsRegister] = useState<boolean>('id' in routeParam.book);
+  const [book, setBook] = useState<IBook>(
+    'id' in routeParam.book ? routeParam.book : convertToIBook(routeParam.book),
+  );
 
   // TODO: エラーハンドリング
   const handleAddBookButton = async () => {
-    return await addBookAsync(book)
+    return await addBookAsync(routeParam.book as ISearchResultItem)
       .then((res) => {
+        setBook(res.data);
         setShowMessage(true);
+        setIsRegister(true);
       })
       .catch((res) => console.log('登録に失敗しました.', res));
   };
+
+  const handleBookStatusButton = useCallback(
+    (status: string) => {
+      props.actions.registerOwnBook(status, book.id);
+      setBook({
+        ...book,
+        bookshelf: {
+          ...book.bookshelf,
+          status: status,
+        },
+      });
+    },
+    [props.actions, book],
+  );
 
   const _handleOpenRakutenPageButtonAsync = async (url: string) => {
     const r = await WebBrowser.openBrowserAsync(url);
     setWbResult(r);
   };
+
+  useEffect(() => {
+    const f = async () => {
+      try {
+        const res = await getBookByISBNAsync(book.isbn);
+        setBook(res.data);
+        setIsRegister(true);
+      } catch (err) {
+        setIsRegister(false);
+      }
+    };
+    f();
+  }, []);
 
   return (
     <View>
@@ -84,20 +126,22 @@ const BookShow = function BookShow(props: Props): ReactElement {
           opacity: 0.8,
         }}
         isVisible={showMessage}
-        onBackdropPress={() => setShowMessage(false)}
-      >
-        <View style={{
-          width: 'auto',
-          height: 'auto',
-          justifyContent: 'center',
-          margin: 8,
-        }}>
-          <Text style={{fontSize: 16, color: COLOR.TEXT_TITLE, margin: 4}}>「{book.title}」</Text>
+        onBackdropPress={() => setShowMessage(false)}>
+        <View
+          style={{
+            width: 'auto',
+            height: 'auto',
+            justifyContent: 'center',
+            margin: 8,
+          }}>
+          <Text style={{ fontSize: 16, color: COLOR.TEXT_TITLE, margin: 4 }}>「{book.title}」</Text>
           <Text> を登録しました。</Text>
         </View>
       </Overlay>
-      <ScrollView contentContainerStyle={styles.container} style={{ marginBottom: 'auto' }}>
-        <HeaderWithBackButton onPress={() => navigation.goBack()} title={book.title} />
+      <HeaderWithBackButton onPress={() => navigation.goBack()} title={book.title} />
+      <ScrollView
+        contentContainerStyle={styles.container}
+        style={{ marginBottom: 'auto', height: '100%' }}>
         <View
           style={{
             alignSelf: 'stretch',
@@ -105,11 +149,7 @@ const BookShow = function BookShow(props: Props): ReactElement {
             alignItems: 'center',
           }}>
           <Image
-            source={
-              book.largeImageUrl
-                ? { uri: book.largeImageUrl }
-                : require('assets/logo.png')
-            }
+            source={book.thumbnailUrl ? { uri: book.thumbnailUrl } : require('assets/logo.png')}
             style={styles.imageContainer}
             transition={true}
           />
@@ -118,35 +158,20 @@ const BookShow = function BookShow(props: Props): ReactElement {
         <Text style={styles.authorContainer}>
           {book.author ? book.author : '著者情報がありません'}
         </Text>
-        {
-          book.itemCaption !== '' ?
-            <Text style={styles.detailContainer}>
-              {fullWidth2halfWidth(book.itemCaption)}
-            </Text> : null
-        }
-        <FlexBoxBookCategory
-          category={
-            book.size
-              ? book.size
-              : 'カテゴリ情報がありません'
-          }
-        />
-        {
-          isRegister ?
-            <ButtonGroupBookFooter
-              handleNavigateToReadBoook={() => undefined}
-              handleNavigateToReadingBoook={() => undefined}
-              handleNavigateToTsundoku={() => undefined}
-              handleNavigateToSellBoook={() => undefined}
-              handleNavigateToWishList={() => undefined}
-            /> :
-            <Button
-              title="本を登録する"
-              onPress={() => handleAddBookButton()}
-            />
-        }
+        {book.description !== '' ? (
+          <Text style={styles.detailContainer}>{fullWidth2halfWidth(book.description)}</Text>
+        ) : null}
+        <FlexBoxBookCategory category={book.size ? book.size : 'カテゴリ情報がありません'} />
+        {isRegister ? (
+          <ButtonGroupBookFooter
+            status={book.bookshelf ? book.bookshelf.status : ''}
+            onPress={handleBookStatusButton}
+          />
+        ) : (
+          <Button title="本を登録する" onPress={() => handleAddBookButton()} />
+        )}
         <Button
-          onPress={() => _handleOpenRakutenPageButtonAsync(book.itemUrl)}
+          onPress={() => _handleOpenRakutenPageButtonAsync(book.rakutenUrl)}
           title="楽天で見る"
           containerStyle={{ marginTop: 10, marginBottom: 10 }}
           buttonStyle={{ backgroundColor: COLOR.PRIMARY_DARK }}
