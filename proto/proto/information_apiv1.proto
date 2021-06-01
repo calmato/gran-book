@@ -7,7 +7,6 @@ option go_package = "github.com/calmato/gran-book/proto";
 service NotificationService {
   rpc Reply(HelloRequest) returns (HelloResponse);
   rpc CreateInquiry(CreateInquiryRequest) returns (InquiryResponse);
-  
 }
 
 message HelloRequest {
