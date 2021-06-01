@@ -3,7 +3,7 @@
 [root](./../../README.md) 
 / [13_database](./README.md)
 
-# 各種ドキュメント
+## 各種ドキュメント
 
 * [RDB - 全体構成](./db_design.md)
 
@@ -15,3 +15,13 @@
 * NoSQL
   * [認証用DB](./11_auth_db/README.md)
   * [チャット用DB](./12_chat_db/README.md)
+
+## データベース設計
+
+* RDB
+
+![RDB_ER図](./MySQL_20210601.png)
+
+* NoSQL
+
+![NoSQL_DB設計](./NoSQL_20210601.jpeg)
