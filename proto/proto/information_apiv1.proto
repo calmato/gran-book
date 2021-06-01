@@ -5,13 +5,60 @@ package proto;
 option go_package = "github.com/calmato/gran-book/proto";
 
 service NotificationService {
-  rpc Reply(HelloRequest) returns (HelloResponse);
+  rpc ListNotification(EmptyNotification) returns (NotificationResponse);
+  rpc GetNotification(GetNotificationRequest) returns (NotificationResponse);
+  rpc CreateNotification(CreateNotificationRequest) returns (NotificationResponse);
+  rpc UpdateNotification(UpdateNotificationRequest) returns (NotificationResponse);
+  rpc DeleteNotification(DeleteNotificationRequest) returns (NotificationResponse);
 }
 
-message HelloRequest {
-  string name = 1;
+message EmptyNotification {}
+
+message GetNotificationRequest {
+  string id = 1;
 }
 
-message HelloResponse {
-  string message = 1;
+message CreateNotificationRequest {
+  string title = 1;
+  string description = 2;
+  string importance = 3;
+  string category = 4;
+}
+
+message UpdateNotificationRequest {
+  string title = 1;
+  string description = 2;
+  string importance = 3;
+  string category = 4;
+}
+
+message DeleteNotificationRequest {
+  string id = 1;
+}
+
+message SearchNotificationRequest {
+  message Order {
+    string by = 1;
+    string direction = 2;
+  }
+  message Search {
+    string field = 1;
+    string value = 2;
+  }
+  int64 limit = 1;
+  int64 offset = 2;
+  Order order = 3;
+  Search search = 4;
+}
+
+message NotificationResponse {
+  string id = 1;
+  string author_id = 2;
+  string editor_id = 3;
+  string title = 4;
+  string description = 5;
+  string importance = 6;
+  string category = 7;
+  string created_at = 8;
+  string updated_at = 9;
 }
