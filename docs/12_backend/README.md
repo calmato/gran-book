@@ -16,6 +16,7 @@
   * [32_user_api](./32_user_api/README.md)
   * [33_book_api](./33_book_api/README.md)
   * [34_store_api](./34_store_api/README.md)
+  * [35_information_api](./35_information_api/README.md)
 * tools
   * [41_rakuten_books_api](./41_rakuten_books_api/README.md)
   * [42_stripe](./42_stripe/README.md)
