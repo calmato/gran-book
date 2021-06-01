@@ -43,13 +43,13 @@ describe('convert to IBook', () => {
 
     const actual: IBook = convertToIBook(sampleResponse);
 
-    expect(actual.detail.isbn).toBe(sampleResponse.isbn);
-    expect(actual.detail.author).toBe(sampleResponse.author);
-    expect(actual.detail.authorKana).toBe(sampleResponse.authorKana);
-    expect(actual.detail.title).toBe(sampleResponse.title);
-    expect(actual.detail.titleKana).toBe(sampleResponse.titleKana);
-    expect(actual.detail.description).toBe(sampleResponse.itemCaption);
-    expect(actual.detail.rakutenUrl).toBe(sampleResponse.itemUrl);
-    expect(actual.detail.thumbnailUrl).toBe(sampleResponse.largeImageUrl);
+    expect(actual.isbn).toBe(sampleResponse.isbn);
+    expect(actual.author).toBe(sampleResponse.author);
+    expect(actual.authorKana).toBe(sampleResponse.authorKana);
+    expect(actual.title).toBe(sampleResponse.title);
+    expect(actual.titleKana).toBe(sampleResponse.titleKana);
+    expect(actual.description).toBe(sampleResponse.itemCaption);
+    expect(actual.rakutenUrl).toBe(sampleResponse.itemUrl);
+    expect(actual.thumbnailUrl).toBe(sampleResponse.largeImageUrl);
   });
 });

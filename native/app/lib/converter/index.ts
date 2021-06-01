@@ -9,26 +9,19 @@ import { ISearchResultItem } from '~/types/response/external/rakuten-books';
 export function convertToIBook(i: ISearchResultItem): IBook {
   const book: IBook = {
     id: 0,
-    readOn: '',
-    status: 0,
+    isbn: i.isbn,
+    author: i.author,
+    authorKana: i.authorKana,
+    title: i.title,
+    titleKana: i.titleKana,
+    description: i.itemCaption,
+    thumbnailUrl: i.largeImageUrl,
+    rakutenUrl: i.itemUrl,
+    publishedOn: i.salesDate,
+    publisher: i.publisherName,
+    size: i.size,
     createdAt: '',
     updatedAt: '',
-    detail: {
-      id: 0,
-      isbn: i.isbn,
-      author: i.author,
-      authorKana: i.authorKana,
-      title: i.title,
-      description: i.itemCaption,
-      titleKana: i.titleKana,
-      thumbnailUrl: i.largeImageUrl,
-      rakutenGenreId: i.booksGenreId,
-      rakutenUrl: i.itemUrl,
-      createdAt: '',
-      updatedAt: '',
-      publishedOn: i.salesDate,
-      publisher: i.publisherName,
-    },
   };
   return book;
 }

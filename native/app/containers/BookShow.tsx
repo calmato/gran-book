@@ -20,7 +20,7 @@ export default function ConnectedBookShow(props: Props): ReactElement {
 
   const actions = React.useMemo(
     () => ({
-      registerOwnBook(status: number, bookId: number) {
+      registerOwnBook(status: string, bookId: number) {
         return dispatch(registerOwnBookAsync(status, bookId));
       },
     }),

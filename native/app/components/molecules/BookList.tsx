@@ -31,9 +31,9 @@ const BookList = function BookList(props: Props): ReactElement {
       {bookList.map((book: IBook, i: number) => (
         <Book
           style={styles.childStyle}
-          title={book.detail.title}
-          image={book.detail.thumbnailUrl}
-          author={book.detail.author}
+          title={book.title}
+          image={book.thumbnailUrl}
+          author={book.author}
           height={250}
           width={width / rowItem - 5}
           onPress={() => props.handleClick(book)}

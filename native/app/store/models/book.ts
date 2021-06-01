@@ -48,7 +48,7 @@ export function filterBooks(model: Model): ViewBooks {
  */
 function readingBooks(books: IBook[]): IBook[] {
   return books.filter((book: IBook) => {
-    return book.status == 0;
+    return book.bookshelf?.status === 'read';
   });
 }
 
@@ -59,7 +59,7 @@ function readingBooks(books: IBook[]): IBook[] {
  */
 function readBooks(books: IBook[]): IBook[] {
   return books.filter((book: IBook) => {
-    return book.status == 1;
+    return book.bookshelf?.status === 'reading';
   });
 }
 
@@ -70,7 +70,7 @@ function readBooks(books: IBook[]): IBook[] {
  */
 function stackBooks(books: IBook[]): IBook[] {
   return books.filter((book: IBook) => {
-    return book.status == 2;
+    return book.bookshelf?.status === 'stack';
   });
 }
 
@@ -81,7 +81,7 @@ function stackBooks(books: IBook[]): IBook[] {
  */
 function releaseBooks(books: IBook[]): IBook[] {
   return books.filter((book: IBook) => {
-    return book.status == 3;
+    return book.bookshelf?.status === 'release';
   });
 }
 
@@ -92,6 +92,6 @@ function releaseBooks(books: IBook[]): IBook[] {
  */
 function wantBooks(books: IBook[]): IBook[] {
   return books.filter((book: IBook) => {
-    return book.status == 4;
+    return book.bookshelf?.status === 'want';
   });
 }

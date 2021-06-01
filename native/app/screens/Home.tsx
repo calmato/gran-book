@@ -1,6 +1,6 @@
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { StyleSheet, ScrollView } from 'react-native';
+import { StyleSheet, ScrollView, RefreshControl } from 'react-native';
 import { View } from 'react-native';
 import { Header } from 'react-native-elements';
 import HeaderText from '~/components/atoms/HeaderText';
@@ -56,9 +56,10 @@ const iconComponent = () => {
 
 const Home = function Home(props: Props): ReactElement {
   const navigation = props.navigation;
-  const [books, setBooks] = useState(props.books.read);
-  const [value, setValue] = useState('read');
-  const [keyword, setKeyword] = useState('');
+  const [books, setBooks] = useState<IBook[]>(props.books.read);
+  const [value, setValue] = useState<string>('read');
+  const [keyword, setKeyword] = useState<string>('');
+  const [refreshing, setRefreshing] = useState<boolean>(false);
 
   const onSubmitEditingCallback = useCallback(() => {
     (async () => {
@@ -87,11 +88,6 @@ const Home = function Home(props: Props): ReactElement {
 
   useEffect(() => {
     props.actions.getAllBook();
-    console.log(props.books.read.length);
-    console.log(props.books.reading.length);
-    console.log(props.books.stack.length);
-    console.log(props.books.want.length);
-    console.log(props.books.release.length);
   }, [props.actions]);
 
   useEffect(() => {
@@ -120,6 +116,16 @@ const Home = function Home(props: Props): ReactElement {
     <View>
       <Header centerComponent={<HeaderText title="Gran Book" />} />
       <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => {
+              setRefreshing(true);
+              props.actions.getAllBook();
+              setRefreshing(false);
+            }}
+          />
+        }
         stickyHeaderIndices={[0]}
         keyboardShouldPersistTaps="handled"
         style={{ marginBottom: 'auto', height: '100%' }}>
