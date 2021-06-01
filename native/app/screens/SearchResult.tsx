@@ -1,11 +1,12 @@
-﻿import { RouteProp } from '@react-navigation/native';
+import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { ReactElement, useCallback, useEffect, useState } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, Alert } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import SearchResultItemList from '~/components/organisms/SearchResultItemList';
 import { searchBookByTitle } from '~/lib/rakuten-books';
+import { generateErrorMessage } from '~/lib/util/ErrorUtil';
 import { HomeTabStackPramList } from '~/types/navigation';
 import { ISearchResponse, ISearchResultItem } from '~/types/response/external/rakuten-books';
 import { COLOR } from '~~/constants/theme';
@@ -38,16 +39,31 @@ const SearchResult = function SearchResult(props: Props): ReactElement {
     [navigation],
   );
 
+  const createAlert = (code: number) => {
+    Alert.alert('検索結果の取得に失敗しました', `${generateErrorMessage(code)}`, [
+      {
+        text: 'OK',
+      },
+    ]);
+  };
+
   // TODO: パフォーマンス面で要リファクタ
   useEffect(() => {
     let unmounted = false;
     const f = async () => {
-      const res = await searchBookByTitle(keyword, page);
-      if (!unmounted && page === 1) {
-        setResult(res.data);
-        setBooks(res.data.Items);
-      } else if (result && page <= result?.pageCount) {
-        setBooks([...books, ...res.data.Items]);
+      try {
+        const res = await searchBookByTitle(keyword, page);
+        if (!unmounted) {
+          if (page === 1) {
+            setResult(res.data);
+            setBooks(res.data.Items);
+          } else if (result && page <= result?.pageCount) {
+            setBooks([...books, ...res.data.Items]);
+          }
+        }
+      } catch (e) {
+        createAlert(e.status);
+        return;
       }
     };
     f();
