@@ -2,7 +2,7 @@
 
 [root](./../../../README.md) 
 / [12_backend](./../README.md) 
-/ [24_store_api](./README.md)
+/ [34_store_api](./README.md)
 
 # 各種ドキュメント
 
