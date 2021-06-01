@@ -563,7 +563,6 @@ paths:
       summary: 本棚の書籍一覧
       tags:
         - BookService
-        - UserService
       security:
         - BearerAuth: []
       parameters:
@@ -603,7 +602,6 @@ paths:
       summary: 本棚の書籍情報取得
       tags:
         - BookService
-        - UserService
       security:
         - BearerAuth: []
       parameters:
@@ -847,7 +845,6 @@ paths:
       summary: ユーザの書籍レビュー一覧
       tags:
         - BookService
-        - UserService
       security:
         - BearerAuth: []
       parameters:
@@ -899,7 +896,6 @@ paths:
       summary: ユーザーの書籍レビュー情報取得
       tags:
         - BookService
-        - UserService
       security:
         - BearerAuth: []
       parameters:
