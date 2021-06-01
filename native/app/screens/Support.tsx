@@ -40,9 +40,7 @@ const styles = StyleSheet.create({
   },
 });
 
-interface Props {}
-
-const Support = function Support(props: Props): ReactElement {
+const Support = function Support(): ReactElement {
   const navigation = useNavigation();
   const supportSubjectList = [
     '（お問い合わせの内容を選択）',

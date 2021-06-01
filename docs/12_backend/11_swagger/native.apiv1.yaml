@@ -1531,6 +1531,8 @@ components:
             type: string
           label:
             type: string
+          userId:
+            type: string
           createdAt:
             type: string
           
