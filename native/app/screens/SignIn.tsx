@@ -11,6 +11,7 @@ import { Button } from 'react-native-elements';
 import ForgotPasswordButton from '~/components/molecules/ForgotPasswordButton';
 import { useNavigation } from '@react-navigation/native';
 import { generateErrorMessage } from '~/lib/util/ErrorUtil';
+import CustomError from '~/lib/util/CustomError';
 
 const styles = StyleSheet.create({
   container: {
@@ -49,8 +50,8 @@ const SignIn = function SignIn(props: Props): ReactElement {
     return !(emailError || passwordError);
   }, [emailError, passwordError]);
 
-  const createAlertNotifySignupError = (code: number) =>
-    Alert.alert('サインインに失敗', `${generateErrorMessage(code)}`, [
+  const createAlertNotifySignupError = (errorMessage: string) =>
+    Alert.alert('サインインに失敗', errorMessage, [
       {
         text: 'OK',
       },
@@ -67,8 +68,15 @@ const SignIn = function SignIn(props: Props): ReactElement {
       .then(() => {
         setApplicationState(Status.AUTHORIZED);
       })
-      .catch((err) => {
-        createAlertNotifySignupError(err.code);
+      .catch((err:Error) => {
+        // CustomErrorではError.message（string）にエラーコードが含まれていたらトーストに表示するError.errorMessageForUsersが代入されてる
+        const error = new CustomError(err)
+        // Error.messageにエラーコードが含まれていなかったら、トーストに何だしたいか決める
+        if(!error.getErrorMessageForUsers()){
+          error.setErrorMessageForUsers(error.message);
+        }
+        //　トースト出す
+        createAlertNotifySignupError(error.errorMessageForUsers);
       });
   }, [
     formData.email,

@@ -48,8 +48,8 @@ const SignInSelect = function SignInSelect(props: Props): ReactElement {
     clientId: process.env.CLIENT_ID_FOR_GOOGLE,
   });
 
-  const createAlertNotifySignupError = (code: number) =>
-    Alert.alert('サインインに失敗', `${generateErrorMessage(code)}`, [
+  const createAlertNotifySignupError = (errorMessage: string) =>
+    Alert.alert('サインインに失敗', `${generateErrorMessage(errorMessage)}`, [
       {
         text: 'OK',
       },
@@ -98,9 +98,8 @@ const SignInSelect = function SignInSelect(props: Props): ReactElement {
         .then(() => {
           setApplicationState(Status.AUTHORIZED);
         })
-        .catch((err) => {
-          console.log(err);
-          createAlertNotifySignupError(err);
+        .catch((err:Error) => {
+          createAlertNotifySignupError(err.message);
         });
     }
   }, [response, dispatch, getAuth, registerForPushNotifications, setApplicationState]);

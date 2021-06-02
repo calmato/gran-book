@@ -61,8 +61,8 @@ const SignUp = function SignUp(props: Props): ReactElement {
     return !emailError && !passwordError && !passwordConfirmationError && formData.agreement;
   }, [emailError, passwordError, passwordConfirmationError, formData.agreement]);
 
-  const createAlertNotifySignupError = (code: number) =>
-    Alert.alert('ユーザー登録に失敗', `${generateErrorMessage(code)}`, [
+  const createAlertNotifySignupError = (errorMessage: string) =>
+    Alert.alert('ユーザー登録に失敗', `${generateErrorMessage(errorMessage)}`, [
       {
         text: 'OK',
       },
@@ -78,9 +78,8 @@ const SignUp = function SignUp(props: Props): ReactElement {
       .then(() => {
         navigation.navigate('SignUpCheckEmail', { email: formData.email });
       })
-      .catch((err) => {
-        console.log('debug', err);
-        createAlertNotifySignupError(err.code);
+      .catch((err: Error) => {
+        createAlertNotifySignupError(err.message);
       });
   }, [
     formData.email,
