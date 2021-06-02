@@ -9,14 +9,18 @@
 * [API設計 - ドメイン・URL設計](./domain-url.md)
 * [API設計 - リクエスト・レスポンス設計](./request-response.md)
 * [Golang - ディレクトリ構成](./directories-for-golang.md)
+* [Node.js - ディレクトリ構成](./directories-for-node.md)
+
+![全体構成](./images/architecture.jpeg)
 
 ## 内部API
 
-* 以下4つに分割
-  * [認証用API](./../21_auth_api/README.md)
-  * [ユーザ管理用API](./../22_user_api/README.md)
-  * [書籍管理用API](./../23_book_api/README.md)
-  * [ECサイト用API](./../24_store_api/README.md)
+* APIとしては以下に分割
+  * [認証用API](./../31_auth_api/README.md)
+  * [ユーザ管理用API](./../32_user_api/README.md)
+  * [書籍管理用API](./../33_book_api/README.md)
+  * [ECサイト用API](./../34_store_api/README.md)
+  * [サポート用API](./../35_information_api/README.md)
 
 ---
 

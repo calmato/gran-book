@@ -55,3 +55,5 @@
 | lib                         | システム内で使用する共通のライブラリを実装。外部ライブラリの設定等もここでする   |
 | mock                        | テスト用のモックを配置                                                           |
 | registry                    | DI 依存性の注入                                                                  |
+
+![API_アーキテクチャ](./images/architecture_service.jpeg)
