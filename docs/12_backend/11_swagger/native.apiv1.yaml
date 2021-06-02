@@ -924,11 +924,162 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorResponse'
+  /v1/users/{userId}/chat:
+    get:
+      summary: チャットルーム一覧
+      tags:
+        - ChatService
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: string
+          required: true
+          description: ユーザID
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          required: false
+          description: 取得上限数
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          required: false
+          description: 取得開始位置
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/chatRoomListResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+    post:
+      summary: チャットルーム作成
+      tags:
+        - ChatService
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: string
+          required: true
+          description: ユーザID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createChatRoomRequest'
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/chatRoomResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+  /v1/users/{userId}/chat/{chatId}/messages/text:
+    post:
+      summary: チャットメッセージ作成 (テキストメッセージの送信)
+      tags:
+        - ChatService
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: string
+          required: true
+          description: ユーザID
+        - in: path
+          name: chatId
+          schema:
+            type: string
+          required: true
+          description: チャットルームID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createChatMessageRequest'
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/chatMessageResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+  /v1/users/{userId}/chat/{chatId}/messages/image:
+    post:
+      summary: チャットメッセージ作成 (画像のアップロード)
+      tags:
+        - ChatService
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: string
+          required: true
+          description: ユーザID
+        - in: path
+          name: chatId
+          schema:
+            type: string
+          required: true
+          description: チャットルームID
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/uploadChatImageRequest'
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/chatMessageResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
 tags:
   - name: AuthService
     description: 認証関連
   - name: UserService
     description: ユーザ関連
+  - name: ChatService
+    description: チャット関連
   - name: BookService
     description: 書籍関連
 components:
@@ -1006,6 +1157,24 @@ components:
       type: object
       properties:
         thumbnail:
+          type: string
+          format: binary
+    createChatRoomRequest:
+      type: object
+      properties:
+        users:
+          type: array
+          items:
+            type: string
+    createChatMessageRequest:
+      type: object
+      properties:
+        text:
+          type: string
+    uploadChatImageRequest:
+      type: object
+      properties:
+        image:
           type: string
           format: binary
     createBookRequest:
@@ -1220,6 +1389,82 @@ components:
         total:
           type: integer
           format: int64
+    chatRoomResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        users:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              username:
+                type: string
+              thumbnailUrl:
+                type: string
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+    chatRoomListResponse:
+      type: object
+      properties:
+        rooms:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              users:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    username:
+                      type: string
+                    thumbnailUrl:
+                      type: string
+              latestMassage:
+                type: object
+                properties:
+                  userId:
+                    type: string
+                  text:
+                    type: string
+                  image:
+                    type: string
+                  createdAt:
+                    type: string
+              createdAt:
+                type: string
+              updatedAt:
+                type: string
+    chatMessageResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        text:
+          type: string
+        image:
+          type: string
+        user:
+          type: object
+          properties:
+            id:
+              type: string
+            username:
+              type: string
+            thumbnailUrl:
+              type: string
+        createdAt:
+          type: string
     bookResponse:
       type: object
       properties:
