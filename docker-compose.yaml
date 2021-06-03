@@ -110,6 +110,8 @@ services:
       - DB_DATABASE=${MYSQL_USER_DATABASE}
       - GCP_SERVICE_KEY_JSON=${GCP_SERVICE_KEY_JSON}
       - GCP_STORAGE_BUCKET_NAME=${GCP_STORAGE_BUCKET_NAME}
+    ports:
+      - 18080:8080
     networks:
       - api
       - monitoring
@@ -138,6 +140,8 @@ services:
       - DB_DATABASE=${MYSQL_BOOK_DATABASE}
       - GCP_SERVICE_KEY_JSON=${GCP_SERVICE_KEY_JSON}
       - GCP_STORAGE_BUCKET_NAME=${GCP_STORAGE_BUCKET_NAME}
+    ports:
+      - 18081:8080
     networks:
       - api
       - monitoring
@@ -166,6 +170,8 @@ services:
       - DB_DATABASE=${MYSQL_INFORMATION_DATABASE}
       - GCP_SERVICE_KEY_JSON=${GCP_SERVICE_KEY_JSON}
       - GCP_STORAGE_BUCKET_NAME=${GCP_STORAGE_BUCKET_NAME}
+    ports:
+      - 18082:8080
     networks:
       - api
       - monitoring
