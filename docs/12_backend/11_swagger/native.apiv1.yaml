@@ -1537,7 +1537,11 @@ components:
             type: string
           label:
             type: string
+          inquiry_id:
+            type: string
           createdAt:
+            type: string
+          updatedAt:
             type: string
           
     errorResponse:
