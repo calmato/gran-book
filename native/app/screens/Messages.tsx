@@ -1,22 +1,19 @@
+import { MaterialIcons, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { StatusBar as ExpoStatusBar } from 'expo-status-bar';
 import React, { useState, useMemo, useEffect } from 'react';
 import {
   View,
   StyleSheet,
-  SafeAreaView,
   TextInput,
-  Text,
-  KeyboardAvoidingView,
   FlatList,
 } from 'react-native';
-import { StatusBar as ExpoStatusBar } from 'expo-status-bar';
-import firebase from '~/lib/firebase';
-import { getMessageDocRef } from '~/store/usecases/auth';
-import { COLOR } from '~~/constants/theme';
-import { MaterialIcons, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { MessageForm } from '~/types/forms';
 import { Header } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
 import { MessageItem } from '~/components/organisms/MessageItem';
+import firebase from '~/lib/firebase';
+import { getMessageDocRef } from '~/store/usecases/auth';
+import { MessageForm } from '~/types/forms';
+import { COLOR } from '~~/constants/theme';
 
 export const MessagesScreen = () => {
   const [textData, setText] = useState<MessageForm>({

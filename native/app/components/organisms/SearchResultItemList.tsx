@@ -1,7 +1,7 @@
 ﻿import React, { ReactElement } from 'react';
 import { View } from 'react-native';
-import { ISearchResultItem } from '~/types/response/external/rakuten-books';
 import SearchResultItem from '~/components/molecules/SearchResultItem';
+import { ISearchResultItem } from '~/types/response/external/rakuten-books';
 
 interface Props {
   resultItems: ISearchResultItem[];

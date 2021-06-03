@@ -1,7 +1,7 @@
+import { MaterialIcons } from '@expo/vector-icons';
 import React, { ReactElement } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { ListItem, Button, Rating, Text, Avatar } from 'react-native-elements';
-import { MaterialIcons } from '@expo/vector-icons';
 import { COLOR } from '~~/constants/theme';
 
 const styles = StyleSheet.create({

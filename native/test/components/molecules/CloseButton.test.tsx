@@ -1,11 +1,11 @@
 import 'jest';
-import React from 'react';
 
 import { shallow, configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import CloseButton from '~/components/molecules/CloseButton';
-import CloseIcon from '~/components/atoms/CloseIcon';
+import React from 'react';
 import { colors } from 'react-native-elements';
+import CloseIcon from '~/components/atoms/CloseIcon';
+import CloseButton from '~/components/molecules/CloseButton';
 
 configure({ adapter: new Adapter() });
 

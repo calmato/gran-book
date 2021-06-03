@@ -1,15 +1,13 @@
-import { StackNavigationProp } from '@react-navigation/stack';
-import React, { ReactElement, useState } from 'react';
-import { Switch } from 'react-native';
-import { ListItem } from 'react-native-elements';
-import { RootStackParamList, UserInfoStackParamList } from '~/types/navigation';
-import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
-import { StyleSheet, View, Text, SafeAreaView, ScrollView } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import { COLOR } from '~~/constants/theme';
 import { useNavigation } from '@react-navigation/core';
+import React, { ReactElement, useState } from 'react';
+import { Switch , StyleSheet, View, Text, SafeAreaView, ScrollView } from 'react-native';
+import { ListItem } from 'react-native-elements';
+import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
+
 import { UiContext } from '~/lib/context';
 import { Status } from '~/lib/context/ui';
+import { COLOR } from '~~/constants/theme';
 const styles = StyleSheet.create({
   subtilte: {
     marginTop: 12,

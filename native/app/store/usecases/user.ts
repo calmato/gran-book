@@ -1,9 +1,9 @@
+import { AxiosResponse } from 'axios';
 import { Dispatch } from 'redux';
 import { internal } from '~/lib/axios';
-import { AxiosResponse } from 'axios';
-import { IOwnOtherProfileResponse } from '~/types/response';
 import { User } from '~/store/models';
 import { setUser } from '~/store/modules/user';
+import { IOwnOtherProfileResponse } from '~/types/response';
 
 export function getOwnProfileAsync(id: string) {
   return async (dispatch: Dispatch): Promise<void> => {
