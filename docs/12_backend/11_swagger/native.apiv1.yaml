@@ -1120,6 +1120,8 @@ components:
     createInquiryRequest:
       type: object
       properties:
+        email: 
+          type: string
         description:
           type: string
         label:
@@ -1527,6 +1529,8 @@ components:
     inquiryResponse:
       type: object
       properties:
+          email:
+            type: string
           description:
             type: string
           label:
