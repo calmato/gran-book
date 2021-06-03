@@ -1529,13 +1529,13 @@ components:
     inquiryResponse:
       type: object
       properties:
+          userId:
+              type: string
           email:
             type: string
           description:
             type: string
           label:
-            type: string
-          userId:
             type: string
           createdAt:
             type: string
