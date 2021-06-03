@@ -121,3 +121,16 @@
 
 | Field | DataType | PK/FK | NotNull | Unsigned | Other | Default | Explanation | Validation |
 | :---- | :------- | :---: | :-----: | :------: | :---: | :------ | :---------- | ---------- |
+
+
+### Inquiries
+
+|    Field    |  DataType  | PK/FK | NotNull | Unsigned | Other | Default | Explanation  | Validation |
+| :---------- | :--------- | :---: | :-----: | :------: | :---: | :------ | :----------- | :--------- |
+| id          | BIGINT(20) |  PK   |  true   |   true   |  AI   |         | ID           |            |
+| category_id | BIGINT(20) |  FK   |  true  　　|   true   |  UQ   | 　　　　-1    | カテゴリーID　　　　　　 |            |
+| user_id     | BIGINT(20) |  FK   |  true   |   true   |  UQ   |         | ユーザーID　    |            |
+| description | TEXT(1000) |       |  true   |          |       | NULL    | 説明     　　　   |            |
+| email       | VARCHAR(256)|      |  false  |          |  UQ   | NULL    | メールアドレス   | Format: Email|
+| created_at  | DATETIME   |       |  true   |          |       |         | 登録日時     |            |
+| updated_at  | DATETIME   |       |  true   |          |       |         | 更新日時     |            |
