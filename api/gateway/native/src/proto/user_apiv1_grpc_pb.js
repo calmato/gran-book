@@ -59,6 +59,39 @@ function deserialize_proto_AuthThumbnailResponse(buffer_arg) {
   return proto_user_apiv1_pb.AuthThumbnailResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_proto_ChatMessageResponse(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.ChatMessageResponse)) {
+    throw new Error('Expected argument of type proto.ChatMessageResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_ChatMessageResponse(buffer_arg) {
+  return proto_user_apiv1_pb.ChatMessageResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_proto_ChatRoomListResponse(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.ChatRoomListResponse)) {
+    throw new Error('Expected argument of type proto.ChatRoomListResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_ChatRoomListResponse(buffer_arg) {
+  return proto_user_apiv1_pb.ChatRoomListResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_proto_ChatRoomResponse(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.ChatRoomResponse)) {
+    throw new Error('Expected argument of type proto.ChatRoomResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_ChatRoomResponse(buffer_arg) {
+  return proto_user_apiv1_pb.ChatRoomResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_proto_CreateAdminRequest(arg) {
   if (!(arg instanceof proto_user_apiv1_pb.CreateAdminRequest)) {
     throw new Error('Expected argument of type proto.CreateAdminRequest');
@@ -79,6 +112,28 @@ function serialize_proto_CreateAuthRequest(arg) {
 
 function deserialize_proto_CreateAuthRequest(buffer_arg) {
   return proto_user_apiv1_pb.CreateAuthRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_proto_CreateChatMessageRequest(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.CreateChatMessageRequest)) {
+    throw new Error('Expected argument of type proto.CreateChatMessageRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_CreateChatMessageRequest(buffer_arg) {
+  return proto_user_apiv1_pb.CreateChatMessageRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_proto_CreateChatRoomRequest(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.CreateChatRoomRequest)) {
+    throw new Error('Expected argument of type proto.CreateChatRoomRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_CreateChatRoomRequest(buffer_arg) {
+  return proto_user_apiv1_pb.CreateChatRoomRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 function serialize_proto_DeleteAdminRequest(arg) {
@@ -167,6 +222,17 @@ function serialize_proto_ListAdminRequest(arg) {
 
 function deserialize_proto_ListAdminRequest(buffer_arg) {
   return proto_user_apiv1_pb.ListAdminRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_proto_ListChatRoomRequest(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.ListChatRoomRequest)) {
+    throw new Error('Expected argument of type proto.ListChatRoomRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_ListChatRoomRequest(buffer_arg) {
+  return proto_user_apiv1_pb.ListChatRoomRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 function serialize_proto_ListFollowRequest(arg) {
@@ -365,6 +431,17 @@ function serialize_proto_UploadAuthThumbnailRequest(arg) {
 
 function deserialize_proto_UploadAuthThumbnailRequest(buffer_arg) {
   return proto_user_apiv1_pb.UploadAuthThumbnailRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_proto_UploadChatImageRequest(arg) {
+  if (!(arg instanceof proto_user_apiv1_pb.UploadChatImageRequest)) {
+    throw new Error('Expected argument of type proto.UploadChatImageRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_UploadChatImageRequest(buffer_arg) {
+  return proto_user_apiv1_pb.UploadChatImageRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 function serialize_proto_UserListResponse(arg) {
@@ -710,3 +787,51 @@ var UserServiceService = exports.UserServiceService = {
 };
 
 exports.UserServiceClient = grpc.makeGenericClientConstructor(UserServiceService);
+var ChatServiceService = exports.ChatServiceService = {
+  listRoom: {
+    path: '/proto.ChatService/ListRoom',
+    requestStream: false,
+    responseStream: false,
+    requestType: proto_user_apiv1_pb.ListChatRoomRequest,
+    responseType: proto_user_apiv1_pb.ChatRoomListResponse,
+    requestSerialize: serialize_proto_ListChatRoomRequest,
+    requestDeserialize: deserialize_proto_ListChatRoomRequest,
+    responseSerialize: serialize_proto_ChatRoomListResponse,
+    responseDeserialize: deserialize_proto_ChatRoomListResponse,
+  },
+  createRoom: {
+    path: '/proto.ChatService/CreateRoom',
+    requestStream: false,
+    responseStream: false,
+    requestType: proto_user_apiv1_pb.CreateChatRoomRequest,
+    responseType: proto_user_apiv1_pb.ChatRoomResponse,
+    requestSerialize: serialize_proto_CreateChatRoomRequest,
+    requestDeserialize: deserialize_proto_CreateChatRoomRequest,
+    responseSerialize: serialize_proto_ChatRoomResponse,
+    responseDeserialize: deserialize_proto_ChatRoomResponse,
+  },
+  createMessage: {
+    path: '/proto.ChatService/CreateMessage',
+    requestStream: false,
+    responseStream: false,
+    requestType: proto_user_apiv1_pb.CreateChatMessageRequest,
+    responseType: proto_user_apiv1_pb.ChatMessageResponse,
+    requestSerialize: serialize_proto_CreateChatMessageRequest,
+    requestDeserialize: deserialize_proto_CreateChatMessageRequest,
+    responseSerialize: serialize_proto_ChatMessageResponse,
+    responseDeserialize: deserialize_proto_ChatMessageResponse,
+  },
+  uploadImage: {
+    path: '/proto.ChatService/UploadImage',
+    requestStream: false,
+    responseStream: false,
+    requestType: proto_user_apiv1_pb.UploadChatImageRequest,
+    responseType: proto_user_apiv1_pb.ChatMessageResponse,
+    requestSerialize: serialize_proto_UploadChatImageRequest,
+    requestDeserialize: deserialize_proto_UploadChatImageRequest,
+    responseSerialize: serialize_proto_ChatMessageResponse,
+    responseDeserialize: deserialize_proto_ChatMessageResponse,
+  },
+};
+
+exports.ChatServiceClient = grpc.makeGenericClientConstructor(ChatServiceService);

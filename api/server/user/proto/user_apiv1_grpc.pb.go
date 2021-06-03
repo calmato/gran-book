@@ -1195,3 +1195,194 @@ var _UserService_serviceDesc = grpc.ServiceDesc{
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "proto/user_apiv1.proto",
 }
+
+// ChatServiceClient is the client API for ChatService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type ChatServiceClient interface {
+	ListRoom(ctx context.Context, in *ListChatRoomRequest, opts ...grpc.CallOption) (*ChatRoomListResponse, error)
+	CreateRoom(ctx context.Context, in *CreateChatRoomRequest, opts ...grpc.CallOption) (*ChatRoomResponse, error)
+	CreateMessage(ctx context.Context, in *CreateChatMessageRequest, opts ...grpc.CallOption) (*ChatMessageResponse, error)
+	UploadImage(ctx context.Context, in *UploadChatImageRequest, opts ...grpc.CallOption) (*ChatMessageResponse, error)
+}
+
+type chatServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewChatServiceClient(cc grpc.ClientConnInterface) ChatServiceClient {
+	return &chatServiceClient{cc}
+}
+
+func (c *chatServiceClient) ListRoom(ctx context.Context, in *ListChatRoomRequest, opts ...grpc.CallOption) (*ChatRoomListResponse, error) {
+	out := new(ChatRoomListResponse)
+	err := c.cc.Invoke(ctx, "/proto.ChatService/ListRoom", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *chatServiceClient) CreateRoom(ctx context.Context, in *CreateChatRoomRequest, opts ...grpc.CallOption) (*ChatRoomResponse, error) {
+	out := new(ChatRoomResponse)
+	err := c.cc.Invoke(ctx, "/proto.ChatService/CreateRoom", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *chatServiceClient) CreateMessage(ctx context.Context, in *CreateChatMessageRequest, opts ...grpc.CallOption) (*ChatMessageResponse, error) {
+	out := new(ChatMessageResponse)
+	err := c.cc.Invoke(ctx, "/proto.ChatService/CreateMessage", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *chatServiceClient) UploadImage(ctx context.Context, in *UploadChatImageRequest, opts ...grpc.CallOption) (*ChatMessageResponse, error) {
+	out := new(ChatMessageResponse)
+	err := c.cc.Invoke(ctx, "/proto.ChatService/UploadImage", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// ChatServiceServer is the server API for ChatService service.
+// All implementations must embed UnimplementedChatServiceServer
+// for forward compatibility
+type ChatServiceServer interface {
+	ListRoom(context.Context, *ListChatRoomRequest) (*ChatRoomListResponse, error)
+	CreateRoom(context.Context, *CreateChatRoomRequest) (*ChatRoomResponse, error)
+	CreateMessage(context.Context, *CreateChatMessageRequest) (*ChatMessageResponse, error)
+	UploadImage(context.Context, *UploadChatImageRequest) (*ChatMessageResponse, error)
+	mustEmbedUnimplementedChatServiceServer()
+}
+
+// UnimplementedChatServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedChatServiceServer struct {
+}
+
+func (UnimplementedChatServiceServer) ListRoom(context.Context, *ListChatRoomRequest) (*ChatRoomListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListRoom not implemented")
+}
+func (UnimplementedChatServiceServer) CreateRoom(context.Context, *CreateChatRoomRequest) (*ChatRoomResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateRoom not implemented")
+}
+func (UnimplementedChatServiceServer) CreateMessage(context.Context, *CreateChatMessageRequest) (*ChatMessageResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateMessage not implemented")
+}
+func (UnimplementedChatServiceServer) UploadImage(context.Context, *UploadChatImageRequest) (*ChatMessageResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UploadImage not implemented")
+}
+func (UnimplementedChatServiceServer) mustEmbedUnimplementedChatServiceServer() {}
+
+// UnsafeChatServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to ChatServiceServer will
+// result in compilation errors.
+type UnsafeChatServiceServer interface {
+	mustEmbedUnimplementedChatServiceServer()
+}
+
+func RegisterChatServiceServer(s grpc.ServiceRegistrar, srv ChatServiceServer) {
+	s.RegisterService(&_ChatService_serviceDesc, srv)
+}
+
+func _ChatService_ListRoom_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListChatRoomRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ChatServiceServer).ListRoom(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.ChatService/ListRoom",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ChatServiceServer).ListRoom(ctx, req.(*ListChatRoomRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ChatService_CreateRoom_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateChatRoomRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ChatServiceServer).CreateRoom(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.ChatService/CreateRoom",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ChatServiceServer).CreateRoom(ctx, req.(*CreateChatRoomRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ChatService_CreateMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateChatMessageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ChatServiceServer).CreateMessage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.ChatService/CreateMessage",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ChatServiceServer).CreateMessage(ctx, req.(*CreateChatMessageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ChatService_UploadImage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UploadChatImageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ChatServiceServer).UploadImage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.ChatService/UploadImage",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ChatServiceServer).UploadImage(ctx, req.(*UploadChatImageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+var _ChatService_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "proto.ChatService",
+	HandlerType: (*ChatServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "ListRoom",
+			Handler:    _ChatService_ListRoom_Handler,
+		},
+		{
+			MethodName: "CreateRoom",
+			Handler:    _ChatService_CreateRoom_Handler,
+		},
+		{
+			MethodName: "CreateMessage",
+			Handler:    _ChatService_CreateMessage_Handler,
+		},
+		{
+			MethodName: "UploadImage",
+			Handler:    _ChatService_UploadImage_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "proto/user_apiv1.proto",
+}
