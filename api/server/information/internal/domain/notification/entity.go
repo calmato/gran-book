@@ -4,7 +4,7 @@ import "time"
 
 // Notification - お知らせエンティティ
 type Notification struct {
-	ID          int `gorm:primaryKey;autoIncrement;<-:create"`
+	ID          int `gorm:"primaryKey;autoIncrement;<-:create"`
 	AuthorID    string
 	EditorID    string
 	CategoryID  string
@@ -17,7 +17,7 @@ type Notification struct {
 
 // Category	-	カテゴリーエンティティ
 type Category struct {
-	ID        int `gorm:primaryKey;autoIncrement;<-:create"`
+	ID        int `gorm:"primaryKey;autoIncrement;<-:create"`
 	Name      string
 	CreatedAt time.Time
 	UpdatedAt time.Time
