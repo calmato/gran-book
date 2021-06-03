@@ -1124,8 +1124,8 @@ components:
           type: string
         description:
           type: string
-        label:
-          type: string
+        category:
+          type: integer
         
     # Response
     emptyResponse:
@@ -1535,10 +1535,10 @@ components:
             type: string
           description:
             type: string
-          label:
-            type: string
+          category:
+            type: integer
           inquiry_id:
-            type: string
+            type: integer
           createdAt:
             type: string
           updatedAt:
