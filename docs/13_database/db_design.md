@@ -123,7 +123,7 @@
 | :---- | :------- | :---: | :-----: | :------: | :---: | :------ | :---------- | ---------- |
 
 
-### Inquiries
+### inquiries
 
 |    Field    |  DataType  | PK/FK | NotNull | Unsigned | Other | Default | Explanation  | Validation |
 | :---------- | :--------- | :---: | :-----: | :------: | :---: | :------ | :----------- | :--------- |
@@ -134,3 +134,10 @@
 | email       | VARCHAR(256)|      |  true  |          |  UQ   | ''    | メールアドレス   | Format: Email|
 | created_at  | DATETIME   |       |  true   |          |       |         | 登録日時     |            |
 | updated_at  | DATETIME   |       |  true   |          |       |         | 更新日時     |            |
+
+### inquiry_category
+
+|    Field    |  DataType  | PK/FK | NotNull | Unsigned | Other | Default | Explanation  | Validation |
+| :---------- | :--------- | :---: | :-----: | :------: | :---: | :------ | :----------- | :--------- |
+| category_id | BIGINT(20) |  PK   |  true   |   true   |  AI   |         | ID           |            |
+| description | TEXT(1000) |       |  true   |          |       |         | 説明     　   |            |
