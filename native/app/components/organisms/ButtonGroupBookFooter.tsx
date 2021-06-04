@@ -59,12 +59,12 @@ const IconComponents = {
 
 const items = [
   {
-    name: '読んでる本',
+    name: '読んだ本',
     value: 'read',
     icon: (color: string) => IconComponents.MaterialIcons('book-plus', color),
   },
   {
-    name: '読んだ本',
+    name: '読んでる本',
     value: 'reading',
     icon: (color: string) => IconComponents.MaterialIcons('book-open-page-variant', color),
   },
