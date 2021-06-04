@@ -14,6 +14,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
+    paddingBottom: 12,
   },
   subtilte: {
     paddingTop: 12,
@@ -134,12 +135,9 @@ const Support = function Support(props: Props): ReactElement {
         {'※問題のある行為や商品、コメントについては、商品詳細下部にある通報機能をご利用ください。\n\n' +
           '※サポート返信目安を過ぎても返信がない場合は、お手数ですが再度お問い合わせください。'}
       </Text>
-      <Button
-        style={{ alignSelf: 'center' }}
-        disabled={!canSubmit}
-        onPress={handleSubmit}
-        title="お問い合わせを送信"
-      />
+      <View style={styles.container}>
+        <Button disabled={!canSubmit} onPress={handleSubmit} title="お問い合わせを送信" />
+      </View>
     </ScrollView>
   );
 };
