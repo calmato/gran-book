@@ -937,7 +937,7 @@ paths:
         - BearerAuth: []
       parameters:
         - in: path
-          name: userId
+          name: senderId
           schema:
             type: string
           required: true
@@ -1120,12 +1120,12 @@ components:
     createInquiryRequest:
       type: object
       properties:
-        email: 
+        subject:
           type: string
         description:
           type: string
-        category:
-          type: integer
+        email: 
+          type: string
         
     # Response
     emptyResponse:
@@ -1529,15 +1529,19 @@ components:
     inquiryResponse:
       type: object
       properties:
-          userId:
-              type: string
-          email:
+          inquiryId:
+            type: integer
+          senderId:
+            type: string
+          adminId:
+            type: string
+          subject:
             type: string
           description:
             type: string
-          category:
-            type: integer
-          inquiry_id:
+          email:
+            type: string
+          isReplied:
             type: integer
           createdAt:
             type: string
