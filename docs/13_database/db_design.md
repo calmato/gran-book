@@ -127,17 +127,13 @@
 
 |    Field    |  DataType  | PK/FK | NotNull | Unsigned | Other | Default | Explanation  | Validation |
 | :---------- | :--------- | :---: | :-----: | :------: | :---: | :------ | :----------- | :--------- |
-| id          | BIGINT(20) |  PK   |  true   |   true   |  AI   |         | ID           |            |
-| category_id | BIGINT(20) |  FK   |  true  　　|   true   |  UQ   | 　　　　-1    | カテゴリーID　　　　　　 |            |
-| user_id     | BIGINT(20) |  FK   |  true   |   true   |  UQ   |         | ユーザーID　    |            |
-| description | TEXT(1000) |       |  true   |          |       |     ''    | 説明     　　　   |            |
+| id          | BIGINT(20) |  PK   |  true   |     |  AI   |         | ID           |            |
+| user_id     | VARCHAR(36) |  FK   |  true   |      |     |         | ユーザーID　    |            |
+| person_in_charge  | VARCHAR(36) |  FK   |  true   |      |     |         | ユーザーID　    |            |
+| subject  | VARCHAR(45) |     |  true   |      |     |      ''   | お問い合わせ題名　    |            |
+| description | TEXT(２000) |       |  true   |          |       |     ''    | 説明     　　　   |            |
 | email       | VARCHAR(256)|      |  true  |          |  UQ   | ''    | メールアドレス   | Format: Email|
 | created_at  | DATETIME   |       |  true   |          |       |         | 登録日時     |            |
 | updated_at  | DATETIME   |       |  true   |          |       |         | 更新日時     |            |
+| is_replied  | TINYINT   |       |  true   |     true     |       |     0    | 返信したか     |            |
 
-### inquiry_category
-
-|    Field    |  DataType  | PK/FK | NotNull | Unsigned | Other | Default | Explanation  | Validation |
-| :---------- | :--------- | :---: | :-----: | :------: | :---: | :------ | :----------- | :--------- |
-| category_id | BIGINT(20) |  PK   |  true   |   true   |  AI   |         | ID           |            |
-| description | VARCHAR(16) |       |  true   |          |       |         | 説明     　   |            |
