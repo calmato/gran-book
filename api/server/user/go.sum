@@ -73,6 +73,7 @@ github.com/bgentry/speakeasy v0.1.0/go.mod h1:+zsyZBPWlz7T6j88CTgSN5bM796AkVf0kB
 github.com/calmato/gran v0.0.0-20200511134047-18998a6ce8a1 h1:6m0XGKeHCOwuCf6a1kWUsF3pXlMtCq+7mgELosLfRK4=
 github.com/calmato/gran-book v0.0.0-20210518174605-75e47cbdba66 h1:dkWI+wIGNN18WFS3h3HVyiNFb6FY3hH9m/rlN/oYsYs=
 github.com/calmato/gran-book v0.0.0-20210604150457-820110c1cd01 h1:N9yp/OFNsuqLXIx5ZBpHzhi2oD/OifHABzax/nitaao=
+github.com/calmato/gran-book v0.0.0-20210604170339-cf156994aa00 h1:pndyLdaqThkZ4X1PCUW2BWyAtwQSmwho1bsylEIigYs=
 github.com/calmato/gran/api/todo v0.0.0-20200511134047-18998a6ce8a1 h1:3H3uY7BWuQ5Cj5IM3jNt9qiyEv9VXB4r/Xd5zICuG1Y=
 github.com/calmato/gran/api/todo v0.0.0-20200511134047-18998a6ce8a1/go.mod h1:qd1POHF/p8tstYUhbngrtfdcujQiNJguIJ6W5I1uY7c=
 github.com/casbin/casbin/v2 v2.1.2/go.mod h1:YcPU1XXisHhLzuxH9coDNf2FbKpjGlbCg3n9yuLkIJQ=
