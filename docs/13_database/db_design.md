@@ -140,4 +140,4 @@
 |    Field    |  DataType  | PK/FK | NotNull | Unsigned | Other | Default | Explanation  | Validation |
 | :---------- | :--------- | :---: | :-----: | :------: | :---: | :------ | :----------- | :--------- |
 | category_id | BIGINT(20) |  PK   |  true   |   true   |  AI   |         | ID           |            |
-| description | VARCHAR(6) |       |  true   |          |       |         | 説明     　   |            |
+| description | VARCHAR(16) |       |  true   |          |       |         | 説明     　   |            |
