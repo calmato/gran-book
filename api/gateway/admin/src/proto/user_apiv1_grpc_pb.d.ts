@@ -518,3 +518,87 @@ export class UserServiceClient extends grpc.Client implements IUserServiceClient
     public unregisterFollow(request: proto_user_apiv1_pb.UnregisterFollowRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.UserProfileResponse) => void): grpc.ClientUnaryCall;
     public unregisterFollow(request: proto_user_apiv1_pb.UnregisterFollowRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.UserProfileResponse) => void): grpc.ClientUnaryCall;
 }
+
+interface IChatServiceService extends grpc.ServiceDefinition<grpc.UntypedServiceImplementation> {
+    listRoom: IChatServiceService_IListRoom;
+    createRoom: IChatServiceService_ICreateRoom;
+    createMessage: IChatServiceService_ICreateMessage;
+    uploadImage: IChatServiceService_IUploadImage;
+}
+
+interface IChatServiceService_IListRoom extends grpc.MethodDefinition<proto_user_apiv1_pb.ListChatRoomRequest, proto_user_apiv1_pb.ChatRoomListResponse> {
+    path: "/proto.ChatService/ListRoom";
+    requestStream: false;
+    responseStream: false;
+    requestSerialize: grpc.serialize<proto_user_apiv1_pb.ListChatRoomRequest>;
+    requestDeserialize: grpc.deserialize<proto_user_apiv1_pb.ListChatRoomRequest>;
+    responseSerialize: grpc.serialize<proto_user_apiv1_pb.ChatRoomListResponse>;
+    responseDeserialize: grpc.deserialize<proto_user_apiv1_pb.ChatRoomListResponse>;
+}
+interface IChatServiceService_ICreateRoom extends grpc.MethodDefinition<proto_user_apiv1_pb.CreateChatRoomRequest, proto_user_apiv1_pb.ChatRoomResponse> {
+    path: "/proto.ChatService/CreateRoom";
+    requestStream: false;
+    responseStream: false;
+    requestSerialize: grpc.serialize<proto_user_apiv1_pb.CreateChatRoomRequest>;
+    requestDeserialize: grpc.deserialize<proto_user_apiv1_pb.CreateChatRoomRequest>;
+    responseSerialize: grpc.serialize<proto_user_apiv1_pb.ChatRoomResponse>;
+    responseDeserialize: grpc.deserialize<proto_user_apiv1_pb.ChatRoomResponse>;
+}
+interface IChatServiceService_ICreateMessage extends grpc.MethodDefinition<proto_user_apiv1_pb.CreateChatMessageRequest, proto_user_apiv1_pb.ChatMessageResponse> {
+    path: "/proto.ChatService/CreateMessage";
+    requestStream: false;
+    responseStream: false;
+    requestSerialize: grpc.serialize<proto_user_apiv1_pb.CreateChatMessageRequest>;
+    requestDeserialize: grpc.deserialize<proto_user_apiv1_pb.CreateChatMessageRequest>;
+    responseSerialize: grpc.serialize<proto_user_apiv1_pb.ChatMessageResponse>;
+    responseDeserialize: grpc.deserialize<proto_user_apiv1_pb.ChatMessageResponse>;
+}
+interface IChatServiceService_IUploadImage extends grpc.MethodDefinition<proto_user_apiv1_pb.UploadChatImageRequest, proto_user_apiv1_pb.ChatMessageResponse> {
+    path: "/proto.ChatService/UploadImage";
+    requestStream: false;
+    responseStream: false;
+    requestSerialize: grpc.serialize<proto_user_apiv1_pb.UploadChatImageRequest>;
+    requestDeserialize: grpc.deserialize<proto_user_apiv1_pb.UploadChatImageRequest>;
+    responseSerialize: grpc.serialize<proto_user_apiv1_pb.ChatMessageResponse>;
+    responseDeserialize: grpc.deserialize<proto_user_apiv1_pb.ChatMessageResponse>;
+}
+
+export const ChatServiceService: IChatServiceService;
+
+export interface IChatServiceServer extends grpc.UntypedServiceImplementation {
+    listRoom: grpc.handleUnaryCall<proto_user_apiv1_pb.ListChatRoomRequest, proto_user_apiv1_pb.ChatRoomListResponse>;
+    createRoom: grpc.handleUnaryCall<proto_user_apiv1_pb.CreateChatRoomRequest, proto_user_apiv1_pb.ChatRoomResponse>;
+    createMessage: grpc.handleUnaryCall<proto_user_apiv1_pb.CreateChatMessageRequest, proto_user_apiv1_pb.ChatMessageResponse>;
+    uploadImage: grpc.handleUnaryCall<proto_user_apiv1_pb.UploadChatImageRequest, proto_user_apiv1_pb.ChatMessageResponse>;
+}
+
+export interface IChatServiceClient {
+    listRoom(request: proto_user_apiv1_pb.ListChatRoomRequest, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.ChatRoomListResponse) => void): grpc.ClientUnaryCall;
+    listRoom(request: proto_user_apiv1_pb.ListChatRoomRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.ChatRoomListResponse) => void): grpc.ClientUnaryCall;
+    listRoom(request: proto_user_apiv1_pb.ListChatRoomRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.ChatRoomListResponse) => void): grpc.ClientUnaryCall;
+    createRoom(request: proto_user_apiv1_pb.CreateChatRoomRequest, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.ChatRoomResponse) => void): grpc.ClientUnaryCall;
+    createRoom(request: proto_user_apiv1_pb.CreateChatRoomRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.ChatRoomResponse) => void): grpc.ClientUnaryCall;
+    createRoom(request: proto_user_apiv1_pb.CreateChatRoomRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.ChatRoomResponse) => void): grpc.ClientUnaryCall;
+    createMessage(request: proto_user_apiv1_pb.CreateChatMessageRequest, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.ChatMessageResponse) => void): grpc.ClientUnaryCall;
+    createMessage(request: proto_user_apiv1_pb.CreateChatMessageRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.ChatMessageResponse) => void): grpc.ClientUnaryCall;
+    createMessage(request: proto_user_apiv1_pb.CreateChatMessageRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.ChatMessageResponse) => void): grpc.ClientUnaryCall;
+    uploadImage(request: proto_user_apiv1_pb.UploadChatImageRequest, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.ChatMessageResponse) => void): grpc.ClientUnaryCall;
+    uploadImage(request: proto_user_apiv1_pb.UploadChatImageRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.ChatMessageResponse) => void): grpc.ClientUnaryCall;
+    uploadImage(request: proto_user_apiv1_pb.UploadChatImageRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.ChatMessageResponse) => void): grpc.ClientUnaryCall;
+}
+
+export class ChatServiceClient extends grpc.Client implements IChatServiceClient {
+    constructor(address: string, credentials: grpc.ChannelCredentials, options?: Partial<grpc.ClientOptions>);
+    public listRoom(request: proto_user_apiv1_pb.ListChatRoomRequest, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.ChatRoomListResponse) => void): grpc.ClientUnaryCall;
+    public listRoom(request: proto_user_apiv1_pb.ListChatRoomRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.ChatRoomListResponse) => void): grpc.ClientUnaryCall;
+    public listRoom(request: proto_user_apiv1_pb.ListChatRoomRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.ChatRoomListResponse) => void): grpc.ClientUnaryCall;
+    public createRoom(request: proto_user_apiv1_pb.CreateChatRoomRequest, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.ChatRoomResponse) => void): grpc.ClientUnaryCall;
+    public createRoom(request: proto_user_apiv1_pb.CreateChatRoomRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.ChatRoomResponse) => void): grpc.ClientUnaryCall;
+    public createRoom(request: proto_user_apiv1_pb.CreateChatRoomRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.ChatRoomResponse) => void): grpc.ClientUnaryCall;
+    public createMessage(request: proto_user_apiv1_pb.CreateChatMessageRequest, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.ChatMessageResponse) => void): grpc.ClientUnaryCall;
+    public createMessage(request: proto_user_apiv1_pb.CreateChatMessageRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.ChatMessageResponse) => void): grpc.ClientUnaryCall;
+    public createMessage(request: proto_user_apiv1_pb.CreateChatMessageRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.ChatMessageResponse) => void): grpc.ClientUnaryCall;
+    public uploadImage(request: proto_user_apiv1_pb.UploadChatImageRequest, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.ChatMessageResponse) => void): grpc.ClientUnaryCall;
+    public uploadImage(request: proto_user_apiv1_pb.UploadChatImageRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.ChatMessageResponse) => void): grpc.ClientUnaryCall;
+    public uploadImage(request: proto_user_apiv1_pb.UploadChatImageRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_user_apiv1_pb.ChatMessageResponse) => void): grpc.ClientUnaryCall;
+}
