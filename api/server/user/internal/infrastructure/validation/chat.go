@@ -8,6 +8,11 @@ import (
 
 type chatDomainValidation struct{}
 
+// NewChatDomainValidation - Chat関連のドメインバリデータ
+func NewChatDomainValidation() chat.Validation {
+	return &chatDomainValidation{}
+}
+
 func (v *chatDomainValidation) Room(ctx context.Context, cr *chat.Room) error {
 	return nil
 }
