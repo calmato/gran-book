@@ -10,6 +10,7 @@
 * [API設計 - ドメイン・URL設計](./domain-url.md)
 * [API設計 - リクエスト・レスポンス設計](./request-response.md)
 * [Golang - ディレクトリ構成](./directories-for-golang.md)
+* [Golang - 使用ライブラリ](./libraries-for-golang.md)
 * [Node.js - ディレクトリ構成](./directories-for-node.md)
 
 ![全体構成](./images/architecture.jpeg)
@@ -29,14 +30,14 @@
 
 * 以下のサービスを採用
   * 書籍検索関連のAPI
-    * [Google Books API](./../31_google_books_api/README.md)
+    * [楽天 Books API](./../41_rakuten_books_api/README.md)
   * 支払い関連のAPI
-    * [Stripe](./../32_stripe/README.md)
+    * [Stripe](./../42_stripe/README.md)
 
 * その他検討対象のサービス
   * 書籍検索関連のAPI
     * Amazon Advertising API
-    * 楽天Book API
+    * Google Books API
   * 支払い関連のAPI
     * PayPal
 
