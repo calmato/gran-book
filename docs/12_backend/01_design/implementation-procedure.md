@@ -17,34 +17,34 @@
 
 1. Domain層の実装 
   1. エンティティを作成
-    * internal/domain/<domain>/entity.go
+    　* internal/domain/<domain>/entity.go
   2. ドメインサービスのインターフェースを作成
-    * internal/domain/<domain>/service.go
-    * internal/domain/<domain>/repository.go
-    * internal/domain/<domain>/validation.go
+    　* internal/domain/<domain>/service.go
+    　* internal/domain/<domain>/repository.go
+    　* internal/domain/<domain>/validation.go
 
 2. Infrastructure層の実装
   1. (1-2)で作成したインターフェースの詳細を実装 (Service以外)
-    * internal/infrastructure/repository/<domain>.go
-    * internal/infrastructure/validation/<domain>.go
+    　* internal/infrastructure/repository/<domain>.go
+    　* internal/infrastructure/validation/<domain>.go
   2. (2-1)までに作成したインターフェースを利用し、ドメインサービスの詳細を実装
-    * internal/infrastructure/service/<domain>.go
+    　* internal/infrastructure/service/<domain>.go
 
 3. Application層の実装
   1. 外部から受け取った値をAPI内部で使えるようにするために詰め替える用の Input オブジェクトの作成
-    * internal/application/input/<domain>.go
+  　  * internal/application/input/<domain>.go
   2. (必要あれば、外部へレスポンスとして返す用の Output オブジェクトも作成)
-    * internal/application/output/<domain>.go
+    　* internal/application/output/<domain>.go
   3. リクエスト値のバリデーション用の リクエストバリデーション の実装
-    * internal/application/validation/<domain>.go
-    * (-> リクエスト値の制約 (バリデーション) は、Inputオブジェクトにタグとして記述する)
+    　* internal/application/validation/<domain>.go
+    　* (-> リクエスト値の制約 (バリデーション) は、Inputオブジェクトにタグとして記述する)
   4. ユースケース (ユーザを登録する...みたいな) を表現するためのインターフェースを作成
-    * internal/application/<domain>.go
-    * (-> ここで定義するメソッドは、基本的にはInterface層のメソッドと1対1対応するようになるはず)
+   　 * internal/application/<domain>.go
+   　 * (-> ここで定義するメソッドは、基本的にはInterface層のメソッドと1対1対応するようになるはず)
 
 4. Interface層の実装
   1. Protobufで生成されたコードを参考に、外部APIからのリクエスト/レスポンス処理の実装
-    * internal/interface/grpc/v1/<domain>.go
+   　 * internal/interface/grpc/v1/<domain>.go
 
 ## BFF(API Gateway)の実装
 
