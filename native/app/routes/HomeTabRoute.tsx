@@ -2,6 +2,7 @@
 import React, { ReactElement } from 'react';
 import BookShow from '~/containers/BookShow';
 import Home from '~/containers/Home';
+import BookReadRegister from '~/screens/BookReadRegister';
 import SearchResult from '~/screens/SearchResult';
 import { HomeTabStackPramList } from '~/types/navigation';
 
@@ -18,6 +19,7 @@ const HomeTabRoute = function HomeTabRoute(): ReactElement {
       <HomeTabStack.Screen name="SearchResult" component={SearchResult} />
       <HomeTabStack.Screen name="SearchResultBookShow" component={BookShow} />
       <HomeTabStack.Screen name="BookShow" component={BookShow} />
+      <HomeTabStack.Screen name="BookReadRegister" component={BookReadRegister} />
     </HomeTabStack.Navigator>
   );
 };
