@@ -89,6 +89,11 @@ const BookShow = function BookShow(props: Props): ReactElement {
 
   const handleBookStatusButton = useCallback(
     (status: string) => {
+      console.log(status);
+      if (status === 'read') {
+        props.navigation.push('BookReadRegister');
+        return;
+      }
       props.actions.registerOwnBook(status, book.id);
       setBook({
         ...book,
@@ -98,7 +103,7 @@ const BookShow = function BookShow(props: Props): ReactElement {
         },
       });
     },
-    [props.actions, book],
+    [props.actions, props.navigation, book],
   );
 
   const _handleOpenRakutenPageButtonAsync = async (url: string) => {
