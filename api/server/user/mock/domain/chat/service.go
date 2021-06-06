@@ -47,3 +47,17 @@ func (mr *MockServiceMockRecorder) CreateRoom(ctx, cr interface{}) *gomock.Call 
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateRoom", reflect.TypeOf((*MockService)(nil).CreateRoom), ctx, cr)
 }
+
+// ValidationRoom mocks base method
+func (m *MockService) ValidationRoom(ctx context.Context, cr *chat.Room) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ValidationRoom", ctx, cr)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// ValidationRoom indicates an expected call of ValidationRoom
+func (mr *MockServiceMockRecorder) ValidationRoom(ctx, cr interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ValidationRoom", reflect.TypeOf((*MockService)(nil).ValidationRoom), ctx, cr)
+}
