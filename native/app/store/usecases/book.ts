@@ -3,6 +3,7 @@ import { Dispatch } from 'redux';
 import { setBooks } from '../modules/book';
 import { internal } from '~/lib/axios';
 import { AppState } from '~/store/modules';
+import { ImpressionForm } from '~/types/forms';
 import { IBook, IBookResponse } from '~/types/response';
 import { IErrorResponse, ISearchResultItem } from '~/types/response/external/rakuten-books';
 
@@ -89,6 +90,18 @@ export function registerOwnBookAsync(status: string, bookId: number) {
 }
 
 /**
+ *
+ * @param bookId バックエンドAPIにアクセスし書籍の感想を登録する関数
+ * @param impressionForm 書籍の感想
+ */
+export function registerReadBookImpressionAsync(bookId: number, impressionForm: ImpressionForm) {
+  return async (_dispatch: Dispatch, getState: () => AppState) => {
+    const user = getState().auth;
+    registerReadBookAsync(user.id, bookId, impressionForm);
+  };
+}
+
+/**
  * バックエンドAPIにアクセスし書籍を全件取得する関数
  * @param  {Partial<ISearchResultItem>} 登録する書籍情報(楽天BooksAPIのレスポンス形式)
  * @return {Promise<AxiosResponse<any>|AxiosResponse<IErrorResponse> } 成功時:登録した書籍情報, 失敗時:HTTPエラーオブジェクト
@@ -106,9 +119,9 @@ async function getAllBookByUserId(
     });
 }
 
-async function registerReadBookAsync(userId: string, bookId: number) {
+async function registerReadBookAsync(userId: string, bookId: number, impressionForm?: ImpressionForm) {
   return internal
-    .post(`v1/users/${userId}/books/${bookId}/read`)
+    .post(`v1/users/${userId}/books/${bookId}/read`, impressionForm)
     .then((res) => {
       console.log('[success]', res.data);
     })
