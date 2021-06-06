@@ -17,6 +17,7 @@ type Registry struct {
 	AdminApplication application.AdminApplication
 	AuthApplication  application.AuthApplication
 	UserApplication  application.UserApplication
+	ChatApplication  application.ChatApplication
 }
 
 // NewRegistry - internalディレクトリ配下のファイルを読み込み
@@ -26,11 +27,13 @@ func NewRegistry(
 	admin := adminInjection(db, fa, s)
 	auth := authInjection(db, fa, s)
 	user := userInjection(db, fa, s)
+	chat := chatInjection(fs)
 
 	return &Registry{
 		AdminApplication: admin,
 		AuthApplication:  auth,
 		UserApplication:  user,
+		ChatApplication:  chat,
 	}
 }
 
@@ -68,4 +71,15 @@ func userInjection(db *repository.Client, fa *authentication.Auth, s *gcs.Storag
 	ua := application.NewUserApplication(urv, us)
 
 	return ua
+}
+
+func chatInjection(fs *firestore.Firestore) application.ChatApplication {
+	cr := repository.NewChatRepository(fs)
+	cdv := dv.NewChatDomainValidation()
+	cs := service.NewChatService(cdv, cr)
+
+	crv := rv.NewChatRequestValidation()
+	ca := application.NewChatApplication(crv, cs)
+
+	return ca
 }
