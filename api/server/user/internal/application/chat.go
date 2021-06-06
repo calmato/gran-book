@@ -51,5 +51,5 @@ func (a *chatApplication) CreateRoom(ctx context.Context, in *input.CreateRoom, 
 		return nil, err
 	}
 
-	return nil, nil
+	return cr, nil
 }
