@@ -1,6 +1,6 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import dayjs from 'dayjs';
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement, useCallback, useState } from 'react';
 import { StyleSheet, View, Text, Switch, Platform } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -26,17 +26,19 @@ interface Props {
 }
 
 const ReadDate = function ReadDate(props: Props): ReactElement {
+  const [show, setShow] = useState(false);
+
   const toggleSwitch = () => props.handleIsDateUnknown(!props.isDateUnknown);
 
-  const [show, setShow] = useState(false);
   const handleChangeDate = (_event, selectedDate) => {
     const currentDate = selectedDate;
     setShow(Platform.OS === 'ios');
     props.handleSetDate(currentDate);
   };
-  const showDatepicker = () => {
+
+  const showDatePicker = useCallback(() => {
     setShow(true);
-  };
+  }, []);
 
   return (
     <View style={styles.containerStyle}>
@@ -47,7 +49,7 @@ const ReadDate = function ReadDate(props: Props): ReactElement {
         {!props.isDateUnknown && (
           <TouchableOpacity
             style={{ flexDirection: 'row', alignItems: 'center' }}
-            onPress={showDatepicker}>
+            onPress={showDatePicker}>
             <Text style={[styles.textStyle]}>{`${dayjs(props.date).format('YYYY/MM/DD')}`}</Text>
             <MaterialIcons name="keyboard-arrow-right" size={24} color={COLOR.GREY} />
           </TouchableOpacity>
