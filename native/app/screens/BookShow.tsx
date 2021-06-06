@@ -91,7 +91,7 @@ const BookShow = function BookShow(props: Props): ReactElement {
     (status: string) => {
       console.log(status);
       if (status === 'read') {
-        props.navigation.push('BookReadRegister');
+        props.navigation.push('BookReadRegister', { book: book });
         return;
       }
       props.actions.registerOwnBook(status, book.id);

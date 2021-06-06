@@ -22,7 +22,7 @@ export type HomeTabStackPramList = {
   SearchResult: { keyword: string; };
   SearchResultBookShow: { book: ISearchResultItem };
   BookShow: { book: IBook };
-  BookReadRegister: undefined;
+  BookReadRegister: { book: IBook };
 };
 
 export type UserInfoStackParamList = {

@@ -1,9 +1,12 @@
+import { RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import React, { ReactElement, useState } from 'react';
 import { StyleSheet, View, ScrollView, Text } from 'react-native';
 import { Input, Button } from 'react-native-elements';
 import BookNameAuthorRegister from '~/components/organisms/BookNameAuthorRegister';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import ReadDate from '~/components/organisms/ReadDate';
+import { HomeTabStackPramList } from '~/types/navigation';
 
 const styles = StyleSheet.create({
   container: {
@@ -11,14 +14,14 @@ const styles = StyleSheet.create({
   },
 });
 
-const bookInfo = {
-  title: '何者',
-  image_url:
-    'https://thechara.xsrv.jp/wp-content/uploads/2020/06/200622%E3%80%90NARUTO%E3%80%91KV_02.jpg',
-  author: '稲富',
-};
+interface Props {
+  route: RouteProp<HomeTabStackPramList, 'BookReadRegister'>;
+  navigation: StackNavigationProp<HomeTabStackPramList, 'BookReadRegister'>;
+}
 
-const BookReadRegister = function BookReadRegister(): ReactElement {
+const BookReadRegister = function BookReadRegister(props: Props): ReactElement {
+  const book = props.route.params.book;
+
   const [impreessionData, setState] = useState({
     date: new Date(),
     impresstion: '',
@@ -27,12 +30,17 @@ const BookReadRegister = function BookReadRegister(): ReactElement {
 
   return (
     <View style={styles.container}>
-      <HeaderWithBackButton title="読んだ本登録" onPress={() => undefined} />
+      <HeaderWithBackButton
+        title="読んだ本登録"
+        onPress={() => {
+          props.navigation.goBack();
+        }}
+      />
       <ScrollView>
         <BookNameAuthorRegister
-          title={bookInfo.title}
-          image_url={bookInfo.image_url}
-          author={bookInfo.author}
+          title={book.title}
+          imageUrl={book.thumbnailUrl}
+          author={book.author}
         />
         <ReadDate
           date={impreessionData.date}
