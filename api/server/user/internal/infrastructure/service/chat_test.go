@@ -18,7 +18,7 @@ func TestChatService_CreateRoom(t *testing.T) {
 		"ok": {
 			Room: &chat.Room{
 				UserIDs:       []string{"00000000-0000-0000-0000-000000000000"},
-				LatestMassage: &chat.Message{},
+				LatestMessage: &chat.Message{},
 			},
 			Expected: nil,
 		},

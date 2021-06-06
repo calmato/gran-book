@@ -23,7 +23,7 @@ func TestChatDomainValidation_Room(t *testing.T) {
 				UserIDs:       []string{"00000000-0000-0000-0000-000000000000"},
 				CreatedAt:     current,
 				UpdatedAt:     current,
-				LatestMassage: &chat.Message{},
+				LatestMessage: &chat.Message{},
 			},
 			Expected: nil,
 		},
