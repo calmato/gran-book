@@ -1,22 +1,43 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { ReactElement, useCallback, useState } from 'react';
-import { StyleSheet, View, ScrollView, Text } from 'react-native';
-import { Button, Input } from 'react-native-elements';
+import { StyleSheet, View, ScrollView, Text, TextInput } from 'react-native';
+import { Button } from 'react-native-elements';
 import BookNameAuthorRegister from '~/components/organisms/BookNameAuthorRegister';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import ReadDate from '~/components/organisms/ReadDate';
+import { ImpressionForm } from '~/types/forms';
 import { HomeTabStackPramList } from '~/types/navigation';
+import { COLOR } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  impressionFormLabel: {
+    fontSize: 16,
+    paddingLeft: 16,
+    marginTop: 10,
+    marginBottom: 8,
+    fontWeight: 'bold',
+    color: COLOR.GREY,
+  },
+  impressionForm: {
+    backgroundColor: COLOR.BACKGROUND_WHITE,
+    padding: 0,
+    fontSize: 16,
+    paddingHorizontal: 16,
+    height: 160,
+    marginBottom: 16,
   },
 });
 
 interface Props {
   route: RouteProp<HomeTabStackPramList, 'BookReadRegister'>;
   navigation: StackNavigationProp<HomeTabStackPramList, 'BookReadRegister'>;
+  actions: {
+    registerReadBookImpression: (bookId: number, impression: ImpressionForm) => Promise<void>;
+  };
 }
 
 const BookReadRegister = function BookReadRegister(props: Props): ReactElement {
@@ -29,7 +50,11 @@ const BookReadRegister = function BookReadRegister(props: Props): ReactElement {
   });
 
   const handleRegisterButtonClick = useCallback(() => {
-    props.navigation.goBack();
+    props.actions.registerReadBookImpression(book.id, {
+      impression: impressionData.impression,
+      readOn: impressionData.date.toString(),
+    });
+    props.navigation.navigate('Home');
   }, [props.navigation]);
 
   return (
@@ -54,17 +79,10 @@ const BookReadRegister = function BookReadRegister(props: Props): ReactElement {
             setState({ ...impressionData, isDateUnknown: isDateUnknown })
           }
         />
-        <Text
-          style={{
-            fontSize: 16,
-            marginStart: 20,
-            marginTop: 20,
-            marginBottom: 10,
-            fontWeight: 'bold',
-          }}>
-          感想
-        </Text>
-        <Input
+        <Text style={styles.impressionFormLabel}>感想</Text>
+        <TextInput
+          style={styles.impressionForm}
+          placeholder="ここに感想を入力"
           onChangeText={(text) => setState({ ...impressionData, impression: text })}
           value={impressionData.impression}
           maxLength={1000}

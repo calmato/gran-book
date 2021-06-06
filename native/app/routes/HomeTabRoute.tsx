@@ -1,8 +1,8 @@
 ﻿import { createStackNavigator } from '@react-navigation/stack';
 import React, { ReactElement } from 'react';
+import BookReadRegister from '~/containers/BookReadRegister';
 import BookShow from '~/containers/BookShow';
 import Home from '~/containers/Home';
-import BookReadRegister from '~/screens/BookReadRegister';
 import SearchResult from '~/screens/SearchResult';
 import { HomeTabStackPramList } from '~/types/navigation';
 

@@ -89,7 +89,6 @@ const BookShow = function BookShow(props: Props): ReactElement {
 
   const handleBookStatusButton = useCallback(
     (status: string) => {
-      console.log(status);
       if (status === 'read') {
         props.navigation.push('BookReadRegister', { book: book });
         return;
