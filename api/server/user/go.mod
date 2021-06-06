@@ -3,26 +3,23 @@ module github.com/calmato/gran-book/api/server/user
 go 1.15
 
 require (
-	cloud.google.com/go/firestore v1.2.0
-	cloud.google.com/go/storage v1.6.0
-	firebase.google.com/go/v4 v4.1.0
-	github.com/calmato/gran/api/todo v0.0.0-20200511134047-18998a6ce8a1
-	github.com/go-playground/validator/v10 v10.2.0
-	github.com/golang/mock v1.4.3
-	github.com/golang/protobuf v1.4.3
-	github.com/google/go-cmp v0.5.1 // indirect
-	github.com/google/uuid v1.1.2
+	cloud.google.com/go/firestore v1.5.0
+	cloud.google.com/go/storage v1.14.0
+	firebase.google.com/go/v4 v4.5.0
+	github.com/go-playground/validator/v10 v10.4.1
+	github.com/golang/mock v1.5.0
+	github.com/golang/protobuf v1.5.2
+	github.com/google/uuid v1.2.0
 	github.com/grpc-ecosystem/go-grpc-middleware v1.2.2
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/prometheus/client_golang v1.9.0
-	github.com/stretchr/testify v1.6.1 // indirect
 	go.uber.org/zap v1.16.0
-	golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543
-	google.golang.org/api v0.23.0
-	google.golang.org/genproto v0.0.0-20201214200347-8c77b98c765d
-	google.golang.org/grpc v1.34.0
-	google.golang.org/protobuf v1.25.0
-	gorm.io/driver/mysql v1.0.5
-	gorm.io/gorm v1.21.3
+	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1
+	google.golang.org/api v0.46.0
+	google.golang.org/genproto v0.0.0-20210429181445-86c259c2b4ab
+	google.golang.org/grpc v1.37.0
+	google.golang.org/protobuf v1.26.0
+	gorm.io/driver/mysql v1.1.0
+	gorm.io/gorm v1.21.10
 )
