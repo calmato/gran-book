@@ -50,6 +50,7 @@ func TestChatApplication_CreateRoom(t *testing.T) {
 
 		csm := mock_chat.NewMockService(ctrl)
 		csm.EXPECT().CreateRoom(ctx, tc.Expected.Room).Return(tc.Expected.Error)
+		csm.EXPECT().ValidationRoom(ctx, tc.Expected.Room).Return(nil)
 
 		t.Run(result, func(t *testing.T) {
 			target := NewChatApplication(crvm, csm)

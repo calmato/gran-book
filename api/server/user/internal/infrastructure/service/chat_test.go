@@ -31,13 +31,13 @@ func TestChatService_CreateRoom(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		uvm := mock_chat.NewMockValidation(ctrl)
+		rvm := mock_chat.NewMockValidation(ctrl)
 
-		urm := mock_chat.NewMockRepository(ctrl)
-		urm.EXPECT().CreateRoom(ctx, tc.Room).Return(tc.Expected)
+		rrm := mock_chat.NewMockRepository(ctrl)
+		rrm.EXPECT().CreateRoom(ctx, tc.Room).Return(tc.Expected)
 
 		t.Run(result, func(t *testing.T) {
-			target := NewChatService(uvm, urm)
+			target := NewChatService(rvm, rrm)
 
 			got := target.CreateRoom(ctx, tc.Room)
 			if !reflect.DeepEqual(got, tc.Expected) {
@@ -46,17 +46,17 @@ func TestChatService_CreateRoom(t *testing.T) {
 			}
 
 			if tc.Room.ID == "" {
-				t.Fatal("User.ID must be not null")
+				t.Fatal("Room.ID must be not null")
 				return
 			}
 
 			if tc.Room.CreatedAt.IsZero() {
-				t.Fatal("User.CreatedAt must be not null")
+				t.Fatal("Room.CreatedAt must be not null")
 				return
 			}
 
 			if tc.Room.UpdatedAt.IsZero() {
-				t.Fatal("User.UpdatedAt must be not null")
+				t.Fatal("Room.UpdatedAt must be not null")
 				return
 			}
 		})
