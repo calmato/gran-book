@@ -22,9 +22,9 @@ interface Props {
 const BookReadRegister = function BookReadRegister(props: Props): ReactElement {
   const book = props.route.params.book;
 
-  const [impreessionData, setState] = useState({
+  const [impressionData, setState] = useState({
     date: new Date(),
-    impresstion: '',
+    impression: '',
     isDateUnknown: false,
   });
 
@@ -47,11 +47,11 @@ const BookReadRegister = function BookReadRegister(props: Props): ReactElement {
           author={book.author}
         />
         <ReadDate
-          date={impreessionData.date}
-          handleSetDate={(date) => setState({ ...impreessionData, date: date })}
-          isDateUnknown={impreessionData.isDateUnknown}
+          date={impressionData.date}
+          handleSetDate={(date) => setState({ ...impressionData, date: date })}
+          isDateUnknown={impressionData.isDateUnknown}
           handleIsDateUnknown={(isDateUnknown) =>
-            setState({ ...impreessionData, isDateUnknown: isDateUnknown })
+            setState({ ...impressionData, isDateUnknown: isDateUnknown })
           }
         />
         <Text
@@ -65,8 +65,8 @@ const BookReadRegister = function BookReadRegister(props: Props): ReactElement {
           感想
         </Text>
         <Input
-          onChangeText={(text) => setState({ ...impreessionData, impresstion: text })}
-          value={impreessionData.impresstion}
+          onChangeText={(text) => setState({ ...impressionData, impression: text })}
+          value={impressionData.impression}
           maxLength={1000}
           multiline={true}
         />
