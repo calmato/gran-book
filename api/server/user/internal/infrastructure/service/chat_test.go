@@ -11,53 +11,61 @@ import (
 )
 
 func TestChatService_CreateRoom(t *testing.T) {
+	type args struct {
+		room *chat.Room
+	}
+
 	testCases := map[string]struct {
-		Room     *chat.Room
-		Expected error
+		args args
+		want error
 	}{
 		"ok": {
-			Room: &chat.Room{
-				UserIDs:       []string{"00000000-0000-0000-0000-000000000000"},
-				LatestMessage: &chat.Message{},
+			args: args{
+				room: &chat.Room{
+					UserIDs:       []string{"00000000-0000-0000-0000-000000000000"},
+					LatestMessage: &chat.Message{},
+				},
 			},
-			Expected: nil,
+			want: nil,
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		rvm := mock_chat.NewMockValidation(ctrl)
+		cvm := mock_chat.NewMockValidation(ctrl)
 
-		rrm := mock_chat.NewMockRepository(ctrl)
-		rrm.EXPECT().CreateRoom(ctx, tc.Room).Return(tc.Expected)
+		crm := mock_chat.NewMockRepository(ctrl)
+		crm.EXPECT().CreateRoom(ctx, tc.args.room).Return(tc.want)
 
-		t.Run(result, func(t *testing.T) {
-			target := NewChatService(rvm, rrm)
+		t.Run(name, func(t *testing.T) {
+			target := NewChatService(cvm, crm)
 
-			got := target.CreateRoom(ctx, tc.Room)
-			if !reflect.DeepEqual(got, tc.Expected) {
-				t.Fatalf("want %#v, but %#v", tc.Expected, got)
+			got := target.CreateRoom(ctx, tc.args.room)
+			if !reflect.DeepEqual(got, tc.want) {
+				t.Fatalf("want %#v, but %#v", tc.want, got)
 				return
 			}
 
-			if tc.Room.ID == "" {
-				t.Fatal("Room.ID must be not null")
-				return
-			}
+			if got == nil {
+				if tc.args.room.ID == "" {
+					t.Fatal("Room.ID must be not null")
+					return
+				}
 
-			if tc.Room.CreatedAt.IsZero() {
-				t.Fatal("Room.CreatedAt must be not null")
-				return
-			}
+				if tc.args.room.CreatedAt.IsZero() {
+					t.Fatal("Room.CreatedAt must be not null")
+					return
+				}
 
-			if tc.Room.UpdatedAt.IsZero() {
-				t.Fatal("Room.UpdatedAt must be not null")
-				return
+				if tc.args.room.UpdatedAt.IsZero() {
+					t.Fatal("Room.UpdatedAt must be not null")
+					return
+				}
 			}
 		})
 	}
