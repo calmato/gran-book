@@ -51,11 +51,11 @@ func TestChatRequestValidation_CreateRoom(t *testing.T) {
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewChatRequestValidation()
 
 			got := target.CreateRoom(tc.Input)

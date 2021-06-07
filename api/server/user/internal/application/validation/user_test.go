@@ -69,11 +69,11 @@ func TestUserRequestValidation_ListUser(t *testing.T) {
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewUserRequestValidation()
 
 			got := target.ListUser(tc.Input)
@@ -133,11 +133,11 @@ func TestUserRequestValidation_ListUserByUserIDs(t *testing.T) {
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewUserRequestValidation()
 
 			got := target.ListUserByUserIDs(tc.Input)
@@ -215,11 +215,11 @@ func TestUserRequestValidation_ListFollow(t *testing.T) {
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewUserRequestValidation()
 
 			got := target.ListFollow(tc.Input)
@@ -297,11 +297,11 @@ func TestUserRequestValidation_ListFollower(t *testing.T) {
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewUserRequestValidation()
 
 			got := target.ListFollower(tc.Input)
@@ -413,11 +413,11 @@ func TestUserRequestValidation_SearchUser(t *testing.T) {
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewUserRequestValidation()
 
 			got := target.SearchUser(tc.Input)

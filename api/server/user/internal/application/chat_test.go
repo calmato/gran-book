@@ -13,32 +13,36 @@ import (
 )
 
 func TestChatApplication_CreateRoom(t *testing.T) {
+	type args struct {
+		uid   string
+		input *input.CreateRoom
+	}
+	type want struct {
+		room *chat.Room
+		err  error
+	}
+
 	testCases := map[string]struct {
-		UID      string
-		Input    *input.CreateRoom
-		Expected struct {
-			Room  *chat.Room
-			Error error
-		}
+		args args
+		want want
 	}{
 		"ok": {
-			UID: "00000000-0000-0000-0000-000000000000",
-			Input: &input.CreateRoom{
-				UserIDs: []string{"00000000-0000-0000-0000-000000000000"},
-			},
-			Expected: struct {
-				Room  *chat.Room
-				Error error
-			}{
-				Room: &chat.Room{
+			args: args{
+				uid: "00000000-0000-0000-0000-000000000000",
+				input: &input.CreateRoom{
 					UserIDs: []string{"00000000-0000-0000-0000-000000000000"},
 				},
-				Error: nil,
+			},
+			want: want{
+				room: &chat.Room{
+					UserIDs: []string{"00000000-0000-0000-0000-000000000000"},
+				},
+				err: nil,
 			},
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
@@ -46,23 +50,23 @@ func TestChatApplication_CreateRoom(t *testing.T) {
 		defer ctrl.Finish()
 
 		crvm := mock_validation.NewMockChatRequestValidation(ctrl)
-		crvm.EXPECT().CreateRoom(tc.Input).Return(nil)
+		crvm.EXPECT().CreateRoom(tc.args.input).Return(nil)
 
 		csm := mock_chat.NewMockService(ctrl)
-		csm.EXPECT().CreateRoom(ctx, tc.Expected.Room).Return(tc.Expected.Error)
-		csm.EXPECT().ValidationRoom(ctx, tc.Expected.Room).Return(nil)
+		csm.EXPECT().ValidationRoom(ctx, tc.want.room).Return(nil)
+		csm.EXPECT().CreateRoom(ctx, tc.want.room).Return(tc.want.err)
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewChatApplication(crvm, csm)
 
-			got, err := target.CreateRoom(ctx, tc.Input, tc.UID)
-			if !reflect.DeepEqual(err, tc.Expected.Error) {
-				t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+			room, err := target.CreateRoom(ctx, tc.args.input, tc.args.uid)
+			if !reflect.DeepEqual(err, tc.want.err) {
+				t.Fatalf("want %#v, but %#v", tc.want.err, err)
 				return
 			}
 
-			if !reflect.DeepEqual(got, tc.Expected.Room) {
-				t.Fatalf("want %#v, but %#v", tc.Expected.Room, got)
+			if !reflect.DeepEqual(room, tc.want.room) {
+				t.Fatalf("want %#v, but %#v", tc.want.room, room)
 				return
 			}
 		})
