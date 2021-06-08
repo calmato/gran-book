@@ -10,8 +10,18 @@
 1. データベースの作成/更新
 2. Protobufでマイクロサービス間の通信を定義
 3. マイクロサービスの実装
-4. SwaggerでRest APIの仕様を定義
-5. BFF(API Gateway)の実装
+4. BloomRPCを利用して動作検証
+5. SwaggerでRest APIの仕様を定義
+6. BFF(API Gateway)の実装
+7. Swaggerを利用して動作検証
+
+## Protobufでマイクロサービス間の通信を定義
+
+1. Protocol BuffersからgRPCコードの生成
+    1. .protoファイルの更新
+        * proto/proto/[api name].go
+    2. リポジトリのルート直下で以下コマンドの実行
+        > $ make proto
 
 ## マイクロサービスの実装
 
@@ -46,6 +56,14 @@
     1. Protobufで生成されたコードを参考に、外部APIからのリクエスト/レスポンス処理の実装
         * internal/interface/grpc/v1/[domain].go
 
+5. 単体テストのコード作成
+    1. Infrastructure層のテストコード作成
+        * internal/infrastructure/service/[domain]_test.go
+        * internal/infrastructure/validation/[domain]_test.go
+    2. Application層のテストコード作成
+        * internal/application/[domain]_test.go
+        * internal/application/validation/[domain]_test.go
+
 ## BFF(API Gateway)の実装
 
 1. システム内で使用するオブジェクトの型定義
@@ -74,6 +92,56 @@
     * src/index.ts
 
 ---
+
+## 単体テストのフォーマット
+
+```go:sample_test.go
+func Test<interface name>_<method name>(t *testing.T) {
+	type args struct {
+		// Add the arguments to be passed to the function.
+	}
+	type want struct {
+		err error
+		// Add the return value from a function.
+	}
+
+	testCases := map[string]struct {
+		args args
+		want want
+	}{
+		"<test case name>": {
+			args: args{
+				// Add test cases.
+			},
+			want: want{
+				// Add test cases.
+			},
+		},
+	}
+
+	for name, tc := range testCases {
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		// Add dependencies for structure fields.
+
+		t.Run(name, func(t *testing.T) {
+			target := New<interface name>()
+
+			got, err := target.<method name>(ctx)
+			if !reflect.DeepEqual(err, tc.want.err) {
+				t.Fatalf("want %#v, but %#v", tc.want.err, err)
+				return
+			}
+
+			// Add other test items.
+		})
+	}
+}
+```
 
 ## 参考
 
