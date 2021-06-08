@@ -390,11 +390,11 @@ func TestBookRequestValidation_Book(t *testing.T) {
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewBookRequestValidation()
 
 			got := target.Book(tc.Input)
@@ -488,11 +488,11 @@ func TestBookRequestValidation_Bookshelf(t *testing.T) {
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewBookRequestValidation()
 
 			got := target.Bookshelf(tc.Input)
@@ -540,11 +540,11 @@ func TestBookRequestValidation_ListBookByBookIDs(t *testing.T) {
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewBookRequestValidation()
 
 			got := target.ListBookByBookIDs(tc.Input)
@@ -608,11 +608,11 @@ func TestBookRequestValidation_ListBookshelf(t *testing.T) {
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewBookRequestValidation()
 
 			got := target.ListBookshelf(tc.Input)
@@ -716,11 +716,11 @@ func TestBookRequestValidation_ListBookReview(t *testing.T) {
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewBookRequestValidation()
 
 			got := target.ListBookReview(tc.Input)
@@ -814,11 +814,11 @@ func TestBookRequestValidation_ListUserReview(t *testing.T) {
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewBookRequestValidation()
 
 			got := target.ListUserReview(tc.Input)
