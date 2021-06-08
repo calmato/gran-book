@@ -10,11 +10,11 @@
 <summary>依存関係</summary>
 
 * Frontend
-  * Node: 15.4.0
+  * Node: 16.1.0
   * Expo: 4.0.13
 * Backend
   * Golang: 1.15.6
-  * Node: 15.4.0
+  * Node: 16.1.0
   * MySQL: 8.0.22
 
 </details>
