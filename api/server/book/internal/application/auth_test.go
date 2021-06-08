@@ -20,7 +20,7 @@ func TestAuthApplication_Authentication(t *testing.T) {
 	}{
 		"ok": {
 			want: want{
-				uid:   "00000000-0000-0000-0000-000000000000",
+				uid: "00000000-0000-0000-0000-000000000000",
 				err: nil,
 			},
 		},
