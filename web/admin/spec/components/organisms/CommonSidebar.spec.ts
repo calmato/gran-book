@@ -94,7 +94,7 @@ describe('components/ogranisms/CommonSidebar', () => {
       it('developerItems', () => {
         expect(wrapper.vm.developerItems).toEqual([
           { icon: 'mdi-account', text: '利用者管理', to: '/' },
-          { icon: 'mdi-book', text: '書籍管理', to: '/' },
+          { icon: 'mdi-book', text: '書籍管理', to: '/books' },
           { icon: 'mdi-store', text: 'ECサイト管理', to: '/' },
         ])
       })

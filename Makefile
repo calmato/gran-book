@@ -56,7 +56,7 @@ start-swagger:
 .PHONY: proto migrate
 
 proto:
-	docker-compose run --rm proto bash -c "make install && make generate"
+	docker-compose run --rm proto make generate
 
 migrate:
 	docker-compose start mysql
