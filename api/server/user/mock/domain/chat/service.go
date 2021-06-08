@@ -6,6 +6,7 @@ package mock_chat
 
 import (
 	context "context"
+	domain "github.com/calmato/gran-book/api/server/user/internal/domain"
 	chat "github.com/calmato/gran-book/api/server/user/internal/domain/chat"
 	gomock "github.com/golang/mock/gomock"
 	reflect "reflect"
@@ -32,6 +33,21 @@ func NewMockService(ctrl *gomock.Controller) *MockService {
 // EXPECT returns an object that allows the caller to indicate expected use
 func (m *MockService) EXPECT() *MockServiceMockRecorder {
 	return m.recorder
+}
+
+// ListRoom mocks base method
+func (m *MockService) ListRoom(ctx context.Context, q *domain.ListQuery, uid string) ([]*chat.Room, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListRoom", ctx, q, uid)
+	ret0, _ := ret[0].([]*chat.Room)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListRoom indicates an expected call of ListRoom
+func (mr *MockServiceMockRecorder) ListRoom(ctx, q, uid interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListRoom", reflect.TypeOf((*MockService)(nil).ListRoom), ctx, q, uid)
 }
 
 // CreateRoom mocks base method

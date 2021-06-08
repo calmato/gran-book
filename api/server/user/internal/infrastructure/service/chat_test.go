@@ -5,10 +5,55 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/calmato/gran-book/api/server/user/internal/domain"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/chat"
 	mock_chat "github.com/calmato/gran-book/api/server/user/mock/domain/chat"
 	"github.com/golang/mock/gomock"
 )
+
+func TestChatService_ListRoom(t *testing.T) {
+	type args struct {
+		query *domain.ListQuery
+		uid   string
+	}
+	type want struct {
+		rooms []*chat.Room
+		err   error
+	}
+
+	testCases := map[string]struct {
+		args args
+		want want
+	}{}
+
+	for name, tc := range testCases {
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		cvm := mock_chat.NewMockValidation(ctrl)
+
+		crm := mock_chat.NewMockRepository(ctrl)
+		crm.EXPECT().ListRoom(ctx, tc.args.query, tc.args.uid).Return(tc.want.rooms, tc.want.err)
+
+		t.Run(name, func(t *testing.T) {
+			target := NewChatService(cvm, crm)
+
+			rooms, err := target.ListRoom(ctx, tc.args.query, tc.args.uid)
+			if !reflect.DeepEqual(err, tc.want.err) {
+				t.Fatalf("want %#v, but %#v", tc.want.err, err)
+				return
+			}
+
+			if !reflect.DeepEqual(rooms, tc.want.rooms) {
+				t.Fatalf("want %#v, but %#v", tc.want.rooms, rooms)
+				return
+			}
+		})
+	}
+}
 
 func TestChatService_CreateRoom(t *testing.T) {
 	type args struct {

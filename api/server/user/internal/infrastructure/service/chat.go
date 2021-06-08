@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/calmato/gran-book/api/server/user/internal/domain"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/chat"
 	"github.com/google/uuid"
 )
@@ -19,6 +20,10 @@ func NewChatService(cdv chat.Validation, cr chat.Repository) chat.Service {
 		chatDomainValidation: cdv,
 		chatRepository:       cr,
 	}
+}
+
+func (s *chatService) ListRoom(ctx context.Context, q *domain.ListQuery, uid string) ([]*chat.Room, error) {
+	return s.chatRepository.ListRoom(ctx, q, uid)
 }
 
 func (s *chatService) CreateRoom(ctx context.Context, cr *chat.Room) error {
