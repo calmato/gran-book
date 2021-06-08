@@ -13,25 +13,29 @@ import (
 )
 
 func TestBookService_List(t *testing.T) {
+	type args struct {
+		query *domain.ListQuery
+	}
+	type want struct {
+		books []*book.Book
+		err   error
+	}
+
 	testCases := map[string]struct {
-		Query    *domain.ListQuery
-		Expected struct {
-			Books []*book.Book
-			Error error
-		}
+		args args
+		want want
 	}{
 		"ok": {
-			Query: &domain.ListQuery{
-				Limit:      100,
-				Offset:     0,
-				Order:      nil,
-				Conditions: []*domain.QueryCondition{},
+			args: args{
+				query: &domain.ListQuery{
+					Limit:      100,
+					Offset:     0,
+					Order:      nil,
+					Conditions: []*domain.QueryCondition{},
+				},
 			},
-			Expected: struct {
-				Books []*book.Book
-				Error error
-			}{
-				Books: []*book.Book{
+			want: want{
+				books: []*book.Book{
 					{
 						ID:           1,
 						Title:        "テスト書籍",
@@ -47,13 +51,13 @@ func TestBookService_List(t *testing.T) {
 						Reviews:      []*book.Review{},
 					},
 				},
-				Error: nil,
+				err: nil,
 			},
 		},
 	}
 
-	for result, tc := range testCases {
-		t.Run(result, func(t *testing.T) {
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
 			ctx, cancel := context.WithCancel(context.Background())
 			defer cancel()
 
@@ -63,19 +67,19 @@ func TestBookService_List(t *testing.T) {
 			bvm := mock_book.NewMockValidation(ctrl)
 
 			brm := mock_book.NewMockRepository(ctrl)
-			brm.EXPECT().List(ctx, tc.Query).Return(tc.Expected.Books, tc.Expected.Error)
+			brm.EXPECT().List(ctx, tc.args.query).Return(tc.want.books, tc.want.err)
 
-			t.Run(result, func(t *testing.T) {
+			t.Run(name, func(t *testing.T) {
 				target := NewBookService(bvm, brm)
 
-				got, err := target.List(ctx, tc.Query)
-				if !reflect.DeepEqual(err, tc.Expected.Error) {
-					t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+				books, err := target.List(ctx, tc.args.query)
+				if !reflect.DeepEqual(err, tc.want.err) {
+					t.Fatalf("want %#v, but %#v", tc.want.err, err)
 					return
 				}
 
-				if !reflect.DeepEqual(got, tc.Expected.Books) {
-					t.Fatalf("want %#v, but %#v", tc.Expected.Books, got)
+				if !reflect.DeepEqual(books, tc.want.books) {
+					t.Fatalf("want %#v, but %#v", tc.want.books, books)
 					return
 				}
 			})
@@ -84,25 +88,29 @@ func TestBookService_List(t *testing.T) {
 }
 
 func TestBookService_ListBookshelf(t *testing.T) {
+	type args struct {
+		query *domain.ListQuery
+	}
+	type want struct {
+		bookshelves []*book.Bookshelf
+		err         error
+	}
+
 	testCases := map[string]struct {
-		Query    *domain.ListQuery
-		Expected struct {
-			Bookshelves []*book.Bookshelf
-			Error       error
-		}
+		args args
+		want want
 	}{
 		"ok": {
-			Query: &domain.ListQuery{
-				Limit:      100,
-				Offset:     0,
-				Order:      nil,
-				Conditions: []*domain.QueryCondition{},
+			args: args{
+				query: &domain.ListQuery{
+					Limit:      100,
+					Offset:     0,
+					Order:      nil,
+					Conditions: []*domain.QueryCondition{},
+				},
 			},
-			Expected: struct {
-				Bookshelves []*book.Bookshelf
-				Error       error
-			}{
-				Bookshelves: []*book.Bookshelf{
+			want: want{
+				bookshelves: []*book.Bookshelf{
 					{
 						ID:        0,
 						BookID:    1,
@@ -112,13 +120,13 @@ func TestBookService_ListBookshelf(t *testing.T) {
 						UpdatedAt: time.Time{},
 					},
 				},
-				Error: nil,
+				err: nil,
 			},
 		},
 	}
 
-	for result, tc := range testCases {
-		t.Run(result, func(t *testing.T) {
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
 			ctx, cancel := context.WithCancel(context.Background())
 			defer cancel()
 
@@ -128,19 +136,19 @@ func TestBookService_ListBookshelf(t *testing.T) {
 			bvm := mock_book.NewMockValidation(ctrl)
 
 			brm := mock_book.NewMockRepository(ctrl)
-			brm.EXPECT().ListBookshelf(ctx, tc.Query).Return(tc.Expected.Bookshelves, tc.Expected.Error)
+			brm.EXPECT().ListBookshelf(ctx, tc.args.query).Return(tc.want.bookshelves, tc.want.err)
 
-			t.Run(result, func(t *testing.T) {
+			t.Run(name, func(t *testing.T) {
 				target := NewBookService(bvm, brm)
 
-				got, err := target.ListBookshelf(ctx, tc.Query)
-				if !reflect.DeepEqual(err, tc.Expected.Error) {
-					t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+				bookshelves, err := target.ListBookshelf(ctx, tc.args.query)
+				if !reflect.DeepEqual(err, tc.want.err) {
+					t.Fatalf("want %#v, but %#v", tc.want.err, err)
 					return
 				}
 
-				if !reflect.DeepEqual(got, tc.Expected.Bookshelves) {
-					t.Fatalf("want %#v, but %#v", tc.Expected.Bookshelves, got)
+				if !reflect.DeepEqual(bookshelves, tc.want.bookshelves) {
+					t.Fatalf("want %#v, but %#v", tc.want.bookshelves, bookshelves)
 					return
 				}
 			})
@@ -149,25 +157,29 @@ func TestBookService_ListBookshelf(t *testing.T) {
 }
 
 func TestBookService_ListReview(t *testing.T) {
+	type args struct {
+		query *domain.ListQuery
+	}
+	type want struct {
+		reviews []*book.Review
+		err     error
+	}
+
 	testCases := map[string]struct {
-		Query    *domain.ListQuery
-		Expected struct {
-			Reviews []*book.Review
-			Error   error
-		}
+		args args
+		want want
 	}{
 		"ok": {
-			Query: &domain.ListQuery{
-				Limit:      100,
-				Offset:     0,
-				Order:      nil,
-				Conditions: []*domain.QueryCondition{},
+			args: args{
+				query: &domain.ListQuery{
+					Limit:      100,
+					Offset:     0,
+					Order:      nil,
+					Conditions: []*domain.QueryCondition{},
+				},
 			},
-			Expected: struct {
-				Reviews []*book.Review
-				Error   error
-			}{
-				Reviews: []*book.Review{
+			want: want{
+				reviews: []*book.Review{
 					{
 						ID:         1,
 						BookID:     1,
@@ -178,13 +190,13 @@ func TestBookService_ListReview(t *testing.T) {
 						UpdatedAt:  time.Time{},
 					},
 				},
-				Error: nil,
+				err: nil,
 			},
 		},
 	}
 
-	for result, tc := range testCases {
-		t.Run(result, func(t *testing.T) {
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
 			ctx, cancel := context.WithCancel(context.Background())
 			defer cancel()
 
@@ -194,19 +206,19 @@ func TestBookService_ListReview(t *testing.T) {
 			bvm := mock_book.NewMockValidation(ctrl)
 
 			brm := mock_book.NewMockRepository(ctrl)
-			brm.EXPECT().ListReview(ctx, tc.Query).Return(tc.Expected.Reviews, tc.Expected.Error)
+			brm.EXPECT().ListReview(ctx, tc.args.query).Return(tc.want.reviews, tc.want.err)
 
-			t.Run(result, func(t *testing.T) {
+			t.Run(name, func(t *testing.T) {
 				target := NewBookService(bvm, brm)
 
-				got, err := target.ListReview(ctx, tc.Query)
-				if !reflect.DeepEqual(err, tc.Expected.Error) {
-					t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+				reviews, err := target.ListReview(ctx, tc.args.query)
+				if !reflect.DeepEqual(err, tc.want.err) {
+					t.Fatalf("want %#v, but %#v", tc.want.err, err)
 					return
 				}
 
-				if !reflect.DeepEqual(got, tc.Expected.Reviews) {
-					t.Fatalf("want %#v, but %#v", tc.Expected.Reviews, got)
+				if !reflect.DeepEqual(reviews, tc.want.reviews) {
+					t.Fatalf("want %#v, but %#v", tc.want.reviews, reviews)
 					return
 				}
 			})
@@ -215,32 +227,36 @@ func TestBookService_ListReview(t *testing.T) {
 }
 
 func TestUserService_ListCount(t *testing.T) {
+	type args struct {
+		query *domain.ListQuery
+	}
+	type want struct {
+		count int
+		err   error
+	}
+
 	testCases := map[string]struct {
-		Query    *domain.ListQuery
-		Expected struct {
-			Count int
-			Error error
-		}
+		args args
+		want want
 	}{
 		"ok": {
-			Query: &domain.ListQuery{
-				Limit:      100,
-				Offset:     0,
-				Order:      nil,
-				Conditions: []*domain.QueryCondition{},
+			args: args{
+				query: &domain.ListQuery{
+					Limit:      100,
+					Offset:     0,
+					Order:      nil,
+					Conditions: []*domain.QueryCondition{},
+				},
 			},
-			Expected: struct {
-				Count int
-				Error error
-			}{
-				Count: 1,
-				Error: nil,
+			want: want{
+				count: 1,
+				err:   nil,
 			},
 		},
 	}
 
-	for result, tc := range testCases {
-		t.Run(result, func(t *testing.T) {
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
 			ctx, cancel := context.WithCancel(context.Background())
 			defer cancel()
 
@@ -250,19 +266,19 @@ func TestUserService_ListCount(t *testing.T) {
 			bvm := mock_book.NewMockValidation(ctrl)
 
 			brm := mock_book.NewMockRepository(ctrl)
-			brm.EXPECT().ListCount(ctx, tc.Query).Return(tc.Expected.Count, tc.Expected.Error)
+			brm.EXPECT().ListCount(ctx, tc.args.query).Return(tc.want.count, tc.want.err)
 
-			t.Run(result, func(t *testing.T) {
+			t.Run(name, func(t *testing.T) {
 				target := NewBookService(bvm, brm)
 
-				got, err := target.ListCount(ctx, tc.Query)
-				if !reflect.DeepEqual(err, tc.Expected.Error) {
-					t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+				count, err := target.ListCount(ctx, tc.args.query)
+				if !reflect.DeepEqual(err, tc.want.err) {
+					t.Fatalf("want %#v, but %#v", tc.want.err, err)
 					return
 				}
 
-				if !reflect.DeepEqual(got, tc.Expected.Count) {
-					t.Fatalf("want %#v, but %#v", tc.Expected.Count, got)
+				if !reflect.DeepEqual(count, tc.want.count) {
+					t.Fatalf("want %#v, but %#v", tc.want.count, count)
 					return
 				}
 			})
@@ -271,32 +287,36 @@ func TestUserService_ListCount(t *testing.T) {
 }
 
 func TestUserService_ListBookshelfCount(t *testing.T) {
+	type args struct {
+		query *domain.ListQuery
+	}
+	type want struct {
+		count int
+		err   error
+	}
+
 	testCases := map[string]struct {
-		Query    *domain.ListQuery
-		Expected struct {
-			Count int
-			Error error
-		}
+		args args
+		want want
 	}{
 		"ok": {
-			Query: &domain.ListQuery{
-				Limit:      100,
-				Offset:     0,
-				Order:      nil,
-				Conditions: []*domain.QueryCondition{},
+			args: args{
+				query: &domain.ListQuery{
+					Limit:      100,
+					Offset:     0,
+					Order:      nil,
+					Conditions: []*domain.QueryCondition{},
+				},
 			},
-			Expected: struct {
-				Count int
-				Error error
-			}{
-				Count: 1,
-				Error: nil,
+			want: want{
+				count: 1,
+				err:   nil,
 			},
 		},
 	}
 
-	for result, tc := range testCases {
-		t.Run(result, func(t *testing.T) {
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
 			ctx, cancel := context.WithCancel(context.Background())
 			defer cancel()
 
@@ -306,19 +326,19 @@ func TestUserService_ListBookshelfCount(t *testing.T) {
 			bvm := mock_book.NewMockValidation(ctrl)
 
 			brm := mock_book.NewMockRepository(ctrl)
-			brm.EXPECT().ListBookshelfCount(ctx, tc.Query).Return(tc.Expected.Count, tc.Expected.Error)
+			brm.EXPECT().ListBookshelfCount(ctx, tc.args.query).Return(tc.want.count, tc.want.err)
 
-			t.Run(result, func(t *testing.T) {
+			t.Run(name, func(t *testing.T) {
 				target := NewBookService(bvm, brm)
 
-				got, err := target.ListBookshelfCount(ctx, tc.Query)
-				if !reflect.DeepEqual(err, tc.Expected.Error) {
-					t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+				count, err := target.ListBookshelfCount(ctx, tc.args.query)
+				if !reflect.DeepEqual(err, tc.want.err) {
+					t.Fatalf("want %#v, but %#v", tc.want.err, err)
 					return
 				}
 
-				if !reflect.DeepEqual(got, tc.Expected.Count) {
-					t.Fatalf("want %#v, but %#v", tc.Expected.Count, got)
+				if !reflect.DeepEqual(count, tc.want.count) {
+					t.Fatalf("want %#v, but %#v", tc.want.count, count)
 					return
 				}
 			})
@@ -327,32 +347,36 @@ func TestUserService_ListBookshelfCount(t *testing.T) {
 }
 
 func TestUserService_ListReviewCount(t *testing.T) {
+	type args struct {
+		query *domain.ListQuery
+	}
+	type want struct {
+		count int
+		err   error
+	}
+
 	testCases := map[string]struct {
-		Query    *domain.ListQuery
-		Expected struct {
-			Count int
-			Error error
-		}
+		args args
+		want want
 	}{
 		"ok": {
-			Query: &domain.ListQuery{
-				Limit:      100,
-				Offset:     0,
-				Order:      nil,
-				Conditions: []*domain.QueryCondition{},
+			args: args{
+				query: &domain.ListQuery{
+					Limit:      100,
+					Offset:     0,
+					Order:      nil,
+					Conditions: []*domain.QueryCondition{},
+				},
 			},
-			Expected: struct {
-				Count int
-				Error error
-			}{
-				Count: 1,
-				Error: nil,
+			want: want{
+				count: 1,
+				err:   nil,
 			},
 		},
 	}
 
-	for result, tc := range testCases {
-		t.Run(result, func(t *testing.T) {
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
 			ctx, cancel := context.WithCancel(context.Background())
 			defer cancel()
 
@@ -362,19 +386,19 @@ func TestUserService_ListReviewCount(t *testing.T) {
 			bvm := mock_book.NewMockValidation(ctrl)
 
 			brm := mock_book.NewMockRepository(ctrl)
-			brm.EXPECT().ListReviewCount(ctx, tc.Query).Return(tc.Expected.Count, tc.Expected.Error)
+			brm.EXPECT().ListReviewCount(ctx, tc.args.query).Return(tc.want.count, tc.want.err)
 
-			t.Run(result, func(t *testing.T) {
+			t.Run(name, func(t *testing.T) {
 				target := NewBookService(bvm, brm)
 
-				got, err := target.ListReviewCount(ctx, tc.Query)
-				if !reflect.DeepEqual(err, tc.Expected.Error) {
-					t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+				count, err := target.ListReviewCount(ctx, tc.args.query)
+				if !reflect.DeepEqual(err, tc.want.err) {
+					t.Fatalf("want %#v, but %#v", tc.want.err, err)
 					return
 				}
 
-				if !reflect.DeepEqual(got, tc.Expected.Count) {
-					t.Fatalf("want %#v, but %#v", tc.Expected.Count, got)
+				if !reflect.DeepEqual(count, tc.want.count) {
+					t.Fatalf("want %#v, but %#v", tc.want.count, count)
 					return
 				}
 			})
@@ -383,20 +407,24 @@ func TestUserService_ListReviewCount(t *testing.T) {
 }
 
 func TestBookService_Show(t *testing.T) {
+	type args struct {
+		bookID int
+	}
+	type want struct {
+		book *book.Book
+		err  error
+	}
+
 	testCases := map[string]struct {
-		BookID   int
-		Expected struct {
-			Book  *book.Book
-			Error error
-		}
+		args args
+		want want
 	}{
 		"ok": {
-			BookID: 1,
-			Expected: struct {
-				Book  *book.Book
-				Error error
-			}{
-				Book: &book.Book{
+			args: args{
+				bookID: 1,
+			},
+			want: want{
+				book: &book.Book{
 					ID:           1,
 					Title:        "テスト書籍",
 					TitleKana:    "てすとしょせき",
@@ -405,18 +433,14 @@ func TestBookService_Show(t *testing.T) {
 					Publisher:    "テスト著者",
 					PublishedOn:  "2021年12月24日",
 					ThumbnailURL: "",
-					CreatedAt:    time.Time{},
-					UpdatedAt:    time.Time{},
-					Authors:      []*book.Author{},
-					Reviews:      []*book.Review{},
 				},
-				Error: nil,
+				err: nil,
 			},
 		},
 	}
 
-	for result, tc := range testCases {
-		t.Run(result, func(t *testing.T) {
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
 			ctx, cancel := context.WithCancel(context.Background())
 			defer cancel()
 
@@ -426,19 +450,19 @@ func TestBookService_Show(t *testing.T) {
 			bvm := mock_book.NewMockValidation(ctrl)
 
 			brm := mock_book.NewMockRepository(ctrl)
-			brm.EXPECT().Show(ctx, tc.BookID).Return(tc.Expected.Book, tc.Expected.Error)
+			brm.EXPECT().Show(ctx, tc.want.book.ID).Return(tc.want.book, tc.want.err)
 
-			t.Run(result, func(t *testing.T) {
+			t.Run(name, func(t *testing.T) {
 				target := NewBookService(bvm, brm)
 
-				got, err := target.Show(ctx, tc.BookID)
-				if !reflect.DeepEqual(err, tc.Expected.Error) {
-					t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+				book, err := target.Show(ctx, tc.args.bookID)
+				if !reflect.DeepEqual(err, tc.want.err) {
+					t.Fatalf("want %#v, but %#v", tc.want.err, err)
 					return
 				}
 
-				if !reflect.DeepEqual(got, tc.Expected.Book) {
-					t.Fatalf("want %#v, but %#v", tc.Expected.Book, got)
+				if !reflect.DeepEqual(book, tc.want.book) {
+					t.Fatalf("want %#v, but %#v", tc.want.book, book)
 					return
 				}
 			})
@@ -447,20 +471,24 @@ func TestBookService_Show(t *testing.T) {
 }
 
 func TestBookService_ShowByIsbn(t *testing.T) {
+	type args struct {
+		isbn string
+	}
+	type want struct {
+		book *book.Book
+		err  error
+	}
+
 	testCases := map[string]struct {
-		Isbn     string
-		Expected struct {
-			Book  *book.Book
-			Error error
-		}
+		args args
+		want want
 	}{
 		"ok": {
-			Isbn: "978-1-234-56789-7",
-			Expected: struct {
-				Book  *book.Book
-				Error error
-			}{
-				Book: &book.Book{
+			args: args{
+				isbn: "978-1-234-56789-7",
+			},
+			want: want{
+				book: &book.Book{
 					ID:           1,
 					Title:        "テスト書籍",
 					TitleKana:    "てすとしょせき",
@@ -469,18 +497,14 @@ func TestBookService_ShowByIsbn(t *testing.T) {
 					Publisher:    "テスト著者",
 					PublishedOn:  "2021年12月24日",
 					ThumbnailURL: "",
-					CreatedAt:    time.Time{},
-					UpdatedAt:    time.Time{},
-					Authors:      []*book.Author{},
-					Reviews:      []*book.Review{},
 				},
-				Error: nil,
+				err: nil,
 			},
 		},
 	}
 
-	for result, tc := range testCases {
-		t.Run(result, func(t *testing.T) {
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
 			ctx, cancel := context.WithCancel(context.Background())
 			defer cancel()
 
@@ -490,19 +514,19 @@ func TestBookService_ShowByIsbn(t *testing.T) {
 			bvm := mock_book.NewMockValidation(ctrl)
 
 			brm := mock_book.NewMockRepository(ctrl)
-			brm.EXPECT().ShowByIsbn(ctx, tc.Isbn).Return(tc.Expected.Book, tc.Expected.Error)
+			brm.EXPECT().ShowByIsbn(ctx, tc.args.isbn).Return(tc.want.book, tc.want.err)
 
-			t.Run(result, func(t *testing.T) {
+			t.Run(name, func(t *testing.T) {
 				target := NewBookService(bvm, brm)
 
-				got, err := target.ShowByIsbn(ctx, tc.Isbn)
-				if !reflect.DeepEqual(err, tc.Expected.Error) {
-					t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+				book, err := target.ShowByIsbn(ctx, tc.args.isbn)
+				if !reflect.DeepEqual(err, tc.want.err) {
+					t.Fatalf("want %#v, but %#v", tc.want.err, err)
 					return
 				}
 
-				if !reflect.DeepEqual(got, tc.Expected.Book) {
-					t.Fatalf("want %#v, but %#v", tc.Expected.Book, got)
+				if !reflect.DeepEqual(book, tc.want.book) {
+					t.Fatalf("want %#v, but %#v", tc.want.book, book)
 					return
 				}
 			})
@@ -511,36 +535,38 @@ func TestBookService_ShowByIsbn(t *testing.T) {
 }
 
 func TestBookService_ShowBookshelfByUserIDAndBookID(t *testing.T) {
+	type args struct {
+		userID string
+		bookID int
+	}
+	type want struct {
+		bookshelf *book.Bookshelf
+		err       error
+	}
+
 	testCases := map[string]struct {
-		UserID   string
-		BookID   int
-		Expected struct {
-			Bookshelf *book.Bookshelf
-			Error     error
-		}
+		args args
+		want want
 	}{
 		"ok": {
-			UserID: "00000000-0000-0000-0000-000000000000",
-			BookID: 1,
-			Expected: struct {
-				Bookshelf *book.Bookshelf
-				Error     error
-			}{
-				Bookshelf: &book.Bookshelf{
-					ID:        0,
-					BookID:    1,
-					UserID:    "00000000-0000-0000-0000-000000000000",
-					Status:    5,
-					CreatedAt: time.Time{},
-					UpdatedAt: time.Time{},
+			args: args{
+				userID: "00000000-0000-0000-0000-000000000000",
+				bookID: 1,
+			},
+			want: want{
+				bookshelf: &book.Bookshelf{
+					ID:     1,
+					BookID: 1,
+					UserID: "00000000-0000-0000-0000-000000000000",
+					Status: 5,
 				},
-				Error: nil,
+				err: nil,
 			},
 		},
 	}
 
-	for result, tc := range testCases {
-		t.Run(result, func(t *testing.T) {
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
 			ctx, cancel := context.WithCancel(context.Background())
 			defer cancel()
 
@@ -551,20 +577,20 @@ func TestBookService_ShowBookshelfByUserIDAndBookID(t *testing.T) {
 
 			brm := mock_book.NewMockRepository(ctrl)
 			brm.EXPECT().
-				ShowBookshelfByUserIDAndBookID(ctx, tc.UserID, tc.BookID).
-				Return(tc.Expected.Bookshelf, tc.Expected.Error)
+				ShowBookshelfByUserIDAndBookID(ctx, tc.args.userID, tc.args.bookID).
+				Return(tc.want.bookshelf, tc.want.err)
 
-			t.Run(result, func(t *testing.T) {
+			t.Run(name, func(t *testing.T) {
 				target := NewBookService(bvm, brm)
 
-				got, err := target.ShowBookshelfByUserIDAndBookID(ctx, tc.UserID, tc.BookID)
-				if !reflect.DeepEqual(err, tc.Expected.Error) {
-					t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+				bookshelf, err := target.ShowBookshelfByUserIDAndBookID(ctx, tc.args.userID, tc.args.bookID)
+				if !reflect.DeepEqual(err, tc.want.err) {
+					t.Fatalf("want %#v, but %#v", tc.want.err, err)
 					return
 				}
 
-				if !reflect.DeepEqual(got, tc.Expected.Bookshelf) {
-					t.Fatalf("want %#v, but %#v", tc.Expected.Bookshelf, got)
+				if !reflect.DeepEqual(bookshelf, tc.want.bookshelf) {
+					t.Fatalf("want %#v, but %#v", tc.want.bookshelf, bookshelf)
 					return
 				}
 			})
@@ -573,34 +599,37 @@ func TestBookService_ShowBookshelfByUserIDAndBookID(t *testing.T) {
 }
 
 func TestBookService_ShowReview(t *testing.T) {
+	type args struct {
+		reviewID int
+	}
+	type want struct {
+		review *book.Review
+		err    error
+	}
+
 	testCases := map[string]struct {
-		ReviewID int
-		Expected struct {
-			Review *book.Review
-			Error  error
-		}
+		args args
+		want want
 	}{
 		"ok": {
-			ReviewID: 1,
-			Expected: struct {
-				Review *book.Review
-				Error  error
-			}{
-				Review: &book.Review{
+			args: args{
+				reviewID: 1,
+			},
+			want: want{
+				review: &book.Review{
 					ID:         1,
 					BookID:     1,
 					UserID:     "00000000-0000-0000-0000-000000000000",
 					Score:      1,
 					Impression: "読んだ感想です。",
-					CreatedAt:  time.Time{},
-					UpdatedAt:  time.Time{},
 				},
+				err: nil,
 			},
 		},
 	}
 
-	for result, tc := range testCases {
-		t.Run(result, func(t *testing.T) {
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
 			ctx, cancel := context.WithCancel(context.Background())
 			defer cancel()
 
@@ -610,19 +639,19 @@ func TestBookService_ShowReview(t *testing.T) {
 			bvm := mock_book.NewMockValidation(ctrl)
 
 			brm := mock_book.NewMockRepository(ctrl)
-			brm.EXPECT().ShowReview(ctx, tc.ReviewID).Return(tc.Expected.Review, tc.Expected.Error)
+			brm.EXPECT().ShowReview(ctx, tc.args.reviewID).Return(tc.want.review, tc.want.err)
 
-			t.Run(result, func(t *testing.T) {
+			t.Run(name, func(t *testing.T) {
 				target := NewBookService(bvm, brm)
 
-				got, err := target.ShowReview(ctx, tc.ReviewID)
-				if !reflect.DeepEqual(err, tc.Expected.Error) {
-					t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+				review, err := target.ShowReview(ctx, tc.args.reviewID)
+				if !reflect.DeepEqual(err, tc.want.err) {
+					t.Fatalf("want %#v, but %#v", tc.want.err, err)
 					return
 				}
 
-				if !reflect.DeepEqual(got, tc.Expected.Review) {
-					t.Fatalf("want %#v, but %#v", tc.Expected.Review, got)
+				if !reflect.DeepEqual(review, tc.want.review) {
+					t.Fatalf("want %#v, but %#v", tc.want.review, review)
 					return
 				}
 			})
@@ -631,36 +660,39 @@ func TestBookService_ShowReview(t *testing.T) {
 }
 
 func TestBookService_ShowReviewByUserIDAndBookID(t *testing.T) {
+	type args struct {
+		userID string
+		bookID int
+	}
+	type want struct {
+		review *book.Review
+		err    error
+	}
+
 	testCases := map[string]struct {
-		UserID   string
-		BookID   int
-		Expected struct {
-			Review *book.Review
-			Error  error
-		}
+		args args
+		want want
 	}{
 		"ok": {
-			UserID: "00000000-0000-0000-0000-000000000000",
-			BookID: 1,
-			Expected: struct {
-				Review *book.Review
-				Error  error
-			}{
-				Review: &book.Review{
-					ID:         0,
+			args: args{
+				userID: "00000000-0000-0000-0000-000000000000",
+				bookID: 1,
+			},
+			want: want{
+				review: &book.Review{
+					ID:         1,
 					BookID:     1,
 					UserID:     "00000000-0000-0000-0000-000000000000",
 					Score:      1,
 					Impression: "読んだ感想です。",
-					CreatedAt:  time.Time{},
-					UpdatedAt:  time.Time{},
 				},
+				err: nil,
 			},
 		},
 	}
 
-	for result, tc := range testCases {
-		t.Run(result, func(t *testing.T) {
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
 			ctx, cancel := context.WithCancel(context.Background())
 			defer cancel()
 
@@ -671,20 +703,20 @@ func TestBookService_ShowReviewByUserIDAndBookID(t *testing.T) {
 
 			brm := mock_book.NewMockRepository(ctrl)
 			brm.EXPECT().
-				ShowReviewByUserIDAndBookID(ctx, tc.UserID, tc.BookID).
-				Return(tc.Expected.Review, tc.Expected.Error)
+				ShowReviewByUserIDAndBookID(ctx, tc.args.userID, tc.args.bookID).
+				Return(tc.want.review, tc.want.err)
 
-			t.Run(result, func(t *testing.T) {
+			t.Run(name, func(t *testing.T) {
 				target := NewBookService(bvm, brm)
 
-				got, err := target.ShowReviewByUserIDAndBookID(ctx, tc.UserID, tc.BookID)
-				if !reflect.DeepEqual(err, tc.Expected.Error) {
-					t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+				review, err := target.ShowReviewByUserIDAndBookID(ctx, tc.args.userID, tc.args.bookID)
+				if !reflect.DeepEqual(err, tc.want.err) {
+					t.Fatalf("want %#v, but %#v", tc.want.err, err)
 					return
 				}
 
-				if !reflect.DeepEqual(got, tc.Expected.Review) {
-					t.Fatalf("want %#v, but %#v", tc.Expected.Review, got)
+				if !reflect.DeepEqual(review, tc.want.review) {
+					t.Fatalf("want %#v, but %#v", tc.want.review, review)
 					return
 				}
 			})
@@ -693,28 +725,34 @@ func TestBookService_ShowReviewByUserIDAndBookID(t *testing.T) {
 }
 
 func TestBookService_Create(t *testing.T) {
+	type args struct {
+		book *book.Book
+	}
+
 	testCases := map[string]struct {
-		Book     *book.Book
-		Expected error
+		args args
+		want error
 	}{
 		"ok": {
-			Book: &book.Book{
-				Title:        "テスト書籍",
-				TitleKana:    "てすとしょせき",
-				Description:  "本の説明です",
-				Isbn:         "1234567890123",
-				Publisher:    "テスト著者",
-				PublishedOn:  "2021年12月24日",
-				ThumbnailURL: "",
-				Authors:      []*book.Author{},
-				Reviews:      []*book.Review{},
+			args: args{
+				book: &book.Book{
+					Title:        "テスト書籍",
+					TitleKana:    "てすとしょせき",
+					Description:  "本の説明です",
+					Isbn:         "1234567890123",
+					Publisher:    "テスト著者",
+					PublishedOn:  "2021年12月24日",
+					ThumbnailURL: "",
+					Authors:      []*book.Author{},
+					Reviews:      []*book.Review{},
+				},
 			},
-			Expected: nil,
+			want: nil,
 		},
 	}
 
-	for result, tc := range testCases {
-		t.Run(result, func(t *testing.T) {
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
 			ctx, cancel := context.WithCancel(context.Background())
 			defer cancel()
 
@@ -724,26 +762,26 @@ func TestBookService_Create(t *testing.T) {
 			bvm := mock_book.NewMockValidation(ctrl)
 
 			brm := mock_book.NewMockRepository(ctrl)
-			brm.EXPECT().Create(ctx, tc.Book).Return(tc.Expected)
-			for _, a := range tc.Book.Authors {
-				brm.EXPECT().ShowOrCreateAuthor(ctx, a).Return(tc.Expected)
+			brm.EXPECT().Create(ctx, tc.args.book).Return(tc.want)
+			for _, a := range tc.args.book.Authors {
+				brm.EXPECT().ShowOrCreateAuthor(ctx, a).Return(nil)
 			}
 
-			t.Run(result, func(t *testing.T) {
+			t.Run(name, func(t *testing.T) {
 				target := NewBookService(bvm, brm)
 
-				err := target.Create(ctx, tc.Book)
-				if !reflect.DeepEqual(err, tc.Expected) {
-					t.Fatalf("want %#v, but %#v", tc.Expected, err)
+				err := target.Create(ctx, tc.args.book)
+				if !reflect.DeepEqual(err, tc.want) {
+					t.Fatalf("want %#v, but %#v", tc.want, err)
 					return
 				}
 
-				if tc.Book.CreatedAt.IsZero() {
+				if tc.args.book.CreatedAt.IsZero() {
 					t.Fatal("CreatedAt must be not null")
 					return
 				}
 
-				if tc.Book.UpdatedAt.IsZero() {
+				if tc.args.book.UpdatedAt.IsZero() {
 					t.Fatal("UpdatedAt must be not null")
 					return
 				}
@@ -753,22 +791,28 @@ func TestBookService_Create(t *testing.T) {
 }
 
 func TestBookService_CreateBookshelf(t *testing.T) {
+	type args struct {
+		bookshelf *book.Bookshelf
+	}
+
 	testCases := map[string]struct {
-		Bookshelf *book.Bookshelf
-		Expected  error
+		args args
+		want error
 	}{
 		"ok": {
-			Bookshelf: &book.Bookshelf{
-				BookID: 1,
-				UserID: "00000000-0000-0000-0000-000000000000",
-				Status: 5,
+			args: args{
+				bookshelf: &book.Bookshelf{
+					BookID: 1,
+					UserID: "00000000-0000-0000-0000-000000000000",
+					Status: 5,
+				},
 			},
-			Expected: nil,
+			want: nil,
 		},
 	}
 
-	for result, tc := range testCases {
-		t.Run(result, func(t *testing.T) {
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
 			ctx, cancel := context.WithCancel(context.Background())
 			defer cancel()
 
@@ -778,23 +822,23 @@ func TestBookService_CreateBookshelf(t *testing.T) {
 			bvm := mock_book.NewMockValidation(ctrl)
 
 			brm := mock_book.NewMockRepository(ctrl)
-			brm.EXPECT().CreateBookshelf(ctx, tc.Bookshelf).Return(tc.Expected)
+			brm.EXPECT().CreateBookshelf(ctx, tc.args.bookshelf).Return(tc.want)
 
-			t.Run(result, func(t *testing.T) {
+			t.Run(name, func(t *testing.T) {
 				target := NewBookService(bvm, brm)
 
-				err := target.CreateBookshelf(ctx, tc.Bookshelf)
-				if !reflect.DeepEqual(err, tc.Expected) {
-					t.Fatalf("want %#v, but %#v", tc.Expected, err)
+				err := target.CreateBookshelf(ctx, tc.args.bookshelf)
+				if !reflect.DeepEqual(err, tc.want) {
+					t.Fatalf("want %#v, but %#v", tc.want, err)
 					return
 				}
 
-				if tc.Bookshelf.CreatedAt.IsZero() {
+				if tc.args.bookshelf.CreatedAt.IsZero() {
 					t.Fatal("CreatedAt must be not null")
 					return
 				}
 
-				if tc.Bookshelf.UpdatedAt.IsZero() {
+				if tc.args.bookshelf.UpdatedAt.IsZero() {
 					t.Fatal("UpdatedAt must be not null")
 					return
 				}
@@ -804,32 +848,37 @@ func TestBookService_CreateBookshelf(t *testing.T) {
 }
 
 func TestBookService_Update(t *testing.T) {
+	type args struct {
+		book *book.Book
+	}
+
 	testCases := map[string]struct {
-		Book     *book.Book
-		Expected error
+		args args
+		want error
 	}{
 		"ok": {
-			Book: &book.Book{
-				ID:           1,
-				Title:        "テスト書籍",
-				Description:  "本の説明",
-				Isbn:         "978-1-234-56789-7",
-				ThumbnailURL: "",
-				Publisher:    "テスト出版社",
-				PublishedOn:  "2021年12月24日",
-				Reviews:      []*book.Review{},
-				Authors: []*book.Author{{
-					ID:       1,
-					Name:     "テスト著者",
-					NameKana: "てすとちょしゃ",
-				}},
+			args: args{
+				book: &book.Book{
+					ID:           1,
+					Title:        "テスト書籍",
+					Description:  "本の説明",
+					Isbn:         "978-1-234-56789-7",
+					ThumbnailURL: "",
+					Publisher:    "テスト出版社",
+					PublishedOn:  "2021年12月24日",
+					Authors: []*book.Author{{
+						ID:       1,
+						Name:     "テスト著者",
+						NameKana: "てすとちょしゃ",
+					}},
+				},
 			},
-			Expected: nil,
+			want: nil,
 		},
 	}
 
-	for result, tc := range testCases {
-		t.Run(result, func(t *testing.T) {
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
 			ctx, cancel := context.WithCancel(context.Background())
 			defer cancel()
 
@@ -839,21 +888,21 @@ func TestBookService_Update(t *testing.T) {
 			bvm := mock_book.NewMockValidation(ctrl)
 
 			brm := mock_book.NewMockRepository(ctrl)
-			brm.EXPECT().Update(ctx, tc.Book).Return(tc.Expected)
-			for _, a := range tc.Book.Authors {
-				brm.EXPECT().ShowOrCreateAuthor(ctx, a).Return(tc.Expected)
+			brm.EXPECT().Update(ctx, tc.args.book).Return(tc.want)
+			for _, a := range tc.args.book.Authors {
+				brm.EXPECT().ShowOrCreateAuthor(ctx, a).Return(nil)
 			}
 
-			t.Run(result, func(t *testing.T) {
+			t.Run(name, func(t *testing.T) {
 				target := NewBookService(bvm, brm)
 
-				err := target.Update(ctx, tc.Book)
-				if !reflect.DeepEqual(err, tc.Expected) {
-					t.Fatalf("want %#v, but %#v", tc.Expected, err)
+				err := target.Update(ctx, tc.args.book)
+				if !reflect.DeepEqual(err, tc.want) {
+					t.Fatalf("want %#v, but %#v", tc.want, err)
 					return
 				}
 
-				if tc.Book.UpdatedAt.IsZero() {
+				if tc.args.book.UpdatedAt.IsZero() {
 					t.Fatal("UpdatedAt must be not null")
 					return
 				}
@@ -863,23 +912,29 @@ func TestBookService_Update(t *testing.T) {
 }
 
 func TestBookService_UpdateBookshelf(t *testing.T) {
+	type args struct {
+		bookshelf *book.Bookshelf
+	}
+
 	testCases := map[string]struct {
-		Bookshelf *book.Bookshelf
-		Expected  error
+		args args
+		want error
 	}{
 		"ok": {
-			Bookshelf: &book.Bookshelf{
-				ID:     1,
-				BookID: 1,
-				UserID: "00000000-0000-0000-0000-000000000000",
-				Status: 5,
+			args: args{
+				bookshelf: &book.Bookshelf{
+					ID:     1,
+					BookID: 1,
+					UserID: "00000000-0000-0000-0000-000000000000",
+					Status: 5,
+				},
 			},
-			Expected: nil,
+			want: nil,
 		},
 	}
 
-	for result, tc := range testCases {
-		t.Run(result, func(t *testing.T) {
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
 			ctx, cancel := context.WithCancel(context.Background())
 			defer cancel()
 
@@ -889,18 +944,18 @@ func TestBookService_UpdateBookshelf(t *testing.T) {
 			bvm := mock_book.NewMockValidation(ctrl)
 
 			brm := mock_book.NewMockRepository(ctrl)
-			brm.EXPECT().UpdateBookshelf(ctx, tc.Bookshelf).Return(tc.Expected)
+			brm.EXPECT().UpdateBookshelf(ctx, tc.args.bookshelf).Return(tc.want)
 
-			t.Run(result, func(t *testing.T) {
+			t.Run(name, func(t *testing.T) {
 				target := NewBookService(bvm, brm)
 
-				err := target.UpdateBookshelf(ctx, tc.Bookshelf)
-				if !reflect.DeepEqual(err, tc.Expected) {
-					t.Fatalf("want %#v, but %#v", tc.Expected, err)
+				err := target.UpdateBookshelf(ctx, tc.args.bookshelf)
+				if !reflect.DeepEqual(err, tc.want) {
+					t.Fatalf("want %#v, but %#v", tc.want, err)
 					return
 				}
 
-				if tc.Bookshelf.UpdatedAt.IsZero() {
+				if tc.args.bookshelf.UpdatedAt.IsZero() {
 					t.Fatal("UpdatedAt must be not null")
 					return
 				}
@@ -910,30 +965,34 @@ func TestBookService_UpdateBookshelf(t *testing.T) {
 }
 
 func TestBookService_MultipleCreate(t *testing.T) {
+	type args struct {
+		books []*book.Book
+	}
+
 	testCases := map[string]struct {
-		Books    []*book.Book
-		Expected error
+		args args
+		want error
 	}{
 		"ok": {
-			Books: []*book.Book{
-				{
-					Title:        "テスト書籍",
-					TitleKana:    "てすとしょせき",
-					Description:  "本の説明です",
-					Isbn:         "1234567890123",
-					Publisher:    "テスト著者",
-					PublishedOn:  "2021年12月24日",
-					ThumbnailURL: "",
-					Authors:      []*book.Author{},
-					Reviews:      []*book.Review{},
+			args: args{
+				books: []*book.Book{
+					{
+						Title:        "テスト書籍",
+						TitleKana:    "てすとしょせき",
+						Description:  "本の説明です",
+						Isbn:         "1234567890123",
+						Publisher:    "テスト著者",
+						PublishedOn:  "2021年12月24日",
+						ThumbnailURL: "",
+					},
 				},
 			},
-			Expected: nil,
+			want: nil,
 		},
 	}
 
-	for result, tc := range testCases {
-		t.Run(result, func(t *testing.T) {
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
 			ctx, cancel := context.WithCancel(context.Background())
 			defer cancel()
 
@@ -943,23 +1002,23 @@ func TestBookService_MultipleCreate(t *testing.T) {
 			bvm := mock_book.NewMockValidation(ctrl)
 
 			brm := mock_book.NewMockRepository(ctrl)
-			brm.EXPECT().MultipleCreate(ctx, tc.Books).Return(tc.Expected)
-			for _, b := range tc.Books {
+			brm.EXPECT().MultipleCreate(ctx, tc.args.books).Return(tc.want)
+			for _, b := range tc.args.books {
 				for _, a := range b.Authors {
-					brm.EXPECT().ShowOrCreateAuthor(ctx, a).Return(tc.Expected)
+					brm.EXPECT().ShowOrCreateAuthor(ctx, a).Return(nil)
 				}
 			}
 
-			t.Run(result, func(t *testing.T) {
+			t.Run(name, func(t *testing.T) {
 				target := NewBookService(bvm, brm)
 
-				err := target.MultipleCreate(ctx, tc.Books)
-				if !reflect.DeepEqual(err, tc.Expected) {
-					t.Fatalf("want %#v, but %#v", tc.Expected, err)
+				err := target.MultipleCreate(ctx, tc.args.books)
+				if !reflect.DeepEqual(err, tc.want) {
+					t.Fatalf("want %#v, but %#v", tc.want, err)
 					return
 				}
 
-				for _, v := range tc.Books {
+				for _, v := range tc.args.books {
 					if v.CreatedAt.IsZero() {
 						t.Fatal("CreatedAt must be not null")
 						return
@@ -976,15 +1035,179 @@ func TestBookService_MultipleCreate(t *testing.T) {
 }
 
 func TestBookService_MultipleUpdate(t *testing.T) {
-	current := time.Now()
+	type args struct {
+		books []*book.Book
+	}
 
+	current := time.Now().Local()
 	testCases := map[string]struct {
-		Books    []*book.Book
-		Expected error
+		args args
+		want error
 	}{
 		"ok": {
-			Books: []*book.Book{
-				{
+			args: args{
+				books: []*book.Book{
+					{
+						ID:           1,
+						Title:        "テスト書籍",
+						Description:  "本の説明",
+						Isbn:         "978-1-234-56789-7",
+						ThumbnailURL: "",
+						Publisher:    "テスト出版社",
+						PublishedOn:  "2021年12月24日",
+						CreatedAt:    current,
+						UpdatedAt:    current,
+						Authors: []*book.Author{{
+							ID:        1,
+							Name:      "テスト著者",
+							NameKana:  "てすとちょしゃ",
+							CreatedAt: current,
+							UpdatedAt: current,
+						}},
+					},
+				},
+			},
+			want: nil,
+		},
+	}
+
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
+			ctx, cancel := context.WithCancel(context.Background())
+			defer cancel()
+
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			bvm := mock_book.NewMockValidation(ctrl)
+
+			brm := mock_book.NewMockRepository(ctrl)
+			brm.EXPECT().MultipleUpdate(ctx, tc.args.books).Return(tc.want)
+			for _, b := range tc.args.books {
+				for _, a := range b.Authors {
+					brm.EXPECT().ShowOrCreateAuthor(ctx, a).Return(nil)
+				}
+			}
+
+			t.Run(name, func(t *testing.T) {
+				target := NewBookService(bvm, brm)
+
+				err := target.MultipleUpdate(ctx, tc.args.books)
+				if !reflect.DeepEqual(err, tc.want) {
+					t.Fatalf("want %#v, but %#v", tc.want, err)
+					return
+				}
+
+				for _, v := range tc.args.books {
+					if v.UpdatedAt.IsZero() {
+						t.Fatal("UpdatedAt must be not null")
+						return
+					}
+				}
+			})
+		})
+	}
+}
+
+func TestBookService_Delete(t *testing.T) {
+	type args struct {
+		bookID int
+	}
+
+	testCases := map[string]struct {
+		args args
+		want error
+	}{
+		"ok": {
+			args: args{
+				bookID: 1,
+			},
+			want: nil,
+		},
+	}
+
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
+			ctx, cancel := context.WithCancel(context.Background())
+			defer cancel()
+
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			bvm := mock_book.NewMockValidation(ctrl)
+
+			brm := mock_book.NewMockRepository(ctrl)
+			brm.EXPECT().Delete(ctx, tc.args.bookID).Return(tc.want)
+
+			t.Run(name, func(t *testing.T) {
+				target := NewBookService(bvm, brm)
+
+				err := target.Delete(ctx, tc.args.bookID)
+				if !reflect.DeepEqual(err, tc.want) {
+					t.Fatalf("want %#v, but %#v", tc.want, err)
+					return
+				}
+			})
+		})
+	}
+}
+
+func TestBookService_DeleteBookshelf(t *testing.T) {
+	type args struct {
+		bookshelfID int
+	}
+
+	testCases := map[string]struct {
+		args args
+		want error
+	}{
+		"ok": {
+			args: args{
+				bookshelfID: 1,
+			},
+			want: nil,
+		},
+	}
+
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
+			ctx, cancel := context.WithCancel(context.Background())
+			defer cancel()
+
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			bvm := mock_book.NewMockValidation(ctrl)
+
+			brm := mock_book.NewMockRepository(ctrl)
+			brm.EXPECT().DeleteBookshelf(ctx, tc.args.bookshelfID).Return(tc.want)
+
+			t.Run(name, func(t *testing.T) {
+				target := NewBookService(bvm, brm)
+
+				err := target.DeleteBookshelf(ctx, tc.args.bookshelfID)
+				if !reflect.DeepEqual(err, tc.want) {
+					t.Fatalf("want %#v, but %#v", tc.want, err)
+					return
+				}
+			})
+		})
+	}
+}
+
+func TestBookService_Validation(t *testing.T) {
+	type args struct {
+		book *book.Book
+	}
+
+	current := time.Now().Local()
+	testCases := map[string]struct {
+		args args
+		want error
+	}{
+		"ok": {
+			args: args{
+				book: &book.Book{
 					ID:           1,
 					Title:        "テスト書籍",
 					Description:  "本の説明",
@@ -1004,12 +1227,12 @@ func TestBookService_MultipleUpdate(t *testing.T) {
 					}},
 				},
 			},
-			Expected: nil,
+			want: nil,
 		},
 	}
 
-	for result, tc := range testCases {
-		t.Run(result, func(t *testing.T) {
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
 			ctx, cancel := context.WithCancel(context.Background())
 			defer cancel()
 
@@ -1017,159 +1240,16 @@ func TestBookService_MultipleUpdate(t *testing.T) {
 			defer ctrl.Finish()
 
 			bvm := mock_book.NewMockValidation(ctrl)
-
-			brm := mock_book.NewMockRepository(ctrl)
-			brm.EXPECT().MultipleUpdate(ctx, tc.Books).Return(tc.Expected)
-			for _, b := range tc.Books {
-				for _, a := range b.Authors {
-					brm.EXPECT().ShowOrCreateAuthor(ctx, a).Return(tc.Expected)
-				}
-			}
-
-			t.Run(result, func(t *testing.T) {
-				target := NewBookService(bvm, brm)
-
-				err := target.MultipleUpdate(ctx, tc.Books)
-				if !reflect.DeepEqual(err, tc.Expected) {
-					t.Fatalf("want %#v, but %#v", tc.Expected, err)
-					return
-				}
-
-				for _, v := range tc.Books {
-					if v.UpdatedAt.IsZero() {
-						t.Fatal("UpdatedAt must be not null")
-						return
-					}
-				}
-			})
-		})
-	}
-}
-
-func TestBookService_Delete(t *testing.T) {
-	testCases := map[string]struct {
-		BookID   int
-		Expected error
-	}{
-		"ok": {
-			BookID:   1,
-			Expected: nil,
-		},
-	}
-
-	for result, tc := range testCases {
-		t.Run(result, func(t *testing.T) {
-			ctx, cancel := context.WithCancel(context.Background())
-			defer cancel()
-
-			ctrl := gomock.NewController(t)
-			defer ctrl.Finish()
-
-			bvm := mock_book.NewMockValidation(ctrl)
-
-			brm := mock_book.NewMockRepository(ctrl)
-			brm.EXPECT().Delete(ctx, tc.BookID).Return(tc.Expected)
-
-			t.Run(result, func(t *testing.T) {
-				target := NewBookService(bvm, brm)
-
-				err := target.Delete(ctx, tc.BookID)
-				if !reflect.DeepEqual(err, tc.Expected) {
-					t.Fatalf("want %#v, but %#v", tc.Expected, err)
-					return
-				}
-			})
-		})
-	}
-}
-
-func TestBookService_DeleteBookshelf(t *testing.T) {
-	testCases := map[string]struct {
-		BookshelfID int
-		Expected    error
-	}{
-		"ok": {
-			BookshelfID: 1,
-			Expected:    nil,
-		},
-	}
-
-	for result, tc := range testCases {
-		t.Run(result, func(t *testing.T) {
-			ctx, cancel := context.WithCancel(context.Background())
-			defer cancel()
-
-			ctrl := gomock.NewController(t)
-			defer ctrl.Finish()
-
-			bvm := mock_book.NewMockValidation(ctrl)
-
-			brm := mock_book.NewMockRepository(ctrl)
-			brm.EXPECT().DeleteBookshelf(ctx, tc.BookshelfID).Return(tc.Expected)
-
-			t.Run(result, func(t *testing.T) {
-				target := NewBookService(bvm, brm)
-
-				err := target.DeleteBookshelf(ctx, tc.BookshelfID)
-				if !reflect.DeepEqual(err, tc.Expected) {
-					t.Fatalf("want %#v, but %#v", tc.Expected, err)
-					return
-				}
-			})
-		})
-	}
-}
-
-func TestBookService_Validation(t *testing.T) {
-	current := time.Now()
-
-	testCases := map[string]struct {
-		Book     *book.Book
-		Expected error
-	}{
-		"ok": {
-			Book: &book.Book{
-				ID:           1,
-				Title:        "テスト書籍",
-				Description:  "本の説明",
-				Isbn:         "978-1-234-56789-7",
-				ThumbnailURL: "",
-				Publisher:    "テスト出版社",
-				PublishedOn:  "2021年12月24日",
-				CreatedAt:    current,
-				UpdatedAt:    current,
-				Reviews:      []*book.Review{},
-				Authors: []*book.Author{{
-					ID:        1,
-					Name:      "テスト著者",
-					NameKana:  "てすとちょしゃ",
-					CreatedAt: current,
-					UpdatedAt: current,
-				}},
-			},
-			Expected: nil,
-		},
-	}
-
-	for result, tc := range testCases {
-		t.Run(result, func(t *testing.T) {
-			ctx, cancel := context.WithCancel(context.Background())
-			defer cancel()
-
-			ctrl := gomock.NewController(t)
-			defer ctrl.Finish()
-
-			bvm := mock_book.NewMockValidation(ctrl)
-			bvm.EXPECT().Book(ctx, tc.Book).Return(tc.Expected)
+			bvm.EXPECT().Book(ctx, tc.args.book).Return(tc.want)
 
 			brm := mock_book.NewMockRepository(ctrl)
 
-			t.Run(result, func(t *testing.T) {
+			t.Run(name, func(t *testing.T) {
 				target := NewBookService(bvm, brm)
 
-				err := target.Validation(ctx, tc.Book)
-				if !reflect.DeepEqual(err, tc.Expected) {
-					t.Fatalf("want %#v, but %#v", tc.Expected, err)
+				err := target.Validation(ctx, tc.args.book)
+				if !reflect.DeepEqual(err, tc.want) {
+					t.Fatalf("want %#v, but %#v", tc.want, err)
 					return
 				}
 			})
@@ -1178,20 +1258,29 @@ func TestBookService_Validation(t *testing.T) {
 }
 
 func TestBookService_ValidationAuthor(t *testing.T) {
+	type args struct {
+		author *book.Author
+	}
+
+	current := time.Now().Local()
 	testCases := map[string]struct {
-		Author   *book.Author
-		Expected error
+		args args
+		want error
 	}{
 		"ok": {
-			Author: &book.Author{
-				Name: "テスト著者",
+			args: args{
+				author: &book.Author{
+					Name:      "テスト著者",
+					CreatedAt: current,
+					UpdatedAt: current,
+				},
 			},
-			Expected: nil,
+			want: nil,
 		},
 	}
 
-	for result, tc := range testCases {
-		t.Run(result, func(t *testing.T) {
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
 			ctx, cancel := context.WithCancel(context.Background())
 			defer cancel()
 
@@ -1199,16 +1288,16 @@ func TestBookService_ValidationAuthor(t *testing.T) {
 			defer ctrl.Finish()
 
 			bvm := mock_book.NewMockValidation(ctrl)
-			bvm.EXPECT().Author(ctx, tc.Author).Return(tc.Expected)
+			bvm.EXPECT().Author(ctx, tc.args.author).Return(tc.want)
 
 			brm := mock_book.NewMockRepository(ctrl)
 
-			t.Run(result, func(t *testing.T) {
+			t.Run(name, func(t *testing.T) {
 				target := NewBookService(bvm, brm)
 
-				err := target.ValidationAuthor(ctx, tc.Author)
-				if !reflect.DeepEqual(err, tc.Expected) {
-					t.Fatalf("want %#v, but %#v", tc.Expected, err)
+				err := target.ValidationAuthor(ctx, tc.args.author)
+				if !reflect.DeepEqual(err, tc.want) {
+					t.Fatalf("want %#v, but %#v", tc.want, err)
 					return
 				}
 			})
@@ -1217,25 +1306,32 @@ func TestBookService_ValidationAuthor(t *testing.T) {
 }
 
 func TestBookService_ValidationBookshelf(t *testing.T) {
+	type args struct {
+		bookshelf *book.Bookshelf
+	}
+
+	current := time.Now().Local()
 	testCases := map[string]struct {
-		Bookshelf *book.Bookshelf
-		Expected  error
+		args args
+		want error
 	}{
 		"ok": {
-			Bookshelf: &book.Bookshelf{
-				ID:        0,
-				BookID:    1,
-				UserID:    "00000000-0000-0000-0000-000000000000",
-				Status:    5,
-				CreatedAt: time.Time{},
-				UpdatedAt: time.Time{},
+			args: args{
+				bookshelf: &book.Bookshelf{
+					ID:        0,
+					BookID:    1,
+					UserID:    "00000000-0000-0000-0000-000000000000",
+					Status:    5,
+					CreatedAt: current,
+					UpdatedAt: current,
+				},
 			},
-			Expected: nil,
+			want: nil,
 		},
 	}
 
-	for result, tc := range testCases {
-		t.Run(result, func(t *testing.T) {
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
 			ctx, cancel := context.WithCancel(context.Background())
 			defer cancel()
 
@@ -1243,16 +1339,16 @@ func TestBookService_ValidationBookshelf(t *testing.T) {
 			defer ctrl.Finish()
 
 			bvm := mock_book.NewMockValidation(ctrl)
-			bvm.EXPECT().Bookshelf(ctx, tc.Bookshelf).Return(tc.Expected)
+			bvm.EXPECT().Bookshelf(ctx, tc.args.bookshelf).Return(tc.want)
 
 			brm := mock_book.NewMockRepository(ctrl)
 
-			t.Run(result, func(t *testing.T) {
+			t.Run(name, func(t *testing.T) {
 				target := NewBookService(bvm, brm)
 
-				err := target.ValidationBookshelf(ctx, tc.Bookshelf)
-				if !reflect.DeepEqual(err, tc.Expected) {
-					t.Fatalf("want %#v, but %#v", tc.Expected, err)
+				err := target.ValidationBookshelf(ctx, tc.args.bookshelf)
+				if !reflect.DeepEqual(err, tc.want) {
+					t.Fatalf("want %#v, but %#v", tc.want, err)
 					return
 				}
 			})
@@ -1261,26 +1357,33 @@ func TestBookService_ValidationBookshelf(t *testing.T) {
 }
 
 func TestBookService_ValidationReview(t *testing.T) {
+	type args struct {
+		review *book.Review
+	}
+
+	current := time.Now().Local()
 	testCases := map[string]struct {
-		Review   *book.Review
-		Expected error
+		args args
+		want error
 	}{
 		"ok": {
-			Review: &book.Review{
-				ID:         0,
-				BookID:     1,
-				UserID:     "00000000-0000-0000-0000-000000000000",
-				Score:      5,
-				Impression: "書籍の感想です。",
-				CreatedAt:  time.Time{},
-				UpdatedAt:  time.Time{},
+			args: args{
+				review: &book.Review{
+					ID:         0,
+					BookID:     1,
+					UserID:     "00000000-0000-0000-0000-000000000000",
+					Score:      5,
+					Impression: "書籍の感想です。",
+					CreatedAt:  current,
+					UpdatedAt:  current,
+				},
 			},
-			Expected: nil,
+			want: nil,
 		},
 	}
 
-	for result, tc := range testCases {
-		t.Run(result, func(t *testing.T) {
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
 			ctx, cancel := context.WithCancel(context.Background())
 			defer cancel()
 
@@ -1288,16 +1391,16 @@ func TestBookService_ValidationReview(t *testing.T) {
 			defer ctrl.Finish()
 
 			bvm := mock_book.NewMockValidation(ctrl)
-			bvm.EXPECT().Review(ctx, tc.Review).Return(tc.Expected)
+			bvm.EXPECT().Review(ctx, tc.args.review).Return(tc.want)
 
 			brm := mock_book.NewMockRepository(ctrl)
 
-			t.Run(result, func(t *testing.T) {
+			t.Run(name, func(t *testing.T) {
 				target := NewBookService(bvm, brm)
 
-				err := target.ValidationReview(ctx, tc.Review)
-				if !reflect.DeepEqual(err, tc.Expected) {
-					t.Fatalf("want %#v, but %#v", tc.Expected, err)
+				err := target.ValidationReview(ctx, tc.args.review)
+				if !reflect.DeepEqual(err, tc.want) {
+					t.Fatalf("want %#v, but %#v", tc.want, err)
 					return
 				}
 			})

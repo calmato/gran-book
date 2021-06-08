@@ -4,7 +4,6 @@ import (
 	"context"
 	"reflect"
 	"testing"
-	"time"
 
 	"github.com/calmato/gran-book/api/server/book/internal/domain/book"
 	"github.com/calmato/gran-book/api/server/book/lib/datetime"
@@ -13,31 +12,32 @@ import (
 )
 
 func TestBookService_Book(t *testing.T) {
+	type args struct {
+		book *book.Book
+	}
+
 	testCases := map[string]struct {
-		Book     *book.Book
-		Expected error
+		args args
+		want error
 	}{
 		"ok": {
-			Book: &book.Book{
-				ID:           0,
-				Title:        "テスト書籍",
-				TitleKana:    "てすとしょせき",
-				Description:  "本の説明です",
-				Isbn:         "1234567890123",
-				Publisher:    "テスト著者",
-				PublishedOn:  "2021年12月24日",
-				ThumbnailURL: "",
-				CreatedAt:    time.Time{},
-				UpdatedAt:    time.Time{},
-				Authors:      []*book.Author{},
-				Reviews:      []*book.Review{},
+			args: args{
+				book: &book.Book{
+					Title:        "テスト書籍",
+					TitleKana:    "てすとしょせき",
+					Description:  "本の説明です",
+					Isbn:         "1234567890123",
+					Publisher:    "テスト著者",
+					PublishedOn:  "2021年12月24日",
+					ThumbnailURL: "",
+				},
 			},
-			Expected: nil,
+			want: nil,
 		},
 	}
 
-	for result, tc := range testCases {
-		t.Run(result, func(t *testing.T) {
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
 			ctx, cancel := context.WithCancel(context.Background())
 			defer cancel()
 
@@ -45,14 +45,14 @@ func TestBookService_Book(t *testing.T) {
 			defer ctrl.Finish()
 
 			bvm := mock_book.NewMockRepository(ctrl)
-			bvm.EXPECT().GetIDByIsbn(ctx, tc.Book.Isbn).Return(tc.Book.ID, nil)
+			bvm.EXPECT().GetIDByIsbn(ctx, tc.args.book.Isbn).Return(tc.args.book.ID, nil)
 
-			t.Run(result, func(t *testing.T) {
+			t.Run(name, func(t *testing.T) {
 				target := NewBookDomainValidation(bvm)
 
-				err := target.Book(ctx, tc.Book)
-				if !reflect.DeepEqual(err, tc.Expected) {
-					t.Fatalf("want %#v, but %#v", tc.Expected, err)
+				err := target.Book(ctx, tc.args.book)
+				if !reflect.DeepEqual(err, tc.want) {
+					t.Fatalf("want %#v, but %#v", tc.want, err)
 					return
 				}
 			})
@@ -61,24 +61,27 @@ func TestBookService_Book(t *testing.T) {
 }
 
 func TestBookService_Author(t *testing.T) {
+	type args struct {
+		author *book.Author
+	}
+
 	testCases := map[string]struct {
-		Author   *book.Author
-		Expected error
+		args args
+		want error
 	}{
 		"ok": {
-			Author: &book.Author{
-				ID:        0,
-				Name:      "テスト著者",
-				NameKana:  "てすとちょしゃ",
-				CreatedAt: time.Time{},
-				UpdatedAt: time.Time{},
+			args: args{
+				author: &book.Author{
+					Name:     "テスト著者",
+					NameKana: "てすとちょしゃ",
+				},
 			},
-			Expected: nil,
+			want: nil,
 		},
 	}
 
-	for result, tc := range testCases {
-		t.Run(result, func(t *testing.T) {
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
 			ctx, cancel := context.WithCancel(context.Background())
 			defer cancel()
 
@@ -87,12 +90,12 @@ func TestBookService_Author(t *testing.T) {
 
 			bvm := mock_book.NewMockRepository(ctrl)
 
-			t.Run(result, func(t *testing.T) {
+			t.Run(name, func(t *testing.T) {
 				target := NewBookDomainValidation(bvm)
 
-				err := target.Author(ctx, tc.Author)
-				if !reflect.DeepEqual(err, tc.Expected) {
-					t.Fatalf("want %#v, but %#v", tc.Expected, err)
+				err := target.Author(ctx, tc.args.author)
+				if !reflect.DeepEqual(err, tc.want) {
+					t.Fatalf("want %#v, but %#v", tc.want, err)
 					return
 				}
 			})
@@ -101,26 +104,29 @@ func TestBookService_Author(t *testing.T) {
 }
 
 func TestBookService_Bookshelf(t *testing.T) {
+	type args struct {
+		bookshelf *book.Bookshelf
+	}
+
 	testCases := map[string]struct {
-		Bookshelf *book.Bookshelf
-		Expected  error
+		args args
+		want error
 	}{
 		"ok": {
-			Bookshelf: &book.Bookshelf{
-				ID:        0,
-				BookID:    1,
-				UserID:    "00000000-0000-0000-0000-000000000000",
-				Status:    5,
-				ReadOn:    datetime.StringToDate("2020-01-01"),
-				CreatedAt: time.Time{},
-				UpdatedAt: time.Time{},
+			args: args{
+				bookshelf: &book.Bookshelf{
+					BookID: 1,
+					UserID: "00000000-0000-0000-0000-000000000000",
+					Status: 5,
+					ReadOn: datetime.StringToDate("2020-01-01"),
+				},
 			},
-			Expected: nil,
+			want: nil,
 		},
 	}
 
-	for result, tc := range testCases {
-		t.Run(result, func(t *testing.T) {
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
 			ctx, cancel := context.WithCancel(context.Background())
 			defer cancel()
 
@@ -129,15 +135,15 @@ func TestBookService_Bookshelf(t *testing.T) {
 
 			bvm := mock_book.NewMockRepository(ctrl)
 			bvm.EXPECT().
-				GetBookshelfIDByUserIDAndBookID(ctx, tc.Bookshelf.UserID, tc.Bookshelf.BookID).
-				Return(tc.Bookshelf.ID, nil)
+				GetBookshelfIDByUserIDAndBookID(ctx, tc.args.bookshelf.UserID, tc.args.bookshelf.BookID).
+				Return(tc.args.bookshelf.ID, nil)
 
-			t.Run(result, func(t *testing.T) {
+			t.Run(name, func(t *testing.T) {
 				target := NewBookDomainValidation(bvm)
 
-				err := target.Bookshelf(ctx, tc.Bookshelf)
-				if !reflect.DeepEqual(err, tc.Expected) {
-					t.Fatalf("want %#v, but %#v", tc.Expected, err)
+				err := target.Bookshelf(ctx, tc.args.bookshelf)
+				if !reflect.DeepEqual(err, tc.want) {
+					t.Fatalf("want %#v, but %#v", tc.want, err)
 					return
 				}
 			})
@@ -146,26 +152,29 @@ func TestBookService_Bookshelf(t *testing.T) {
 }
 
 func TestBookService_Review(t *testing.T) {
+	type args struct {
+		review *book.Review
+	}
+
 	testCases := map[string]struct {
-		Review   *book.Review
-		Expected error
+		args args
+		want error
 	}{
 		"ok": {
-			Review: &book.Review{
-				ID:         0,
-				BookID:     1,
-				UserID:     "00000000-0000-0000-0000-000000000000",
-				Score:      5,
-				Impression: "書籍の感想です。",
-				CreatedAt:  time.Time{},
-				UpdatedAt:  time.Time{},
+			args: args{
+				review: &book.Review{
+					BookID:     1,
+					UserID:     "00000000-0000-0000-0000-000000000000",
+					Score:      5,
+					Impression: "書籍の感想です。",
+				},
 			},
-			Expected: nil,
+			want: nil,
 		},
 	}
 
-	for result, tc := range testCases {
-		t.Run(result, func(t *testing.T) {
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
 			ctx, cancel := context.WithCancel(context.Background())
 			defer cancel()
 
@@ -174,15 +183,15 @@ func TestBookService_Review(t *testing.T) {
 
 			bvm := mock_book.NewMockRepository(ctrl)
 			bvm.EXPECT().
-				GetReviewIDByUserIDAndBookID(ctx, tc.Review.UserID, tc.Review.BookID).
-				Return(tc.Review.ID, nil)
+				GetReviewIDByUserIDAndBookID(ctx, tc.args.review.UserID, tc.args.review.BookID).
+				Return(tc.args.review.ID, nil)
 
-			t.Run(result, func(t *testing.T) {
+			t.Run(name, func(t *testing.T) {
 				target := NewBookDomainValidation(bvm)
 
-				err := target.Review(ctx, tc.Review)
-				if !reflect.DeepEqual(err, tc.Expected) {
-					t.Fatalf("want %#v, but %#v", tc.Expected, err)
+				err := target.Review(ctx, tc.args.review)
+				if !reflect.DeepEqual(err, tc.want) {
+					t.Fatalf("want %#v, but %#v", tc.want, err)
 					return
 				}
 			})

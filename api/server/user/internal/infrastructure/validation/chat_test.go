@@ -11,37 +11,44 @@ import (
 )
 
 func TestChatDomainValidation_Room(t *testing.T) {
-	current := time.Now()
+	type args struct {
+		room *chat.Room
+	}
 
+	current := time.Now().Local()
 	testCases := map[string]struct {
-		Room     *chat.Room
-		Expected error
+		args args
+		want error
 	}{
 		"ok": {
-			Room: &chat.Room{
-				ID:            "00000000-0000-0000-0000-000000000000",
-				UserIDs:       []string{"00000000-0000-0000-0000-000000000000"},
-				CreatedAt:     current,
-				UpdatedAt:     current,
-				LatestMessage: &chat.Message{},
+			args: args{
+				room: &chat.Room{
+					ID: "00000000-0000-0000-0000-000000000000",
+					UserIDs: []string{
+						"00000000-0000-0000-0000-000000000000",
+						"11111111-1111-1111-1111-111111111111",
+					},
+					CreatedAt: current,
+					UpdatedAt: current,
+				},
 			},
-			Expected: nil,
+			want: nil,
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewChatDomainValidation()
 
-			got := target.Room(ctx, tc.Room)
-			if !reflect.DeepEqual(got, tc.Expected) {
-				t.Fatalf("want %#v, but %#v", tc.Expected, got)
+			got := target.Room(ctx, tc.args.room)
+			if !reflect.DeepEqual(got, tc.want) {
+				t.Errorf("want %#v, but %#v", tc.want, got)
 			}
 		})
 	}
