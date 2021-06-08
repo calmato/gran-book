@@ -81,6 +81,7 @@
 
 * [01_specification](./docs/01_specification/README.md)
 * [02_design](./docs/02_design/README.md)
+* [03_setup](./docs/03_setup/README.md)
 * [11_frontend](./docs/11_frontend/README.md)
   * [01_native](./docs/11_frontend/01_native/README.md)
   * [02_web](./docs/11_frontend/02_web/README.md)
