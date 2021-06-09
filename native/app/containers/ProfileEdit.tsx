@@ -1,9 +1,9 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { authSelector } from '~/store/selectors';
-import { Auth } from '~/store/models';
 import ProfileEdit from '~/screens/ProfileEdit';
+import { Auth } from '~/store/models';
 import { useReduxDispatch } from '~/store/modules';
+import { authSelector } from '~/store/selectors';
 import { profileEditAsync } from '~/store/usecases';
 
 export default function ConnectedProfilrEdit(): JSX.Element {

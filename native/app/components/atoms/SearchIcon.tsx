@@ -1,5 +1,5 @@
-﻿import React, { ReactElement } from 'react';
-import { Ionicons } from '@expo/vector-icons';
+﻿import { Ionicons } from '@expo/vector-icons';
+import React, { ReactElement } from 'react';
 import { COLOR } from '~~/constants/theme';
 
 interface Props {

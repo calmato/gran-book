@@ -1,11 +1,11 @@
 import 'jest';
-import React from 'react';
 
 import { shallow, configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import SearchBar from '~/components/molecules/SearchBar';
-import { SearchBar as ElementsSearchBar } from 'react-native-elements';
+import React from 'react';
 import { ViewStyle } from 'react-native';
+import { SearchBar as ElementsSearchBar } from 'react-native-elements';
+import SearchBar from '~/components/molecules/SearchBar';
 
 configure({ adapter: new Adapter() });
 

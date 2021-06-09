@@ -1,7 +1,7 @@
 import React from 'react';
+import AccountSetting from '~/screens/AccoutSetting';
 import { useReduxDispatch } from '~/store/modules';
 import { signOutAsync } from '~/store/usecases';
-import AccountSetting from '~/screens/AccoutSetting';
 
 export default function ConnectAccountSetting(): JSX.Element {
   const dispatch = useReduxDispatch();

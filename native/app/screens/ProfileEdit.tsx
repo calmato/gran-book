@@ -1,14 +1,14 @@
+import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import * as ImagePicker from 'expo-image-picker';
 import React, { ReactElement, useMemo, useState } from 'react';
 import { StyleSheet, View, Alert, ScrollView, Text, TouchableOpacity } from 'react-native';
 import { Avatar, Button, Input, ListItem } from 'react-native-elements';
 import ChangeNickname from '~/components/organisms/ChangeNickname';
 import GenderRadioGroup from '~/components/organisms/GenderRadioGroup';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
-import { ProfileEditForm } from '~/types/forms';
 import { generateErrorMessage } from '~/lib/util/ErrorUtil';
-import * as ImagePicker from 'expo-image-picker';
-import { MaterialIcons } from '@expo/vector-icons';
+import { ProfileEditForm } from '~/types/forms';
 
 const styles = StyleSheet.create({
   selfIntroduction: {

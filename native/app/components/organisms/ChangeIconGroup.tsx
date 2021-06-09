@@ -1,9 +1,9 @@
+import { MaterialIcons } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
 import React, { ReactElement, useEffect, useState } from 'react';
 import { Platform, StyleSheet, Text } from 'react-native';
 import { Avatar, ListItem } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { MaterialIcons } from '@expo/vector-icons';
-import * as ImagePicker from 'expo-image-picker';
 
 const styles = StyleSheet.create({
   text: {

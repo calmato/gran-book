@@ -1,8 +1,8 @@
-import React, { ReactElement } from 'react';
-import { StyleSheet, View, Text, ShadowPropTypesIOS } from 'react-native';
-import { COLOR } from '~~/constants/theme';
 import RadioButtonRN from 'radio-buttons-react-native';
+import React, { ReactElement } from 'react';
+import { StyleSheet, View, Text } from 'react-native';
 import { RadioGroupForm } from '~/types/forms';
+import { COLOR } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
   container: {

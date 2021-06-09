@@ -1,10 +1,10 @@
 import 'jest';
-import React from 'react';
 
 import { shallow, configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import PasswordInput from '~/components/molecules/PasswordInput';
+import React from 'react';
 import { colors, Input } from 'react-native-elements';
+import PasswordInput from '~/components/molecules/PasswordInput';
 
 configure({ adapter: new Adapter() });
 

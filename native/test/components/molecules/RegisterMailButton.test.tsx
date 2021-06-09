@@ -1,11 +1,11 @@
 import 'jest';
-import React from 'react';
 
 import { shallow, configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import RegisterMailButton from '~/components/molecules/RegisterMailButton';
-import { Button, colors } from 'react-native-elements';
+import React from 'react';
 import { TextStyle, ViewStyle } from 'react-native';
+import { Button, colors } from 'react-native-elements';
+import RegisterMailButton from '~/components/molecules/RegisterMailButton';
 import { SOCIAL_BUTTON } from '~~/constants/theme';
 
 configure({ adapter: new Adapter() });

@@ -1,10 +1,10 @@
-import React, { ReactElement } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
-import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
-import { COLOR } from '~~/constants/theme';
-import { ListItem } from 'react-native-elements';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import React, { ReactElement } from 'react';
+import { StyleSheet, View, Text } from 'react-native';
+import { ListItem } from 'react-native-elements';
+import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
+import { COLOR } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
   subtitle: {

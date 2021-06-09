@@ -1,0 +1,17 @@
+{
+  // "jestrunner.jestCommand": "cd ./native && yarn test --"
+  "jestrunner.jestCommand": "yarn test --",
+
+  "files.associations": {
+    "*.tsx": "typescriptreact",
+    "*.ts": "typescript"
+  },
+
+  "[typescriptreact]": {
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true,
+    },
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+  }
+}

@@ -1,16 +1,16 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { ReactElement, useMemo, useState } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
+import { Button } from 'react-native-elements';
+import ForgotPasswordButton from '~/components/molecules/ForgotPasswordButton';
 import MailInput from '~/components/molecules/MailInput';
 import PasswordInput from '~/components/molecules/PasswordInput';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
-import { SignInForm } from '~/types/forms';
 import { UiContext } from '~/lib/context';
 import { Status } from '~/lib/context/ui';
-import { emailValidation, passwordValidation } from '~/lib/validation';
-import { Button } from 'react-native-elements';
-import ForgotPasswordButton from '~/components/molecules/ForgotPasswordButton';
-import { useNavigation } from '@react-navigation/native';
 import { generateErrorMessage } from '~/lib/util/ErrorUtil';
+import { emailValidation, passwordValidation } from '~/lib/validation';
+import { SignInForm } from '~/types/forms';
 
 const styles = StyleSheet.create({
   container: {
@@ -23,13 +23,14 @@ interface Props {
   actions: {
     signInWithEmail: (email: string, password: string) => Promise<void>;
     getAuth: () => Promise<void>;
+    registerForPushNotifications: () => Promise<void>;
   };
 }
 
 const SignIn = function SignIn(props: Props): ReactElement {
   const navigation = useNavigation();
   const { setApplicationState } = React.useContext(UiContext);
-  const { signInWithEmail, getAuth } = props.actions;
+  const { signInWithEmail, getAuth, registerForPushNotifications } = props.actions;
 
   const [formData, setValue] = useState<SignInForm>({
     email: '',
@@ -58,6 +59,9 @@ const SignIn = function SignIn(props: Props): ReactElement {
   const handleSubmit = React.useCallback(async () => {
     await signInWithEmail(formData.email, formData.password)
       .then(() => {
+        return registerForPushNotifications();
+      })
+      .then(() => {
         return getAuth();
       })
       .then(() => {
@@ -66,7 +70,14 @@ const SignIn = function SignIn(props: Props): ReactElement {
       .catch((err) => {
         createAlertNotifySignupError(err.code);
       });
-  }, [formData.email, formData.password, signInWithEmail, getAuth, setApplicationState]);
+  }, [
+    formData.email,
+    formData.password,
+    registerForPushNotifications,
+    signInWithEmail,
+    getAuth,
+    setApplicationState,
+  ]);
 
   return (
     <View style={styles.container}>
