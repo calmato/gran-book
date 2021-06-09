@@ -44,4 +44,7 @@ update-manifest:
 	kubectl patch ${RESOURCE} ${APP_NAME} -p "{\"spec\": {\"template\": {\"metadata\": {\"labels\": {\"date\": \"${CURRENT}\" }}}}}"
 
 update-manifest-all:
+	$(MAKE) update-manifest RESOURCE=deploy APP_NAME=admin-gateway
+	$(MAKE) update-manifest RESOURCE=deploy APP_NAME=native-gateway
+	$(MAKE) update-manifest RESOURCE=deploy APP_NAME=book-api
 	$(MAKE) update-manifest RESOURCE=deploy APP_NAME=user-api
