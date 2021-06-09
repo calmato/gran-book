@@ -31,4 +31,5 @@ export type UserInfoStackParamList = {
   ContactEdit: undefined;
   EmailEdit: undefined;
   PasswordEmailEdit: undefined;
+  Support: undefined;
 };
