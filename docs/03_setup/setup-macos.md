@@ -24,6 +24,10 @@
 3. コンテナ実行環境の設定
 4. ネイティブアプリ起動設定
 
+### 事前準備
+検証用の端末にExpo Goをダウンロードしておく。  
+https://apps.apple.com/jp/app/expo-go/id982107779?l=en
+
 ### brewのインストール
 
 1. Spotlight検索より `Terminal` を開く
