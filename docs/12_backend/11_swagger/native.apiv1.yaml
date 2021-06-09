@@ -1073,6 +1073,40 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorResponse'
+  /v1/supports/{userId}/inquiries:
+    post:
+      summary: お問い合わせの登録
+      tags:
+        - InformationService
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: string
+          required: true
+          description: ユーザーID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createInquiryRequest'
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inquiryResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+
 tags:
   - name: AuthService
     description: 認証関連
@@ -1082,6 +1116,8 @@ tags:
     description: チャット関連
   - name: BookService
     description: 書籍関連
+  - name: InformationService
+    description: お問い合わせとお知らせ関連
 components:
   securitySchemes:
     BearerAuth:
@@ -1246,6 +1282,13 @@ components:
           type: string
         readOn:
           type: string
+    createInquiryRequest:
+       type: object
+       properties:
+         description:
+           type: string
+         label:
+           type: string
     # Response
     emptyResponse:
       type: object
@@ -1721,6 +1764,16 @@ components:
         total:
           type: integer
           format: int64
+    inquiryResponse:
+      type: object
+      properties:
+        description:
+          type: string
+        label:
+          type: string
+        createdAt:
+          type: string
+
     errorResponse:
       type: object
       properties:
