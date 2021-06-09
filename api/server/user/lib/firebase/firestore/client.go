@@ -47,16 +47,6 @@ func (f *Firestore) Close() error {
 	return f.Client.Close()
 }
 
-// Get - 単一のドキュメントの内容を取得
-func (f *Firestore) Get(ctx context.Context, collection string, document string) (*firestore.DocumentSnapshot, error) {
-	doc, err := f.Client.Collection(collection).Doc(document).Get(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	return doc, nil
-}
-
 // List - コレクション内のドキュメントを福数取得
 func (f *Firestore) List(
 	ctx context.Context, collection string, params *Params, queries []*Query,
@@ -96,6 +86,16 @@ func (f *Firestore) Search(
 	return docs, nil
 }
 
+// Get - 単一のドキュメントの内容を取得
+func (f *Firestore) Get(ctx context.Context, collection string, document string) (*firestore.DocumentSnapshot, error) {
+	doc, err := f.Client.Collection(collection).Doc(document).Get(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return doc, nil
+}
+
 // Set - 単一のドキュメントを作成または上書き
 func (f *Firestore) Set(ctx context.Context, collection string, document string, data interface{}) error {
 	if _, err := f.Client.Collection(collection).Doc(document).Set(ctx, data); err != nil {
@@ -114,6 +114,9 @@ func (f *Firestore) DeleteDoc(ctx context.Context, collection string, document s
 	return nil
 }
 
+/*
+ * Private Method
+ */
 func (f *Firestore) getQuery(ctx context.Context, collection string, params *Params) (firestore.Query, error) {
 	// ソート
 	if params.OrderBy == "" {

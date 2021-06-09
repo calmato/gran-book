@@ -5,12 +5,14 @@ import (
 
 	"github.com/calmato/gran-book/api/server/user/internal/application/input"
 	"github.com/calmato/gran-book/api/server/user/internal/application/validation"
+	"github.com/calmato/gran-book/api/server/user/internal/domain"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/chat"
 	"github.com/calmato/gran-book/api/server/user/lib/array"
 )
 
 // ChatApplication - Chatアプリケーションのインターフェース
 type ChatApplication interface {
+	ListRoom(ctx context.Context, cuid string) ([]*chat.Room, error)
 	CreateRoom(ctx context.Context, in *input.CreateRoom, cuid string) (*chat.Room, error)
 }
 
@@ -25,6 +27,17 @@ func NewChatApplication(crv validation.ChatRequestValidation, cs chat.Service) C
 		chatRequestValidation: crv,
 		chatService:           cs,
 	}
+}
+
+func (a *chatApplication) ListRoom(ctx context.Context, cuid string) ([]*chat.Room, error) {
+	q := &domain.ListQuery{
+		Order: &domain.QueryOrder{
+			By:        "updatedAt",
+			Direction: "desc",
+		},
+	}
+
+	return a.chatService.ListRoom(ctx, q, cuid)
 }
 
 func (a *chatApplication) CreateRoom(ctx context.Context, in *input.CreateRoom, cuid string) (*chat.Room, error) {
