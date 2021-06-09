@@ -12,6 +12,10 @@ service NotificationService {
   rpc DeleteNotification(DeleteNotificationRequest) returns (NotificationResponse);
 }
 
+service InquiryService {
+  rpc CreateInquiry(CreateInquiryRequest) returns (InquiryResponse);
+}
+
 message EmptyNotification {}
 
 message GetNotificationRequest {
@@ -59,6 +63,25 @@ message NotificationResponse {
   string description = 5;
   string importance = 6;
   string category = 7;
+  string created_at = 8;
+  string updated_at = 9;
+}
+
+message CreateInquiryRequest {
+  string sender_id = 1;
+  string subject = 2;
+  string description = 3;
+  string email = 4;
+}
+
+message InquiryResponse {
+  string inquiry_id = 1;
+  string sender_id = 2;
+  string admin_id = 3;
+  string subject = 4;
+  string description = 5;
+  string email = 6;
+  string is_replied = 7;
   string created_at = 8;
   string updated_at = 9;
 }
