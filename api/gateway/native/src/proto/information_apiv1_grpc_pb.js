@@ -4,6 +4,17 @@
 var grpc = require('@grpc/grpc-js');
 var proto_information_apiv1_pb = require('../proto/information_apiv1_pb.js');
 
+function serialize_proto_CreateInquiryRequest(arg) {
+  if (!(arg instanceof proto_information_apiv1_pb.CreateInquiryRequest)) {
+    throw new Error('Expected argument of type proto.CreateInquiryRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_CreateInquiryRequest(buffer_arg) {
+  return proto_information_apiv1_pb.CreateInquiryRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_proto_CreateNotificationRequest(arg) {
   if (!(arg instanceof proto_information_apiv1_pb.CreateNotificationRequest)) {
     throw new Error('Expected argument of type proto.CreateNotificationRequest');
@@ -46,6 +57,17 @@ function serialize_proto_GetNotificationRequest(arg) {
 
 function deserialize_proto_GetNotificationRequest(buffer_arg) {
   return proto_information_apiv1_pb.GetNotificationRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_proto_InquiryResponse(arg) {
+  if (!(arg instanceof proto_information_apiv1_pb.InquiryResponse)) {
+    throw new Error('Expected argument of type proto.InquiryResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_proto_InquiryResponse(buffer_arg) {
+  return proto_information_apiv1_pb.InquiryResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 function serialize_proto_NotificationResponse(arg) {
@@ -130,3 +152,18 @@ var NotificationServiceService = exports.NotificationServiceService = {
 };
 
 exports.NotificationServiceClient = grpc.makeGenericClientConstructor(NotificationServiceService);
+var InquiryServiceService = exports.InquiryServiceService = {
+  createInquiry: {
+    path: '/proto.InquiryService/CreateInquiry',
+    requestStream: false,
+    responseStream: false,
+    requestType: proto_information_apiv1_pb.CreateInquiryRequest,
+    responseType: proto_information_apiv1_pb.InquiryResponse,
+    requestSerialize: serialize_proto_CreateInquiryRequest,
+    requestDeserialize: deserialize_proto_CreateInquiryRequest,
+    responseSerialize: serialize_proto_InquiryResponse,
+    responseDeserialize: deserialize_proto_InquiryResponse,
+  },
+};
+
+exports.InquiryServiceClient = grpc.makeGenericClientConstructor(InquiryServiceService);
