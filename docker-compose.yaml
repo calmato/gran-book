@@ -226,6 +226,7 @@ services:
   # Other
   proto:
     container_name: gran_book_proto
+    platform: linux/x86_64
     build:
       context: ./infra/docker/proto
       dockerfile: Dockerfile
