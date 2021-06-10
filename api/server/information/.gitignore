@@ -3,3 +3,5 @@ app
 # bin file
 bin
 !bin/build-mocks.sh
+
+vendor
