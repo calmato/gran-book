@@ -28,7 +28,7 @@ func NewRegistry(
 	admin := adminInjection(db, fa, s)
 	auth := authInjection(db, fa, s)
 	user := userInjection(db, fa, s)
-	chat := chatInjection(fs)
+	chat := chatInjection(db, fa, fs, s)
 
 	return &Registry{
 		AdminApplication: admin,
@@ -74,14 +74,21 @@ func userInjection(db *repository.Client, fa *authentication.Auth, s *gcs.Storag
 	return ua
 }
 
-func chatInjection(fs *firestore.Firestore) application.ChatApplication {
+func chatInjection(
+	db *repository.Client, fa *authentication.Auth, fs *firestore.Firestore, s *gcs.Storage,
+) application.ChatApplication {
+	ur := repository.NewUserRepository(db, fa)
+	udv := dv.NewUserDomainValidation(ur)
+	uu := storage.NewUserUploader(s)
+	us := service.NewUserService(udv, ur, uu)
+
 	cm := messaging.NewChatMessaging()
 	cr := repository.NewChatRepository(fs)
 	cdv := dv.NewChatDomainValidation()
 	cs := service.NewChatService(cdv, cr, cm)
 
 	crv := rv.NewChatRequestValidation()
-	ca := application.NewChatApplication(crv, cs)
+	ca := application.NewChatApplication(crv, cs, us)
 
 	return ca
 }
