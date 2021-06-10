@@ -76,7 +76,7 @@ func (a *chatApplication) CreateRoom(ctx context.Context, in *input.CreateRoom, 
 
 	err = a.chatService.PushCreateRoom(ctx, cr)
 	if err != nil {
-		log.Printf("Failed to push notification: %v", err) // TOOD: エラーの出し方考える
+		log.Printf("Failed to push notification: %v", err) // TODO: エラーの出し方考える
 	}
 
 	return cr, nil
