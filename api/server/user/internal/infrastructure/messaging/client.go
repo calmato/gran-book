@@ -20,8 +20,8 @@ func NewMessagingClient() *Client {
 	}
 }
 
-func (c *Client) getToken(instanceIDs []string) []string {
-	tokens := []string{}
+func (c *Client) getValidToken(instanceIDs []string) []expo.ExponentPushToken {
+	tokens := []expo.ExponentPushToken{}
 
 	for _, instanceID := range instanceIDs {
 		// To check the token is valid
@@ -34,7 +34,7 @@ func (c *Client) getToken(instanceIDs []string) []string {
 	return tokens
 }
 
-func (c *Client) checkResponse(res *expo.PushResponse, err error) error {
+func (c *Client) checkResponse(res expo.PushResponse, err error) error {
 	// Check errors
 	if err != nil {
 		return exception.ErrorInOtherAPI.New(err)

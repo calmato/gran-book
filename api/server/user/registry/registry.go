@@ -3,6 +3,7 @@ package registry
 import (
 	"github.com/calmato/gran-book/api/server/user/internal/application"
 	rv "github.com/calmato/gran-book/api/server/user/internal/application/validation"
+	"github.com/calmato/gran-book/api/server/user/internal/infrastructure/messaging"
 	"github.com/calmato/gran-book/api/server/user/internal/infrastructure/repository"
 	"github.com/calmato/gran-book/api/server/user/internal/infrastructure/service"
 	"github.com/calmato/gran-book/api/server/user/internal/infrastructure/storage"
@@ -74,9 +75,10 @@ func userInjection(db *repository.Client, fa *authentication.Auth, s *gcs.Storag
 }
 
 func chatInjection(fs *firestore.Firestore) application.ChatApplication {
+	cm := messaging.NewChatMessaging()
 	cr := repository.NewChatRepository(fs)
 	cdv := dv.NewChatDomainValidation()
-	cs := service.NewChatService(cdv, cr)
+	cs := service.NewChatService(cdv, cr, cm)
 
 	crv := rv.NewChatRequestValidation()
 	ca := application.NewChatApplication(crv, cs)
