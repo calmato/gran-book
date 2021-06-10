@@ -1,13 +1,13 @@
 import 'jest';
-import React from 'react';
 
 import { shallow, configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import GoogleButton from '~/components/molecules/GoogleButton';
+import React from 'react';
 import { TextStyle, ViewStyle } from 'react-native';
-import { COLOR, SOCIAL_BUTTON } from '~~/constants/theme';
 import { Button } from 'react-native-elements';
+import GoogleButton from '~/components/molecules/GoogleButton';
 import google from '~~/assets/g-logo.png';
+import { COLOR, SOCIAL_BUTTON } from '~~/constants/theme';
 
 configure({ adapter: new Adapter() });
 

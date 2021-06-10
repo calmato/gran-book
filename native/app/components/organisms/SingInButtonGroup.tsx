@@ -15,6 +15,7 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
+  handleSignInWithGoogle: () => void;
   handleRegisterWithMail: () => void;
   handleSignInWithMail: () => void;
 }
@@ -25,7 +26,7 @@ const SignInButtonGroup = function SignInButtonGroup(props: Props): ReactElement
       <AppleButton style={styles.buttonLayout} />
       <TwitterButton style={styles.buttonLayout} />
       <FacebookButton style={styles.buttonLayout} />
-      <GoogleButton style={styles.buttonLayout} />
+      <GoogleButton onPress={props.handleSignInWithGoogle} style={styles.buttonLayout} />
       <MailSignInButton onPress={props.handleSignInWithMail} style={styles.buttonLayout} />
       <RegisterMailButton onPress={props.handleRegisterWithMail} style={styles.buttonLayout} />
     </View>

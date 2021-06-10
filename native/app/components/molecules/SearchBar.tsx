@@ -1,8 +1,8 @@
 ﻿import React, { ReactElement } from 'react';
 import { Platform, StyleSheet } from 'react-native';
 import { SearchBar as ElementsSearchBar } from 'react-native-elements';
-import { COLOR } from '~~/constants/theme';
 import SearchIcon from '~/components/atoms/SearchIcon';
+import { COLOR } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
   inputContainerStyle: {

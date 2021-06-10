@@ -1,13 +1,13 @@
-import React, { ReactElement } from 'react';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import React, { ReactElement } from 'react';
 import { StyleSheet } from 'react-native';
-import { COLOR } from '~~/constants/theme';
-import Store from '~/screens/Store';
-import Bookshelf from '~/screens/Bookshelf';
-import Sale from '~/screens/Sale';
 import HomeTabRoute from '~/routes/HomeTabRoute';
 import UserInfoRoute from '~/routes/UserInfoRoute';
+import Bookshelf from '~/screens/Bookshelf';
+import Sale from '~/screens/Sale';
+import Store from '~/screens/Store';
+import { COLOR } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
   labelStyle: {

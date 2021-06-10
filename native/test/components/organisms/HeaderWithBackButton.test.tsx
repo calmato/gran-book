@@ -1,8 +1,8 @@
 import 'jest';
-import React from 'react';
 
 import { shallow, configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
+import React from 'react';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 
 configure({ adapter: new Adapter() });
