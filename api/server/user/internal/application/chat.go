@@ -8,6 +8,7 @@ import (
 	"github.com/calmato/gran-book/api/server/user/internal/application/validation"
 	"github.com/calmato/gran-book/api/server/user/internal/domain"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/chat"
+	"github.com/calmato/gran-book/api/server/user/internal/domain/user"
 	"github.com/calmato/gran-book/api/server/user/lib/array"
 )
 
@@ -20,13 +21,15 @@ type ChatApplication interface {
 type chatApplication struct {
 	chatRequestValidation validation.ChatRequestValidation
 	chatService           chat.Service
+	userService           user.Service
 }
 
 // NewChatApplication - ChatApplicationの生成
-func NewChatApplication(crv validation.ChatRequestValidation, cs chat.Service) ChatApplication {
+func NewChatApplication(crv validation.ChatRequestValidation, cs chat.Service, us user.Service) ChatApplication {
 	return &chatApplication{
 		chatRequestValidation: crv,
 		chatService:           cs,
+		userService:           us,
 	}
 }
 
@@ -60,7 +63,11 @@ func (a *chatApplication) CreateRoom(ctx context.Context, in *input.CreateRoom, 
 		return nil, err
 	}
 
-	// TODO: InstanceID取得
+	instanceIDs, err := a.userService.ListInstanceID(ctx, cr.UserIDs)
+	if err != nil {
+		return nil, err
+	}
+	cr.InstanceIDs = instanceIDs
 
 	err = a.chatService.CreateRoom(ctx, cr)
 	if err != nil {
