@@ -2,6 +2,7 @@ package application
 
 import (
 	"context"
+	"log"
 
 	"github.com/calmato/gran-book/api/server/user/internal/application/input"
 	"github.com/calmato/gran-book/api/server/user/internal/application/validation"
@@ -59,9 +60,16 @@ func (a *chatApplication) CreateRoom(ctx context.Context, in *input.CreateRoom, 
 		return nil, err
 	}
 
+	// TODO: InstanceID取得
+
 	err = a.chatService.CreateRoom(ctx, cr)
 	if err != nil {
 		return nil, err
+	}
+
+	err = a.chatService.PushCreateRoom(ctx, cr)
+	if err != nil {
+		log.Printf("Failed to push notification: %v", err) // TOOD: エラーの出し方考える
 	}
 
 	return cr, nil
