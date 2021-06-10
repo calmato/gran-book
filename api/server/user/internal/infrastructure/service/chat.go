@@ -42,6 +42,10 @@ func (s *chatService) ValidationRoom(ctx context.Context, cr *chat.Room) error {
 	return s.chatDomainValidation.Room(ctx, cr)
 }
 
+func (s *chatService) PushCreateRoom(ctx context.Context, cr *chat.Room) error {
+	return s.chatMessaging.PushCreateRoom(cr)
+}
+
 func (s *chatService) PushNewMessage(ctx context.Context, cr *chat.Room, cm *chat.Message) error {
 	return s.chatMessaging.PushNewMessage(cr, cm)
 }

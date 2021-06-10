@@ -19,9 +19,27 @@ func NewChatMessaging() chat.Messaging {
 	}
 }
 
+func (m *chatMessaging) PushCreateRoom(cr *chat.Room) error {
+	tokens := m.client.getValidToken(cr.InstanceIDs)
+	title := "新規チャットルーム"
+	body := "新しいチャットルームが作成されました."
+
+	pm := &expo.PushMessage{
+		To:         tokens,
+		Title:      title,
+		Body:       body,
+		Sound:      "default",
+		TTLSeconds: 300, // 5 min
+		Priority:   expo.DefaultPriority,
+	}
+
+	res, err := m.client.messaging.Publish(pm)
+	return m.client.checkResponse(res, err)
+}
+
 func (m *chatMessaging) PushNewMessage(cr *chat.Room, cm *chat.Message) error {
 	tokens := m.client.getValidToken(cr.InstanceIDs)
-	title := cm.Username
+	title := "新規チャットメッセージ"
 	body := fmt.Sprintf("%s: %s", cm.Username, cm.Text)
 
 	pm := &expo.PushMessage{
