@@ -29,8 +29,7 @@ spec:
       priorityClassName: high-priority
       containers:
       - name: nginx
-        image: asia.gcr.io/gran-book-stg/nginx:1.2
-        imagePullPolicy: Always
+        image: asia.gcr.io/<PROJECT-ID>/nginx:latest
         resources:
           limits:
             cpu: 100m
@@ -47,8 +46,6 @@ spec:
           mountPath: /etc/tls
           readOnly: true
         - name: nginx-conf
-          mountPath: /etc/nginx
-        - name: nginx-conf-default
           mountPath: /etc/nginx/conf.d
         env:
         - name: TZ
@@ -60,12 +57,3 @@ spec:
       - name: nginx-conf
         configMap:
           name: nginx-config
-          items:
-          - key: nginx.conf
-            path: nginx.conf
-      - name: nginx-conf-default
-        configMap:
-          name: nginx-config
-          items:
-          - key: default.conf
-            path: default.conf
