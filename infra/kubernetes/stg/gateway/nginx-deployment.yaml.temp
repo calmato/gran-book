@@ -29,7 +29,7 @@ spec:
       priorityClassName: high-priority
       containers:
       - name: nginx
-        image: asia.gcr.io/<PROJECT-ID>/nginx:latest
+        image: asia.gcr.io/<PROJECT-ID>/nginx:1.3
         resources:
           limits:
             cpu: 100m
