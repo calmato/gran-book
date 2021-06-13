@@ -4,6 +4,37 @@ metadata:
   name: nginx-config
   namespace: gateway
 data:
+  nginx.conf: |
+    user  nginx;
+    worker_processes  auto;
+
+    error_log  /var/log/nginx/error.log notice;
+    pid        /var/run/nginx.pid;
+
+
+    events {
+        worker_connections  1024;
+    }
+
+    http {
+        # include       /etc/nginx/mime.types;
+        default_type  application/json;
+
+        log_format main '$remote_addr $host $remote_user [$time_local] "$request" '
+                        '$status $body_bytes_sent "$http_referer" '
+                        '"$http_user_agent" "$http_x_forwarded_for" "$request_time"';
+
+        access_log /var/log/nginx/access.log main;
+
+        sendfile        on;
+        #tcp_nopush     on;
+
+        keepalive_timeout  65;
+
+        #gzip  on;
+
+        include /etc/nginx/conf.d/*.conf;
+    }
   default.conf: |
     resolver kube-dns.kube-system.svc.cluster.local valid=60s ipv6=off;
 
