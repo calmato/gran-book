@@ -1,6 +1,7 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { ReactElement, useCallback, useState } from 'react';
+import dayjs from 'dayjs';
+import React, { ReactElement, useState } from 'react';
 import { StyleSheet, View, ScrollView, Text, TextInput } from 'react-native';
 import { Button } from 'react-native-elements';
 import BookNameAuthorRegister from '~/components/organisms/BookNameAuthorRegister';
@@ -49,13 +50,13 @@ const BookReadRegister = function BookReadRegister(props: Props): ReactElement {
     isDateUnknown: false,
   });
 
-  const handleRegisterButtonClick = useCallback(() => {
+  const handleRegisterButtonClick = () => {
     props.actions.registerReadBookImpression(book.id, {
       impression: impressionData.impression,
-      readOn: impressionData.date.toString(),
+      readOn: dayjs(impressionData.date).format('YYYY-MM-DD'),
     });
     props.navigation.navigate('Home');
-  }, [props.navigation]);
+  };
 
   return (
     <View style={styles.container}>
