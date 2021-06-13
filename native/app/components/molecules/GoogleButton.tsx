@@ -1,8 +1,8 @@
 import React, { ReactElement } from 'react';
 import { StyleSheet, ViewStyle, Image } from 'react-native';
 import { Button } from 'react-native-elements';
-import { COLOR, SOCIAL_BUTTON } from '~~/constants/theme';
 import google from '~~/assets/g-logo.png';
+import { COLOR, SOCIAL_BUTTON } from '~~/constants/theme';
 
 const color = 'rgba(0,0,0,0.54)';
 
@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
 
 interface Props {
   style?: ViewStyle;
+  onPress: () => void;
 }
 
 const GoogleButton = function GoogleButton(props: Props): ReactElement {
@@ -32,6 +33,7 @@ const GoogleButton = function GoogleButton(props: Props): ReactElement {
       buttonStyle={styles.buttonStyle}
       titleStyle={styles.fontStyle}
       containerStyle={props.style}
+      onPress={props.onPress}
       title="Googleでサインイン"
     />
   );

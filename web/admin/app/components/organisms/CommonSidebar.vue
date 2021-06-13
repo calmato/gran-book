@@ -85,7 +85,7 @@ export default defineComponent({
     ]
     const developerItems: ISidebarListItem[] = [
       { icon: 'mdi-account', text: '利用者管理', to: '/' },
-      { icon: 'mdi-book', text: '書籍管理', to: '/' },
+      { icon: 'mdi-book', text: '書籍管理', to: '/books' },
       { icon: 'mdi-store', text: 'ECサイト管理', to: '/' },
     ]
     const systemItems: ISidebarListItem[] = [

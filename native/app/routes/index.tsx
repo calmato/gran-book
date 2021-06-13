@@ -1,14 +1,14 @@
-import React, { ReactElement, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import * as UiContext from '~/lib/context/ui';
+import React, { ReactElement, useEffect } from 'react';
 import { UiContext as Context } from '~/lib/context';
-import Onboarding from '~/screens/Onboarding';
+import * as UiContext from '~/lib/context/ui';
 import AuthRoute from '~/routes/AuthRoute';
 import ServiceRoute from '~/routes/ServiceRoute';
-import { RootStackParamList } from '~/types/navigation';
-import { authenticationAsync, getAuthAsync } from '~/store/usecases';
+import Onboarding from '~/screens/Onboarding';
 import { useReduxDispatch } from '~/store/modules';
+import { authenticationAsync, getAuthAsync } from '~/store/usecases';
+import { RootStackParamList } from '~/types/navigation';
 const Stack = createStackNavigator<RootStackParamList>();
 
 function OnboadingRoute(): ReactElement {

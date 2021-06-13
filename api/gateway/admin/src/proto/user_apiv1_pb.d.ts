@@ -1665,10 +1665,10 @@ export namespace ChatRoomListResponse {
         setUserIdsList(value: Array<string>): Room;
         addUserIds(value: string, index?: number): string;
 
-        hasLatestmassage(): boolean;
-        clearLatestmassage(): void;
-        getLatestmassage(): ChatRoomListResponse.Message | undefined;
-        setLatestmassage(value?: ChatRoomListResponse.Message): Room;
+        hasLatestmessage(): boolean;
+        clearLatestmessage(): void;
+        getLatestmessage(): ChatRoomListResponse.Message | undefined;
+        setLatestmessage(value?: ChatRoomListResponse.Message): Room;
 
         serializeBinary(): Uint8Array;
         toObject(includeInstance?: boolean): Room.AsObject;
@@ -1684,7 +1684,7 @@ export namespace ChatRoomListResponse {
         export type AsObject = {
             id: string,
             userIdsList: Array<string>,
-            latestmassage?: ChatRoomListResponse.Message.AsObject,
+            latestmessage?: ChatRoomListResponse.Message.AsObject,
         }
     }
 

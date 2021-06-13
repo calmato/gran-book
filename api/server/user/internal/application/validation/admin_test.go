@@ -69,11 +69,11 @@ func TestAdminRequestValidation_ListAdmin(t *testing.T) {
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewAdminRequestValidation()
 
 			got := target.ListAdmin(tc.Input)
@@ -185,11 +185,11 @@ func TestAdminRequestValidation_SearchAdmin(t *testing.T) {
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewAdminRequestValidation()
 
 			got := target.SearchAdmin(tc.Input)
@@ -549,11 +549,11 @@ func TestAdminRequestValidation_CreateAdmin(t *testing.T) {
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewAdminRequestValidation()
 
 			got := target.CreateAdmin(tc.Input)
@@ -612,11 +612,11 @@ func TestAdminRequestValidation_UpdateAdminContact(t *testing.T) {
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewAdminRequestValidation()
 
 			got := target.UpdateAdminContact(tc.Input)
@@ -689,11 +689,11 @@ func TestAdminRequestValidation_UpdateAdminPassword(t *testing.T) {
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewAdminRequestValidation()
 
 			got := target.UpdateAdminPassword(tc.Input)
@@ -897,11 +897,11 @@ func TestAdminRequestValidation_UpdateAdminProfile(t *testing.T) {
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewAdminRequestValidation()
 
 			got := target.UpdateAdminProfile(tc.Input)
@@ -937,11 +937,11 @@ func TestAdminRequestValidation_UploadAdminThumbnail(t *testing.T) {
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewAdminRequestValidation()
 
 			got := target.UploadAdminThumbnail(tc.Input)

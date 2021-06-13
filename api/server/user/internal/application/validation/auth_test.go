@@ -123,11 +123,11 @@ func TestAuthRequestValidation_CreateAuth(t *testing.T) {
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewAuthRequestValidation()
 
 			got := target.CreateAuth(tc.Input)
@@ -175,11 +175,11 @@ func TestAuthRequestValidation_UpdateAuthEmail(t *testing.T) {
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewAuthRequestValidation()
 
 			got := target.UpdateAuthEmail(tc.Input)
@@ -252,11 +252,11 @@ func TestAuthRequestValidation_UpdateAuthPassword(t *testing.T) {
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewAuthRequestValidation()
 
 			got := target.UpdateAuthPassword(tc.Input)
@@ -334,11 +334,11 @@ func TestAuthRequestValidation_UpdateAuthProfile(t *testing.T) {
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewAuthRequestValidation()
 
 			got := target.UpdateAuthProfile(tc.Input)
@@ -688,11 +688,11 @@ func TestAuthRequestValidation_UpdateAuthAddress(t *testing.T) {
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewAuthRequestValidation()
 
 			got := target.UpdateAuthAddress(tc.Input)
@@ -728,11 +728,11 @@ func TestAuthRequestValidation_UploadAuthThumbnail(t *testing.T) {
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewAuthRequestValidation()
 
 			got := target.UploadAuthThumbnail(tc.Input)
@@ -768,11 +768,11 @@ func TestAuthRequestValidation_RegisterDevice(t *testing.T) {
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewAuthRequestValidation()
 
 			got := target.RegisterAuthDevice(tc.Input)

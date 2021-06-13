@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
     marginLeft: 32,
     color: COLOR.TEXT_WARNING,
     textDecorationLine: 'underline',
-  }
+  },
 });
 
 interface Props {

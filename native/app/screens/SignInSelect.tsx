@@ -1,13 +1,20 @@
-import { StackNavigationProp } from '@react-navigation/stack';
+import { useNavigation } from '@react-navigation/native';
+import * as Google from 'expo-auth-session/providers/google';
+import * as WebBrowser from 'expo-web-browser';
 import React, { ReactElement } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Alert, StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-elements';
-import { AuthStackParamList } from '~/types/navigation';
+import TitleLogoText from '~/components/atoms/TitleLogoText';
 import HeaderWithCloseButton from '~/components/organisms/HeaderWithCloseButton';
 import SignInButtonGroup from '~/components/organisms/SingInButtonGroup';
-import TitleLogoText from '~/components/atoms/TitleLogoText';
-
-type AuthSignInNavigationProp = StackNavigationProp<AuthStackParamList, 'SignUp'>;
+import { UiContext } from '~/lib/context';
+import { Status } from '~/lib/context/ui';
+import firebase from '~/lib/firebase';
+import * as LocalStorage from '~/lib/local-storage';
+import { generateErrorMessage } from '~/lib/util/ErrorUtil';
+import { Auth } from '~/store/models';
+import { useReduxDispatch } from '~/store/modules';
+import { setAuth } from '~/store/modules/auth';
 
 const styles = StyleSheet.create({
   container: {
@@ -24,11 +31,79 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  navigation: AuthSignInNavigationProp;
+  actions: {
+    getAuth: () => Promise<void>;
+    registerForPushNotifications: () => Promise<void>;
+  };
 }
 
+WebBrowser.maybeCompleteAuthSession();
+
 const SignInSelect = function SignInSelect(props: Props): ReactElement {
-  const navigation = props.navigation;
+  const navigation = useNavigation();
+  const { setApplicationState } = React.useContext(UiContext);
+  const { getAuth, registerForPushNotifications } = props.actions;
+
+  const [_request, response, handleSignInWithGoogle] = Google.useIdTokenAuthRequest({
+    clientId: process.env.CLIENT_ID_FOR_GOOGLE,
+  });
+
+  const createAlertNotifySignupError = (code: number) =>
+    Alert.alert('サインインに失敗', `${generateErrorMessage(code)}`, [
+      {
+        text: 'OK',
+      },
+    ]);
+
+  const dispatch = useReduxDispatch();
+
+  React.useEffect(() => {
+    if (response?.type === 'success') {
+      const { id_token } = response.params;
+      const credential = firebase.auth.GoogleAuthProvider.credential(id_token);
+      firebase
+        .auth()
+        .signInWithCredential(credential)
+        .then(async () => {
+          await firebase
+            .auth()
+            .currentUser?.getIdToken(true)
+            .then(async (token) => {
+              const user = firebase.auth().currentUser!;
+
+              const values: Auth.AuthValues = {
+                id: user.uid,
+                email: user.email || undefined,
+                emailVerified: true,
+                token: token,
+              };
+
+              const model: Auth.Model = {
+                ...Auth.initialState,
+                id: values.id,
+                token: values.token,
+                email: values.email || '',
+                emailVerified: values.emailVerified || false,
+              };
+              dispatch(setAuth(values));
+              await LocalStorage.AuthStorage.save(model);
+            });
+        })
+        .then(() => {
+          return registerForPushNotifications();
+        })
+        .then(async () => {
+          await getAuth();
+        })
+        .then(() => {
+          setApplicationState(Status.AUTHORIZED);
+        })
+        .catch((err) => {
+          console.log(err);
+          createAlertNotifySignupError(err);
+        });
+    }
+  }, [response, dispatch, getAuth, registerForPushNotifications, setApplicationState]);
 
   return (
     <View style={styles.container}>
@@ -41,6 +116,7 @@ const SignInSelect = function SignInSelect(props: Props): ReactElement {
         </Text>
       </View>
       <SignInButtonGroup
+        handleSignInWithGoogle={() => handleSignInWithGoogle()}
         handleRegisterWithMail={() => navigation.navigate('SignUp')}
         handleSignInWithMail={() => navigation.navigate('SignIn')}
       />

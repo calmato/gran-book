@@ -13781,7 +13781,7 @@ proto.proto.ChatRoomListResponse.Room.toObject = function(includeInstance, msg) 
   var f, obj = {
     id: jspb.Message.getFieldWithDefault(msg, 1, ""),
     userIdsList: (f = jspb.Message.getRepeatedField(msg, 2)) == null ? undefined : f,
-    latestmassage: (f = msg.getLatestmassage()) && proto.proto.ChatRoomListResponse.Message.toObject(includeInstance, f)
+    latestmessage: (f = msg.getLatestmessage()) && proto.proto.ChatRoomListResponse.Message.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -13829,7 +13829,7 @@ proto.proto.ChatRoomListResponse.Room.deserializeBinaryFromReader = function(msg
     case 3:
       var value = new proto.proto.ChatRoomListResponse.Message;
       reader.readMessage(value,proto.proto.ChatRoomListResponse.Message.deserializeBinaryFromReader);
-      msg.setLatestmassage(value);
+      msg.setLatestmessage(value);
       break;
     default:
       reader.skipField();
@@ -13874,7 +13874,7 @@ proto.proto.ChatRoomListResponse.Room.serializeBinaryToWriter = function(message
       f
     );
   }
-  f = message.getLatestmassage();
+  f = message.getLatestmessage();
   if (f != null) {
     writer.writeMessage(
       3,
@@ -13941,10 +13941,10 @@ proto.proto.ChatRoomListResponse.Room.prototype.clearUserIdsList = function() {
 
 
 /**
- * optional Message latestMassage = 3;
+ * optional Message latestMessage = 3;
  * @return {?proto.proto.ChatRoomListResponse.Message}
  */
-proto.proto.ChatRoomListResponse.Room.prototype.getLatestmassage = function() {
+proto.proto.ChatRoomListResponse.Room.prototype.getLatestmessage = function() {
   return /** @type{?proto.proto.ChatRoomListResponse.Message} */ (
     jspb.Message.getWrapperField(this, proto.proto.ChatRoomListResponse.Message, 3));
 };
@@ -13954,7 +13954,7 @@ proto.proto.ChatRoomListResponse.Room.prototype.getLatestmassage = function() {
  * @param {?proto.proto.ChatRoomListResponse.Message|undefined} value
  * @return {!proto.proto.ChatRoomListResponse.Room} returns this
 */
-proto.proto.ChatRoomListResponse.Room.prototype.setLatestmassage = function(value) {
+proto.proto.ChatRoomListResponse.Room.prototype.setLatestmessage = function(value) {
   return jspb.Message.setWrapperField(this, 3, value);
 };
 
@@ -13963,8 +13963,8 @@ proto.proto.ChatRoomListResponse.Room.prototype.setLatestmassage = function(valu
  * Clears the message field making it undefined.
  * @return {!proto.proto.ChatRoomListResponse.Room} returns this
  */
-proto.proto.ChatRoomListResponse.Room.prototype.clearLatestmassage = function() {
-  return this.setLatestmassage(undefined);
+proto.proto.ChatRoomListResponse.Room.prototype.clearLatestmessage = function() {
+  return this.setLatestmessage(undefined);
 };
 
 
@@ -13972,7 +13972,7 @@ proto.proto.ChatRoomListResponse.Room.prototype.clearLatestmassage = function() 
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.proto.ChatRoomListResponse.Room.prototype.hasLatestmassage = function() {
+proto.proto.ChatRoomListResponse.Room.prototype.hasLatestmessage = function() {
   return jspb.Message.getField(this, 3) != null;
 };
 

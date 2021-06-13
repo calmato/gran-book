@@ -44,6 +44,6 @@ export interface ISearchResultItem {
 }
 
 export interface IErrorResponse {
-  error: string
-  error_description: string
+  error: string;
+  error_description: string;
 }
