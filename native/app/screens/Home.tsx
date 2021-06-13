@@ -1,7 +1,7 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { ReactElement, useCallback, useEffect, useState } from 'react';
-import { StyleSheet, ScrollView, RefreshControl , View } from 'react-native';
+import { StyleSheet, ScrollView, RefreshControl, View } from 'react-native';
 
 import { Header } from 'react-native-elements';
 import RNPickerSelect from 'react-native-picker-select';
