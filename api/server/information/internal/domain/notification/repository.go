@@ -10,7 +10,7 @@ import (
 type Repository interface {
 	ListNotification(ctx context.Context, q *domain.ListQuery) ([]*Notification, error)
 	ShowNotication(ctx context.Context, notificatinID int) (*Notification, error)
-	CreateNotification(ctx context.Context, n *domain.ListQuery) error
-	UpdateNotification(ctx context.Context, n *domain.ListQuery) error
+	CreateNotification(ctx context.Context, n *Notification) error
+	UpdateNotification(ctx context.Context, n *Notification) error
 	DeleteNotification(ctx context.Context, notificatinID int) error
 }
