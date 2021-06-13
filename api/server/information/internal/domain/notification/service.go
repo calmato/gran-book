@@ -6,11 +6,11 @@ import (
 	"github.com/calmato/gran-book/api/server/information/internal/domain"
 )
 
-// Repository - Informationサービス
+// Service - Notifiationサービス
 type Service interface {
 	ListNotification(ctx context.Context, q *domain.ListQuery) ([]*Notification, error)
-	ShowNotication(ctx context.Context, q *domain.ListQuery) ([]*Notification, error)
-	CreateNotification(ctx context.Context, q *domain.ListQuery) ([]*Notification, error)
-	UpdateNotification(ctx context.Context, q *domain.ListQuery) ([]*Notification, error)
-	DeleteNotification(ctx context.Context, q *domain.ListQuery) ([]*Notification, error)
+	ShowNotication(ctx context.Context, notificatinID int) (*Notification, error)
+	CreateNotification(ctx context.Context, n *Notification) error
+	UpdateNotification(ctx context.Context, n *Notification) error
+	DeleteNotification(ctx context.Context, notificatinID int) error
 }

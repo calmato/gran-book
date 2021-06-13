@@ -4,5 +4,5 @@ import "context"
 
 // Validation - Notificationドメインバリデーション
 type Validation interface {
-	Notification(ctx context.Context, b *Notification) error
+	Notification(ctx context.Context, n *Notification) error
 }
