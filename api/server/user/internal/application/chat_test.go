@@ -11,6 +11,7 @@ import (
 	"github.com/calmato/gran-book/api/server/user/internal/domain/chat"
 	mock_validation "github.com/calmato/gran-book/api/server/user/mock/application/validation"
 	mock_chat "github.com/calmato/gran-book/api/server/user/mock/domain/chat"
+	mock_user "github.com/calmato/gran-book/api/server/user/mock/domain/user"
 	"github.com/golang/mock/gomock"
 )
 
@@ -65,8 +66,10 @@ func TestChatApplication_ListRoom(t *testing.T) {
 		csm := mock_chat.NewMockService(ctrl)
 		csm.EXPECT().ListRoom(ctx, q, tc.args.uid).Return(tc.want.rooms, tc.want.err)
 
+		usm := mock_user.NewMockService(ctrl)
+
 		t.Run(name, func(t *testing.T) {
-			target := NewChatApplication(crvm, csm)
+			target := NewChatApplication(crvm, csm, usm)
 
 			rooms, err := target.ListRoom(ctx, tc.args.uid)
 			if !reflect.DeepEqual(err, tc.want.err) {
@@ -124,10 +127,14 @@ func TestChatApplication_CreateRoom(t *testing.T) {
 
 		csm := mock_chat.NewMockService(ctrl)
 		csm.EXPECT().ValidationRoom(ctx, tc.want.room).Return(nil)
+		csm.EXPECT().PushCreateRoom(ctx, tc.want.room).Return(nil)
 		csm.EXPECT().CreateRoom(ctx, tc.want.room).Return(tc.want.err)
 
+		usm := mock_user.NewMockService(ctrl)
+		usm.EXPECT().ListInstanceID(ctx, tc.want.room.UserIDs).Return(tc.want.room.InstanceIDs, nil)
+
 		t.Run(name, func(t *testing.T) {
-			target := NewChatApplication(crvm, csm)
+			target := NewChatApplication(crvm, csm, usm)
 
 			room, err := target.CreateRoom(ctx, tc.args.input, tc.args.uid)
 			if !reflect.DeepEqual(err, tc.want.err) {

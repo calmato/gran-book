@@ -95,6 +95,21 @@ func (mr *MockServiceMockRecorder) ListFollower(ctx, q, uid interface{}) *gomock
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListFollower", reflect.TypeOf((*MockService)(nil).ListFollower), ctx, q, uid)
 }
 
+// ListInstanceID mocks base method
+func (m *MockService) ListInstanceID(ctx context.Context, userIDs []string) ([]string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListInstanceID", ctx, userIDs)
+	ret0, _ := ret[0].([]string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListInstanceID indicates an expected call of ListInstanceID
+func (mr *MockServiceMockRecorder) ListInstanceID(ctx, userIDs interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListInstanceID", reflect.TypeOf((*MockService)(nil).ListInstanceID), ctx, userIDs)
+}
+
 // ListCount mocks base method
 func (m *MockService) ListCount(ctx context.Context, q *domain.ListQuery) (int, error) {
 	m.ctrl.T.Helper()
