@@ -2793,6 +2793,11 @@
   resolved "https://registry.yarnpkg.com/@react-native-picker/picker/-/picker-1.9.11.tgz#490c752417c17d687e2941659b3c0bff9cb79b83"
   integrity sha512-E7whvvMIl9Ln1sxgug7OAEVWQ69n82iV0d2OWWp5VV52+RW3azKh1IFm4rxdW5/oByMfl7FFL0eHNelGgY4BMQ==
 
+"@react-native-segmented-control/segmented-control@^2.3.0":
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/@react-native-segmented-control/segmented-control/-/segmented-control-2.3.0.tgz#f3ec8bf40a7e7df8c9ed15cc97513eb343e6f89c"
+  integrity sha512-CWa6G/j0SyVkavrf4riyuKWrSJmALOCn9F+PNtDPhlQMVKlZyYL11BOFl+plLqYqNu6Hm2+xkHVx6eZI63c/Tw==
+
 "@react-navigation/bottom-tabs@^5.11.7":
   version "5.11.7"
   resolved "https://registry.yarnpkg.com/@react-navigation/bottom-tabs/-/bottom-tabs-5.11.7.tgz#a1d220afe02b6897c0705ddc40265e65c01fa0ba"
