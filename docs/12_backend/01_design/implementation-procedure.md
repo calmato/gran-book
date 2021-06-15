@@ -25,15 +25,21 @@
 
 ## マイクロサービスの実装
 
+![implementation-microservice-01](./images/implementation-microservice-01.jpeg)
+
 1. Domain層の実装
+    ![implementation-microservice-02](./images/implementation-microservice-02.jpeg)
     1. エンティティを作成
         * internal/domain/[domain]/entity.go
+        ![implementation-microservice-03](./images/implementation-microservice-03.jpeg)
     2. ドメインサービスのインターフェースを作成
         * internal/domain/[domain]/service.go
         * internal/domain/[domain]/repository.go
         * internal/domain/[domain]/validation.go
+        ![implementation-microservice-04](./images/implementation-microservice-04.jpeg)
 
 2. Infrastructure層の実装
+    ![implementation-microservice-05](./images/implementation-microservice-05.jpeg)
     1. (1-2)で作成したインターフェースの詳細を実装 (Service以外)
         * internal/infrastructure/repository/[domain].go
         * internal/infrastructure/validation/[domain].go
@@ -41,6 +47,7 @@
         * internal/infrastructure/service/[domain].go
 
 3. Application層の実装
+    ![implementation-microservice-06](./images/implementation-microservice-06.jpeg)
     1. 外部から受け取った値をAPI内部で使えるようにするために詰め替える用の Input オブジェクトの作成
         * internal/application/input/[domain].go
     2. (必要あれば、外部へレスポンスとして返す用の Output オブジェクトも作成)
@@ -51,12 +58,18 @@
     4. ユースケース (ユーザを登録する...みたいな) を表現するためのインターフェースを作成
         * internal/application/[domain].go
         * (-> ここで定義するメソッドは、基本的にはInterface層のメソッドと1対1対応するようになるはず)
+        ![implementation-microservice-07](./images/implementation-microservice-07.jpeg)
 
 4. Interface層の実装
+    ![implementation-microservice-08](./images/implementation-microservice-08.jpeg)
     1. Protobufで生成されたコードを参考に、外部APIからのリクエスト/レスポンス処理の実装
         * internal/interface/grpc/v1/[domain].go
+        ![implementation-microservice-09](./images/implementation-microservice-09.jpeg)
 
-5. 単体テストのコード作成
+5. 動作検証
+    ![implementation-microservice-10](./images/implementation-microservice-10.jpeg)
+
+6. 単体テストのコード作成
     1. Infrastructure層のテストコード作成
         * internal/infrastructure/service/[domain]_test.go
         * internal/infrastructure/validation/[domain]_test.go
