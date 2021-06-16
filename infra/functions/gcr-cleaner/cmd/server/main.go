@@ -9,6 +9,7 @@ import (
 	"runtime"
 	"time"
 
+	"github.com/calmato/gran-book/infra/functions/gcr-cleaner/internal/server"
 	"github.com/calmato/gran-book/infra/functions/gcr-cleaner/pkg/gcrcleaner"
 	"github.com/google/go-containerregistry/pkg/v1/google"
 )
@@ -34,18 +35,18 @@ func main() {
 		log.Fatalf("failed to create cleaner: %s", err)
 	}
 
-	cleanerServer, err := NewServer(cleaner)
+	cleanerServer, err := server.NewServer(cleaner)
 	if err != nil {
 		log.Fatalf("failed to create server: %s", err)
 	}
 
-	cache := NewTimerCache(5 * time.Minute)
+	cache := server.NewTimerCache(5 * time.Minute)
 
 	mux := http.NewServeMux()
 	mux.Handle("/http", cleanerServer.HTTPHandler())
 	mux.Handle("/pubsub", cleanerServer.PubSubHandler(cache))
 
-	server := &http.Server{
+	httpServer := &http.Server{
 		Addr:    ":" + port,
 		Handler: mux,
 	}
@@ -53,7 +54,7 @@ func main() {
 	go func() {
 		log.Printf("server is listening on %s\n", port)
 
-		err := server.ListenAndServe()
+		err := httpServer.ListenAndServe()
 		if err != nil && err != http.ErrServerClosed {
 			log.Fatalf("server exited: %s", err)
 		}
@@ -68,7 +69,7 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	if err := server.Shutdown(ctx); err != nil {
+	if err := httpServer.Shutdown(ctx); err != nil {
 		log.Fatalf("failed to shutdown server: %s", err)
 	}
 }
