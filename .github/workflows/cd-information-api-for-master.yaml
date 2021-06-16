@@ -29,16 +29,14 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest] # exclude: macos-latest, windows-latest
-        gcloud-cli: [281.0.0]
 
     steps:
       - name: Check out code
         uses: actions/checkout@v2
 
-      - name: Setup gcloud CLI
-        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      - name: Setup Cloud SDK
+        uses: oogle-github-actions/setup-gcloud@master
         with:
-          version: ${{ matrix.gcloud-cli }}
           service_account_email: ${{ secrets.STG_GCP_SA_EMAIL }}
           service_account_key: ${{ secrets.STG_GCP_SA_KEY }}
           export_default_credentials: true
@@ -74,16 +72,14 @@ jobs:
   #   strategy:
   #     matrix:
   #       os: [ubuntu-latest] # exclude: macos-latest, windows-latest
-  #       gcloud-cli: [281.0.0]
 
   #   steps:
   #     - name: Check out code
   #       uses: actions/checkout@v2
 
-  #     - name: Setup gcloud CLI
-  #       uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+  #     - name: Setup Cloud SDK
+  #       uses: oogle-github-actions/setup-gcloud@master
   #       with:
-  #         version: ${{ matrix.gcloud-cli }}
   #         service_account_email: ${{ secrets.STG_GCP_SA_EMAIL }}
   #         service_account_key: ${{ secrets.STG_GCP_SA_KEY }}
   #         export_default_credentials: true
@@ -110,16 +106,14 @@ jobs:
   #   strategy:
   #     matrix:
   #       os: [ubuntu-latest] # exclude: macos-latest, windows-latest
-  #       gcloud-cli: [281.0.0]
 
   #   steps:
   #     - name: Check out code
   #       uses: actions/checkout@v2
 
-  #     - name: Setup gcloud CLI
-  #       uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+  #     - name: Setup Cloud SDK
+  #       uses: oogle-github-actions/setup-gcloud@master
   #       with:
-  #         version: ${{ matrix.gcloud-cli }}
   #         service_account_email: ${{ secrets.STG_GCP_SA_EMAIL }}
   #         service_account_key: ${{ secrets.STG_GCP_SA_KEY }}
   #         export_default_credentials: true
