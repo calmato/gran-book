@@ -6,7 +6,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
+	"github.com/calmato/gran-book/api/server/information/internal/domain/exception"
 	"github.com/go-playground/validator/v10"
 )
 
