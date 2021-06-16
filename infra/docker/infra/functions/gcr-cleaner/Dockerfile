@@ -1,6 +1,6 @@
 FROM golang:1.15.6-alpine AS builder
 
-WORKDIR /go/src/github.com/calamto/gran-book/infra/functions/gcr-cleaner
+WORKDIR /go/src/github.com/calmato/gran-book/infra/functions/gcr-cleaner
 
 RUN apk add --update --no-cache \
       git \
