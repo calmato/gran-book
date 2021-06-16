@@ -20,7 +20,6 @@ The payload is expected to be JSON with the following fields:
   to limit cleaning only on the tags with begining with is `dev`. The default
   is no filtering. The regular expression is parsed according to the [Go regexp package syntax](https://golang.org/pkg/regexp/syntax/).
 
-
 ---
 
 ## 参考

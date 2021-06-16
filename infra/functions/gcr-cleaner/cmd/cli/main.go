@@ -1,4 +1,4 @@
-package cli
+package main
 
 import (
 	"flag"
@@ -12,17 +12,27 @@ import (
 )
 
 var (
-	json        = flag.String("token", os.Getenv("GCP_SERVICE_KEY_JSON"), "JSON which GCP service account")
+	serviceKey  = flag.String("token", os.Getenv("GCP_SERVICE_KEY_JSON"), "JSON which GCP service account")
 	repo        = flag.String("repo", "", "Repository name")
 	keep        = flag.Int("keep", 3, "Minimum to keep generation")
 	allowTagged = flag.Bool("allow-tagged", false, "Delete tagged images")
 	tagFilter   = flag.String("tag-filter", "", "Tags pattern to clean")
 )
 
-func Exec() error {
+func main() error {
 	flag.Parse()
 
-	if *json == "" {
+	err := exec()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "%s\n", err)
+		os.Exit(1)
+	}
+
+	return nil
+}
+
+func exec() error {
+	if *serviceKey == "" {
 		return fmt.Errorf("the environment variable GCP_SERVICE_KEY_JSON is required")
 	}
 
@@ -39,7 +49,7 @@ func Exec() error {
 		return fmt.Errorf("failed to parse -tag-filter: %w", err)
 	}
 
-	auth := google.NewJSONKeyAuthenticator(*json)
+	auth := google.NewJSONKeyAuthenticator(*serviceKey)
 	concurrency := runtime.NumCPU()
 	cleaner, err := gcrcleaner.NewCleaner(auth, concurrency)
 	if err != nil {
@@ -48,10 +58,12 @@ func Exec() error {
 
 	// Do the deletion.
 	fmt.Fprintf(os.Stdout, "%s: deleting refs older than %d generations\n", *repo, *keep)
+
 	deleted, err := cleaner.Clean(*repo, *keep, *allowTagged, tagFilterRegexp)
 	if err != nil {
 		return err
 	}
+
 	fmt.Fprintf(os.Stdout, "%s: successfully deleted %d refs\n", *repo, len(deleted))
 
 	return nil
