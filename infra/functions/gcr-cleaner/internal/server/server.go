@@ -134,7 +134,7 @@ func (s *Server) clean(r io.ReadCloser) ([]string, int, error) {
 	allowTagged := p.AllowTagged
 	tagFilterRegexp, err := regexp.Compile(p.TagFilter)
 	if err != nil {
-		return nil, 500, fmt.Errorf("failed to parse tag_filter: %w", err)
+		return nil, 500, fmt.Errorf("failed to parse tagFilter: %w", err)
 	}
 
 	// Do the deletion.
@@ -160,10 +160,10 @@ type Payload struct {
 
 	// AllowTagged is a Boolean value determine if tagged images are allowed
 	// to be deleted.
-	AllowTagged bool `json:"allow_tagged"`
+	AllowTagged bool `json:"allowTagged"`
 
 	// TagFilter is the tags pattern to be allowed removing
-	TagFilter string `json:"tag_filter"`
+	TagFilter string `json:"tagFilter"`
 }
 
 type cleanResp struct {
@@ -178,7 +178,7 @@ type errorResp struct {
 type pubsubMessage struct {
 	Message struct {
 		Data []byte `json:"data"`
-		ID   string `json:"message_id"`
+		ID   string `json:"messageId"`
 	} `json:"message"`
 	Subscription string `json:"subscription"`
 }

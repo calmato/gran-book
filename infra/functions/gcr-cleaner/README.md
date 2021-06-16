@@ -25,3 +25,4 @@ The payload is expected to be JSON with the following fields:
 ## 参考
 
 * [GitHub - GCR Cleaner](https://github.com/sethvargo/gcr-cleaner)
+* [GitHub - go-containerregistry](https://github.com/google/go-containerregistry)
