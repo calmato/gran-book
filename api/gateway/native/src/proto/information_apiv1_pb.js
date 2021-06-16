@@ -2262,13 +2262,13 @@ proto.proto.InquiryResponse.prototype.toObject = function(opt_includeInstance) {
  */
 proto.proto.InquiryResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    inquiryId: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    inquiryId: jspb.Message.getFieldWithDefault(msg, 1, 0),
     senderId: jspb.Message.getFieldWithDefault(msg, 2, ""),
     adminId: jspb.Message.getFieldWithDefault(msg, 3, ""),
     subject: jspb.Message.getFieldWithDefault(msg, 4, ""),
     description: jspb.Message.getFieldWithDefault(msg, 5, ""),
     email: jspb.Message.getFieldWithDefault(msg, 6, ""),
-    isReplied: jspb.Message.getFieldWithDefault(msg, 7, ""),
+    isReplied: jspb.Message.getBooleanFieldWithDefault(msg, 7, false),
     createdAt: jspb.Message.getFieldWithDefault(msg, 8, ""),
     updatedAt: jspb.Message.getFieldWithDefault(msg, 9, "")
   };
@@ -2308,7 +2308,7 @@ proto.proto.InquiryResponse.deserializeBinaryFromReader = function(msg, reader) 
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {number} */ (reader.readInt64());
       msg.setInquiryId(value);
       break;
     case 2:
@@ -2332,7 +2332,7 @@ proto.proto.InquiryResponse.deserializeBinaryFromReader = function(msg, reader) 
       msg.setEmail(value);
       break;
     case 7:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {boolean} */ (reader.readBool());
       msg.setIsReplied(value);
       break;
     case 8:
@@ -2373,8 +2373,8 @@ proto.proto.InquiryResponse.prototype.serializeBinary = function() {
 proto.proto.InquiryResponse.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getInquiryId();
-  if (f.length > 0) {
-    writer.writeString(
+  if (f !== 0) {
+    writer.writeInt64(
       1,
       f
     );
@@ -2415,8 +2415,8 @@ proto.proto.InquiryResponse.serializeBinaryToWriter = function(message, writer) 
     );
   }
   f = message.getIsReplied();
-  if (f.length > 0) {
-    writer.writeString(
+  if (f) {
+    writer.writeBool(
       7,
       f
     );
@@ -2439,20 +2439,20 @@ proto.proto.InquiryResponse.serializeBinaryToWriter = function(message, writer) 
 
 
 /**
- * optional string inquiry_id = 1;
- * @return {string}
+ * optional int64 inquiry_id = 1;
+ * @return {number}
  */
 proto.proto.InquiryResponse.prototype.getInquiryId = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
 };
 
 
 /**
- * @param {string} value
+ * @param {number} value
  * @return {!proto.proto.InquiryResponse} returns this
  */
 proto.proto.InquiryResponse.prototype.setInquiryId = function(value) {
-  return jspb.Message.setProto3StringField(this, 1, value);
+  return jspb.Message.setProto3IntField(this, 1, value);
 };
 
 
@@ -2547,20 +2547,20 @@ proto.proto.InquiryResponse.prototype.setEmail = function(value) {
 
 
 /**
- * optional string is_replied = 7;
- * @return {string}
+ * optional bool is_replied = 7;
+ * @return {boolean}
  */
 proto.proto.InquiryResponse.prototype.getIsReplied = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 7, ""));
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 7, false));
 };
 
 
 /**
- * @param {string} value
+ * @param {boolean} value
  * @return {!proto.proto.InquiryResponse} returns this
  */
 proto.proto.InquiryResponse.prototype.setIsReplied = function(value) {
-  return jspb.Message.setProto3StringField(this, 7, value);
+  return jspb.Message.setProto3BooleanField(this, 7, value);
 };
 
 

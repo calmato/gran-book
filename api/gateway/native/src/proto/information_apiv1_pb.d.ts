@@ -278,8 +278,8 @@ export namespace CreateInquiryRequest {
 }
 
 export class InquiryResponse extends jspb.Message { 
-    getInquiryId(): string;
-    setInquiryId(value: string): InquiryResponse;
+    getInquiryId(): number;
+    setInquiryId(value: number): InquiryResponse;
     getSenderId(): string;
     setSenderId(value: string): InquiryResponse;
     getAdminId(): string;
@@ -290,8 +290,8 @@ export class InquiryResponse extends jspb.Message {
     setDescription(value: string): InquiryResponse;
     getEmail(): string;
     setEmail(value: string): InquiryResponse;
-    getIsReplied(): string;
-    setIsReplied(value: string): InquiryResponse;
+    getIsReplied(): boolean;
+    setIsReplied(value: boolean): InquiryResponse;
     getCreatedAt(): string;
     setCreatedAt(value: string): InquiryResponse;
     getUpdatedAt(): string;
@@ -309,13 +309,13 @@ export class InquiryResponse extends jspb.Message {
 
 export namespace InquiryResponse {
     export type AsObject = {
-        inquiryId: string,
+        inquiryId: number,
         senderId: string,
         adminId: string,
         subject: string,
         description: string,
         email: string,
-        isReplied: string,
+        isReplied: boolean,
         createdAt: string,
         updatedAt: string,
     }
