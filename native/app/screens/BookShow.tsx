@@ -3,7 +3,7 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import * as WebBrowser from 'expo-web-browser';
 import React, { ReactElement, useCallback, useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Overlay, Text } from 'react-native-elements';
 import BookImpression from '../components/organisms/BookImpression';
 import BookInfo from '~/components/organisms/BookInfo';
@@ -14,6 +14,12 @@ import { HomeTabStackPramList } from '~/types/navigation';
 import { IBook } from '~/types/response';
 import { ISearchResultItem } from '~/types/response/external/rakuten-books';
 import { COLOR } from '~~/constants/theme';
+
+const styles = StyleSheet.create({
+  menuActiveFontStyle: {
+    color: COLOR.PRIMARY,
+  },
+});
 
 interface Props {
   route:
@@ -108,6 +114,8 @@ const BookShow = function BookShow(props: Props): ReactElement {
       </Overlay>
       <HeaderWithBackButton onPress={() => navigation.goBack()} title={book.title} />
       <SegmentedControl
+        activeFontStyle={styles.menuActiveFontStyle}
+        backgroundColor={COLOR.BACKGROUND_WHITE}
         values={selectMenuList}
         selectedIndex={selectedIndex}
         onValueChange={(event) => setIndex(selectMenuList.indexOf(event))}
