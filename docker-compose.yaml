@@ -186,6 +186,7 @@ services:
     build:
       context: ./infra/docker/infra/mysql
       dockerfile: Dockerfile
+    image: mysql/mysql-server:8.0.20
     volumes:
       - ./infra/mysql/development.cnf:/etc/mysql/conf.d/my.cnf
       - ./infra/mysql/sql:/docker-entrypoint-initdb.d

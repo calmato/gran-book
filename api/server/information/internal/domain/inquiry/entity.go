@@ -10,7 +10,7 @@ type Inquiry struct {
 	Subject     string    `gorm:""`
 	Description string    `gorm:""`
 	Email       string    `gorm:""`
-	IsReplied   int       `gorm:""`
+	IsReplied   bool      `gorm:""`
 	CreatedAt   time.Time `gorm:"<-:create"`
 	UpdatedAt   time.Time `gorm:""`
 }
