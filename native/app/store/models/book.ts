@@ -48,7 +48,7 @@ export function filterBooks(model: Model): ViewBooks {
  */
 function readingBooks(books: IBook[]): IBook[] {
   return books.filter((book: IBook) => {
-    return book.bookshelf?.status === 'read';
+    return book.bookshelf?.status === 'reading';
   });
 }
 
@@ -59,7 +59,7 @@ function readingBooks(books: IBook[]): IBook[] {
  */
 function readBooks(books: IBook[]): IBook[] {
   return books.filter((book: IBook) => {
-    return book.bookshelf?.status === 'reading';
+    return book.bookshelf?.status === 'read';
   });
 }
 

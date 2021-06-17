@@ -51,3 +51,8 @@ export interface MessageForm {
   createdAt: firebase.firestore.Timestamp;
   userId: string;
 }
+
+export interface ImpressionForm {
+  impression: string,
+  readOn: string
+}

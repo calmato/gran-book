@@ -14,14 +14,14 @@ const styles = StyleSheet.create({
 
 interface Props {
   title: string;
-  image_url: string;
+  imageUrl: string;
   author: string;
 }
 
 const BookNameAuthorRegister = function BookNameAuthorRegister(props: Props): ReactElement {
   return (
     <View style={styles.bookInfoStyle}>
-      <Image source={{ uri: props.image_url }} style={{ width: 75, height: 105 }} />
+      <Image source={{ uri: props.imageUrl }} style={{ width: 75, height: 105 }} />
       <View style={{ justifyContent: 'space-around', marginStart: 20 }}>
         <Text style={{ fontSize: 16 }}>{props.title}</Text>
         <Text style={{ fontSize: 16, color: COLOR.GREY }}>{props.author}</Text>

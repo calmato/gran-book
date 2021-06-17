@@ -1,5 +1,6 @@
 ﻿import { createStackNavigator } from '@react-navigation/stack';
 import React, { ReactElement } from 'react';
+import BookReadRegister from '~/containers/BookReadRegister';
 import BookShow from '~/containers/BookShow';
 import Home from '~/containers/Home';
 import SearchResult from '~/screens/SearchResult';
@@ -18,6 +19,7 @@ const HomeTabRoute = function HomeTabRoute(): ReactElement {
       <HomeTabStack.Screen name="SearchResult" component={SearchResult} />
       <HomeTabStack.Screen name="SearchResultBookShow" component={BookShow} />
       <HomeTabStack.Screen name="BookShow" component={BookShow} />
+      <HomeTabStack.Screen name="BookReadRegister" component={BookReadRegister} />
     </HomeTabStack.Navigator>
   );
 };
