@@ -1,4 +1,4 @@
-import firebase from 'firebase';
+import firebase from '~/lib/firebase';
 
 export type SingUpForm = {
   email: string;
@@ -47,9 +47,20 @@ export type AccountEditForm = {
 };
 
 export interface MessageForm {
-  newText: string;
+  text: string;
   createdAt: firebase.firestore.Timestamp;
-  userId: string;
+  _id: string;
+  name: string;
+}
+
+export interface TransferMessageForm {
+  text: string;
+  createdAt: any;
+  _id: string;
+  user:{
+    _id: string;
+    name: string;
+  };
 }
 
 export interface ImpressionForm {
