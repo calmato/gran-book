@@ -4,7 +4,7 @@ import { setBooks } from '../modules/book';
 import { internal } from '~/lib/axios';
 import { AppState } from '~/store/modules';
 import { ImpressionForm } from '~/types/forms';
-import { IBook, IBookResponse } from '~/types/response';
+import { IBook, IBookResponse, IImpressionResponse } from '~/types/response';
 import { IErrorResponse, ISearchResultItem } from '~/types/response/external/rakuten-books';
 
 /**
@@ -100,6 +100,23 @@ export function registerReadBookImpressionAsync(bookId: number, impressionForm: 
     const user = getState().auth;
     registerReadBookAsync(user.id, bookId, impressionForm);
   };
+}
+
+/**
+ * バックエンドAPIにアクセスし指定した書籍の感想を取得する関数
+ * @param bookId 感想を取得する書籍のID
+ * @returns
+ */
+export async function getAllImpressionByBookIdAsync(bookId: number) {
+  return internal
+    .get(`/v1/books/${bookId}/reviews`)
+    .then((res: AxiosResponse<IImpressionResponse>) => {
+      return res.data;
+    })
+    .catch((err: AxiosResponse<IErrorResponse>) => {
+      console.log(err);
+      return Promise.reject(err);
+    });
 }
 
 /**
