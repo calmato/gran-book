@@ -10,7 +10,7 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-// RequestValidator - リクエストバリデーションインターフェース
+// RequestVsalidator - リクエストバリデーションインターフェース
 type RequestValidator interface {
 	Run(i interface{}, prefix string) []*exception.ValidationError
 }
