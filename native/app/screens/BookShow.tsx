@@ -135,9 +135,9 @@ const BookShow = function BookShow(props: Props): ReactElement {
           handleOpenRakutenPageButton={_handleOpenRakutenPageButtonAsync}
           handleAddButton={handleAddBookButton}
         />
-      ) : (
-        <BookImpression />
-      )}
+      ) : impressions ? (
+        <BookImpression book={book} impressionResponse={impressions} />
+      ) : null}
     </View>
   );
 };
