@@ -1,9 +1,9 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { authSelector, userSelector } from '~/store/selectors';
 import OwnProfile from '~/screens/OwnProfile';
-import { useReduxDispatch } from '~/store/modules';
 import { Auth, User } from '~/store/models';
+import { useReduxDispatch } from '~/store/modules';
+import { authSelector, userSelector } from '~/store/selectors';
 import { getOwnProfileAsync } from '~/store/usecases/user';
 
 export default function ConnectedOwnProfile(): JSX.Element {

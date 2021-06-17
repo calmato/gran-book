@@ -25,3 +25,9 @@
 * NoSQL
 
 ![NoSQL_DB設計](./NoSQL_20210601.jpeg)
+
+---
+
+## 参考
+
+* [TECHSCORE - SQL](https://www.techscore.com/tech/sql/index.html/)

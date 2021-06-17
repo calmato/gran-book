@@ -1,12 +1,12 @@
 import 'jest';
-import React from 'react';
-
+import { Ionicons } from '@expo/vector-icons';
 import { shallow, configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import CheckBox from '~/components/molecules/CheckBox';
+import React from 'react';
+
 import { Text, View, ViewStyle } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { colors } from 'react-native-elements';
+import CheckBox from '~/components/molecules/CheckBox';
 
 configure({ adapter: new Adapter() });
 

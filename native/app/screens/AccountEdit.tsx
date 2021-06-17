@@ -1,15 +1,15 @@
 import React, { ReactElement, useState, useMemo } from 'react';
 import { StyleSheet, View, Text, TextInput, Alert } from 'react-native';
-import { COLOR } from '~~/constants/theme';
-import { external } from '~/lib/axios';
-import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import { Button } from 'react-native-elements';
+import FullTextInput from '~/components/molecules/FullTextInput';
 import HalfTextInput from '~/components/molecules/HalfTextInput';
 import NumberTextInput from '~/components/molecules/NumberTextInput';
-import FullTextInput from '~/components/molecules/FullTextInput';
 import PrefecturePicker from '~/components/molecules/PrefecturePicker';
-import { AccountEditForm } from '~/types/forms';
+import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
+import { external } from '~/lib/axios';
 import { generateErrorMessage } from '~/lib/util/ErrorUtil';
+import { AccountEditForm } from '~/types/forms';
+import { COLOR } from '~~/constants/theme';
 
 const maxNameLength7 = 7;
 const maxNameLength16 = 16;

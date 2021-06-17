@@ -1,11 +1,11 @@
 import React, { ReactElement, useState, useMemo } from 'react';
 import { StyleSheet, View, Text, Alert } from 'react-native';
-import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
-import { COLOR } from '~~/constants/theme';
-import { PasswordEditForm } from '~/types/forms';
-import PasswordInput from '~/components/molecules/PasswordInput';
-import { generateErrorMessage } from '~/lib/util/ErrorUtil';
 import { Button } from 'react-native-elements';
+import PasswordInput from '~/components/molecules/PasswordInput';
+import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
+import { generateErrorMessage } from '~/lib/util/ErrorUtil';
+import { PasswordEditForm } from '~/types/forms';
+import { COLOR } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
   buttonStyle: {

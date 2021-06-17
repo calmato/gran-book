@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { COLOR } from '~~/constants/theme';
 import ProfileNumberOfThings from '../atoms/ProfileNumberOfThings';
+import { COLOR } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
   container: {

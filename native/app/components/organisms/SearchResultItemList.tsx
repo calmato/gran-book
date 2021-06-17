@@ -1,22 +1,20 @@
 ﻿import React, { ReactElement } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { ISearchResponse, ISearchResultItem } from '~/types/response/external/rakuten-books';
+import { View } from 'react-native';
 import SearchResultItem from '~/components/molecules/SearchResultItem';
-
-const styles = StyleSheet.create({});
+import { ISearchResultItem } from '~/types/response/external/rakuten-books';
 
 interface Props {
-  results: ISearchResponse;
+  resultItems: ISearchResultItem[];
   onPress: (item: Partial<ISearchResultItem>) => void;
 }
 
 const SearchResultItemList = function SearchResultItemList(props: Props): ReactElement {
-  const results = props.results;
+  const items = props.resultItems;
 
   return (
     <View>
-      {results.Items.map((item) => (
-        <SearchResultItem key={item.isbn} book={item} onPress={() => props.onPress(item)} />
+      {items.map((item, idx) => (
+        <SearchResultItem key={idx} book={item} onPress={() => props.onPress(item)} />
       ))}
     </View>
   );

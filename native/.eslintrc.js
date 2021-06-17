@@ -8,6 +8,8 @@ module.exports = {
     'eslint:recommended',
     'plugin:react/recommended',
     'plugin:@typescript-eslint/recommended',
+    'plugin:import/warnings',
+    'plugin:import/typescript',
     'prettier'
   ],
   'parser': '@typescript-eslint/parser',
@@ -22,6 +24,8 @@ module.exports = {
     'react',
     '@typescript-eslint',
     'react-hooks',
+    'import',
+    'unused-imports',
     'prettier'
   ],
   'rules': {
@@ -33,11 +37,19 @@ module.exports = {
     'react-hooks/rules-of-hooks': 'error',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
-    '@typescript-eslint/no-unused-vars': 'off'
+    '@typescript-eslint/no-unused-vars': 'off',
+    'sort-imports': 0,
+    'import/order': ['warn', { 'alphabetize': { 'order': 'asc' } }],
+    'unused-imports/no-unused-imports-ts': 'warn',
   },
   'settings': {
     'react': {
       'version': 'detect'
+    },
+    'import/resolver': {
+      'node': {
+        'extensions': ['.ts']
+      }
     }
   }
 };

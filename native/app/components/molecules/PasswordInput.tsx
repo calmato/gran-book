@@ -1,5 +1,5 @@
-import React, { ReactElement, useState } from 'react';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import React, { ReactElement, useState } from 'react';
 import { colors, Input } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
