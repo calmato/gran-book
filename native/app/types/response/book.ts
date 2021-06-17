@@ -20,7 +20,7 @@ export interface IBook {
   publisher: string;
   createdAt: string; // TODO: 日付の扱いどうするか？
   updatedAt: string;
-  bookshelf?: IBookshelf
+  bookshelf?: IBookshelf;
 }
 
 interface IBookshelf {

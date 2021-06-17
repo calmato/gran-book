@@ -53,6 +53,6 @@ export interface MessageForm {
 }
 
 export interface ImpressionForm {
-  impression: string,
-  readOn: string
+  impression: string;
+  readOn: string;
 }
