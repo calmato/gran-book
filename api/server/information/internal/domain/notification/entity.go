@@ -13,6 +13,7 @@ type Notification struct {
 	Importance  string
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
+	Category    *Category
 }
 
 // Category	-	カテゴリーエンティティ
