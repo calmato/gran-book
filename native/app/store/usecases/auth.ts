@@ -1,17 +1,17 @@
-import { Dispatch } from 'redux';
-import { Platform } from 'react-native';
 import { AxiosResponse } from 'axios';
-import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
+import * as Notifications from 'expo-notifications';
 import Firebase from 'firebase';
+import { Platform } from 'react-native';
+import { Dispatch } from 'redux';
 import { internal } from '~/lib/axios';
 import firebase from '~/lib/firebase';
 import * as LocalStorage from '~/lib/local-storage';
 import { Auth } from '~/store/models';
 import { AppState } from '~/store/modules';
 import { setAuth, setProfile } from '~/store/modules/auth';
-import { IAuthResponse } from '~/types/response';
 import { AccountEditForm } from '~/types/forms';
+import { IAuthResponse } from '~/types/response';
 
 interface IAuth {
   user: Firebase.User;

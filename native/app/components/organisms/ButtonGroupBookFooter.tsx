@@ -1,8 +1,8 @@
+import { MaterialCommunityIcons, FontAwesome5 } from '@expo/vector-icons';
 import React, { ReactElement } from 'react';
 import { StyleSheet, Dimensions, View, Text } from 'react-native';
-import { MaterialCommunityIcons, FontAwesome5 } from '@expo/vector-icons';
-import { COLOR } from '~~/constants/theme';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { COLOR } from '~~/constants/theme';
 
 const { width } = Dimensions.get('window');
 const iconSize = 25;

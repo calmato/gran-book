@@ -1,9 +1,9 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { authSelector } from '~/store/selectors';
-import { Auth } from '~/store/models';
 import EmailEdit from '~/screens/EmailEdit';
+import { Auth } from '~/store/models';
 import { useReduxDispatch } from '~/store/modules';
+import { authSelector } from '~/store/selectors';
 import { editEmailAsync, signOutAsync } from '~/store/usecases';
 
 export default function ConnectedEmailEdit(): JSX.Element {

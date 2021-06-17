@@ -1,5 +1,5 @@
-import React, { ReactElement } from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import React, { ReactElement } from 'react';
 
 interface Props {
   date: Date;

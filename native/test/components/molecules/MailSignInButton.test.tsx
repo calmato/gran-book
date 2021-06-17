@@ -1,12 +1,12 @@
 import 'jest';
-import React from 'react';
-
 import { shallow, configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import MailSignInButton from '~/components/molecules/MailSignInButton';
-import { Button } from 'react-native-elements';
-import { SOCIAL_BUTTON } from '~~/constants/theme';
+import React from 'react';
+
 import { ViewStyle } from 'react-native';
+import { Button } from 'react-native-elements';
+import MailSignInButton from '~/components/molecules/MailSignInButton';
+import { SOCIAL_BUTTON } from '~~/constants/theme';
 
 configure({ adapter: new Adapter() });
 

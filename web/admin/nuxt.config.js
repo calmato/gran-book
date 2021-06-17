@@ -66,6 +66,7 @@ export default {
     firebaseApiKey: process.env.FIREBASE_API_KEY,
     firebaseProjectId: process.env.FIREBASE_PROJECT_ID,
     firebaseMessagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+    rakutenAppId: process.env.RAKUTEN_APPLICATION_ID,
     apiURL: process.env.API_URL,
   },
 

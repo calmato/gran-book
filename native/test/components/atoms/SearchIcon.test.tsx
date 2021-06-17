@@ -1,10 +1,10 @@
 import 'jest';
-import React from 'react';
-
+import { Ionicons } from '@expo/vector-icons';
 import { shallow, configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
+import React from 'react';
+
 import SearchIcon from '~/components/atoms/SearchIcon';
-import { Ionicons } from '@expo/vector-icons';
 import { COLOR } from '~~/constants/theme';
 
 configure({ adapter: new Adapter() });
