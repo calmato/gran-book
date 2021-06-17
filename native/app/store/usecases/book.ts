@@ -90,9 +90,10 @@ export function registerOwnBookAsync(status: string, bookId: number) {
 }
 
 /**
- *
- * @param bookId バックエンドAPIにアクセスし書籍の感想を登録する関数
+ * バックエンドAPIにアクセスし書籍の感想を登録する関数
+ * @param bookId 感想を登録する書籍のID
  * @param impressionForm 書籍の感想
+ * TODO エラーハンドリング
  */
 export function registerReadBookImpressionAsync(bookId: number, impressionForm: ImpressionForm) {
   return async (_dispatch: Dispatch, getState: () => AppState) => {
@@ -119,7 +120,11 @@ async function getAllBookByUserId(
     });
 }
 
-async function registerReadBookAsync(userId: string, bookId: number, impressionForm?: ImpressionForm) {
+async function registerReadBookAsync(
+  userId: string,
+  bookId: number,
+  impressionForm?: ImpressionForm,
+) {
   return internal
     .post(`v1/users/${userId}/books/${bookId}/read`, impressionForm)
     .then((res) => {
