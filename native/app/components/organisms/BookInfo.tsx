@@ -32,6 +32,7 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     fontSize: 12,
     alignSelf: 'stretch',
+    color: COLOR.GREY,
     backgroundColor: COLOR.BACKGROUND_WHITE,
   },
   detailContainer: {
