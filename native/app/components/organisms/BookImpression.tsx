@@ -1,4 +1,5 @@
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import dayjs from 'dayjs';
 import React, { ReactElement } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { ListItem, Avatar, Divider, Image, Badge } from 'react-native-elements';
@@ -17,9 +18,41 @@ const styles = StyleSheet.create({
   },
   bookInfoStyle: {
     flexDirection: 'row',
-    marginStart: 10,
-    marginTop: 10,
+    paddingHorizontal: 10,
+    alignSelf: 'stretch',
     backgroundColor: COLOR.TEXT_WHITE,
+    marginVertical: 8,
+  },
+  titleStyle: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: COLOR.GREY,
+    marginBottom: 8,
+  },
+  authorStyle: {
+    fontSize: 12,
+    color: COLOR.GREY,
+  },
+  listTitleStyle: {
+    color: COLOR.GREY,
+    fontSize: 16,
+    marginBottom: 4,
+  },
+  listSubTitleStyle: {
+    color: COLOR.GREY,
+    fontSize: 12,
+  },
+  reviewStyle: {
+    paddingHorizontal: 16,
+    marginBottom: 8,
+    color: COLOR.GREY,
+    fontSize: 14,
+  },
+  reactionContainerStyle: {
+    marginVertical: 4,
+    paddingHorizontal: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });
 
@@ -41,29 +74,44 @@ const BookImpression = function BookImpression(props: Props): ReactElement {
       />
       <View style={styles.bookInfoStyle}>
         <Image source={{ uri: book.thumbnailUrl }} style={{ width: 50, height: 70 }} />
-        <View style={{ justifyContent: 'space-around', marginStart: 20 }}>
-          <Text style={{ fontSize: 16 }}>{book.title}</Text>
-          <Text style={{ fontSize: 16, color: COLOR.GREY }}>{book.author}</Text>
+        <View
+          style={{
+            flexDirection: 'column',
+            width: '90%',
+            justifyContent: 'center',
+            paddingHorizontal: 8,
+          }}>
+          <Text style={styles.titleStyle}>{book.title}</Text>
+          <Text style={styles.authorStyle}>{book.author}</Text>
         </View>
       </View>
-      <View style={{ marginTop: 10 }}>
+
+      <View>
         {reviews.map((review) => (
-          <View style={{ backgroundColor: COLOR.TEXT_WHITE }} key={review.id}>
+          <View style={{ backgroundColor: COLOR.TEXT_WHITE, marginBottom: 4 }} key={review.id}>
             <ListItem key={review.id}>
-              <Avatar source={{ uri: review.user.thumbnailUrl }} rounded />
+              {review.user.thumbnailUrl !== '' ? (
+                <Avatar source={{ uri: review.user.thumbnailUrl }} rounded />
+              ) : (
+                <Avatar rounded>
+                  <MaterialIcons name="person-outline" size={36} color={COLOR.GREY} />
+                </Avatar>
+              )}
               <ListItem.Content>
-                <ListItem.Title>{review.user.username + 'が感想を投稿しました'}</ListItem.Title>
-                <ListItem.Subtitle>{review.createdAt}</ListItem.Subtitle>
+                <ListItem.Title style={styles.listTitleStyle}>
+                  {review.user.username + ' が感想を投稿しました'}
+                </ListItem.Title>
+                <ListItem.Subtitle style={styles.listSubTitleStyle}>
+                  {dayjs(review.createdAt).format('YYYY/MM/DD')}
+                </ListItem.Subtitle>
               </ListItem.Content>
             </ListItem>
-            <Text style={{ fontSize: 16, marginStart: 15, marginEnd: 15 }}>
-              {review.impression}
-            </Text>
-            <View style={{ marginStart: 15, flexDirection: 'row', alignItems: 'center' }}>
-              <Ionicons name="heart-outline" size={36} color={COLOR.GREY} />
+            <Text style={styles.reviewStyle}>{review.impression}</Text>
+            <Divider style={{ height: 0.5 }} />
+            <View style={styles.reactionContainerStyle}>
+              <Ionicons name="heart-outline" size={20} color={COLOR.GREY} />
               <Text style={{ marginStart: 10 }}></Text>
             </View>
-            <Divider style={{ height: 2 }} />
           </View>
         ))}
       </View>
