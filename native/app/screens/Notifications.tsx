@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Header } from 'react-native-elements';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import HeaderText from '~/components/atoms/HeaderText';
 import { COLOR } from '~~/constants/theme';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
@@ -25,6 +25,19 @@ const Notifications = () => {
         selectedIndex={selectedIndex}
         onValueChange={(event) => setIndex(notificationList.indexOf(event))}
       />
+      {selectedIndex === 0 ? (
+        <View>
+          <Text>チャットルーム一覧</Text>
+        </View>
+      ) : selectedIndex === 1 ? (
+        <View>
+          <Text>取引き</Text>
+        </View>
+      ) : (
+        <View>
+          <Text>お知らせ</Text>
+        </View>
+      )}
     </View>
   );
 };
