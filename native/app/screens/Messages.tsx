@@ -9,6 +9,34 @@ import { TransferMessageForm } from '~/types/forms';
 import { Header } from 'react-native-elements';
 import { GiftedChat, Send } from 'react-native-gifted-chat';
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: COLOR.BACKGROUND_GREY,
+  },
+  header: {
+    color: COLOR.TEXT_TITLE,
+    fontSize: 20,
+    fontWeight: 'bold',
+    flexDirection: 'column',
+    justifyContent: 'flex-end',
+  },
+  sendContainer: {
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    flexDirection: 'row',
+    height: 'auto',
+    minHeight: '10%',
+    marginRight: '3%',
+    bottom: 0,
+  },
+  sendButton: {
+    marginRight: '3%',
+    marginBottom: '5%',
+    color: COLOR.PRIMARY,
+  },
+});
+
 export const MessagesScreen = () => {
   const [messages, setMessages] = useState<TransferMessageForm[]>([]);
   const docRef = getMessageDocRef();
@@ -78,33 +106,5 @@ export const MessagesScreen = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLOR.BACKGROUND_GREY,
-  },
-  header: {
-    color: COLOR.TEXT_TITLE,
-    fontSize: 20,
-    fontWeight: 'bold',
-    flexDirection: 'column',
-    justifyContent: 'flex-end',
-  },
-  sendContainer: {
-    justifyContent: 'center',
-    alignItems: 'flex-end',
-    flexDirection: 'row',
-    height: 'auto',
-    minHeight: '10%',
-    marginRight: '3%',
-    bottom: 0,
-  },
-  sendButton: {
-    marginRight: '3%',
-    marginBottom: '5%',
-    color: COLOR.PRIMARY,
-  },
-});
 
 export default MessagesScreen;

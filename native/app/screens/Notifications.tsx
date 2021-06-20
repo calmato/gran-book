@@ -1,13 +1,62 @@
 import React, { useState } from 'react';
-import { Header } from 'react-native-elements';
+import { Header, Avatar } from 'react-native-elements';
 import { View, StyleSheet, Text } from 'react-native';
 import HeaderText from '~/components/atoms/HeaderText';
 import { COLOR } from '~~/constants/theme';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const styles = StyleSheet.create({
   selected: {
     color: COLOR.PRIMARY,
+  },
+  roomContainer: {
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    backgroundColor: COLOR.BACKGROUND_WHITE,
+    height: 70,
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  roomInfo: {
+    paddingLeft: 10,
+    paddingRight: 20,
+    width: '100%',
+    flexDirection: 'column',
+  },
+  topInfo: {
+    width: '100%',
+    height: 30,
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  bottomInfo: {
+    width: '100%',
+    alignItems: 'center',
+    height: 40,
+    flexDirection: 'row',
+  },
+  userName: {
+    color: COLOR.TEXT_DEFAULT,
+    width: '50%',
+    fontWeight: 'bold',
+    fontSize: 24,
+  },
+  createdAt: {
+    textAlign: 'right',
+    width: '40%',
+    color: COLOR.TEXT_GRAY,
+    fontSize: 20,
+  },
+  latestMessage: {
+    fontSize: 24,
+    width: '70%',
+    color: COLOR.TEXT_GRAY,
+  },
+  forwardButton: {
+    textAlign: 'right',
+    color: 'black',
+    width: '20%',
   },
 });
 
@@ -27,7 +76,23 @@ const Notifications = () => {
       />
       {selectedIndex === 0 ? (
         <View>
-          <Text>チャットルーム一覧</Text>
+          <View style={styles.roomContainer}>
+            <Avatar
+              rounded
+              size="medium"
+              source={{ uri: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg' }}
+            />
+            <View style={styles.roomInfo}>
+              <View style={styles.topInfo}>
+                <Text style={styles.userName}>はまだ</Text>
+                <Text style={styles.createdAt}>2021/06/21</Text>
+              </View>
+              <View style={styles.bottomInfo}>
+                <Text style={styles.latestMessage}>新規メッセージ</Text>
+                <MaterialIcons style={styles.forwardButton} size={32} name="keyboard-arrow-right" />
+              </View>
+            </View>
+          </View>
         </View>
       ) : selectedIndex === 1 ? (
         <View>
