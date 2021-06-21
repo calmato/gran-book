@@ -1,8 +1,8 @@
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import React, { ReactElement } from 'react';
 import { View } from 'react-native';
+import BookImpression from '~/components/organisms/BookImpression';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
-import BookImpression from '~/screens/BookImpression';
 import BookShow from '~/screens/BookShow';
 import { COLOR } from '~~/constants/theme';
 

@@ -1,7 +1,10 @@
-import { Ionicons , MaterialCommunityIcons , MaterialIcons , FontAwesome , FontAwesome5 } from '@expo/vector-icons';
-
-
-
+import {
+  Ionicons,
+  MaterialCommunityIcons,
+  MaterialIcons,
+  FontAwesome,
+  FontAwesome5,
+} from '@expo/vector-icons';
 
 import { useNavigation } from '@react-navigation/native';
 import React, { ReactElement } from 'react';

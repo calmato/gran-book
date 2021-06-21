@@ -57,7 +57,7 @@ export interface TransferMessageForm {
   text: string;
   createdAt: any;
   _id: string;
-  user:{
+  user: {
     _id: string;
     name: string;
   };

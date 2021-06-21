@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import React, { ReactElement, useMemo, useState } from 'react';
-import { StyleSheet, View , Alert } from 'react-native';
+import { StyleSheet, View, Alert } from 'react-native';
 import { Button, colors, Input } from 'react-native-elements';
 import CheckBox from '~/components/molecules/CheckBox';
 import MailInput from '~/components/molecules/MailInput';
@@ -10,7 +10,6 @@ import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import { generateErrorMessage } from '~/lib/util/ErrorUtil';
 import { emailValidation } from '~/lib/validation';
 import { SingUpForm } from '~/types/forms';
-
 
 const styles = StyleSheet.create({
   container: {
