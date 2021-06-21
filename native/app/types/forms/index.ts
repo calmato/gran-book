@@ -64,6 +64,6 @@ export interface TransferMessageForm {
 }
 
 export interface ImpressionForm {
-  impression: string,
-  readOn: string
+  impression: string;
+  readOn: string;
 }

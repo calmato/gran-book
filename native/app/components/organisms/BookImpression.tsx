@@ -1,34 +1,10 @@
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import dayjs from 'dayjs';
 import React, { ReactElement } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { ListItem, Avatar, Divider, Image, Badge } from 'react-native-elements';
+import { IBook, IImpressionResponse } from '~/types/response';
 import { COLOR } from '~~/constants/theme';
-
-const list = [
-  {
-    name: 'hamachans',
-    avatar_url:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTF0rqSrJnxHQSHdHNXEEUYO4sRucTmGd3BtA&usqp=CAU',
-    subtilte: '2020/12/02',
-    text: '面白すぎわろた',
-    numberOfLikes: 5,
-  },
-  {
-    name: 'Atsuhide',
-    avatar_url:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTF0rqSrJnxHQSHdHNXEEUYO4sRucTmGd3BtA&usqp=CAU',
-    subtilte: '2020/12/04',
-    text: '最高です',
-    numberOfLikes: 10000,
-  },
-];
-
-const bookInfo = {
-  title: '何者',
-  image_url:
-    'https://thechara.xsrv.jp/wp-content/uploads/2020/06/200622%E3%80%90NARUTO%E3%80%91KV_02.jpg',
-  author: '稲富',
-};
 
 const styles = StyleSheet.create({
   badgeStyle: {
@@ -42,42 +18,100 @@ const styles = StyleSheet.create({
   },
   bookInfoStyle: {
     flexDirection: 'row',
-    marginStart: 10,
-    marginTop: 10,
+    paddingHorizontal: 10,
+    alignSelf: 'stretch',
     backgroundColor: COLOR.TEXT_WHITE,
+    marginVertical: 8,
+  },
+  titleStyle: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: COLOR.GREY,
+    marginBottom: 8,
+  },
+  authorStyle: {
+    fontSize: 12,
+    color: COLOR.GREY,
+  },
+  listTitleStyle: {
+    color: COLOR.GREY,
+    fontSize: 16,
+    marginBottom: 4,
+  },
+  listSubTitleStyle: {
+    color: COLOR.GREY,
+    fontSize: 12,
+  },
+  reviewStyle: {
+    paddingHorizontal: 16,
+    marginBottom: 8,
+    color: COLOR.GREY,
+    fontSize: 14,
+  },
+  reactionContainerStyle: {
+    marginVertical: 4,
+    paddingHorizontal: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });
 
-const BookImpression = function BookImpression(): ReactElement {
+interface Props {
+  impressionResponse: IImpressionResponse;
+  book: IBook;
+}
+
+const BookImpression = function BookImpression(props: Props): ReactElement {
+  const book = props.book;
+  const reviews = props.impressionResponse.reviews;
+  const total = props.impressionResponse.total;
+
   return (
     <View>
       <Badge
-        value={<Text style={{ fontSize: 16 }}>{`${list.length}件`}</Text>}
+        value={<Text style={{ fontSize: 16 }}>{`${total}件`}</Text>}
         badgeStyle={styles.badgeStyle}
       />
       <View style={styles.bookInfoStyle}>
-        <Image source={{ uri: bookInfo.image_url }} style={{ width: 50, height: 70 }} />
-        <View style={{ justifyContent: 'space-around', marginStart: 20 }}>
-          <Text style={{ fontSize: 16 }}>{bookInfo.title}</Text>
-          <Text style={{ fontSize: 16, color: COLOR.GREY }}>{bookInfo.author}</Text>
+        <Image source={{ uri: book.thumbnailUrl }} style={{ width: 50, height: 70 }} />
+        <View
+          style={{
+            flexDirection: 'column',
+            width: '90%',
+            justifyContent: 'center',
+            paddingHorizontal: 8,
+          }}>
+          <Text style={styles.titleStyle}>{book.title}</Text>
+          <Text style={styles.authorStyle}>{book.author}</Text>
         </View>
       </View>
-      <View style={{ marginTop: 10 }}>
-        {list.map((l, index) => (
-          <View style={{ backgroundColor: COLOR.TEXT_WHITE }} key={index}>
-            <ListItem key={index}>
-              <Avatar source={{ uri: l.avatar_url }} rounded />
+
+      <View>
+        {reviews.map((review) => (
+          <View style={{ backgroundColor: COLOR.TEXT_WHITE, marginBottom: 4 }} key={review.id}>
+            <ListItem key={review.id}>
+              {review.user.thumbnailUrl !== '' ? (
+                <Avatar source={{ uri: review.user.thumbnailUrl }} rounded />
+              ) : (
+                <Avatar rounded>
+                  <MaterialIcons name="person-outline" size={36} color={COLOR.GREY} />
+                </Avatar>
+              )}
               <ListItem.Content>
-                <ListItem.Title>{l.name + 'が感想を投稿しました'}</ListItem.Title>
-                <ListItem.Subtitle>{l.subtilte}</ListItem.Subtitle>
+                <ListItem.Title style={styles.listTitleStyle}>
+                  {review.user.username + ' が感想を投稿しました'}
+                </ListItem.Title>
+                <ListItem.Subtitle style={styles.listSubTitleStyle}>
+                  {dayjs(review.createdAt).format('YYYY/MM/DD')}
+                </ListItem.Subtitle>
               </ListItem.Content>
             </ListItem>
-            <Text style={{ fontSize: 16, marginStart: 15, marginEnd: 15 }}>{l.text}</Text>
-            <View style={{ marginStart: 15, flexDirection: 'row', alignItems: 'center' }}>
-              <Ionicons name="heart-outline" size={36} color={COLOR.GREY} />
-              <Text style={{ marginStart: 10 }}>{l.numberOfLikes}</Text>
+            <Text style={styles.reviewStyle}>{review.impression}</Text>
+            <Divider style={{ height: 0.5 }} />
+            <View style={styles.reactionContainerStyle}>
+              <Ionicons name="heart-outline" size={20} color={COLOR.GREY} />
+              <Text style={{ marginStart: 10 }}></Text>
             </View>
-            <Divider style={{ height: 2 }} />
           </View>
         ))}
       </View>
