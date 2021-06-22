@@ -30,6 +30,7 @@ func (ia *inquiryApplication) Create(ctx context.Context, in *input.CreateInquir
 		Description: in.Description,
 		Email:       in.Email,
 	}
+
 	err := ia.inquiryService.Create(ctx, i)
 	if err != nil {
 		return nil, err

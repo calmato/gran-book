@@ -4,7 +4,7 @@ import (
 	"context"
 )
 
-// Service - Bookサービス
+// Service - Inquiryサービス
 type Service interface {
 	Create(ctx context.Context, i *Inquiry) error
 }
