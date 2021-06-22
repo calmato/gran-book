@@ -1,13 +1,13 @@
+import { MaterialIcons, Ionicons } from '@expo/vector-icons';
+import { StatusBar as ExpoStatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { StatusBar as ExpoStatusBar } from 'expo-status-bar';
-import firebase from '~/lib/firebase';
-import { getMessageDocRef } from '~/store/usecases/auth';
-import { COLOR } from '~~/constants/theme';
-import { MaterialIcons, Ionicons } from '@expo/vector-icons';
-import { TransferMessageForm } from '~/types/forms';
 import { Header } from 'react-native-elements';
 import { GiftedChat, Send } from 'react-native-gifted-chat';
+import firebase from '~/lib/firebase';
+import { getMessageDocRef } from '~/store/usecases/auth';
+import { TransferMessageForm } from '~/types/forms';
+import { COLOR } from '~~/constants/theme';
 
 export const MessagesScreen = () => {
   const [messages, setMessages] = useState<TransferMessageForm[]>([]);
