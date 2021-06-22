@@ -10,6 +10,10 @@ const styles = StyleSheet.create({
   selected: {
     color: COLOR.PRIMARY,
   },
+  listContainer: {
+    backgroundColor: COLOR.BACKGROUND_GREY,
+    marginVertical: 5,
+  },
   roomContainer: {
     paddingVertical: 10,
     paddingHorizontal: 10,
@@ -75,7 +79,7 @@ const Notifications = () => {
         onValueChange={(event) => setIndex(notificationList.indexOf(event))}
       />
       {selectedIndex === 0 ? (
-        <View>
+        <View style={styles.listContainer}>
           <View style={styles.roomContainer}>
             <Avatar
               rounded
