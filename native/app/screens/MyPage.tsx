@@ -46,8 +46,8 @@ const MyPage = function MyPage(props: Props): ReactElement {
 
   return (
     <View>
-      <ScrollView stickyHeaderIndices={[0]}>
-        <Header centerComponent={<HeaderText title="マイページ" />} />
+      <Header centerComponent={<HeaderText title="Gran Book" />} />
+      <ScrollView>
         <View>
           <ListItem bottomDivider onPress={() => navigation.navigate('OwnProfile')}>
             <Avatar source={{ uri: avatar.thumbnailUrl }} rounded />
