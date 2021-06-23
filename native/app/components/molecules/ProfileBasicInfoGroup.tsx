@@ -7,28 +7,27 @@ import { COLOR } from '~~/constants/theme';
 const styles = StyleSheet.create({
   container: {
     backgroundColor: COLOR.BACKGROUND_WHITE,
-    padding: 10,
   },
   reviewContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingTop: 10,
-    paddingBottom: 10,
+    marginTop: 6,
   },
   reviewRate: {
-    paddingStart: 10,
-    paddingEnd: 10,
+    marginStart: 10,
     color: COLOR.TEXT_DEFAULT,
-  },
-  icon: {
-    paddingStart: 30,
   },
   button: {
     height: 35,
-    alignSelf: 'flex-end',
+    alignSelf: 'center',
+    marginVertical: 8,
   },
   buttonTitle: {
     color: COLOR.TEXT_TITLE,
+  },
+  name: {
+    color: COLOR.TEXT_DEFAULT,
+    fontSize: 18,
   },
 });
 
@@ -43,24 +42,30 @@ interface Props {
 
 const ProfileBasicInfoGroup = function ProfileBasicInfoGroup(props: Props): ReactElement {
   return (
-    <ListItem style={styles.container}>
-      <Avatar source={{ uri: props.avatarUrl }} rounded size="medium" />
-      <ListItem.Content>
-        <ListItem.Title>{props.name}</ListItem.Title>
-        <View style={styles.reviewContainer}>
-          <Rating fractions={1} readonly={true} startingValue={props.rating} imageSize={20} />
-          <Text style={styles.reviewRate}>{props.rating}</Text>
-          <Text>({props.reviewCount}件)</Text>
-          <MaterialIcons name="keyboard-arrow-right" size={24} color="black" style={styles.icon} />
-        </View>
-        <Button
-          title={props.buttonTitle}
-          buttonStyle={styles.button}
-          titleStyle={styles.buttonTitle}
-          onPress={props.handleClick}
-        />
-      </ListItem.Content>
-    </ListItem>
+    <View style={styles.container}>
+      <ListItem containerStyle={styles.container}>
+        {props.avatarUrl !== '' ? (
+          <Avatar source={{ uri: props.avatarUrl }} rounded size="medium" />
+        ) : (
+          <MaterialIcons name="person-outline" size={36} color={COLOR.GREY} />
+        )}
+        <ListItem.Content>
+          <ListItem.Title style={styles.name}>{props.name}</ListItem.Title>
+          <View style={styles.reviewContainer}>
+            <Rating fractions={1} readonly={true} startingValue={props.rating} imageSize={16} />
+            <Text style={styles.reviewRate}>{props.rating}</Text>
+            <Text>（{props.reviewCount}件）</Text>
+          </View>
+        </ListItem.Content>
+        <MaterialIcons name="keyboard-arrow-right" size={24} color={COLOR.GREY} />
+      </ListItem>
+      <Button
+        title={props.buttonTitle}
+        buttonStyle={styles.button}
+        titleStyle={styles.buttonTitle}
+        onPress={props.handleClick}
+      />
+    </View>
   );
 };
 
