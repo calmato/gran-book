@@ -3,7 +3,6 @@ import React, { ReactElement, useState } from 'react';
 import { RefreshControl, StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
-import BookList from '~/components/molecules/BookList';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import ProfileViewGroup from '~/components/organisms/ProfileViewGroup';
 import { COLOR } from '~~/constants/theme';
@@ -70,10 +69,10 @@ const OwnProfile = function OwnProfile(props: Props): ReactElement {
     setHasGottonProfile(true);
     handleGetOwnProfile();
   }
-  console.log('debug', 'render');
+
   return (
     <View style={styles.container}>
-      <HeaderWithBackButton title="プロフィール" onPress={() => navigation.goBack()} />
+      <HeaderWithBackButton title={props.username} onPress={() => navigation.goBack()} />
       <ScrollView
         refreshControl={<RefreshControl refreshing={isLoading} onRefresh={handleGetOwnProfile} />}>
         <ProfileViewGroup
@@ -89,7 +88,6 @@ const OwnProfile = function OwnProfile(props: Props): ReactElement {
         />
         <Text style={styles.selfIntroduction}>{props.selfIntroduction}</Text>
         <Text style={styles.title}>出品リスト</Text>
-        <BookList />
       </ScrollView>
     </View>
   );
