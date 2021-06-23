@@ -47,7 +47,7 @@ const MyPage = function MyPage(props: Props): ReactElement {
   return (
     <View>
       <Header centerComponent={<HeaderText title="Gran Book" />} />
-      <ScrollView>
+      <ScrollView style={{ marginBottom: 'auto' }}>
         <View>
           <ListItem bottomDivider onPress={() => navigation.navigate('OwnProfile')}>
             <Avatar source={{ uri: avatar.thumbnailUrl }} rounded />
