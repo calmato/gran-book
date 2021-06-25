@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLOR.BACKGROUND_WHITE,
     color: COLOR.TEXT_DEFAULT,
     marginTop: 10,
-    padding: 10,
+    padding: 16,
     alignSelf: 'stretch',
     minHeight: 100,
   },
