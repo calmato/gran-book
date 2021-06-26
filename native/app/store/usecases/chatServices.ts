@@ -8,11 +8,11 @@ async function getRoomInfoByUserId(
   userId: string,
 ): Promise<AxiosResponse<any> | AxiosResponse<IErrorResponse>> {
   return internal
-  .get(`/v1/users/{userId}/chat`)
-  .then((res:AxiosResponse<RoomInfoResponse>) => {
-    return res;
-  })
-  .catch((err: AxiosResponse<IErrorResponse>) => {
-    return Promise.reject(err);
-  });
+    .get('/v1/users/{userId}/chat')
+    .then((res:AxiosResponse<RoomInfoResponse>) => {
+      return res;
+    })
+    .catch((err: AxiosResponse<IErrorResponse>) => {
+      return Promise.reject(err);
+    });
 }

@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { Header, Avatar } from 'react-native-elements';
-import { View, StyleSheet, Text, FlatList } from 'react-native';
-import HeaderText from '~/components/atoms/HeaderText';
-import { COLOR } from '~~/constants/theme';
-import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import { MaterialIcons } from '@expo/vector-icons';
+import SegmentedControl from '@react-native-segmented-control/segmented-control';
+import React, { useState } from 'react';
+import { View, StyleSheet, Text, FlatList } from 'react-native';
+import { Header, Avatar } from 'react-native-elements';
+import HeaderText from '~/components/atoms/HeaderText';
 import { RoomInfo } from '~/types/response/chat';
+import { COLOR } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
   selected: {
