@@ -1,4 +1,11 @@
-export interface roomInfo {
+export interface RoomInfoResponse {
+  limit: number;
+  offset: number;
+  total: number;
+  rooms: Array<RoomInfo>;
+}
+
+export interface RoomInfo {
   rooms: [
     {
       id: string,

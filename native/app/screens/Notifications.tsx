@@ -5,7 +5,7 @@ import HeaderText from '~/components/atoms/HeaderText';
 import { COLOR } from '~~/constants/theme';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import { MaterialIcons } from '@expo/vector-icons';
-import { roomInfo } from '~/types/response/chat';
+import { RoomInfo } from '~/types/response/chat';
 
 const styles = StyleSheet.create({
   selected: {
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
 const Notifications = () => {
   const notificationList = ['メッセージ', '取り引き', 'お知らせ'];
   const [selectedIndex, setIndex] = useState<number>(0);
-  const testData: roomInfo[] = [
+  const testData: RoomInfo[] = [
     {
       rooms: [
         {
@@ -116,7 +116,7 @@ const Notifications = () => {
     },
   ];
 
-  const renderRoom = ({ item }: { item: roomInfo }) => {
+  const renderRoom = ({ item }: { item: RoomInfo }) => {
     console.log(item);
     return (
       <View style={styles.roomContainer}>
