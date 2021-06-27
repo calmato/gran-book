@@ -78,7 +78,8 @@ const Notifications = () => {
             {
               id: '1',
               username: '濵田',
-              thumbnailUrl: '',
+              thumbnailUrl:
+                'https://iconbu.com/wp-content/uploads/2021/03/%E3%82%86%E3%82%8B%E3%81%84%E6%81%90%E7%AB%9C%E3%81%AE%E3%83%95%E3%83%AA%E3%83%BC%E3%82%A2%E3%82%A4%E3%82%B3%E3%83%B3.jpg',
             },
           ],
           latestMassage: {
@@ -100,7 +101,8 @@ const Notifications = () => {
             {
               id: '2',
               username: '西川',
-              thumbnailUrl: '',
+              thumbnailUrl:
+                'https://iconbu.com/wp-content/uploads/2020/01/%E3%83%9A%E3%83%B3%E3%82%AE%E3%83%B3%E3%81%AE%E3%82%A2%E3%82%A4%E3%82%B3%E3%83%B3.jpg',
             },
           ],
           latestMassage: {
@@ -120,11 +122,7 @@ const Notifications = () => {
     console.log(item);
     return (
       <View style={styles.roomContainer}>
-        <Avatar
-          rounded
-          size="medium"
-          source={{ uri: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg' }}
-        />
+        <Avatar rounded size="medium" source={{ uri: item.rooms[0].users[0].thumbnailUrl }} />
         <View style={styles.roomInfo}>
           <View style={styles.topInfo}>
             <Text style={styles.userName}>{item.rooms[0].users[0].username}</Text>
