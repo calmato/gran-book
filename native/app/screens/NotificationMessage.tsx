@@ -1,10 +1,13 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import React, { useState } from 'react';
+import { useEffect } from 'react';
 import { View, StyleSheet, Text, FlatList } from 'react-native';
 import { Header, Avatar } from 'react-native-elements';
 import HeaderText from '~/components/atoms/HeaderText';
-import { RoomInfo } from '~/types/response/chat';
+import { Auth } from '~/store/models';
+import { getRoomInfoByUserId } from '~/store/usecases/chatServices';
+import { RoomInfo, RoomInfoResponse } from '~/types/response/chat';
 import { COLOR } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
@@ -65,10 +68,19 @@ const styles = StyleSheet.create({
     width: '20%',
   },
 });
+interface Props {
+  auth: Auth.Model;
+}
 
-const Notifications = () => {
+const NotificationMessage = (props: Props) => {
+  useEffect(() => {
+    console.log('ok');
+    getRoomInfoByUserId(props.auth.id);
+  }, []);
   const notificationList = ['メッセージ', '取り引き', 'お知らせ'];
   const [selectedIndex, setIndex] = useState<number>(0);
+  const [roomInfo, setRoomInfo] = useState<RoomInfoResponse>();
+
   const testData: RoomInfo[] = [
     {
       rooms: [
@@ -119,7 +131,6 @@ const Notifications = () => {
   ];
 
   const renderRoom = ({ item }: { item: RoomInfo }) => {
-    console.log(item);
     return (
       <View style={styles.roomContainer}>
         <Avatar rounded size="medium" source={{ uri: item.rooms[0].users[0].thumbnailUrl }} />
@@ -164,4 +175,4 @@ const Notifications = () => {
   );
 };
 
-export default Notifications;
+export default NotificationMessage;
