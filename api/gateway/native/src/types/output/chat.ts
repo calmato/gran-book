@@ -19,5 +19,5 @@ export interface IChatRoomListOutputMessage {
 export interface IChatRoomListOutputRoom {
   id: string
   userIds: Array<string>
-  latestMessage: IChatRoomListOutputMessage
+  latestMessage?: IChatRoomListOutputMessage
 }
