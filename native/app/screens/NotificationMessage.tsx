@@ -1,7 +1,7 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
-import React, { useState } from 'react';
-import { useEffect } from 'react';
+import React, { useState , useEffect } from 'react';
+
 import { View, StyleSheet, Text, FlatList } from 'react-native';
 import { Header, Avatar } from 'react-native-elements';
 import HeaderText from '~/components/atoms/HeaderText';
