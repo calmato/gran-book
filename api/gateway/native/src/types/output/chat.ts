@@ -20,4 +20,6 @@ export interface IChatRoomListOutputRoom {
   id: string
   userIds: Array<string>
   latestMessage?: IChatRoomListOutputMessage
+  createdAt: string
+  updatedAt: string
 }
