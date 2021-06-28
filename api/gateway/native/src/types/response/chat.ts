@@ -27,6 +27,8 @@ export interface IChatRoomListResponseRoom {
   id: string
   users: Array<IChatRoomListResponseUser>
   latestMassage?: IChatRoomListResponseMessage
+  createdAt: string
+  updatedAt: string
 }
 
 export interface IChatRoomListResponseUser {
