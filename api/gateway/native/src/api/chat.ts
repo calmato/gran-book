@@ -10,6 +10,10 @@ export function listChatRoom(req: Request<any>, input: IListChatRoomInput): Prom
   const request = new ListChatRoomRequest()
   const metadata = getGrpcMetadata(req)
 
+  request.setUserId(input.userId)
+  request.setLimit(input.limit)
+  request.setOffset(input.offset)
+
   return new Promise((resolve: (res: IChatRoomListOutput) => void, reject: (reason: Error) => void) => {
     chatClient.listRoom(request, metadata, (err: any, res: ChatRoomListResponse) => {
       if (err) {
@@ -25,6 +29,8 @@ export function listChatRoom(req: Request<any>, input: IListChatRoomInput): Prom
 export function createChatRoom(req: Request<any>, input: ICreateChatRoomInput): Promise<IChatRoomOutput> {
   const request = new CreateChatRoomRequest()
   const metadata = getGrpcMetadata(req)
+
+  request.setUserIdsList(input.userIds)
 
   return new Promise((resolve: (res: IChatRoomOutput) => void, reject: (reason: Error) => void) => {
     chatClient.createRoom(request, metadata, (err: any, res: ChatRoomResponse) => {
@@ -56,6 +62,8 @@ function setChatRoomListOutput(res: ChatRoomListResponse): IChatRoomListOutput {
       const room: IChatRoomListOutputRoom = {
         id: cr.getId(),
         userIds: cr.getUserIdsList(),
+        createdAt: '', // TODO: 追加
+        updatedAt: '', // TODO: 追加
       }
 
       const message: ChatRoomListResponse.Message | undefined = cr.getLatestmessage()
