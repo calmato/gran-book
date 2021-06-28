@@ -3,8 +3,18 @@ import { chatClient } from '~/plugins/grpc'
 import { getGrpcError } from '~/lib/grpc-exception'
 import { getGrpcMetadata } from '~/lib/grpc-metadata'
 import { ICreateChatRoomInput, IListChatRoomInput } from '~/types/input'
-import { IChatRoomListOutput, IChatRoomListOutputMessage, IChatRoomListOutputRoom, IChatRoomOutput } from '~/types/output'
-import { ChatRoomListResponse, ChatRoomResponse, CreateChatRoomRequest, ListChatRoomRequest } from '~/proto/user_apiv1_pb'
+import {
+  IChatRoomListOutput,
+  IChatRoomListOutputMessage,
+  IChatRoomListOutputRoom,
+  IChatRoomOutput,
+} from '~/types/output'
+import {
+  ChatRoomListResponse,
+  ChatRoomResponse,
+  CreateChatRoomRequest,
+  ListChatRoomRequest,
+} from '~/proto/user_apiv1_pb'
 
 export function listChatRoom(req: Request<any>, input: IListChatRoomInput): Promise<IChatRoomListOutput> {
   const request = new ListChatRoomRequest()
@@ -38,7 +48,6 @@ export function createChatRoom(req: Request<any>, input: ICreateChatRoomInput): 
         reject(getGrpcError(err))
         return
       }
-
 
       resolve(setChatRoomOutput(res))
     })

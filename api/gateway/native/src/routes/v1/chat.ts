@@ -4,7 +4,14 @@ import { GrpcError } from '~/types/exception'
 import { ICreateChatRoomInput, IGetUserInput, IListChatRoomInput, IListUserByUserIdsInput } from '~/types/input'
 import { IChatRoomListOutput, IChatRoomListOutputRoom, IChatRoomOutput, IUserHashOutput } from '~/types/output'
 import { ICreateChatRoomRequest } from '~/types/request'
-import { IChatRoomListResponse, IChatRoomListResponseMessage, IChatRoomListResponseRoom, IChatRoomListResponseUser, IChatRoomResponse, IChatRoomResponseUser } from '~/types/response'
+import {
+  IChatRoomListResponse,
+  IChatRoomListResponseMessage,
+  IChatRoomListResponseRoom,
+  IChatRoomListResponseUser,
+  IChatRoomResponse,
+  IChatRoomResponseUser,
+} from '~/types/response'
 
 const router = express.Router()
 
@@ -86,25 +93,27 @@ router.post(
 )
 
 function setChatRoomResponse(roomOutput: IChatRoomOutput, usersOutput?: IUserHashOutput): IChatRoomResponse {
-  const users = roomOutput.userIds.map((userId: string): IChatRoomResponseUser => {
-    if (!usersOutput || !usersOutput[userId]) {
-      const user: IChatRoomListResponseUser = {
+  const users = roomOutput.userIds.map(
+    (userId: string): IChatRoomResponseUser => {
+      if (!usersOutput || !usersOutput[userId]) {
+        const user: IChatRoomListResponseUser = {
+          id: userId,
+          username: '',
+          thumbnailUrl: '',
+        }
+
+        return user
+      }
+
+      const user: IChatRoomResponseUser = {
         id: userId,
-        username: '',
-        thumbnailUrl: '',
+        username: usersOutput[userId].username,
+        thumbnailUrl: usersOutput[userId].thumbnailUrl,
       }
 
       return user
     }
-
-    const user: IChatRoomResponseUser = {
-      id: userId,
-      username: usersOutput[userId].username,
-      thumbnailUrl: usersOutput[userId].thumbnailUrl,
-    }
-
-    return user
-  })
+  )
 
   const response: IChatRoomResponse = {
     id: roomOutput.id,
@@ -116,48 +125,55 @@ function setChatRoomResponse(roomOutput: IChatRoomOutput, usersOutput?: IUserHas
   return response
 }
 
-function setChatRoomListResponse(roomsOutput: IChatRoomListOutput, usersOutput?: IUserHashOutput): IChatRoomListResponse {
-  const rooms = roomsOutput.rooms.map((cr: IChatRoomListOutputRoom): IChatRoomListResponseRoom => {
-    const users = cr.userIds.map((userId: string): IChatRoomListResponseUser => {
-      if (!usersOutput || !usersOutput[userId]) {
-        const user: IChatRoomListResponseUser = {
-          id: userId,
-          username: '',
-          thumbnailUrl: '',
+function setChatRoomListResponse(
+  roomsOutput: IChatRoomListOutput,
+  usersOutput?: IUserHashOutput
+): IChatRoomListResponse {
+  const rooms = roomsOutput.rooms.map(
+    (cr: IChatRoomListOutputRoom): IChatRoomListResponseRoom => {
+      const users = cr.userIds.map(
+        (userId: string): IChatRoomListResponseUser => {
+          if (!usersOutput || !usersOutput[userId]) {
+            const user: IChatRoomListResponseUser = {
+              id: userId,
+              username: '',
+              thumbnailUrl: '',
+            }
+
+            return user
+          }
+
+          const user: IChatRoomListResponseUser = {
+            id: userId,
+            username: usersOutput[userId].username,
+            thumbnailUrl: usersOutput[userId].thumbnailUrl,
+          }
+
+          return user
+        }
+      )
+
+      const room: IChatRoomListResponseRoom = {
+        id: cr.id,
+        users,
+        createdAt: cr.createdAt,
+        updatedAt: cr.updatedAt,
+      }
+
+      if (cr.latestMessage) {
+        const m: IChatRoomListResponseMessage = {
+          userId: cr.latestMessage.userId,
+          text: cr.latestMessage.text,
+          image: cr.latestMessage.image,
+          createdAt: cr.latestMessage.createdAt,
         }
 
-        return user
+        room.latestMassage = m
       }
 
-      const user: IChatRoomListResponseUser = {
-        id: userId,
-        username: usersOutput[userId].username,
-        thumbnailUrl: usersOutput[userId].thumbnailUrl,
-      }
-
-      return user
-    })
-
-    const room: IChatRoomListResponseRoom = {
-      id: cr.id,
-      users,
-      createdAt: cr.createdAt,
-      updatedAt: cr.updatedAt,
+      return room
     }
-
-    if (cr.latestMessage) {
-      const m: IChatRoomListResponseMessage = {
-        userId: cr.latestMessage.userId,
-        text: cr.latestMessage.text,
-        image: cr.latestMessage.image,
-        createdAt: cr.latestMessage.createdAt,
-      }
-
-      room.latestMassage = m
-    }
-
-    return room
-  })
+  )
 
   const response: IChatRoomListResponse = {
     rooms,
