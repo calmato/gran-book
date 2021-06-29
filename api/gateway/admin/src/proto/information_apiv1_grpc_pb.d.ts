@@ -5,7 +5,6 @@
 /* eslint-disable */
 
 import * as grpc from "@grpc/grpc-js";
-import {handleClientStreamingCall} from "@grpc/grpc-js/build/src/server-call";
 import * as proto_information_apiv1_pb from "../proto/information_apiv1_pb";
 
 interface INotificationServiceService extends grpc.ServiceDefinition<grpc.UntypedServiceImplementation> {
