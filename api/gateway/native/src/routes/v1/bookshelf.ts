@@ -285,26 +285,28 @@ function setBookshelfResponse(bookshelfOutput: IBookshelfOutput, usersOutput: IU
     return item.nameKana
   })
 
-  const reviews = bookshelfOutput.book.reviews.map((item: IBookshelfOutputReview): IBookshelfResponseReview => {
-    const user: IBookshelfResponseUserOnReview = {
-      id: item.userId,
-      username: '',
-      thumbnailUrl: '',
-    }
+  const reviews = bookshelfOutput.book.reviews.map(
+    (item: IBookshelfOutputReview): IBookshelfResponseReview => {
+      const user: IBookshelfResponseUserOnReview = {
+        id: item.userId,
+        username: '',
+        thumbnailUrl: '',
+      }
 
-    if (usersOutput[item.userId]) {
-      user.username = usersOutput[item.userId].username
-      user.thumbnailUrl = usersOutput[item.userId].thumbnailUrl
-    }
+      if (usersOutput[item.userId]) {
+        user.username = usersOutput[item.userId].username
+        user.thumbnailUrl = usersOutput[item.userId].thumbnailUrl
+      }
 
-    return {
-      id: item.id,
-      impression: item.impression,
-      createdAt: item.createdAt,
-      updatedAt: item.updatedAt,
-      user,
+      return {
+        id: item.id,
+        impression: item.impression,
+        createdAt: item.createdAt,
+        updatedAt: item.updatedAt,
+        user,
+      }
     }
-  })
+  )
 
   const bookshelf: IBookshelfResponseBookshelf = {
     id: bookshelfOutput.id,
