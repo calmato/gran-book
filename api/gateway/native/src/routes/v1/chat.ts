@@ -35,7 +35,7 @@ router.get(
         })
 
         const userListInput: IListUserByUserIdsInput = {
-          ids: Array.from(new Set(userIds)),
+          ids: userIds,
         }
 
         return listUserWithUserIds(req, userListInput)
