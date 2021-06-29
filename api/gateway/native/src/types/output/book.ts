@@ -64,7 +64,7 @@ export interface IBookshelfOutput {
   createdAt: string
   updatedAt: string
   book: IBookshelfOutputBook
-  myReview: IBookshelfOutputReview
+  myReview?: IBookshelfOutputReview
 }
 
 export interface IBookshelfOutputBook {
@@ -140,7 +140,7 @@ export interface IBookshelfListOutputBookshelf {
   createdAt: string
   updatedAt: string
   book: IBookshelfListOutputBook
-  myReview: IBookshelfListOutputReview
+  myReview?: IBookshelfListOutputReview
 }
 
 export interface IBookshelfListOutputReview {
