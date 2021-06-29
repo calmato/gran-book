@@ -1,3 +1,6 @@
+/*
+ * 本棚の書籍詳細レスポンス
+ */
 export interface IBookshelfResponse {
   id: number
   title: string
@@ -14,6 +17,10 @@ export interface IBookshelfResponse {
   createdAt: string
   updatedAt: string
   bookshelf?: IBookshelfResponseBookshelf
+  reviews: Array<IBookshelfResponseReview>
+  reviewLimit: number
+  reviewOffset: number
+  reviewTotal: number
 }
 
 export interface IBookshelfResponseBookshelf {
@@ -25,6 +32,23 @@ export interface IBookshelfResponseBookshelf {
   updatedAt: string
 }
 
+export interface IBookshelfResponseReview {
+  id: number
+  impression: number
+  createdAt: string
+  updatedAt: string
+  user: IBookshelfResponseUserOnReview
+}
+
+export interface IBookshelfResponseUserOnReview {
+  id: string
+  username: string
+  thumbnailUrl: string
+}
+
+/*
+ * 本棚の書籍一覧レスポンス
+ */
 export interface IBookshelfListResponse {
   books: Array<IBookshelfListResponseBook>
   limit: number
@@ -54,6 +78,7 @@ export interface IBookshelfListResponseBookshelf {
   id: number
   status: string
   readOn: string
+  impression: string
   createdAt: string
   updatedAt: string
 }

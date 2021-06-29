@@ -1,3 +1,6 @@
+/*
+ * 書籍詳細アウトプット
+ */
 export interface IBookOutput {
   id: number
   title: string
@@ -20,6 +23,9 @@ export interface IBookOutputAuthor {
   nameKana: string
 }
 
+/*
+ * 書籍一覧(ハッシュ)アウトプット
+ */
 export interface IBookHashOutput {
   [key: number]: IBookHashOutputBook
 }
@@ -46,6 +52,9 @@ export interface IBookHashOutputAuthor {
   nameKana: string
 }
 
+/*
+ * 本棚の書籍詳細アウトプット
+ */
 export interface IBookshelfOutput {
   id: number
   bookId: number
@@ -55,7 +64,7 @@ export interface IBookshelfOutput {
   createdAt: string
   updatedAt: string
   book: IBookshelfOutputBook
-  review?: IBookshelfOutputReview
+  myReview: IBookshelfOutputReview
 }
 
 export interface IBookshelfOutputBook {
@@ -73,6 +82,7 @@ export interface IBookshelfOutputBook {
   createdAt: string
   updatedAt: string
   authors: Array<IBookshelfOutputAuthor>
+  reviews: Array<IBookshelfOutputReview>
 }
 
 export interface IBookshelfOutputAuthor {
@@ -81,10 +91,17 @@ export interface IBookshelfOutputAuthor {
 }
 
 export interface IBookshelfOutputReview {
+  id: number
+  userId: string
   score: number
   impression: string
+  createdAt: string
+  updatedAt: string
 }
 
+/*
+ * 本棚の書籍一覧アウトプット
+ */
 export interface IBookshelfListOutput {
   bookshelves: Array<IBookshelfListOutputBookshelf>
   limit: number
@@ -123,8 +140,21 @@ export interface IBookshelfListOutputBookshelf {
   createdAt: string
   updatedAt: string
   book: IBookshelfListOutputBook
+  myReview: IBookshelfListOutputReview
 }
 
+export interface IBookshelfListOutputReview {
+  id: number
+  userId: string
+  score: number
+  impression: string
+  createdAt: string
+  updatedAt: string
+}
+
+/*
+ * 書籍レビュー詳細アウトプット
+ */
 export interface IReviewOutput {
   id: number
   bookId: number
@@ -135,6 +165,9 @@ export interface IReviewOutput {
   updatedAt: string
 }
 
+/*
+ * 書籍レビュー一覧アウトプット
+ */
 export interface IReviewListOutput {
   reviews: Array<IReviewListOutputReview>
   limit: number
