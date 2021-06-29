@@ -56,6 +56,7 @@ import {
   IBookshelfListOutputAuthor,
   IBookshelfListOutputBook,
   IBookshelfListOutputBookshelf,
+  IBookshelfListOutputReview,
   IBookshelfOutput,
   IBookshelfOutputAuthor,
   IBookshelfOutputBook,
@@ -505,6 +506,17 @@ function setBookshelfOutput(res: BookshelfResponse): IBookshelfOutput {
     })
   )
 
+  const reviews = b.getReviewsList().map(
+    (r: BookshelfResponse.Review): IBookshelfOutputReview => ({
+      id: r.getId(),
+      userId: r.getUserId(),
+      score: r.getScore(),
+      impression: r.getImpression(),
+      createdAt: r.getCreatedAt(),
+      updatedAt: r.getUpdatedAt(),
+    })
+  )
+
   const book: IBookshelfOutputBook = {
     id: b.getId(),
     title: b.getTitle(),
@@ -520,6 +532,10 @@ function setBookshelfOutput(res: BookshelfResponse): IBookshelfOutput {
     createdAt: b.getCreatedAt(),
     updatedAt: b.getUpdatedAt(),
     authors,
+    reviews,
+    reviewLimit: b.getReviewLimit(),
+    reviewOffset: b.getReviewOffset(),
+    reviewTotal: b.getReviewTotal(),
   }
 
   const output: IBookshelfOutput = {
@@ -533,14 +549,18 @@ function setBookshelfOutput(res: BookshelfResponse): IBookshelfOutput {
     book,
   }
 
-  const rv: BookshelfResponse.Review | undefined = res.getReview()
+  const rv: BookshelfResponse.Review | undefined = res.getMyReview()
   if (rv) {
-    const review: IBookshelfOutputReview = {
+    const myReview: IBookshelfOutputReview = {
+      id: rv.getId(),
+      userId: rv.getUserId(),
       score: rv.getScore(),
       impression: rv.getImpression(),
+      createdAt: rv.getCreatedAt(),
+      updatedAt: rv.getUpdatedAt(),
     }
 
-    output.review = review
+    output.myReview = myReview
   }
 
   return output
@@ -579,7 +599,7 @@ function setBookshelfListOutput(res: BookshelfListResponse): IBookshelfListOutpu
         authors,
       }
 
-      return {
+      const bookshelf: IBookshelfListOutputBookshelf = {
         id: bs.getId(),
         bookId: bs.getBookId(),
         userId: bs.getUserId(),
@@ -589,6 +609,21 @@ function setBookshelfListOutput(res: BookshelfListResponse): IBookshelfListOutpu
         updatedAt: bs.getUpdatedAt(),
         book,
       }
+
+      const rv: BookshelfListResponse.Review | undefined = bs.getMyReview()
+      if (rv) {
+        const myReview: IBookshelfListOutputReview = {
+          id: rv.getId(),
+          score: rv.getScore(),
+          impression: rv.getImpression(),
+          createdAt: rv.getCreatedAt(),
+          updatedAt: rv.getUpdatedAt(),
+        }
+
+        bookshelf.myReview = myReview
+      }
+
+      return bookshelf
     })
     .filter((item): item is NonNullable<typeof item> => !!item)
 

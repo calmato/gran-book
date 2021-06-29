@@ -34,7 +34,7 @@ export interface IBookshelfResponseBookshelf {
 
 export interface IBookshelfResponseReview {
   id: number
-  impression: number
+  impression: string
   createdAt: string
   updatedAt: string
   user: IBookshelfResponseUserOnReview

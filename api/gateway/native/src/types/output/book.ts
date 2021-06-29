@@ -83,6 +83,9 @@ export interface IBookshelfOutputBook {
   updatedAt: string
   authors: Array<IBookshelfOutputAuthor>
   reviews: Array<IBookshelfOutputReview>
+  reviewLimit: number
+  reviewOffset: number
+  reviewTotal: number
 }
 
 export interface IBookshelfOutputAuthor {
@@ -145,7 +148,6 @@ export interface IBookshelfListOutputBookshelf {
 
 export interface IBookshelfListOutputReview {
   id: number
-  userId: string
   score: number
   impression: string
   createdAt: string

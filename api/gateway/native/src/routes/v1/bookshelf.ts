@@ -4,6 +4,7 @@ import {
   getBookshelf,
   getUser,
   listBookshelf,
+  listUserWithUserIds,
   readBookshelf,
   readingBookshelf,
   releaseBookshelf,
@@ -17,6 +18,7 @@ import {
   IGetBookshelfInput,
   IGetUserInput,
   IListBookshelfInput,
+  IListUserByUserIdsInput,
   IReadBookshelfInput,
   IReadingBookshelfInput,
   IReleaseBookshelfInput,
@@ -29,6 +31,8 @@ import {
   IBookshelfListOutputBookshelf,
   IBookshelfOutput,
   IBookshelfOutputAuthor,
+  IBookshelfOutputReview,
+  IUserHashOutput,
 } from '~/types/output'
 import { IReadBookshelfRequest } from '~/types/request'
 import {
@@ -37,6 +41,8 @@ import {
   IBookshelfListResponseBookshelf,
   IBookshelfResponse,
   IBookshelfResponseBookshelf,
+  IBookshelfResponseReview,
+  IBookshelfResponseUserOnReview,
 } from '~/types/response'
 
 const router = express.Router()
@@ -87,8 +93,25 @@ router.get(
 
         return getBookshelf(req, bookshelfInput)
       })
-      .then((output: IBookshelfOutput) => {
-        const response: IBookshelfResponse = setBookshelfResponse(output)
+      .then(async (bookshelfOutput: IBookshelfOutput) => {
+        let userIds: string[] = []
+        bookshelfOutput.book.reviews.forEach((rv: IBookshelfOutputReview) => {
+          userIds = userIds.concat(rv.userId)
+        })
+
+        const userListInput: IListUserByUserIdsInput = {
+          ids: userIds,
+        }
+
+        return listUserWithUserIds(req, userListInput)
+          .then((usersOutput: IUserHashOutput) => {
+            return setBookshelfResponse(bookshelfOutput, usersOutput)
+          })
+          .catch(() => {
+            return setBookshelfResponse(bookshelfOutput, {})
+          })
+      })
+      .then((response: IBookshelfResponse) => {
         res.status(200).json(response)
       })
       .catch((err: GrpcError) => next(err))
@@ -117,7 +140,7 @@ router.post(
         return readBookshelf(req, bookshelfInput)
       })
       .then((output: IBookshelfOutput) => {
-        const response: IBookshelfResponse = setBookshelfResponse(output)
+        const response: IBookshelfResponse = setBookshelfResponse(output, {})
         res.status(200).json(response)
       })
       .catch((err: GrpcError) => next(err))
@@ -143,7 +166,7 @@ router.post(
         return readingBookshelf(req, bookshelfInput)
       })
       .then((output: IBookshelfOutput) => {
-        const response: IBookshelfResponse = setBookshelfResponse(output)
+        const response: IBookshelfResponse = setBookshelfResponse(output, {})
         res.status(200).json(response)
       })
       .catch((err: GrpcError) => next(err))
@@ -169,7 +192,7 @@ router.post(
         return stackBookshelf(req, bookshelfInput)
       })
       .then((output: IBookshelfOutput) => {
-        const response: IBookshelfResponse = setBookshelfResponse(output)
+        const response: IBookshelfResponse = setBookshelfResponse(output, {})
         res.status(200).json(response)
       })
       .catch((err: GrpcError) => next(err))
@@ -195,7 +218,7 @@ router.post(
         return wantBookshelf(req, bookshelfInput)
       })
       .then((output: IBookshelfOutput) => {
-        const response: IBookshelfResponse = setBookshelfResponse(output)
+        const response: IBookshelfResponse = setBookshelfResponse(output, {})
         res.status(200).json(response)
       })
       .catch((err: GrpcError) => next(err))
@@ -221,7 +244,7 @@ router.post(
         return releaseBookshelf(req, bookshelfInput)
       })
       .then((output: IBookshelfOutput) => {
-        const response: IBookshelfResponse = setBookshelfResponse(output)
+        const response: IBookshelfResponse = setBookshelfResponse(output, {})
         res.status(200).json(response)
       })
       .catch((err: GrpcError) => next(err))
@@ -253,40 +276,65 @@ router.delete(
   }
 )
 
-function setBookshelfResponse(output: IBookshelfOutput): IBookshelfResponse {
-  const authorNames: string[] = output.book.authors.map((item: IBookshelfOutputAuthor) => {
+function setBookshelfResponse(bookshelfOutput: IBookshelfOutput, usersOutput: IUserHashOutput): IBookshelfResponse {
+  const authorNames: string[] = bookshelfOutput.book.authors.map((item: IBookshelfOutputAuthor) => {
     return item.name
   })
 
-  const authorNameKanas: string[] = output.book.authors.map((item: IBookshelfOutputAuthor) => {
+  const authorNameKanas: string[] = bookshelfOutput.book.authors.map((item: IBookshelfOutputAuthor) => {
     return item.nameKana
   })
 
+  const reviews = bookshelfOutput.book.reviews.map((item: IBookshelfOutputReview): IBookshelfResponseReview => {
+    const user: IBookshelfResponseUserOnReview = {
+      id: item.userId,
+      username: '',
+      thumbnailUrl: '',
+    }
+
+    if (usersOutput[item.userId]) {
+      user.username = usersOutput[item.userId].username
+      user.thumbnailUrl = usersOutput[item.userId].thumbnailUrl
+    }
+
+    return {
+      id: item.id,
+      impression: item.impression,
+      createdAt: item.createdAt,
+      updatedAt: item.updatedAt,
+      user,
+    }
+  })
+
   const bookshelf: IBookshelfResponseBookshelf = {
-    id: output.id,
-    status: BookStatus[output.status],
-    impression: output.review?.impression || '',
-    readOn: output.readOn,
-    createdAt: output.createdAt,
-    updatedAt: output.updatedAt,
+    id: bookshelfOutput.id,
+    status: BookStatus[bookshelfOutput.status],
+    readOn: bookshelfOutput.readOn,
+    impression: bookshelfOutput.myReview?.impression || '',
+    createdAt: bookshelfOutput.createdAt,
+    updatedAt: bookshelfOutput.updatedAt,
   }
 
   const response: IBookshelfResponse = {
-    id: output.book.id,
-    title: output.book.title,
-    titleKana: output.book.titleKana,
-    description: output.book.description,
-    isbn: output.book.isbn,
-    publisher: output.book.publisher,
-    publishedOn: output.book.publishedOn,
-    thumbnailUrl: output.book.thumbnailUrl,
-    rakutenUrl: output.book.rakutenUrl,
-    size: output.book.rakutenSize,
+    id: bookshelfOutput.book.id,
+    title: bookshelfOutput.book.title,
+    titleKana: bookshelfOutput.book.titleKana,
+    description: bookshelfOutput.book.description,
+    isbn: bookshelfOutput.book.isbn,
+    publisher: bookshelfOutput.book.publisher,
+    publishedOn: bookshelfOutput.book.publishedOn,
+    thumbnailUrl: bookshelfOutput.book.thumbnailUrl,
+    rakutenUrl: bookshelfOutput.book.rakutenUrl,
+    size: bookshelfOutput.book.rakutenSize,
     author: authorNames.join('/'),
     authorKana: authorNameKanas.join('/'),
-    createdAt: output.book.createdAt,
-    updatedAt: output.book.updatedAt,
+    createdAt: bookshelfOutput.book.createdAt,
+    updatedAt: bookshelfOutput.book.updatedAt,
     bookshelf,
+    reviews,
+    reviewLimit: bookshelfOutput.book.reviewLimit,
+    reviewOffset: bookshelfOutput.book.reviewOffset,
+    reviewTotal: bookshelfOutput.book.reviewTotal,
   }
 
   return response
@@ -306,6 +354,7 @@ function setBookshelfListResponse(output: IBookshelfListOutput): IBookshelfListR
       id: bs.id,
       status: BookStatus[bs.status],
       readOn: bs.readOn,
+      impression: bs.myReview?.impression || '',
       createdAt: bs.createdAt,
       updatedAt: bs.updatedAt,
     }

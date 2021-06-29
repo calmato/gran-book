@@ -302,7 +302,7 @@ function setBookResponse(bookOutput: IBookOutput, bookshelfOutput?: IBookshelfOu
     const bookshelf: IBookResponseBookshelf = {
       id: bookshelfOutput.id,
       status: BookStatus[bookshelfOutput.status],
-      impression: bookshelfOutput.review?.impression || '',
+      impression: '', // TODO: refactor
       readOn: bookshelfOutput.readOn,
       createdAt: bookshelfOutput.createdAt,
       updatedAt: bookshelfOutput.updatedAt,
