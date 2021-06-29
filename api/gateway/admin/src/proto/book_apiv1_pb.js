@@ -7493,7 +7493,10 @@ proto.proto.BookshelfResponse.Book.toObject = function(includeInstance, msg) {
     authorsList: jspb.Message.toObjectList(msg.getAuthorsList(),
     proto.proto.BookshelfResponse.Author.toObject, includeInstance),
     reviewsList: jspb.Message.toObjectList(msg.getReviewsList(),
-    proto.proto.BookshelfResponse.Review.toObject, includeInstance)
+    proto.proto.BookshelfResponse.Review.toObject, includeInstance),
+    reviewLimit: jspb.Message.getFieldWithDefault(msg, 16, 0),
+    reviewOffset: jspb.Message.getFieldWithDefault(msg, 17, 0),
+    reviewTotal: jspb.Message.getFieldWithDefault(msg, 18, 0)
   };
 
   if (includeInstance) {
@@ -7591,6 +7594,18 @@ proto.proto.BookshelfResponse.Book.deserializeBinaryFromReader = function(msg, r
       var value = new proto.proto.BookshelfResponse.Review;
       reader.readMessage(value,proto.proto.BookshelfResponse.Review.deserializeBinaryFromReader);
       msg.addReviews(value);
+      break;
+    case 16:
+      var value = /** @type {number} */ (reader.readInt64());
+      msg.setReviewLimit(value);
+      break;
+    case 17:
+      var value = /** @type {number} */ (reader.readInt64());
+      msg.setReviewOffset(value);
+      break;
+    case 18:
+      var value = /** @type {number} */ (reader.readInt64());
+      msg.setReviewTotal(value);
       break;
     default:
       reader.skipField();
@@ -7726,6 +7741,27 @@ proto.proto.BookshelfResponse.Book.serializeBinaryToWriter = function(message, w
       15,
       f,
       proto.proto.BookshelfResponse.Review.serializeBinaryToWriter
+    );
+  }
+  f = message.getReviewLimit();
+  if (f !== 0) {
+    writer.writeInt64(
+      16,
+      f
+    );
+  }
+  f = message.getReviewOffset();
+  if (f !== 0) {
+    writer.writeInt64(
+      17,
+      f
+    );
+  }
+  f = message.getReviewTotal();
+  if (f !== 0) {
+    writer.writeInt64(
+      18,
+      f
     );
   }
 };
@@ -8038,6 +8074,60 @@ proto.proto.BookshelfResponse.Book.prototype.addReviews = function(opt_value, op
  */
 proto.proto.BookshelfResponse.Book.prototype.clearReviewsList = function() {
   return this.setReviewsList([]);
+};
+
+
+/**
+ * optional int64 review_limit = 16;
+ * @return {number}
+ */
+proto.proto.BookshelfResponse.Book.prototype.getReviewLimit = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 16, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.proto.BookshelfResponse.Book} returns this
+ */
+proto.proto.BookshelfResponse.Book.prototype.setReviewLimit = function(value) {
+  return jspb.Message.setProto3IntField(this, 16, value);
+};
+
+
+/**
+ * optional int64 review_offset = 17;
+ * @return {number}
+ */
+proto.proto.BookshelfResponse.Book.prototype.getReviewOffset = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 17, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.proto.BookshelfResponse.Book} returns this
+ */
+proto.proto.BookshelfResponse.Book.prototype.setReviewOffset = function(value) {
+  return jspb.Message.setProto3IntField(this, 17, value);
+};
+
+
+/**
+ * optional int64 review_total = 18;
+ * @return {number}
+ */
+proto.proto.BookshelfResponse.Book.prototype.getReviewTotal = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 18, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.proto.BookshelfResponse.Book} returns this
+ */
+proto.proto.BookshelfResponse.Book.prototype.setReviewTotal = function(value) {
+  return jspb.Message.setProto3IntField(this, 18, value);
 };
 
 

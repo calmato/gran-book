@@ -935,6 +935,12 @@ export namespace BookshelfResponse {
         getReviewsList(): Array<BookshelfResponse.Review>;
         setReviewsList(value: Array<BookshelfResponse.Review>): Book;
         addReviews(value?: BookshelfResponse.Review, index?: number): BookshelfResponse.Review;
+        getReviewLimit(): number;
+        setReviewLimit(value: number): Book;
+        getReviewOffset(): number;
+        setReviewOffset(value: number): Book;
+        getReviewTotal(): number;
+        setReviewTotal(value: number): Book;
 
         serializeBinary(): Uint8Array;
         toObject(includeInstance?: boolean): Book.AsObject;
@@ -963,6 +969,9 @@ export namespace BookshelfResponse {
             updatedAt: string,
             authorsList: Array<BookshelfResponse.Author.AsObject>,
             reviewsList: Array<BookshelfResponse.Review.AsObject>,
+            reviewLimit: number,
+            reviewOffset: number,
+            reviewTotal: number,
         }
     }
 
