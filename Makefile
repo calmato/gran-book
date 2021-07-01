@@ -7,6 +7,8 @@ setup:
 	cp $(PWD)/.env.temp $(PWD)/.env
 	$(MAKE) build
 	$(MAKE) install
+	docker-compose run --rm admin_gateway yarn build:dev
+	docker-compose run --rm native_gateway yarn build:dev
 	$(MAKE) migrate
 
 build:
@@ -15,6 +17,8 @@ build:
 install:
 	docker-compose run --rm admin yarn
 	docker-compose run --rm native yarn
+	docker-compose run --rm admin_gateway yarn
+	docker-compose run --rm native_gateway yarn
 
 start:
 	$(PWD)/bin/get-local-ip-addr.sh
