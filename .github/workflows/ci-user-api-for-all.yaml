@@ -5,6 +5,9 @@ on:
       - '.github/workflows/ci-user-api-for-all.yaml'
       - 'api/server/user/**'
 
+env:
+  PROTOC_VERSION: 3.15.8
+
 jobs:
   build_and_test:
     name: Build and Test
