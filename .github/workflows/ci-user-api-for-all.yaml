@@ -48,6 +48,19 @@ jobs:
           sudo mv ./prototool-$(uname -s)-$(uname -m) /usr/local/bin/prototool
           sudo chmod +x /usr/local/bin/prototool
 
+      - name: Install Protobuf
+        run: |
+          git clone https://github.com/protocolbuffers/protobuf.git
+          cd protobuf
+          git submodule update --init --recursive
+          ./autogen.sh
+          ./autogen.sh  # run autogen twice, see below
+          ./configure
+          make
+          make check
+          sudo make install
+          sudo ldconfig
+
       - name: Install gRPC tools
         run: |
           go get google.golang.org/protobuf/cmd/protoc-gen-go
