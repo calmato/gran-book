@@ -50,6 +50,7 @@ jobs:
 
       - name: Install gRPC tools
         run: |
+          go get google.golang.org/protobuf/cmd/protoc-gen-go
           npm install -g grpc grpc-tools grpc_tools_node_protoc_ts
 
       - name: Generate proto
