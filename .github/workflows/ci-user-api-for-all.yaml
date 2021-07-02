@@ -35,7 +35,7 @@ jobs:
       - name: Generate Protobuf
         working-directory: ./proto
         run: |
-          make protoc-service SERVICE_PATH=./../api/server/user
+          make generate
 
       - name: Use Golang ${{ matrix.golang }}
         uses: actions/setup-go@v2
