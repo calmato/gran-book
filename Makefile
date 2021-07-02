@@ -7,9 +7,9 @@ setup:
 	cp $(PWD)/.env.temp $(PWD)/.env
 	$(MAKE) build
 	$(MAKE) install
+	$(MAKE) proto
 	docker-compose run --rm admin_gateway yarn build:dev
 	docker-compose run --rm native_gateway yarn build:dev
-	$(MAKE) migrate
 
 build:
 	docker-compose build --parallel

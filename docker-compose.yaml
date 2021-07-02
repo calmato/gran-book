@@ -60,7 +60,6 @@ services:
       - 8080:8080
     networks:
       - api
-      - monitoring
     command: yarn dev
 
   admin_gateway:
@@ -86,7 +85,6 @@ services:
       - 8081:8080
     networks:
       - api
-      - monitoring
     command: yarn dev
 
   user_api:
@@ -114,7 +112,6 @@ services:
       - 18080:8080
     networks:
       - api
-      - monitoring
     command: realize start
     depends_on:
       - mysql
@@ -144,7 +141,6 @@ services:
       - 18081:8080
     networks:
       - api
-      - monitoring
     command: realize start
     depends_on:
       - mysql
@@ -174,7 +170,6 @@ services:
       - 18082:8080
     networks:
       - api
-      - monitoring
     command: realize start
     depends_on:
       - mysql
@@ -197,31 +192,6 @@ services:
       - 3316:3306
     networks:
       - api
-      - monitoring
-
-  # Monitoring
-  grafana:
-    container_name: gran_book_grafana
-    build:
-      context: ./infra/docker/infra/grafana
-      dockerfile: Dockerfile
-    ports:
-      - 9000:3000
-    networks:
-      - monitoring
-
-  prometheus:
-    container_name: gran_book_prometheus
-    build:
-      context: ./infra/docker/infra/prometheus
-      dockerfile: Dockerfile
-    volumes:
-      - ./infra/prometheus/development.yaml:/etc/prometheus/prometheus.yaml:cached
-    ports:
-      - 9090:9090
-    networks:
-      - monitoring
-    command: --config.file=/etc/prometheus/prometheus.yaml
 
   # Other
   proto:
@@ -277,6 +247,4 @@ services:
 
 networks:
   api:
-    driver: bridge
-  monitoring:
     driver: bridge
