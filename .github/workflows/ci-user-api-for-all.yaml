@@ -60,12 +60,6 @@ jobs:
           sudo make install
           sudo ldconfig
 
-      - name: Install protoc
-        run: |
-          curl -fSLO "https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-$(uname -s)-$(uname -m).zip"
-          sudo unzip protoc-${PROTOC_VERSION}-$(uname -s)-$(uname -m).zip -d /usr/local
-          sudo chmod +x /usr/local/bin/protoc
-
       - name: Install prototool
         run: |
           curl -fSLO "https://github.com/uber/prototool/releases/download/v${PROTOTOOL_VERSION}/prototool-$(uname -s)-$(uname -m)"
