@@ -26,10 +26,10 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
 
-      - name: Configure prototool
+      - name: Configure protoc
         run: |
           curl -fSLO "https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-$(uname -s)-$(uname -m).zip"
-          unzip protoc-${PROTOC_VERSION}-$(uname -s)-$(uname -m).zip -d /usr/local/bin
+          unzip protoc-${PROTOC_VERSION}-$(uname -s)-$(uname -m).zip -d /usr/local/bin/protoc
           sudo chmod +x /usr/local/bin/protoc
 
       - name: Generate Protobuf
