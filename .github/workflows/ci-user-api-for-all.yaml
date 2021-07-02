@@ -10,7 +10,7 @@ env:
   PROTOTOOL_VERSION: 1.10.0
 
 jobs:
-  setup:
+  setup_proto:
     name: Setup Proto
     runs-on: ${{ matrix.os }}
     defaults:
