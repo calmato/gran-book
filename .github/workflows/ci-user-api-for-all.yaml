@@ -36,7 +36,7 @@ jobs:
         working-directory: ./proto
         run: |
           make install
-          make generate-service SERVICE_PATH='./../api/server/user'
+          make protoc-service SERVICE_PATH='./../api/server/user'
 
       - name: Use Golang ${{ matrix.golang }}
         uses: actions/setup-go@v2
