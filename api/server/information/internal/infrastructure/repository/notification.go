@@ -3,7 +3,6 @@ package repository
 import (
 	"context"
 
-	"github.com/calmato/gran-book/api/server/information/internal/domain"
 	"github.com/calmato/gran-book/api/server/information/internal/domain/exception"
 	"github.com/calmato/gran-book/api/server/information/internal/domain/notification"
 	"gorm.io/gorm/clause"
@@ -20,13 +19,10 @@ func NewNotificationRepository(c *Client) notification.Repository {
 	}
 }
 
-func (r *notificationRepository) ListNotification(ctx context.Context, q *domain.ListQuery) ([]*notification.Notification, error) {
+func (r *notificationRepository) List(ctx context.Context) ([]*notification.Notification, error) {
 	ns := []*notification.Notification{}
 
-	sql := r.client.db.Preload("Notification")
-	db := r.client.getListQuery(sql, q)
-
-	err := db.Find(&ns).Error
+	err := r.client.db.Find(&ns).Error
 	if err != nil {
 		return nil, exception.ErrorInDatastore.New(err)
 	}
@@ -34,10 +30,10 @@ func (r *notificationRepository) ListNotification(ctx context.Context, q *domain
 	return ns, nil
 }
 
-func (r *notificationRepository) ShowNotication(ctx context.Context, notificatinID int) (*notification.Notification, error) {
+func (r *notificationRepository) Show(ctx context.Context, notificatinID int) (*notification.Notification, error) {
 	n := &notification.Notification{}
 
-	err := r.client.db.Preload("Notification").First(n, "id = ?", notificatinID).Error
+	err := r.client.db.First(n, "id = ?", notificatinID).Error
 	if err != nil {
 		return nil, exception.NotFound.New(err)
 	}
@@ -45,49 +41,25 @@ func (r *notificationRepository) ShowNotication(ctx context.Context, notificatin
 	return n, nil
 }
 
-func (r *notificationRepository) CreateNotification(ctx context.Context, n *notification.Notification) error {
-	tx := r.client.db.Begin()
-	defer func() {
-		if r := recover(); r != nil {
-			tx.Rollback()
-		}
-	}()
-
-	if err := tx.Error; err != nil {
-		return err
-	}
-
-	err := tx.Omit(clause.Associations).Create(&n).Error
+func (r *notificationRepository) Create(ctx context.Context, n *notification.Notification) error {
+	err := r.client.db.Omit(clause.Associations).Create(&n).Error
 	if err != nil {
-		tx.Rollback()
 		return exception.ErrorInDatastore.New(err)
 	}
 
-	return tx.Commit().Error
+	return nil
 }
 
-func (r *notificationRepository) UpdateNotification(ctx context.Context, n *notification.Notification) error {
-	tx := r.client.db.Begin()
-	defer func() {
-		if r := recover(); r != nil {
-			tx.Rollback()
-		}
-	}()
-
-	if err := tx.Error; err != nil {
-		return err
-	}
-
-	err := tx.Omit(clause.Associations).Save(&b).Error
+func (r *notificationRepository) Update(ctx context.Context, n *notification.Notification) error {
+	err := r.client.db.Omit(clause.Associations).Save(&r).Error
 	if err != nil {
-		tx.Rollback()
 		return exception.ErrorInDatastore.New(err)
 	}
 
-	return tx.Commit().Error
+	return nil
 }
 
-func (r *notificationRepository) DeleteNotification(ctx context.Context, notificatinID int) error {
+func (r *notificationRepository) Delete(ctx context.Context, notificatinID int) error {
 	err := r.client.db.Where("id = ?", notificatinID).Delete(&notification.Notification{}).Error
 	if err != nil {
 		return exception.ErrorInDatastore.New(err)
