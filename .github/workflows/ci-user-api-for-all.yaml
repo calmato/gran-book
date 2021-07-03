@@ -39,8 +39,8 @@ jobs:
       - name: Cache protobuf library
         uses: actions/cache@v2
         with:
-          path: /tmp/protobuf
-          key: ${{ runner.os }}-protobuf # TODO: edit
+          path: /usr/local/bin
+          key: protoc
 
       - name: Build protobuf library
         if: steps.cache.outputs.cache-hit != 'true'
@@ -56,9 +56,8 @@ jobs:
           make check
 
       - name: Install protobuf library
-        working-directory: /tmp
+        working-directory: /tmp/protobuf
         run: |
-          cd protobuf
           sudo make install
           sudo ldconfig
 
