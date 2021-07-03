@@ -16,7 +16,7 @@ export interface RoomInfo {
           thumbnailUrl: string
         }
       ],
-      latestMassage: {
+      latestMessage: {
         userId: string,
         text: string,
         image: string,
