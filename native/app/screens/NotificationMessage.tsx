@@ -6,7 +6,7 @@ import { Header, Avatar } from 'react-native-elements';
 import HeaderText from '~/components/atoms/HeaderText';
 import { Auth } from '~/store/models';
 import { getRoomInfoByUserId } from '~/store/usecases/chatServices';
-import { RoomInfo } from '~/types/response/chat';
+import { RoomInfoResponse } from '~/types/response/chat';
 import { COLOR } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
@@ -44,19 +44,19 @@ const styles = StyleSheet.create({
     height: 40,
     flexDirection: 'row',
   },
-  userName: {
+  userNameStyle: {
     color: COLOR.TEXT_DEFAULT,
     width: '50%',
     fontWeight: 'bold',
     fontSize: 24,
   },
-  createdAt: {
+  createdAtStyle: {
     textAlign: 'right',
     width: '40%',
     color: COLOR.TEXT_GRAY,
     fontSize: 20,
   },
-  latestMessage: {
+  latestMessageStyle: {
     fontSize: 24,
     width: '70%',
     color: COLOR.TEXT_GRAY,
@@ -69,76 +69,33 @@ const styles = StyleSheet.create({
 });
 interface Props {
   auth: Auth.Model;
+  roomInfo?: RoomInfoResponse;
 }
 
 const NotificationMessage = (props: Props) => {
   useEffect(() => {
     getRoomInfoByUserId(props.auth.id);
   }, []);
+  const roomItem = props.roomInfo.rooms;
+  const thumbnailUrl = roomItem[0].rooms[0].users[0].thumbnailUrl;
+  const userName = roomItem[0].rooms[0].users[0].username;
+  const createdAt = roomItem[0].rooms[0].latestMessage.createdAt;
+  const latestMessage = roomItem[0].rooms[0].latestMessage.text;
   const notificationList = ['メッセージ', '取り引き', 'お知らせ'];
   const [selectedIndex, setIndex] = useState<number>(0);
 
-  const testData: RoomInfo[] = [
-    {
-      rooms: [
-        {
-          id: '1',
-          users: [
-            {
-              id: '1',
-              username: '濵田',
-              thumbnailUrl:
-                'https://iconbu.com/wp-content/uploads/2021/03/%E3%82%86%E3%82%8B%E3%81%84%E6%81%90%E7%AB%9C%E3%81%AE%E3%83%95%E3%83%AA%E3%83%BC%E3%82%A2%E3%82%A4%E3%82%B3%E3%83%B3.jpg',
-            },
-          ],
-          latestMassage: {
-            userId: '1',
-            text: 'こんにちは',
-            image: '',
-            createdAt: '2021/6/24 21:30',
-          },
-          createdAt: '2021/6/24 21:00',
-          updatedAt: '2021/6/24 21:30',
-        },
-      ],
-    },
-    {
-      rooms: [
-        {
-          id: '2',
-          users: [
-            {
-              id: '2',
-              username: '西川',
-              thumbnailUrl:
-                'https://iconbu.com/wp-content/uploads/2020/01/%E3%83%9A%E3%83%B3%E3%82%AE%E3%83%B3%E3%81%AE%E3%82%A2%E3%82%A4%E3%82%B3%E3%83%B3.jpg',
-            },
-          ],
-          latestMassage: {
-            userId: '2',
-            text: 'こんばんは',
-            image: '',
-            createdAt: '2021/6/23 22:30',
-          },
-          createdAt: '2021/6/23 20:00',
-          updatedAt: '2021/6/23 22:30',
-        },
-      ],
-    },
-  ];
-
-  const renderRoom = ({ item }: { item: RoomInfo }) => {
+  const renderRoom = () => {
     getRoomInfoByUserId(props.auth.id);
     return (
       <View style={styles.roomContainer}>
-        <Avatar rounded size="medium" source={{ uri: item.rooms[0].users[0].thumbnailUrl }} />
+        <Avatar rounded size="medium" source={{ uri: thumbnailUrl}} />
         <View style={styles.roomInfo}>
           <View style={styles.topInfo}>
-            <Text style={styles.userName}>{item.rooms[0].users[0].username}</Text>
-            <Text style={styles.createdAt}>{item.rooms[0].updatedAt}</Text>
+            <Text style={styles.userNameStyle}>{userName}</Text>
+            <Text style={styles.createdAtStyle}>{createdAt}</Text>
           </View>
           <View style={styles.bottomInfo}>
-            <Text style={styles.latestMessage}>{item.rooms[0].latestMassage.text}</Text>
+            <Text style={styles.latestMessageStyle}>{latestMessage}</Text>
             <MaterialIcons style={styles.forwardButton} size={32} name="keyboard-arrow-right" />
           </View>
         </View>
@@ -158,7 +115,7 @@ const NotificationMessage = (props: Props) => {
       />
       {selectedIndex === 0 ? (
         <View style={styles.listContainer}>
-          <FlatList data={testData} renderItem={renderRoom}></FlatList>
+          <FlatList data={roomItem} renderItem={renderRoom}></FlatList>
         </View>
       ) : selectedIndex === 1 ? (
         <View>
