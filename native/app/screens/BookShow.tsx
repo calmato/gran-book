@@ -9,9 +9,9 @@ import BookImpression from '../components/organisms/BookImpression';
 import BookInfo from '~/components/organisms/BookInfo';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import { convertToIBook } from '~/lib/converter';
-import { addBookAsync, getBookByISBNAsync } from '~/store/usecases';
+import { addBookAsync, getAllImpressionByBookIdAsync, getBookByISBNAsync } from '~/store/usecases';
 import { HomeTabStackPramList } from '~/types/navigation';
-import { IBook } from '~/types/response';
+import { IBook, IImpressionResponse } from '~/types/response';
 import { ISearchResultItem } from '~/types/response/external/rakuten-books';
 import { COLOR } from '~~/constants/theme';
 
@@ -36,12 +36,16 @@ interface Props {
 const BookShow = function BookShow(props: Props): ReactElement {
   const navigation = props.navigation;
   const routeParam = props.route.params;
+
   const [_wbResult, setWbResult] = useState<WebBrowser.WebBrowserResult>();
   const [showMessage, setShowMessage] = useState<boolean>(false);
+
   const [isRegister, setIsRegister] = useState<boolean>('id' in routeParam.book);
   const [book, setBook] = useState<IBook>(
     'id' in routeParam.book ? routeParam.book : convertToIBook(routeParam.book),
   );
+
+  const [impressions, setImpressions] = useState<IImpressionResponse>();
 
   const selectMenuList = ['情報', '感想'];
   const [selectedIndex, setIndex] = useState<number>(0);
@@ -80,12 +84,15 @@ const BookShow = function BookShow(props: Props): ReactElement {
     setWbResult(r);
   };
 
+  // TODO エラーハンドリングの処理を分ける
   useEffect(() => {
     const f = async () => {
       try {
         const res = await getBookByISBNAsync(book.isbn);
         setBook(res.data);
         setIsRegister(true);
+        const impRes = await getAllImpressionByBookIdAsync(book.id);
+        setImpressions(impRes);
       } catch (err) {
         setIsRegister(false);
       }
@@ -128,9 +135,9 @@ const BookShow = function BookShow(props: Props): ReactElement {
           handleOpenRakutenPageButton={_handleOpenRakutenPageButtonAsync}
           handleAddButton={handleAddBookButton}
         />
-      ) : (
-        <BookImpression />
-      )}
+      ) : impressions ? (
+        <BookImpression book={book} impressionResponse={impressions} />
+      ) : null}
     </View>
   );
 };
