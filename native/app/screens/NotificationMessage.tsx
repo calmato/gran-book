@@ -1,13 +1,13 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
-import React, { useState , useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { View, StyleSheet, Text, FlatList } from 'react-native';
 import { Header, Avatar } from 'react-native-elements';
 import HeaderText from '~/components/atoms/HeaderText';
 import { Auth } from '~/store/models';
 import { getRoomInfoByUserId } from '~/store/usecases/chatServices';
-import { RoomInfo, RoomInfoResponse } from '~/types/response/chat';
+import { RoomInfo } from '~/types/response/chat';
 import { COLOR } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
@@ -76,10 +76,9 @@ const NotificationMessage = (props: Props) => {
   useEffect(() => {
     console.log('ok');
     getRoomInfoByUserId(props.auth.id);
-  }, []);
+  }, [props.auth.id]);
   const notificationList = ['メッセージ', '取り引き', 'お知らせ'];
   const [selectedIndex, setIndex] = useState<number>(0);
-  const [roomInfo, setRoomInfo] = useState<RoomInfoResponse>();
 
   const testData: RoomInfo[] = [
     {
