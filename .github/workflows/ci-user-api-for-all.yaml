@@ -39,8 +39,8 @@ jobs:
       - name: Cache protobuf library
         uses: actions/cache@v2
         with:
-          path: /usr/local/bin
-          key: protoc
+          path: /usr/local/bin/protoc
+          key: protoc-${{ matrix.os }}
 
       - name: Build protobuf library
         if: steps.cache.outputs.cache-hit != 'true'
@@ -69,7 +69,7 @@ jobs:
 
       - name: Install gRPC tools
         run: |
-          sudo make install
+          go mod download
 
       - name: Generate proto
         run: |
