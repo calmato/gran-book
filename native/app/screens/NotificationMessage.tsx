@@ -74,7 +74,7 @@ interface Props {
 const NotificationMessage = (props: Props) => {
   useEffect(() => {
     getRoomInfoByUserId(props.auth.id);
-  }, [props.auth.id]);
+  }, []);
   const notificationList = ['メッセージ', '取り引き', 'お知らせ'];
   const [selectedIndex, setIndex] = useState<number>(0);
 
@@ -128,6 +128,7 @@ const NotificationMessage = (props: Props) => {
   ];
 
   const renderRoom = ({ item }: { item: RoomInfo }) => {
+    getRoomInfoByUserId(props.auth.id);
     return (
       <View style={styles.roomContainer}>
         <Avatar rounded size="medium" source={{ uri: item.rooms[0].users[0].thumbnailUrl }} />
