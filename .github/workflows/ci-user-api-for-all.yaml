@@ -36,6 +36,11 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
+      - name: test
+        run: |
+          which go
+          go env
+
       - name: Cache protobuf library
         uses: actions/cache@v2
         with:
@@ -70,6 +75,10 @@ jobs:
       - name: Install gRPC tools
         run: |
           go mod download
+          which go
+          which protoc
+          which prototool
+          go env
 
       - name: Generate proto
         run: |
