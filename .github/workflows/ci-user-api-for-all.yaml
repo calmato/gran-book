@@ -50,11 +50,9 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         working-directory: /tmp
         run: |
-          git clone https://github.com/protocolbuffers/protobuf.git
+          wget https://github.com/protocolbuffers/protobuf/releases/download/v3.17.3/protobuf-js-3.17.3.tar.gz
+          tar -xvzf protobuf-js-3.17.3.tar.gz
           cd ./protobuf
-          git submodule update --init --recursive
-          ./autogen.sh
-          ./autogen.sh  # run autogen twice, see below
           ./configure
           make
           make check
@@ -74,10 +72,13 @@ jobs:
       - name: Install gRPC tools
         run: |
           go mod download
+          # --- ↓remove ---
           which go
+          which protoc-gen-go
           which protoc
           which prototool
           go env
+          # --- ↑remove ---
 
       - name: Generate proto
         run: |
