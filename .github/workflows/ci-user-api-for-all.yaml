@@ -39,13 +39,13 @@ jobs:
       - name: test
         run: |
           which go
+          which protoc
           go env
 
       - name: Cache protobuf library
         uses: actions/cache@v2
         with:
           path: /usr/local/bin/protoc
-          key: protoc-${{ matrix.os }}
 
       - name: Build protobuf library
         if: steps.cache.outputs.cache-hit != 'true'
