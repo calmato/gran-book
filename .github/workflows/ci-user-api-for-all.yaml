@@ -39,7 +39,6 @@ jobs:
       - name: test
         run: |
           which go
-          which protoc
           go env
 
       - name: Cache protobuf library
