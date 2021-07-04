@@ -45,6 +45,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: /usr/local/bin/protoc
+          key: protoc-${{ matrix.os }}
 
       - name: Build protobuf library
         if: steps.cache.outputs.cache-hit != 'true'
