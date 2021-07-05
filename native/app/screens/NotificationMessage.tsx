@@ -72,18 +72,47 @@ interface Props {
   roomInfo?: RoomInfoResponse;
 }
 
+const intitialData :RoomInfoResponse = {
+  limit: 1,
+  offset: 1,
+  total: 1,
+  rooms:[{
+    rooms: [
+      {
+        id: '',
+        users: [
+          {
+            id: 'initialize',
+            username: 'ユーザー',
+            thumbnailUrl: 'https://iconbu.com/wp-content/uploads/2021/03/%E3%82%86%E3%82%8B%E3%81%84%E6%81%90%E7%AB%9C%E3%81%AE%E3%83%95%E3%83%AA%E3%83%BC%E3%82%A2%E3%82%A4%E3%82%B3%E3%83%B3.jpg',
+          }
+        ],
+        latestMessage: {
+          userId: '',
+          text: 'メッセージがありません',
+          image: '',
+          createdAt: '2021/07/06/23:30'
+        },
+        createdAt: '2021/07/06/23:30',
+        updatedAt: '2021/07/06/23:30',
+      }
+    ]
+  }
+  ]
+};
+
+
 const NotificationMessage = (props: Props) => {
   useEffect(() => {
     getRoomInfoByUserId(props.auth.id);
-  }, []);
-  const roomItem = props.roomInfo.rooms;
+  }, []);;
+  const roomItem = props.roomInfo?.rooms || intitialData ;
   const thumbnailUrl = roomItem[0].rooms[0].users[0].thumbnailUrl;
   const userName = roomItem[0].rooms[0].users[0].username;
   const createdAt = roomItem[0].rooms[0].latestMessage.createdAt;
   const latestMessage = roomItem[0].rooms[0].latestMessage.text;
   const notificationList = ['メッセージ', '取り引き', 'お知らせ'];
   const [selectedIndex, setIndex] = useState<number>(0);
-
   const renderRoom = () => {
     getRoomInfoByUserId(props.auth.id);
     return (
