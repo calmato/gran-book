@@ -144,7 +144,7 @@ const NotificationMessage = (props: Props) => {
       />
       {selectedIndex === 0 ? (
         <View style={styles.listContainer}>
-          <FlatList data={roomItem} renderItem={renderRoom}></FlatList>
+          <FlatList data={Object.keys(roomItem)} renderItem={renderRoom}></FlatList>
         </View>
       ) : selectedIndex === 1 ? (
         <View>
