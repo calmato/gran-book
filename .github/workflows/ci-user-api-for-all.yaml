@@ -63,6 +63,14 @@ jobs:
       #   run: |
       #     sudo make install
       #     sudo ldconfig
+      - name: Install protobuf
+        run: |
+          curl -fSLO https://github.com/google/protobuf/releases/download/v3.9.0/protoc-3.9.0-linux-x86_64.zip
+          unzip protoc-3.9.0-linux-x86_64.zip -d protoc
+          sudo mv protoc/bin/* /usr/local/bin/
+          sudo mv protoc/include/* /usr/local/include/
+          sudo chmod +x /usr/local/bin/protoc
+          sudo chmod +x /usr/local/include/google
 
       - name: Install prototool
         run: |
@@ -78,9 +86,9 @@ jobs:
           go get -u google.golang.org/grpc/cmd/protoc-gen-go-grpc
           # --- ↓remove ---
           which go
-          which protoc-gen-go
-          # which protoc
+          which protoc
           which prototool
+          which protoc-gen-go
           go env
           # --- ↑remove ---
 
