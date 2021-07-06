@@ -78,7 +78,7 @@ jobs:
           # --- ↓remove ---
           which go
           # which protoc-gen-go
-          which protoc
+          # which protoc
           which prototool
           go env
           # --- ↑remove ---
