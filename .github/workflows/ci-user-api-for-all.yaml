@@ -87,7 +87,11 @@ jobs:
           export PATH="$PATH:$(go env GOPATH)/bin"
           env
           sudo chmod 777 $(which protoc-gen-go)
+          echo '--- bin ---'
           ls -l /usr/local/bin
+          echo '--- go ---'
+          ls -l /home/runner/go/bin
+          echo '--- ---'
           # --- ↓remove ---
           which go
           which protoc
