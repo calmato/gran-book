@@ -20,12 +20,12 @@ func NewNotificationService(ndv notification.Validation, nr notification.Reposit
 	}
 }
 
-func (n *notificationService) List(ctx context.Context) ([]*notification.Notification, error) {
-	return n.notificationRepository.List(ctx)
+func (s *notificationService) List(ctx context.Context) ([]*notification.Notification, error) {
+	return s.notificationRepository.List(ctx)
 }
 
-func (n *notificationService) Show(ctx context.Context, notificatinID int) (*notification.Notification, error) {
-	return n.notificationRepository.Show(ctx, notificatinID)
+func (s *notificationService) Show(ctx context.Context, notificatinID int) (*notification.Notification, error) {
+	return s.notificationRepository.Show(ctx, notificatinID)
 }
 
 func (s *notificationService) Create(ctx context.Context, n *notification.Notification) error {
