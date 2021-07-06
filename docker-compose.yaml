@@ -245,12 +245,11 @@ services:
       context: ./infra/docker/infra/swagger_ui
       dockerfile: Dockerfile
     volumes:
-      - ./docs/12_backend/11_swagger/admin.apiv1.yaml:/var/swagger/admin.yaml:cached
-      - ./docs/12_backend/11_swagger/native.apiv1.yaml:/var/swagger/native.yaml:cached
+      - ./docs/12_backend/11_swagger:/var/swagger:cached
     ports:
       - 8000:8080
     environment:
-      SWAGGER_JSON: /var/swagger/native.yaml
+      SWAGGER_JSON: /var/swagger/native.apiv1.yaml
 
   swagger_editor:
     container_name: gran_book_swagger_editor

@@ -1,0 +1,268 @@
+openapi: 3.0.0
+info:
+  title: Gran Book (Native)
+  description: ネイティブアプリ用API
+  version: 0.1.0
+servers:
+  - url: http://localhost:8080
+    description: 開発環境
+  - url: https://api.gran-book-stg.calmato.work
+    description: 検証環境
+paths:
+  /v2/users/{userId}/books:
+    get:
+      summary: 本棚の書籍一覧
+      tags:
+        - BookService
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: string
+          required: true
+          description: ユーザID
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          required: false
+          description: 取得上限数
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          required: false
+          description: 取得開始位置
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/bookshelfListResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+  /v2/users/{userId}/books/{bookId}:
+    get:
+      summary: 本棚の書籍情報取得
+      tags:
+        - BookService
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: string
+          required: true
+          description: ユーザID
+        - in: path
+          name: bookId
+          schema:
+            type: integer
+            format: int64
+          required: true
+          description: 書籍ID
+        - in: query
+          name: key
+          schema:
+            type: string
+          required: false
+          description: 書籍IDの種類 (id / isbn, default - id)
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/bookshelfResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+tags:
+  - name: BookService
+    description: 書籍関連
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+  schemas:
+    # Request
+    # Response
+    emptyResponse:
+      type: object
+      properties:
+        impression:
+          type: string
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+    bookshelfResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        title:
+          type: string
+        titleKana:
+          type: string
+        description:
+          type: string
+        isbn:
+          type: string
+        publisher:
+          type: string
+        publishedOn:
+          type: string
+        thumbnailUrl:
+          type: string
+        rakutenUrl:
+          type: string
+        size:
+          type: string
+        author:
+          type: string
+        authorKana:
+          type: string
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+        bookshelf:
+          type: object
+          properties:
+            status:
+              type: string
+            readOn:
+              type: string
+            reviewId:
+              type: integer
+              format: int64
+            createdAt:
+              type: string
+            updatedAt:
+              type: string
+        reviews:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                format: int64
+              impression:
+                type: string
+              createdAt:
+                type: string
+              updatedAt:
+                type: string
+              user:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  username:
+                    type: string
+                  thumbnailUrl:
+                    type: string
+        reviewLimit:
+          type: integer
+          format: int64
+        reviewOffset:
+          type: integer
+          format: int64
+        reviewTotal:
+          type: integer
+          format: int64
+    bookshelfListResponse:
+      type: object
+      properties:
+        books:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                format: int64
+              title:
+                type: string
+              titleKana:
+                type: string
+              description:
+                type: string
+              isbn:
+                type: string
+              publisher:
+                type: string
+              publishedOn:
+                type: string
+              thumbnailUrl:
+                type: string
+              rakutenUrl:
+                type: string
+              size:
+                type: string
+              author:
+                type: string
+              authorKana:
+                type: string
+              createdAt:
+                type: string
+              updatedAt:
+                type: string
+              bookshelf:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  readOn:
+                    type: string
+                  reviewId:
+                    type: integer
+                    format: int64
+                  createdAt:
+                    type: string
+                  updatedAt:
+                    type: string
+        limit:
+          type: integer
+          format: int64
+        offset:
+          type: integer
+          format: int64
+        total:
+          type: integer
+          format: int64
+    errorResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+              reason:
+                type: string
