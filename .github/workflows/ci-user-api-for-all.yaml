@@ -80,10 +80,9 @@ jobs:
 
       - name: Install gRPC tools
         run: |
-          export PATH=$PATH:$GOPATH/bin
-          make install
-          go get -u google.golang.org/protobuf/cmd/protoc-gen-go
-          go get -u google.golang.org/grpc/cmd/protoc-gen-go-grpc
+          go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.26
+          go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.1
+          export PATH="$PATH:$(go env GOPATH)/bin"
           # --- ↓remove ---
           which go
           which protoc
