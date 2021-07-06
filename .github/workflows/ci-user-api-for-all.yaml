@@ -85,7 +85,9 @@ jobs:
           go get -u google.golang.org/grpc/cmd/protoc-gen-go-grpc
           go install google.golang.org/grpc/cmd/protoc-gen-go-grpc
           export PATH="$PATH:$(go env GOPATH)/bin"
+          env
           sudo chmod 777 $(which protoc-gen-go)
+          ls -l /usr/local/bin
           # --- ↓remove ---
           which go
           which protoc
