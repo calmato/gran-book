@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLOR.BACKGROUND_WHITE,
   },
   divider: {
-    borderLeftWidth: 1,
+    borderLeftWidth: 0.5,
     borderLeftColor: COLOR.TEXT_GRAY,
     alignSelf: 'stretch',
   },

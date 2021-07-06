@@ -15,7 +15,7 @@ const UserInfoStack = createStackNavigator<UserInfoStackParamList>();
 
 const UserInfoRoute = function SettingRoute() {
   return (
-    <UserInfoStack.Navigator initialRouteName="MyPage" headerMode="none">
+    <UserInfoStack.Navigator screenOptions={{ headerShown: false }} initialRouteName="MyPage">
       <UserInfoStack.Screen name="MyPage" component={MyPage} />
       <UserInfoStack.Screen name="OwnProfile" component={OwnProfile} />
       <UserInfoStack.Screen name="AccountSetting" component={AccountSetting} />
