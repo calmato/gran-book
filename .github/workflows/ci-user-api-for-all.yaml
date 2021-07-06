@@ -59,7 +59,7 @@ jobs:
           make check
 
       - name: Install protobuf library
-        working-directory: /tmp/protobuf
+        working-directory: /tmp/protobuf-3.17.3
         run: |
           sudo make install
           sudo ldconfig
