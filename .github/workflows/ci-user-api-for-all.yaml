@@ -5,9 +5,107 @@ on:
       - '.github/workflows/ci-user-api-for-all.yaml'
       - 'api/server/user/**'
 
+env:
+  PROTOC_VERSION: 3.15.8
+  PROTOTOOL_VERSION: 1.10.0
+
 jobs:
+  setup_proto:
+    name: Setup Proto
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./proto
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node: ['^16.1']
+        golang: ['^1.16.3']
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Use Golang ${{ matrix.golang }}
+        uses: actions/setup-go@v2
+
+      - name: Use Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: test
+        run: |
+          which go
+          go env
+
+      # - name: Cache protobuf library
+      #   uses: actions/cache@v2
+      #   with:
+      #     path: /usr/local/bin/protoc
+      #     key: protoc-${{ matrix.os }}
+
+      # - name: Build protobuf library
+      #   if: steps.cache.outputs.cache-hit != 'true'
+      #   working-directory: /tmp
+      #   run: |
+      #     wget https://github.com/protocolbuffers/protobuf/releases/download/v3.17.3/protobuf-js-3.17.3.tar.gz
+      #     tar -xvzf protobuf-js-3.17.3.tar.gz
+      #     cd ./protobuf-3.17.3
+      #     ./configure
+      #     make
+      #     make check
+
+      # - name: Install protobuf library
+      #   working-directory: /tmp/protobuf-3.17.3
+      #   run: |
+      #     sudo make install
+      #     sudo ldconfig
+      - name: Install protobuf
+        run: |
+          curl -fSLO https://github.com/google/protobuf/releases/download/v3.9.0/protoc-3.9.0-linux-x86_64.zip
+          unzip protoc-3.9.0-linux-x86_64.zip -d protoc
+          sudo mv protoc/bin/* /usr/local/bin/
+          sudo mv protoc/include/* /usr/local/include/
+          sudo chmod +x /usr/local/bin/protoc
+          sudo chmod +x /usr/local/include/google
+
+      - name: Install prototool
+        run: |
+          curl -fSLO "https://github.com/uber/prototool/releases/download/v${PROTOTOOL_VERSION}/prototool-$(uname -s)-$(uname -m)"
+          sudo mv ./prototool-$(uname -s)-$(uname -m) /usr/local/bin/prototool
+          sudo chmod +x /usr/local/bin/prototool
+
+      - name: Install gRPC tools
+        run: |
+          go get -u google.golang.org/protobuf/cmd/protoc-gen-go
+          go install google.golang.org/protobuf/cmd/protoc-gen-go
+          go get -u google.golang.org/grpc/cmd/protoc-gen-go-grpc
+          go install google.golang.org/grpc/cmd/protoc-gen-go-grpc
+          export PATH="$PATH:$(go env GOPATH)/bin"
+          env
+          sudo chmod 777 $(which protoc-gen-go)
+          echo '--- bin ---'
+          ls -l /usr/local/bin
+          echo '--- go ---'
+          ls -l /home/runner/go/bin
+          echo '--- ---'
+          # --- ↓remove ---
+          which go
+          which protoc
+          which prototool
+          which protoc-gen-go
+          # --- ↑remove ---
+
+      - name: Generate proto
+        run: |
+          make protoc-service SERVICE_PATH='./../api/server/user'
+
   build_and_test:
     name: Build and Test
+    needs: setup_proto
     runs-on: ${{ matrix.os }}
     defaults:
       run:
