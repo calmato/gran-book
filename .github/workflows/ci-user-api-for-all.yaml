@@ -103,6 +103,11 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: go mod download
 
+      - name: test
+        run: |
+          ls -a ./proto
+          git diff
+
       - name: Setup
         run: make setup
 
