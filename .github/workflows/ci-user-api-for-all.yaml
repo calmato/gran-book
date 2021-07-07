@@ -65,7 +65,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: artifact-${ARTIFACT_TAG}
-          path: ./../api/server/user/proto
+          path: api/server/user/proto
 
   build_and_test:
     name: Build and Test
