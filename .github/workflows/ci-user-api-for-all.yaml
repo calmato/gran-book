@@ -63,7 +63,7 @@ jobs:
       - name: test
         run: |
           git diff
-          ls -a ./proto
+          ls -a ./api/server/user/proto
 
   build_and_test:
     name: Build and Test
