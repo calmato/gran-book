@@ -5,7 +5,6 @@
 /* eslint-disable */
 
 import * as grpc from "@grpc/grpc-js";
-import {handleClientStreamingCall} from "@grpc/grpc-js/build/src/server-call";
 import * as proto_user_apiv1_pb from "../proto/user_apiv1_pb";
 
 interface IAuthServiceService extends grpc.ServiceDefinition<grpc.UntypedServiceImplementation> {
@@ -111,7 +110,7 @@ export interface IAuthServiceServer extends grpc.UntypedServiceImplementation {
     updateAuthPassword: grpc.handleUnaryCall<proto_user_apiv1_pb.UpdateAuthPasswordRequest, proto_user_apiv1_pb.AuthResponse>;
     updateAuthProfile: grpc.handleUnaryCall<proto_user_apiv1_pb.UpdateAuthProfileRequest, proto_user_apiv1_pb.AuthResponse>;
     updateAuthAddress: grpc.handleUnaryCall<proto_user_apiv1_pb.UpdateAuthAddressRequest, proto_user_apiv1_pb.AuthResponse>;
-    uploadAuthThumbnail: handleClientStreamingCall<proto_user_apiv1_pb.UploadAuthThumbnailRequest, proto_user_apiv1_pb.AuthThumbnailResponse>;
+    uploadAuthThumbnail: grpc.handleClientStreamingCall<proto_user_apiv1_pb.UploadAuthThumbnailRequest, proto_user_apiv1_pb.AuthThumbnailResponse>;
     deleteAuth: grpc.handleUnaryCall<proto_user_apiv1_pb.EmptyUser, proto_user_apiv1_pb.EmptyUser>;
     registerAuthDevice: grpc.handleUnaryCall<proto_user_apiv1_pb.RegisterAuthDeviceRequest, proto_user_apiv1_pb.AuthResponse>;
 }
@@ -283,7 +282,7 @@ export interface IAdminServiceServer extends grpc.UntypedServiceImplementation {
     updateAdminContact: grpc.handleUnaryCall<proto_user_apiv1_pb.UpdateAdminContactRequest, proto_user_apiv1_pb.AdminResponse>;
     updateAdminPassword: grpc.handleUnaryCall<proto_user_apiv1_pb.UpdateAdminPasswordRequest, proto_user_apiv1_pb.AdminResponse>;
     updateAdminProfile: grpc.handleUnaryCall<proto_user_apiv1_pb.UpdateAdminProfileRequest, proto_user_apiv1_pb.AdminResponse>;
-    uploadAdminThumbnail: handleClientStreamingCall<proto_user_apiv1_pb.UploadAdminThumbnailRequest, proto_user_apiv1_pb.AdminThumbnailResponse>;
+    uploadAdminThumbnail: grpc.handleClientStreamingCall<proto_user_apiv1_pb.UploadAdminThumbnailRequest, proto_user_apiv1_pb.AdminThumbnailResponse>;
     deleteAdmin: grpc.handleUnaryCall<proto_user_apiv1_pb.DeleteAdminRequest, proto_user_apiv1_pb.EmptyUser>;
 }
 

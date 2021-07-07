@@ -5,19 +5,18 @@
 /* eslint-disable */
 
 import * as grpc from "@grpc/grpc-js";
-import {handleClientStreamingCall} from "@grpc/grpc-js/build/src/server-call";
 import * as proto_information_apiv1_pb from "../proto/information_apiv1_pb";
 
 interface INotificationServiceService extends grpc.ServiceDefinition<grpc.UntypedServiceImplementation> {
-    listNotification: INotificationServiceService_IListNotification;
-    getNotification: INotificationServiceService_IGetNotification;
-    createNotification: INotificationServiceService_ICreateNotification;
-    updateNotification: INotificationServiceService_IUpdateNotification;
-    deleteNotification: INotificationServiceService_IDeleteNotification;
+    list: INotificationServiceService_IList;
+    get: INotificationServiceService_IGet;
+    create: INotificationServiceService_ICreate;
+    update: INotificationServiceService_IUpdate;
+    delete: INotificationServiceService_IDelete;
 }
 
-interface INotificationServiceService_IListNotification extends grpc.MethodDefinition<proto_information_apiv1_pb.EmptyNotification, proto_information_apiv1_pb.NotificationResponse> {
-    path: "/proto.NotificationService/ListNotification";
+interface INotificationServiceService_IList extends grpc.MethodDefinition<proto_information_apiv1_pb.EmptyNotification, proto_information_apiv1_pb.NotificationResponse> {
+    path: "/proto.NotificationService/List";
     requestStream: false;
     responseStream: false;
     requestSerialize: grpc.serialize<proto_information_apiv1_pb.EmptyNotification>;
@@ -25,8 +24,8 @@ interface INotificationServiceService_IListNotification extends grpc.MethodDefin
     responseSerialize: grpc.serialize<proto_information_apiv1_pb.NotificationResponse>;
     responseDeserialize: grpc.deserialize<proto_information_apiv1_pb.NotificationResponse>;
 }
-interface INotificationServiceService_IGetNotification extends grpc.MethodDefinition<proto_information_apiv1_pb.GetNotificationRequest, proto_information_apiv1_pb.NotificationResponse> {
-    path: "/proto.NotificationService/GetNotification";
+interface INotificationServiceService_IGet extends grpc.MethodDefinition<proto_information_apiv1_pb.GetNotificationRequest, proto_information_apiv1_pb.NotificationResponse> {
+    path: "/proto.NotificationService/Get";
     requestStream: false;
     responseStream: false;
     requestSerialize: grpc.serialize<proto_information_apiv1_pb.GetNotificationRequest>;
@@ -34,8 +33,8 @@ interface INotificationServiceService_IGetNotification extends grpc.MethodDefini
     responseSerialize: grpc.serialize<proto_information_apiv1_pb.NotificationResponse>;
     responseDeserialize: grpc.deserialize<proto_information_apiv1_pb.NotificationResponse>;
 }
-interface INotificationServiceService_ICreateNotification extends grpc.MethodDefinition<proto_information_apiv1_pb.CreateNotificationRequest, proto_information_apiv1_pb.NotificationResponse> {
-    path: "/proto.NotificationService/CreateNotification";
+interface INotificationServiceService_ICreate extends grpc.MethodDefinition<proto_information_apiv1_pb.CreateNotificationRequest, proto_information_apiv1_pb.NotificationResponse> {
+    path: "/proto.NotificationService/Create";
     requestStream: false;
     responseStream: false;
     requestSerialize: grpc.serialize<proto_information_apiv1_pb.CreateNotificationRequest>;
@@ -43,8 +42,8 @@ interface INotificationServiceService_ICreateNotification extends grpc.MethodDef
     responseSerialize: grpc.serialize<proto_information_apiv1_pb.NotificationResponse>;
     responseDeserialize: grpc.deserialize<proto_information_apiv1_pb.NotificationResponse>;
 }
-interface INotificationServiceService_IUpdateNotification extends grpc.MethodDefinition<proto_information_apiv1_pb.UpdateNotificationRequest, proto_information_apiv1_pb.NotificationResponse> {
-    path: "/proto.NotificationService/UpdateNotification";
+interface INotificationServiceService_IUpdate extends grpc.MethodDefinition<proto_information_apiv1_pb.UpdateNotificationRequest, proto_information_apiv1_pb.NotificationResponse> {
+    path: "/proto.NotificationService/Update";
     requestStream: false;
     responseStream: false;
     requestSerialize: grpc.serialize<proto_information_apiv1_pb.UpdateNotificationRequest>;
@@ -52,8 +51,8 @@ interface INotificationServiceService_IUpdateNotification extends grpc.MethodDef
     responseSerialize: grpc.serialize<proto_information_apiv1_pb.NotificationResponse>;
     responseDeserialize: grpc.deserialize<proto_information_apiv1_pb.NotificationResponse>;
 }
-interface INotificationServiceService_IDeleteNotification extends grpc.MethodDefinition<proto_information_apiv1_pb.DeleteNotificationRequest, proto_information_apiv1_pb.NotificationResponse> {
-    path: "/proto.NotificationService/DeleteNotification";
+interface INotificationServiceService_IDelete extends grpc.MethodDefinition<proto_information_apiv1_pb.DeleteNotificationRequest, proto_information_apiv1_pb.NotificationResponse> {
+    path: "/proto.NotificationService/Delete";
     requestStream: false;
     responseStream: false;
     requestSerialize: grpc.serialize<proto_information_apiv1_pb.DeleteNotificationRequest>;
@@ -65,46 +64,46 @@ interface INotificationServiceService_IDeleteNotification extends grpc.MethodDef
 export const NotificationServiceService: INotificationServiceService;
 
 export interface INotificationServiceServer extends grpc.UntypedServiceImplementation {
-    listNotification: grpc.handleUnaryCall<proto_information_apiv1_pb.EmptyNotification, proto_information_apiv1_pb.NotificationResponse>;
-    getNotification: grpc.handleUnaryCall<proto_information_apiv1_pb.GetNotificationRequest, proto_information_apiv1_pb.NotificationResponse>;
-    createNotification: grpc.handleUnaryCall<proto_information_apiv1_pb.CreateNotificationRequest, proto_information_apiv1_pb.NotificationResponse>;
-    updateNotification: grpc.handleUnaryCall<proto_information_apiv1_pb.UpdateNotificationRequest, proto_information_apiv1_pb.NotificationResponse>;
-    deleteNotification: grpc.handleUnaryCall<proto_information_apiv1_pb.DeleteNotificationRequest, proto_information_apiv1_pb.NotificationResponse>;
+    list: grpc.handleUnaryCall<proto_information_apiv1_pb.EmptyNotification, proto_information_apiv1_pb.NotificationResponse>;
+    get: grpc.handleUnaryCall<proto_information_apiv1_pb.GetNotificationRequest, proto_information_apiv1_pb.NotificationResponse>;
+    create: grpc.handleUnaryCall<proto_information_apiv1_pb.CreateNotificationRequest, proto_information_apiv1_pb.NotificationResponse>;
+    update: grpc.handleUnaryCall<proto_information_apiv1_pb.UpdateNotificationRequest, proto_information_apiv1_pb.NotificationResponse>;
+    delete: grpc.handleUnaryCall<proto_information_apiv1_pb.DeleteNotificationRequest, proto_information_apiv1_pb.NotificationResponse>;
 }
 
 export interface INotificationServiceClient {
-    listNotification(request: proto_information_apiv1_pb.EmptyNotification, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
-    listNotification(request: proto_information_apiv1_pb.EmptyNotification, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
-    listNotification(request: proto_information_apiv1_pb.EmptyNotification, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
-    getNotification(request: proto_information_apiv1_pb.GetNotificationRequest, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
-    getNotification(request: proto_information_apiv1_pb.GetNotificationRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
-    getNotification(request: proto_information_apiv1_pb.GetNotificationRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
-    createNotification(request: proto_information_apiv1_pb.CreateNotificationRequest, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
-    createNotification(request: proto_information_apiv1_pb.CreateNotificationRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
-    createNotification(request: proto_information_apiv1_pb.CreateNotificationRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
-    updateNotification(request: proto_information_apiv1_pb.UpdateNotificationRequest, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
-    updateNotification(request: proto_information_apiv1_pb.UpdateNotificationRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
-    updateNotification(request: proto_information_apiv1_pb.UpdateNotificationRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
-    deleteNotification(request: proto_information_apiv1_pb.DeleteNotificationRequest, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
-    deleteNotification(request: proto_information_apiv1_pb.DeleteNotificationRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
-    deleteNotification(request: proto_information_apiv1_pb.DeleteNotificationRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
+    list(request: proto_information_apiv1_pb.EmptyNotification, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
+    list(request: proto_information_apiv1_pb.EmptyNotification, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
+    list(request: proto_information_apiv1_pb.EmptyNotification, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
+    get(request: proto_information_apiv1_pb.GetNotificationRequest, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
+    get(request: proto_information_apiv1_pb.GetNotificationRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
+    get(request: proto_information_apiv1_pb.GetNotificationRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
+    create(request: proto_information_apiv1_pb.CreateNotificationRequest, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
+    create(request: proto_information_apiv1_pb.CreateNotificationRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
+    create(request: proto_information_apiv1_pb.CreateNotificationRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
+    update(request: proto_information_apiv1_pb.UpdateNotificationRequest, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
+    update(request: proto_information_apiv1_pb.UpdateNotificationRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
+    update(request: proto_information_apiv1_pb.UpdateNotificationRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
+    delete(request: proto_information_apiv1_pb.DeleteNotificationRequest, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
+    delete(request: proto_information_apiv1_pb.DeleteNotificationRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
+    delete(request: proto_information_apiv1_pb.DeleteNotificationRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
 }
 
 export class NotificationServiceClient extends grpc.Client implements INotificationServiceClient {
     constructor(address: string, credentials: grpc.ChannelCredentials, options?: Partial<grpc.ClientOptions>);
-    public listNotification(request: proto_information_apiv1_pb.EmptyNotification, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
-    public listNotification(request: proto_information_apiv1_pb.EmptyNotification, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
-    public listNotification(request: proto_information_apiv1_pb.EmptyNotification, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
-    public getNotification(request: proto_information_apiv1_pb.GetNotificationRequest, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
-    public getNotification(request: proto_information_apiv1_pb.GetNotificationRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
-    public getNotification(request: proto_information_apiv1_pb.GetNotificationRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
-    public createNotification(request: proto_information_apiv1_pb.CreateNotificationRequest, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
-    public createNotification(request: proto_information_apiv1_pb.CreateNotificationRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
-    public createNotification(request: proto_information_apiv1_pb.CreateNotificationRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
-    public updateNotification(request: proto_information_apiv1_pb.UpdateNotificationRequest, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
-    public updateNotification(request: proto_information_apiv1_pb.UpdateNotificationRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
-    public updateNotification(request: proto_information_apiv1_pb.UpdateNotificationRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
-    public deleteNotification(request: proto_information_apiv1_pb.DeleteNotificationRequest, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
-    public deleteNotification(request: proto_information_apiv1_pb.DeleteNotificationRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
-    public deleteNotification(request: proto_information_apiv1_pb.DeleteNotificationRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
+    public list(request: proto_information_apiv1_pb.EmptyNotification, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
+    public list(request: proto_information_apiv1_pb.EmptyNotification, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
+    public list(request: proto_information_apiv1_pb.EmptyNotification, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
+    public get(request: proto_information_apiv1_pb.GetNotificationRequest, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
+    public get(request: proto_information_apiv1_pb.GetNotificationRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
+    public get(request: proto_information_apiv1_pb.GetNotificationRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
+    public create(request: proto_information_apiv1_pb.CreateNotificationRequest, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
+    public create(request: proto_information_apiv1_pb.CreateNotificationRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
+    public create(request: proto_information_apiv1_pb.CreateNotificationRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
+    public update(request: proto_information_apiv1_pb.UpdateNotificationRequest, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
+    public update(request: proto_information_apiv1_pb.UpdateNotificationRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
+    public update(request: proto_information_apiv1_pb.UpdateNotificationRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
+    public delete(request: proto_information_apiv1_pb.DeleteNotificationRequest, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
+    public delete(request: proto_information_apiv1_pb.DeleteNotificationRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
+    public delete(request: proto_information_apiv1_pb.DeleteNotificationRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: proto_information_apiv1_pb.NotificationResponse) => void): grpc.ClientUnaryCall;
 }

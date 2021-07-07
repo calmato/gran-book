@@ -5,11 +5,11 @@ package proto;
 option go_package = "github.com/calmato/gran-book/proto";
 
 service NotificationService {
-  rpc ListNotification(EmptyNotification) returns (NotificationResponse);
-  rpc GetNotification(GetNotificationRequest) returns (NotificationResponse);
-  rpc CreateNotification(CreateNotificationRequest) returns (NotificationResponse);
-  rpc UpdateNotification(UpdateNotificationRequest) returns (NotificationResponse);
-  rpc DeleteNotification(DeleteNotificationRequest) returns (NotificationResponse);
+  rpc List(EmptyNotification) returns (NotificationResponse);
+  rpc Get(GetNotificationRequest) returns (NotificationResponse);
+  rpc Create(CreateNotificationRequest) returns (NotificationResponse);
+  rpc Update(UpdateNotificationRequest) returns (NotificationResponse);
+  rpc Delete(DeleteNotificationRequest) returns (NotificationResponse);
 }
 
 message EmptyNotification {}

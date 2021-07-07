@@ -72,8 +72,8 @@ function deserialize_proto_UpdateNotificationRequest(buffer_arg) {
 
 
 var NotificationServiceService = exports.NotificationServiceService = {
-  listNotification: {
-    path: '/proto.NotificationService/ListNotification',
+  list: {
+    path: '/proto.NotificationService/List',
     requestStream: false,
     responseStream: false,
     requestType: proto_information_apiv1_pb.EmptyNotification,
@@ -83,8 +83,8 @@ var NotificationServiceService = exports.NotificationServiceService = {
     responseSerialize: serialize_proto_NotificationResponse,
     responseDeserialize: deserialize_proto_NotificationResponse,
   },
-  getNotification: {
-    path: '/proto.NotificationService/GetNotification',
+  get: {
+    path: '/proto.NotificationService/Get',
     requestStream: false,
     responseStream: false,
     requestType: proto_information_apiv1_pb.GetNotificationRequest,
@@ -94,8 +94,8 @@ var NotificationServiceService = exports.NotificationServiceService = {
     responseSerialize: serialize_proto_NotificationResponse,
     responseDeserialize: deserialize_proto_NotificationResponse,
   },
-  createNotification: {
-    path: '/proto.NotificationService/CreateNotification',
+  create: {
+    path: '/proto.NotificationService/Create',
     requestStream: false,
     responseStream: false,
     requestType: proto_information_apiv1_pb.CreateNotificationRequest,
@@ -105,8 +105,8 @@ var NotificationServiceService = exports.NotificationServiceService = {
     responseSerialize: serialize_proto_NotificationResponse,
     responseDeserialize: deserialize_proto_NotificationResponse,
   },
-  updateNotification: {
-    path: '/proto.NotificationService/UpdateNotification',
+  update: {
+    path: '/proto.NotificationService/Update',
     requestStream: false,
     responseStream: false,
     requestType: proto_information_apiv1_pb.UpdateNotificationRequest,
@@ -116,8 +116,8 @@ var NotificationServiceService = exports.NotificationServiceService = {
     responseSerialize: serialize_proto_NotificationResponse,
     responseDeserialize: deserialize_proto_NotificationResponse,
   },
-  deleteNotification: {
-    path: '/proto.NotificationService/DeleteNotification',
+  delete: {
+    path: '/proto.NotificationService/Delete',
     requestStream: false,
     responseStream: false,
     requestType: proto_information_apiv1_pb.DeleteNotificationRequest,
