@@ -96,6 +96,13 @@ jobs:
           name: artifact-${ARTIFACT_TAG}
           path: api/server/user/proto
 
+      - name: test
+        run: |
+          pwd
+          ls -a proto
+          echo '---'
+          ls -a ./
+
       - name: Check golang version
         run: go version
 
