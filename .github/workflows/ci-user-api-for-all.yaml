@@ -60,6 +60,10 @@ jobs:
           export PATH="$PATH:$(go env GOPATH)/bin"
           make protoc-service SERVICE_PATH='./../api/server/user'
 
+      - name: test
+        run: |
+          git diff
+
   build_and_test:
     name: Build and Test
     needs: setup_proto
