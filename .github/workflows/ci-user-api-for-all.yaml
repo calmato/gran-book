@@ -95,6 +95,10 @@ jobs:
         with:
           name: artifact-${ARTIFACT_TAG}
 
+      - name: test
+        run: |
+          ls -a proto
+
       - name: Check golang version
         run: go version
 
