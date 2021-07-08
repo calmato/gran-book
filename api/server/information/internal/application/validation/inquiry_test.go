@@ -94,7 +94,7 @@ func TestInquiryRequeestValidation_CreateInquiry(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			target := NewInquiryRequestValidation()
 
-			got := target.Inquiry(tc.Input)
+			got := target.CreateInquiry(tc.Input)
 			if !tc.Expected {
 				if got != nil {
 					t.Fatalf("Incorrect result: %#v", got)
