@@ -33,12 +33,7 @@ const SearchResultItem = function SearchResultItem(props: Props): ReactElement {
   return (
     <ListItem bottomDivider onPress={props.onPress}>
       <Image
-        source={
-          book.largeImageUrl
-            ? { uri: book.largeImageUrl }
-
-            : require('assets/logo.png')
-        }
+        source={book.largeImageUrl ? { uri: book.largeImageUrl } : require('assets/logo.png')}
         style={styles.bookCoverStyle}
         width={80}
         height={120}

@@ -5,7 +5,9 @@ metadata:
 spec:
   containers:
   - name: busybox
-    image: ubuntu:21.04
+    # image: ubuntu:21.04
+    image: alpine:3.13.5
+    # image: nginx:1.21.0-alpine
     imagePullPolicy: IfNotPresent
     stdin: true
     tty: true

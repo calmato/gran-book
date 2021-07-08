@@ -9,6 +9,7 @@ type Room struct {
 	CreatedAt     time.Time `firestore:"createdAt"`
 	UpdatedAt     time.Time `firestore:"updatedAt"`
 	LatestMessage *Message  `firestore:"-"`
+	InstanceIDs   []string  `firestore:"-"`
 }
 
 // Message - チャットメッセージ エンティティ
@@ -17,5 +18,6 @@ type Message struct {
 	Text      string    `firestore:"text"`
 	Image     string    `firestore:"image"`
 	UserID    string    `firestore:"userId"`
+	Username  string    `firestore:"-"`
 	CreatedAt time.Time `firestore:"createdAt"`
 }

@@ -65,10 +65,24 @@ data:
         Parser       nginx
         Reserve_Data True
         Preserve_Key False
+    [FILTER]
+        Name         grep
+        Match        kube.default.*-gateway
+        Exclude      $log['path'] /health
+    [FILTER]
+        name         nest
+        Match        kube.default.*
+        Operation    lift
+        Nested_under log
   outputs.conf: |
     [OUTPUT]
-        Name  stackdriver
-        Match kube.*
+        Name                   loki
+        Match                  *
+        Host                   mgmt.calmato.work
+        Port                   3100
+        Labels                 job=fluentbit
+        Label_Keys             $namespace, $app_name, $pod_id
+        Auto_Kubernetes_Labels on
   parsers-custom.conf: |
     [PARSER]
         Name        docker
@@ -82,10 +96,10 @@ data:
     [PARSER]
         Name        pod
         Format      regex
-        Regex       ^/var/log/containers/(?<pod_id>[^_]*).*.log$
+        Regex       ^/var/log/containers/(?<pod_id>[^_]*)_(?<namespace>[^_]*)_(?<app_name>[^ ]*)-[0-9a-z]*.log$
     [PARSER]
         Name        nginx
         Format      regex
-        Regex       ^(?<remote>[^ ]*) (?<host>[^ ]*) (?<user>[^ ]*) \[(?<time>[^\]]*)\] "(?<method>\S+)(?: +(?<path>[^\"]*?)(?: +\S*)?)?" (?<code>[^ ]*) (?<size>[^ ]*)(?: "(?<referer>[^\"]*)" "(?<agent>[^\"]*)")
+        Regex       ^(?<remote_addr>[^ ]*) (?<host>[^ ]*) (?<remote_user>[^ ]*) \[(?<time_local>[^\]]*)\] "(?<method>\S+)(?: +(?<path>[^\"]*?)(?: +\S*)?)?" (?<status>[^ ]*) (?<body_bytes_sent>[^ ]*)(?: "(?<http_referer>[^\"]*)" "(?<http_user_agent>[^\"]*)" "(?<http_x_forwarded_for>[^\"]*)" "(?<request_time>[^\"]*)")
         Time_Key    time
         Time_Format %d/%b/%Y:%H:%M:%S %z
