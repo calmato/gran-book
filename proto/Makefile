@@ -51,4 +51,4 @@ protoc-service:
 		--go_opt paths=source_relative \
 		--go-grpc_out ${SERVICE_PATH} \
 		--go-grpc_opt paths=source_relative \
-		./proto/*.proto
+		./proto/*api*.proto
