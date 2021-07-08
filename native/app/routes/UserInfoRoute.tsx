@@ -3,18 +3,11 @@ import React from 'react';
 import { MyPage , OwnProfile , EmailEdit , ContactEdit , ProfileEdit , AccountSetting } from '~/containers';
 
 import { UserInfoStackParamList } from '~/types/navigation';
-<<<<<<< HEAD
 import { EmailEdit } from '~/containers';
 import { ContactEdit } from '~/containers';
 import { ProfileEdit } from '~/containers';
 import { AccountSetting } from '~/containers';
 import { Support } from '~/containers';
-=======
-
-
-
-
->>>>>>> 3c9a5a31619a7e0e50130070a2bb56746e750f03
 
 const UserInfoStack = createStackNavigator<UserInfoStackParamList>();
 
