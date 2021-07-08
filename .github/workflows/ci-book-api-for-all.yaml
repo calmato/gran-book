@@ -64,11 +64,12 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: artifact-book-api-${ARTIFACT_TAG}
+          name: artifact-${ARTIFACT_TAG}
           path: api/server/book/proto
 
   build_and_test:
     name: Build and Test
+    needs: setup_proto
     runs-on: ${{ matrix.os }}
     defaults:
       run:
@@ -92,7 +93,7 @@ jobs:
       - name: Download artifact for setup proto
         uses: actions/download-artifact@v2
         with:
-          name: artifact-book-api-${ARTIFACT_TAG}
+          name: artifact-${ARTIFACT_TAG}
           path: api/server/book/proto
 
       - name: Check golang version

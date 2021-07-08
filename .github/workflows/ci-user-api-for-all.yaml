@@ -64,7 +64,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: artifact-user-api-${ARTIFACT_TAG}
+          name: artifact-${ARTIFACT_TAG}
           path: api/server/user/proto
 
   build_and_test:
@@ -93,7 +93,7 @@ jobs:
       - name: Download artifact for setup proto
         uses: actions/download-artifact@v2
         with:
-          name: artifact-user-api-${ARTIFACT_TAG}
+          name: artifact-${ARTIFACT_TAG}
           path: api/server/user/proto
 
       - name: Check golang version
