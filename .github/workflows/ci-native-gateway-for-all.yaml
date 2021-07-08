@@ -65,7 +65,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: artifact-${ARTIFACT_TAG}
+          name: artifact-native-gateway-${ARTIFACT_TAG}
           path: api/gateway/native/src/proto
 
   build_and_test:
@@ -93,7 +93,7 @@ jobs:
       - name: Download artifact for setup proto
         uses: actions/download-artifact@v2
         with:
-          name: artifact-${ARTIFACT_TAG}
+          name: artifact-native-gateway-${ARTIFACT_TAG}
           path: api/gateway/native/src/proto
 
       - name: Get yarn cache directory path
