@@ -10,6 +10,7 @@ on:
 env:
   PROTOBUF_VERSION: 3.9.0
   PROTOTOOL_VERSION: 1.10.0
+  ARTIFACT_TAG: ${{ github.sha }}
   GCP_PROJECT_ID: ${{ secrets.STG_GCP_PROJECT_ID }}
   GCP_REGION: ${{ secrets.STG_GCP_REGION }}
   GCR_HOSTNAME: ${{ secrets.STG_GCR_HOSTNAME }}

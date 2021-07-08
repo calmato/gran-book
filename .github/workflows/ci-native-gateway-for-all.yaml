@@ -6,7 +6,68 @@ on:
       - '.github/workflows/ci-native-gateway-for-all.yaml'
       - 'api/gateway/native/**'
 
+env:
+  PROTOBUF_VERSION: 3.9.0
+  PROTOTOOL_VERSION: 1.10.0
+  ARTIFACT_TAG: ${{ github.sha }}
+
 jobs:
+  setup_proto:
+    name: Setup Proto
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./proto
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node: ['^16.1']
+        golang: ['^1.16.3']
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Use Golang ${{ matrix.golang }}
+        uses: actions/setup-go@v2
+
+      - name: Use Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Install protobuf
+        run: |
+          curl -fSLO https://github.com/google/protobuf/releases/download/v${PROTOBUF_VERSION}/protoc-${PROTOBUF_VERSION}-linux-x86_64.zip
+          unzip protoc-${PROTOBUF_VERSION}-linux-x86_64.zip -d protoc
+          sudo mv protoc/bin/* /usr/local/bin/
+          sudo mv protoc/include/* /usr/local/include/
+          sudo chmod +x /usr/local/bin/protoc
+          sudo chmod +x /usr/local/include/google
+
+      - name: Install prototool
+        run: |
+          curl -fSLO "https://github.com/uber/prototool/releases/download/v${PROTOTOOL_VERSION}/prototool-$(uname -s)-$(uname -m)"
+          sudo mv ./prototool-$(uname -s)-$(uname -m) /usr/local/bin/prototool
+          sudo chmod +x /usr/local/bin/prototool
+
+      - name: Install gRPC tools
+        run: |
+          npm install -g grpc grpc-tools grpc_tools_node_protoc_ts
+          make install
+
+      - name: Generate proto
+        run: |
+          make protoc-gateway GATEWAY_PATH='./../api/gateway/native/src'
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: artifact-${ARTIFACT_TAG}
+          path: api/gateway/native/src/proto
+
   build_and_test:
     name: Build and Test
     runs-on: ${{ matrix.os }}
@@ -28,6 +89,12 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node }}
+
+      - name: Download artifact for setup proto
+        uses: actions/download-artifact@v2
+        with:
+          name: artifact-${ARTIFACT_TAG}
+          path: api/gateway/native/src/proto
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path

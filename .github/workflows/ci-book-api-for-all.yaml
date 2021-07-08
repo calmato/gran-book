@@ -8,6 +8,7 @@ on:
 env:
   PROTOBUF_VERSION: 3.9.0
   PROTOTOOL_VERSION: 1.10.0
+  ARTIFACT_TAG: ${{ github.sha }}
 
 jobs:
   setup_proto:
