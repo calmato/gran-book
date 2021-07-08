@@ -107,24 +107,21 @@ const NotificationMessage = (props: Props) => {
     getRoomInfoByUserId(props.auth.id);
   }, []);;
   const roomItem = props.roomInfo?.rooms || intitialData ;
-  const thumbnailUrl = roomItem[0].rooms[0].users[0].thumbnailUrl;
-  const userName = roomItem[0].rooms[0].users[0].username;
-  const createdAt = roomItem[0].rooms[0].latestMessage.createdAt;
-  const latestMessage = roomItem[0].rooms[0].latestMessage.text;
+  console.log(roomItem);
   const notificationList = ['メッセージ', '取り引き', 'お知らせ'];
   const [selectedIndex, setIndex] = useState<number>(0);
   const renderRoom = () => {
     getRoomInfoByUserId(props.auth.id);
     return (
       <View style={styles.roomContainer}>
-        <Avatar rounded size="medium" source={{ uri: thumbnailUrl}} />
+        <Avatar rounded size="medium" source={{ uri: intitialData.rooms[0].rooms[0].users[0].thumbnailUrl}} />
         <View style={styles.roomInfo}>
           <View style={styles.topInfo}>
-            <Text style={styles.userNameStyle}>{userName}</Text>
-            <Text style={styles.createdAtStyle}>{createdAt}</Text>
+            <Text style={styles.userNameStyle}>{intitialData.rooms[0].rooms[0].users[0].username}</Text>
+            <Text style={styles.createdAtStyle}>{intitialData.rooms[0].rooms[0].latestMessage.createdAt}</Text>
           </View>
           <View style={styles.bottomInfo}>
-            <Text style={styles.latestMessageStyle}>{latestMessage}</Text>
+            <Text style={styles.latestMessageStyle}>{intitialData.rooms[0].rooms[0].latestMessage.text}</Text>
             <MaterialIcons style={styles.forwardButton} size={32} name="keyboard-arrow-right" />
           </View>
         </View>

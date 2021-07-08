@@ -2,7 +2,7 @@ export interface RoomInfoResponse {
   limit: number;
   offset: number;
   total: number;
-  rooms: Array<RoomInfo>;
+  rooms: RoomInfo[];
 }
 
 export interface RoomInfo {
@@ -18,12 +18,12 @@ export interface RoomInfo {
       ],
       latestMessage: {
         userId: string,
-        text: string,
-        image: string,
+        text?: string,
+        image?: string,
         createdAt: string
       },
-      createdAt: string,
-      updatedAt: string
+      createdAt?: string,
+      updatedAt?: string
     }
   ]
 }
