@@ -72,14 +72,14 @@ interface Props {
   roomInfo?: RoomInfoResponse;
 }
 
-const intitialData :RoomInfoResponse = {
+const initialData :RoomInfoResponse = {
   limit: 1,
   offset: 1,
   total: 1,
   rooms:[{
     rooms: [
       {
-        id: '',
+        id: '1',
         users: [
           {
             id: 'initialize',
@@ -106,22 +106,21 @@ const NotificationMessage = (props: Props) => {
   useEffect(() => {
     getRoomInfoByUserId(props.auth.id);
   }, []);;
-  const roomItem = props.roomInfo?.rooms || intitialData ;
-  console.log(roomItem);
+  const roomItem = props.roomInfo?.rooms || initialData ;
   const notificationList = ['メッセージ', '取り引き', 'お知らせ'];
   const [selectedIndex, setIndex] = useState<number>(0);
   const renderRoom = () => {
     getRoomInfoByUserId(props.auth.id);
     return (
       <View style={styles.roomContainer}>
-        <Avatar rounded size="medium" source={{ uri: intitialData.rooms[0].rooms[0].users[0].thumbnailUrl}} />
+        <Avatar rounded size="medium" source={{ uri: initialData.rooms[0].rooms[0].users[0].thumbnailUrl}} />
         <View style={styles.roomInfo}>
           <View style={styles.topInfo}>
-            <Text style={styles.userNameStyle}>{intitialData.rooms[0].rooms[0].users[0].username}</Text>
-            <Text style={styles.createdAtStyle}>{intitialData.rooms[0].rooms[0].latestMessage.createdAt}</Text>
+            <Text style={styles.userNameStyle}>{initialData.rooms[0].rooms[0].users[0].username}</Text>
+            <Text style={styles.createdAtStyle}>{initialData.rooms[0].rooms[0].latestMessage.createdAt}</Text>
           </View>
           <View style={styles.bottomInfo}>
-            <Text style={styles.latestMessageStyle}>{intitialData.rooms[0].rooms[0].latestMessage.text}</Text>
+            <Text style={styles.latestMessageStyle}>{initialData.rooms[0].rooms[0].latestMessage.text}</Text>
             <MaterialIcons style={styles.forwardButton} size={32} name="keyboard-arrow-right" />
           </View>
         </View>
@@ -141,7 +140,8 @@ const NotificationMessage = (props: Props) => {
       />
       {selectedIndex === 0 ? (
         <View style={styles.listContainer}>
-          <FlatList data={Object.keys(roomItem)} renderItem={renderRoom}></FlatList>
+          {/*renderoomが複数回実行される */}
+          <FlatList data={Object.keys(roomItem)} renderItem={renderRoom} ></FlatList>
         </View>
       ) : selectedIndex === 1 ? (
         <View>
