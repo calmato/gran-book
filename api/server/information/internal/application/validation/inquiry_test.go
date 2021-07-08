@@ -10,11 +10,11 @@ import (
 
 func TestInquiryRequeestValidation_CreateInquiry(t *testing.T) {
 	testCases := map[string]struct {
-		Input    *input.Inquiry
+		Input    *input.CreateInquiry
 		Expected bool
 	}{
 		"ok": {
-			Input: &input.Inquiry{
+			Input: &input.CreateInquiry{
 				SenderId:    "00000000-0000-0000-0000-000000000000",
 				Subject:     "本が検索しても見つからない",
 				Description: "読みたい本を検索しても見つかりません。どうしたら追加できますか？",
@@ -23,7 +23,7 @@ func TestInquiryRequeestValidation_CreateInquiry(t *testing.T) {
 			Expected: true,
 		},
 		"ng_userId_required": {
-			Input: &input.Inquiry{
+			Input: &input.CreateInquiry{
 				SenderId:    "",
 				Subject:     "本が検索しても見つからない",
 				Description: "読みたい本を検索しても見つかりません。どうしたら追加できますか？",
@@ -32,7 +32,7 @@ func TestInquiryRequeestValidation_CreateInquiry(t *testing.T) {
 			Expected: false,
 		},
 		"ng_subject_required": {
-			Input: &input.Inquiry{
+			Input: &input.CreateInquiry{
 				SenderId:    "00000000-0000-0000-0000-000000000000",
 				Subject:     "",
 				Description: "読みたい本を検索しても見つかりません。どうしたら追加できますか？",
@@ -41,7 +41,7 @@ func TestInquiryRequeestValidation_CreateInquiry(t *testing.T) {
 			Expected: false,
 		},
 		"ng_subject_max": {
-			Input: &input.Inquiry{
+			Input: &input.CreateInquiry{
 				SenderId:    "00000000-0000-0000-0000-000000000000",
 				Subject:     strings.Repeat("x", 65),
 				Description: "読みたい本を検索しても見つかりません。どうしたら追加できますか？",
@@ -50,7 +50,7 @@ func TestInquiryRequeestValidation_CreateInquiry(t *testing.T) {
 			Expected: false,
 		},
 		"ng_description_required": {
-			Input: &input.Inquiry{
+			Input: &input.CreateInquiry{
 				SenderId:    "00000000-0000-0000-0000-000000000000",
 				Subject:     "本が検索しても見つからない",
 				Description: "",
@@ -59,7 +59,7 @@ func TestInquiryRequeestValidation_CreateInquiry(t *testing.T) {
 			Expected: false,
 		},
 		"ng_description_max": {
-			Input: &input.Inquiry{
+			Input: &input.CreateInquiry{
 				SenderId:    "00000000-0000-0000-0000-000000000000",
 				Subject:     "本が検索しても見つからない",
 				Description: strings.Repeat("x", 1001),
@@ -68,7 +68,7 @@ func TestInquiryRequeestValidation_CreateInquiry(t *testing.T) {
 			Expected: false,
 		},
 		"ng_email_required": {
-			Input: &input.Inquiry{
+			Input: &input.CreateInquiry{
 				SenderId:    "00000000-0000-0000-0000-000000000000",
 				Subject:     "本が検索しても見つからない",
 				Description: "読みたい本を検索しても見つかりません。どうしたら追加できますか？",
@@ -77,7 +77,7 @@ func TestInquiryRequeestValidation_CreateInquiry(t *testing.T) {
 			Expected: false,
 		},
 		"ng_email_max": {
-			Input: &input.Inquiry{
+			Input: &input.CreateInquiry{
 				SenderId:    "00000000-0000-0000-0000-000000000000",
 				Subject:     "本が検索しても見つからない",
 				Description: "読みたい本を検索しても見つかりません。どうしたら追加できますか？",
