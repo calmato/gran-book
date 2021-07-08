@@ -20,22 +20,10 @@ func NewInquiryRepository(c *Client) inquiry.Repository {
 }
 
 func (r *inquiryRepository) Create(ctx context.Context, i *inquiry.Inquiry) error {
-	tx := r.client.db.Begin()
-	defer func() {
-		if r := recover(); r != nil {
-			tx.Rollback()
-		}
-	}()
-
-	if err := tx.Error; err != nil {
-		return err
-	}
-
-	err := tx.Omit(clause.Associations).Create(&i).Error
+	err := r.client.db.Omit(clause.Associations).Create(&i).Error
 	if err != nil {
-		tx.Rollback()
 		return exception.ErrorInDatastore.New(err)
 	}
 
-	return tx.Commit().Error
+	return nil
 }
