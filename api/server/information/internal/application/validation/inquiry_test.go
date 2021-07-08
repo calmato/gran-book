@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/calmato/gran-book/api/server/inquiry/internal/application/input"
+	"github.com/calmato/gran-book/api/server/information/internal/application/input"
 	"github.com/golang/mock/gomock"
 )
 
