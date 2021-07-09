@@ -30,50 +30,25 @@ format-fix:
 
 generate:
 	$(MAKE) install
-	$(MAKE) generate-admin-gateway
-	$(MAKE) generate-native-gateway
-	$(MAKE) generate-user-api
-	$(MAKE) generate-book-api
-	$(MAKE) generate-information-api
+	$(MAKE) protoc-gateway GATEWAY_PATH=${ADMIN_GATEWAY_PATH}
+	$(MAKE) protoc-gateway GATEWAY_PATH=${NATIVE_GATEWAY_PATH}
+	$(MAKE) protoc-service SERVICE_PATH=${USER_API_PATH}
+	$(MAKE) protoc-service SERVICE_PATH=${BOOK_API_PATH}
+	$(MAKE) protoc-service SERVICE_PATH=${INFORMATION_API_PATH}
 
-generate-admin-gateway:
+protoc-gateway:
 	protoc -I . \
 		--plugin=protoc-gen-ts=${PROTOC_GEN_TS_PATH} \
 		--plugin=protoc-gen-grpc=${PROTOC_GEN_GRPC_PATH} \
-		--js_out=import_style=commonjs,binary:${ADMIN_GATEWAY_PATH} \
-		--grpc_out=grpc_js:${ADMIN_GATEWAY_PATH} \
-		--ts_out=grpc_js:${ADMIN_GATEWAY_PATH} \
+		--js_out=import_style=commonjs,binary:${GATEWAY_PATH} \
+		--grpc_out=grpc_js:${GATEWAY_PATH} \
+		--ts_out=grpc_js:${GATEWAY_PATH} \
 		./proto/*.proto
 
-generate-native-gateway:
+protoc-service:
 	protoc -I . \
-		--plugin=protoc-gen-ts=${PROTOC_GEN_TS_PATH} \
-		--plugin=protoc-gen-grpc=${PROTOC_GEN_GRPC_PATH} \
-		--js_out=import_style=commonjs,binary:${NATIVE_GATEWAY_PATH} \
-		--grpc_out=grpc_js:${NATIVE_GATEWAY_PATH} \
-		--ts_out=grpc_js:${NATIVE_GATEWAY_PATH} \
-		./proto/*.proto
-
-generate-user-api:
-	protoc -I . \
-		--go_out ${USER_API_PATH} \
+		--go_out ${SERVICE_PATH} \
 		--go_opt paths=source_relative \
-		--go-grpc_out ${USER_API_PATH} \
+		--go-grpc_out ${SERVICE_PATH} \
 		--go-grpc_opt paths=source_relative \
-		./proto/user_apiv1.proto
-
-generate-book-api:
-	protoc -I . \
-		--go_out ${BOOK_API_PATH} \
-		--go_opt paths=source_relative \
-		--go-grpc_out ${BOOK_API_PATH} \
-		--go-grpc_opt paths=source_relative \
-		./proto/book_apiv1.proto
-
-generate-information-api:
-	protoc -I . \
-		--go_out ${INFORMATION_API_PATH} \
-		--go_opt paths=source_relative \
-		--go-grpc_out ${INFORMATION_API_PATH} \
-		--go-grpc_opt paths=source_relative \
-		./proto/information_apiv1.proto
+		./proto/*api*.proto
