@@ -10,7 +10,7 @@ import (
 
 // NotificationApplication - Notificationアプリケーションのインターフェース
 type NotificationApplication interface {
-	Create(ctx context.Context, in *input.CreateNotification) error
+	Create(ctx context.Context, in *input.CreateNotification) (*notification.Notification, error)
 }
 
 type notificationApplication struct {
@@ -26,13 +26,13 @@ func NewNotificationApplication(nrv validation.NotificationRequestValidation, ns
 	}
 }
 
-func (n *notificationApplication) Create(ctx context.Context, in *input.CreateNotification) error {
-	err := n.notificationRequestValidation.CreateNotification(in)
+func (a *notificationApplication) Create(ctx context.Context, in *input.CreateNotification) (*notification.Notification, error) {
+	err := a.notificationRequestValidation.CreateNotification(in)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	u := &notification.Notification{
+	n := &notification.Notification{
 		Title:       in.Title,
 		Description: in.Description,
 		Importance:  in.Importance,
@@ -40,10 +40,10 @@ func (n *notificationApplication) Create(ctx context.Context, in *input.CreateNo
 
 	// TODO: valication check
 
-	err = n.notifictationService.Create(ctx, u)
+	err = a.notifictationService.Create(ctx, n)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return n, nil
 }

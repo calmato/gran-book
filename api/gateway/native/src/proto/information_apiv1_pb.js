@@ -1628,7 +1628,7 @@ proto.proto.NotificationResponse.prototype.toObject = function(opt_includeInstan
  */
 proto.proto.NotificationResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    id: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    id: jspb.Message.getFieldWithDefault(msg, 1, 0),
     authorId: jspb.Message.getFieldWithDefault(msg, 2, ""),
     editorId: jspb.Message.getFieldWithDefault(msg, 3, ""),
     title: jspb.Message.getFieldWithDefault(msg, 4, ""),
@@ -1674,7 +1674,7 @@ proto.proto.NotificationResponse.deserializeBinaryFromReader = function(msg, rea
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {number} */ (reader.readInt64());
       msg.setId(value);
       break;
     case 2:
@@ -1739,8 +1739,8 @@ proto.proto.NotificationResponse.prototype.serializeBinary = function() {
 proto.proto.NotificationResponse.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getId();
-  if (f.length > 0) {
-    writer.writeString(
+  if (f !== 0) {
+    writer.writeInt64(
       1,
       f
     );
@@ -1805,20 +1805,20 @@ proto.proto.NotificationResponse.serializeBinaryToWriter = function(message, wri
 
 
 /**
- * optional string id = 1;
- * @return {string}
+ * optional int64 id = 1;
+ * @return {number}
  */
 proto.proto.NotificationResponse.prototype.getId = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
 };
 
 
 /**
- * @param {string} value
+ * @param {number} value
  * @return {!proto.proto.NotificationResponse} returns this
  */
 proto.proto.NotificationResponse.prototype.setId = function(value) {
-  return jspb.Message.setProto3StringField(this, 1, value);
+  return jspb.Message.setProto3IntField(this, 1, value);
 };
 
 

@@ -52,7 +52,7 @@ message SearchNotificationRequest {
 }
 
 message NotificationResponse {
-  string id = 1;
+  int64 id = 1;
   string author_id = 2;
   string editor_id = 3;
   string title = 4;

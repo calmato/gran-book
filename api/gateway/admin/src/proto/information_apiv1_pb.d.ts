@@ -205,8 +205,8 @@ export namespace SearchNotificationRequest {
 }
 
 export class NotificationResponse extends jspb.Message { 
-    getId(): string;
-    setId(value: string): NotificationResponse;
+    getId(): number;
+    setId(value: number): NotificationResponse;
     getAuthorId(): string;
     setAuthorId(value: string): NotificationResponse;
     getEditorId(): string;
@@ -236,7 +236,7 @@ export class NotificationResponse extends jspb.Message {
 
 export namespace NotificationResponse {
     export type AsObject = {
-        id: string,
+        id: number,
         authorId: string,
         editorId: string,
         title: string,
