@@ -1430,7 +1430,7 @@ components:
                       type: string
                     thumbnailUrl:
                       type: string
-              latestMassage:
+              latestMessage:
                 type: object
                 properties:
                   userId:

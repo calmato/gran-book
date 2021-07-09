@@ -115,6 +115,20 @@ func (r *userRepository) ListFollower(ctx context.Context, q *domain.ListQuery) 
 	return fs, nil
 }
 
+func (r *userRepository) ListInstanceID(ctx context.Context, q *domain.ListQuery) ([]string, error) {
+	instanceIDs := []string{}
+
+	sql := r.client.db.Table("users").Select("instance_id")
+	db := r.client.getListQuery(sql, q)
+
+	err := db.Scan(&instanceIDs).Error
+	if err != nil {
+		return nil, exception.ErrorInDatastore.New(err)
+	}
+
+	return instanceIDs, nil
+}
+
 func (r *userRepository) ListFollowerID(ctx context.Context, q *domain.ListQuery) ([]string, error) {
 	followerIDs := []string{}
 

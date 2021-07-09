@@ -6,7 +6,7 @@ ENV TZ Asia/Tokyo
 ENV GO_VERSION 1.16.3
 ENV NODE_VERSION 16.1.0
 
-ENV PROTOBUF_VERSION 3.15.8
+ENV PROTOBUF_VERSION 3.17.3
 ENV PROTOTOOL_VERSION 1.10.0
 ENV GRPC_WEB_VERSION 1.2.1
 ENV GRPC_GATEWAY_VERSION 2.3.0
@@ -18,7 +18,8 @@ RUN apt-get install -y --no-install-recommends \
   curl \
   git \
   libtool \
-  tar
+  tar \
+  unzip
 RUN rm -rf /var/lib/apt/lists/*
 
 WORKDIR /tmp
@@ -34,13 +35,12 @@ RUN NODE_CHECKSUM=`cat SHASUMS256.txt | grep "node-v${NODE_VERSION}-linux-x64.ta
   && rm -f "node-v${NODE_VERSION}-linux-x64.tar.gz" SHASUMS256.txt
 
 # Protocol Buffers
-RUN curl -fSLO "https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOBUF_VERSION}/protobuf-cpp-${PROTOBUF_VERSION}.tar.gz"
-RUN tar -xvzf "protobuf-cpp-${PROTOBUF_VERSION}.tar.gz" -C . \
-  && cd ./protobuf-${PROTOBUF_VERSION} \
-  && ./autogen.sh \
-  && ./configure \
-  && make -j 4 \
-  && make install
+RUN curl -fSLO "https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOBUF_VERSION}/protoc-${PROTOBUF_VERSION}-linux-x86_64.zip"
+RUN unzip "protoc-${PROTOBUF_VERSION}-linux-x86_64.zip" -d ./protoc \
+  && mv protoc/bin/* /usr/local/bin/ \
+  && mv protoc/include/* /usr/local/include/ \
+  && chmod +x /usr/local/bin/protoc \
+  && chmod +x /usr/local/include/google
 
 # # gRPC Web
 # RUN curl -fSLO "https://github.com/grpc/grpc-web/releases/download/${GRPC_WEB_VERSION}/protoc-gen-grpc-web-${GRPC_WEB_VERSION}-$(uname -s)-$(uname -m)"

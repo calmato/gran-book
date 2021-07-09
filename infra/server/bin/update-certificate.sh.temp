@@ -4,13 +4,16 @@
 # Variables
 ##################################################
 CURRENT=`date "+%Y%m%d-%H%M%S"`
-K8S_SECRET_CERTIFICATE=`cat /etc/letsencrypt/live/<domain-name>/fullchain.pem | base64 -w 0`
-K8S_SECRET_PRIVATE_KEY=`cat /etc/letsencrypt/live/<domain-name>/privkey.pem | base64 -w 0`
 
 ##################################################
 # Main
 ##################################################
 certbot renew --force-renew
 
+K8S_SECRET_CERTIFICATE=`cat /etc/letsencrypt/live/<domain-name>/fullchain.pem | base64 -w 0`
+K8S_SECRET_PRIVATE_KEY=`cat /etc/letsencrypt/live/<domain-name>/privkey.pem | base64 -w 0`
+
 kubectl patch secret -n gateway nginx-secret -p "{\"data\":{\"cert.pem\": \"${K8S_SECRET_CERTIFICATE}\", \"privkey.pem\": \"${K8S_SECRET_PRIVATE_KEY}\"}}"
 kubectl patch deploy -n gateway nginx -p "{\"spec\": {\"template\": {\"metadata\": {\"labels\": {\"date\": \"${CURRENT}\" }}}}}"
+
+systemctl restart nginx

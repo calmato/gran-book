@@ -416,7 +416,7 @@ message ChatRoomListResponse {
   message Room {
     string id = 1;
     repeated string user_ids = 2;
-    Message latestMassage = 3;
+    Message latestMessage = 3;
   }
   repeated Room rooms = 1;
 }
