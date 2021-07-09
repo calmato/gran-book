@@ -19,14 +19,16 @@ type notificationApplication struct {
 }
 
 // NewNotificationApplication - NotificationApplicationの生成
-func NewNotificationApplication(nrv validation.NotificationRequestValidation, ns notification.Service) NotificationApplication {
+func NewNotificationApplication(nrv validation.NotificationRequestValidation,
+	ns notification.Service) NotificationApplication {
 	return &notificationApplication{
 		notificationRequestValidation: nrv,
 		notifictationService:          ns,
 	}
 }
 
-func (a *notificationApplication) Create(ctx context.Context, in *input.CreateNotification) (*notification.Notification, error) {
+func (a *notificationApplication) Create(ctx context.Context,
+	in *input.CreateNotification) (*notification.Notification, error) {
 	err := a.notificationRequestValidation.CreateNotification(in)
 	if err != nil {
 		return nil, err

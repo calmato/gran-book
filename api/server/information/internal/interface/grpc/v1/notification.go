@@ -17,7 +17,8 @@ type NotificationServer struct {
 }
 
 // CreateNotification - お知らせ登録
-func (s *NotificationServer) Create(ctx context.Context, req *pb.CreateNotificationRequest) (*pb.NotificationResponse, error) {
+func (s *NotificationServer) Create(ctx context.Context,
+	req *pb.CreateNotificationRequest) (*pb.NotificationResponse, error) {
 	in := &input.CreateNotification{
 		Title:       req.Title,
 		Description: req.Description,
