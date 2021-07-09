@@ -25,7 +25,7 @@ func NewInquiryApplication(is inquiry.Service) InquiryApplication {
 
 func (ia *inquiryApplication) Create(ctx context.Context, in *input.CreateInquiry) (*inquiry.Inquiry, error) {
 	i := &inquiry.Inquiry{
-		SenderId:    in.SenderId,
+		SenderID:    in.SenderID,
 		Subject:     in.Subject,
 		Description: in.Description,
 		Email:       in.Email,

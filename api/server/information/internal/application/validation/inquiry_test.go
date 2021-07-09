@@ -15,16 +15,16 @@ func TestInquiryRequeestValidation_CreateInquiry(t *testing.T) {
 	}{
 		"ok": {
 			Input: &input.CreateInquiry{
-				SenderId:    "00000000-0000-0000-0000-000000000000",
+				SenderID:    "00000000-0000-0000-0000-000000000000",
 				Subject:     "本が検索しても見つからない",
 				Description: "読みたい本を検索しても見つかりません。どうしたら追加できますか？",
 				Email:       "calmato.dev@gmail.com",
 			},
 			Expected: true,
 		},
-		"ng_userId_required": {
+		"ng_senderId_required": {
 			Input: &input.CreateInquiry{
-				SenderId:    "",
+				SenderID:    "",
 				Subject:     "本が検索しても見つからない",
 				Description: "読みたい本を検索しても見つかりません。どうしたら追加できますか？",
 				Email:       "calmato.dev@gmail.com",
@@ -33,7 +33,7 @@ func TestInquiryRequeestValidation_CreateInquiry(t *testing.T) {
 		},
 		"ng_subject_required": {
 			Input: &input.CreateInquiry{
-				SenderId:    "00000000-0000-0000-0000-000000000000",
+				SenderID:    "00000000-0000-0000-0000-000000000000",
 				Subject:     "",
 				Description: "読みたい本を検索しても見つかりません。どうしたら追加できますか？",
 				Email:       "calmato.dev@gmail.com",
@@ -42,7 +42,7 @@ func TestInquiryRequeestValidation_CreateInquiry(t *testing.T) {
 		},
 		"ng_subject_max": {
 			Input: &input.CreateInquiry{
-				SenderId:    "00000000-0000-0000-0000-000000000000",
+				SenderID:    "00000000-0000-0000-0000-000000000000",
 				Subject:     strings.Repeat("x", 65),
 				Description: "読みたい本を検索しても見つかりません。どうしたら追加できますか？",
 				Email:       "calmato.dev@gmail.com",
@@ -51,7 +51,7 @@ func TestInquiryRequeestValidation_CreateInquiry(t *testing.T) {
 		},
 		"ng_description_required": {
 			Input: &input.CreateInquiry{
-				SenderId:    "00000000-0000-0000-0000-000000000000",
+				SenderID:    "00000000-0000-0000-0000-000000000000",
 				Subject:     "本が検索しても見つからない",
 				Description: "",
 				Email:       "calmato.dev@gmail.com",
@@ -60,7 +60,7 @@ func TestInquiryRequeestValidation_CreateInquiry(t *testing.T) {
 		},
 		"ng_description_max": {
 			Input: &input.CreateInquiry{
-				SenderId:    "00000000-0000-0000-0000-000000000000",
+				SenderID:    "00000000-0000-0000-0000-000000000000",
 				Subject:     "本が検索しても見つからない",
 				Description: strings.Repeat("x", 1001),
 				Email:       "calmato.dev@gmail.com",
@@ -69,7 +69,7 @@ func TestInquiryRequeestValidation_CreateInquiry(t *testing.T) {
 		},
 		"ng_email_required": {
 			Input: &input.CreateInquiry{
-				SenderId:    "00000000-0000-0000-0000-000000000000",
+				SenderID:    "00000000-0000-0000-0000-000000000000",
 				Subject:     "本が検索しても見つからない",
 				Description: "読みたい本を検索しても見つかりません。どうしたら追加できますか？",
 				Email:       "",
@@ -78,7 +78,7 @@ func TestInquiryRequeestValidation_CreateInquiry(t *testing.T) {
 		},
 		"ng_email_max": {
 			Input: &input.CreateInquiry{
-				SenderId:    "00000000-0000-0000-0000-000000000000",
+				SenderID:    "00000000-0000-0000-0000-000000000000",
 				Subject:     "本が検索しても見つからない",
 				Description: "読みたい本を検索しても見つかりません。どうしたら追加できますか？",
 				Email:       strings.Repeat("x", 257),
@@ -95,7 +95,7 @@ func TestInquiryRequeestValidation_CreateInquiry(t *testing.T) {
 			target := NewInquiryRequestValidation()
 
 			got := target.CreateInquiry(tc.Input)
-			if !tc.Expected {
+			if tc.Expected {
 				if got != nil {
 					t.Fatalf("Incorrect result: %#v", got)
 				}
