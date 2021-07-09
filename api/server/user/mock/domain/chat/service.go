@@ -77,3 +77,31 @@ func (mr *MockServiceMockRecorder) ValidationRoom(ctx, cr interface{}) *gomock.C
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ValidationRoom", reflect.TypeOf((*MockService)(nil).ValidationRoom), ctx, cr)
 }
+
+// PushCreateRoom mocks base method
+func (m *MockService) PushCreateRoom(ctx context.Context, cr *chat.Room) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "PushCreateRoom", ctx, cr)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// PushCreateRoom indicates an expected call of PushCreateRoom
+func (mr *MockServiceMockRecorder) PushCreateRoom(ctx, cr interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PushCreateRoom", reflect.TypeOf((*MockService)(nil).PushCreateRoom), ctx, cr)
+}
+
+// PushNewMessage mocks base method
+func (m *MockService) PushNewMessage(ctx context.Context, cr *chat.Room, cm *chat.Message) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "PushNewMessage", ctx, cr, cm)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// PushNewMessage indicates an expected call of PushNewMessage
+func (mr *MockServiceMockRecorder) PushNewMessage(ctx, cr, cm interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PushNewMessage", reflect.TypeOf((*MockService)(nil).PushNewMessage), ctx, cr, cm)
+}

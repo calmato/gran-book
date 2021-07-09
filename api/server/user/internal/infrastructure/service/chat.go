@@ -12,13 +12,15 @@ import (
 type chatService struct {
 	chatDomainValidation chat.Validation
 	chatRepository       chat.Repository
+	chatMessaging        chat.Messaging
 }
 
 // NewChatService - ChatServiceの生成
-func NewChatService(cdv chat.Validation, cr chat.Repository) chat.Service {
+func NewChatService(cdv chat.Validation, cr chat.Repository, cm chat.Messaging) chat.Service {
 	return &chatService{
 		chatDomainValidation: cdv,
 		chatRepository:       cr,
+		chatMessaging:        cm,
 	}
 }
 
@@ -38,4 +40,12 @@ func (s *chatService) CreateRoom(ctx context.Context, cr *chat.Room) error {
 
 func (s *chatService) ValidationRoom(ctx context.Context, cr *chat.Room) error {
 	return s.chatDomainValidation.Room(ctx, cr)
+}
+
+func (s *chatService) PushCreateRoom(ctx context.Context, cr *chat.Room) error {
+	return s.chatMessaging.PushCreateRoom(cr)
+}
+
+func (s *chatService) PushNewMessage(ctx context.Context, cr *chat.Room, cm *chat.Message) error {
+	return s.chatMessaging.PushNewMessage(cr, cm)
 }
