@@ -14,33 +14,29 @@ import (
 )
 
 func TestUserService_Authentication(t *testing.T) {
+	type want struct {
+		uid string
+		err error
+	}
+
 	testCases := map[string]struct {
-		Expected struct {
-			UID   string
-			Error error
-		}
+		want want
 	}{
 		"ok": {
-			Expected: struct {
-				UID   string
-				Error error
-			}{
-				UID:   "00000000-0000-0000-0000-000000000000",
-				Error: nil,
+			want: want{
+				uid: "00000000-0000-0000-0000-000000000000",
+				err: nil,
 			},
 		},
 		"ng_unauthorized": {
-			Expected: struct {
-				UID   string
-				Error error
-			}{
-				UID:   "",
-				Error: exception.Unauthorized.New(nil),
+			want: want{
+				uid: "",
+				err: exception.Unauthorized.New(nil),
 			},
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
@@ -50,21 +46,21 @@ func TestUserService_Authentication(t *testing.T) {
 		uvm := mock_user.NewMockValidation(ctrl)
 
 		urm := mock_user.NewMockRepository(ctrl)
-		urm.EXPECT().Authentication(ctx).Return(tc.Expected.UID, tc.Expected.Error)
+		urm.EXPECT().Authentication(ctx).Return(tc.want.uid, tc.want.err)
 
 		uum := mock_user.NewMockUploader(ctrl)
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewUserService(uvm, urm, uum)
 
-			got, err := target.Authentication(ctx)
-			if !reflect.DeepEqual(err, tc.Expected.Error) {
-				t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+			uid, err := target.Authentication(ctx)
+			if !reflect.DeepEqual(err, tc.want.err) {
+				t.Fatalf("want %#v, but %#v", tc.want.err, err)
 				return
 			}
 
-			if !reflect.DeepEqual(got, tc.Expected.UID) {
-				t.Fatalf("want %#v, but %#v", tc.Expected.UID, got)
+			if !reflect.DeepEqual(uid, tc.want.uid) {
+				t.Fatalf("want %#v, but %#v", tc.want.uid, uid)
 				return
 			}
 		})
@@ -72,27 +68,30 @@ func TestUserService_Authentication(t *testing.T) {
 }
 
 func TestUserService_List(t *testing.T) {
-	current := time.Now()
+	type args struct {
+		query *domain.ListQuery
+	}
+	type want struct {
+		users []*user.User
+		err   error
+	}
 
+	current := time.Now().Local()
 	testCases := map[string]struct {
-		Query    *domain.ListQuery
-		Expected struct {
-			Users []*user.User
-			Error error
-		}
+		args args
+		want want
 	}{
 		"ok": {
-			Query: &domain.ListQuery{
-				Limit:      100,
-				Offset:     0,
-				Order:      nil,
-				Conditions: []*domain.QueryCondition{},
+			args: args{
+				query: &domain.ListQuery{
+					Limit:      100,
+					Offset:     0,
+					Order:      nil,
+					Conditions: []*domain.QueryCondition{},
+				},
 			},
-			Expected: struct {
-				Users []*user.User
-				Error error
-			}{
-				Users: []*user.User{
+			want: want{
+				users: []*user.User{
 					{
 						ID:               "00000000-0000-0000-0000-000000000000",
 						Username:         "test-user",
@@ -116,12 +115,12 @@ func TestUserService_List(t *testing.T) {
 						UpdatedAt:        current,
 					},
 				},
-				Error: nil,
+				err: nil,
 			},
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
@@ -131,21 +130,21 @@ func TestUserService_List(t *testing.T) {
 		uvm := mock_user.NewMockValidation(ctrl)
 
 		urm := mock_user.NewMockRepository(ctrl)
-		urm.EXPECT().List(ctx, tc.Query).Return(tc.Expected.Users, tc.Expected.Error)
+		urm.EXPECT().List(ctx, tc.args.query).Return(tc.want.users, tc.want.err)
 
 		uum := mock_user.NewMockUploader(ctrl)
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewUserService(uvm, urm, uum)
 
-			got, err := target.List(ctx, tc.Query)
-			if !reflect.DeepEqual(err, tc.Expected.Error) {
-				t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+			us, err := target.List(ctx, tc.args.query)
+			if !reflect.DeepEqual(err, tc.want.err) {
+				t.Fatalf("want %#v, but %#v", tc.want.err, err)
 				return
 			}
 
-			if !reflect.DeepEqual(got, tc.Expected.Users) {
-				t.Fatalf("want %#v, but %#v", tc.Expected.Users, got)
+			if !reflect.DeepEqual(us, tc.want.users) {
+				t.Fatalf("want %#v, but %#v", tc.want.users, us)
 				return
 			}
 		})
@@ -153,27 +152,31 @@ func TestUserService_List(t *testing.T) {
 }
 
 func TestUserService_ListFollow(t *testing.T) {
+	type args struct {
+		query *domain.ListQuery
+		uid   string
+	}
+	type want struct {
+		follows []*user.Follow
+		err     error
+	}
+
 	testCases := map[string]struct {
-		Query    *domain.ListQuery
-		UID      string
-		Expected struct {
-			Follows []*user.Follow
-			Error   error
-		}
+		args args
+		want want
 	}{
 		"ok": {
-			Query: &domain.ListQuery{
-				Limit:      100,
-				Offset:     0,
-				Order:      nil,
-				Conditions: []*domain.QueryCondition{},
+			args: args{
+				query: &domain.ListQuery{
+					Limit:      100,
+					Offset:     0,
+					Order:      nil,
+					Conditions: []*domain.QueryCondition{},
+				},
+				uid: "11111111-1111-1111-1111-111111111111",
 			},
-			UID: "11111111-1111-1111-1111-111111111111",
-			Expected: struct {
-				Follows []*user.Follow
-				Error   error
-			}{
-				Follows: []*user.Follow{
+			want: want{
+				follows: []*user.Follow{
 					{
 						FollowID:         "00000000-0000-0000-0000-000000000000",
 						FollowerID:       "11111111-1111-1111-1111-111111111111",
@@ -183,12 +186,12 @@ func TestUserService_ListFollow(t *testing.T) {
 						IsFollow:         false,
 					},
 				},
-				Error: nil,
+				err: nil,
 			},
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
@@ -198,22 +201,22 @@ func TestUserService_ListFollow(t *testing.T) {
 		uvm := mock_user.NewMockValidation(ctrl)
 
 		urm := mock_user.NewMockRepository(ctrl)
-		urm.EXPECT().ListFollow(ctx, tc.Query).Return(tc.Expected.Follows, tc.Expected.Error)
-		urm.EXPECT().ListFollowerID(ctx, gomock.Any()).Return([]string{}, tc.Expected.Error)
+		urm.EXPECT().ListFollow(ctx, tc.args.query).Return(tc.want.follows, tc.want.err)
+		urm.EXPECT().ListFollowerID(ctx, gomock.Any()).Return([]string{}, tc.want.err)
 
 		uum := mock_user.NewMockUploader(ctrl)
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewUserService(uvm, urm, uum)
 
-			got, err := target.ListFollow(ctx, tc.Query, tc.UID)
-			if !reflect.DeepEqual(err, tc.Expected.Error) {
-				t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+			fs, err := target.ListFollow(ctx, tc.args.query, tc.args.uid)
+			if !reflect.DeepEqual(err, tc.want.err) {
+				t.Fatalf("want %#v, but %#v", tc.want.err, err)
 				return
 			}
 
-			if !reflect.DeepEqual(got, tc.Expected.Follows) {
-				t.Fatalf("want %#v, but %#v", tc.Expected.Follows, got)
+			if !reflect.DeepEqual(fs, tc.want.follows) {
+				t.Fatalf("want %#v, but %#v", tc.want.follows, fs)
 				return
 			}
 		})
@@ -221,27 +224,31 @@ func TestUserService_ListFollow(t *testing.T) {
 }
 
 func TestUserService_ListFollower(t *testing.T) {
+	type args struct {
+		query *domain.ListQuery
+		uid   string
+	}
+	type want struct {
+		followers []*user.Follower
+		err       error
+	}
+
 	testCases := map[string]struct {
-		Query    *domain.ListQuery
-		UID      string
-		Expected struct {
-			Follower []*user.Follower
-			Error    error
-		}
+		args args
+		want want
 	}{
 		"ok": {
-			Query: &domain.ListQuery{
-				Limit:      100,
-				Offset:     0,
-				Order:      nil,
-				Conditions: []*domain.QueryCondition{},
+			args: args{
+				query: &domain.ListQuery{
+					Limit:      100,
+					Offset:     0,
+					Order:      nil,
+					Conditions: []*domain.QueryCondition{},
+				},
+				uid: "00000000-0000-0000-0000-000000000000",
 			},
-			UID: "00000000-0000-0000-0000-000000000000",
-			Expected: struct {
-				Follower []*user.Follower
-				Error    error
-			}{
-				Follower: []*user.Follower{
+			want: want{
+				followers: []*user.Follower{
 					{
 						FollowID:         "00000000-0000-0000-0000-000000000000",
 						FollowerID:       "11111111-1111-1111-1111-111111111111",
@@ -251,12 +258,12 @@ func TestUserService_ListFollower(t *testing.T) {
 						IsFollow:         false,
 					},
 				},
-				Error: nil,
+				err: nil,
 			},
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
@@ -266,22 +273,22 @@ func TestUserService_ListFollower(t *testing.T) {
 		uvm := mock_user.NewMockValidation(ctrl)
 
 		urm := mock_user.NewMockRepository(ctrl)
-		urm.EXPECT().ListFollower(ctx, tc.Query).Return(tc.Expected.Follower, tc.Expected.Error)
-		urm.EXPECT().ListFollowerID(ctx, gomock.Any()).Return([]string{}, tc.Expected.Error)
+		urm.EXPECT().ListFollower(ctx, tc.args.query).Return(tc.want.followers, tc.want.err)
+		urm.EXPECT().ListFollowerID(ctx, gomock.Any()).Return([]string{}, tc.want.err)
 
 		uum := mock_user.NewMockUploader(ctrl)
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewUserService(uvm, urm, uum)
 
-			got, err := target.ListFollower(ctx, tc.Query, tc.UID)
-			if !reflect.DeepEqual(err, tc.Expected.Error) {
-				t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+			fs, err := target.ListFollower(ctx, tc.args.query, tc.args.uid)
+			if !reflect.DeepEqual(err, tc.want.err) {
+				t.Fatalf("want %#v, but %#v", tc.want.err, err)
 				return
 			}
 
-			if !reflect.DeepEqual(got, tc.Expected.Follower) {
-				t.Fatalf("want %#v, but %#v", tc.Expected.Follower, got)
+			if !reflect.DeepEqual(fs, tc.want.followers) {
+				t.Fatalf("want %#v, but %#v", tc.want.followers, fs)
 				return
 			}
 		})
@@ -289,31 +296,35 @@ func TestUserService_ListFollower(t *testing.T) {
 }
 
 func TestUserService_ListCount(t *testing.T) {
+	type args struct {
+		query *domain.ListQuery
+	}
+	type want struct {
+		count int
+		err   error
+	}
+
 	testCases := map[string]struct {
-		Query    *domain.ListQuery
-		Expected struct {
-			Count int
-			Error error
-		}
+		args args
+		want want
 	}{
 		"ok": {
-			Query: &domain.ListQuery{
-				Limit:      100,
-				Offset:     0,
-				Order:      nil,
-				Conditions: []*domain.QueryCondition{},
+			args: args{
+				query: &domain.ListQuery{
+					Limit:      100,
+					Offset:     0,
+					Order:      nil,
+					Conditions: []*domain.QueryCondition{},
+				},
 			},
-			Expected: struct {
-				Count int
-				Error error
-			}{
-				Count: 1,
-				Error: nil,
+			want: want{
+				count: 1,
+				err:   nil,
 			},
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
@@ -323,21 +334,21 @@ func TestUserService_ListCount(t *testing.T) {
 		uvm := mock_user.NewMockValidation(ctrl)
 
 		urm := mock_user.NewMockRepository(ctrl)
-		urm.EXPECT().ListCount(ctx, tc.Query).Return(tc.Expected.Count, tc.Expected.Error)
+		urm.EXPECT().ListCount(ctx, tc.args.query).Return(tc.want.count, tc.want.err)
 
 		uum := mock_user.NewMockUploader(ctrl)
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewUserService(uvm, urm, uum)
 
-			got, err := target.ListCount(ctx, tc.Query)
-			if !reflect.DeepEqual(err, tc.Expected.Error) {
-				t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+			count, err := target.ListCount(ctx, tc.args.query)
+			if !reflect.DeepEqual(err, tc.want.err) {
+				t.Fatalf("want %#v, but %#v", tc.want.err, err)
 				return
 			}
 
-			if !reflect.DeepEqual(got, tc.Expected.Count) {
-				t.Fatalf("want %#v, but %#v", tc.Expected.Count, got)
+			if !reflect.DeepEqual(count, tc.want.count) {
+				t.Fatalf("want %#v, but %#v", tc.want.count, count)
 				return
 			}
 		})
@@ -345,29 +356,32 @@ func TestUserService_ListCount(t *testing.T) {
 }
 
 func TestUserService_ListFriendCount(t *testing.T) {
+	type args struct {
+		uid string
+	}
+	type want struct {
+		followCount   int
+		followerCount int
+		err           error
+	}
+
 	testCases := map[string]struct {
-		UID      string
-		Expected struct {
-			FollowCount   int
-			FollowerCount int
-			Error         error
-		}
+		args args
+		want want
 	}{
 		"ok": {
-			UID: "00000000-0000-0000-0000-000000000000",
-			Expected: struct {
-				FollowCount   int
-				FollowerCount int
-				Error         error
-			}{
-				FollowCount:   1,
-				FollowerCount: 3,
-				Error:         nil,
+			args: args{
+				uid: "00000000-0000-0000-0000-000000000000",
+			},
+			want: want{
+				followCount:   1,
+				followerCount: 3,
+				err:           nil,
 			},
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
@@ -379,7 +393,7 @@ func TestUserService_ListFriendCount(t *testing.T) {
 				{
 					Field:    "follow_id",
 					Operator: "==",
-					Value:    tc.UID,
+					Value:    tc.args.uid,
 				},
 			},
 		}
@@ -389,7 +403,7 @@ func TestUserService_ListFriendCount(t *testing.T) {
 				{
 					Field:    "follower_id",
 					Operator: "==",
-					Value:    tc.UID,
+					Value:    tc.args.uid,
 				},
 			},
 		}
@@ -397,27 +411,27 @@ func TestUserService_ListFriendCount(t *testing.T) {
 		uvm := mock_user.NewMockValidation(ctrl)
 
 		urm := mock_user.NewMockRepository(ctrl)
-		urm.EXPECT().ListRelationshipCount(ctx, followQuery).Return(tc.Expected.FollowCount, tc.Expected.Error)
-		urm.EXPECT().ListRelationshipCount(ctx, followerQuery).Return(tc.Expected.FollowerCount, tc.Expected.Error)
+		urm.EXPECT().ListRelationshipCount(ctx, followQuery).Return(tc.want.followCount, tc.want.err)
+		urm.EXPECT().ListRelationshipCount(ctx, followerQuery).Return(tc.want.followerCount, tc.want.err)
 
 		uum := mock_user.NewMockUploader(ctrl)
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewUserService(uvm, urm, uum)
 
-			followCount, followerCount, err := target.ListFriendCount(ctx, tc.UID)
-			if !reflect.DeepEqual(err, tc.Expected.Error) {
-				t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+			followCount, followerCount, err := target.ListFriendCount(ctx, tc.args.uid)
+			if !reflect.DeepEqual(err, tc.want.err) {
+				t.Fatalf("want %#v, but %#v", tc.want.err, err)
 				return
 			}
 
-			if !reflect.DeepEqual(followCount, tc.Expected.FollowCount) {
-				t.Fatalf("want %#v, but %#v", tc.Expected.FollowCount, followCount)
+			if !reflect.DeepEqual(followCount, tc.want.followCount) {
+				t.Fatalf("want %#v, but %#v", tc.want.followCount, followCount)
 				return
 			}
 
-			if !reflect.DeepEqual(followerCount, tc.Expected.FollowerCount) {
-				t.Fatalf("want %#v, but %#v", tc.Expected.FollowerCount, followerCount)
+			if !reflect.DeepEqual(followerCount, tc.want.followerCount) {
+				t.Fatalf("want %#v, but %#v", tc.want.followerCount, followerCount)
 				return
 			}
 		})
@@ -425,22 +439,25 @@ func TestUserService_ListFriendCount(t *testing.T) {
 }
 
 func TestUserService_Show(t *testing.T) {
-	current := time.Now()
+	type args struct {
+		uid string
+	}
+	type want struct {
+		user *user.User
+		err  error
+	}
 
+	current := time.Now().Local()
 	testCases := map[string]struct {
-		UID      string
-		Expected struct {
-			User  *user.User
-			Error error
-		}
+		args args
+		want want
 	}{
 		"ok": {
-			UID: "00000000-0000-0000-0000-000000000000",
-			Expected: struct {
-				User  *user.User
-				Error error
-			}{
-				User: &user.User{
+			args: args{
+				uid: "00000000-0000-0000-0000-000000000000",
+			},
+			want: want{
+				user: &user.User{
 					ID:               "00000000-0000-0000-0000-000000000000",
 					Username:         "test-user",
 					Gender:           0,
@@ -462,22 +479,21 @@ func TestUserService_Show(t *testing.T) {
 					CreatedAt:        current,
 					UpdatedAt:        current,
 				},
-				Error: nil,
+				err: nil,
 			},
 		},
 		"ng_notfound": {
-			UID: "",
-			Expected: struct {
-				User  *user.User
-				Error error
-			}{
-				User:  nil,
-				Error: exception.NotFound.New(nil),
+			args: args{
+				uid: "",
+			},
+			want: want{
+				user: nil,
+				err:  exception.NotFound.New(nil),
 			},
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
@@ -487,21 +503,21 @@ func TestUserService_Show(t *testing.T) {
 		uvm := mock_user.NewMockValidation(ctrl)
 
 		urm := mock_user.NewMockRepository(ctrl)
-		urm.EXPECT().Show(ctx, tc.UID).Return(tc.Expected.User, tc.Expected.Error)
+		urm.EXPECT().Show(ctx, tc.args.uid).Return(tc.want.user, tc.want.err)
 
 		uum := mock_user.NewMockUploader(ctrl)
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewUserService(uvm, urm, uum)
 
-			got, err := target.Show(ctx, tc.UID)
-			if !reflect.DeepEqual(err, tc.Expected.Error) {
-				t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+			u, err := target.Show(ctx, tc.args.uid)
+			if !reflect.DeepEqual(err, tc.want.err) {
+				t.Fatalf("want %#v, but %#v", tc.want.err, err)
 				return
 			}
 
-			if !reflect.DeepEqual(got, tc.Expected.User) {
-				t.Fatalf("want %#v, but %#v", tc.Expected.User, got)
+			if !reflect.DeepEqual(u, tc.want.user) {
+				t.Fatalf("want %#v, but %#v", tc.want.user, u)
 				return
 			}
 		})
@@ -509,44 +525,46 @@ func TestUserService_Show(t *testing.T) {
 }
 
 func TestUserService_ShowRelationship(t *testing.T) {
-	current := time.Now()
+	type args struct {
+		id int
+	}
+	type want struct {
+		relationship *user.Relationship
+		err          error
+	}
 
+	current := time.Now().Local()
 	testCases := map[string]struct {
-		ID       int
-		Expected struct {
-			Relationship *user.Relationship
-			Error        error
-		}
+		args args
+		want want
 	}{
 		"ok": {
-			ID: 1,
-			Expected: struct {
-				Relationship *user.Relationship
-				Error        error
-			}{
-				Relationship: &user.Relationship{
+			args: args{
+				id: 1,
+			},
+			want: want{
+				relationship: &user.Relationship{
 					ID:         1,
 					FollowID:   "00000000-0000-0000-0000-000000000000",
 					FollowerID: "11111111-1111-1111-1111-111111111111",
 					CreatedAt:  current,
 					UpdatedAt:  current,
 				},
-				Error: nil,
+				err: nil,
 			},
 		},
 		"ng_notfound": {
-			ID: 1,
-			Expected: struct {
-				Relationship *user.Relationship
-				Error        error
-			}{
-				Relationship: nil,
-				Error:        exception.NotFound.New(nil),
+			args: args{
+				id: 1,
+			},
+			want: want{
+				relationship: nil,
+				err:          exception.NotFound.New(nil),
 			},
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
@@ -556,21 +574,21 @@ func TestUserService_ShowRelationship(t *testing.T) {
 		uvm := mock_user.NewMockValidation(ctrl)
 
 		urm := mock_user.NewMockRepository(ctrl)
-		urm.EXPECT().ShowRelationship(ctx, tc.ID).Return(tc.Expected.Relationship, tc.Expected.Error)
+		urm.EXPECT().ShowRelationship(ctx, tc.args.id).Return(tc.want.relationship, tc.want.err)
 
 		uum := mock_user.NewMockUploader(ctrl)
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewUserService(uvm, urm, uum)
 
-			got, err := target.ShowRelationship(ctx, tc.ID)
-			if !reflect.DeepEqual(err, tc.Expected.Error) {
-				t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+			r, err := target.ShowRelationship(ctx, tc.args.id)
+			if !reflect.DeepEqual(err, tc.want.err) {
+				t.Fatalf("want %#v, but %#v", tc.want.err, err)
 				return
 			}
 
-			if !reflect.DeepEqual(got, tc.Expected.Relationship) {
-				t.Fatalf("want %#v, but %#v", tc.Expected.Relationship, got)
+			if !reflect.DeepEqual(r, tc.want.relationship) {
+				t.Fatalf("want %#v, but %#v", tc.want.relationship, r)
 				return
 			}
 		})
@@ -578,47 +596,49 @@ func TestUserService_ShowRelationship(t *testing.T) {
 }
 
 func TestUserService_ShowRelationshipByUID(t *testing.T) {
-	current := time.Now()
+	type args struct {
+		followID   string
+		followerID string
+	}
+	type want struct {
+		relationship *user.Relationship
+		err          error
+	}
 
+	current := time.Now().Local()
 	testCases := map[string]struct {
-		FollowID   string
-		FollowerID string
-		Expected   struct {
-			Relationship *user.Relationship
-			Error        error
-		}
+		args args
+		want want
 	}{
 		"ok": {
-			FollowID:   "00000000-0000-0000-0000-000000000000",
-			FollowerID: "11111111-1111-1111-1111-111111111111",
-			Expected: struct {
-				Relationship *user.Relationship
-				Error        error
-			}{
-				Relationship: &user.Relationship{
+			args: args{
+				followID:   "00000000-0000-0000-0000-000000000000",
+				followerID: "11111111-1111-1111-1111-111111111111",
+			},
+			want: want{
+				relationship: &user.Relationship{
 					ID:         1,
 					FollowID:   "00000000-0000-0000-0000-000000000000",
 					FollowerID: "11111111-1111-1111-1111-111111111111",
 					CreatedAt:  current,
 					UpdatedAt:  current,
 				},
-				Error: nil,
+				err: nil,
 			},
 		},
 		"ng_notfound": {
-			FollowID:   "00000000-0000-0000-0000-000000000000",
-			FollowerID: "11111111-1111-1111-1111-111111111111",
-			Expected: struct {
-				Relationship *user.Relationship
-				Error        error
-			}{
-				Relationship: nil,
-				Error:        exception.NotFound.New(nil),
+			args: args{
+				followID:   "00000000-0000-0000-0000-000000000000",
+				followerID: "11111111-1111-1111-1111-111111111111",
+			},
+			want: want{
+				relationship: nil,
+				err:          exception.NotFound.New(nil),
 			},
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
@@ -626,31 +646,31 @@ func TestUserService_ShowRelationshipByUID(t *testing.T) {
 		defer ctrl.Finish()
 
 		var fid int
-		if tc.Expected.Relationship != nil {
-			fid = tc.Expected.Relationship.ID
+		if tc.want.relationship != nil {
+			fid = tc.want.relationship.ID
 		}
 
 		uvm := mock_user.NewMockValidation(ctrl)
 
 		urm := mock_user.NewMockRepository(ctrl)
-		urm.EXPECT().GetRelationshipIDByUID(ctx, tc.FollowID, tc.FollowerID).Return(fid, tc.Expected.Error)
+		urm.EXPECT().GetRelationshipIDByUID(ctx, tc.args.followID, tc.args.followerID).Return(fid, tc.want.err)
 		if fid != 0 {
-			urm.EXPECT().ShowRelationship(ctx, fid).Return(tc.Expected.Relationship, tc.Expected.Error)
+			urm.EXPECT().ShowRelationship(ctx, fid).Return(tc.want.relationship, tc.want.err)
 		}
 
 		uum := mock_user.NewMockUploader(ctrl)
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewUserService(uvm, urm, uum)
 
-			got, err := target.ShowRelationshipByUID(ctx, tc.FollowID, tc.FollowerID)
-			if !reflect.DeepEqual(err, tc.Expected.Error) {
-				t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+			r, err := target.ShowRelationshipByUID(ctx, tc.args.followID, tc.args.followerID)
+			if !reflect.DeepEqual(err, tc.want.err) {
+				t.Fatalf("want %#v, but %#v", tc.want.err, err)
 				return
 			}
 
-			if !reflect.DeepEqual(got, tc.Expected.Relationship) {
-				t.Fatalf("want %#v, but %#v", tc.Expected.Relationship, got)
+			if !reflect.DeepEqual(r, tc.want.relationship) {
+				t.Fatalf("want %#v, but %#v", tc.want.relationship, r)
 				return
 			}
 		})
@@ -658,38 +678,42 @@ func TestUserService_ShowRelationshipByUID(t *testing.T) {
 }
 
 func TestUserService_Create(t *testing.T) {
+	type args struct {
+		user *user.User
+	}
+
 	testCases := map[string]struct {
-		User     *user.User
-		Expected error
+		args args
+		want error
 	}{
 		"ok": {
-			User: &user.User{
-				ID:               "",
-				Username:         "test-user",
-				Gender:           0,
-				Email:            "test-user@calmato.com",
-				PhoneNumber:      "000-0000-0000",
-				Role:             0,
-				ThumbnailURL:     "",
-				SelfIntroduction: "",
-				LastName:         "テスト",
-				FirstName:        "ユーザ",
-				LastNameKana:     "てすと",
-				FirstNameKana:    "ゆーざ",
-				PostalCode:       "000-0000",
-				Prefecture:       "東京都",
-				City:             "小金井市",
-				AddressLine1:     "貫井北町4-1-1",
-				AddressLine2:     "",
-				InstanceID:       "",
-				CreatedAt:        time.Time{},
-				UpdatedAt:        time.Time{},
+			args: args{
+				user: &user.User{
+					ID:               "",
+					Username:         "test-user",
+					Gender:           0,
+					Email:            "test-user@calmato.com",
+					PhoneNumber:      "000-0000-0000",
+					Role:             0,
+					ThumbnailURL:     "",
+					SelfIntroduction: "",
+					LastName:         "テスト",
+					FirstName:        "ユーザ",
+					LastNameKana:     "てすと",
+					FirstNameKana:    "ゆーざ",
+					PostalCode:       "000-0000",
+					Prefecture:       "東京都",
+					City:             "小金井市",
+					AddressLine1:     "貫井北町4-1-1",
+					AddressLine2:     "",
+					InstanceID:       "",
+				},
 			},
-			Expected: nil,
+			want: nil,
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
@@ -699,30 +723,30 @@ func TestUserService_Create(t *testing.T) {
 		uvm := mock_user.NewMockValidation(ctrl)
 
 		urm := mock_user.NewMockRepository(ctrl)
-		urm.EXPECT().Create(ctx, tc.User).Return(tc.Expected)
+		urm.EXPECT().Create(ctx, tc.args.user).Return(tc.want)
 
 		uum := mock_user.NewMockUploader(ctrl)
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewUserService(uvm, urm, uum)
 
-			got := target.Create(ctx, tc.User)
-			if !reflect.DeepEqual(got, tc.Expected) {
-				t.Fatalf("want %#v, but %#v", tc.Expected, got)
+			got := target.Create(ctx, tc.args.user)
+			if !reflect.DeepEqual(got, tc.want) {
+				t.Fatalf("want %#v, but %#v", tc.want, got)
 				return
 			}
 
-			if tc.User.ID == "" {
+			if tc.args.user.ID == "" {
 				t.Fatal("User.ID must be not null")
 				return
 			}
 
-			if tc.User.CreatedAt.IsZero() {
+			if tc.args.user.CreatedAt.IsZero() {
 				t.Fatal("User.CreatedAt must be not null")
 				return
 			}
 
-			if tc.User.UpdatedAt.IsZero() {
+			if tc.args.user.UpdatedAt.IsZero() {
 				t.Fatal("User.UpdatedAt must be not null")
 				return
 			}
@@ -731,23 +755,26 @@ func TestUserService_Create(t *testing.T) {
 }
 
 func TestUserService_CreateRelationship(t *testing.T) {
+	type args struct {
+		relationship *user.Relationship
+	}
+
 	testCases := map[string]struct {
-		Relationship *user.Relationship
-		Expected     error
+		args args
+		want error
 	}{
 		"ok": {
-			Relationship: &user.Relationship{
-				ID:         0,
-				FollowID:   "00000000-0000-0000-0000-000000000000",
-				FollowerID: "11111111-1111-1111-1111-111111111111",
-				CreatedAt:  time.Time{},
-				UpdatedAt:  time.Time{},
+			args: args{
+				relationship: &user.Relationship{
+					FollowID:   "00000000-0000-0000-0000-000000000000",
+					FollowerID: "11111111-1111-1111-1111-111111111111",
+				},
 			},
-			Expected: nil,
+			want: nil,
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
@@ -757,25 +784,25 @@ func TestUserService_CreateRelationship(t *testing.T) {
 		uvm := mock_user.NewMockValidation(ctrl)
 
 		urm := mock_user.NewMockRepository(ctrl)
-		urm.EXPECT().CreateRelationship(ctx, tc.Relationship).Return(tc.Expected)
+		urm.EXPECT().CreateRelationship(ctx, tc.args.relationship).Return(tc.want)
 
 		uum := mock_user.NewMockUploader(ctrl)
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewUserService(uvm, urm, uum)
 
-			got := target.CreateRelationship(ctx, tc.Relationship)
-			if !reflect.DeepEqual(got, tc.Expected) {
-				t.Fatalf("want %#v, but %#v", tc.Expected, got)
+			got := target.CreateRelationship(ctx, tc.args.relationship)
+			if !reflect.DeepEqual(got, tc.want) {
+				t.Fatalf("want %#v, but %#v", tc.want, got)
 				return
 			}
 
-			if tc.Relationship.CreatedAt.IsZero() {
+			if tc.args.relationship.CreatedAt.IsZero() {
 				t.Fatal("Relationship.CreatedAt must be not null")
 				return
 			}
 
-			if tc.Relationship.UpdatedAt.IsZero() {
+			if tc.args.relationship.UpdatedAt.IsZero() {
 				t.Fatal("Relationship.UpdatedAt must be not null")
 				return
 			}
@@ -784,40 +811,45 @@ func TestUserService_CreateRelationship(t *testing.T) {
 }
 
 func TestUserService_Update(t *testing.T) {
-	current := time.Now()
+	type args struct {
+		user *user.User
+	}
 
+	current := time.Now().Local()
 	testCases := map[string]struct {
-		User     *user.User
-		Expected error
+		args args
+		want error
 	}{
 		"ok": {
-			User: &user.User{
-				ID:               "00000000-0000-0000-0000-000000000000",
-				Username:         "test-user",
-				Gender:           0,
-				Email:            "test-user@calmato.com",
-				PhoneNumber:      "000-0000-0000",
-				Role:             0,
-				ThumbnailURL:     "",
-				SelfIntroduction: "",
-				LastName:         "テスト",
-				FirstName:        "ユーザ",
-				LastNameKana:     "てすと",
-				FirstNameKana:    "ゆーざ",
-				PostalCode:       "000-0000",
-				Prefecture:       "東京都",
-				City:             "小金井市",
-				AddressLine1:     "貫井北町4-1-1",
-				AddressLine2:     "",
-				InstanceID:       "",
-				CreatedAt:        current,
-				UpdatedAt:        current,
+			args: args{
+				user: &user.User{
+					ID:               "00000000-0000-0000-0000-000000000000",
+					Username:         "test-user",
+					Gender:           0,
+					Email:            "test-user@calmato.com",
+					PhoneNumber:      "000-0000-0000",
+					Role:             0,
+					ThumbnailURL:     "",
+					SelfIntroduction: "",
+					LastName:         "テスト",
+					FirstName:        "ユーザ",
+					LastNameKana:     "てすと",
+					FirstNameKana:    "ゆーざ",
+					PostalCode:       "000-0000",
+					Prefecture:       "東京都",
+					City:             "小金井市",
+					AddressLine1:     "貫井北町4-1-1",
+					AddressLine2:     "",
+					InstanceID:       "",
+					CreatedAt:        current,
+					UpdatedAt:        current,
+				},
 			},
-			Expected: nil,
+			want: nil,
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
@@ -827,20 +859,20 @@ func TestUserService_Update(t *testing.T) {
 		uvm := mock_user.NewMockValidation(ctrl)
 
 		urm := mock_user.NewMockRepository(ctrl)
-		urm.EXPECT().Update(ctx, tc.User).Return(tc.Expected)
+		urm.EXPECT().Update(ctx, tc.args.user).Return(tc.want)
 
 		uum := mock_user.NewMockUploader(ctrl)
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewUserService(uvm, urm, uum)
 
-			got := target.Update(ctx, tc.User)
-			if !reflect.DeepEqual(got, tc.Expected) {
-				t.Fatalf("want %#v, but %#v", tc.Expected, got)
+			got := target.Update(ctx, tc.args.user)
+			if !reflect.DeepEqual(got, tc.want) {
+				t.Fatalf("want %#v, but %#v", tc.want, got)
 				return
 			}
 
-			if tc.User.UpdatedAt == current {
+			if tc.args.user.UpdatedAt == current {
 				t.Fatal("User.UpdatedAt must be changed")
 				return
 			}
@@ -849,19 +881,25 @@ func TestUserService_Update(t *testing.T) {
 }
 
 func TestUserService_UpdatePassword(t *testing.T) {
+	type args struct {
+		uid      string
+		password string
+	}
+
 	testCases := map[string]struct {
-		UID      string
-		Password string
-		Expected error
+		args args
+		want error
 	}{
 		"ok": {
-			UID:      "00000000-0000-0000-0000-000000000000",
-			Password: "12345678",
-			Expected: nil,
+			args: args{
+				uid:      "00000000-0000-0000-0000-000000000000",
+				password: "12345678",
+			},
+			want: nil,
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
@@ -871,16 +909,16 @@ func TestUserService_UpdatePassword(t *testing.T) {
 		uvm := mock_user.NewMockValidation(ctrl)
 
 		urm := mock_user.NewMockRepository(ctrl)
-		urm.EXPECT().UpdatePassword(ctx, tc.UID, tc.Password).Return(tc.Expected)
+		urm.EXPECT().UpdatePassword(ctx, tc.args.uid, tc.args.password).Return(tc.want)
 
 		uum := mock_user.NewMockUploader(ctrl)
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewUserService(uvm, urm, uum)
 
-			got := target.UpdatePassword(ctx, tc.UID, tc.Password)
-			if !reflect.DeepEqual(got, tc.Expected) {
-				t.Fatalf("want %#v, but %#v", tc.Expected, got)
+			got := target.UpdatePassword(ctx, tc.args.uid, tc.args.password)
+			if !reflect.DeepEqual(got, tc.want) {
+				t.Fatalf("want %#v, but %#v", tc.want, got)
 				return
 			}
 		})
@@ -888,17 +926,23 @@ func TestUserService_UpdatePassword(t *testing.T) {
 }
 
 func TestUserService_Delete(t *testing.T) {
+	type args struct {
+		uid string
+	}
+
 	testCases := map[string]struct {
-		UID      string
-		Expected error
+		args args
+		want error
 	}{
 		"ok": {
-			UID:      "00000000-0000-0000-0000-000000000000",
-			Expected: nil,
+			args: args{
+				uid: "00000000-0000-0000-0000-000000000000",
+			},
+			want: nil,
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
@@ -908,16 +952,16 @@ func TestUserService_Delete(t *testing.T) {
 		uvm := mock_user.NewMockValidation(ctrl)
 
 		urm := mock_user.NewMockRepository(ctrl)
-		urm.EXPECT().Delete(ctx, tc.UID).Return(tc.Expected)
+		urm.EXPECT().Delete(ctx, tc.args.uid).Return(tc.want)
 
 		uum := mock_user.NewMockUploader(ctrl)
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewUserService(uvm, urm, uum)
 
-			got := target.Delete(ctx, tc.UID)
-			if !reflect.DeepEqual(got, tc.Expected) {
-				t.Fatalf("want %#v, but %#v", tc.Expected, got)
+			got := target.Delete(ctx, tc.args.uid)
+			if !reflect.DeepEqual(got, tc.want) {
+				t.Fatalf("want %#v, but %#v", tc.want, got)
 				return
 			}
 		})
@@ -925,17 +969,23 @@ func TestUserService_Delete(t *testing.T) {
 }
 
 func TestUserService_DeleteRelationship(t *testing.T) {
+	type args struct {
+		id int
+	}
+
 	testCases := map[string]struct {
-		ID       int
-		Expected error
+		args args
+		want error
 	}{
 		"ok": {
-			ID:       1,
-			Expected: nil,
+			args: args{
+				id: 1,
+			},
+			want: nil,
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
@@ -945,16 +995,16 @@ func TestUserService_DeleteRelationship(t *testing.T) {
 		uvm := mock_user.NewMockValidation(ctrl)
 
 		urm := mock_user.NewMockRepository(ctrl)
-		urm.EXPECT().DeleteRelationship(ctx, tc.ID).Return(tc.Expected)
+		urm.EXPECT().DeleteRelationship(ctx, tc.args.id).Return(tc.want)
 
 		uum := mock_user.NewMockUploader(ctrl)
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewUserService(uvm, urm, uum)
 
-			got := target.DeleteRelationship(ctx, tc.ID)
-			if !reflect.DeepEqual(got, tc.Expected) {
-				t.Fatalf("want %#v, but %#v", tc.Expected, got)
+			got := target.DeleteRelationship(ctx, tc.args.id)
+			if !reflect.DeepEqual(got, tc.want) {
+				t.Fatalf("want %#v, but %#v", tc.want, got)
 				return
 			}
 		})
@@ -962,28 +1012,32 @@ func TestUserService_DeleteRelationship(t *testing.T) {
 }
 
 func TestUserService_UpdateThumbnail(t *testing.T) {
+	type args struct {
+		uid       string
+		thumbnail []byte
+	}
+	type want struct {
+		thumbnailURL string
+		err          error
+	}
+
 	testCases := map[string]struct {
-		UID       string
-		Thumbnail []byte
-		Expected  struct {
-			ThumbailURL string
-			Error       error
-		}
+		args args
+		want want
 	}{
 		"ok": {
-			UID:       "00000000-0000-0000-0000-000000000000",
-			Thumbnail: []byte{},
-			Expected: struct {
-				ThumbailURL string
-				Error       error
-			}{
-				ThumbailURL: "https://calmato.com/user_thumbnails",
-				Error:       nil,
+			args: args{
+				uid:       "00000000-0000-0000-0000-000000000000",
+				thumbnail: []byte{},
+			},
+			want: want{
+				thumbnailURL: "https://calmato.com/user_thumbnails",
+				err:          nil,
 			},
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
@@ -995,19 +1049,19 @@ func TestUserService_UpdateThumbnail(t *testing.T) {
 		urm := mock_user.NewMockRepository(ctrl)
 
 		uum := mock_user.NewMockUploader(ctrl)
-		uum.EXPECT().Thumbnail(ctx, tc.UID, tc.Thumbnail).Return(tc.Expected.ThumbailURL, tc.Expected.Error)
+		uum.EXPECT().Thumbnail(ctx, tc.args.uid, tc.args.thumbnail).Return(tc.want.thumbnailURL, tc.want.err)
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewUserService(uvm, urm, uum)
 
-			got, err := target.UploadThumbnail(ctx, tc.UID, tc.Thumbnail)
-			if !reflect.DeepEqual(err, tc.Expected.Error) {
-				t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+			thumbnailURL, err := target.UploadThumbnail(ctx, tc.args.uid, tc.args.thumbnail)
+			if !reflect.DeepEqual(err, tc.want.err) {
+				t.Fatalf("want %#v, but %#v", tc.want.err, err)
 				return
 			}
 
-			if !reflect.DeepEqual(got, tc.Expected.ThumbailURL) {
-				t.Fatalf("want %#v, but %#v", tc.Expected.ThumbailURL, got)
+			if !reflect.DeepEqual(thumbnailURL, tc.want.thumbnailURL) {
+				t.Fatalf("want %#v, but %#v", tc.want.thumbnailURL, thumbnailURL)
 				return
 			}
 		})
@@ -1015,28 +1069,32 @@ func TestUserService_UpdateThumbnail(t *testing.T) {
 }
 
 func TestUserService_IsFriend(t *testing.T) {
+	type args struct {
+		friendID string
+		uid      string
+	}
+	type want struct {
+		isFollow   bool
+		isFollower bool
+	}
+
 	testCases := map[string]struct {
-		FriendID string
-		UID      string
-		Expected struct {
-			IsFollow   bool
-			IsFollower bool
-		}
+		args args
+		want want
 	}{
 		"ok": {
-			FriendID: "00000000-0000-0000-0000-000000000000",
-			UID:      "11111111-1111-1111-1111-111111111111",
-			Expected: struct {
-				IsFollow   bool
-				IsFollower bool
-			}{
-				IsFollow:   true,
-				IsFollower: true,
+			args: args{
+				friendID: "00000000-0000-0000-0000-000000000000",
+				uid:      "11111111-1111-1111-1111-111111111111",
+			},
+			want: want{
+				isFollow:   true,
+				isFollower: true,
 			},
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
@@ -1046,33 +1104,33 @@ func TestUserService_IsFriend(t *testing.T) {
 		var followID int
 		var followerID int
 
-		if tc.Expected.IsFollow {
+		if tc.want.isFollow {
 			followID = 1
 		}
 
-		if tc.Expected.IsFollower {
+		if tc.want.isFollower {
 			followerID = 1
 		}
 
 		uvm := mock_user.NewMockValidation(ctrl)
 
 		urm := mock_user.NewMockRepository(ctrl)
-		urm.EXPECT().GetRelationshipIDByUID(ctx, tc.UID, tc.FriendID).Return(followID, nil)
-		urm.EXPECT().GetRelationshipIDByUID(ctx, tc.FriendID, tc.UID).Return(followerID, nil)
+		urm.EXPECT().GetRelationshipIDByUID(ctx, tc.args.uid, tc.args.friendID).Return(followID, nil)
+		urm.EXPECT().GetRelationshipIDByUID(ctx, tc.args.friendID, tc.args.uid).Return(followerID, nil)
 
 		uum := mock_user.NewMockUploader(ctrl)
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewUserService(uvm, urm, uum)
 
-			isFollow, isFollower := target.IsFriend(ctx, tc.FriendID, tc.UID)
-			if !reflect.DeepEqual(isFollow, tc.Expected.IsFollow) {
-				t.Fatalf("want %#v, but %#v", tc.Expected.IsFollow, isFollow)
+			isFollow, isFollower := target.IsFriend(ctx, tc.args.friendID, tc.args.uid)
+			if !reflect.DeepEqual(isFollow, tc.want.isFollow) {
+				t.Fatalf("want %#v, but %#v", tc.want.isFollow, isFollow)
 				return
 			}
 
-			if !reflect.DeepEqual(isFollower, tc.Expected.IsFollower) {
-				t.Fatalf("want %#v, but %#v", tc.Expected.IsFollower, isFollower)
+			if !reflect.DeepEqual(isFollower, tc.want.isFollower) {
+				t.Fatalf("want %#v, but %#v", tc.want.isFollower, isFollower)
 				return
 			}
 		})
@@ -1080,38 +1138,44 @@ func TestUserService_IsFriend(t *testing.T) {
 }
 
 func TestUserService_Validation(t *testing.T) {
+	type args struct {
+		user *user.User
+	}
+
 	testCases := map[string]struct {
-		User     *user.User
-		Expected error
+		args args
+		want error
 	}{
 		"ok": {
-			User: &user.User{
-				ID:               "",
-				Username:         "test-user",
-				Gender:           0,
-				Email:            "test-user@calmato.com",
-				PhoneNumber:      "000-0000-0000",
-				Role:             0,
-				ThumbnailURL:     "",
-				SelfIntroduction: "",
-				LastName:         "テスト",
-				FirstName:        "ユーザ",
-				LastNameKana:     "てすと",
-				FirstNameKana:    "ゆーざ",
-				PostalCode:       "000-0000",
-				Prefecture:       "東京都",
-				City:             "小金井市",
-				AddressLine1:     "貫井北町4-1-1",
-				AddressLine2:     "",
-				InstanceID:       "",
-				CreatedAt:        time.Time{},
-				UpdatedAt:        time.Time{},
+			args: args{
+				user: &user.User{
+					ID:               "",
+					Username:         "test-user",
+					Gender:           0,
+					Email:            "test-user@calmato.com",
+					PhoneNumber:      "000-0000-0000",
+					Role:             0,
+					ThumbnailURL:     "",
+					SelfIntroduction: "",
+					LastName:         "テスト",
+					FirstName:        "ユーザ",
+					LastNameKana:     "てすと",
+					FirstNameKana:    "ゆーざ",
+					PostalCode:       "000-0000",
+					Prefecture:       "東京都",
+					City:             "小金井市",
+					AddressLine1:     "貫井北町4-1-1",
+					AddressLine2:     "",
+					InstanceID:       "",
+					CreatedAt:        time.Time{},
+					UpdatedAt:        time.Time{},
+				},
 			},
-			Expected: nil,
+			want: nil,
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
@@ -1119,18 +1183,18 @@ func TestUserService_Validation(t *testing.T) {
 		defer ctrl.Finish()
 
 		uvm := mock_user.NewMockValidation(ctrl)
-		uvm.EXPECT().User(ctx, tc.User).Return(tc.Expected)
+		uvm.EXPECT().User(ctx, tc.args.user).Return(tc.want)
 
 		urm := mock_user.NewMockRepository(ctrl)
 
 		uum := mock_user.NewMockUploader(ctrl)
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewUserService(uvm, urm, uum)
 
-			got := target.Validation(ctx, tc.User)
-			if !reflect.DeepEqual(got, tc.Expected) {
-				t.Fatalf("want %#v, but %#v", tc.Expected, got)
+			got := target.Validation(ctx, tc.args.user)
+			if !reflect.DeepEqual(got, tc.want) {
+				t.Fatalf("want %#v, but %#v", tc.want, got)
 				return
 			}
 		})
@@ -1138,23 +1202,29 @@ func TestUserService_Validation(t *testing.T) {
 }
 
 func TestUserService_ValidationRelationship(t *testing.T) {
+	type args struct {
+		relationship *user.Relationship
+	}
+
 	testCases := map[string]struct {
-		Relationship *user.Relationship
-		Expected     error
+		args args
+		want error
 	}{
 		"ok": {
-			Relationship: &user.Relationship{
-				ID:         0,
-				FollowID:   "00000000-0000-0000-0000-000000000000",
-				FollowerID: "11111111-1111-1111-1111-111111111111",
-				CreatedAt:  time.Time{},
-				UpdatedAt:  time.Time{},
+			args: args{
+				relationship: &user.Relationship{
+					ID:         0,
+					FollowID:   "00000000-0000-0000-0000-000000000000",
+					FollowerID: "11111111-1111-1111-1111-111111111111",
+					CreatedAt:  time.Time{},
+					UpdatedAt:  time.Time{},
+				},
 			},
-			Expected: nil,
+			want: nil,
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
@@ -1162,18 +1232,18 @@ func TestUserService_ValidationRelationship(t *testing.T) {
 		defer ctrl.Finish()
 
 		uvm := mock_user.NewMockValidation(ctrl)
-		uvm.EXPECT().Relationship(ctx, tc.Relationship).Return(tc.Expected)
+		uvm.EXPECT().Relationship(ctx, tc.args.relationship).Return(tc.want)
 
 		urm := mock_user.NewMockRepository(ctrl)
 
 		uum := mock_user.NewMockUploader(ctrl)
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewUserService(uvm, urm, uum)
 
-			got := target.ValidationRelationship(ctx, tc.Relationship)
-			if !reflect.DeepEqual(got, tc.Expected) {
-				t.Fatalf("want %#v, but %#v", tc.Expected, got)
+			got := target.ValidationRelationship(ctx, tc.args.relationship)
+			if !reflect.DeepEqual(got, tc.want) {
+				t.Fatalf("want %#v, but %#v", tc.want, got)
 				return
 			}
 		})

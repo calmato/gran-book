@@ -86,7 +86,7 @@ describe('components/ogranisms/CommonSidebar', () => {
         expect(wrapper.vm.maintenanceItems).toEqual([
           { icon: 'mdi-cart', text: 'お取り引き管理', to: '/' },
           { icon: 'mdi-forum', text: 'お問い合わせ管理', to: '/' },
-          { icon: 'mdi-bell-ring', text: 'お知らせ管理', to: '/' },
+          { icon: 'mdi-bell-ring', text: 'お知らせ管理', to: '/notifications' },
           { icon: 'mdi-cash-100', text: 'セール情報管理', to: '/' },
         ])
       })
@@ -94,7 +94,7 @@ describe('components/ogranisms/CommonSidebar', () => {
       it('developerItems', () => {
         expect(wrapper.vm.developerItems).toEqual([
           { icon: 'mdi-account', text: '利用者管理', to: '/' },
-          { icon: 'mdi-book', text: '書籍管理', to: '/' },
+          { icon: 'mdi-book', text: '書籍管理', to: '/books' },
           { icon: 'mdi-store', text: 'ECサイト管理', to: '/' },
         ])
       })

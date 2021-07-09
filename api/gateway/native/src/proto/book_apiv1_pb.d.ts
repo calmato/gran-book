@@ -285,6 +285,8 @@ export class CreateBookRequest extends jspb.Message {
     setThumbnailUrl(value: string): CreateBookRequest;
     getRakutenUrl(): string;
     setRakutenUrl(value: string): CreateBookRequest;
+    getRakutenSize(): string;
+    setRakutenSize(value: string): CreateBookRequest;
     getRakutenGenreId(): string;
     setRakutenGenreId(value: string): CreateBookRequest;
     clearAuthorsList(): void;
@@ -312,6 +314,7 @@ export namespace CreateBookRequest {
         publishedOn: string,
         thumbnailUrl: string,
         rakutenUrl: string,
+        rakutenSize: string,
         rakutenGenreId: string,
         authorsList: Array<CreateBookRequest.Author.AsObject>,
     }
@@ -359,6 +362,8 @@ export class UpdateBookRequest extends jspb.Message {
     setThumbnailUrl(value: string): UpdateBookRequest;
     getRakutenUrl(): string;
     setRakutenUrl(value: string): UpdateBookRequest;
+    getRakutenSize(): string;
+    setRakutenSize(value: string): UpdateBookRequest;
     getRakutenGenreId(): string;
     setRakutenGenreId(value: string): UpdateBookRequest;
     clearAuthorsList(): void;
@@ -386,6 +391,7 @@ export namespace UpdateBookRequest {
         publishedOn: string,
         thumbnailUrl: string,
         rakutenUrl: string,
+        rakutenSize: string,
         rakutenGenreId: string,
         authorsList: Array<UpdateBookRequest.Author.AsObject>,
     }
@@ -602,6 +608,8 @@ export class BookResponse extends jspb.Message {
     setThumbnailUrl(value: string): BookResponse;
     getRakutenUrl(): string;
     setRakutenUrl(value: string): BookResponse;
+    getRakutenSize(): string;
+    setRakutenSize(value: string): BookResponse;
     getRakutenGenreId(): string;
     setRakutenGenreId(value: string): BookResponse;
     getCreatedAt(): string;
@@ -634,6 +642,7 @@ export namespace BookResponse {
         publishedOn: string,
         thumbnailUrl: string,
         rakutenUrl: string,
+        rakutenSize: string,
         rakutenGenreId: string,
         createdAt: string,
         updatedAt: string,
@@ -739,6 +748,8 @@ export namespace BookListResponse {
         setThumbnailUrl(value: string): Book;
         getRakutenUrl(): string;
         setRakutenUrl(value: string): Book;
+        getRakutenSize(): string;
+        setRakutenSize(value: string): Book;
         getRakutenGenreId(): string;
         setRakutenGenreId(value: string): Book;
         getCreatedAt(): string;
@@ -771,6 +782,7 @@ export namespace BookListResponse {
             publishedOn: string,
             thumbnailUrl: string,
             rakutenUrl: string,
+            rakutenSize: string,
             rakutenGenreId: string,
             createdAt: string,
             updatedAt: string,
@@ -872,6 +884,8 @@ export namespace BookshelfResponse {
         setThumbnailUrl(value: string): Book;
         getRakutenUrl(): string;
         setRakutenUrl(value: string): Book;
+        getRakutenSize(): string;
+        setRakutenSize(value: string): Book;
         getRakutenGenreId(): string;
         setRakutenGenreId(value: string): Book;
         getCreatedAt(): string;
@@ -904,6 +918,7 @@ export namespace BookshelfResponse {
             publishedOn: string,
             thumbnailUrl: string,
             rakutenUrl: string,
+            rakutenSize: string,
             rakutenGenreId: string,
             createdAt: string,
             updatedAt: string,
@@ -1009,6 +1024,8 @@ export namespace BookshelfListResponse {
         setThumbnailUrl(value: string): Book;
         getRakutenUrl(): string;
         setRakutenUrl(value: string): Book;
+        getRakutenSize(): string;
+        setRakutenSize(value: string): Book;
         getRakutenGenreId(): string;
         setRakutenGenreId(value: string): Book;
         getCreatedAt(): string;
@@ -1041,6 +1058,7 @@ export namespace BookshelfListResponse {
             publishedOn: string,
             thumbnailUrl: string,
             rakutenUrl: string,
+            rakutenSize: string,
             rakutenGenreId: string,
             createdAt: string,
             updatedAt: string,

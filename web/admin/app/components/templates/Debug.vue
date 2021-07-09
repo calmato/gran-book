@@ -11,7 +11,7 @@
               {{ omitToken }}
               <v-tooltip v-model="showTooltip" top>
                 <template v-slot:activator="{}">
-                  <v-btn icon @click="handleCopyText">
+                  <v-btn icon @click="onClickTextCopy">
                     <v-icon>mdi-clipboard-text</v-icon>
                   </v-btn>
                 </template>
@@ -59,7 +59,7 @@ export default defineComponent({
       return props.token.substring(0, length) + omission
     })
 
-    const handleCopyText = async () => {
+    const onClickTextCopy = async () => {
       await toClipboard(props.token)
         .then(() => {
           showTooltip.value = true
@@ -77,7 +77,7 @@ export default defineComponent({
     return {
       showTooltip,
       omitToken,
-      handleCopyText,
+      onClickTextCopy,
     }
   },
 })

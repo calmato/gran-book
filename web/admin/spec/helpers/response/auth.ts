@@ -16,6 +16,12 @@ export const get = {
   },
 }
 
+export const post = {
+  '/v1/auth/thumbnail': {
+    thumbnailUrl: 'https://calmato.com/images/01',
+  },
+}
+
 export const patch = {
   '/v1/auth/email': {
     id: '00000000-0000-0000-00000000',

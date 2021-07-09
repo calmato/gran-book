@@ -37,7 +37,8 @@ export interface IAuthEditPasswordParams {
 
 export interface IAuthEditProfileParams {
   username: string
-  thumbnail?: string
+  thumbnail: File | null
+  thumbnailUrl: string | ArrayBuffer | null
   selfIntroduction: string
   lastName: string
   firstName: string
@@ -113,9 +114,9 @@ export const AuthEditProfileOptions: IAuthEditProfileOptions = {
     label: 'サムネイル',
     rules: {
       image: true,
-      size: 10000, // 10MB
+      size: 3 * 1024, // KB
     },
-  } as ITextField,
+  } as IFileInput,
   selfIntroduction: {
     label: '自己紹介',
     rules: {

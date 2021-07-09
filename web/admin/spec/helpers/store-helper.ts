@@ -1,11 +1,12 @@
 import Vue, { VueConstructor } from 'vue'
 import Vuex from 'vuex'
 import { createLocalVue } from '@vue/test-utils'
-import { AdminStore, AuthStore, CommonStore, initialiseStores } from '~/store'
+import { AdminStore, AuthStore, BookStore, CommonStore, initialiseStores } from '~/store'
 import AdminModule from '~/store/admin'
 import AuthModule from '~/store/auth'
 import CommonModule from '~/store/common'
 import response from '~~/spec/helpers/response'
+import BookModule from '~/store/book'
 
 const localVue: VueConstructor<Vue> = createLocalVue()
 localVue.use(Vuex)
@@ -14,6 +15,7 @@ const store = new Vuex.Store({
   modules: {
     admin: AdminModule,
     auth: AuthModule,
+    book: BookModule,
     common: CommonModule,
   },
 })
@@ -25,6 +27,7 @@ function setup(): void {
 function refresh(): void {
   AdminStore.factory()
   AuthStore.factory()
+  BookStore.factory()
   CommonStore.factory()
 }
 

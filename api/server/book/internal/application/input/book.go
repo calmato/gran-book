@@ -10,6 +10,7 @@ type Book struct {
 	PublishedOn    string        `json:"publishedOn" validate:"required"`
 	ThumbnailURL   string        `json:"thumbnailUrl" validate:"omitempty"`
 	RakutenURL     string        `json:"rakutenUrl" validate:"omitempty"`
+	RakutenSize    string        `json:"rakutenSize" validate:"omitempty"`
 	RakutenGenreID string        `json:"rakutenGenreId" validate:"omitempty"`
 	Authors        []*BookAuthor `json:"authors" validate:"omitempty"`
 }

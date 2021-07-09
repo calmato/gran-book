@@ -56,10 +56,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@nuxtjs/composition-api'
+import { defineComponent, PropType } from '@nuxtjs/composition-api'
 import TheFormGroup from '~/components/atoms/TheFormGroup.vue'
 import TheSelect from '~/components/atoms/TheSelect.vue'
 import TheTextField from '~/components/atoms/TheTextField.vue'
+import { IAdminNewForm } from '~/types/forms'
 
 export default defineComponent({
   components: {
@@ -70,7 +71,7 @@ export default defineComponent({
 
   props: {
     form: {
-      type: Object,
+      type: Object as PropType<IAdminNewForm>,
       required: true,
     },
   },

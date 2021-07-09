@@ -255,6 +255,7 @@ export function createBook(req: Request<any>, input: ICreateBookInput): Promise<
   request.setPublishedOn(input.publishedOn)
   request.setThumbnailUrl(input.thumbnailUrl)
   request.setRakutenUrl(input.rakutenUrl)
+  request.setRakutenSize(input.rakutenSize)
   request.setRakutenGenreId(input.rakutenGenreId)
   request.setAuthorsList(authors)
 
@@ -292,6 +293,7 @@ export function updateBook(req: Request<any>, input: IUpdateBookInput): Promise<
   request.setPublishedOn(input.publishedOn)
   request.setThumbnailUrl(input.thumbnailUrl)
   request.setRakutenUrl(input.rakutenUrl)
+  request.setRakutenSize(input.rakutenSize)
   request.setRakutenGenreId(input.rakutenGenreId)
   request.setAuthorsList(authors)
 
@@ -449,6 +451,7 @@ function setBookOutput(res: BookResponse): IBookOutput {
     publishedOn: res.getPublishedOn(),
     thumbnailUrl: res.getThumbnailUrl(),
     rakutenUrl: res.getRakutenUrl(),
+    rakutenSize: res.getRakutenSize(),
     rakutenGenreId: res.getRakutenGenreId(),
     createdAt: res.getCreatedAt(),
     updatedAt: res.getUpdatedAt(),
@@ -479,6 +482,7 @@ function setBookHashOutput(res: BookListResponse): IBookHashOutput {
       publishedOn: b.getPublishedOn(),
       thumbnailUrl: b.getThumbnailUrl(),
       rakutenUrl: b.getRakutenUrl(),
+      rakutenSize: b.getRakutenSize(),
       rakutenGenreId: b.getRakutenGenreId(),
       createdAt: b.getCreatedAt(),
       updatedAt: b.getUpdatedAt(),
@@ -511,6 +515,7 @@ function setBookshelfOutput(res: BookshelfResponse): IBookshelfOutput {
     publishedOn: b.getPublishedOn(),
     thumbnailUrl: b.getThumbnailUrl(),
     rakutenUrl: b.getRakutenUrl(),
+    rakutenSize: b.getRakutenSize(),
     rakutenGenreId: b.getRakutenGenreId(),
     createdAt: b.getCreatedAt(),
     updatedAt: b.getUpdatedAt(),
@@ -567,6 +572,7 @@ function setBookshelfListOutput(res: BookshelfListResponse): IBookshelfListOutpu
         publishedOn: b.getPublishedOn(),
         thumbnailUrl: b.getThumbnailUrl(),
         rakutenUrl: b.getRakutenUrl(),
+        rakutenSize: b.getRakutenSize(),
         rakutenGenreId: b.getRakutenGenreId(),
         createdAt: b.getCreatedAt(),
         updatedAt: b.getUpdatedAt(),

@@ -1,12 +1,12 @@
-import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { MyPage } from '~/containers';
-import { OwnProfile } from '~/containers';
+import React from 'react';
+import { MyPage , OwnProfile , EmailEdit , ContactEdit , ProfileEdit , AccountSetting } from '~/containers';
+
 import { UserInfoStackParamList } from '~/types/navigation';
-import { EmailEdit } from '~/containers';
-import { ContactEdit } from '~/containers';
-import { ProfileEdit } from '~/containers';
-import { AccountSetting } from '~/containers';
+
+
+
+
 
 const UserInfoStack = createStackNavigator<UserInfoStackParamList>();
 

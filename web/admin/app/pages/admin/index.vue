@@ -6,6 +6,7 @@
     :sort-by.sync="sortBy"
     :sort-desc.sync="sortDesc"
     :loading="loading"
+    :role="role"
     :users="users"
     :total="total"
     :new-form="newForm"
@@ -13,8 +14,7 @@
     @new:open="handleClickNewItem"
     @new:close="handleClickCloseNewItem"
     @create="handleClickCreateItem"
-    @edit="handleClickEditItem"
-    @delete="handleClickDeleteItem"
+    @show="handleClickShowItem"
   />
 </template>
 
@@ -31,6 +31,7 @@ export default defineComponent({
   },
 
   setup(_, { root }: SetupContext) {
+    const router = root.$router
     const store = root.$store
 
     const initializeNewForm: IAdminNewParams = {
@@ -59,6 +60,7 @@ export default defineComponent({
       },
     })
 
+    const role = computed(() => store.getters['auth/getRole'])
     const users = computed(() => store.getters['admin/getUsers'])
     const total = computed(() => store.getters['admin/getTotal'])
     const loading = computed((): boolean => {
@@ -110,12 +112,12 @@ export default defineComponent({
         })
     }
 
-    const handleClickEditItem = (index: number): void => {
-      console.log('debug', 'editItem', index)
-    }
+    const handleClickShowItem = (userId: string): void => {
+      if (userId === '') {
+        CommonStore.showSnackbar({ color: 'error', message: 'ユーザーが見つかりません。' })
+      }
 
-    const handleClickDeleteItem = (index: number): void => {
-      console.log('debug', 'deleteItem', index)
+      router.push(`/admin/${userId}`)
     }
 
     async function indexAdmin(): Promise<void> {
@@ -142,6 +144,7 @@ export default defineComponent({
       itemsPerPage,
       sortBy,
       sortDesc,
+      role,
       users,
       total,
       newForm,
@@ -149,8 +152,7 @@ export default defineComponent({
       handleClickNewItem,
       handleClickCloseNewItem,
       handleClickCreateItem,
-      handleClickEditItem,
-      handleClickDeleteItem,
+      handleClickShowItem,
     }
   },
 })

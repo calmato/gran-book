@@ -9,7 +9,8 @@ describe('components/templates/SettingsEditProfile', () => {
   beforeEach(() => {
     const params: IAuthEditProfileParams = {
       username: '',
-      thumbnail: undefined,
+      thumbnail: null,
+      thumbnailUrl: '',
       selfIntroduction: '',
       lastName: '',
       firstName: '',
@@ -32,7 +33,8 @@ describe('components/templates/SettingsEditProfile', () => {
           expect(wrapper.props().form).toEqual({
             params: {
               username: '',
-              thumbnail: undefined,
+              thumbnail: null,
+              thumbnailUrl: '',
               selfIntroduction: '',
               lastName: '',
               firstName: '',
@@ -49,7 +51,8 @@ describe('components/templates/SettingsEditProfile', () => {
             form: {
               params: {
                 username: 'test-user',
-                thumbnail: undefined,
+                thumbnail: null,
+                thumbnailUrl: '',
                 selfIntroduction: 'よろしく',
                 lastName: 'テスト',
                 firstName: 'ユーザ',
@@ -63,7 +66,8 @@ describe('components/templates/SettingsEditProfile', () => {
           expect(wrapper.props().form).toEqual({
             params: {
               username: 'test-user',
-              thumbnail: undefined,
+              thumbnail: null,
+              thumbnailUrl: '',
               selfIntroduction: 'よろしく',
               lastName: 'テスト',
               firstName: 'ユーザ',

@@ -511,6 +511,163 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorResponse'
+  /v1/notifications:
+    get:
+      summary: お知らせ一覧取得
+      tags:
+        - NotificationService
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          required: false
+          description: 取得上限数
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          required: false
+          description: 取得開始位置
+        - in: query
+          name: field
+          schema:
+            type: string
+          required: false
+          description: 検索項目
+        - in: query
+          name: value
+          schema:
+            type: string
+          required: false
+          description: 検索値
+        - in: query
+          name: by
+          schema:
+            type: string
+          required: false
+          description: 並び替え対象のカラム
+        - in: query
+          name: direction
+          schema:
+            type: string
+          required: false
+          description: 並び替え順 (asc or desc)
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/notificationListResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+    post:
+      summary: お知らせの登録
+      tags:
+        - NotificationService
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/notificationRequest'
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/notificationResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+  /v1/notifications/{notificationId}:
+    get:
+      summary: お知らせ詳細の取得
+      tags:
+        - NotificationService
+      parameters:
+        - in: path
+          name: notificationId
+          schema:
+            type: integer
+          required: true
+          description: お知らせID
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/notificationResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+    patch:
+      summary: お知らせの編集
+      tags:
+        - NotificationService
+      parameters:
+        - in: path
+          name: notificationId
+          schema:
+            type: integer
+          required: true
+          description: お知らせID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/notificationRequest'
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/notificationResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+    delete:
+      summary: お知らせの削除
+      tags:
+        - NotificationService
+      parameters:
+        - in: path
+          name: notificationId
+          schema:
+            type: integer
+          required: true
+          description: お知らせID
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/emptyResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
 tags:
   - name: AuthService
     description: 認証関連
@@ -520,6 +677,8 @@ tags:
     description: ユーザ関連
   - name: BookService
     description: 書籍関連
+  - name: NotificationService
+    description: お知らせ関連
 components:
   securitySchemes:
     BearerAuth:
@@ -839,3 +998,82 @@ components:
                 type: string
               reason:
                 type: string
+    notificationRequest:
+      type: object
+      properties:
+        notifications:
+          type: array
+          items:
+            type: object
+            properties:
+              title:
+                type: string
+              description:
+                type: string
+              importance:
+                type: string
+              category:
+                type: string
+    notificationListResponse:
+      type: object
+      properties:
+        notifications:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              authorName:
+                type: string
+              editorName:
+                type: string
+              title:
+                type: string
+              description:
+                type: string
+              importance:
+                type: string
+              category:
+                type: string
+              createdAt:
+                type: string
+              updatedAt:
+                type: string
+        limit:
+          type: integer
+          format: int64
+        offset:
+          type: integer
+          format: int64
+        total:
+          type: integer
+          format: int64
+        order:
+          type: object
+          properties:
+            by:
+              type: string
+            direction:
+              type: string
+    notificationResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        authorName:
+          type: string
+        editorName:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        importance:
+          type: string
+        category:
+          type: string
+        createdAt:
+          type: string
+        updatedAt:
+          type: string

@@ -15,27 +15,29 @@ import (
 )
 
 func TestAdminApplication_List(t *testing.T) {
-	current := time.Now()
+	type args struct {
+		input *input.ListAdmin
+	}
+	type want struct {
+		users  []*user.User
+		output *output.ListQuery
+		err    error
+	}
 
+	current := time.Now().Local()
 	testCases := map[string]struct {
-		Input    *input.ListAdmin
-		Expected struct {
-			Users  []*user.User
-			Output *output.ListQuery
-			Error  error
-		}
+		args args
+		want want
 	}{
 		"ok": {
-			Input: &input.ListAdmin{
-				Limit:  100,
-				Offset: 0,
+			args: args{
+				input: &input.ListAdmin{
+					Limit:  100,
+					Offset: 0,
+				},
 			},
-			Expected: struct {
-				Users  []*user.User
-				Output *output.ListQuery
-				Error  error
-			}{
-				Users: []*user.User{
+			want: want{
+				users: []*user.User{
 					{
 						ID:               "00000000-0000-0000-0000-000000000000",
 						Username:         "test-user",
@@ -59,18 +61,18 @@ func TestAdminApplication_List(t *testing.T) {
 						UpdatedAt:        current,
 					},
 				},
-				Output: &output.ListQuery{
+				output: &output.ListQuery{
 					Limit:  100,
 					Offset: 0,
 					Total:  1,
 					Order:  nil,
 				},
-				Error: nil,
+				err: nil,
 			},
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
@@ -78,23 +80,23 @@ func TestAdminApplication_List(t *testing.T) {
 		defer ctrl.Finish()
 
 		arvm := mock_validation.NewMockAdminRequestValidation(ctrl)
-		arvm.EXPECT().ListAdmin(tc.Input).Return(nil)
+		arvm.EXPECT().ListAdmin(tc.args.input).Return(nil)
 
 		usm := mock_user.NewMockService(ctrl)
-		usm.EXPECT().List(ctx, gomock.Any()).Return(tc.Expected.Users, tc.Expected.Error)
-		usm.EXPECT().ListCount(ctx, gomock.Any()).Return(tc.Expected.Output.Total, tc.Expected.Error)
+		usm.EXPECT().List(ctx, gomock.Any()).Return(tc.want.users, tc.want.err)
+		usm.EXPECT().ListCount(ctx, gomock.Any()).Return(tc.want.output.Total, tc.want.err)
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewAdminApplication(arvm, usm)
 
-			users, _, err := target.List(ctx, tc.Input)
-			if !reflect.DeepEqual(err, tc.Expected.Error) {
-				t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+			users, _, err := target.List(ctx, tc.args.input)
+			if !reflect.DeepEqual(err, tc.want.err) {
+				t.Fatalf("want %#v, but %#v", tc.want.err, err)
 				return
 			}
 
-			if !reflect.DeepEqual(users, tc.Expected.Users) {
-				t.Fatalf("want %#v, but %#v", tc.Expected.Users, users)
+			if !reflect.DeepEqual(users, tc.want.users) {
+				t.Fatalf("want %#v, but %#v", tc.want.users, users)
 				return
 			}
 		})
@@ -102,29 +104,32 @@ func TestAdminApplication_List(t *testing.T) {
 }
 
 func TestAdminApplication_Search(t *testing.T) {
-	current := time.Now()
+	type args struct {
+		input *input.SearchAdmin
+	}
+	type want struct {
+		users  []*user.User
+		output *output.ListQuery
+		err    error
+	}
+
+	current := time.Now().Local()
 
 	testCases := map[string]struct {
-		Input    *input.SearchAdmin
-		Expected struct {
-			Users  []*user.User
-			Output *output.ListQuery
-			Error  error
-		}
+		args args
+		want want
 	}{
 		"ok": {
-			Input: &input.SearchAdmin{
-				Limit:  100,
-				Offset: 0,
-				Field:  "email",
-				Value:  "test-user@calmato.com",
+			args: args{
+				input: &input.SearchAdmin{
+					Limit:  100,
+					Offset: 0,
+					Field:  "email",
+					Value:  "test-user@calmato.com",
+				},
 			},
-			Expected: struct {
-				Users  []*user.User
-				Output *output.ListQuery
-				Error  error
-			}{
-				Users: []*user.User{
+			want: want{
+				users: []*user.User{
 					{
 						ID:               "00000000-0000-0000-0000-000000000000",
 						Username:         "test-user",
@@ -148,18 +153,18 @@ func TestAdminApplication_Search(t *testing.T) {
 						UpdatedAt:        current,
 					},
 				},
-				Output: &output.ListQuery{
+				output: &output.ListQuery{
 					Limit:  100,
 					Offset: 0,
 					Total:  1,
 					Order:  nil,
 				},
-				Error: nil,
+				err: nil,
 			},
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
@@ -167,23 +172,23 @@ func TestAdminApplication_Search(t *testing.T) {
 		defer ctrl.Finish()
 
 		arvm := mock_validation.NewMockAdminRequestValidation(ctrl)
-		arvm.EXPECT().SearchAdmin(tc.Input).Return(nil)
+		arvm.EXPECT().SearchAdmin(tc.args.input).Return(nil)
 
 		usm := mock_user.NewMockService(ctrl)
-		usm.EXPECT().List(ctx, gomock.Any()).Return(tc.Expected.Users, tc.Expected.Error)
-		usm.EXPECT().ListCount(ctx, gomock.Any()).Return(tc.Expected.Output.Total, tc.Expected.Error)
+		usm.EXPECT().List(ctx, gomock.Any()).Return(tc.want.users, tc.want.err)
+		usm.EXPECT().ListCount(ctx, gomock.Any()).Return(tc.want.output.Total, tc.want.err)
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewAdminApplication(arvm, usm)
 
-			users, _, err := target.Search(ctx, tc.Input)
-			if !reflect.DeepEqual(err, tc.Expected.Error) {
-				t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+			users, _, err := target.Search(ctx, tc.args.input)
+			if !reflect.DeepEqual(err, tc.want.err) {
+				t.Fatalf("want %#v, but %#v", tc.want.err, err)
 				return
 			}
 
-			if !reflect.DeepEqual(users, tc.Expected.Users) {
-				t.Fatalf("want %#v, but %#v", tc.Expected.Users, users)
+			if !reflect.DeepEqual(users, tc.want.users) {
+				t.Fatalf("want %#v, but %#v", tc.want.users, users)
 				return
 			}
 		})
@@ -191,22 +196,25 @@ func TestAdminApplication_Search(t *testing.T) {
 }
 
 func TestAdminApplication_Show(t *testing.T) {
-	current := time.Now()
+	type args struct {
+		uid string
+	}
+	type want struct {
+		user *user.User
+		err  error
+	}
 
+	current := time.Now()
 	testCases := map[string]struct {
-		UID      string
-		Expected struct {
-			User  *user.User
-			Error error
-		}
+		args args
+		want want
 	}{
 		"ok": {
-			UID: "00000000-0000-0000-0000-000000000000",
-			Expected: struct {
-				User  *user.User
-				Error error
-			}{
-				User: &user.User{
+			args: args{
+				uid: "00000000-0000-0000-0000-000000000000",
+			},
+			want: want{
+				user: &user.User{
 					ID:               "00000000-0000-0000-0000-000000000000",
 					Username:         "test-user",
 					Gender:           0,
@@ -228,12 +236,12 @@ func TestAdminApplication_Show(t *testing.T) {
 					CreatedAt:        current,
 					UpdatedAt:        current,
 				},
-				Error: nil,
+				err: nil,
 			},
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
@@ -243,19 +251,19 @@ func TestAdminApplication_Show(t *testing.T) {
 		arvm := mock_validation.NewMockAdminRequestValidation(ctrl)
 
 		usm := mock_user.NewMockService(ctrl)
-		usm.EXPECT().Show(ctx, tc.UID).Return(tc.Expected.User, tc.Expected.Error)
+		usm.EXPECT().Show(ctx, tc.args.uid).Return(tc.want.user, tc.want.err)
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewAdminApplication(arvm, usm)
 
-			got, err := target.Show(ctx, tc.UID)
-			if !reflect.DeepEqual(err, tc.Expected.Error) {
-				t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+			user, err := target.Show(ctx, tc.args.uid)
+			if !reflect.DeepEqual(err, tc.want.err) {
+				t.Fatalf("want %#v, but %#v", tc.want.err, err)
 				return
 			}
 
-			if !reflect.DeepEqual(got, tc.Expected.User) {
-				t.Fatalf("want %#v, but %#v", tc.Expected.User, got)
+			if !reflect.DeepEqual(user, tc.want.user) {
+				t.Fatalf("want %#v, but %#v", tc.want.user, user)
 				return
 			}
 		})
@@ -263,29 +271,33 @@ func TestAdminApplication_Show(t *testing.T) {
 }
 
 func TestAdminApplication_Create(t *testing.T) {
+	type args struct {
+		input *input.CreateAdmin
+	}
+	type want struct {
+		user *user.User
+		err  error
+	}
+
 	testCases := map[string]struct {
-		Input    *input.CreateAdmin
-		Expected struct {
-			User  *user.User
-			Error error
-		}
+		args args
+		want want
 	}{
 		"ok": {
-			Input: &input.CreateAdmin{
-				Username:      "test-user",
-				Email:         "test@calmato.com",
-				Password:      "12345678",
-				Role:          1,
-				LastName:      "テスト",
-				FirstName:     "ユーザ",
-				LastNameKana:  "てすと",
-				FirstNameKana: "ゆーざ",
+			args: args{
+				input: &input.CreateAdmin{
+					Username:      "test-user",
+					Email:         "test@calmato.com",
+					Password:      "12345678",
+					Role:          1,
+					LastName:      "テスト",
+					FirstName:     "ユーザ",
+					LastNameKana:  "てすと",
+					FirstNameKana: "ゆーざ",
+				},
 			},
-			Expected: struct {
-				User  *user.User
-				Error error
-			}{
-				User: &user.User{
+			want: want{
+				user: &user.User{
 					Username:      "test-user",
 					Email:         "test@calmato.com",
 					Password:      "12345678",
@@ -296,12 +308,12 @@ func TestAdminApplication_Create(t *testing.T) {
 					LastNameKana:  "てすと",
 					FirstNameKana: "ゆーざ",
 				},
-				Error: nil,
+				err: nil,
 			},
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
@@ -309,23 +321,23 @@ func TestAdminApplication_Create(t *testing.T) {
 		defer ctrl.Finish()
 
 		arvm := mock_validation.NewMockAdminRequestValidation(ctrl)
-		arvm.EXPECT().CreateAdmin(tc.Input).Return(nil)
+		arvm.EXPECT().CreateAdmin(tc.args.input).Return(nil)
 
 		usm := mock_user.NewMockService(ctrl)
-		usm.EXPECT().Validation(ctx, gomock.Any()).Return(tc.Expected.Error)
-		usm.EXPECT().Create(ctx, gomock.Any()).Return(tc.Expected.Error)
+		usm.EXPECT().Validation(ctx, gomock.Any()).Return(nil)
+		usm.EXPECT().Create(ctx, gomock.Any()).Return(tc.want.err)
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewAdminApplication(arvm, usm)
 
-			got, err := target.Create(ctx, tc.Input)
-			if !reflect.DeepEqual(err, tc.Expected.Error) {
-				t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+			user, err := target.Create(ctx, tc.args.input)
+			if !reflect.DeepEqual(err, tc.want.err) {
+				t.Fatalf("want %#v, but %#v", tc.want.err, err)
 				return
 			}
 
-			if !reflect.DeepEqual(got, tc.Expected.User) {
-				t.Fatalf("want %#v, but %#v", tc.Expected.User, got)
+			if !reflect.DeepEqual(user, tc.want.user) {
+				t.Fatalf("want %#v, but %#v", tc.want.user, user)
 				return
 			}
 		})
@@ -333,35 +345,39 @@ func TestAdminApplication_Create(t *testing.T) {
 }
 
 func TestAdminApplication_UpdateContact(t *testing.T) {
+	type args struct {
+		uid   string
+		input *input.UpdateAdminContact
+	}
+	type want struct {
+		user *user.User
+		err  error
+	}
+
 	testCases := map[string]struct {
-		Input    *input.UpdateAdminContact
-		ID       string
-		Expected struct {
-			User  *user.User
-			Error error
-		}
+		args args
+		want want
 	}{
 		"ok": {
-			Input: &input.UpdateAdminContact{
-				Email:       "test-user@calmato.jp",
-				PhoneNumber: "000-0000-0000",
+			args: args{
+				uid: "12345678-1234-1234-1234-12345678901234",
+				input: &input.UpdateAdminContact{
+					Email:       "test-user@calmato.jp",
+					PhoneNumber: "000-0000-0000",
+				},
 			},
-			ID: "12345678-1234-1234-1234-12345678901234",
-			Expected: struct {
-				User  *user.User
-				Error error
-			}{
-				User: &user.User{
+			want: want{
+				user: &user.User{
 					ID:          "12345678-1234-1234-1234-12345678901234",
 					Email:       "test-user@calmato.jp",
 					PhoneNumber: "000-0000-0000",
 				},
-				Error: nil,
+				err: nil,
 			},
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
@@ -369,24 +385,24 @@ func TestAdminApplication_UpdateContact(t *testing.T) {
 		defer ctrl.Finish()
 
 		arvm := mock_validation.NewMockAdminRequestValidation(ctrl)
-		arvm.EXPECT().UpdateAdminContact(tc.Input).Return(nil)
+		arvm.EXPECT().UpdateAdminContact(tc.args.input).Return(nil)
 
 		usm := mock_user.NewMockService(ctrl)
-		usm.EXPECT().Validation(ctx, gomock.Any()).Return(tc.Expected.Error)
-		usm.EXPECT().Show(ctx, tc.ID).Return(tc.Expected.User, tc.Expected.Error)
-		usm.EXPECT().Update(ctx, tc.Expected.User).Return(tc.Expected.Error)
+		usm.EXPECT().Validation(ctx, gomock.Any()).Return(nil)
+		usm.EXPECT().Show(ctx, tc.args.uid).Return(tc.want.user, nil)
+		usm.EXPECT().Update(ctx, tc.want.user).Return(tc.want.err)
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewAdminApplication(arvm, usm)
 
-			got, err := target.UpdateContact(ctx, tc.Input, tc.ID)
-			if !reflect.DeepEqual(err, tc.Expected.Error) {
-				t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+			user, err := target.UpdateContact(ctx, tc.args.input, tc.args.uid)
+			if !reflect.DeepEqual(err, tc.want.err) {
+				t.Fatalf("want %#v, but %#v", tc.want.err, err)
 				return
 			}
 
-			if !reflect.DeepEqual(got, tc.Expected.User) {
-				t.Fatalf("want %#v, but %#v", tc.Expected.User, got)
+			if !reflect.DeepEqual(user, tc.want.user) {
+				t.Fatalf("want %#v, but %#v", tc.want.user, user)
 				return
 			}
 		})
@@ -394,34 +410,38 @@ func TestAdminApplication_UpdateContact(t *testing.T) {
 }
 
 func TestAdminApplication_UpdatePassword(t *testing.T) {
+	type args struct {
+		uid   string
+		input *input.UpdateAdminPassword
+	}
+	type want struct {
+		user *user.User
+		err  error
+	}
+
 	testCases := map[string]struct {
-		Input    *input.UpdateAdminPassword
-		ID       string
-		Expected struct {
-			User  *user.User
-			Error error
-		}
+		args args
+		want want
 	}{
 		"ok": {
-			Input: &input.UpdateAdminPassword{
-				Password:             "12345678",
-				PasswordConfirmation: "12345678",
+			args: args{
+				uid: "12345678-1234-1234-1234-12345678901234",
+				input: &input.UpdateAdminPassword{
+					Password:             "12345678",
+					PasswordConfirmation: "12345678",
+				},
 			},
-			ID: "12345678-1234-1234-1234-12345678901234",
-			Expected: struct {
-				User  *user.User
-				Error error
-			}{
-				User: &user.User{
+			want: want{
+				user: &user.User{
 					ID:       "12345678-1234-1234-1234-12345678901234",
 					Password: "12345678",
 				},
-				Error: nil,
+				err: nil,
 			},
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
@@ -429,23 +449,23 @@ func TestAdminApplication_UpdatePassword(t *testing.T) {
 		defer ctrl.Finish()
 
 		arvm := mock_validation.NewMockAdminRequestValidation(ctrl)
-		arvm.EXPECT().UpdateAdminPassword(tc.Input).Return(nil)
+		arvm.EXPECT().UpdateAdminPassword(tc.args.input).Return(nil)
 
 		usm := mock_user.NewMockService(ctrl)
-		usm.EXPECT().Show(ctx, tc.ID).Return(tc.Expected.User, tc.Expected.Error)
-		usm.EXPECT().UpdatePassword(ctx, tc.Expected.User.ID, tc.Expected.User.Password).Return(tc.Expected.Error)
+		usm.EXPECT().Show(ctx, tc.args.uid).Return(tc.want.user, nil)
+		usm.EXPECT().UpdatePassword(ctx, tc.want.user.ID, tc.want.user.Password).Return(tc.want.err)
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewAdminApplication(arvm, usm)
 
-			got, err := target.UpdatePassword(ctx, tc.Input, tc.ID)
-			if !reflect.DeepEqual(err, tc.Expected.Error) {
-				t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+			user, err := target.UpdatePassword(ctx, tc.args.input, tc.args.uid)
+			if !reflect.DeepEqual(err, tc.want.err) {
+				t.Fatalf("want %#v, but %#v", tc.want.err, err)
 				return
 			}
 
-			if !reflect.DeepEqual(got, tc.Expected.User) {
-				t.Fatalf("want %#v, but %#v", tc.Expected.User, got)
+			if !reflect.DeepEqual(user, tc.want.user) {
+				t.Fatalf("want %#v, but %#v", tc.want.user, user)
 				return
 			}
 		})
@@ -453,30 +473,34 @@ func TestAdminApplication_UpdatePassword(t *testing.T) {
 }
 
 func TestAdminApplication_UpdateProfile(t *testing.T) {
+	type args struct {
+		uid   string
+		input *input.UpdateAdminProfile
+	}
+	type want struct {
+		user *user.User
+		err  error
+	}
+
 	testCases := map[string]struct {
-		Input    *input.UpdateAdminProfile
-		ID       string
-		Expected struct {
-			User  *user.User
-			Error error
-		}
+		args args
+		want want
 	}{
 		"ok": {
-			Input: &input.UpdateAdminProfile{
-				Username:      "test-user",
-				LastName:      "テスト",
-				FirstName:     "ユーザ",
-				LastNameKana:  "てすと",
-				FirstNameKana: "ゆーざ",
-				Role:          1,
-				ThumbnailURL:  "https://www.google.co.jp",
+			args: args{
+				uid: "12345678-1234-1234-1234-12345678901234",
+				input: &input.UpdateAdminProfile{
+					Username:      "test-user",
+					LastName:      "テスト",
+					FirstName:     "ユーザ",
+					LastNameKana:  "てすと",
+					FirstNameKana: "ゆーざ",
+					Role:          1,
+					ThumbnailURL:  "https://www.google.co.jp",
+				},
 			},
-			ID: "12345678-1234-1234-1234-12345678901234",
-			Expected: struct {
-				User  *user.User
-				Error error
-			}{
-				User: &user.User{
+			want: want{
+				user: &user.User{
 					ID:            "12345678-1234-1234-1234-12345678901234",
 					Username:      "test-user",
 					Email:         "test@calmato.com",
@@ -487,12 +511,12 @@ func TestAdminApplication_UpdateProfile(t *testing.T) {
 					Role:          1,
 					ThumbnailURL:  "https://www.google.co.jp",
 				},
-				Error: nil,
+				err: nil,
 			},
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
@@ -500,24 +524,24 @@ func TestAdminApplication_UpdateProfile(t *testing.T) {
 		defer ctrl.Finish()
 
 		arvm := mock_validation.NewMockAdminRequestValidation(ctrl)
-		arvm.EXPECT().UpdateAdminProfile(tc.Input).Return(nil)
+		arvm.EXPECT().UpdateAdminProfile(tc.args.input).Return(nil)
 
 		usm := mock_user.NewMockService(ctrl)
-		usm.EXPECT().Validation(ctx, gomock.Any()).Return(tc.Expected.Error)
-		usm.EXPECT().Show(ctx, tc.ID).Return(tc.Expected.User, tc.Expected.Error)
-		usm.EXPECT().Update(ctx, tc.Expected.User).Return(tc.Expected.Error)
+		usm.EXPECT().Validation(ctx, gomock.Any()).Return(nil)
+		usm.EXPECT().Show(ctx, tc.args.uid).Return(tc.want.user, nil)
+		usm.EXPECT().Update(ctx, tc.want.user).Return(tc.want.err)
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewAdminApplication(arvm, usm)
 
-			got, err := target.UpdateProfile(ctx, tc.Input, tc.ID)
-			if !reflect.DeepEqual(err, tc.Expected.Error) {
-				t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+			user, err := target.UpdateProfile(ctx, tc.args.input, tc.args.uid)
+			if !reflect.DeepEqual(err, tc.want.err) {
+				t.Fatalf("want %#v, but %#v", tc.want.err, err)
 				return
 			}
 
-			if !reflect.DeepEqual(got, tc.Expected.User) {
-				t.Fatalf("want %#v, but %#v", tc.Expected.User, got)
+			if !reflect.DeepEqual(user, tc.want.user) {
+				t.Fatalf("want %#v, but %#v", tc.want.user, user)
 				return
 			}
 		})
@@ -525,17 +549,23 @@ func TestAdminApplication_UpdateProfile(t *testing.T) {
 }
 
 func TestAdminApplication_Delete(t *testing.T) {
+	type args struct {
+		uid string
+	}
+
 	testCases := map[string]struct {
-		UID      string
-		Expected error
+		args args
+		want error
 	}{
 		"ok": {
-			UID:      "00000000-0000-0000-0000-000000000000",
-			Expected: nil,
+			args: args{
+				uid: "00000000-0000-0000-0000-000000000000",
+			},
+			want: nil,
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
@@ -543,21 +573,21 @@ func TestAdminApplication_Delete(t *testing.T) {
 		defer ctrl.Finish()
 
 		u := &user.User{
-			ID: tc.UID,
+			ID: tc.args.uid,
 		}
 
 		arvm := mock_validation.NewMockAdminRequestValidation(ctrl)
 
 		usm := mock_user.NewMockService(ctrl)
-		usm.EXPECT().Show(ctx, tc.UID).Return(u, nil)
-		usm.EXPECT().Update(ctx, u).Return(tc.Expected)
+		usm.EXPECT().Show(ctx, tc.args.uid).Return(u, nil)
+		usm.EXPECT().Update(ctx, u).Return(tc.want)
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewAdminApplication(arvm, usm)
 
-			err := target.Delete(ctx, tc.UID)
-			if !reflect.DeepEqual(err, tc.Expected) {
-				t.Fatalf("want %#v, but %#v", tc.Expected, err)
+			err := target.Delete(ctx, tc.args.uid)
+			if !reflect.DeepEqual(err, tc.want) {
+				t.Fatalf("want %#v, but %#v", tc.want, err)
 				return
 			}
 		})
