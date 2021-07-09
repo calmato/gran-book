@@ -31,7 +31,6 @@ func (s *NotificationServer) Create(ctx context.Context, req *pb.CreateNotificat
 
 	res := getNotificationResponse(n)
 	return res, nil
-
 }
 
 func getNotificationResponse(n *notification.Notification) *pb.NotificationResponse {
