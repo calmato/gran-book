@@ -3,3 +3,6 @@ app
 # bin file
 bin
 !bin/build-mocks.sh
+
+# proto file
+*.pb.go

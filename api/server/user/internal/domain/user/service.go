@@ -12,6 +12,7 @@ type Service interface {
 	List(ctx context.Context, q *domain.ListQuery) ([]*User, error)
 	ListFollow(ctx context.Context, q *domain.ListQuery, uid string) ([]*Follow, error)
 	ListFollower(ctx context.Context, q *domain.ListQuery, uid string) ([]*Follower, error)
+	ListInstanceID(ctx context.Context, userIDs []string) ([]string, error)
 	ListCount(ctx context.Context, q *domain.ListQuery) (int, error)
 	ListFriendCount(ctx context.Context, uid string) (int, int, error)
 	Show(ctx context.Context, uid string) (*User, error)

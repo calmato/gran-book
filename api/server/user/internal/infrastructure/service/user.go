@@ -113,6 +113,20 @@ func (s *userService) ListFollower(ctx context.Context, q *domain.ListQuery, uid
 	return fs, nil
 }
 
+func (s *userService) ListInstanceID(ctx context.Context, userIDs []string) ([]string, error) {
+	query := &domain.ListQuery{
+		Conditions: []*domain.QueryCondition{
+			{
+				Field:    "id",
+				Operator: "IN",
+				Value:    userIDs,
+			},
+		},
+	}
+
+	return s.userRepository.ListInstanceID(ctx, query)
+}
+
 func (s *userService) ListCount(ctx context.Context, q *domain.ListQuery) (int, error) {
 	return s.userRepository.ListCount(ctx, q)
 }

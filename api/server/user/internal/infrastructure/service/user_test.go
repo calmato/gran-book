@@ -295,6 +295,71 @@ func TestUserService_ListFollower(t *testing.T) {
 	}
 }
 
+func TestUserService_ListInstanceID(t *testing.T) {
+	type args struct {
+		userIDs []string
+	}
+	type want struct {
+		instanceIDs []string
+		err         error
+	}
+
+	testCases := map[string]struct {
+		args args
+		want want
+	}{
+		"ok": {
+			args: args{
+				userIDs: []string{"00000000-0000-0000-0000-000000000000"},
+			},
+			want: want{
+				instanceIDs: []string{"ExponentPushToken[XXXXXXXXXXXXXXXXXXXXXX]"},
+				err:         nil,
+			},
+		},
+	}
+
+	for name, tc := range testCases {
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		q := &domain.ListQuery{
+			Conditions: []*domain.QueryCondition{
+				{
+					Field:    "id",
+					Operator: "IN",
+					Value:    tc.args.userIDs,
+				},
+			},
+		}
+
+		uvm := mock_user.NewMockValidation(ctrl)
+
+		urm := mock_user.NewMockRepository(ctrl)
+		urm.EXPECT().ListInstanceID(ctx, q).Return(tc.want.instanceIDs, tc.want.err)
+
+		uum := mock_user.NewMockUploader(ctrl)
+
+		t.Run(name, func(t *testing.T) {
+			target := NewUserService(uvm, urm, uum)
+
+			instanceIDs, err := target.ListInstanceID(ctx, tc.args.userIDs)
+			if !reflect.DeepEqual(err, tc.want.err) {
+				t.Fatalf("want %#v, but %#v", tc.want.err, err)
+				return
+			}
+
+			if !reflect.DeepEqual(instanceIDs, tc.want.instanceIDs) {
+				t.Fatalf("want %#v, but %#v", tc.want.instanceIDs, instanceIDs)
+				return
+			}
+		})
+	}
+}
+
 func TestUserService_ListCount(t *testing.T) {
 	type args struct {
 		query *domain.ListQuery

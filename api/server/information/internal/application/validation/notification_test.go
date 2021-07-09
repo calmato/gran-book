@@ -1,6 +1,7 @@
 package validation
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/calmato/gran-book/api/server/information/internal/application/input"
@@ -30,7 +31,7 @@ func TestNotificationRequestValidation_CreateNotification(t *testing.T) {
 		},
 		"ng_title_max": {
 			Input: &input.CreateNotification{
-				Title:       "境界値test(65)境界値test(65)境界値test(65)境界値test(65)境界値test(65)境界値test(65",
+				Title:       strings.Repeat("x", 65),
 				Description: "Gran Bookをリリースされるにあたり、友達紹介キャンペーンを開催します。",
 				Importance:  "重要",
 			},
@@ -47,7 +48,7 @@ func TestNotificationRequestValidation_CreateNotification(t *testing.T) {
 		"ng_description_max": {
 			Input: &input.CreateNotification{
 				Title:       "Gran Book",
-				Description: "境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001)境界値test(2001",
+				Description: strings.Repeat("x", 2001),
 				Importance:  "重要",
 			},
 			Expected: false,
@@ -64,7 +65,7 @@ func TestNotificationRequestValidation_CreateNotification(t *testing.T) {
 			Input: &input.CreateNotification{
 				Title:       "Gran Book",
 				Description: "",
-				Importance:  "境界値test(65)境界値test(65)境界値test(65)境界値test(65)境界値test(65)境界値test(65",
+				Importance:  strings.Repeat("x", 65),
 			},
 			Expected: false,
 		},
