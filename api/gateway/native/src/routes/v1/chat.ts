@@ -168,7 +168,7 @@ function setChatRoomListResponse(
           createdAt: cr.latestMessage.createdAt,
         }
 
-        room.latestMassage = m
+        room.latestMessage = m
       }
 
       return room
