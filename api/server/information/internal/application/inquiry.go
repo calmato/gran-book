@@ -14,7 +14,7 @@ type InquiryApplication interface {
 }
 
 type inquiryApplication struct {
-	inquiryRequestValidation validation.NewInquiryRequestValidation
+	inquiryRequestValidation validation.InquiryRequestValidation
 	inquiryService           inquiry.Service
 }
 
@@ -39,7 +39,7 @@ func (ia *inquiryApplication) Create(ctx context.Context, in *input.CreateInquir
 		Email:       in.Email,
 	}
 
-	err := ia.inquiryService.Create(ctx, i)
+	err = ia.inquiryService.Create(ctx, i)
 	if err != nil {
 		return nil, err
 	}
