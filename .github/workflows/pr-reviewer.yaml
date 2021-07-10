@@ -1,0 +1,12 @@
+name: Auto Assign Reviewer
+on:
+  pull_request:
+    types: [opened, ready_for_review]
+
+jobs:
+  add-reviews:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: kentaro-m/auto-assign-action@master
+        with:
+          configuration-path: .github/reviewer.yaml

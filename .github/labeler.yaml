@@ -1,0 +1,32 @@
+frontend (native):
+- native/**/*
+frontend (admin):
+- web/admin/**/*
+
+gateway (native):
+- api/gateway/native/**/*
+gateway (admin):
+- api/gateway/admin/**/*
+
+backend (user api):
+- api/server/user/**/*
+backend (book api):
+- api/server/book/**/*
+backend (information api):
+- api/server/information/**/*
+
+database:
+- infra/mysql/**/*
+infrastructure:
+- infra/docker/**/*
+- infra/functions/**/*
+- infra/kubernetes/**/*
+- infra/nginx/**/*
+- infra/server/**/*
+- infra/terraform/**/*
+monitoring:
+- infra/fluent-bit/**/*
+- infra/grafana/**/*
+
+workflows:
+- .github/**/*
