@@ -1,6 +1,7 @@
 export * from './auth'
 export * from './book'
 export * from './bookshelf'
+export * from './v2/bookshelf'
 export * from './chat'
 export * from './error'
 export * from './user'
