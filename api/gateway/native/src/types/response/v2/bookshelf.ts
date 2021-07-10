@@ -26,7 +26,7 @@ export interface IBookshelfV2Response {
 export interface IBookshelfV2ResponseBookshelf {
   status: string
   readOn: string
-  reviewId: number
+  reviewId?: number
   createdAt: string
   updatedAt: string
 }
@@ -76,7 +76,7 @@ export interface IBookshelfListV2ResponseBook {
 export interface IBookshelfListV2ResponseBookshelf {
   status: string
   readOn: string
-  reviewId: number
+  reviewId?: number
   createdAt: string
   updatedAt: string
 }

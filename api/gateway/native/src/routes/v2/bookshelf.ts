@@ -1,9 +1,38 @@
 import express, { NextFunction, Request, Response } from 'express'
 import { getBookshelf, getUser, listBookReview, listBookshelf, listUserWithUserIds } from '~/api'
-import { IGetBookshelfInput, IGetUserInput, IListBookReviewInput, IListBookshelfInput, IListUserByUserIdsInput } from '~/types/input'
-import { IBookshelfListOutput, IBookshelfListOutputAuthor, IBookshelfListOutputBookshelf, IBookshelfOutput, IBookshelfOutputAuthor, IReviewListOutput, IReviewListOutputReview, IUserHashOutput } from '~/types/output'
-import { IBookshelfListV2Response, IBookshelfListV2ResponseBook, IBookshelfListV2ResponseBookshelf, IBookshelfV2Response, IBookshelfV2ResponseBookshelf, IBookshelfV2ResponseReview, IBookshelfV2ResponseUser } from '~/types/response'
-import { BookStatus, LIST_DEFAULT_LIMIT, LIST_DEFAULT_OFFSET, LIST_DEFAULT_ORDER_BY, LIST_DEFAULT_ORDER_DIRECTION } from '~/util'
+import {
+  IGetBookshelfInput,
+  IGetUserInput,
+  IListBookReviewInput,
+  IListBookshelfInput,
+  IListUserByUserIdsInput,
+} from '~/types/input'
+import {
+  IBookshelfListOutput,
+  IBookshelfListOutputAuthor,
+  IBookshelfListOutputBookshelf,
+  IBookshelfOutput,
+  IBookshelfOutputAuthor,
+  IReviewListOutput,
+  IReviewListOutputReview,
+  IUserHashOutput,
+} from '~/types/output'
+import {
+  IBookshelfListV2Response,
+  IBookshelfListV2ResponseBook,
+  IBookshelfListV2ResponseBookshelf,
+  IBookshelfV2Response,
+  IBookshelfV2ResponseBookshelf,
+  IBookshelfV2ResponseReview,
+  IBookshelfV2ResponseUser,
+} from '~/types/response'
+import {
+  BookStatus,
+  LIST_DEFAULT_LIMIT,
+  LIST_DEFAULT_OFFSET,
+  LIST_DEFAULT_ORDER_BY,
+  LIST_DEFAULT_ORDER_DIRECTION,
+} from '~/util'
 
 const router = express.Router()
 
@@ -95,7 +124,11 @@ router.get(
   }
 )
 
-function setBookshelfResponse(bookshelfOutput: IBookshelfOutput, reviewsOutput: any, usersOutput: IUserHashOutput): IBookshelfV2Response {
+function setBookshelfResponse(
+  bookshelfOutput: IBookshelfOutput,
+  reviewsOutput: IReviewListOutput,
+  usersOutput: IUserHashOutput
+): IBookshelfV2Response {
   const authorNames = bookshelfOutput.book.authors.map((item: IBookshelfOutputAuthor): string => {
     return item.name
   })
@@ -107,35 +140,37 @@ function setBookshelfResponse(bookshelfOutput: IBookshelfOutput, reviewsOutput: 
   const bookshelf: IBookshelfV2ResponseBookshelf = {
     status: BookStatus[bookshelfOutput.status],
     readOn: bookshelfOutput.readOn,
-    reviewId: bookshelfOutput.reviewId,
+    reviewId: bookshelfOutput.reviewId === 0 ? bookshelfOutput.reviewId : undefined,
     createdAt: bookshelfOutput.createdAt,
     updatedAt: bookshelfOutput.updatedAt,
   }
 
   // TODO: refactor
-  const reviews = reviewsOutput.map((item: any): IBookshelfV2ResponseReview => {
-    const user: IBookshelfV2ResponseUser = {
-      id: '',
-      username: 'unknown',
-      thumbnailUrl: '',
-    }
+  const reviews = reviewsOutput.reviews.map(
+    (item: IReviewListOutputReview): IBookshelfV2ResponseReview => {
+      const user: IBookshelfV2ResponseUser = {
+        id: '',
+        username: 'unknown',
+        thumbnailUrl: '',
+      }
 
-    if (usersOutput[item.userId]) {
-      const { id, username, thumbnailUrl } = usersOutput[item.userId]
+      if (usersOutput[item.userId]) {
+        const { id, username, thumbnailUrl } = usersOutput[item.userId]
 
-      user.id = id
-      user.username = username
-      user.thumbnailUrl = thumbnailUrl
-    }
+        user.id = id
+        user.username = username
+        user.thumbnailUrl = thumbnailUrl
+      }
 
-    return {
-      id: item.id,
-      impression: item.impression,
-      createdAt: item.createdAt,
-      updatedAt: item.updatedAt,
-      user,
+      return {
+        id: item.id,
+        impression: item.impression,
+        createdAt: item.createdAt,
+        updatedAt: item.updatedAt,
+        user,
+      }
     }
-  })
+  )
 
   const response: IBookshelfV2Response = {
     id: bookshelfOutput.book.id,
@@ -163,43 +198,45 @@ function setBookshelfResponse(bookshelfOutput: IBookshelfOutput, reviewsOutput: 
 }
 
 function setBookshelfListResponse(output: IBookshelfListOutput): IBookshelfListV2Response {
-  const books = output.bookshelves.map((bs: IBookshelfListOutputBookshelf): IBookshelfListV2ResponseBook => {
-    const authorNames = bs.book.authors.map((item: IBookshelfListOutputAuthor): string => {
-      return item.name
-    })
+  const books = output.bookshelves.map(
+    (bs: IBookshelfListOutputBookshelf): IBookshelfListV2ResponseBook => {
+      const authorNames = bs.book.authors.map((item: IBookshelfListOutputAuthor): string => {
+        return item.name
+      })
 
-    const authorNameKanas = bs.book.authors.map((item: IBookshelfListOutputAuthor): string => {
-      return item.nameKana
-    })
+      const authorNameKanas = bs.book.authors.map((item: IBookshelfListOutputAuthor): string => {
+        return item.nameKana
+      })
 
-    const bookshelf: IBookshelfListV2ResponseBookshelf = {
-      status: BookStatus[bs.status],
-      readOn: bs.readOn,
-      reviewId: bs.reviewId,
-      createdAt: bs.createdAt,
-      updatedAt: bs.updatedAt,
+      const bookshelf: IBookshelfListV2ResponseBookshelf = {
+        status: BookStatus[bs.status],
+        readOn: bs.readOn,
+        reviewId: bs.reviewId === 0 ? bs.reviewId : undefined,
+        createdAt: bs.createdAt,
+        updatedAt: bs.updatedAt,
+      }
+
+      const book: IBookshelfListV2ResponseBook = {
+        id: bs.book.id,
+        title: bs.book.title,
+        titleKana: bs.book.titleKana,
+        description: bs.book.description,
+        isbn: bs.book.isbn,
+        publisher: bs.book.publisher,
+        publishedOn: bs.book.publishedOn,
+        thumbnailUrl: bs.book.thumbnailUrl,
+        rakutenUrl: bs.book.rakutenUrl,
+        size: bs.book.rakutenSize,
+        author: authorNames.join('/'),
+        authorKana: authorNameKanas.join('/'),
+        createdAt: bs.book.createdAt,
+        updatedAt: bs.book.updatedAt,
+        bookshelf,
+      }
+
+      return book
     }
-
-    const book: IBookshelfListV2ResponseBook = {
-      id: bs.book.id,
-      title: bs.book.title,
-      titleKana: bs.book.titleKana,
-      description: bs.book.description,
-      isbn: bs.book.isbn,
-      publisher: bs.book.publisher,
-      publishedOn: bs.book.publishedOn,
-      thumbnailUrl: bs.book.thumbnailUrl,
-      rakutenUrl: bs.book.rakutenUrl,
-      size: bs.book.rakutenSize,
-      author: authorNames.join('/'),
-      authorKana: authorNameKanas.join('/'),
-      createdAt: bs.book.createdAt,
-      updatedAt: bs.book.updatedAt,
-      bookshelf,
-    }
-
-    return book
-  })
+  )
 
   const response: IBookshelfListV2Response = {
     books,
