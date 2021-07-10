@@ -1,3 +1,3 @@
-export * from './auth'
-export * from './book'
-export * from './chat'
+export * from './v1/auth'
+export * from './v1/book'
+export * from './v1/chat'
