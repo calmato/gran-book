@@ -17,7 +17,7 @@ type InquiryServer struct {
 // CreateInquiry お問い合わせ登録
 func (s *InquiryServer) CreateInquiry(ctx context.Context, req *pb.CreateInquiryRequest) (*pb.InquiryResponse, error) {
 	in := &input.CreateInquiry{
-		SenderId:    req.GetSenderId(),
+		SenderID:    req.GetSenderId(),
 		Subject:     req.GetSubject(),
 		Description: req.GetDescription(),
 		Email:       req.GetEmail(),
@@ -27,8 +27,8 @@ func (s *InquiryServer) CreateInquiry(ctx context.Context, req *pb.CreateInquiry
 
 	res := &pb.InquiryResponse{
 		InquiryId:   int64(ir.ID),
-		SenderId:    ir.SenderId,
-		AdminId:     ir.AdminId,
+		SenderId:    ir.SenderID,
+		AdminId:     ir.AdminID,
 		Subject:     ir.Subject,
 		Description: ir.Description,
 		Email:       ir.Email,
