@@ -102,45 +102,36 @@ router.get(
         }
       })
       .then(async (bookOutput: IBookOutput) => {
-        const bookshelfInput: IGetBookshelfInput = {
-          userId,
+        const reviewListInput: IListBookReviewInput = {
           bookId: bookOutput.id,
+          limit: LIST_DEFAULT_LIMIT,
+          offset: LIST_DEFAULT_OFFSET,
+          by: LIST_DEFAULT_ORDER_BY,
+          direction: LIST_DEFAULT_ORDER_DIRECTION,
         }
 
-        return getBookshelf(req, bookshelfInput)
-          .then(async (bookshelfOutput: IBookshelfOutput) => {
-            const reviewListInput: IListBookReviewInput = {
-              bookId: Number(bookId) || 0,
-              limit: LIST_DEFAULT_LIMIT,
-              offset: LIST_DEFAULT_OFFSET,
-              by: LIST_DEFAULT_ORDER_BY,
-              direction: LIST_DEFAULT_ORDER_DIRECTION,
+        return listBookReview(req, reviewListInput)
+          .then(async (reviewsOutput: IReviewListOutput) => {
+            const userIds = reviewsOutput.reviews.map((rv: IReviewListOutputReview): string => {
+              return rv.userId
+            })
+
+            const userListInput: IListUserByUserIdsInput = {
+              ids: Array.from(new Set(userIds)),
             }
 
-            return listBookReview(req, reviewListInput)
-              .then(async (reviewsOutput: IReviewListOutput) => {
-                const userIds = reviewsOutput.reviews.map((rv: IReviewListOutputReview): string => {
-                  return rv.userId
-                })
+            const bookshelfInput: IGetBookshelfInput = {
+              userId,
+              bookId: bookOutput.id,
+            }
 
-                const userListInput: IListUserByUserIdsInput = {
-                  ids: Array.from(new Set(userIds)),
-                }
+            const usersOutput = await listUserWithUserIds(req, userListInput)
+            const bookshelfOutput = await getBookshelf(req, bookshelfInput)
 
-                return listUserWithUserIds(req, userListInput)
-                  .then((usersOutput: IUserHashOutput) => {
-                    return setBookshelfResponse(bookOutput, usersOutput, bookshelfOutput, reviewsOutput)
-                  })
-                  .catch(() => {
-                    return setBookshelfResponse(bookOutput, {}, bookshelfOutput, reviewsOutput)
-                  })
-              })
-              .catch((err: Error) => {
-                throw err
-              })
+            return setBookshelfResponse(bookOutput, reviewsOutput, usersOutput, bookshelfOutput)
           })
-          .catch(() => {
-            return setBookshelfResponse(bookOutput, {})
+          .catch((err: Error) => {
+            throw err
           })
       })
       .then((response: IBookshelfV2Response) => {
@@ -170,9 +161,9 @@ function bookByIsbn(req: Request, isbn: string): Promise<IBookOutput> {
 
 function setBookshelfResponse(
   bookOutput: IBookOutput,
+  reviewsOutput: IReviewListOutput,
   usersOutput: IUserHashOutput,
-  bookshelfOutput?: IBookshelfOutput,
-  reviewsOutput?: IReviewListOutput
+  bookshelfOutput?: IBookshelfOutput
 ): IBookshelfV2Response {
   const authorNames = bookOutput.authors.map((item: IBookshelfOutputAuthor): string => {
     return item.name
@@ -182,7 +173,7 @@ function setBookshelfResponse(
     return item.nameKana
   })
 
-  const reviews = reviewsOutput?.reviews.map(
+  const reviews = reviewsOutput.reviews.map(
     (item: IReviewListOutputReview): IBookshelfV2ResponseReview => {
       const user: IBookshelfV2ResponseUser = {
         id: '',
@@ -224,9 +215,9 @@ function setBookshelfResponse(
     createdAt: bookOutput.createdAt,
     updatedAt: bookOutput.updatedAt,
     reviews: reviews || [],
-    reviewLimit: reviewsOutput?.limit || 0,
-    reviewOffset: reviewsOutput?.offset || 0,
-    reviewTotal: reviewsOutput?.total || 0,
+    reviewLimit: reviewsOutput.limit || 0,
+    reviewOffset: reviewsOutput.offset || 0,
+    reviewTotal: reviewsOutput.total || 0,
   }
 
   if (bookshelfOutput && bookshelfOutput.status !== BookStatus.none) {
