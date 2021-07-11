@@ -9,6 +9,7 @@ import (
 // NotificationRequestValidation - Notifiction関連のリクエストバリデーター
 type NotificationRequestValidation interface {
 	CreateNotification(in *input.CreateNotification) error
+	UpdateNotification(in *input.UpdaeteNotification) error
 }
 
 type notificationRequestValidation struct {
@@ -25,6 +26,16 @@ func NewNotificationRequestValidation() NotificationRequestValidation {
 }
 
 func (v *notificationRequestValidation) CreateNotification(in *input.CreateNotification) error {
+	ves := v.validator.Run(in, "")
+	if len(ves) == 0 {
+		return nil
+	}
+
+	err := xerrors.New("Failed to CreateNotification for RequestValidation")
+	return exception.InvalidRequestValidation.New(err, ves...)
+}
+
+func (v *notificationRequestValidation) UpdateNotification(in *input.CreateNotification) error {
 	ves := v.validator.Run(in, "")
 	if len(ves) == 0 {
 		return nil

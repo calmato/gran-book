@@ -14,8 +14,8 @@ type UpdaeteNotification struct {
 	Importance  string `json:"importance" validate:"required,max=64"`
 }
 
-// Notifcation - お知らせの取得のリクエスト
-type GetNotification struct {
+// Notifcation - お知らせ詳細の取得のリクエスト
+type ShowNotification struct {
 	ID int `json:"id" validate:"required"`
 }
 
