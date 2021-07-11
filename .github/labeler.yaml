@@ -28,5 +28,13 @@ monitoring:
 - infra/fluent-bit/**/*
 - infra/grafana/**/*
 
+test:
+- api/server/**/*_test.go
+- native/**/*.test.ts
+- native/**/*.test.tsx
+- web/**/*.spec.ts
+
+documentation:
+- docs/**/*
 workflows:
 - .github/**/*
