@@ -38,7 +38,9 @@ router.get(
           ids: Array.from(new Set(userIds)),
         }
 
-        const usersOutput = await listUserWithUserIds(req, userListInput).catch(() => { return {} })
+        const usersOutput = await listUserWithUserIds(req, userListInput).catch(() => {
+          return {}
+        })
 
         return setBookResponse(bookOutput, reviewsOutput, usersOutput)
       })
