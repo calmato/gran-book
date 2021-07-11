@@ -88,10 +88,9 @@ router.get(
     }
 
     await getUser(req, userInput)
-      .then(() => {
-        return bookByIdOrIsbn(req, key, bookId)
-      })
-      .then(async (bookOutput: IBookOutput) => {
+      .then(async () => {
+        const bookOutput = await bookByIdOrIsbn(req, key, bookId)
+
         const reviewListInput: IListBookReviewInput = {
           bookId: bookOutput.id,
           limit: LIST_DEFAULT_LIMIT,
@@ -100,29 +99,23 @@ router.get(
           direction: LIST_DEFAULT_ORDER_DIRECTION,
         }
 
-        return listBookReview(req, reviewListInput)
-          .then(async (reviewsOutput: IReviewListOutput) => {
-            const userIds = reviewsOutput.reviews.map((rv: IReviewListOutputReview): string => {
-              return rv.userId
-            })
+        const reviewsOutput = await listBookReview(req, reviewListInput)
 
-            const userListInput: IListUserByUserIdsInput = {
-              ids: Array.from(new Set(userIds)),
-            }
+        const userIds = reviewsOutput.reviews.map((rv: IReviewListOutputReview): string => {
+          return rv.userId
+        })
+        const userListInput: IListUserByUserIdsInput = {
+          ids: Array.from(new Set(userIds)),
+        }
+        const bookshelfInput: IGetBookshelfInput = {
+          userId,
+          bookId: bookOutput.id,
+        }
 
-            const bookshelfInput: IGetBookshelfInput = {
-              userId,
-              bookId: bookOutput.id,
-            }
+        const usersOutput = await listUserWithUserIds(req, userListInput).catch(() => { return {} })
+        const bookshelfOutput = await getBookshelf(req, bookshelfInput).catch(() => undefined)
 
-            const usersOutput = await listUserWithUserIds(req, userListInput).catch(() => { return {} })
-            const bookshelfOutput = await getBookshelf(req, bookshelfInput).catch(() => undefined)
-
-            return setBookshelfResponse(bookOutput, reviewsOutput, usersOutput, bookshelfOutput)
-          })
-          .catch((err: Error) => {
-            throw err
-          })
+        return setBookshelfResponse(bookOutput, reviewsOutput, usersOutput, bookshelfOutput)
       })
       .then((response: IBookshelfV2Response) => {
         res.status(200).json(response)
