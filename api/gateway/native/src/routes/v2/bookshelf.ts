@@ -65,10 +65,10 @@ router.get(
           offset: Number(offset) || LIST_DEFAULT_OFFSET,
         }
 
-        return listBookshelf(req, bookshelfInput)
+        const output = await listBookshelf(req, bookshelfInput)
+        return setBookshelfListResponse(output)
       })
-      .then((output: IBookshelfListOutput) => {
-        const response: IBookshelfListV2Response = setBookshelfListResponse(output)
+      .then((response: IBookshelfListV2Response) => {
         res.status(200).json(response)
       })
       .catch((err: Error) => {
