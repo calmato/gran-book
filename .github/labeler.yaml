@@ -28,5 +28,7 @@ monitoring:
 - infra/fluent-bit/**/*
 - infra/grafana/**/*
 
+documentation:
+- docs/**/*
 workflows:
 - .github/**/*
