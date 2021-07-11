@@ -12,7 +12,7 @@ type inquiryRepository struct {
 	client *Client
 }
 
-//NewInquiryRepository - InquiryRepositoryの生成
+// NewInquiryRepository - InquiryRepositoryの生成
 func NewInquiryRepository(c *Client) inquiry.Repository {
 	return &inquiryRepository{
 		client: c,
