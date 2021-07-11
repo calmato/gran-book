@@ -1,5 +1,13 @@
 import express, { NextFunction, Request, Response } from 'express'
-import { getBook, getBookByIsbn, getBookshelf, getUser, listBookReview, listBookshelf, listUserWithUserIds } from '~/api'
+import {
+  getBook,
+  getBookByIsbn,
+  getBookshelf,
+  getUser,
+  listBookReview,
+  listBookshelf,
+  listUserWithUserIds,
+} from '~/api'
 import {
   IGetBookByIsbnInput,
   IGetBookInput,
@@ -82,19 +90,15 @@ router.get(
     await getUser(req, userInput)
       .then(() => {
         switch (key) {
-          case 'isbn':
-            const bookByIsbnInput: IGetBookByIsbnInput = {
-              isbn: bookId,
-            }
-
-            return getBookByIsbn(req, bookByIsbnInput)
+          case 'isbn': {
+            const isbn: string = bookId
+            return bookByIsbn(req, isbn)
+          }
           case 'id':
-          default:
-            const bookInput: IGetBookInput = {
-              bookId: Number(bookId) || 0,
-            }
-
-            return getBook(req, bookInput)
+          default: {
+            const id: number = Number(bookId) || 0
+            return bookById(req, id)
+          }
         }
       })
       .then(async (bookOutput: IBookOutput) => {
@@ -148,11 +152,27 @@ router.get(
   }
 )
 
+function bookById(req: Request, bookId: number): Promise<IBookOutput> {
+  const input: IGetBookInput = {
+    bookId,
+  }
+
+  return getBook(req, input)
+}
+
+function bookByIsbn(req: Request, isbn: string): Promise<IBookOutput> {
+  const input: IGetBookByIsbnInput = {
+    isbn,
+  }
+
+  return getBookByIsbn(req, input)
+}
+
 function setBookshelfResponse(
   bookOutput: IBookOutput,
   usersOutput: IUserHashOutput,
   bookshelfOutput?: IBookshelfOutput,
-  reviewsOutput?: IReviewListOutput,
+  reviewsOutput?: IReviewListOutput
 ): IBookshelfV2Response {
   const authorNames = bookOutput.authors.map((item: IBookshelfOutputAuthor): string => {
     return item.name
