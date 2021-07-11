@@ -29,27 +29,18 @@ router.get(
           direction: LIST_DEFAULT_ORDER_DIRECTION,
         }
 
-        return listBookReview(req, reviewListInput)
-          .then(async (reviewsOutput: IReviewListOutput) => {
-            const userIds = reviewsOutput.reviews.map((rv: IReviewListOutputReview): string => {
-              return rv.userId
-            })
+        const reviewsOutput = await listBookReview(req, reviewListInput)
 
-            const userListInput: IListUserByUserIdsInput = {
-              ids: Array.from(new Set(userIds)),
-            }
+        const userIds = reviewsOutput.reviews.map((rv: IReviewListOutputReview): string => {
+          return rv.userId
+        })
+        const userListInput: IListUserByUserIdsInput = {
+          ids: Array.from(new Set(userIds)),
+        }
 
-            return listUserWithUserIds(req, userListInput)
-              .then((usersOutput: IUserHashOutput) => {
-                return setBookResponse(bookOutput, reviewsOutput, usersOutput)
-              })
-              .catch(() => {
-                return setBookResponse(bookOutput, reviewsOutput, {})
-              })
-          })
-          .catch((err: Error) => {
-            throw err
-          })
+        const usersOutput = await listUserWithUserIds(req, userListInput).catch(() => { return {} })
+
+        return setBookResponse(bookOutput, reviewsOutput, usersOutput)
       })
       .then((response: IBookV2Response) => {
         res.status(200).json(response)
