@@ -25,6 +25,10 @@ func (s *InquiryServer) CreateInquiry(ctx context.Context, req *pb.CreateInquiry
 
 	ir, err := s.InquiryApplication.Create(ctx, in)
 
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
 	res := &pb.InquiryResponse{
 		InquiryId:   int64(ir.ID),
 		SenderId:    ir.SenderID,
