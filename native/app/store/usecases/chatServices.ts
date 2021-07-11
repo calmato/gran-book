@@ -8,4 +8,5 @@ export async function getRoomInfoByUserId(userId: string) {
     .then((res: AxiosResponse<RoomInfoResponse>) => {
       return res.data;
     });
+  return res;
 }
