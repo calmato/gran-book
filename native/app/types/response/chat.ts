@@ -2,7 +2,7 @@ export interface RoomInfoResponse {
   limit: number;
   offset: number;
   total: number;
-  rooms: RoomInfo[];
+  info: RoomInfo[];
 }
 
 export interface RoomInfo {

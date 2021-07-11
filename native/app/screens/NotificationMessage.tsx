@@ -76,7 +76,7 @@ const initialData :RoomInfoResponse = {
   limit: 1,
   offset: 1,
   total: 1,
-  rooms:[{
+  info:[{
     rooms: [
       {
         id: '1',
@@ -106,21 +106,23 @@ const NotificationMessage = (props: Props) => {
   useEffect(() => {
     getRoomInfoByUserId(props.auth.id);
   }, []);;
+  const testData = props.roomInfo;
   const roomItem = props.roomInfo?.rooms || initialData ;
   const notificationList = ['メッセージ', '取り引き', 'お知らせ'];
   const [selectedIndex, setIndex] = useState<number>(0);
   const renderRoom = () => {
     getRoomInfoByUserId(props.auth.id);
+    console.log(testData);
     return (
       <View style={styles.roomContainer}>
-        <Avatar rounded size="medium" source={{ uri: initialData.rooms[0].rooms[0].users[0].thumbnailUrl}} />
+        <Avatar rounded size="medium" source={{ uri: initialData.info[0].rooms[0].users[0].thumbnailUrl}} />
         <View style={styles.roomInfo}>
           <View style={styles.topInfo}>
-            <Text style={styles.userNameStyle}>{initialData.rooms[0].rooms[0].users[0].username}</Text>
-            <Text style={styles.createdAtStyle}>{initialData.rooms[0].rooms[0].latestMessage.createdAt}</Text>
+            <Text style={styles.userNameStyle}>{initialData.info[0].rooms[0].users[0].username}</Text>
+            <Text style={styles.createdAtStyle}>{initialData.info[0].rooms[0].latestMessage.createdAt}</Text>
           </View>
           <View style={styles.bottomInfo}>
-            <Text style={styles.latestMessageStyle}>{initialData.rooms[0].rooms[0].latestMessage.text}</Text>
+            <Text style={styles.latestMessageStyle}>{initialData.info[0].rooms[0].latestMessage.text}</Text>
             <MaterialIcons style={styles.forwardButton} size={32} name="keyboard-arrow-right" />
           </View>
         </View>
