@@ -112,7 +112,9 @@ router.get(
           bookId: bookOutput.id,
         }
 
-        const usersOutput = await listUserWithUserIds(req, userListInput).catch(() => { return {} })
+        const usersOutput = await listUserWithUserIds(req, userListInput).catch(() => {
+          return {}
+        })
         const bookshelfOutput = await getBookshelf(req, bookshelfInput).catch(() => undefined)
 
         return setBookshelfResponse(bookOutput, reviewsOutput, usersOutput, bookshelfOutput)
