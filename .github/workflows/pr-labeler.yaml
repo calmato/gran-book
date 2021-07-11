@@ -3,8 +3,14 @@ on:
 - pull_request_target
 
 jobs:
-  triage:
-    runs-on: ubuntu-latest
+  add_labeler:
+    name: add labeler when create pul request
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+
     steps:
     - uses: actions/labeler@v3
       with:
