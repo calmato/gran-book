@@ -89,17 +89,7 @@ router.get(
 
     await getUser(req, userInput)
       .then(() => {
-        switch (key) {
-          case 'isbn': {
-            const isbn: string = bookId
-            return bookByIsbn(req, isbn)
-          }
-          case 'id':
-          default: {
-            const id: number = Number(bookId) || 0
-            return bookById(req, id)
-          }
-        }
+        return bookByIdOrIsbn(req, key, bookId)
       })
       .then(async (bookOutput: IBookOutput) => {
         const reviewListInput: IListBookReviewInput = {
@@ -125,8 +115,8 @@ router.get(
               bookId: bookOutput.id,
             }
 
-            const usersOutput = await listUserWithUserIds(req, userListInput)
-            const bookshelfOutput = await getBookshelf(req, bookshelfInput)
+            const usersOutput = await listUserWithUserIds(req, userListInput).catch(() => { return {} })
+            const bookshelfOutput = await getBookshelf(req, bookshelfInput).catch(() => undefined)
 
             return setBookshelfResponse(bookOutput, reviewsOutput, usersOutput, bookshelfOutput)
           })
@@ -142,6 +132,20 @@ router.get(
       })
   }
 )
+
+async function bookByIdOrIsbn(req: Request, key: string, value: string): Promise<IBookOutput> {
+  switch (key) {
+    case 'isbn': {
+      const isbn: string = value
+      return bookByIsbn(req, isbn)
+    }
+    case 'id':
+    default: {
+      const id: number = Number(value) || 0
+      return bookById(req, id)
+    }
+  }
+}
 
 function bookById(req: Request, bookId: number): Promise<IBookOutput> {
   const input: IGetBookInput = {
