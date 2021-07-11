@@ -5,7 +5,7 @@ import { corsOptions } from '~/config/cors'
 import { authentication } from '~/lib/authenticated'
 import { notFoundErrorHandler, otherErrorHandler } from '~/lib/error-handler'
 import { accessLogHandler } from '~/lib/log-handler'
-import { common, v1Auth, v1Book, v1Bookshelf, v1Chat, v1Review, v1User, v2Bookshelf } from '~/routes'
+import { common, v1Auth, v1Book, v1Bookshelf, v1Chat, v1Review, v1User, v2Book, v2Bookshelf } from '~/routes'
 
 const app = express()
 
@@ -21,6 +21,7 @@ app.use(authentication)
 app.use(common)
 app.use(v1Auth) // /v1/auth
 app.use(v1Book) // v1/books
+app.use(v2Book) // v2/books
 app.use(v1User) // /v1/users
 app.use(v1Chat) // /v1/users/:userId/chat
 app.use(v1Bookshelf) // /v1/users/:userId/books
