@@ -1,9 +1,10 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
-import React, { useState, useEffect } from 'react';
+import React, { useState , useEffect } from 'react';
 import { View, StyleSheet, Text, FlatList } from 'react-native';
 import { Header, Avatar } from 'react-native-elements';
 import HeaderText from '~/components/atoms/HeaderText';
+import  RoomInfoItem  from '~/components/organisms/RoomInfoItem';
 import { Auth } from '~/store/models';
 import { getRoomInfoByUserId } from '~/store/usecases/chatServices';
 import { RoomInfoResponse } from '~/types/response/chat';
@@ -103,26 +104,29 @@ const initialData :RoomInfoResponse = {
 
 
 const NotificationMessage = (props: Props) => {
-  useEffect(() => {
-    getRoomInfoByUserId(props.auth.id);
-  }, []);;
-  const testData = props.roomInfo;
-  const roomItem = props.roomInfo?.rooms || initialData ;
+  const [data, setData] = useState<any>(initialData);
+  useEffect (() => {
+    const f = async () => {
+      const res = await getRoomInfoByUserId(props.auth.id);
+      console.log(res);
+      setData(res);
+    };
+    f();
+  } , []
+  );
   const notificationList = ['メッセージ', '取り引き', 'お知らせ'];
   const [selectedIndex, setIndex] = useState<number>(0);
   const renderRoom = () => {
-    getRoomInfoByUserId(props.auth.id);
-    console.log(testData);
     return (
       <View style={styles.roomContainer}>
-        <Avatar rounded size="medium" source={{ uri: initialData.info[0].rooms[0].users[0].thumbnailUrl}} />
+        <Avatar rounded size="medium" source={{ uri: data.rooms.id}} />
         <View style={styles.roomInfo}>
           <View style={styles.topInfo}>
-            <Text style={styles.userNameStyle}>{initialData.info[0].rooms[0].users[0].username}</Text>
-            <Text style={styles.createdAtStyle}>{initialData.info[0].rooms[0].latestMessage.createdAt}</Text>
+            <Text style={styles.userNameStyle}>{data.rooms.id}</Text>
+            <Text style={styles.createdAtStyle}>{data.rooms.id}</Text>
           </View>
           <View style={styles.bottomInfo}>
-            <Text style={styles.latestMessageStyle}>{initialData.info[0].rooms[0].latestMessage.text}</Text>
+            <Text style={styles.latestMessageStyle}>{data.rooms.id}</Text>
             <MaterialIcons style={styles.forwardButton} size={32} name="keyboard-arrow-right" />
           </View>
         </View>
@@ -142,8 +146,7 @@ const NotificationMessage = (props: Props) => {
       />
       {selectedIndex === 0 ? (
         <View style={styles.listContainer}>
-          {/*renderoomが複数回実行される */}
-          <FlatList data={Object.keys(roomItem)} renderItem={renderRoom} ></FlatList>
+          <FlatList data={data} renderItem={({ item }) => <RoomInfoItem auth={data.id} roomInfo={data}/>} ></FlatList>
         </View>
       ) : selectedIndex === 1 ? (
         <View>
