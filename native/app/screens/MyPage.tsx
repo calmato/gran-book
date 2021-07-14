@@ -147,7 +147,7 @@ const MyPage = function MyPage(props: Props): ReactElement {
             </ListItem.Content>
             <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
           </ListItem>
-          <ListItem key={13} bottomDivider>
+          <ListItem key={13} bottomDivider onPress={() => navigation.navigate('Support')}>
             <ListItem.Content>
               <ListItem.Title>{'お問い合わせ'}</ListItem.Title>
             </ListItem.Content>
