@@ -1,10 +1,9 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import React, { useState , useEffect } from 'react';
-import { View, StyleSheet, Text, FlatList } from 'react-native';
-import { Header, Avatar } from 'react-native-elements';
+import { View, StyleSheet, Text } from 'react-native';
+import { Header, Avatar, ListItem } from 'react-native-elements';
 import HeaderText from '~/components/atoms/HeaderText';
-import  RoomInfoItem  from '~/components/organisms/RoomInfoItem';
 import { Auth } from '~/store/models';
 import { getRoomInfoByUserId } from '~/store/usecases/chatServices';
 import { RoomInfoResponse } from '~/types/response/chat';
@@ -146,7 +145,26 @@ const NotificationMessage = (props: Props) => {
       />
       {selectedIndex === 0 ? (
         <View style={styles.listContainer}>
-          <FlatList data={data} renderItem={({ item }) => <RoomInfoItem auth={data.id} roomInfo={data}/>} ></FlatList>
+          {initialData.info.map((dataInfo) => (
+            <ListItem key={dataInfo.rooms[0].id}>
+              {dataInfo.rooms[0].users[0].thumbnailUrl !== '' ? (
+                <Avatar source={{ uri: dataInfo.rooms[0].users[0].thumbnailUrl}} />
+              ) : (
+                <Avatar rounded>
+                  <MaterialIcons name="person-outline" size={36} color={COLOR.GREY} />
+                </Avatar>
+              )}
+              <ListItem.Content>
+                <ListItem.Title style={styles.userNameStyle}>
+                  {dataInfo.rooms[0].users[0].username}
+                </ListItem.Title>
+                <ListItem.Subtitle>
+                  {dataInfo.rooms[0].latestMessage.text}
+                </ListItem.Subtitle>
+              </ListItem.Content>
+
+            </ListItem>
+          ))}
         </View>
       ) : selectedIndex === 1 ? (
         <View>
