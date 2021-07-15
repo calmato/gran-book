@@ -6,7 +6,7 @@ import { Header, Avatar, ListItem } from 'react-native-elements';
 import HeaderText from '~/components/atoms/HeaderText';
 import { Auth } from '~/store/models';
 import { getRoomInfoByUserId } from '~/store/usecases/chatServices';
-import { RoomInfoResponse } from '~/types/response/chat';
+import { RoomInfo } from '~/types/response/chat';
 import { COLOR } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
@@ -69,35 +69,29 @@ const styles = StyleSheet.create({
 });
 interface Props {
   auth: Auth.Model;
-  roomInfo?: RoomInfoResponse;
+  roomInfo?: RoomInfo;
 }
 
-const initialData :RoomInfoResponse = {
-  limit: 1,
-  offset: 1,
-  total: 1,
-  info:[{
-    rooms: [
-      {
-        id: '1',
-        users: [
-          {
-            id: 'initialize',
-            username: 'ユーザー',
-            thumbnailUrl: 'https://iconbu.com/wp-content/uploads/2021/03/%E3%82%86%E3%82%8B%E3%81%84%E6%81%90%E7%AB%9C%E3%81%AE%E3%83%95%E3%83%AA%E3%83%BC%E3%82%A2%E3%82%A4%E3%82%B3%E3%83%B3.jpg',
-          }
-        ],
-        latestMessage: {
-          userId: '',
-          text: 'メッセージがありません',
-          image: '',
-          createdAt: '2021/07/06/23:30'
-        },
-        createdAt: '2021/07/06/23:30',
-        updatedAt: '2021/07/06/23:30',
-      }
-    ]
-  }
+const initialData :RoomInfo = {
+  rooms: [
+    {
+      id: '1',
+      users: [
+        {
+          id: 'initialize',
+          userName: 'ユーザー',
+          thumbnailUrl: 'https://iconbu.com/wp-content/uploads/2021/03/%E3%82%86%E3%82%8B%E3%81%84%E6%81%90%E7%AB%9C%E3%81%AE%E3%83%95%E3%83%AA%E3%83%BC%E3%82%A2%E3%82%A4%E3%82%B3%E3%83%B3.jpg',
+        }
+      ],
+      latestMessage: {
+        userId: '',
+        text: 'メッセージがありません',
+        image: '',
+        createdAt: '2021/07/06/23:30'
+      },
+      createdAt: '2021/07/06/23:30',
+      updatedAt: '2021/07/06/23:30',
+    }
   ]
 };
 
@@ -145,10 +139,10 @@ const NotificationMessage = (props: Props) => {
       />
       {selectedIndex === 0 ? (
         <View style={styles.listContainer}>
-          {initialData.info.map((dataInfo) => (
-            <ListItem key={dataInfo.rooms[0].id}>
-              {dataInfo.rooms[0].users[0].thumbnailUrl !== '' ? (
-                <Avatar source={{ uri: dataInfo.rooms[0].users[0].thumbnailUrl}} />
+          {initialData.rooms.map((dataInfo) => (
+            <ListItem key={dataInfo.id} style={styles.roomContainer}>
+              {dataInfo.users[0].thumbnailUrl !== '' ? (
+                <Avatar source={{ uri: dataInfo.users[0].thumbnailUrl}} />
               ) : (
                 <Avatar rounded>
                   <MaterialIcons name="person-outline" size={36} color={COLOR.GREY} />
@@ -156,13 +150,12 @@ const NotificationMessage = (props: Props) => {
               )}
               <ListItem.Content>
                 <ListItem.Title style={styles.userNameStyle}>
-                  {dataInfo.rooms[0].users[0].username}
+                  {dataInfo.users[0].userName}
                 </ListItem.Title>
                 <ListItem.Subtitle>
-                  {dataInfo.rooms[0].latestMessage.text}
+                  {dataInfo.latestMessage.text}
                 </ListItem.Subtitle>
               </ListItem.Content>
-
             </ListItem>
           ))}
         </View>
