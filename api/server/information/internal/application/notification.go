@@ -13,7 +13,7 @@ type NotificationApplication interface {
 	List(ctx context.Context) ([]*notification.Notification, error)
 	Show(ctx context.Context, notificatinID int) (*notification.Notification, error)
 	Create(ctx context.Context, in *input.CreateNotification) (*notification.Notification, error)
-	Update(ctx context.Context, in *input.UpdaeteNotification) (*notification.Notification, error)
+	Update(ctx context.Context, in *input.UpdateNotification) (*notification.Notification, error)
 	Delete(ctx context.Context, notificatinID int) error
 }
 
@@ -62,24 +62,26 @@ func (a *notificationApplication) Create(ctx context.Context,
 }
 
 func (a *notificationApplication) Update(ctx context.Context,
-	in *input.UpdaeteNotification) (*notification.Notification, error) {
+	in *input.UpdateNotification) (*notification.Notification, error) {
 	err := a.notificationRequestValidation.UpdateNotification(in)
 	if err != nil {
 		return nil, err
 	}
 
-	n := &notification.Notification{
-		Title:       in.Title,
-		Description: in.Description,
-		Importance:  in.Importance,
-	}
-
-	err = a.notifictationService.Update(ctx, n)
+	s, err := a.notifictationService.Show(ctx, in.ID)
 	if err != nil {
 		return nil, err
 	}
 
-	return n, nil
+	s.Title = in.Title
+	s.Description = in.Description
+	s.Importance = in.Importance
+
+	if err != nil {
+		return nil, err
+	}
+
+	return s, nil
 }
 
 func (a *notificationApplication) Delete(ctx context.Context,

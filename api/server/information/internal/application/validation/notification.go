@@ -10,7 +10,7 @@ import (
 type NotificationRequestValidation interface {
 	ShowNotification(in *input.ShowNotification) error
 	CreateNotification(in *input.CreateNotification) error
-	UpdateNotification(in *input.UpdaeteNotification) error
+	UpdateNotification(in *input.UpdateNotification) error
 	DeleteNotification(in *input.DeleteNotification) error
 }
 
@@ -47,7 +47,7 @@ func (v *notificationRequestValidation) CreateNotification(in *input.CreateNotif
 	return exception.InvalidRequestValidation.New(err, ves...)
 }
 
-func (v *notificationRequestValidation) UpdateNotification(in *input.UpdaeteNotification) error {
+func (v *notificationRequestValidation) UpdateNotification(in *input.UpdateNotification) error {
 	ves := v.validator.Run(in, "")
 	if len(ves) == 0 {
 		return nil

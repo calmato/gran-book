@@ -8,7 +8,8 @@ type CreateNotification struct {
 }
 
 // Notification - お知らせの更新のリクエスト
-type UpdaeteNotification struct {
+type UpdateNotification struct {
+	ID          int    `json:"id" validate:"required"`
 	Title       string `json:"title" validate:"required,max=64"`
 	Description string `json:"description" validate:"required,max=2000"`
 	Importance  string `json:"importance" validate:"required,max=64"`
