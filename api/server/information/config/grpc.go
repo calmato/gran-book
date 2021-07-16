@@ -40,7 +40,8 @@ func newGRPCServer(port, logPath, logLevel string, reg *registry.Registry) (*grp
 
 	s := grpc.NewServer(opts...)
 	pb.RegisterNotificationServiceServer(s, &v1.NotificationServer{
-		AuthApplication: reg.AuthApplication,
+		AuthApplication:         reg.AuthApplication,
+		NotificationApplication: reg.NotificationApplication,
 	})
 
 	grpc_prometheus.Register(s)

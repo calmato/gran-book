@@ -205,24 +205,24 @@ func (r *bookRepository) CreateBookshelf(ctx context.Context, bs *book.Bookshelf
 		return err
 	}
 
+	err := associateBookshelf(tx, bs)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
 	if bs.ReadOn.IsZero() {
-		err := tx.Omit(clause.Associations, "read_on").Create(&bs).Error
+		err = tx.Omit(clause.Associations, "read_on").Create(&bs).Error
 		if err != nil {
 			tx.Rollback()
 			return exception.ErrorInDatastore.New(err)
 		}
 	} else {
-		err := tx.Omit(clause.Associations).Create(&bs).Error
+		err = tx.Omit(clause.Associations).Create(&bs).Error
 		if err != nil {
 			tx.Rollback()
 			return exception.ErrorInDatastore.New(err)
 		}
-	}
-
-	err := associateBookshelf(tx, bs)
-	if err != nil {
-		tx.Rollback()
-		return err
 	}
 
 	return tx.Commit().Error
@@ -276,22 +276,22 @@ func (r *bookRepository) UpdateBookshelf(ctx context.Context, bs *book.Bookshelf
 		return err
 	}
 
-	if bs.ReadOn.IsZero() {
-		err := r.client.db.Omit(clause.Associations, "read_on").Save(&bs).Error
-		if err != nil {
-			return exception.ErrorInDatastore.New(err)
-		}
-	} else {
-		err := r.client.db.Omit(clause.Associations).Save(&bs).Error
-		if err != nil {
-			return exception.ErrorInDatastore.New(err)
-		}
-	}
-
 	err := associateBookshelf(tx, bs)
 	if err != nil {
 		tx.Rollback()
 		return err
+	}
+
+	if bs.ReadOn.IsZero() {
+		err = r.client.db.Omit(clause.Associations, "read_on").Save(&bs).Error
+		if err != nil {
+			return exception.ErrorInDatastore.New(err)
+		}
+	} else {
+		err = r.client.db.Omit(clause.Associations).Save(&bs).Error
+		if err != nil {
+			return exception.ErrorInDatastore.New(err)
+		}
 	}
 
 	return tx.Commit().Error
@@ -449,6 +449,8 @@ func associateBookshelf(tx *gorm.DB, bs *book.Bookshelf) error {
 	if err != nil {
 		return err
 	}
+
+	bs.ReviewID = bs.Review.ID
 
 	return nil
 }

@@ -52,6 +52,7 @@ export interface IBookshelfOutput {
   userId: string
   status: number
   readOn: string
+  reviewId: number
   createdAt: string
   updatedAt: string
   book: IBookshelfOutputBook
@@ -120,6 +121,7 @@ export interface IBookshelfListOutputBookshelf {
   userId: string
   status: number
   readOn: string
+  reviewId: number
   createdAt: string
   updatedAt: string
   book: IBookshelfListOutputBook

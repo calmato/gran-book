@@ -35,6 +35,7 @@ type Bookshelf struct {
 	ID        int       `gorm:"primaryKey;autoIncrement;<-:create"`
 	BookID    int       `gorm:"uniqueIndex:ui_bookshelfs_01;uniqueIndex:ui_bookshelfs_02"`
 	UserID    string    `gorm:"uniqueIndex:ui_bookshelfs_01;uniqueIndex:ui_bookshelfs_02"`
+	ReviewID  int       `gorm:"unique"`
 	Status    int       `gorm:""`
 	ReadOn    time.Time `gorm:""`
 	CreatedAt time.Time `gorm:"<-:create"`
