@@ -2,9 +2,6 @@ name: Pull Request Labeler (Approved)
 on:
 - pull_request_review
 
-env:
-  APPROVALS: 1
-  ADD_LABEL: mergeable
 
 jobs:
   label_when_approved:
@@ -19,5 +16,5 @@ jobs:
     - uses: pullreminders/label-when-approved-action@master
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        APPROVALS: ${APPROVALS}
-        ADD_LABEL: ${ADD_LABEL}
+        APPROVALS: 1
+        ADD_LABEL: "mergeable"
