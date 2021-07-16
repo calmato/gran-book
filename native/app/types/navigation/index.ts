@@ -19,9 +19,10 @@ export type AuthStackParamList = {
 
 export type HomeTabStackPramList = {
   Home: undefined;
-  SearchResult: { keyword: string; };
+  SearchResult: { keyword: string };
   SearchResultBookShow: { book: ISearchResultItem };
   BookShow: { book: IBook };
+  BookReadRegister: { book: IBook };
 };
 
 export type UserInfoStackParamList = {

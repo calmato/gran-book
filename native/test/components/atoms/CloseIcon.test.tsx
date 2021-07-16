@@ -6,7 +6,6 @@ import React from 'react';
 import { colors } from 'react-native-elements';
 import * as ShallowRenderer from 'react-test-renderer/shallow';
 
-
 describe('<CloseIcon />', () => {
   let render: ShallowRenderer.ShallowRenderer;
 

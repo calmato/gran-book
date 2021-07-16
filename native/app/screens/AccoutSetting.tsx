@@ -1,7 +1,7 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/core';
 import React, { ReactElement, useState } from 'react';
-import { Switch , StyleSheet, View, Text, SafeAreaView, ScrollView } from 'react-native';
+import { Switch, StyleSheet, View, Text, SafeAreaView, ScrollView } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 

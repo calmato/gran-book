@@ -3,7 +3,8 @@ import { Dispatch } from 'redux';
 import { setBooks } from '../modules/book';
 import { internal } from '~/lib/axios';
 import { AppState } from '~/store/modules';
-import { IBook, IBookResponse } from '~/types/response';
+import { ImpressionForm } from '~/types/forms';
+import { IBook, IBookResponse, IImpressionResponse } from '~/types/response';
 import { IErrorResponse, ISearchResultItem } from '~/types/response/external/rakuten-books';
 
 /**
@@ -89,6 +90,36 @@ export function registerOwnBookAsync(status: string, bookId: number) {
 }
 
 /**
+ * バックエンドAPIにアクセスし書籍の感想を登録する関数
+ * @param bookId 感想を登録する書籍のID
+ * @param impressionForm 書籍の感想
+ * TODO エラーハンドリング
+ */
+export function registerReadBookImpressionAsync(bookId: number, impressionForm: ImpressionForm) {
+  return async (_dispatch: Dispatch, getState: () => AppState) => {
+    const user = getState().auth;
+    registerReadBookAsync(user.id, bookId, impressionForm);
+  };
+}
+
+/**
+ * バックエンドAPIにアクセスし指定した書籍の感想を取得する関数
+ * @param bookId 感想を取得する書籍のID
+ * @returns
+ */
+export async function getAllImpressionByBookIdAsync(bookId: number) {
+  return internal
+    .get(`/v1/books/${bookId}/reviews`)
+    .then((res: AxiosResponse<IImpressionResponse>) => {
+      return res.data;
+    })
+    .catch((err: AxiosResponse<IErrorResponse>) => {
+      console.log(err);
+      return Promise.reject(err);
+    });
+}
+
+/**
  * バックエンドAPIにアクセスし書籍を全件取得する関数
  * @param  {Partial<ISearchResultItem>} 登録する書籍情報(楽天BooksAPIのレスポンス形式)
  * @return {Promise<AxiosResponse<any>|AxiosResponse<IErrorResponse> } 成功時:登録した書籍情報, 失敗時:HTTPエラーオブジェクト
@@ -106,9 +137,13 @@ async function getAllBookByUserId(
     });
 }
 
-async function registerReadBookAsync(userId: string, bookId: number) {
+async function registerReadBookAsync(
+  userId: string,
+  bookId: number,
+  impressionForm?: ImpressionForm,
+) {
   return internal
-    .post(`v1/users/${userId}/books/${bookId}/read`)
+    .post(`v1/users/${userId}/books/${bookId}/read`, impressionForm)
     .then((res) => {
       console.log('[success]', res.data);
     })

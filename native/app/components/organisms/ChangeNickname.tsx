@@ -37,7 +37,6 @@ const ChangeNickname = function ChangeNickname(props: Props): ReactElement {
         style={styles.input}
         maxLength={32}
         textAlign="right"
-        multiline={true}
         value={props.value}
         onChangeText={(text) => props.handelOnChangeText(text)}
         placeholder={'ニックネームを入力してください'}
