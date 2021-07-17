@@ -66,3 +66,25 @@ func (r *chatRepository) CreateRoom(ctx context.Context, cr *chat.Room) error {
 
 	return nil
 }
+
+func (r *chatRepository) UpdateRoom(ctx context.Context, cr *chat.Room) error {
+	c := getChatRoomCollection()
+
+	err := r.firestore.Set(ctx, c, cr.ID, cr)
+	if err != nil {
+		return exception.ErrorInDatastore.New(err)
+	}
+
+	return nil
+}
+
+func (r *chatRepository) CreateMessage(ctx context.Context, roomID string, cm *chat.Message) error {
+	c := getChatMessageCollection(roomID)
+
+	err := r.firestore.Set(ctx, c, cm.ID, cm)
+	if err != nil {
+		return exception.ErrorInDatastore.New(err)
+	}
+
+	return nil
+}
