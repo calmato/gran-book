@@ -30,8 +30,8 @@ func (s *chatService) ListRoom(ctx context.Context, q *domain.ListQuery, uid str
 	return s.chatRepository.ListRoom(ctx, q, uid)
 }
 
-func (s *chatService) GetRoom(ctx context.Context, roomID string, uid string) (*chat.Room, error) {
-	return s.chatRepository.GetRoom(ctx, roomID, uid)
+func (s *chatService) GetRoom(ctx context.Context, roomID string) (*chat.Room, error) {
+	return s.chatRepository.GetRoom(ctx, roomID)
 }
 
 func (s *chatService) CreateRoom(ctx context.Context, cr *chat.Room) error {
@@ -50,6 +50,7 @@ func (s *chatService) CreateMessage(ctx context.Context, cr *chat.Room, cm *chat
 	cm.ID = uuid.New().String()
 	cm.CreatedAt = current
 	cr.LatestMessage = cm
+	cr.UpdatedAt = current
 
 	err := s.chatRepository.CreateMessage(ctx, cr.ID, cm)
 	if err != nil {
@@ -65,6 +66,10 @@ func (s *chatService) ValidationRoom(ctx context.Context, cr *chat.Room) error {
 
 func (s *chatService) ValidationMessage(ctx context.Context, cm *chat.Message) error {
 	return s.chatDomainValidation.Message(ctx, cm)
+}
+
+func (s *chatService) UploadImage(ctx context.Context, roomID string, image []byte) (string, error) {
+	return s.chatUploader.Image(ctx, roomID, image)
 }
 
 func (s *chatService) PushCreateRoom(ctx context.Context, cr *chat.Room) error {

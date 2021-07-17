@@ -65,18 +65,18 @@ func (mr *MockServiceMockRecorder) CreateRoom(ctx, cr interface{}) *gomock.Call 
 }
 
 // GetRoom mocks base method.
-func (m *MockService) GetRoom(ctx context.Context, roomID, uid string) (*chat.Room, error) {
+func (m *MockService) GetRoom(ctx context.Context, roomID string) (*chat.Room, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetRoom", ctx, roomID, uid)
+	ret := m.ctrl.Call(m, "GetRoom", ctx, roomID)
 	ret0, _ := ret[0].(*chat.Room)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetRoom indicates an expected call of GetRoom.
-func (mr *MockServiceMockRecorder) GetRoom(ctx, roomID, uid interface{}) *gomock.Call {
+func (mr *MockServiceMockRecorder) GetRoom(ctx, roomID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRoom", reflect.TypeOf((*MockService)(nil).GetRoom), ctx, roomID, uid)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRoom", reflect.TypeOf((*MockService)(nil).GetRoom), ctx, roomID)
 }
 
 // ListRoom mocks base method.
@@ -120,6 +120,21 @@ func (m *MockService) PushNewMessage(ctx context.Context, cr *chat.Room, cm *cha
 func (mr *MockServiceMockRecorder) PushNewMessage(ctx, cr, cm interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PushNewMessage", reflect.TypeOf((*MockService)(nil).PushNewMessage), ctx, cr, cm)
+}
+
+// UploadImage mocks base method.
+func (m *MockService) UploadImage(ctx context.Context, roomID string, image []byte) (string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UploadImage", ctx, roomID, image)
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UploadImage indicates an expected call of UploadImage.
+func (mr *MockServiceMockRecorder) UploadImage(ctx, roomID, image interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UploadImage", reflect.TypeOf((*MockService)(nil).UploadImage), ctx, roomID, image)
 }
 
 // ValidationRoom mocks base method.

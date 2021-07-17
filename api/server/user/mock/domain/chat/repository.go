@@ -65,18 +65,18 @@ func (mr *MockRepositoryMockRecorder) CreateRoom(ctx, cr interface{}) *gomock.Ca
 }
 
 // GetRoom mocks base method.
-func (m *MockRepository) GetRoom(ctx context.Context, roomID, uid string) (*chat.Room, error) {
+func (m *MockRepository) GetRoom(ctx context.Context, roomID string) (*chat.Room, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetRoom", ctx, roomID, uid)
+	ret := m.ctrl.Call(m, "GetRoom", ctx, roomID)
 	ret0, _ := ret[0].(*chat.Room)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetRoom indicates an expected call of GetRoom.
-func (mr *MockRepositoryMockRecorder) GetRoom(ctx, roomID, uid interface{}) *gomock.Call {
+func (mr *MockRepositoryMockRecorder) GetRoom(ctx, roomID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRoom", reflect.TypeOf((*MockRepository)(nil).GetRoom), ctx, roomID, uid)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRoom", reflect.TypeOf((*MockRepository)(nil).GetRoom), ctx, roomID)
 }
 
 // ListRoom mocks base method.

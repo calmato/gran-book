@@ -56,7 +56,7 @@ func (r *chatRepository) ListRoom(ctx context.Context, q *domain.ListQuery, uid 
 	return crs, nil
 }
 
-func (r *chatRepository) GetRoom(ctx context.Context, roomID string, uid string) (*chat.Room, error) {
+func (r *chatRepository) GetRoom(ctx context.Context, roomID string) (*chat.Room, error) {
 	c := getChatRoomCollection()
 	cr := &chat.Room{}
 
