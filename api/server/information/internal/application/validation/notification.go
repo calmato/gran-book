@@ -8,7 +8,10 @@ import (
 
 // NotificationRequestValidation - Notifiction関連のリクエストバリデーター
 type NotificationRequestValidation interface {
+	ShowNotification(in *input.ShowNotification) error
 	CreateNotification(in *input.CreateNotification) error
+	UpdateNotification(in *input.UpdateNotification) error
+	DeleteNotification(in *input.DeleteNotification) error
 }
 
 type notificationRequestValidation struct {
@@ -24,6 +27,16 @@ func NewNotificationRequestValidation() NotificationRequestValidation {
 	}
 }
 
+func (v *notificationRequestValidation) ShowNotification(in *input.ShowNotification) error {
+	ves := v.validator.Run(in, "")
+	if len(ves) == 0 {
+		return nil
+	}
+
+	err := xerrors.New("Failed to ShowNotification for RequestValidation")
+	return exception.InvalidRequestValidation.New(err, ves...)
+}
+
 func (v *notificationRequestValidation) CreateNotification(in *input.CreateNotification) error {
 	ves := v.validator.Run(in, "")
 	if len(ves) == 0 {
@@ -31,5 +44,25 @@ func (v *notificationRequestValidation) CreateNotification(in *input.CreateNotif
 	}
 
 	err := xerrors.New("Failed to CreateNotification for RequestValidation")
+	return exception.InvalidRequestValidation.New(err, ves...)
+}
+
+func (v *notificationRequestValidation) UpdateNotification(in *input.UpdateNotification) error {
+	ves := v.validator.Run(in, "")
+	if len(ves) == 0 {
+		return nil
+	}
+
+	err := xerrors.New("Failed to UpdateNotification for RequestValidation")
+	return exception.InvalidRequestValidation.New(err, ves...)
+}
+
+func (v *notificationRequestValidation) DeleteNotification(in *input.DeleteNotification) error {
+	ves := v.validator.Run(in, "")
+	if len(ves) == 0 {
+		return nil
+	}
+
+	err := xerrors.New("Failed to DeleteNotification for RequestValidation")
 	return exception.InvalidRequestValidation.New(err, ves...)
 }
