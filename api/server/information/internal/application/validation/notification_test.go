@@ -99,6 +99,7 @@ func TestNotificationRequestValidation_UpdateNotification(t *testing.T) {
 	}{
 		"ok": {
 			Input: &input.UpdateNotification{
+				ID:          123456789,
 				Title:       "Gran Book",
 				Description: "Gran Bookをリリースされるにあたり、友達紹介キャンペーンを開催します。",
 				Importance:  "重要",
@@ -107,6 +108,7 @@ func TestNotificationRequestValidation_UpdateNotification(t *testing.T) {
 		},
 		"ng_title_required": {
 			Input: &input.UpdateNotification{
+				ID:          123456789,
 				Title:       "",
 				Description: "Gran Bookをリリースされるにあたり、友達紹介キャンペーンを開催します。",
 				Importance:  "重要",
@@ -115,6 +117,7 @@ func TestNotificationRequestValidation_UpdateNotification(t *testing.T) {
 		},
 		"ng_title_max": {
 			Input: &input.UpdateNotification{
+				ID:          123456789,
 				Title:       strings.Repeat("x", 65),
 				Description: "Gran Bookをリリースされるにあたり、友達紹介キャンペーンを開催します。",
 				Importance:  "重要",
@@ -123,6 +126,7 @@ func TestNotificationRequestValidation_UpdateNotification(t *testing.T) {
 		},
 		"ng_description_required": {
 			Input: &input.UpdateNotification{
+				ID:          123456789,
 				Title:       "Gran Book",
 				Description: "",
 				Importance:  "重要",
@@ -131,6 +135,7 @@ func TestNotificationRequestValidation_UpdateNotification(t *testing.T) {
 		},
 		"ng_description_max": {
 			Input: &input.UpdateNotification{
+				ID:          123456789,
 				Title:       "Gran Book",
 				Description: strings.Repeat("x", 2001),
 				Importance:  "重要",
@@ -139,6 +144,7 @@ func TestNotificationRequestValidation_UpdateNotification(t *testing.T) {
 		},
 		"ng_importance_required": {
 			Input: &input.UpdateNotification{
+				ID:          123456789,
 				Title:       "Gran Book",
 				Description: "Gran Bookをリリースされるにあたり、友達紹介キャンペーンを開催します。",
 				Importance:  "",
@@ -147,6 +153,7 @@ func TestNotificationRequestValidation_UpdateNotification(t *testing.T) {
 		},
 		"ng_importance_max": {
 			Input: &input.UpdateNotification{
+				ID:          123456789,
 				Title:       "Gran Book",
 				Description: "",
 				Importance:  strings.Repeat("x", 65),
