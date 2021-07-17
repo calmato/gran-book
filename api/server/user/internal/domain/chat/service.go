@@ -9,6 +9,7 @@ import (
 // Service - Chatドメインサービス
 type Service interface {
 	ListRoom(ctx context.Context, q *domain.ListQuery, uid string) ([]*Room, error)
+	GetRoom(ctx context.Context, roomID string, uid string) (*Room, error)
 	CreateRoom(ctx context.Context, cr *Room) error
 	CreateMessage(ctx context.Context, cr *Room, cm *Message) error
 	ValidationRoom(ctx context.Context, cr *Room) error

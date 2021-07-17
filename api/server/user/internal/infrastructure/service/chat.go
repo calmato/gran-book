@@ -30,6 +30,10 @@ func (s *chatService) ListRoom(ctx context.Context, q *domain.ListQuery, uid str
 	return s.chatRepository.ListRoom(ctx, q, uid)
 }
 
+func (s *chatService) GetRoom(ctx context.Context, roomID string, uid string) (*chat.Room, error) {
+	return s.chatRepository.GetRoom(ctx, roomID, uid)
+}
+
 func (s *chatService) CreateRoom(ctx context.Context, cr *chat.Room) error {
 	current := time.Now().Local()
 

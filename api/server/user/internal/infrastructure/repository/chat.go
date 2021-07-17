@@ -56,6 +56,23 @@ func (r *chatRepository) ListRoom(ctx context.Context, q *domain.ListQuery, uid 
 	return crs, nil
 }
 
+func (r *chatRepository) GetRoom(ctx context.Context, roomID string, uid string) (*chat.Room, error) {
+	c := getChatRoomCollection()
+	cr := &chat.Room{}
+
+	doc, err := r.firestore.Get(ctx, c, roomID)
+	if err != nil {
+		return nil, exception.ErrorInDatastore.New(err)
+	}
+
+	err = doc.DataTo(cr)
+	if err != nil {
+		return nil, err
+	}
+
+	return cr, nil
+}
+
 func (r *chatRepository) CreateRoom(ctx context.Context, cr *chat.Room) error {
 	c := getChatRoomCollection()
 
