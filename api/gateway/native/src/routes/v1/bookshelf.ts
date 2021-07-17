@@ -10,7 +10,6 @@ import {
   stackBookshelf,
   wantBookshelf,
 } from '~/api'
-import { BookStatus } from '~/types/book'
 import { GrpcError } from '~/types/exception'
 import {
   IDeleteBookshelfInput,
@@ -38,6 +37,7 @@ import {
   IBookshelfResponse,
   IBookshelfResponseBookshelf,
 } from '~/types/response'
+import { BookStatus } from '~/util'
 
 const router = express.Router()
 
