@@ -17,7 +17,9 @@ type ChatApplication interface {
 	ListRoom(ctx context.Context, cuid string) ([]*chat.Room, error)
 	CreateRoom(ctx context.Context, in *input.CreateRoom, cuid string) (*chat.Room, error)
 	CreateTextMessage(ctx context.Context, in *input.CreateTextMessage, roomID string, cuid string) (*chat.Message, error)
-	CreateImageMessage(ctx context.Context, in *input.CreateImageMessage, roomID string, cuid string) (*chat.Message, error)
+	CreateImageMessage(
+		ctx context.Context, in *input.CreateImageMessage, roomID string, cuid string,
+	) (*chat.Message, error)
 }
 
 type chatApplication struct {
@@ -84,7 +86,9 @@ func (a *chatApplication) CreateRoom(ctx context.Context, in *input.CreateRoom, 
 	return cr, nil
 }
 
-func (a *chatApplication) CreateTextMessage(ctx context.Context, in *input.CreateTextMessage, roomID string, cuid string) (*chat.Message, error) {
+func (a *chatApplication) CreateTextMessage(
+	ctx context.Context, in *input.CreateTextMessage, roomID string, cuid string,
+) (*chat.Message, error) {
 	err := a.chatRequestValidation.CreateTextMessage(in)
 	if err != nil {
 		return nil, err
@@ -118,7 +122,9 @@ func (a *chatApplication) CreateTextMessage(ctx context.Context, in *input.Creat
 	return cm, nil
 }
 
-func (a *chatApplication) CreateImageMessage(ctx context.Context, in *input.CreateImageMessage, roomID string, cuid string) (*chat.Message, error) {
+func (a *chatApplication) CreateImageMessage(
+	ctx context.Context, in *input.CreateImageMessage, roomID string, cuid string,
+) (*chat.Message, error) {
 	err := a.chatRequestValidation.CreateImageMessage(in)
 	if err != nil {
 		return nil, err
