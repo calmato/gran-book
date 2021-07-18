@@ -2,6 +2,7 @@ package v1
 
 import (
 	"context"
+	"io"
 
 	"github.com/calmato/gran-book/api/server/user/internal/application"
 	"github.com/calmato/gran-book/api/server/user/internal/application/input"
@@ -53,6 +54,65 @@ func (s *ChatServer) CreateRoom(ctx context.Context, req *pb.CreateChatRoomReque
 	return res, nil
 }
 
+// CreateMessage - チャットメッセージ(テキスト)作成
+func (s *ChatServer) CreateMessage(ctx context.Context, req *pb.CreateChatMessageRequest) (*pb.ChatMessageResponse, error) {
+	cu, err := s.AuthApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	in := &input.CreateTextMessage{
+		Text: req.GetText(),
+	}
+
+	cm, err := s.ChatApplication.CreateTextMessage(ctx, in, req.GetRoomId(), cu.ID) // TODO: add roomID
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	res := getChatMessageResponse(cm)
+	return res, nil
+}
+
+// UploadImage - チャットメッセージ(イメージ)作成
+func (s *ChatServer) UploadImage(stream pb.ChatService_UploadImageServer) error {
+	ctx := stream.Context()
+	imageBytes := map[int][]byte{}
+	for {
+		req, err := stream.Recv()
+		if err == io.EOF {
+			cu, err := s.AuthApplication.Authentication(ctx)
+			if err != nil {
+				return errorHandling(err)
+			}
+
+			image := []byte{}
+			for i := 0; i < len(imageBytes); i++ {
+				image = append(image, imageBytes[i]...)
+			}
+
+			in := &input.CreateImageMessage{
+				Image: image,
+			}
+
+			cm, err := s.ChatApplication.CreateImageMessage(ctx, in, req.GetRoomId(), cu.ID)
+			if err != nil {
+				return errorHandling(err)
+			}
+
+			res := getChatMessageResponse(cm)
+			return stream.SendAndClose(res)
+		}
+
+		if err != nil {
+			return errorHandling(err)
+		}
+
+		num := int(req.GetPosition())
+		imageBytes[num] = req.GetImage()
+	}
+}
+
 func getChatRoomResponse(cr *chat.Room) *pb.ChatRoomResponse {
 	return &pb.ChatRoomResponse{
 		Id:        cr.ID,
@@ -86,5 +146,15 @@ func getChatRoomListResponse(crs []*chat.Room) *pb.ChatRoomListResponse {
 
 	return &pb.ChatRoomListResponse{
 		Rooms: rs,
+	}
+}
+
+func getChatMessageResponse(cm *chat.Message) *pb.ChatMessageResponse {
+	return &pb.ChatMessageResponse{
+		Id:        cm.ID,
+		UserId:    cm.UserID,
+		Text:      cm.Text,
+		Image:     cm.Image,
+		CreatedAt: datetime.TimeToString(cm.CreatedAt),
 	}
 }

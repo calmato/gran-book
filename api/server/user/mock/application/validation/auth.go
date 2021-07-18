@@ -5,35 +5,36 @@
 package mock_validation
 
 import (
+	reflect "reflect"
+
 	input "github.com/calmato/gran-book/api/server/user/internal/application/input"
 	gomock "github.com/golang/mock/gomock"
-	reflect "reflect"
 )
 
-// MockAuthRequestValidation is a mock of AuthRequestValidation interface
+// MockAuthRequestValidation is a mock of AuthRequestValidation interface.
 type MockAuthRequestValidation struct {
 	ctrl     *gomock.Controller
 	recorder *MockAuthRequestValidationMockRecorder
 }
 
-// MockAuthRequestValidationMockRecorder is the mock recorder for MockAuthRequestValidation
+// MockAuthRequestValidationMockRecorder is the mock recorder for MockAuthRequestValidation.
 type MockAuthRequestValidationMockRecorder struct {
 	mock *MockAuthRequestValidation
 }
 
-// NewMockAuthRequestValidation creates a new mock instance
+// NewMockAuthRequestValidation creates a new mock instance.
 func NewMockAuthRequestValidation(ctrl *gomock.Controller) *MockAuthRequestValidation {
 	mock := &MockAuthRequestValidation{ctrl: ctrl}
 	mock.recorder = &MockAuthRequestValidationMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockAuthRequestValidation) EXPECT() *MockAuthRequestValidationMockRecorder {
 	return m.recorder
 }
 
-// CreateAuth mocks base method
+// CreateAuth mocks base method.
 func (m *MockAuthRequestValidation) CreateAuth(in *input.CreateAuth) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateAuth", in)
@@ -41,83 +42,13 @@ func (m *MockAuthRequestValidation) CreateAuth(in *input.CreateAuth) error {
 	return ret0
 }
 
-// CreateAuth indicates an expected call of CreateAuth
+// CreateAuth indicates an expected call of CreateAuth.
 func (mr *MockAuthRequestValidationMockRecorder) CreateAuth(in interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAuth", reflect.TypeOf((*MockAuthRequestValidation)(nil).CreateAuth), in)
 }
 
-// UpdateAuthEmail mocks base method
-func (m *MockAuthRequestValidation) UpdateAuthEmail(in *input.UpdateAuthEmail) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateAuthEmail", in)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// UpdateAuthEmail indicates an expected call of UpdateAuthEmail
-func (mr *MockAuthRequestValidationMockRecorder) UpdateAuthEmail(in interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAuthEmail", reflect.TypeOf((*MockAuthRequestValidation)(nil).UpdateAuthEmail), in)
-}
-
-// UpdateAuthPassword mocks base method
-func (m *MockAuthRequestValidation) UpdateAuthPassword(in *input.UpdateAuthPassword) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateAuthPassword", in)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// UpdateAuthPassword indicates an expected call of UpdateAuthPassword
-func (mr *MockAuthRequestValidationMockRecorder) UpdateAuthPassword(in interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAuthPassword", reflect.TypeOf((*MockAuthRequestValidation)(nil).UpdateAuthPassword), in)
-}
-
-// UpdateAuthProfile mocks base method
-func (m *MockAuthRequestValidation) UpdateAuthProfile(in *input.UpdateAuthProfile) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateAuthProfile", in)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// UpdateAuthProfile indicates an expected call of UpdateAuthProfile
-func (mr *MockAuthRequestValidationMockRecorder) UpdateAuthProfile(in interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAuthProfile", reflect.TypeOf((*MockAuthRequestValidation)(nil).UpdateAuthProfile), in)
-}
-
-// UpdateAuthAddress mocks base method
-func (m *MockAuthRequestValidation) UpdateAuthAddress(in *input.UpdateAuthAddress) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateAuthAddress", in)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// UpdateAuthAddress indicates an expected call of UpdateAuthAddress
-func (mr *MockAuthRequestValidationMockRecorder) UpdateAuthAddress(in interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAuthAddress", reflect.TypeOf((*MockAuthRequestValidation)(nil).UpdateAuthAddress), in)
-}
-
-// UploadAuthThumbnail mocks base method
-func (m *MockAuthRequestValidation) UploadAuthThumbnail(in *input.UploadAuthThumbnail) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UploadAuthThumbnail", in)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// UploadAuthThumbnail indicates an expected call of UploadAuthThumbnail
-func (mr *MockAuthRequestValidationMockRecorder) UploadAuthThumbnail(in interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UploadAuthThumbnail", reflect.TypeOf((*MockAuthRequestValidation)(nil).UploadAuthThumbnail), in)
-}
-
-// RegisterAuthDevice mocks base method
+// RegisterAuthDevice mocks base method.
 func (m *MockAuthRequestValidation) RegisterAuthDevice(in *input.RegisterAuthDevice) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RegisterAuthDevice", in)
@@ -125,8 +56,78 @@ func (m *MockAuthRequestValidation) RegisterAuthDevice(in *input.RegisterAuthDev
 	return ret0
 }
 
-// RegisterAuthDevice indicates an expected call of RegisterAuthDevice
+// RegisterAuthDevice indicates an expected call of RegisterAuthDevice.
 func (mr *MockAuthRequestValidationMockRecorder) RegisterAuthDevice(in interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegisterAuthDevice", reflect.TypeOf((*MockAuthRequestValidation)(nil).RegisterAuthDevice), in)
+}
+
+// UpdateAuthAddress mocks base method.
+func (m *MockAuthRequestValidation) UpdateAuthAddress(in *input.UpdateAuthAddress) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateAuthAddress", in)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpdateAuthAddress indicates an expected call of UpdateAuthAddress.
+func (mr *MockAuthRequestValidationMockRecorder) UpdateAuthAddress(in interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAuthAddress", reflect.TypeOf((*MockAuthRequestValidation)(nil).UpdateAuthAddress), in)
+}
+
+// UpdateAuthEmail mocks base method.
+func (m *MockAuthRequestValidation) UpdateAuthEmail(in *input.UpdateAuthEmail) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateAuthEmail", in)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpdateAuthEmail indicates an expected call of UpdateAuthEmail.
+func (mr *MockAuthRequestValidationMockRecorder) UpdateAuthEmail(in interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAuthEmail", reflect.TypeOf((*MockAuthRequestValidation)(nil).UpdateAuthEmail), in)
+}
+
+// UpdateAuthPassword mocks base method.
+func (m *MockAuthRequestValidation) UpdateAuthPassword(in *input.UpdateAuthPassword) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateAuthPassword", in)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpdateAuthPassword indicates an expected call of UpdateAuthPassword.
+func (mr *MockAuthRequestValidationMockRecorder) UpdateAuthPassword(in interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAuthPassword", reflect.TypeOf((*MockAuthRequestValidation)(nil).UpdateAuthPassword), in)
+}
+
+// UpdateAuthProfile mocks base method.
+func (m *MockAuthRequestValidation) UpdateAuthProfile(in *input.UpdateAuthProfile) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateAuthProfile", in)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpdateAuthProfile indicates an expected call of UpdateAuthProfile.
+func (mr *MockAuthRequestValidationMockRecorder) UpdateAuthProfile(in interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAuthProfile", reflect.TypeOf((*MockAuthRequestValidation)(nil).UpdateAuthProfile), in)
+}
+
+// UploadAuthThumbnail mocks base method.
+func (m *MockAuthRequestValidation) UploadAuthThumbnail(in *input.UploadAuthThumbnail) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UploadAuthThumbnail", in)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UploadAuthThumbnail indicates an expected call of UploadAuthThumbnail.
+func (mr *MockAuthRequestValidationMockRecorder) UploadAuthThumbnail(in interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UploadAuthThumbnail", reflect.TypeOf((*MockAuthRequestValidation)(nil).UploadAuthThumbnail), in)
 }

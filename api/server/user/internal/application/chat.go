@@ -16,6 +16,8 @@ import (
 type ChatApplication interface {
 	ListRoom(ctx context.Context, cuid string) ([]*chat.Room, error)
 	CreateRoom(ctx context.Context, in *input.CreateRoom, cuid string) (*chat.Room, error)
+	CreateTextMessage(ctx context.Context, in *input.CreateTextMessage, roomID string, cuid string) (*chat.Message, error)
+	CreateImageMessage(ctx context.Context, in *input.CreateImageMessage, roomID string, cuid string) (*chat.Message, error)
 }
 
 type chatApplication struct {
@@ -80,4 +82,67 @@ func (a *chatApplication) CreateRoom(ctx context.Context, in *input.CreateRoom, 
 	}
 
 	return cr, nil
+}
+
+func (a *chatApplication) CreateTextMessage(ctx context.Context, in *input.CreateTextMessage, roomID string, cuid string) (*chat.Message, error) {
+	err := a.chatRequestValidation.CreateTextMessage(in)
+	if err != nil {
+		return nil, err
+	}
+
+	cr, err := a.chatService.GetRoom(ctx, roomID)
+	if err != nil {
+		return nil, err
+	}
+
+	cm := &chat.Message{
+		Text:   in.Text,
+		UserID: cuid,
+	}
+
+	err = a.chatService.CreateMessage(ctx, cr, cm)
+	if err != nil {
+		return nil, err
+	}
+
+	err = a.chatService.PushNewMessage(ctx, cr, cm)
+	if err != nil {
+		log.Printf("Failed to push notification: %v", err) // TODO: エラーの出し方考える
+	}
+
+	return cm, nil
+}
+
+func (a *chatApplication) CreateImageMessage(ctx context.Context, in *input.CreateImageMessage, roomID string, cuid string) (*chat.Message, error) {
+	err := a.chatRequestValidation.CreateImageMessage(in)
+	if err != nil {
+		return nil, err
+	}
+
+	cr, err := a.chatService.GetRoom(ctx, roomID)
+	if err != nil {
+		return nil, err
+	}
+
+	imageURL, err := a.chatService.UploadImage(ctx, cr.ID, in.Image)
+	if err != nil {
+		return nil, err
+	}
+
+	cm := &chat.Message{
+		Image:  imageURL,
+		UserID: cuid,
+	}
+
+	err = a.chatService.CreateMessage(ctx, cr, cm)
+	if err != nil {
+		return nil, err
+	}
+
+	err = a.chatService.PushNewMessage(ctx, cr, cm)
+	if err != nil {
+		log.Printf("Failed to push notification: %v", err) // TODO: エラーの出し方考える
+	}
+
+	return cm, nil
 }

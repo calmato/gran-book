@@ -5,35 +5,50 @@
 package mock_validation
 
 import (
+	reflect "reflect"
+
 	input "github.com/calmato/gran-book/api/server/user/internal/application/input"
 	gomock "github.com/golang/mock/gomock"
-	reflect "reflect"
 )
 
-// MockChatRequestValidation is a mock of ChatRequestValidation interface
+// MockChatRequestValidation is a mock of ChatRequestValidation interface.
 type MockChatRequestValidation struct {
 	ctrl     *gomock.Controller
 	recorder *MockChatRequestValidationMockRecorder
 }
 
-// MockChatRequestValidationMockRecorder is the mock recorder for MockChatRequestValidation
+// MockChatRequestValidationMockRecorder is the mock recorder for MockChatRequestValidation.
 type MockChatRequestValidationMockRecorder struct {
 	mock *MockChatRequestValidation
 }
 
-// NewMockChatRequestValidation creates a new mock instance
+// NewMockChatRequestValidation creates a new mock instance.
 func NewMockChatRequestValidation(ctrl *gomock.Controller) *MockChatRequestValidation {
 	mock := &MockChatRequestValidation{ctrl: ctrl}
 	mock.recorder = &MockChatRequestValidationMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockChatRequestValidation) EXPECT() *MockChatRequestValidationMockRecorder {
 	return m.recorder
 }
 
-// CreateRoom mocks base method
+// CreateImageMessage mocks base method.
+func (m *MockChatRequestValidation) CreateImageMessage(in *input.CreateImageMessage) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateImageMessage", in)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CreateImageMessage indicates an expected call of CreateImageMessage.
+func (mr *MockChatRequestValidationMockRecorder) CreateImageMessage(in interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateImageMessage", reflect.TypeOf((*MockChatRequestValidation)(nil).CreateImageMessage), in)
+}
+
+// CreateRoom mocks base method.
 func (m *MockChatRequestValidation) CreateRoom(in *input.CreateRoom) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateRoom", in)
@@ -41,8 +56,22 @@ func (m *MockChatRequestValidation) CreateRoom(in *input.CreateRoom) error {
 	return ret0
 }
 
-// CreateRoom indicates an expected call of CreateRoom
+// CreateRoom indicates an expected call of CreateRoom.
 func (mr *MockChatRequestValidationMockRecorder) CreateRoom(in interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateRoom", reflect.TypeOf((*MockChatRequestValidation)(nil).CreateRoom), in)
+}
+
+// CreateTextMessage mocks base method.
+func (m *MockChatRequestValidation) CreateTextMessage(in *input.CreateTextMessage) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateTextMessage", in)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CreateTextMessage indicates an expected call of CreateTextMessage.
+func (mr *MockChatRequestValidationMockRecorder) CreateTextMessage(in interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateTextMessage", reflect.TypeOf((*MockChatRequestValidation)(nil).CreateTextMessage), in)
 }
