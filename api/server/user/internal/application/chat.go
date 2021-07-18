@@ -100,6 +100,11 @@ func (a *chatApplication) CreateTextMessage(ctx context.Context, in *input.Creat
 		UserID: cuid,
 	}
 
+	err = a.chatService.ValidationMessage(ctx, cm)
+	if err != nil {
+		return nil, err
+	}
+
 	err = a.chatService.CreateMessage(ctx, cr, cm)
 	if err != nil {
 		return nil, err
@@ -132,6 +137,11 @@ func (a *chatApplication) CreateImageMessage(ctx context.Context, in *input.Crea
 	cm := &chat.Message{
 		Image:  imageURL,
 		UserID: cuid,
+	}
+
+	err = a.chatService.ValidationMessage(ctx, cm)
+	if err != nil {
+		return nil, err
 	}
 
 	err = a.chatService.CreateMessage(ctx, cr, cm)

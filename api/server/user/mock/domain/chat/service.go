@@ -137,6 +137,20 @@ func (mr *MockServiceMockRecorder) UploadImage(ctx, roomID, image interface{}) *
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UploadImage", reflect.TypeOf((*MockService)(nil).UploadImage), ctx, roomID, image)
 }
 
+// ValidationMessage mocks base method.
+func (m *MockService) ValidationMessage(ctx context.Context, cm *chat.Message) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ValidationMessage", ctx, cm)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// ValidationMessage indicates an expected call of ValidationMessage.
+func (mr *MockServiceMockRecorder) ValidationMessage(ctx, cm interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ValidationMessage", reflect.TypeOf((*MockService)(nil).ValidationMessage), ctx, cm)
+}
+
 // ValidationRoom mocks base method.
 func (m *MockService) ValidationRoom(ctx context.Context, cr *chat.Room) error {
 	m.ctrl.T.Helper()

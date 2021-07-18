@@ -13,6 +13,7 @@ type Service interface {
 	CreateRoom(ctx context.Context, cr *Room) error
 	CreateMessage(ctx context.Context, cr *Room, cm *Message) error
 	ValidationRoom(ctx context.Context, cr *Room) error
+	ValidationMessage(ctx context.Context, cm *Message) error
 	UploadImage(ctx context.Context, roomID string, image []byte) (string, error)
 	PushCreateRoom(ctx context.Context, cr *Room) error
 	PushNewMessage(ctx context.Context, cr *Room, cm *Message) error
