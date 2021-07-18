@@ -222,7 +222,7 @@ func TestChatService_CreateMessage(t *testing.T) {
 
 		crm := mock_chat.NewMockRepository(ctrl)
 		crm.EXPECT().UpdateRoom(ctx, tc.args.room).Return(tc.want)
-		crm.EXPECT().CreateMessage(ctx, tc.args.room, tc.args.message).Return(tc.want)
+		crm.EXPECT().CreateMessage(ctx, tc.args.room.ID, tc.args.message).Return(tc.want)
 
 		cum := mock_chat.NewMockUploader(ctrl)
 

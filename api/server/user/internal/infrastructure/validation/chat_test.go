@@ -109,8 +109,16 @@ func TestChatDomainValidation_Message(t *testing.T) {
 			target := NewChatDomainValidation()
 
 			got := target.Message(ctx, tc.args.message)
-			if !reflect.DeepEqual(got, tc.want) {
-				t.Errorf("want %#v, but %#v", tc.want, got)
+			if tc.want == nil {
+				if got != nil {
+					t.Errorf("want %#v, but %#v", tc.want, got)
+					return
+				}
+			} else {
+				if got == nil {
+					t.Errorf("want %#v, but %#v", tc.want, got)
+					return
+				}
 			}
 		})
 	}
