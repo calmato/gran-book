@@ -49,6 +49,7 @@ start-admin:
 	docker-compose up admin
 
 start-api:
+	$(MAKE) proto
 	docker-compose up native_gateway admin_gateway user_api book_api information_api mysql
 
 start-swagger:
