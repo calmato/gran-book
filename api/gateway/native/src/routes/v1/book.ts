@@ -10,7 +10,6 @@ import {
   listUserWithUserIds,
   updateBook,
 } from '~/api'
-import { BookStatus } from '~/types/book'
 import { GrpcError } from '~/types/exception'
 import {
   IBookInputAuthor,
@@ -44,6 +43,7 @@ import {
   IReviewResponseBook,
   IReviewResponseUser,
 } from '~/types/response'
+import { BookStatus } from '~/util'
 
 const router = express.Router()
 
