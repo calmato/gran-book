@@ -70,7 +70,7 @@ interface Props {
 
 const RoomInfoItem = function RoomInfoItem (props:Props):ReactElement  {
   const thumbnailUrl = props.roomInfo.info[0].rooms[0].users[0].thumbnailUrl;
-  const userName = props.roomInfo.info[0].rooms[0].users[0].username;
+  const userName = props.roomInfo.info[0].rooms[0].users[0].userName;
   const updatedAt = props.roomInfo.info[0].rooms[0].updatedAt;
   const latestMessage = props.roomInfo.info[0].rooms[0].latestMessage.text;
   return (

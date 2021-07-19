@@ -1,12 +1,12 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
-import React, { useState , useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { Header, Avatar, ListItem } from 'react-native-elements';
 import HeaderText from '~/components/atoms/HeaderText';
 import { Auth } from '~/store/models';
 import { getRoomInfoByUserId } from '~/store/usecases/chatServices';
-import { RoomInfo } from '~/types/response/chat';
+import { RoomInfoResponse } from '~/types/response/chat';
 import { COLOR } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
@@ -69,50 +69,56 @@ const styles = StyleSheet.create({
 });
 interface Props {
   auth: Auth.Model;
-  roomInfo?: RoomInfo;
+  roomInfo?: RoomInfoResponse;
 }
 
-const initialData :RoomInfo = {
-  rooms: [
+const initialData: RoomInfoResponse = {
+  limit: 1,
+  offset: 1,
+  total: 1,
+  info: [
     {
-      id: '1',
-      users: [
+      rooms: [
         {
-          id: 'initialize',
-          userName: 'ユーザー',
-          thumbnailUrl: 'https://iconbu.com/wp-content/uploads/2021/03/%E3%82%86%E3%82%8B%E3%81%84%E6%81%90%E7%AB%9C%E3%81%AE%E3%83%95%E3%83%AA%E3%83%BC%E3%82%A2%E3%82%A4%E3%82%B3%E3%83%B3.jpg',
-        }
+          id: '1',
+          users: [
+            {
+              id: 'initialize',
+              userName: 'ユーザー',
+              thumbnailUrl:
+                'https://iconbu.com/wp-content/uploads/2021/03/%E3%82%86%E3%82%8B%E3%81%84%E6%81%90%E7%AB%9C%E3%81%AE%E3%83%95%E3%83%AA%E3%83%BC%E3%82%A2%E3%82%A4%E3%82%B3%E3%83%B3.jpg',
+            },
+          ],
+          latestMessage: {
+            userId: '',
+            text: 'メッセージがありません',
+            image: '',
+            createdAt: '2021/07/06/23:30',
+          },
+          createdAt: '2021/07/06/23:30',
+          updatedAt: '2021/07/06/23:30',
+        },
       ],
-      latestMessage: {
-        userId: '',
-        text: 'メッセージがありません',
-        image: '',
-        createdAt: '2021/07/06/23:30'
-      },
-      createdAt: '2021/07/06/23:30',
-      updatedAt: '2021/07/06/23:30',
-    }
-  ]
+    },
+  ],
 };
-
 
 const NotificationMessage = (props: Props) => {
   const [data, setData] = useState<any>(initialData);
-  useEffect (() => {
+  useEffect(() => {
     const f = async () => {
       const res = await getRoomInfoByUserId(props.auth.id);
       console.log(res);
       setData(res);
     };
     f();
-  } , []
-  );
+  }, []);
   const notificationList = ['メッセージ', '取り引き', 'お知らせ'];
   const [selectedIndex, setIndex] = useState<number>(0);
   const renderRoom = () => {
     return (
       <View style={styles.roomContainer}>
-        <Avatar rounded size="medium" source={{ uri: data.rooms.id}} />
+        <Avatar rounded size="medium" source={{ uri: data.rooms.id }} />
         <View style={styles.roomInfo}>
           <View style={styles.topInfo}>
             <Text style={styles.userNameStyle}>{data.rooms.id}</Text>
@@ -139,10 +145,10 @@ const NotificationMessage = (props: Props) => {
       />
       {selectedIndex === 0 ? (
         <View style={styles.listContainer}>
-          {initialData.rooms.map((dataInfo) => (
-            <ListItem key={dataInfo.id} style={styles.roomContainer}>
-              {dataInfo.users[0].thumbnailUrl !== '' ? (
-                <Avatar source={{ uri: dataInfo.users[0].thumbnailUrl}} />
+          {initialData.info.map((dataInfo) => (
+            <ListItem key={dataInfo.rooms[0].id} style={styles.roomContainer}>
+              {dataInfo.rooms[0].users[0].thumbnailUrl !== '' ? (
+                <Avatar source={{ uri: dataInfo.rooms[0].users[0].thumbnailUrl }} />
               ) : (
                 <Avatar rounded>
                   <MaterialIcons name="person-outline" size={36} color={COLOR.GREY} />
@@ -150,11 +156,9 @@ const NotificationMessage = (props: Props) => {
               )}
               <ListItem.Content>
                 <ListItem.Title style={styles.userNameStyle}>
-                  {dataInfo.users[0].userName}
+                  {dataInfo.rooms[0].users[0].userName}
                 </ListItem.Title>
-                <ListItem.Subtitle>
-                  {dataInfo.latestMessage.text}
-                </ListItem.Subtitle>
+                <ListItem.Subtitle>{dataInfo.rooms[0].latestMessage.text}</ListItem.Subtitle>
               </ListItem.Content>
             </ListItem>
           ))}
