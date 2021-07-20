@@ -47,7 +47,7 @@ const GenderRadioGroup = function GenderRadioGroup(props: Props): ReactElement {
         textStyle={styles.text}
         data={props.data}
         initial={props.initial}
-        selectedBtn={(e) => props.handleOnChange(e.label)}
+        selectedBtn={(e: { label: string }) => props.handleOnChange(e.label)}
         activeColor={COLOR.PRIMARY}
       />
     </View>

@@ -10,24 +10,23 @@ import (
 )
 
 func TestAuthApplication_Authentication(t *testing.T) {
+	type want struct {
+		uid string
+		err error
+	}
+
 	testCases := map[string]struct {
-		Expected struct {
-			UID   string
-			Error error
-		}
+		want want
 	}{
 		"ok": {
-			Expected: struct {
-				UID   string
-				Error error
-			}{
-				UID:   "00000000-0000-0000-0000-000000000000",
-				Error: nil,
+			want: want{
+				uid: "00000000-0000-0000-0000-000000000000",
+				err: nil,
 			},
 		},
 	}
 
-	for result, tc := range testCases {
+	for name, tc := range testCases {
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
@@ -35,19 +34,19 @@ func TestAuthApplication_Authentication(t *testing.T) {
 		defer ctrl.Finish()
 
 		asm := mock_auth.NewMockService(ctrl)
-		asm.EXPECT().Authentication(ctx).Return(tc.Expected.UID, tc.Expected.Error)
+		asm.EXPECT().Authentication(ctx).Return(tc.want.uid, tc.want.err)
 
-		t.Run(result, func(t *testing.T) {
+		t.Run(name, func(t *testing.T) {
 			target := NewAuthApplication(asm)
 
-			got, err := target.Authentication(ctx)
-			if !reflect.DeepEqual(err, tc.Expected.Error) {
-				t.Fatalf("want %#v, but %#v", tc.Expected.Error, err)
+			uid, err := target.Authentication(ctx)
+			if !reflect.DeepEqual(err, tc.want.err) {
+				t.Fatalf("want %#v, but %#v", tc.want.err, err)
 				return
 			}
 
-			if !reflect.DeepEqual(got, tc.Expected.UID) {
-				t.Fatalf("want %#v, but %#v", tc.Expected.UID, got)
+			if !reflect.DeepEqual(uid, tc.want.uid) {
+				t.Fatalf("want %#v, but %#v", tc.want.uid, uid)
 				return
 			}
 		})

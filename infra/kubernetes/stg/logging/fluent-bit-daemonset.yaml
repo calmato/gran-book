@@ -6,6 +6,7 @@ metadata:
   labels:
     app: fluent-bit
 spec:
+  revisionHistoryLimit: 5
   selector:
     matchLabels:
       app: fluent-bit

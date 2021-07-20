@@ -3,6 +3,7 @@ package registry
 import (
 	"github.com/calmato/gran-book/api/server/user/internal/application"
 	rv "github.com/calmato/gran-book/api/server/user/internal/application/validation"
+	"github.com/calmato/gran-book/api/server/user/internal/infrastructure/messaging"
 	"github.com/calmato/gran-book/api/server/user/internal/infrastructure/repository"
 	"github.com/calmato/gran-book/api/server/user/internal/infrastructure/service"
 	"github.com/calmato/gran-book/api/server/user/internal/infrastructure/storage"
@@ -17,6 +18,7 @@ type Registry struct {
 	AdminApplication application.AdminApplication
 	AuthApplication  application.AuthApplication
 	UserApplication  application.UserApplication
+	ChatApplication  application.ChatApplication
 }
 
 // NewRegistry - internalディレクトリ配下のファイルを読み込み
@@ -26,11 +28,13 @@ func NewRegistry(
 	admin := adminInjection(db, fa, s)
 	auth := authInjection(db, fa, s)
 	user := userInjection(db, fa, s)
+	chat := chatInjection(db, fa, fs, s)
 
 	return &Registry{
 		AdminApplication: admin,
 		AuthApplication:  auth,
 		UserApplication:  user,
+		ChatApplication:  chat,
 	}
 }
 
@@ -68,4 +72,23 @@ func userInjection(db *repository.Client, fa *authentication.Auth, s *gcs.Storag
 	ua := application.NewUserApplication(urv, us)
 
 	return ua
+}
+
+func chatInjection(
+	db *repository.Client, fa *authentication.Auth, fs *firestore.Firestore, s *gcs.Storage,
+) application.ChatApplication {
+	ur := repository.NewUserRepository(db, fa)
+	udv := dv.NewUserDomainValidation(ur)
+	uu := storage.NewUserUploader(s)
+	us := service.NewUserService(udv, ur, uu)
+
+	cm := messaging.NewChatMessaging()
+	cr := repository.NewChatRepository(fs)
+	cdv := dv.NewChatDomainValidation()
+	cs := service.NewChatService(cdv, cr, cm)
+
+	crv := rv.NewChatRequestValidation()
+	ca := application.NewChatApplication(crv, cs, us)
+
+	return ca
 }
