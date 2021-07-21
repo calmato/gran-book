@@ -79,6 +79,7 @@ func (s *ChatServer) CreateMessage(
 // UploadImage - チャットメッセージ(イメージ)作成
 func (s *ChatServer) UploadImage(stream pb.ChatService_UploadImageServer) error {
 	ctx := stream.Context()
+	roomID := ""
 	imageBytes := map[int][]byte{}
 	for {
 		req, err := stream.Recv()
@@ -97,7 +98,7 @@ func (s *ChatServer) UploadImage(stream pb.ChatService_UploadImageServer) error 
 				Image: image,
 			}
 
-			cm, err := s.ChatApplication.CreateImageMessage(ctx, in, req.GetRoomId(), cu.ID)
+			cm, err := s.ChatApplication.CreateImageMessage(ctx, in, roomID, cu.ID)
 			if err != nil {
 				return errorHandling(err)
 			}
@@ -108,6 +109,10 @@ func (s *ChatServer) UploadImage(stream pb.ChatService_UploadImageServer) error 
 
 		if err != nil {
 			return errorHandling(err)
+		}
+
+		if roomID == "" && req.GetRoomId() != "" {
+			roomID = req.GetRoomId()
 		}
 
 		num := int(req.GetPosition())
