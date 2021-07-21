@@ -1,10 +1,8 @@
-import { MaterialIcons } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { ReactElement, useCallback, useEffect, useState } from 'react';
 import { StyleSheet, ScrollView, RefreshControl, View } from 'react-native';
 
-import { Header } from 'react-native-elements';
-import RNPickerSelect from 'react-native-picker-select';
+import { Header, Tab, TabView } from 'react-native-elements';
 import HeaderText from '~/components/atoms/HeaderText';
 import BookList from '~/components/molecules/BookList';
 import SearchBar from '~/components/molecules/SearchBar';
@@ -31,6 +29,18 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: COLOR.TEXT_TITLE,
   },
+  tabTitle: {
+    fontSize: 12,
+    color: COLOR.GREY,
+  },
+  indicator: {
+    height: 3,
+    backgroundColor: COLOR.PRIMARY,
+  },
+  tabView: {
+    width: '100%',
+    height: 800,
+  },
 });
 
 interface Props {
@@ -41,24 +51,11 @@ interface Props {
   books: ViewBooks;
 }
 
-const pickerItems = [
-  { label: '読んだ本', value: 'read' },
-  { label: '読んでいる本', value: 'reading' },
-  { label: '積読本', value: 'stack' },
-  { label: '欲しい本', value: 'want' },
-  { label: '手放したい本', value: 'release' },
-];
-
-const iconComponent = () => {
-  return <MaterialIcons name="keyboard-arrow-down" size={16} color={COLOR.TEXT_TITLE} />;
-};
-
 const Home = function Home(props: Props): ReactElement {
   const navigation = props.navigation;
-  const [books, setBooks] = useState<IBook[]>(props.books.read);
-  const [value, setValue] = useState<string>('read');
   const [keyword, setKeyword] = useState<string>('');
   const [refreshing, setRefreshing] = useState<boolean>(false);
+  const [index, setIndex] = useState<number>(0);
 
   const onSubmitEditingCallback = useCallback(() => {
     (async () => {
@@ -75,10 +72,6 @@ const Home = function Home(props: Props): ReactElement {
     [navigation],
   );
 
-  const handlePickerSelect = useCallback((value) => {
-    setValue(value);
-  }, []);
-
   const cancelCallback = useCallback(() => {
     return setKeyword('');
   }, [setKeyword]);
@@ -87,31 +80,26 @@ const Home = function Home(props: Props): ReactElement {
     props.actions.getAllBook();
   }, [props.actions]);
 
-  useEffect(() => {
-    switch (value) {
-      case 'read':
-        setBooks(props.books.read);
-        break;
-      case 'reading':
-        setBooks(props.books.reading);
-        break;
-      case 'want':
-        setBooks(props.books.want);
-        break;
-      case 'release':
-        setBooks(props.books.release);
-        break;
-      case 'stack':
-        setBooks(props.books.stack);
-        break;
-      default:
-        break;
-    }
-  }, [value, props.books]);
-
   return (
     <View>
       <Header centerComponent={<HeaderText title="Gran Book" />} />
+      <SearchBar
+        onCancel={cancelCallback}
+        keyword={keyword}
+        onChangeText={(text) => setKeyword(text)}
+        onSubmitEditing={onSubmitEditingCallback}
+      />
+
+      <ScrollView horizontal={true} bounces={false} showsHorizontalScrollIndicator={false}>
+        <Tab value={index} onChange={setIndex} indicatorStyle={styles.indicator}>
+          <Tab.Item title="呼んだ本" titleStyle={styles.tabTitle} />
+          <Tab.Item title="読んでいる本" titleStyle={styles.tabTitle} />
+          <Tab.Item title="積読本" titleStyle={styles.tabTitle} />
+          <Tab.Item title="欲しい本" titleStyle={styles.tabTitle} />
+          <Tab.Item title="手放したい本" titleStyle={styles.tabTitle} />
+        </Tab>
+      </ScrollView>
+
       <ScrollView
         refreshControl={
           <RefreshControl
@@ -123,28 +111,29 @@ const Home = function Home(props: Props): ReactElement {
             }}
           />
         }
-        stickyHeaderIndices={[0]}
         keyboardShouldPersistTaps="handled"
         style={{ marginBottom: 'auto', height: '100%' }}>
-        <SearchBar
-          onCancel={cancelCallback}
-          keyword={keyword}
-          onChangeText={(text) => setKeyword(text)}
-          onSubmitEditing={onSubmitEditingCallback}
-        />
-        <RNPickerSelect
-          style={{
-            viewContainer: styles.pickerStyle,
-            inputIOS: styles.inputIOS,
-            inputAndroid: styles.inputAndroid,
-          }}
-          placeholder={{}}
-          onValueChange={handlePickerSelect}
-          value={value}
-          items={pickerItems}
-          Icon={iconComponent}
-        />
-        {books ? <BookList books={books} handleClick={handleBookClick} /> : null}
+        <TabView value={index} onChange={setIndex}>
+          <TabView.Item style={styles.tabView}>
+            {props.books && <BookList books={props.books.read} handleClick={handleBookClick} />}
+          </TabView.Item>
+
+          <TabView.Item style={styles.tabView}>
+            {props.books && <BookList books={props.books.reading} handleClick={handleBookClick} />}
+          </TabView.Item>
+
+          <TabView.Item style={styles.tabView}>
+            {props.books && <BookList books={props.books.stack} handleClick={handleBookClick} />}
+          </TabView.Item>
+
+          <TabView.Item style={styles.tabView}>
+            {props.books && <BookList books={props.books.want} handleClick={handleBookClick} />}
+          </TabView.Item>
+
+          <TabView.Item style={styles.tabView}>
+            {props.books && <BookList books={props.books.release} handleClick={handleBookClick} />}
+          </TabView.Item>
+        </TabView>
       </ScrollView>
     </View>
   );
