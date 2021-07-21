@@ -12,25 +12,8 @@ import { IBook } from '~/types/response';
 import { COLOR } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
-  pickerStyle: {
-    backgroundColor: COLOR.BACKGROUND_WHITE,
-    height: 24,
-    justifyContent: 'center',
-    alignContent: 'center',
-    paddingHorizontal: 12,
-  },
-  inputIOS: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    color: COLOR.TEXT_TITLE,
-  },
-  inputAndroid: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    color: COLOR.TEXT_TITLE,
-  },
   tabTitle: {
-    fontSize: 12,
+    fontSize: 14,
     color: COLOR.GREY,
   },
   indicator: {
