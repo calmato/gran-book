@@ -1,0 +1,20 @@
+name: Pull Request Labeler (Approved)
+on:
+- pull_request_review
+
+
+jobs:
+  label_when_approved:
+    name: label when approved
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+
+    steps:
+    - uses: pullreminders/label-when-approved-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        APPROVALS: 1
+        ADD_LABEL: "mergeable"
