@@ -30,9 +30,9 @@ func (s *InquiryServer) CreateInquiry(ctx context.Context, req *pb.CreateInquiry
 	}
 
 	res := &pb.InquiryResponse{
-		InquiryId:   int64(ir.ID),
-		SenderId:    ir.SenderID,
-		AdminId:     ir.AdminID,
+		InquiryId: int64(ir.ID),
+		SenderId:  ir.SenderID,
+		// AdminId:     ir.AdminID,
 		Subject:     ir.Subject,
 		Description: ir.Description,
 		Email:       ir.Email,

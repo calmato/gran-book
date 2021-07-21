@@ -6,7 +6,7 @@ import "time"
 type Inquiry struct {
 	ID          int       `gorm:"primaryKey;autoIncrement;<-:create"`
 	SenderID    string    `gorm:""`
-	AdminID     string    `gorm:""`
+	AdminID     *string   `gorm:""`
 	Subject     string    `gorm:""`
 	Description string    `gorm:""`
 	Email       string    `gorm:""`

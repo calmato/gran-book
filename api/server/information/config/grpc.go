@@ -43,6 +43,9 @@ func newGRPCServer(port, logPath, logLevel string, reg *registry.Registry) (*grp
 		AuthApplication:         reg.AuthApplication,
 		NotificationApplication: reg.NotificationApplication,
 	})
+	pb.RegisterInquiryServiceServer(s, &v1.InquiryServer{
+		InquiryApplication: reg.InquiryApplication,
+	})
 
 	grpc_prometheus.Register(s)
 	grpc_prometheus.EnableHandlingTimeHistogram()
