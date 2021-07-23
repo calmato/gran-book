@@ -1,8 +1,7 @@
 import { MaterialIcons } from '@expo/vector-icons';
-import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
-import { Header, Avatar, ListItem } from 'react-native-elements';
+import { Header, Avatar, ListItem, Tab } from 'react-native-elements';
 import HeaderText from '~/components/atoms/HeaderText';
 import { Auth } from '~/store/models';
 import { getRoomInfoByUserId } from '~/store/usecases/chatServices';
@@ -113,7 +112,6 @@ const NotificationMessage = (props: Props) => {
     };
     f();
   }, []);
-  const notificationList = ['メッセージ', '取り引き', 'お知らせ'];
   const [selectedIndex, setIndex] = useState<number>(0);
   const renderRoom = () => {
     return (
@@ -136,13 +134,11 @@ const NotificationMessage = (props: Props) => {
   return (
     <View>
       <Header centerComponent={<HeaderText title="通知" />} centerContainerStyle={{ height: 30 }} />
-      <SegmentedControl
-        activeFontStyle={styles.selected}
-        values={notificationList}
-        backgroundColor={COLOR.BACKGROUND_WHITE}
-        selectedIndex={selectedIndex}
-        onValueChange={(event) => setIndex(notificationList.indexOf(event))}
-      />
+      <Tab value={selectedIndex} onChange={setIndex}>
+        <Tab.Item title="メッセージ" titleStyle={styles.selected} />
+        <Tab.Item title="取り引き" titleStyle={styles.selected} />
+        <Tab.Item title="お知らせ" titleStyle={styles.selected} />
+      </Tab>
       {selectedIndex === 0 ? (
         <View style={styles.listContainer}>
           {initialData.info.map((dataInfo) => (
