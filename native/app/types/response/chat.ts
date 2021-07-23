@@ -8,7 +8,15 @@ export interface RoomInfoResponse {
 export interface RoomInfo {
   rooms: [
     {
+      createdAt?: string,
       id: string,
+      latestMessage: {
+        createdAt: string,
+        id: string,
+        text: string,
+        image: string,
+        userId: string,
+      },
       users: [
         {
           id: string,
@@ -16,13 +24,6 @@ export interface RoomInfo {
           thumbnailUrl: string
         }
       ],
-      latestMessage: {
-        userId: string,
-        text?: string,
-        image?: string,
-        createdAt: string
-      },
-      createdAt?: string,
       updatedAt?: string
     }
   ]
