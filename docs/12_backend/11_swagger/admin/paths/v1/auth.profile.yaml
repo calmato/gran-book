@@ -10,16 +10,16 @@ patch:
       application/json:
         schema:
           $ref: '../../openapi.yaml#/components/schemas/updateAuthProfileV1Request'
-    responses:
-      '200':
-        description: A successful response.
-        content:
-          application/json:
-            schema:
-              $ref: '../../openapi.yaml#/components/schemas/authV1Response'
-      default:
-        description: An unexpected error response.
-        content:
-          application/json:
-            schema:
-              $ref: '../../openapi.yaml#/components/schemas/errorResponse'
+  responses:
+    '200':
+      description: A successful response.
+      content:
+        application/json:
+          schema:
+            $ref: '../../openapi.yaml#/components/schemas/authV1Response'
+    default:
+      description: An unexpected error response.
+      content:
+        application/json:
+          schema:
+            $ref: '../../openapi.yaml#/components/schemas/errorResponse'
