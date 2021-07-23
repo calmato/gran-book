@@ -1,0 +1,25 @@
+patch:
+  summary: プロフィール更新
+  tags:
+    - AuthService
+  security:
+    - BearerAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: './../../openapi.yaml#/components/schemas/updateAuthProfileV1Request'
+  responses:
+    '200':
+      description: A successful response.
+      content:
+        application/json:
+          schema:
+            $ref: './../../openapi.yaml#/components/schemas/authV1Response'
+    default:
+      description: An unexpected error response.
+      content:
+        application/json:
+          schema:
+            $ref: './../../openapi.yaml#/components/schemas/errorResponse'

@@ -1,0 +1,58 @@
+createAdminRequest:
+  type: object
+  properties:
+    username:
+      type: string
+    email:
+      type: string
+    password:
+      type: string
+    passwordConfirmation:
+      type: string
+    role:
+      type: integer
+      format: int32
+    lastName:
+      type: string
+    firstName:
+      type: string
+    lastNameKana:
+      type: string
+    firstNameKana:
+      type: string
+updateAdminContactRequest:
+  type: object
+  properties:
+    email:
+      type: string
+    phoneNumber:
+      type: string
+updateAdminPasswordRequest:
+  type: object
+  properties:
+    password:
+      type: string
+    passwordConfirmation:
+      type: string
+updateAdminProfileRequest:
+  type: object
+  properties:
+    lastName:
+      type: string
+    firstName:
+      type: string
+    lastNameKana:
+      type: string
+    firstNameKana:
+      type: string
+    thumbnailUrl:
+      type: string
+    role:
+      type: integer
+      format: int32
+uploadAdminThumbnailRequest:
+  type: object
+  properties:
+    thumbnail:
+      type: string
+      format: binary

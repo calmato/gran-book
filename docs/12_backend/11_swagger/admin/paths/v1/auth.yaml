@@ -1,0 +1,20 @@
+/v1/auth:
+  get:
+    summary: 認証情報取得
+    tags:
+      - AuthService
+    security:
+      - BearerAuth: []
+    responses:
+      '200':
+        description: A successful response.
+        content:
+          application/json:
+            schema:
+              $ref: '../../openapi.yaml#/components/schemas/authV1Response'
+      default:
+        description: An unexpected error response.
+        content:
+          application/json:
+            schema:
+              $ref: '../../openapi.yaml#/components/schemas/errorResponse'

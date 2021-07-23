@@ -1,0 +1,75 @@
+userResponse:
+  type: object
+  properties:
+    id:
+      type: string
+    username:
+      type: string
+    email:
+      type: string
+    phoneNumber:
+      type: string
+    thumbnailUrl:
+      type: string
+    selfIntroduction:
+      type: string
+    lastName:
+      type: string
+    firstName:
+      type: string
+    lastNameKana:
+      type: string
+    firstNameKana:
+      type: string
+    createdAt:
+      type: string
+    updatedAt:
+      type: string
+userListResponse:
+  type: object
+  properties:
+    users:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: string
+          username:
+            type: string
+          email:
+            type: string
+          phoneNumber:
+            type: string
+          thumbnailUrl:
+            type: string
+          selfIntroduction:
+            type: string
+          lastName:
+            type: string
+          firstName:
+            type: string
+          lastNameKana:
+            type: string
+          firstNameKana:
+            type: string
+          createdAt:
+            type: string
+          updatedAt:
+            type: string
+    limit:
+      type: integer
+      format: int64
+    offset:
+      type: integer
+      format: int64
+    total:
+      type: integer
+      format: int64
+    order:
+      type: object
+      properties:
+        by:
+          type: string
+        direction:
+          type: string
