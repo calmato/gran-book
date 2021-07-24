@@ -56,10 +56,49 @@ func (r *chatRepository) ListRoom(ctx context.Context, q *domain.ListQuery, uid 
 	return crs, nil
 }
 
+func (r *chatRepository) GetRoom(ctx context.Context, roomID string) (*chat.Room, error) {
+	c := getChatRoomCollection()
+	cr := &chat.Room{}
+
+	doc, err := r.firestore.Get(ctx, c, roomID)
+	if err != nil {
+		return nil, exception.ErrorInDatastore.New(err)
+	}
+
+	err = doc.DataTo(cr)
+	if err != nil {
+		return nil, err
+	}
+
+	return cr, nil
+}
+
 func (r *chatRepository) CreateRoom(ctx context.Context, cr *chat.Room) error {
 	c := getChatRoomCollection()
 
 	err := r.firestore.Set(ctx, c, cr.ID, cr)
+	if err != nil {
+		return exception.ErrorInDatastore.New(err)
+	}
+
+	return nil
+}
+
+func (r *chatRepository) UpdateRoom(ctx context.Context, cr *chat.Room) error {
+	c := getChatRoomCollection()
+
+	err := r.firestore.Set(ctx, c, cr.ID, cr)
+	if err != nil {
+		return exception.ErrorInDatastore.New(err)
+	}
+
+	return nil
+}
+
+func (r *chatRepository) CreateMessage(ctx context.Context, roomID string, cm *chat.Message) error {
+	c := getChatMessageCollection(roomID)
+
+	err := r.firestore.Set(ctx, c, cm.ID, cm)
 	if err != nil {
 		return exception.ErrorInDatastore.New(err)
 	}
