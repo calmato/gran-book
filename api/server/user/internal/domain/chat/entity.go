@@ -8,7 +8,7 @@ type Room struct {
 	UserIDs       []string  `firestore:"users"`
 	CreatedAt     time.Time `firestore:"createdAt"`
 	UpdatedAt     time.Time `firestore:"updatedAt"`
-	LatestMessage *Message  `firestore:"-"`
+	LatestMessage *Message  `firestore:"latestMassage"`
 	InstanceIDs   []string  `firestore:"-"`
 }
 
