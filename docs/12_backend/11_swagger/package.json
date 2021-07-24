@@ -11,9 +11,9 @@
     "generate:html": "make build-html",
     "generate:yaml": "make build-yaml",
     "lint": "make lint",
-    "watch": "npm-run-all watch:*",
-    "watch:native": "chokidar 'native/**/*.yaml' -c 'yarn generate' --initial",
-    "watch:admin": "chokidar 'admin/**/*.yaml' -c 'yarn generate' --initial"
+    "watch": "npm-run-all --parallel watch:*",
+    "watch:native": "chokidar 'native/**/*.yaml' -c 'yarn generate:native' --initial",
+    "watch:admin": "chokidar 'admin/**/*.yaml' -c 'yarn generate:admin' --initial"
   },
   "devDependencies": {
     "@openapitools/openapi-generator-cli": "^2.3.7",

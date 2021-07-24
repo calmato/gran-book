@@ -66,7 +66,7 @@ proto:
 	docker-compose run --rm proto make generate
 
 swagger:
-	docker-compose run --rm swagger_generator make build
+	docker-compose run --rm swagger_generator yarn generate
 
 migrate:
 	docker-compose start mysql
