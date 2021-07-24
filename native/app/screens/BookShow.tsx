@@ -1,10 +1,10 @@
-import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import * as WebBrowser from 'expo-web-browser';
 import React, { ReactElement, useCallback, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Overlay, Text } from 'react-native-elements';
+import { Overlay, Tab, TabView, Text } from 'react-native-elements';
+import { ScrollView } from 'react-native-gesture-handler';
 import BookImpression from '../components/organisms/BookImpression';
 import BookInfo from '~/components/organisms/BookInfo';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
@@ -18,6 +18,18 @@ import { COLOR } from '~~/constants/theme';
 const styles = StyleSheet.create({
   menuActiveFontStyle: {
     color: COLOR.PRIMARY,
+  },
+  tabTitle: {
+    fontSize: 14,
+    color: COLOR.GREY,
+  },
+  indicator: {
+    height: 3,
+    backgroundColor: COLOR.PRIMARY,
+  },
+  tabView: {
+    width: '100%',
+    height: '100%',
   },
 });
 
@@ -47,19 +59,18 @@ const BookShow = function BookShow(props: Props): ReactElement {
 
   const [impressions, setImpressions] = useState<IImpressionResponse>();
 
-  const selectMenuList = ['情報', '感想'];
-  const [selectedIndex, setIndex] = useState<number>(0);
+  const [index, setIndex] = useState<number>(0);
 
   // TODO: エラーハンドリング
-  const handleAddBookButton = async () => {
-    return await addBookAsync(routeParam.book as ISearchResultItem)
+  const handleAddBookButton = useCallback(async () => {
+    await addBookAsync(routeParam.book as ISearchResultItem)
       .then((res) => {
         setBook(res.data);
         setShowMessage(true);
         setIsRegister(true);
       })
       .catch((res) => console.log('登録に失敗しました.', res));
-  };
+  }, [routeParam.book]);
 
   const handleBookStatusButton = useCallback(
     (status: string) => {
@@ -120,24 +131,28 @@ const BookShow = function BookShow(props: Props): ReactElement {
         </View>
       </Overlay>
       <HeaderWithBackButton onPress={() => navigation.goBack()} title={book.title} />
-      <SegmentedControl
-        activeFontStyle={styles.menuActiveFontStyle}
-        backgroundColor={COLOR.BACKGROUND_WHITE}
-        values={selectMenuList}
-        selectedIndex={selectedIndex}
-        onValueChange={(event) => setIndex(selectMenuList.indexOf(event))}
-      />
-      {selectedIndex === 0 ? (
-        <BookInfo
-          book={book}
-          isRegister={isRegister}
-          handleBookStatusButton={handleBookStatusButton}
-          handleOpenRakutenPageButton={_handleOpenRakutenPageButtonAsync}
-          handleAddButton={handleAddBookButton}
-        />
-      ) : impressions ? (
-        <BookImpression book={book} impressionResponse={impressions} />
-      ) : null}
+
+      <Tab value={index} onChange={setIndex} indicatorStyle={styles.indicator}>
+        <Tab.Item title="情報" titleStyle={styles.tabTitle} />
+        <Tab.Item title="感想" titleStyle={styles.tabTitle} />
+      </Tab>
+
+      <ScrollView style={{ marginBottom: 'auto' }}>
+        <TabView value={index} onChange={setIndex}>
+          <TabView.Item style={styles.tabView}>
+            <BookInfo
+              book={book}
+              isRegister={isRegister}
+              handleBookStatusButton={handleBookStatusButton}
+              handleOpenRakutenPageButton={_handleOpenRakutenPageButtonAsync}
+              handleAddButton={handleAddBookButton}
+            />
+          </TabView.Item>
+          <TabView.Item style={styles.tabView}>
+            {impressions && <BookImpression book={book} impressionResponse={impressions} />}
+          </TabView.Item>
+        </TabView>
+      </ScrollView>
     </View>
   );
 };
