@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
   },
   tabView: {
     width: '100%',
-    height: 800,
+    height: '100%',
   },
 });
 
@@ -95,7 +95,7 @@ const Home = function Home(props: Props): ReactElement {
           />
         }
         keyboardShouldPersistTaps="handled"
-        style={{ marginBottom: 'auto', height: '100%' }}>
+        style={{ marginBottom: 'auto' }}>
         <TabView value={index} onChange={setIndex}>
           <TabView.Item style={styles.tabView}>
             {props.books && <BookList books={props.books.read} handleClick={handleBookClick} />}
