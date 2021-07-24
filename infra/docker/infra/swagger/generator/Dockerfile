@@ -1,0 +1,8 @@
+FROM node:16.1.0-alpine
+
+ENV LANG C.UTF-8
+ENV TZ Asia/Tokyo
+
+RUN apk add --update \
+  g++ \
+  make

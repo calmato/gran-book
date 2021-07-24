@@ -1,0 +1,23 @@
+{
+  "name": "swagger-generator",
+  "version": "1.0.0",
+  "description": "openapi code generator",
+  "author": "calmato",
+  "license": "MIT",
+  "scripts": {
+    "generate": "make build",
+    "generate:native": "make build-native",
+    "generate:admin": "make build-admin",
+    "generate:html": "make build-html",
+    "generate:yaml": "make build-yaml",
+    "lint": "make lint",
+    "watch": "npm-run-all watch:*",
+    "watch:native": "chokidar 'native/**/*.yaml' -c 'yarn generate' --initial",
+    "watch:admin": "chokidar 'admin/**/*.yaml' -c 'yarn generate' --initial"
+  },
+  "devDependencies": {
+    "@openapitools/openapi-generator-cli": "^2.3.7",
+    "chokidar-cli": "^2.1.0",
+    "npm-run-all": "^4.1.5"
+  }
+}
