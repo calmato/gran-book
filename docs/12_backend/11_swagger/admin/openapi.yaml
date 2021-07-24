@@ -4,7 +4,7 @@ info:
   description: 管理コンソール用API
   version: 0.6.0
 servers:
-- url: http://localhost:8080
+- url: http://localhost:8081
   description: 開発環境
 - url: https://api.gran-book-stg.calmato.work/admin
   description: 検証環境
