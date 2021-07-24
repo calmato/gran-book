@@ -226,10 +226,11 @@ message BookshelfResponse {
   string user_id = 3;
   int32 status = 4;
   string read_on = 5;
-  string created_at = 8;
-  string updated_at = 9;
-  Book book = 10;
-  Review review = 11;
+  int64 review_id = 6;
+  string created_at = 7;
+  string updated_at = 8;
+  Book book = 9;
+  Review review = 10;
 }
 
 message BookshelfListResponse {
@@ -259,9 +260,10 @@ message BookshelfListResponse {
     string user_id = 3;
     int32 status = 4;
     string read_on = 5;
-    string created_at = 6;
-    string updated_at = 7;
-    Book book = 8;
+    int64 review_id = 6;
+    string created_at = 7;
+    string updated_at = 8;
+    Book book = 9;
   }
   repeated Bookshelf bookshelves = 1;
   int64 limit = 2;
