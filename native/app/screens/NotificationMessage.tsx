@@ -10,7 +10,10 @@ import { COLOR } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
   selected: {
-    color: COLOR.PRIMARY,
+    color: COLOR.PRIMARY_DARK,
+  },
+  indicatorStyle: {
+    backgroundColor: COLOR.PRIMARY,
   },
   listContainer: {
     backgroundColor: COLOR.BACKGROUND_GREY,
@@ -21,49 +24,40 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 10,
     backgroundColor: COLOR.BACKGROUND_WHITE,
-    height: 70,
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-  roomInfo: {
-    paddingLeft: 10,
-    paddingRight: 20,
-    width: '100%',
+    height: 100,
     flexDirection: 'column',
   },
   topInfo: {
     width: '100%',
     height: 30,
-    alignItems: 'center',
     flexDirection: 'row',
+    marginBottom: 10,
   },
   bottomInfo: {
     width: '100%',
     alignItems: 'center',
+    justifyContent: 'space-between',
     height: 40,
     flexDirection: 'row',
   },
   userNameStyle: {
     color: COLOR.TEXT_DEFAULT,
-    width: '50%',
     fontWeight: 'bold',
+    width: '30%',
     fontSize: 24,
   },
   createdAtStyle: {
-    textAlign: 'right',
-    width: '40%',
+    width: '70%',
     color: COLOR.TEXT_GRAY,
     fontSize: 20,
   },
   latestMessageStyle: {
+    width: '80%',
     fontSize: 24,
-    width: '70%',
     color: COLOR.TEXT_GRAY,
   },
   forwardButton: {
-    textAlign: 'right',
     color: 'black',
-    width: '20%',
   },
 });
 interface Props {
@@ -79,7 +73,7 @@ const initialData: RoomInfo = {
       users: [
         {
           id: 'initialize',
-          userName: 'ユーザー',
+          username: 'ユーザー',
           thumbnailUrl:
             'https://iconbu.com/wp-content/uploads/2021/03/%E3%82%86%E3%82%8B%E3%81%84%E6%81%90%E7%AB%9C%E3%81%AE%E3%83%95%E3%83%AA%E3%83%BC%E3%82%A2%E3%82%A4%E3%82%B3%E3%83%B3.jpg',
         },
@@ -100,25 +94,27 @@ const NotificationMessage = (props: Props) => {
   const [data, setData] = useState<any>(initialData);
   useEffect(() => {
     const f = async () => {
-      const res = await getRoomInfoByUserId();
+      const res = await getRoomInfoByUserId(props.auth.id);
       console.log(res);
       if (res.rooms[0].latestMessage.text !== '' || res.rooms[0].latestMessage.image !== '') {
         setData(res);
+      } else {
+        setData(initialData);
       }
     };
     f();
   }, []);
-  const [selectedIndex, setIndex] = useState<number>(0);
+  const [index, setIndex] = useState<number>(0);
 
   return (
     <View>
       <Header centerComponent={<HeaderText title="通知" />} centerContainerStyle={{ height: 30 }} />
-      <Tab value={selectedIndex} onChange={setIndex}>
+      <Tab value={index} onChange={setIndex} indicatorStyle={styles.indicatorStyle}>
         <Tab.Item title="メッセージ" titleStyle={styles.selected} />
         <Tab.Item title="取り引き" titleStyle={styles.selected} />
         <Tab.Item title="お知らせ" titleStyle={styles.selected} />
       </Tab>
-      {selectedIndex === 0 ? (
+      {index === 0 ? (
         <View style={styles.listContainer}>
           {data.rooms.map((dataInfo) => (
             <ListItem key={dataInfo.id} style={styles.roomContainer}>
@@ -130,19 +126,27 @@ const NotificationMessage = (props: Props) => {
                 </Avatar>
               )}
               <ListItem.Content>
-                <ListItem.Title style={styles.userNameStyle}>
-                  {dataInfo.users[0].userName}
-                </ListItem.Title>
-                <ListItem.Subtitle>
-                  {dataInfo.latestMessage.text !== ''
-                    ? dataInfo.latestMessage.text
-                    : dataInfo.latestMessage.image}
-                </ListItem.Subtitle>
+                <View style={styles.topInfo}>
+                  <Text style={styles.userNameStyle}>{dataInfo.users[0].username}</Text>
+                  <Text style={styles.createdAtStyle}>{dataInfo.latestMessage.createdAt}</Text>
+                </View>
+                <View style={styles.bottomInfo}>
+                  <Text style={styles.latestMessageStyle}>
+                    {dataInfo.latestMessage.text !== ''
+                      ? dataInfo.latestMessage.text
+                      : '画像が送信されました'}
+                  </Text>
+                  <MaterialIcons
+                    style={styles.forwardButton}
+                    size={32}
+                    name="keyboard-arrow-right"
+                  />
+                </View>
               </ListItem.Content>
             </ListItem>
           ))}
         </View>
-      ) : selectedIndex === 1 ? (
+      ) : index === 1 ? (
         <View>
           <Text>取引き</Text>
         </View>

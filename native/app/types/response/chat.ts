@@ -20,7 +20,7 @@ export interface RoomInfo {
       users: [
         {
           id: string,
-          userName: string,
+          username: string,
           thumbnailUrl: string
         }
       ],
