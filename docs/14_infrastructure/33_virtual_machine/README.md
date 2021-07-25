@@ -74,6 +74,69 @@
 2. サービスの再起動
   > $ systemctl restart nginx.service
 
+### Swagger UIの設定
+
+1. リポジトリのクローン
+    > $ cd /opt
+
+    > $ git clone https://github.com/swagger-api/swagger-ui.git
+
+    > $ git clone https://github.com/calmato/gran-book.git
+
+2. Swagger UIのビルドファイルをコピー
+    > $ mkdir -p /var/www/html/swagger
+
+    > $ cp -r ./swagger-ui/dist/ /var/www/html/swagger/native
+
+    > $ cp -r ./swagger-ui/dist/ /var/www/html/swagger/admin
+
+3. openapi.yamlの生成
+    > $ cd /opt/gran-book/docs/12_backend/11_swagger
+
+    > $ yarn; yarn generate
+
+3. シンボリックリンクの作成
+    > $ ln -s \
+    > /opt/gran-book/tmp/data/swagger/native/openapi/openapi.yaml \
+    > /var/www/html/swagger/native/openapi.yaml
+
+    > $ ln -s \
+    > /opt/gran-book/tmp/data/swagger/admin/openapi/openapi.yaml \
+    > /var/www/html/swagger/admin/openapi.yaml
+
+4. 設定ファイルの編集
+    > $ vi /var/www/html/swagger/native/index.html
+
+    > $ vi /var/www/html/swagger/native/index.html
+
+```html
+ 38     <script>
+ 39     window.onload = function() {
+ 40       // Begin Swagger UI call region
+ 41       const ui = SwaggerUIBundle({
+-42         url: "https://petstore.swagger.io/v2/swagger.json",
++42         url: "./openapi.yaml",
+ 43         dom_id: '#swagger-ui',
+ 44         deepLinking: true,
+ 45         presets: [
+ 46           SwaggerUIBundle.presets.apis,
+ 47           SwaggerUIStandalonePreset
+ 48         ],
+ 49         plugins: [
+ 50           SwaggerUIBundle.plugins.DownloadUrl
+ 51         ],
+ 52         layout: "StandaloneLayout"
+ 53       });
+ 54       // End Swagger UI call region
+ 55
+ 56       window.ui = ui;
+ 57     };
+ 58   </script>
+```
+
+5. Nginxサービスの再起動
+    > $ systemctl restart nginx.service
+
 ---
 
 ## 参考
