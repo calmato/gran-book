@@ -1,0 +1,62 @@
+createBookRequest:
+  type: object
+  properties:
+    title:
+      type: string
+    titleKana:
+      type: string
+    itemCaption:
+      type: string
+    isbn:
+      type: string
+    publisherName:
+      type: string
+    salesDate:
+      type: string
+    largeImageUrl:
+      type: string
+    mediumImageUrl:
+      type: string
+    smallImageUrl:
+      type: string
+    itemUrl:
+      type: string
+    booksGenreId:
+      type: string
+    size:
+      type: string
+    author:
+      type: string
+    authorKana:
+      type: string
+updateBookRequest:
+  type: object
+  properties:
+    title:
+      type: string
+    titleKana:
+      type: string
+    itemCaption:
+      type: string
+    isbn:
+      type: string
+    publisherName:
+      type: string
+    salesDate:
+      type: string
+    largeImageUrl:
+      type: string
+    mediumImageUrl:
+      type: string
+    smallImageUrl:
+      type: string
+    itemUrl:
+      type: string
+    booksGenreId:
+      type: string
+    size:
+      type: string
+    author:
+      type: string
+    authorKana:
+      type: string

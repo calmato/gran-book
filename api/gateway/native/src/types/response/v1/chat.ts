@@ -43,3 +43,17 @@ export interface IChatRoomListResponseMessage {
   image: string
   createdAt: string
 }
+
+export interface IChatMessageResponse {
+  id: string
+  text: string
+  image: string
+  user: IChatMessageResponseUser
+  createdAt: string
+}
+
+export interface IChatMessageResponseUser {
+  id: string
+  username: string
+  thumbnailUrl: string
+}

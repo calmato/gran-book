@@ -149,3 +149,146 @@ func TestChatApplication_CreateRoom(t *testing.T) {
 		})
 	}
 }
+
+func TestChatApplication_CreateTextMessage(t *testing.T) {
+	type args struct {
+		uid    string
+		roomID string
+		input  *input.CreateTextMessage
+	}
+	type want struct {
+		message *chat.Message
+		err     error
+	}
+
+	testCases := map[string]struct {
+		args args
+		want want
+	}{
+		"ok": {
+			args: args{
+				uid:    "00000000-0000-0000-0000-000000000000",
+				roomID: "00000000-0000-0000-0000-000000000000",
+				input: &input.CreateTextMessage{
+					Text: "テストメッセージ",
+				},
+			},
+			want: want{
+				message: &chat.Message{
+					Text:   "テストメッセージ",
+					UserID: "00000000-0000-0000-0000-000000000000",
+				},
+				err: nil,
+			},
+		},
+	}
+
+	for name, tc := range testCases {
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		cm := &chat.Room{}
+
+		crvm := mock_validation.NewMockChatRequestValidation(ctrl)
+		crvm.EXPECT().CreateTextMessage(tc.args.input).Return(nil)
+
+		csm := mock_chat.NewMockService(ctrl)
+		csm.EXPECT().ValidationMessage(ctx, tc.want.message).Return(nil)
+		csm.EXPECT().PushNewMessage(ctx, cm, tc.want.message).Return(nil)
+		csm.EXPECT().GetRoom(ctx, tc.args.roomID).Return(cm, nil)
+		csm.EXPECT().CreateMessage(ctx, cm, tc.want.message).Return(tc.want.err)
+
+		usm := mock_user.NewMockService(ctrl)
+
+		t.Run(name, func(t *testing.T) {
+			target := NewChatApplication(crvm, csm, usm)
+
+			message, err := target.CreateTextMessage(ctx, tc.args.input, tc.args.roomID, tc.args.uid)
+			if !reflect.DeepEqual(err, tc.want.err) {
+				t.Fatalf("want %#v, but %#v", tc.want.err, err)
+				return
+			}
+
+			if !reflect.DeepEqual(message, tc.want.message) {
+				t.Fatalf("want %#v, but %#v", tc.want.message, message)
+				return
+			}
+		})
+	}
+}
+
+func TestChatApplication_CreateImageMessage(t *testing.T) {
+	type args struct {
+		uid    string
+		roomID string
+		input  *input.CreateImageMessage
+	}
+	type want struct {
+		message *chat.Message
+		err     error
+	}
+
+	testCases := map[string]struct {
+		args args
+		want want
+	}{
+		"ok": {
+			args: args{
+				uid:    "00000000-0000-0000-0000-000000000000",
+				roomID: "00000000-0000-0000-0000-000000000000",
+				input: &input.CreateImageMessage{
+					Image: []byte("あいうえお"),
+				},
+			},
+			want: want{
+				message: &chat.Message{
+					Image:  "http://example.com",
+					UserID: "00000000-0000-0000-0000-000000000000",
+				},
+				err: nil,
+			},
+		},
+	}
+
+	for name, tc := range testCases {
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		cm := &chat.Room{
+			ID: tc.args.roomID,
+		}
+
+		crvm := mock_validation.NewMockChatRequestValidation(ctrl)
+		crvm.EXPECT().CreateImageMessage(tc.args.input).Return(nil)
+
+		csm := mock_chat.NewMockService(ctrl)
+		csm.EXPECT().ValidationMessage(ctx, tc.want.message).Return(nil)
+		csm.EXPECT().PushNewMessage(ctx, cm, tc.want.message).Return(nil)
+		csm.EXPECT().GetRoom(ctx, tc.args.roomID).Return(cm, nil)
+		csm.EXPECT().UploadImage(ctx, cm.ID, tc.args.input.Image).Return(tc.want.message.Image, nil)
+		csm.EXPECT().CreateMessage(ctx, cm, tc.want.message).Return(tc.want.err)
+
+		usm := mock_user.NewMockService(ctrl)
+
+		t.Run(name, func(t *testing.T) {
+			target := NewChatApplication(crvm, csm, usm)
+
+			message, err := target.CreateImageMessage(ctx, tc.args.input, tc.args.roomID, tc.args.uid)
+			if !reflect.DeepEqual(err, tc.want.err) {
+				t.Fatalf("want %#v, but %#v", tc.want.err, err)
+				return
+			}
+
+			if !reflect.DeepEqual(message, tc.want.message) {
+				t.Fatalf("want %#v, but %#v", tc.want.message, message)
+				return
+			}
+		})
+	}
+}

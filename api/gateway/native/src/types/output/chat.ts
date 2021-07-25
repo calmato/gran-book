@@ -23,3 +23,11 @@ export interface IChatRoomListOutputRoom {
   createdAt: string
   updatedAt: string
 }
+
+export interface IChatMessageOutput {
+  id: string
+  userId: string
+  text: string
+  image: string
+  createdAt: string
+}

@@ -1,10 +1,27 @@
 import express, { NextFunction, Request, Response } from 'express'
-import { createChatRoom, getUser, listChatRoom, listUserWithUserIds } from '~/api'
+import multer from '~/plugins/multer'
+import { createChatMessage, createChatRoom, getUser, listChatRoom, listUserWithUserIds, uploadChatImage } from '~/api'
 import { GrpcError } from '~/types/exception'
-import { ICreateChatRoomInput, IGetUserInput, IListChatRoomInput, IListUserByUserIdsInput } from '~/types/input'
-import { IChatRoomListOutput, IChatRoomListOutputRoom, IChatRoomOutput, IUserHashOutput } from '~/types/output'
-import { ICreateChatRoomRequest } from '~/types/request'
 import {
+  ICreateChatMessageInput,
+  ICreateChatRoomInput,
+  IGetUserInput,
+  IListChatRoomInput,
+  IListUserByUserIdsInput,
+  IUploadChatImageInput,
+} from '~/types/input'
+import {
+  IChatMessageOutput,
+  IChatRoomListOutput,
+  IChatRoomListOutputRoom,
+  IChatRoomOutput,
+  IUserHashOutput,
+  IUserOutput,
+} from '~/types/output'
+import { ICreateChatMessageRequest, ICreateChatRoomRequest } from '~/types/request'
+import {
+  IChatMessageResponse,
+  IChatMessageResponseUser,
   IChatRoomListResponse,
   IChatRoomListResponseMessage,
   IChatRoomListResponseRoom,
@@ -12,6 +29,7 @@ import {
   IChatRoomResponse,
   IChatRoomResponseUser,
 } from '~/types/response'
+import { badRequest } from '~/lib/http-exception'
 
 const router = express.Router()
 
@@ -86,6 +104,60 @@ router.post(
           })
       })
       .then((response: IChatRoomResponse) => {
+        res.status(200).json(response)
+      })
+      .catch((err: GrpcError) => next(err))
+  }
+)
+
+router.post(
+  '/v1/users/:userId/chat/:chatId/messages/text',
+  async (req: Request, res: Response<IChatMessageResponse>, next: NextFunction): Promise<void> => {
+    const { userId, chatId } = req.params
+    const { text } = req.body as ICreateChatMessageRequest
+
+    const messageInput: ICreateChatMessageInput = {
+      roomId: chatId,
+      text,
+    }
+
+    await createChatMessage(req, messageInput)
+      .then(async (messageOutput: IChatMessageOutput) => {
+        const userInput: IGetUserInput = {
+          id: userId,
+        }
+
+        const userOutput = await getUser(req, userInput)
+        const response: IChatMessageResponse = setChatMessageResponse(messageOutput, userOutput)
+        res.status(200).json(response)
+      })
+      .catch((err: GrpcError) => next(err))
+  }
+)
+
+router.post(
+  '/v1/users/:userId/chat/:chatId/messages/image',
+  multer.single('image'),
+  async (req: Request, res: Response<IChatMessageResponse>, next: NextFunction): Promise<void> => {
+    if (!req.file) {
+      next(badRequest([{ message: 'image is not exists' }]))
+      return
+    }
+
+    const { userId, chatId } = req.params
+    const messageInput: IUploadChatImageInput = {
+      roomId: chatId,
+      path: req.file.path,
+    }
+
+    await uploadChatImage(req, messageInput)
+      .then(async (messageOutput: IChatMessageOutput) => {
+        const userInput: IGetUserInput = {
+          id: userId,
+        }
+
+        const userOutput = await getUser(req, userInput)
+        const response: IChatMessageResponse = setChatMessageResponse(messageOutput, userOutput)
         res.status(200).json(response)
       })
       .catch((err: GrpcError) => next(err))
@@ -177,6 +249,29 @@ function setChatRoomListResponse(
 
   const response: IChatRoomListResponse = {
     rooms,
+  }
+
+  return response
+}
+
+function setChatMessageResponse(messageOutput: IChatMessageOutput, userOutput?: IUserOutput): IChatMessageResponse {
+  const user: IChatMessageResponseUser = {
+    id: messageOutput.userId,
+    username: 'unknown',
+    thumbnailUrl: '',
+  }
+
+  if (userOutput) {
+    user.username = userOutput.username
+    user.thumbnailUrl = userOutput.thumbnailUrl
+  }
+
+  const response: IChatMessageResponse = {
+    id: messageOutput.id,
+    text: messageOutput.text,
+    image: messageOutput.image,
+    user,
+    createdAt: messageOutput.createdAt,
   }
 
   return response

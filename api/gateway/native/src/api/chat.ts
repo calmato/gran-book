@@ -1,20 +1,26 @@
 import { Request } from 'express'
+import fs from 'fs'
 import { chatClient } from '~/plugins/grpc'
 import { getGrpcError } from '~/lib/grpc-exception'
 import { getGrpcMetadata } from '~/lib/grpc-metadata'
-import { ICreateChatRoomInput, IListChatRoomInput } from '~/types/input'
+import { ICreateChatMessageInput, ICreateChatRoomInput, IListChatRoomInput, IUploadChatImageInput } from '~/types/input'
 import {
+  IChatMessageOutput,
   IChatRoomListOutput,
   IChatRoomListOutputMessage,
   IChatRoomListOutputRoom,
   IChatRoomOutput,
 } from '~/types/output'
 import {
+  ChatMessageResponse,
   ChatRoomListResponse,
   ChatRoomResponse,
+  CreateChatMessageRequest,
   CreateChatRoomRequest,
   ListChatRoomRequest,
+  UploadChatImageRequest,
 } from '~/proto/user_apiv1_pb'
+import { ClientWritableStream } from '@grpc/grpc-js'
 
 export function listChatRoom(req: Request<any>, input: IListChatRoomInput): Promise<IChatRoomListOutput> {
   const request = new ListChatRoomRequest()
@@ -50,6 +56,59 @@ export function createChatRoom(req: Request<any>, input: ICreateChatRoomInput): 
       }
 
       resolve(setChatRoomOutput(res))
+    })
+  })
+}
+
+export function createChatMessage(req: Request<any>, input: ICreateChatMessageInput): Promise<IChatMessageOutput> {
+  const request = new CreateChatMessageRequest()
+  const metadata = getGrpcMetadata(req)
+
+  request.setRoomId(input.roomId)
+  request.setText(input.text)
+
+  return new Promise((resolve: (res: IChatMessageOutput) => void, reject: (reason: Error) => void) => {
+    chatClient.createMessage(request, metadata, (err: any, res: ChatMessageResponse) => {
+      if (err) {
+        reject(getGrpcError(err))
+        return
+      }
+
+      resolve(setChatMessageOuput(res))
+    })
+  })
+}
+
+export function uploadChatImage(req: Request<any>, input: IUploadChatImageInput): Promise<IChatMessageOutput> {
+  const metadata = getGrpcMetadata(req)
+
+  return new Promise((resolve: (res: IChatMessageOutput) => void, reject: (reason: Error) => void) => {
+    const call: ClientWritableStream<UploadChatImageRequest> = chatClient.uploadImage(
+      metadata,
+      (err: any, res: ChatMessageResponse) => {
+        if (err) {
+          return reject(getGrpcError(err))
+        }
+
+        return resolve(setChatMessageOuput(res))
+      }
+    )
+
+    const stream: fs.ReadStream = fs.createReadStream(input.path, { highWaterMark: 102400 })
+    let count = 0 // 読み込み回数
+
+    stream.on('data', (chunk: Buffer) => {
+      const request = new UploadChatImageRequest()
+      request.setRoomId(input.roomId)
+      request.setImage(chunk)
+      request.setPosition(count)
+
+      call.write(request)
+      count += 1
+    })
+
+    stream.on('end', () => {
+      call.end() // TODO: try-catchとかのエラー処理必要かも
     })
   })
 }
@@ -93,6 +152,18 @@ function setChatRoomListOutput(res: ChatRoomListResponse): IChatRoomListOutput {
 
   const output: IChatRoomListOutput = {
     rooms,
+  }
+
+  return output
+}
+
+function setChatMessageOuput(res: ChatMessageResponse): IChatMessageOutput {
+  const output: IChatMessageOutput = {
+    id: res.getId(),
+    userId: res.getUserId(),
+    text: res.getText(),
+    image: res.getImage(),
+    createdAt: res.getCreatedAt(),
   }
 
   return output

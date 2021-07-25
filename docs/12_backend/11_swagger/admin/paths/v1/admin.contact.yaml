@@ -1,0 +1,32 @@
+patch:
+  summary: 管理者連絡先更新
+  tags:
+    - AdminService
+  security:
+    - BearerAuth: []
+  parameters:
+    - in: path
+      name: userId
+      schema:
+        type: string
+      required: true
+      description: ユーザーID
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../openapi.yaml#/components/schemas/updateAdminContactV1Request'
+  responses:
+    '200':
+      description: A successful response.
+      content:
+        application/json:
+          schema:
+            $ref: '../../openapi.yaml#/components/schemas/adminV1Response'
+    default:
+      description: An unexpected error response.
+      content:
+        application/json:
+          schema:
+            $ref: '../../openapi.yaml#/components/schemas/errorResponse'
