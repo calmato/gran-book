@@ -1,0 +1,92 @@
+userProfileResponse:
+  type: object
+  properties:
+    id:
+      type: string
+    username:
+      type: string
+    thumbnailUrl:
+      type: string
+    selfIntroduction:
+      type: string
+    isFollow:
+      type: boolean
+    isFollower:
+      type: boolean
+    followCount:
+      type: integer
+    followerCount:
+      type: integer
+    reviewCount:
+      type: integer
+    rating:
+      type: integer
+    products:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: integer
+          name:
+            type: string
+          thumbnailUrl:
+            type: string
+          authors:
+            type: array
+            items:
+              type: string
+followListResponse:
+  type: object
+  properties:
+    users:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: string
+          username:
+            type: string
+          thumbnailUrl:
+            type: string
+          selfIntroduction:
+            type: string
+          isFollow:
+            type: boolean
+    limit:
+      type: integer
+      format: int64
+    offset:
+      type: integer
+      format: int64
+    total:
+      type: integer
+      format: int64
+followerListResponse:
+  type: object
+  properties:
+    users:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: string
+          username:
+            type: string
+          thumbnailUrl:
+            type: string
+          selfIntroduction:
+            type: string
+          isFollow:
+            type: boolean
+    limit:
+      type: integer
+      format: int64
+    offset:
+      type: integer
+      format: int64
+    total:
+      type: integer
+      format: int64

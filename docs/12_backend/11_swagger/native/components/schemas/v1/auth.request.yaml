@@ -1,0 +1,70 @@
+createAuthRequest:
+  type: object
+  properties:
+    username:
+      type: string
+    email:
+      type: string
+    password:
+      type: string
+    passwordConfirmation:
+      type: string
+updateAuthEmailRequest:
+  type: object
+  properties:
+    email:
+      type: string
+updateAuthPasswordRequest:
+  type: object
+  properties:
+    password:
+      type: string
+    passwordConfirmation:
+      type: string
+updateAuthProfileRequest:
+  type: object
+  properties:
+    username:
+      type: string
+    gender:
+      type: integer
+      format: int32
+    thumbnailUrl:
+      type: string
+      format: byte
+    selfIntroduction:
+      type: string
+updateAuthAddressRequest:
+  type: object
+  properties:
+    lastName:
+      type: string
+    firstName:
+      type: string
+    lastNameKana:
+      type: string
+    firstNameKana:
+      type: string
+    phoneNumber:
+      type: string
+    postalCode:
+      type: string
+    prefecture:
+      type: string
+    city:
+      type: string
+    addressLine1:
+      type: string
+    addressLine2:
+      type: string
+registerAuthDeviceRequest:
+  type: object
+  properties:
+    instanceId:
+      type: string
+uploadAuthThumbnailRequest:
+  type: object
+  properties:
+    thumbnail:
+      type: string
+      format: binary

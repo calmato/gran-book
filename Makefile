@@ -8,6 +8,7 @@ setup:
 	$(MAKE) build
 	$(MAKE) install
 	$(MAKE) proto
+	$(MAKE) swagger
 	docker-compose run --rm admin_gateway yarn build:dev
 	docker-compose run --rm native_gateway yarn build:dev
 
@@ -19,6 +20,7 @@ install:
 	docker-compose run --rm native yarn
 	docker-compose run --rm admin_gateway yarn
 	docker-compose run --rm native_gateway yarn
+	docker-compose run --rm swagger_generator yarn
 
 start:
 	$(PWD)/bin/get-local-ip-addr.sh
@@ -53,15 +55,18 @@ start-api:
 	docker-compose up native_gateway admin_gateway user_api book_api information_api mysql
 
 start-swagger:
-	docker-compose up swagger swagger_editor
+	docker-compose up swagger_native swagger_admin swagger_generator
 
 ##################################################
 # Container Commands - Single
 ##################################################
-.PHONY: proto migrate
+.PHONY: proto swagger migrate
 
 proto:
 	docker-compose run --rm proto make generate
+
+swagger:
+	docker-compose run --rm swagger_generator yarn generate
 
 migrate:
 	docker-compose start mysql

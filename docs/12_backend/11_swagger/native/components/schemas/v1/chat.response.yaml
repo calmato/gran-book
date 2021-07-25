@@ -1,0 +1,76 @@
+chatRoomResponse:
+  type: object
+  properties:
+    id:
+      type: string
+    users:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: string
+          username:
+            type: string
+          thumbnailUrl:
+            type: string
+    createdAt:
+      type: string
+    updatedAt:
+      type: string
+chatRoomListResponse:
+  type: object
+  properties:
+    rooms:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: string
+          users:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: string
+                username:
+                  type: string
+                thumbnailUrl:
+                  type: string
+          latestMessage:
+            type: object
+            properties:
+              userId:
+                type: string
+              text:
+                type: string
+              image:
+                type: string
+              createdAt:
+                type: string
+          createdAt:
+            type: string
+          updatedAt:
+            type: string
+chatMessageResponse:
+  type: object
+  properties:
+    id:
+      type: string
+    text:
+      type: string
+    image:
+      type: string
+    user:
+      type: object
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+        thumbnailUrl:
+          type: string
+    createdAt:
+      type: string

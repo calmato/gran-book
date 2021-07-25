@@ -1,0 +1,50 @@
+get:
+  summary: ユーザの書籍レビュー一覧
+  tags:
+    - BookshelfService
+  security:
+    - BearerAuth: []
+  parameters:
+    - in: path
+      name: userId
+      schema:
+        type: string
+      required: true
+      description: ユーザID
+    - in: query
+      name: limit
+      schema:
+        type: integer
+      required: false
+      description: 取得上限数
+    - in: query
+      name: offset
+      schema:
+        type: integer
+      required: false
+      description: 取得開始位置
+    - in: query
+      name: by
+      schema:
+        type: string
+      required: false
+      description: 並び替え対象のカラム
+    - in: query
+      name: direction
+      schema:
+        type: string
+      required: false
+      description: 並び替え順 (asc or desc)
+  responses:
+    '200':
+      description: A successful response.
+      content:
+        application/json:
+          schema:
+            $ref: './../../openapi.yaml#/components/schemas/userReviewListV1Response'
+    default:
+      description: An unexpected error response.
+      content:
+        application/json:
+          schema:
+            $ref: './../../openapi.yaml#/components/schemas/errorResponse'

@@ -1,0 +1,39 @@
+get:
+  summary: 本棚の書籍情報取得
+  tags:
+    - BookshelfService
+  security:
+    - BearerAuth: []
+  parameters:
+    - in: path
+      name: userId
+      schema:
+        type: string
+      required: true
+      description: ユーザID
+    - in: path
+      name: bookId
+      schema:
+        type: integer
+        format: int64
+      required: true
+      description: 書籍ID
+    - in: query
+      name: key
+      schema:
+        type: string
+      required: false
+      description: 書籍IDの種類 (id / isbn, default - id)
+  responses:
+    '200':
+      description: A successful response.
+      content:
+        application/json:
+          schema:
+            $ref: './../../openapi.yaml#/components/schemas/bookshelfV2Response'
+    default:
+      description: An unexpected error response.
+      content:
+        application/json:
+          schema:
+            $ref: './../../openapi.yaml#/components/schemas/errorResponse'
