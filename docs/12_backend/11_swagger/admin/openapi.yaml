@@ -1,0 +1,115 @@
+openapi: 3.0.3
+info:
+  title: Gran Book (Admin)
+  description: 管理コンソール用API
+  version: 0.6.0
+servers:
+- url: http://localhost:8081
+  description: 開発環境
+- url: https://api.gran-book-stg.calmato.work/admin
+  description: 検証環境
+tags:
+- name: AuthService
+  description: 認証関連
+- name: AdminService
+  description: 管理者関連
+- name: UserService
+  description: ユーザ関連
+- name: BookService
+  description: 書籍関連
+- name: NotificationService
+  description: お知らせ関連
+paths:
+  # Auth Service
+  /v1/auth:
+    $ref: './paths/v1/auth.yaml'
+  /v1/auth/email:
+    $ref: './paths/v1/auth.email.yaml'
+  /v1/auth/password:
+    $ref: './paths/v1/auth.password.yaml'
+  /v1/auth/profile:
+    $ref: './paths/v1/auth.profile.yaml'
+  /v1/auth/thumbnail:
+    $ref: './paths/v1/auth.thumbnail.yaml'
+  # Admin Service
+  /v1/admin:
+    $ref: './paths/v1/admin.yaml'
+  /v1/admin/{userId}:
+    $ref: './paths/v1/admin-by-id.yaml'
+  /v1/admin/{userId}/contact:
+    $ref: './paths/v1/admin.contact.yaml'
+  /v1/admin/{userId}/password:
+    $ref: './paths/v1/admin.password.yaml'
+  /v1/admin/{userId}/profile:
+    $ref: './paths/v1/admin.profile.yaml'
+  /v1/admin/{userId}/thumbnail:
+    $ref: './paths/v1/admin.thumbnail.yaml'
+  # User Service
+  /v1/users:
+    $ref: './paths/v1/user.yaml'
+  /v1/users/{userId}:
+    $ref: './paths/v1/user-by-id.yaml'
+  # Book Service
+  /v1/books/{bookId}:
+    $ref: './paths/v1/book-by-id.yaml'
+  # Notification Service
+  /v1/notifications:
+    $ref: './paths/v1/notification.yaml'
+  /v1/notifications/{notificationId}:
+    $ref: './paths/v1/notification-by-id.yaml'
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+  schemas:
+    # Request - Auth Service
+    updateAuthEmailV1Request:
+      $ref: './components/schemas/v1/auth.request.yaml#/updateAuthEmailRequest'
+    updateAuthPasswordV1Request:
+      $ref: './components/schemas/v1/auth.request.yaml#/updateAuthPasswordRequest'
+    updateAuthProfileV1Request:
+      $ref: './components/schemas/v1/auth.request.yaml#/updateAuthProfileRequest'
+    uploadAuthThumbnailV1Request:
+      $ref: './components/schemas/v1/auth.request.yaml#/uploadAuthThumbnailRequest'
+    # Request - Admin Service
+    createAdminV1Request:
+      $ref: './components/schemas/v1/admin.request.yaml#/createAdminRequest'
+    updateAdminContactV1Request:
+      $ref: './components/schemas/v1/admin.request.yaml#/updateAdminContactRequest'
+    updateAdminPasswordV1Request:
+      $ref: './components/schemas/v1/admin.request.yaml#/updateAdminPasswordRequest'
+    updateAdminProfileV1Request:
+      $ref: './components/schemas/v1/admin.request.yaml#/updateAdminProfileRequest'
+    uploadAdminThumbnailV1Request:
+      $ref: './components/schemas/v1/admin.request.yaml#/uploadAdminThumbnailRequest'
+    # Request - Notification Service
+    createNotificationV1Request:
+      $ref: './components/schemas/v1/notification.request.yaml#/createNotificationRequest'
+    updateNotificationV1Request:
+      $ref: './components/schemas/v1/notification.request.yaml#/updateNotificationRequest'
+    # Response
+    emptyResponse:
+      $ref: './components/schemas/common.yaml#/emptyResponse'
+    errorResponse:
+      $ref: './components/schemas/common.yaml#/errorResponse'
+    # Response - Auth Service
+    authV1Response:
+      $ref: './components/schemas/v1/auth.response.yaml#/authResponse'
+    # Response - Admin Service
+    adminV1Response:
+      $ref: './components/schemas/v1/admin.response.yaml#/adminResponse'
+    adminListV1Response:
+      $ref: './components/schemas/v1/admin.response.yaml#/adminListResponse'
+    adminThumbnailV1Response:
+      $ref: './components/schemas/v1/admin.response.yaml#/adminThumbnailResponse'
+    # Response - User Service
+    userV1Response:
+      $ref: './components/schemas/v1/user.response.yaml#/userResponse'
+    userListV1Response:
+      $ref: './components/schemas/v1/user.response.yaml#/userListResponse'
+    # Response - Notification Service
+    notificationV1Response:
+      $ref: './components/schemas/v1/notification.response.yaml#/notificationResponse'
+    notificationListV1Response:
+      $ref: './components/schemas/v1/notification.response.yaml#/notificationListResponse'

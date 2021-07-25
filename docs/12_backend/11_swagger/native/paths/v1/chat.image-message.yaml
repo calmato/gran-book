@@ -1,0 +1,38 @@
+post:
+  summary: チャットメッセージ作成 (画像のアップロード)
+  tags:
+    - ChatService
+  security:
+    - BearerAuth: []
+  parameters:
+    - in: path
+      name: userId
+      schema:
+        type: string
+      required: true
+      description: ユーザID
+    - in: path
+      name: chatId
+      schema:
+        type: string
+      required: true
+      description: チャットルームID
+  requestBody:
+    required: true
+    content:
+      multipart/form-data:
+        schema:
+          $ref: './../../openapi.yaml#/components/schemas/uploadChatImageV1Request'
+  responses:
+    '200':
+      description: A successful response.
+      content:
+        application/json:
+          schema:
+            $ref: './../../openapi.yaml#/components/schemas/chatMessageV1Response'
+    default:
+      description: An unexpected error response.
+      content:
+        application/json:
+          schema:
+            $ref: './../../openapi.yaml#/components/schemas/errorResponse'

@@ -1,0 +1,23 @@
+# Common - Response
+emptyResponse:
+  type: object
+errorResponse:
+  type: object
+  properties:
+    status:
+      type: integer
+      format: int32
+    code:
+      type: integer
+      format: int32
+    message:
+      type: string
+    errors:
+      type: array
+      items:
+        type: object
+        properties:
+          field:
+            type: string
+          reason:
+            type: string

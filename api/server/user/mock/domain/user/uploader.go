@@ -6,34 +6,35 @@ package mock_user
 
 import (
 	context "context"
-	gomock "github.com/golang/mock/gomock"
 	reflect "reflect"
+
+	gomock "github.com/golang/mock/gomock"
 )
 
-// MockUploader is a mock of Uploader interface
+// MockUploader is a mock of Uploader interface.
 type MockUploader struct {
 	ctrl     *gomock.Controller
 	recorder *MockUploaderMockRecorder
 }
 
-// MockUploaderMockRecorder is the mock recorder for MockUploader
+// MockUploaderMockRecorder is the mock recorder for MockUploader.
 type MockUploaderMockRecorder struct {
 	mock *MockUploader
 }
 
-// NewMockUploader creates a new mock instance
+// NewMockUploader creates a new mock instance.
 func NewMockUploader(ctrl *gomock.Controller) *MockUploader {
 	mock := &MockUploader{ctrl: ctrl}
 	mock.recorder = &MockUploaderMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockUploader) EXPECT() *MockUploaderMockRecorder {
 	return m.recorder
 }
 
-// Thumbnail mocks base method
+// Thumbnail mocks base method.
 func (m *MockUploader) Thumbnail(ctx context.Context, uid string, data []byte) (string, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Thumbnail", ctx, uid, data)
@@ -42,7 +43,7 @@ func (m *MockUploader) Thumbnail(ctx context.Context, uid string, data []byte) (
 	return ret0, ret1
 }
 
-// Thumbnail indicates an expected call of Thumbnail
+// Thumbnail indicates an expected call of Thumbnail.
 func (mr *MockUploaderMockRecorder) Thumbnail(ctx, uid, data interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Thumbnail", reflect.TypeOf((*MockUploader)(nil).Thumbnail), ctx, uid, data)

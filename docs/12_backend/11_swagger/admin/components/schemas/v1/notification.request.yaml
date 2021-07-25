@@ -1,0 +1,32 @@
+createNotificationRequest:
+  type: object
+  properties:
+    notifications:
+      type: array
+      items:
+        type: object
+        properties:
+          title:
+            type: string
+          description:
+            type: string
+          importance:
+            type: string
+          category:
+            type: string
+updateNotificationRequest:
+  type: object
+  properties:
+    notifications:
+      type: array
+      items:
+        type: object
+        properties:
+          title:
+            type: string
+          description:
+            type: string
+          importance:
+            type: string
+          category:
+            type: string

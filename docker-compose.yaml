@@ -209,25 +209,44 @@ services:
       - ./api/gateway/native:/go/src/github.com/calmato/gran-book/api/gateway/native:cached
       - ./tmp/data/go/pkg/mod:/go/pkg/mod:delegated
 
-  swagger:
-    container_name: gran_book_swagger
+  swagger_native:
+    container_name: gran_book_swagger_native
     build:
-      context: ./infra/docker/infra/swagger_ui
+      context: ./infra/docker/infra/swagger/admin
       dockerfile: Dockerfile
     volumes:
-      - ./docs/12_backend/11_swagger:/var/swagger:cached
+      - ./tmp/data/swagger/native/openapi:/var/swagger:cached
     ports:
       - 8000:8080
     environment:
-      SWAGGER_JSON: /var/swagger/native.apiv1.yaml
+      SWAGGER_JSON: /var/swagger/openapi.yaml
+    depends_on:
+      - swagger_generator
 
-  swagger_editor:
-    container_name: gran_book_swagger_editor
+  swagger_admin:
+    container_name: gran_book_swagger_admin
     build:
-      context: ./infra/docker/infra/swagger_editor
+      context: ./infra/docker/infra/swagger/admin
       dockerfile: Dockerfile
+    volumes:
+      - ./tmp/data/swagger/admin/openapi:/var/swagger:cached
     ports:
       - 8001:8080
+    environment:
+      SWAGGER_JSON: /var/swagger/openapi.yaml
+    depends_on:
+      - swagger_generator
+
+  swagger_generator:
+    container_name: gran_book_swagger_generator
+    working_dir: /var/swagger/src
+    build:
+      context: ./infra/docker/infra/swagger/generator
+      dockerfile: Dockerfile
+    volumes:
+      - ./docs/12_backend/11_swagger:/var/swagger/src:cached
+      - ./tmp/data/swagger:/tmp/data/swagger:cached
+    command: yarn watch
 
   terraform:
     container_name: gran_book_terraform

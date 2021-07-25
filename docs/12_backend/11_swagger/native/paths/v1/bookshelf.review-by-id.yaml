@@ -1,0 +1,32 @@
+get:
+  summary: ユーザーの書籍レビュー情報取得
+  tags:
+    - BookshelfService
+  security:
+    - BearerAuth: []
+  parameters:
+    - in: path
+      name: userId
+      schema:
+        type: string
+      required: true
+      description: ユーザID
+    - in: path
+      name: reviewId
+      schema:
+        type: integer
+      required: true
+      description: レビューID
+  responses:
+    '200':
+      description: A successful response.
+      content:
+        application/json:
+          schema:
+            $ref: './../../openapi.yaml#/components/schemas/reviewV1Response'
+    default:
+      description: An unexpected error response.
+      content:
+        application/json:
+          schema:
+            $ref: './../../openapi.yaml#/components/schemas/errorResponse'

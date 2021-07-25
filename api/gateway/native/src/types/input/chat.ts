@@ -7,3 +7,13 @@ export interface IListChatRoomInput {
 export interface ICreateChatRoomInput {
   userIds: Array<string>
 }
+
+export interface ICreateChatMessageInput {
+  roomId: string
+  text: string
+}
+
+export interface IUploadChatImageInput {
+  roomId: string
+  path: string
+}

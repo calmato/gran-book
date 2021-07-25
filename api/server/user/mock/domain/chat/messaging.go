@@ -5,35 +5,36 @@
 package mock_chat
 
 import (
+	reflect "reflect"
+
 	chat "github.com/calmato/gran-book/api/server/user/internal/domain/chat"
 	gomock "github.com/golang/mock/gomock"
-	reflect "reflect"
 )
 
-// MockMessaging is a mock of Messaging interface
+// MockMessaging is a mock of Messaging interface.
 type MockMessaging struct {
 	ctrl     *gomock.Controller
 	recorder *MockMessagingMockRecorder
 }
 
-// MockMessagingMockRecorder is the mock recorder for MockMessaging
+// MockMessagingMockRecorder is the mock recorder for MockMessaging.
 type MockMessagingMockRecorder struct {
 	mock *MockMessaging
 }
 
-// NewMockMessaging creates a new mock instance
+// NewMockMessaging creates a new mock instance.
 func NewMockMessaging(ctrl *gomock.Controller) *MockMessaging {
 	mock := &MockMessaging{ctrl: ctrl}
 	mock.recorder = &MockMessagingMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockMessaging) EXPECT() *MockMessagingMockRecorder {
 	return m.recorder
 }
 
-// PushCreateRoom mocks base method
+// PushCreateRoom mocks base method.
 func (m *MockMessaging) PushCreateRoom(cr *chat.Room) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "PushCreateRoom", cr)
@@ -41,13 +42,13 @@ func (m *MockMessaging) PushCreateRoom(cr *chat.Room) error {
 	return ret0
 }
 
-// PushCreateRoom indicates an expected call of PushCreateRoom
+// PushCreateRoom indicates an expected call of PushCreateRoom.
 func (mr *MockMessagingMockRecorder) PushCreateRoom(cr interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PushCreateRoom", reflect.TypeOf((*MockMessaging)(nil).PushCreateRoom), cr)
 }
 
-// PushNewMessage mocks base method
+// PushNewMessage mocks base method.
 func (m *MockMessaging) PushNewMessage(cr *chat.Room, cm *chat.Message) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "PushNewMessage", cr, cm)
@@ -55,7 +56,7 @@ func (m *MockMessaging) PushNewMessage(cr *chat.Room, cm *chat.Message) error {
 	return ret0
 }
 
-// PushNewMessage indicates an expected call of PushNewMessage
+// PushNewMessage indicates an expected call of PushNewMessage.
 func (mr *MockMessagingMockRecorder) PushNewMessage(cr, cm interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PushNewMessage", reflect.TypeOf((*MockMessaging)(nil).PushNewMessage), cr, cm)

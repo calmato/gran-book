@@ -1,0 +1,165 @@
+openapi: 3.0.3
+info:
+  title: Gran Book (Native)
+  description: ネイティブアプリ用API
+  version: 0.6.0
+servers:
+- url: http://localhost:8080
+  description: 開発環境
+- url: https://api.gran-book-stg.calmato.work
+  description: 検証環境
+tags:
+- name: AuthService
+  description: 認証関連
+- name: UserService
+  description: ユーザ関連
+- name: ChatService
+  description: チャット関連
+- name: BookService
+  description: 書籍関連
+- name: BookshelfService
+  description: 本棚の書籍関連
+paths:
+  # Auth Service
+  /v1/auth:
+    $ref: './paths/v1/auth.yaml'
+  /v1/auth/address:
+    $ref: './paths/v1/auth.address.yaml'
+  /v1/auth/device:
+    $ref: './paths/v1/auth.device.yaml'
+  /v1/auth/email:
+    $ref: './paths/v1/auth.email.yaml'
+  /v1/auth/password:
+    $ref: './paths/v1/auth.password.yaml'
+  /v1/auth/profile:
+    $ref: './paths/v1/auth.profile.yaml'
+  /v1/auth/thumbnail:
+    $ref: './paths/v1/auth.thumbnail.yaml'
+  # User Service
+  /v1/users/{userId}/follow:
+    $ref: './paths/v1/user.follow.yaml'
+  /v1/users/{userId}/follower:
+    $ref: './paths/v1/user.follower.yaml'
+  /v1/users/{userId}/profile:
+    $ref: './paths/v1/user.profile.yaml'
+  # Chat Service
+  /v1/users/{userId}/chat:
+    $ref: './paths/v1/chat.yaml'
+  /v1/users/{userId}/chat/{chatId}/messages/image:
+    $ref: './paths/v1/chat.image-message.yaml'
+  /v1/users/{userId}/chat/{chatId}/messages/text:
+    $ref: './paths/v1/chat.text-message.yaml'
+  # Book Service
+  /v1/books:
+    $ref: './paths/v1/book.yaml'
+  /v1/books/{isbn}:
+    $ref: './paths/v1/book.isbn.yaml'
+  /v2/books/{bookId}:
+    $ref: './paths/v2/book-by-id.yaml'
+  /v1/books/{bookId}/reviews:
+    $ref: './paths/v1/book.review.yaml'
+  /v1/books/{bookId}/reviews/{reviewId}:
+    $ref: './paths/v1/book.review-by-id.yaml'
+  # Bookshelf Service
+  /v1/users/{userId}/books:
+    $ref: './paths/v1/bookshelf.yaml'
+  /v2/users/{userId}/books:
+    $ref: './paths/v2/bookshelf.yaml'
+  /v1/users/{userId}/books/{bookId}:
+    $ref: './paths/v1/bookshelf-by-id.yaml'
+  /v2/users/{userId}/books/{bookId}:
+    $ref: './paths/v2/bookshelf-by-id.yaml'
+  /v1/users/{userId}/books/{bookId}/read:
+    $ref: './paths/v1/bookshelf.read.yaml'
+  /v1/users/{userId}/books/{bookId}/reading:
+    $ref: './paths/v1/bookshelf.reading.yaml'
+  /v1/users/{userId}/books/{bookId}/release:
+    $ref: './paths/v1/bookshelf.release.yaml'
+  /v1/users/{userId}/books/{bookId}/stack:
+    $ref: './paths/v1/bookshelf.stack.yaml'
+  /v1/users/{userId}/books/{bookId}/want:
+    $ref: './paths/v1/bookshelf.want.yaml'
+  /v1/users/{userId}/reviews:
+    $ref: './paths/v1/bookshelf.review.yaml'
+  /v1/users/{userId}/reviews/{reviewId}:
+    $ref: './paths/v1/bookshelf.review-by-id.yaml'
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+  schemas:
+    # Request - Auth Service
+    createAuthV1Request:
+      $ref: './components/schemas/v1/auth.request.yaml#/createAuthRequest'
+    registerAuthDeviceV1Request:
+      $ref: './components/schemas/v1/auth.request.yaml#/registerAuthDeviceRequest'
+    updateAuthAddressV1Request:
+      $ref: './components/schemas/v1/auth.request.yaml#/updateAuthAddressRequest'
+    updateAuthEmailV1Request:
+      $ref: './components/schemas/v1/auth.request.yaml#/updateAuthEmailRequest'
+    updateAuthPasswordV1Request:
+      $ref: './components/schemas/v1/auth.request.yaml#/updateAuthPasswordRequest'
+    updateAuthProfileV1Request:
+      $ref: './components/schemas/v1/auth.request.yaml#/updateAuthProfileRequest'
+    uploadAuthThumbnailV1Request:
+      $ref: './components/schemas/v1/auth.request.yaml#/uploadAuthThumbnailRequest'
+    # Request - Chat Service
+    createChatMessageV1Request:
+      $ref: './components/schemas/v1/chat.request.yaml#/createChatMessageRequest'
+    createChatRoomV1Request:
+      $ref: './components/schemas/v1/chat.request.yaml#/createChatRoomRequest'
+    uploadChatImageV1Request:
+      $ref: './components/schemas/v1/chat.request.yaml#/uploadChatImageRequest'
+    # Request - Book Service
+    createBookV1Request:
+      $ref: './components/schemas/v1/book.request.yaml#/createBookRequest'
+    updateBookV1Request:
+      $ref: './components/schemas/v1/book.request.yaml#/updateBookRequest'
+    # Request - Bookshelf Service
+    readBookshelfV1Request:
+      $ref: './components/schemas/v1/bookshelf.request.yaml#/readBookshelfRequest'
+    # Response
+    emptyResponse:
+      $ref: './components/schemas/common.yaml#/emptyResponse'
+    errorResponse:
+      $ref: './components/schemas/common.yaml#/errorResponse'
+    # Response - Auth Service
+    authV1Response:
+      $ref: './components/schemas/v1/auth.response.yaml#/authResponse'
+    authThumbnailV1Response:
+      $ref: './components/schemas/v1/auth.response.yaml#/authThumbnailResponse'
+    # Request - User Service
+    followListV1Response:
+      $ref: './components/schemas/v1/user.response.yaml#/followListResponse'
+    followerListV1Response:
+      $ref: './components/schemas/v1/user.response.yaml#/followerListResponse'
+    userProfileV1Response:
+      $ref: './components/schemas/v1/user.response.yaml#/userProfileResponse'
+    # Response - Chat Service
+    chatMessageV1Response:
+      $ref: './components/schemas/v1/chat.response.yaml#/chatMessageResponse'
+    chatRoomV1Response:
+      $ref: './components/schemas/v1/chat.response.yaml#/chatRoomResponse'
+    chatRoomListV1Response:
+      $ref: './components/schemas/v1/chat.response.yaml#/chatRoomListResponse'
+    # Response - Book Service
+    bookV1Response:
+      $ref: './components/schemas/v1/book.response.yaml#/bookResponse'
+    bookV2Response:
+      $ref: './components/schemas/v2/book.response.yaml#/bookResponse'
+    bookReviewListV1Response:
+      $ref: './components/schemas/v1/book.response.yaml#/bookReviewListResponse'
+    reviewV1Response:
+      $ref: './components/schemas/v1/book.response.yaml#/reviewResponse'
+    # Response - Bookshelf Service
+    bookshelfV1Response:
+      $ref: './components/schemas/v1/bookshelf.response.yaml#/bookshelfResponse'
+    bookshelfV2Response:
+      $ref: './components/schemas/v2/bookshelf.response.yaml#/bookshelfResponse'
+    bookshelfListV1Response:
+      $ref: './components/schemas/v1/bookshelf.response.yaml#/bookshelfListResponse'
+    bookshelfListV2Response:
+      $ref: './components/schemas/v2/bookshelf.response.yaml#/bookshelfListResponse'
+    userReviewListV1Response:
+      $ref: './components/schemas/v1/bookshelf.response.yaml#/userReviewListResponse'

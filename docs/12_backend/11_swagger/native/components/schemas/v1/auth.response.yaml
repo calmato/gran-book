@@ -1,0 +1,48 @@
+authResponse:
+  type: object
+  properties:
+    id:
+      type: string
+    username:
+      type: string
+    gender:
+      type: integer
+      format: int32
+    email:
+      type: string
+    phoneNumber:
+      type: string
+    role:
+      type: integer
+      format: int32
+    thumbnailUrl:
+      type: string
+    selfIntroduction:
+      type: string
+    lastName:
+      type: string
+    firstName:
+      type: string
+    lastNameKana:
+      type: string
+    firstNameKana:
+      type: string
+    postalCode:
+      type: string
+    prefecture:
+      type: string
+    city:
+      type: string
+    addressLine1:
+      type: string
+    addressLine2:
+      type: string
+    createdAt:
+      type: string
+    updatedAt:
+      type: string
+authThumbnailResponse:
+  type: object
+  properties:
+    thumbnailUrl:
+      type: string

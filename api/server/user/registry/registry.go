@@ -85,7 +85,8 @@ func chatInjection(
 	cm := messaging.NewChatMessaging()
 	cr := repository.NewChatRepository(fs)
 	cdv := dv.NewChatDomainValidation()
-	cs := service.NewChatService(cdv, cr, cm)
+	cu := storage.NewChatUploader(s)
+	cs := service.NewChatService(cdv, cr, cu, cm)
 
 	crv := rv.NewChatRequestValidation()
 	ca := application.NewChatApplication(crv, cs, us)

@@ -1,0 +1,32 @@
+post:
+  summary: 管理者サムネイルアップロード
+  tags:
+    - AdminService
+  security:
+    - BearerAuth: []
+  parameters:
+    - in: path
+      name: userId
+      schema:
+        type: string
+      required: true
+      description: ユーザーID
+  requestBody:
+    required: true
+    content:
+      multipart/form-data:
+        schema:
+          $ref: '../../openapi.yaml#/components/schemas/uploadAdminThumbnailV1Request'
+  responses:
+    '200':
+      description: A successful response.
+      content:
+        application/json:
+          schema:
+            $ref: '../../openapi.yaml#/components/schemas/adminThumbnailV1Response'
+    default:
+      description: An unexpected error response.
+      content:
+        application/json:
+          schema:
+            $ref: '../../openapi.yaml#/components/schemas/errorResponse'
