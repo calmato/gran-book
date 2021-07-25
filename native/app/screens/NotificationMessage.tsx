@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     justifyContent: 'space-between',
-    height: 40,
+    height: 30,
     flexDirection: 'row',
   },
   userNameStyle: {
@@ -68,24 +68,23 @@ interface Props {
 const initialData: RoomInfo = {
   rooms: [
     {
-      createdAt: '2021/07/06/23:30',
-      id: '1',
+      createdAt: '',
+      id: '',
       users: [
         {
           id: 'initialize',
-          username: 'ユーザー',
-          thumbnailUrl:
-            'https://iconbu.com/wp-content/uploads/2021/03/%E3%82%86%E3%82%8B%E3%81%84%E6%81%90%E7%AB%9C%E3%81%AE%E3%83%95%E3%83%AA%E3%83%BC%E3%82%A2%E3%82%A4%E3%82%B3%E3%83%B3.jpg',
+          username: '',
+          thumbnailUrl: '',
         },
       ],
       latestMessage: {
-        id: '1',
+        id: '',
         userId: '',
-        text: 'メッセージがありません',
+        text: '',
         image: '',
-        createdAt: '2021/07/06/23:30',
+        createdAt: '',
       },
-      updatedAt: '2021/07/06/23:30',
+      updatedAt: '',
     },
   ],
 };
@@ -105,7 +104,6 @@ const NotificationMessage = (props: Props) => {
     f();
   }, []);
   const [index, setIndex] = useState<number>(0);
-
   return (
     <View>
       <Header centerComponent={<HeaderText title="通知" />} centerContainerStyle={{ height: 30 }} />
@@ -134,7 +132,9 @@ const NotificationMessage = (props: Props) => {
                   <Text style={styles.latestMessageStyle}>
                     {dataInfo.latestMessage.text !== ''
                       ? dataInfo.latestMessage.text
-                      : '画像が送信されました'}
+                      : dataInfo.latestMessage.image !== ''
+                      ? '画像が送信されました'
+                      : ''}
                   </Text>
                   <MaterialIcons
                     style={styles.forwardButton}
