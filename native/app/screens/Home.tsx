@@ -26,6 +26,14 @@ const styles = StyleSheet.create({
   },
 });
 
+const tabList = [
+  { title: '読んだ本', alias: 'read' },
+  { title: '読んでいる本', alias: 'reading' },
+  { title: '積読本', alias: 'stack' },
+  { title: '欲しい本', alias: 'want' },
+  { title: '手放したい本', alias: 'release' },
+];
+
 interface Props {
   navigation?: StackNavigationProp<HomeTabStackPramList, 'Home'>;
   actions: {
@@ -75,11 +83,9 @@ const Home = function Home(props: Props): ReactElement {
 
       <ScrollView horizontal={true} bounces={false} showsHorizontalScrollIndicator={false}>
         <Tab value={index} onChange={setIndex} indicatorStyle={styles.indicator}>
-          <Tab.Item title="呼んだ本" titleStyle={styles.tabTitle} />
-          <Tab.Item title="読んでいる本" titleStyle={styles.tabTitle} />
-          <Tab.Item title="積読本" titleStyle={styles.tabTitle} />
-          <Tab.Item title="欲しい本" titleStyle={styles.tabTitle} />
-          <Tab.Item title="手放したい本" titleStyle={styles.tabTitle} />
+          {tabList.map((item, idx) => {
+            return <Tab.Item key={idx} title={item.title} titleStyle={styles.tabTitle} />;
+          })}
         </Tab>
       </ScrollView>
 
@@ -97,25 +103,14 @@ const Home = function Home(props: Props): ReactElement {
         keyboardShouldPersistTaps="handled"
         style={{ marginBottom: 'auto' }}>
         <TabView value={index} onChange={setIndex}>
-          <TabView.Item style={styles.tabView}>
-            {props.books && <BookList books={props.books.read} handleClick={handleBookClick} />}
-          </TabView.Item>
-
-          <TabView.Item style={styles.tabView}>
-            {props.books && <BookList books={props.books.reading} handleClick={handleBookClick} />}
-          </TabView.Item>
-
-          <TabView.Item style={styles.tabView}>
-            {props.books && <BookList books={props.books.stack} handleClick={handleBookClick} />}
-          </TabView.Item>
-
-          <TabView.Item style={styles.tabView}>
-            {props.books && <BookList books={props.books.want} handleClick={handleBookClick} />}
-          </TabView.Item>
-
-          <TabView.Item style={styles.tabView}>
-            {props.books && <BookList books={props.books.release} handleClick={handleBookClick} />}
-          </TabView.Item>
+          {props.books &&
+            tabList.map((item, idx) => {
+              return (
+                <TabView.Item key={idx} style={styles.tabView}>
+                  <BookList books={props.books[item.alias]} handleClick={handleBookClick} />
+                </TabView.Item>
+              );
+            })}
         </TabView>
       </ScrollView>
     </View>
