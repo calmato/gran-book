@@ -1,0 +1,81 @@
+get:
+  summary: 管理者一覧
+  tags:
+    - AdminService
+  security:
+    - BearerAuth: []
+  parameters:
+    - in: query
+      name: limit
+      schema:
+        type: integer
+      required: false
+      description: 取得上限数
+    - in: query
+      name: offset
+      schema:
+        type: integer
+      required: false
+      description: 取得開始位置
+    - in: query
+      name: field
+      schema:
+        type: string
+      required: false
+      description: 検索項目
+    - in: query
+      name: value
+      schema:
+        type: string
+      required: false
+      description: 検索値
+    - in: query
+      name: by
+      schema:
+        type: string
+      required: false
+      description: 並び替え対象のカラム
+    - in: query
+      name: direction
+      schema:
+        type: string
+      required: false
+      description: 並び替え順 (asc or desc)
+  responses:
+    '200':
+      description: A successful response.
+      content:
+        application/json:
+          schema:
+            $ref: '../../openapi.yaml#/components/schemas/adminListV1Response'
+    default:
+      description: An unexpected error response.
+      content:
+        application/json:
+          schema:
+            $ref: '../../openapi.yaml#/components/schemas/errorResponse'
+post:
+  summary: 管理者登録
+  tags:
+    - AdminService
+  security:
+    - BearerAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../openapi.yaml#/components/schemas/createAdminV1Request'
+  responses:
+    '200':
+      description: A successful response.
+      content:
+        application/json:
+          schema:
+            $ref: '../../openapi.yaml#/components/schemas/adminV1Response'
+    default:
+      description: An unexpected error response.
+      content:
+        application/json:
+          schema:
+            $ref: '../../openapi.yaml#/components/schemas/errorResponse'

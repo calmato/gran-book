@@ -71,3 +71,89 @@ func TestChatRequestValidation_CreateRoom(t *testing.T) {
 		})
 	}
 }
+
+func TestChatRequestValidation_CreateTextMessage(t *testing.T) {
+	testCases := map[string]struct {
+		Input    *input.CreateTextMessage
+		Expected bool
+	}{
+		"ok": {
+			Input: &input.CreateTextMessage{
+				Text: "テストメッセージ",
+			},
+			Expected: true,
+		},
+		"ng_text_required": {
+			Input: &input.CreateTextMessage{
+				Text: "",
+			},
+			Expected: false,
+		},
+		"ng_text_max": {
+			Input: &input.CreateTextMessage{
+				Text: strings.Repeat("x", 1001),
+			},
+			Expected: false,
+		},
+	}
+
+	for name, tc := range testCases {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		t.Run(name, func(t *testing.T) {
+			target := NewChatRequestValidation()
+
+			got := target.CreateTextMessage(tc.Input)
+			if tc.Expected {
+				if got != nil {
+					t.Fatalf("Incorrect result: %#v", got)
+				}
+			} else {
+				if got == nil {
+					t.Fatalf("Incorrect result: result is nil")
+				}
+			}
+		})
+	}
+}
+
+func TestChatRequestValidation_CreateImageMessage(t *testing.T) {
+	testCases := map[string]struct {
+		Input    *input.CreateImageMessage
+		Expected bool
+	}{
+		"ok": {
+			Input: &input.CreateImageMessage{
+				Image: []byte("あいうえお"),
+			},
+			Expected: true,
+		},
+		"ng_text_required": {
+			Input: &input.CreateImageMessage{
+				Image: nil,
+			},
+			Expected: false,
+		},
+	}
+
+	for name, tc := range testCases {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		t.Run(name, func(t *testing.T) {
+			target := NewChatRequestValidation()
+
+			got := target.CreateImageMessage(tc.Input)
+			if tc.Expected {
+				if got != nil {
+					t.Fatalf("Incorrect result: %#v", got)
+				}
+			} else {
+				if got == nil {
+					t.Fatalf("Incorrect result: result is nil")
+				}
+			}
+		})
+	}
+}

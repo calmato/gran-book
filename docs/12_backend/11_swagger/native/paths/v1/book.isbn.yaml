@@ -1,0 +1,38 @@
+get:
+  summary: 書籍情報取得
+  tags:
+    - BookService
+  security:
+    - BearerAuth: []
+  parameters:
+    - in: path
+      name: isbn
+      schema:
+        type: string
+      required: true
+      description: ISBN
+    - in: query
+      name: limit
+      schema:
+        type: integer
+      required: false
+      description: 取得上限数
+    - in: query
+      name: offset
+      schema:
+        type: integer
+      required: false
+      description: 取得開始位置
+  responses:
+    '200':
+      description: A successful response.
+      content:
+        application/json:
+          schema:
+            $ref: './../../openapi.yaml#/components/schemas/bookV1Response'
+    default:
+      description: An unexpected error response.
+      content:
+        application/json:
+          schema:
+            $ref: './../../openapi.yaml#/components/schemas/errorResponse'

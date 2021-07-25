@@ -44,7 +44,7 @@ service ChatService {
   rpc ListRoom(ListChatRoomRequest) returns (ChatRoomListResponse);
   rpc CreateRoom(CreateChatRoomRequest) returns (ChatRoomResponse);
   rpc CreateMessage(CreateChatMessageRequest) returns (ChatMessageResponse);
-  rpc UploadImage(UploadChatImageRequest) returns (ChatMessageResponse);
+  rpc UploadImage(stream UploadChatImageRequest) returns (ChatMessageResponse);
 }
 
 message EmptyUser {}
@@ -236,12 +236,14 @@ message CreateChatRoomRequest {
 }
 
 message CreateChatMessageRequest {
-  string text = 1;
+  string room_id = 1;
+  string text = 2;
 }
 
 message UploadChatImageRequest {
-  bytes image = 1;
-  int64 position = 2;
+  string room_id = 1;
+  bytes image = 2;
+  int64 position = 3;
 }
 
 message AuthResponse {

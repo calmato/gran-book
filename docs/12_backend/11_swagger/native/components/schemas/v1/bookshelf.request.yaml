@@ -1,0 +1,7 @@
+readBookshelfRequest:
+  type: object
+  properties:
+    impression:
+      type: string
+    readOn:
+      type: string

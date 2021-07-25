@@ -1,0 +1,63 @@
+notificationResponse:
+  type: object
+  properties:
+    id:
+      type: integer
+    authorName:
+      type: string
+    editorName:
+      type: string
+    title:
+      type: string
+    description:
+      type: string
+    importance:
+      type: string
+    category:
+      type: string
+    createdAt:
+      type: string
+    updatedAt:
+      type: string
+notificationListResponse:
+  type: object
+  properties:
+    notifications:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: integer
+          authorName:
+            type: string
+          editorName:
+            type: string
+          title:
+            type: string
+          description:
+            type: string
+          importance:
+            type: string
+          category:
+            type: string
+          createdAt:
+            type: string
+          updatedAt:
+            type: string
+    limit:
+      type: integer
+      format: int64
+    offset:
+      type: integer
+      format: int64
+    total:
+      type: integer
+      format: int64
+    order:
+      type: object
+      properties:
+        by:
+          type: string
+        direction:
+          type: string

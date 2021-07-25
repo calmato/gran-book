@@ -1,0 +1,78 @@
+get:
+  summary: お知らせ詳細の取得
+  tags:
+    - NotificationService
+  parameters:
+    - in: path
+      name: notificationId
+      schema:
+        type: integer
+      required: true
+      description: お知らせID
+  responses:
+    '200':
+      description: A successful response.
+      content:
+        application/json:
+          schema:
+            $ref: '../../openapi.yaml#/components/schemas/notificationV1Response'
+    default:
+      description: An unexpected error response.
+      content:
+        application/json:
+          schema:
+            $ref: '../../openapi.yaml#/components/schemas/errorResponse'
+patch:
+  summary: お知らせの編集
+  tags:
+    - NotificationService
+  parameters:
+    - in: path
+      name: notificationId
+      schema:
+        type: integer
+      required: true
+      description: お知らせID
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../openapi.yaml#/components/schemas/updateNotificationV1Request'
+  responses:
+    '200':
+      description: A successful response.
+      content:
+        application/json:
+          schema:
+            $ref: '../../openapi.yaml#/components/schemas/notificationV1Response'
+    default:
+      description: An unexpected error response.
+      content:
+        application/json:
+          schema:
+            $ref: '../../openapi.yaml#/components/schemas/errorResponse'
+delete:
+  summary: お知らせの削除
+  tags:
+    - NotificationService
+  parameters:
+    - in: path
+      name: notificationId
+      schema:
+        type: integer
+      required: true
+      description: お知らせID
+  responses:
+    '200':
+      description: A successful response.
+      content:
+        application/json:
+          schema:
+            $ref: '../../openapi.yaml#/components/schemas/emptyResponse'
+    default:
+      description: An unexpected error response.
+      content:
+        application/json:
+          schema:
+            $ref: '../../openapi.yaml#/components/schemas/errorResponse'
