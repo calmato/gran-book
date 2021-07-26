@@ -70,6 +70,14 @@ apt install -y certbot
 ### Nginx
 apt install -y nginx
 
+### Nodejs
+curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+apt install -y nodejs
+npm install -g yarn
+
+### Java
+apt install -y openjdk-11-jre-headless
+
 ### Prometheus
 apt install -y prometheus prometheus-node-exporter
 

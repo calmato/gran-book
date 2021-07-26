@@ -1,0 +1,33 @@
+name: Swagger Deploy
+on:
+  push:
+    paths:
+      - '.github/workflows/cd-swagger.yaml'
+      - 'docs/12_backend/11_swagger/**'
+    branches:
+      - master
+
+jobs:
+  setup_and_build:
+    name: Setup and Build
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+
+    steps:
+    - name: Deploy
+      uses: appleboy/ssh-action@master
+      with:
+        username: ${{ secrets.MGMT_SERVER_USERNAME }}
+        host: ${{ secrets.MGMT_SERVER_HOSTNAME }}
+        port: ${{ secrets.MGMT_SERVER_PORT }}
+        key: ${{ secrets.MGMT_SERVER_PRIVATE_KEY }}
+        script: |
+          cd /opt/gran-book/docs/12_backend/11_swagger
+          git pull origin master
+          yarn generate

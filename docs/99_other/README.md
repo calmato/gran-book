@@ -24,7 +24,7 @@
 
 ## コミットルール
 
-* Commit Massage Prefix一覧
+* Commit Message Prefix一覧
 
 * Format: <type>(<scope>): <subject>
 
