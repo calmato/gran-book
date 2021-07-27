@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package proto;
+
+option go_package = "github.com/calmato/gran-book/proto";
+
+message Empty {}
+
+message Search {
+  string key = 1;
+  string value = 2;
+}
+
+message Order {
+  string key = 1;
+  OrderBy order_by = 2;
+}
+
+enum OrderBy {
+  ORDER_BY_INVALID = 0;
+  ORDER_BY_ASC = 1;
+  ORDER_BY_DESC = 2;
+}

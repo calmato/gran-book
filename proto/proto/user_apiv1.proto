@@ -28,18 +28,6 @@ service AdminService {
   rpc DeleteAdmin(DeleteAdminRequest) returns (EmptyUser);
 }
 
-service UserService {
-  rpc ListUser(ListUserRequest) returns (UserListResponse);
-  rpc ListUserByUserIds(ListUserByUserIdsRequest) returns (UserListResponse);
-  rpc ListFollow(ListFollowRequest) returns (FollowListResponse);
-  rpc ListFollower(ListFollowerRequest) returns (FollowerListResponse);
-  rpc SearchUser(SearchUserRequest) returns (UserListResponse);
-  rpc GetUser(GetUserRequest) returns (UserResponse);
-  rpc GetUserProfile(GetUserProfileRequest) returns (UserProfileResponse);
-  rpc RegisterFollow(RegisterFollowRequest) returns (UserProfileResponse);
-  rpc UnregisterFollow(UnregisterFollowRequest) returns (UserProfileResponse);
-}
-
 service ChatService {
   rpc ListRoom(ListChatRoomRequest) returns (ChatRoomListResponse);
   rpc CreateRoom(CreateChatRoomRequest) returns (ChatRoomResponse);
@@ -168,63 +156,6 @@ message DeleteAdminRequest {
   string user_id = 1;
 }
 
-message ListUserRequest {
-  message Order {
-    string by = 1;
-    string direction = 2;
-  }
-  int64 limit = 1;
-  int64 offset = 2;
-  Order order = 3;
-}
-
-message ListUserByUserIdsRequest {
-  repeated string user_ids = 1;
-}
-
-message ListFollowRequest {
-  string id = 1;
-  int64 limit = 2;
-  int64 offset = 3;
-}
-
-message ListFollowerRequest {
-  string id = 1;
-  int64 limit = 2;
-  int64 offset = 3;
-}
-
-message SearchUserRequest {
-  message Order {
-    string by = 1;
-    string direction = 2;
-  }
-  message Search {
-    string field = 1;
-    string value = 2;
-  }
-  int64 limit = 1;
-  int64 offset = 2;
-  Order order = 3;
-  Search search = 4;
-}
-
-message GetUserRequest {
-  string id = 1;
-}
-
-message GetUserProfileRequest {
-  string id = 1;
-}
-
-message RegisterFollowRequest {
-  string id = 1;
-}
-
-message UnregisterFollowRequest {
-  string id = 1;
-}
-
 message ListChatRoomRequest {
   string user_id = 1;
   int64 limit = 2;
@@ -317,88 +248,6 @@ message AdminListResponse {
 
 message AdminThumbnailResponse {
   string thumbnail_url = 1;
-}
-
-message UserResponse {
-  string id = 1;
-  string username = 2;
-  string email = 3;
-  string phone_number = 4;
-  int32 role = 5;
-  string thumbnail_url = 6;
-  string self_introduction = 7;
-  string last_name = 8;
-  string first_name = 9;
-  string last_name_kana = 10;
-  string first_name_kana = 11;
-  string created_at = 12;
-  string updated_at = 13;
-}
-
-message UserListResponse {
-  message User {
-    string id = 1;
-    string username = 2;
-    string email = 3;
-    string phone_number = 4;
-    int32 role = 5;
-    string thumbnail_url = 6;
-    string self_introduction = 7;
-    string last_name = 8;
-    string first_name = 9;
-    string last_name_kana = 10;
-    string first_name_kana = 11;
-    string created_at = 12;
-    string updated_at = 13;
-  }
-  message Order {
-    string by = 1;
-    string direction = 2;
-  }
-  repeated User users = 1;
-  int64 limit = 2;
-  int64 offset = 3;
-  int64 total = 4;
-  Order order = 5;
-}
-
-message UserProfileResponse {
-  string id = 1;
-  string username = 2;
-  string thumbnail_url = 3;
-  string self_introduction = 4;
-  bool is_follow = 5;
-  bool is_follower = 6;
-  int64 follow_count = 7;
-  int64 follower_count = 8;
-}
-
-message FollowListResponse {
-  message User {
-    string id = 1;
-    string username = 2;
-    string thumbnail_url = 3;
-    string self_introduction = 4;
-    bool is_follow = 5;
-  }
-  repeated User users = 1;
-  int64 limit = 2;
-  int64 offset = 3;
-  int64 total = 4;
-}
-
-message FollowerListResponse {
-  message User {
-    string id = 1;
-    string username = 2;
-    string thumbnail_url = 3;
-    string self_introduction = 4;
-    bool is_follow = 5;
-  }
-  repeated User users = 1;
-  int64 limit = 2;
-  int64 offset = 3;
-  int64 total = 4;
 }
 
 message ChatRoomResponse {
