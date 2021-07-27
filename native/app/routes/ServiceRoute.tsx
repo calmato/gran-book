@@ -2,9 +2,9 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React, { ReactElement } from 'react';
 import { StyleSheet } from 'react-native';
-import HomeTabRoute from '~/routes/HomeTabRoute';
+import BookshelfTabRoute from '~/routes/BookshelfTabRoute';
 import UserInfoRoute from '~/routes/UserInfoRoute';
-import Bookshelf from '~/screens/Bookshelf';
+import Home from '~/screens/Home';
 import Sale from '~/screens/Sale';
 import Store from '~/screens/Store';
 import { COLOR } from '~~/constants/theme';
@@ -59,8 +59,8 @@ const ServiceRoute = function ServiceRoute(): ReactElement {
         activeTintColor: COLOR.TEXT_TITLE,
         labelStyle: styles.labelStyle,
       }}>
-      <Tab.Screen name="ホーム" component={HomeTabRoute} />
-      <Tab.Screen name="本棚" component={Bookshelf} />
+      <Tab.Screen name="ホーム" component={Home} />
+      <Tab.Screen name="本棚" component={BookshelfTabRoute} />
       <Tab.Screen name="本を出品" component={Sale} />
       <Tab.Screen name="本を買う" component={Store} />
       <Tab.Screen name="マイページ" component={UserInfoRoute} />
