@@ -6,6 +6,7 @@ import * as UiContext from '~/lib/context/ui';
 import AuthRoute from '~/routes/AuthRoute';
 import ServiceRoute from '~/routes/ServiceRoute';
 import Onboarding from '~/screens/Onboarding';
+import SplashScreen from '~/screens/SplashScreen';
 import { useReduxDispatch } from '~/store/modules';
 import { authenticationAsync, getAuthAsync } from '~/store/usecases';
 import { RootStackParamList } from '~/types/navigation';
@@ -23,8 +24,10 @@ function OnboadingRoute(): ReactElement {
 // アプリ起動時、認証情報によってページ遷移
 function SwitchingStatus(status: UiContext.Status): ReactElement {
   switch (status) {
+    // 認証済みならばサービスルートを表示
     case UiContext.Status.AUTHORIZED:
       return ServiceRoute();
+    // 未認証あるいはそれ以外ならば認証・登録ルートを表示
     case UiContext.Status.UN_AUTHORIZED:
     default:
       return OnboadingRoute();
@@ -36,6 +39,9 @@ export default function MainRoute(): ReactElement {
   const { setApplicationState } = React.useContext(Context);
   const dispatch = useReduxDispatch();
 
+  const wait = async (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  const waitTime = 1600;
+
   useEffect(() => {
     async function prepare() {
       await actions
@@ -43,10 +49,12 @@ export default function MainRoute(): ReactElement {
         .then(() => {
           return actions.getAuth();
         })
-        .then(() => {
+        .then(async () => {
+          await wait(waitTime);
           setApplicationState(UiContext.Status.AUTHORIZED);
         })
-        .catch(() => {
+        .catch(async () => {
+          await wait(waitTime);
           setApplicationState(UiContext.Status.UN_AUTHORIZED);
         });
     }
@@ -66,5 +74,10 @@ export default function MainRoute(): ReactElement {
     [dispatch],
   );
 
-  return <NavigationContainer>{SwitchingStatus(uiContext.applicationState)}</NavigationContainer>;
+  // ローディング中はSplashScreenを表示する
+  return uiContext.applicationState === UiContext.Status.LOADING ? (
+    <SplashScreen />
+  ) : (
+    <NavigationContainer>{SwitchingStatus(uiContext.applicationState)}</NavigationContainer>
+  );
 }
