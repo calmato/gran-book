@@ -3,4 +3,4 @@ protoc:
   includes:
   - ./proto
 lint:
-  group: google
+  group: uber2

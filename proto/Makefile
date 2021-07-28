@@ -37,6 +37,8 @@ generate:
 	$(MAKE) protoc-service SERVICE_PATH=${INFORMATION_API_PATH}
 
 protoc-gateway:
+	rm -rf ${GATEWAY_PATH}/*_pb.js
+	rm -rf ${GATEWAY_PATH}/*_pb.d.ts
 	protoc -I . \
 		--plugin=protoc-gen-ts=${PROTOC_GEN_TS_PATH} \
 		--plugin=protoc-gen-grpc=${PROTOC_GEN_GRPC_PATH} \
@@ -46,6 +48,7 @@ protoc-gateway:
 		./proto/*.proto
 
 protoc-service:
+	rm -rf ${SERVICE_PATH}/*.pb.go
 	protoc -I . \
 		--go_out ${SERVICE_PATH} \
 		--go_opt paths=source_relative \
