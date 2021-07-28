@@ -4,13 +4,14 @@ package proto;
 
 option go_package = "github.com/calmato/gran-book/proto";
 
+import "github.com/envoyproxy/protoc-gen-validate/validate/validate.proto";
 import "proto/common.proto";
 
 service UserService {
   rpc ListUser(ListUserRequest) returns (UserListResponse);
   rpc ListFollow(ListFollowRequest) returns (FollowListResponse);
   rpc ListFollower(ListFollowerRequest) returns (FollowerListResponse);
-  rpc MultiGetUser(MultiGetUserRequest) returns (UserHashResponse);
+  rpc MultiGetUser(MultiGetUserRequest) returns (UserMapResponse);
   rpc GetUser(GetUserRequest) returns (UserResponse);
   rpc GetUserProfile(GetUserProfileRequest) returns (UserProfileResponse);
   rpc RegisterFollow(RegisterFollowRequest) returns (UserProfileResponse);
@@ -25,14 +26,22 @@ message ListUserRequest {
 }
 
 message ListFollowRequest {
-  string user_id = 1;
+  string user_id = 1 [
+    (validate.rules).string = {
+      min_len: 1
+    }
+  ];
   Order order = 2;
   int64 limit = 3;
   int64 offset = 4;
 }
 
 message ListFollowerRequest {
-  string user_id = 1;
+  string user_id = 1 [
+    (validate.rules).string = {
+      min_len: 1
+    }
+  ];
   Order order = 2;
   int64 limit = 3;
   int64 offset = 4;
@@ -43,19 +52,35 @@ message MultiGetUserRequest {
 }
 
 message GetUserRequest {
-  string id = 1;
+  string id = 1 [
+    (validate.rules).string = {
+      min_len: 1
+    }
+  ];
 }
 
 message GetUserProfileRequest {
-  string id = 1;
+  string id = 1 [
+    (validate.rules).string = {
+      min_len: 1
+    }
+  ];
 }
 
 message RegisterFollowRequest {
-  string id = 1;
+  string id = 1 [
+    (validate.rules).string = {
+      min_len: 1
+    }
+  ];
 }
 
 message UnregisterFollowRequest {
-  string id = 1;
+  string id = 1 [
+    (validate.rules).string = {
+      min_len: 1
+    }
+  ];
 }
 
 message UserResponse {
@@ -98,7 +123,7 @@ message UserListResponse {
   int64 total = 4; // 条件一致数
 }
 
-message UserHashResponse {
+message UserMapResponse {
   message User {
     string id = 1; // ユーザーID
     string username = 2; // ユーザー名

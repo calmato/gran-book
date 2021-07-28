@@ -6,6 +6,7 @@ require (
 	cloud.google.com/go/firestore v1.5.0
 	cloud.google.com/go/storage v1.14.0
 	firebase.google.com/go/v4 v4.5.0
+	github.com/envoyproxy/protoc-gen-validate v0.1.0
 	github.com/go-playground/validator/v10 v10.4.1
 	github.com/golang/mock v1.5.0
 	github.com/golang/protobuf v1.5.2
