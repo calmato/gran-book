@@ -1,7 +1,7 @@
 import LottieView from 'lottie-react-native';
 import React, { ReactElement, useRef, useEffect } from 'react';
 
-import { StyleSheet, View, ActivityIndicator } from 'react-native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { COLOR } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
@@ -11,29 +11,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: COLOR.BACKGROUND_WHITE,
   },
-  logo: {
-    width: 218.75 / 2,
-    height: 250 / 2,
-    margin: 30,
-    borderRadius: 16,
-  },
 });
 
-const options = {
-  loop: true,
-  autoplay: true,
-};
-
 const SplashScreen = function SplashScreen(): ReactElement {
-  const animation = useRef(null);
+  const animation = useRef<LottieView>(null);
 
   useEffect(() => {
-    animation.current.play();
+    if (animation) {
+      animation.current?.play();
+    }
   }, []);
 
   return (
     <View style={styles.container}>
-      {/* <Image style={styles.logo} source={logo} /> */}
       <LottieView
         ref={animation}
         source={require('~~/assets/animations/book')}
