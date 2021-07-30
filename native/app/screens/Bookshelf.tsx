@@ -1,5 +1,5 @@
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { ReactElement, useCallback, useEffect, useState } from 'react';
+import React, { ReactElement, useCallback, useState } from 'react';
 import { StyleSheet, ScrollView, RefreshControl, View } from 'react-native';
 
 import { Header, Tab, TabView } from 'react-native-elements';
@@ -66,10 +66,6 @@ const Bookshelf = function Bookshelf(props: Props): ReactElement {
   const cancelCallback = useCallback(() => {
     return setKeyword('');
   }, [setKeyword]);
-
-  useEffect(() => {
-    props.actions.getAllBook();
-  }, [props.actions]);
 
   return (
     <View>
