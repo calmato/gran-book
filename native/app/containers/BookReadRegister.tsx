@@ -5,11 +5,11 @@ import BookReadRegister from '~/screens/BookReadRegister';
 import { useReduxDispatch } from '~/store/modules';
 import { registerReadBookImpressionAsync } from '~/store/usecases';
 import { ImpressionForm } from '~/types/forms';
-import { HomeTabStackPramList } from '~/types/navigation';
+import { BookshelfTabStackPramList } from '~/types/navigation';
 
 interface Props {
-  route: RouteProp<HomeTabStackPramList, 'BookReadRegister'>;
-  navigation: StackNavigationProp<HomeTabStackPramList, 'BookReadRegister'>;
+  route: RouteProp<BookshelfTabStackPramList, 'BookReadRegister'>;
+  navigation: StackNavigationProp<BookshelfTabStackPramList, 'BookReadRegister'>;
 }
 
 const ConnectedBookReadRegister = function ConnectedBookReadRegister(props: Props): ReactElement {
