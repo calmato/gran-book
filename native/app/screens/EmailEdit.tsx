@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
   },
   textCard: {
     width: '90%',
-    fontSize: 16,
+    fontSize: 14,
     color: COLOR.TEXT_DEFAULT,
     backgroundColor: COLOR.BACKGROUND_YELLOW,
     borderColor: COLOR.PRIMARY,
@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     marginTop: 30,
     marginLeft: 12,
     marginBottom: 6,
-    fontSize: 16,
+    fontSize: 15,
     color: COLOR.TEXT_TITLE,
     fontWeight: '600',
     alignSelf: 'flex-start',

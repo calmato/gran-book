@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingHorizontal: 16,
     paddingBottom: 10,
-    fontSize: 12,
+    fontSize: 14,
     alignSelf: 'stretch',
     color: COLOR.GREY,
     backgroundColor: COLOR.BACKGROUND_WHITE,

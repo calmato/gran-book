@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
   },
   authors: {
     color: COLOR.TEXT_GRAY,
-    fontSize: 12,
+    fontSize: 14,
   },
 });
 

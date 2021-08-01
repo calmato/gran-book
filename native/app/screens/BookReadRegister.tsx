@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   impressionFormLabel: {
-    fontSize: 16,
+    fontSize: 15,
     paddingLeft: 16,
     marginTop: 10,
     marginBottom: 8,
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
   impressionForm: {
     backgroundColor: COLOR.BACKGROUND_WHITE,
     padding: 0,
-    fontSize: 16,
+    fontSize: 18,
     paddingHorizontal: 16,
     height: 160,
     marginBottom: 16,

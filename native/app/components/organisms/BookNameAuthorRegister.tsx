@@ -24,7 +24,7 @@ const BookNameAuthorRegister = function BookNameAuthorRegister(props: Props): Re
       <Image source={{ uri: props.imageUrl }} style={{ width: 75, height: 105 }} />
       <View style={{ justifyContent: 'space-around', marginStart: 20 }}>
         <Text style={{ fontSize: 16 }}>{props.title}</Text>
-        <Text style={{ fontSize: 16, color: COLOR.GREY }}>{props.author}</Text>
+        <Text style={{ fontSize: 14, color: COLOR.GREY }}>{props.author}</Text>
       </View>
     </View>
   );

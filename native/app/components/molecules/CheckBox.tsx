@@ -10,7 +10,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   icon: {},
-  text: {},
+  text: {
+    fontSize: 14,
+  },
 });
 
 interface Props {

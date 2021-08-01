@@ -30,6 +30,7 @@ const PasswordInput = function PasswordInput(props: Props): ReactElement {
       }
       errorMessage={props.hasError ? props.errorMessage : ''}
       maxLength={32}
+      inputStyle={{ fontSize: 18 }}
     />
   );
 };

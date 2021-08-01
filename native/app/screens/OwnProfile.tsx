@@ -18,10 +18,12 @@ const styles = StyleSheet.create({
     padding: 16,
     alignSelf: 'stretch',
     minHeight: 100,
+    fontSize: 14,
   },
   title: {
     color: COLOR.TEXT_TITLE,
     padding: 10,
+    fontSize: 15,
   },
 });
 
