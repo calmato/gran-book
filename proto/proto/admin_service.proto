@@ -34,7 +34,11 @@ message ListAdminRequest {
 }
 
 message GetAdminRequest {
-  string user_id = 1;
+  string user_id = 1 [
+    (validate.rules).string = {
+      min_len: 1
+    }
+  ];
 }
 
 message CreateAdminRequest {
@@ -196,11 +200,7 @@ message UpdateAdminProfileRequest {
 }
 
 message UploadAdminThumbnailRequest {
-  string user_id = 1 [
-    (validate.rules).string = {
-      min_len: 1
-    }
-  ];
+  string user_id = 1;
   bytes thumbnail = 2;
   int64 position = 3 [
     (validate.rules).int64 = {
