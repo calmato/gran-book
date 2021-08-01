@@ -17,7 +17,6 @@ import (
 // Registry - DIコンテナ
 type Registry struct {
 	AdminApplication application.AdminApplication
-	AuthApplication  application.AuthApplication
 	UserApplication  application.UserApplication
 	ChatApplication  application.ChatApplication
 }
@@ -27,13 +26,11 @@ func NewRegistry(
 	db *database.Client, fa *authentication.Auth, fs *firestore.Firestore, s *gcs.Storage,
 ) *Registry {
 	admin := adminInjection(db, fa, s)
-	auth := authInjection(db, fa, s)
 	user := userInjection(db, fa, s)
 	chat := chatInjection(db, fa, fs, s)
 
 	return &Registry{
 		AdminApplication: admin,
-		AuthApplication:  auth,
 		UserApplication:  user,
 		ChatApplication:  chat,
 	}
@@ -47,18 +44,6 @@ func adminInjection(db *database.Client, fa *authentication.Auth, s *gcs.Storage
 
 	arv := rv.NewAdminRequestValidation()
 	aa := application.NewAdminApplication(arv, us)
-
-	return aa
-}
-
-func authInjection(db *database.Client, fa *authentication.Auth, s *gcs.Storage) application.AuthApplication {
-	ur := repository.NewUserRepository(db, fa)
-	udv := dv.NewUserDomainValidation(ur)
-	uu := storage.NewUserUploader(s)
-	us := service.NewUserService(udv, ur, uu)
-
-	arv := rv.NewAuthRequestValidation()
-	aa := application.NewAuthApplication(arv, us)
 
 	return aa
 }

@@ -4,18 +4,6 @@ package proto;
 
 option go_package = "github.com/calmato/gran-book/proto";
 
-service AuthService {
-  rpc GetAuth(EmptyUser) returns (AuthResponse);
-  rpc CreateAuth(CreateAuthRequest) returns (AuthResponse);
-  rpc UpdateAuthEmail(UpdateAuthEmailRequest) returns (AuthResponse);
-  rpc UpdateAuthPassword(UpdateAuthPasswordRequest) returns (AuthResponse);
-  rpc UpdateAuthProfile(UpdateAuthProfileRequest) returns (AuthResponse);
-  rpc UpdateAuthAddress(UpdateAuthAddressRequest) returns (AuthResponse);
-  rpc UploadAuthThumbnail(stream UploadAuthThumbnailRequest) returns (AuthThumbnailResponse);
-  rpc DeleteAuth(EmptyUser) returns (EmptyUser);
-  rpc RegisterAuthDevice(RegisterAuthDeviceRequest) returns (AuthResponse);
-}
-
 service AdminService {
   rpc ListAdmin(ListAdminRequest) returns (AdminListResponse);
   rpc SearchAdmin(SearchAdminRequest) returns (AdminListResponse);
@@ -36,51 +24,6 @@ service ChatService {
 }
 
 message EmptyUser {}
-
-message CreateAuthRequest {
-  string username = 1;
-  string email = 2;
-  string password = 3;
-  string password_confirmation = 4;
-}
-
-message UpdateAuthEmailRequest {
-  string email = 1;
-}
-
-message UpdateAuthPasswordRequest {
-  string password = 1;
-  string password_confirmation = 2;
-}
-
-message UpdateAuthProfileRequest {
-  string username = 1;
-  int32 gender = 2;
-  string thumbnail_url = 3;
-  string self_introduction = 4;
-}
-
-message UpdateAuthAddressRequest {
-  string last_name = 1;
-  string first_name = 2;
-  string last_name_kana = 3;
-  string first_name_kana = 4;
-  string phone_number = 5;
-  string postal_code = 6;
-  string prefecture = 7;
-  string city = 8;
-  string address_line1 = 9;
-  string address_line2 = 10;
-}
-
-message UploadAuthThumbnailRequest {
-  bytes thumbnail = 1;
-  int64 position = 2;
-}
-
-message RegisterAuthDeviceRequest {
-  string instance_id = 1;
-}
 
 message ListAdminRequest {
   message Order {
@@ -175,32 +118,6 @@ message UploadChatImageRequest {
   string room_id = 1;
   bytes image = 2;
   int64 position = 3;
-}
-
-message AuthResponse {
-  string id = 1;
-  string username = 2;
-  int32 gender = 3;
-  string email = 4;
-  string phone_number = 5;
-  int32 role = 6;
-  string thumbnail_url = 7;
-  string self_introduction = 8;
-  string last_name = 9;
-  string first_name = 10;
-  string last_name_kana = 11;
-  string first_name_kana = 12;
-  string postal_code = 13;
-  string prefecture = 14;
-  string city = 15;
-  string address_line1 = 16;
-  string address_line2 = 17;
-  string created_at = 18;
-  string updated_at = 19;
-}
-
-message AuthThumbnailResponse {
-  string thumbnail_url = 1;
 }
 
 message AdminResponse {

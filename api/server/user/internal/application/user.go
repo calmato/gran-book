@@ -10,15 +10,20 @@ import (
 
 // UserApplication - Userアプリケーションのインターフェース
 type UserApplication interface {
-	Authentication(ctx context.Context) (string, error)
+	Authentication(ctx context.Context) (*user.User, error)
 	List(ctx context.Context, q *database.ListQuery) ([]*user.User, int, error)
 	ListFollow(ctx context.Context, userID string, limit int, offset int) ([]*user.Follow, int, error)
 	ListFollower(ctx context.Context, userID string, limit int, offset int) ([]*user.Follower, int, error)
 	MultiGet(ctx context.Context, userIDs []string) ([]*user.User, error)
 	Get(ctx context.Context, userID string) (*user.User, error)
 	GetUserProfile(ctx context.Context, userID string) (*user.User, bool, bool, int, int, error)
+	Create(ctx context.Context, u *user.User) error
+	Update(ctx context.Context, u *user.User) error
+	UpdatePassword(ctx context.Context, u *user.User) error
+	Delete(ctx context.Context, u *user.User) error
 	Follow(ctx context.Context, userID string, followerID string) (*user.User, bool, bool, int, int, error)
 	Unfollow(ctx context.Context, userID string, followerID string) (*user.User, bool, bool, int, int, error)
+	UploadThumbnail(ctx context.Context, userID string, thumbnail []byte) (string, error)
 }
 
 type userApplication struct {
@@ -36,8 +41,32 @@ func NewUserApplication(udv user.Validation, ur user.Repository, uu user.Uploade
 	}
 }
 
-func (a *userApplication) Authentication(ctx context.Context) (string, error) {
-	return a.userRepository.Authentication(ctx)
+func (a *userApplication) Authentication(ctx context.Context) (*user.User, error) {
+	userID, err := a.userRepository.Authentication(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	u, err := a.userRepository.Get(ctx, userID)
+	if err == nil {
+		return u, nil
+	}
+
+	// err: Auth APIにはデータがあるが、User DBにはレコードがない
+	// -> Auth APIのデータを基にUser DBに登録
+	ou := &user.User{
+		ID:     userID,
+		Gender: user.UnkownGender,
+		Role:   user.UserRole,
+	}
+
+	// TODO: domain validation
+	err = a.userRepository.CreateWithOAuth(ctx, ou)
+	if err != nil {
+		return nil, err
+	}
+
+	return ou, nil
 }
 
 func (a *userApplication) List(ctx context.Context, q *database.ListQuery) ([]*user.User, int, error) {
@@ -164,6 +193,37 @@ func (a *userApplication) GetUserProfile(
 	return u, isFollow, isFollower, followCount, followerCount, nil
 }
 
+func (a *userApplication) Create(ctx context.Context, u *user.User) error {
+	err := a.userDomainValidation.User(ctx, u)
+	if err != nil {
+		return err
+	}
+
+	return a.userRepository.Create(ctx, u)
+}
+
+func (a *userApplication) Update(ctx context.Context, u *user.User) error {
+	err := a.userDomainValidation.User(ctx, u)
+	if err != nil {
+		return err
+	}
+
+	return a.userRepository.Update(ctx, u)
+}
+
+func (a *userApplication) UpdatePassword(ctx context.Context, u *user.User) error {
+	err := a.userDomainValidation.User(ctx, u)
+	if err != nil {
+		return err
+	}
+
+	return a.userRepository.UpdatePassword(ctx, u.ID, u.Password)
+}
+
+func (a *userApplication) Delete(ctx context.Context, u *user.User) error {
+	return a.userRepository.Delete(ctx, u.ID)
+}
+
 func (a *userApplication) Follow(
 	ctx context.Context, userID string, followerID string,
 ) (*user.User, bool, bool, int, int, error) {
@@ -219,6 +279,10 @@ func (a *userApplication) Unfollow(
 	}
 
 	return fu, isFollow, isFollower, followCount, followerCount, nil
+}
+
+func (a *userApplication) UploadThumbnail(ctx context.Context, userID string, thumbnail []byte) (string, error) {
+	return a.userUploader.Thumbnail(ctx, userID, thumbnail)
 }
 
 func (a *userApplication) getRelationship(ctx context.Context, userID string) (bool, bool, int, int, error) {

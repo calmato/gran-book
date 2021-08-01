@@ -21,8 +21,16 @@ service UserService {
 message ListUserRequest {
   Search search = 1;
   Order order = 2;
-  int64 limit = 3;
-  int64 offset = 4;
+  int64 limit = 3 [
+    (validate.rules).int64 = {
+      lte: 200
+    }
+  ];
+  int64 offset = 4 [
+    (validate.rules).int64 = {
+      gte: 0
+    }
+  ];
 }
 
 message ListFollowRequest {
@@ -32,8 +40,16 @@ message ListFollowRequest {
     }
   ];
   Order order = 2;
-  int64 limit = 3;
-  int64 offset = 4;
+  int64 limit = 3 [
+    (validate.rules).int64 = {
+      lte: 200
+    }
+  ];
+  int64 offset = 4 [
+    (validate.rules).int64 = {
+      gte: 0
+    }
+  ];
 }
 
 message ListFollowerRequest {
@@ -43,12 +59,26 @@ message ListFollowerRequest {
     }
   ];
   Order order = 2;
-  int64 limit = 3;
-  int64 offset = 4;
+  int64 limit = 3 [
+    (validate.rules).int64 = {
+      lte: 200
+    }
+  ];
+  int64 offset = 4 [
+    (validate.rules).int64 = {
+      gte: 0
+    }
+  ];
 }
 
 message MultiGetUserRequest {
-  repeated string ids = 1;
+  repeated string ids = 1 [
+    (validate.rules).repeated = {
+      min_items: 1
+      max_items: 200
+      unique: true
+    }
+  ];
 }
 
 message GetUserRequest {

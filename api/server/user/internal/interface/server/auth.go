@@ -1,25 +1,29 @@
-package v1
+package server
 
 import (
 	"context"
 	"io"
+	"strings"
 
 	"github.com/calmato/gran-book/api/server/user/internal/application"
-	"github.com/calmato/gran-book/api/server/user/internal/application/input"
+	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/user"
-	"github.com/calmato/gran-book/api/server/user/lib/datetime"
+	"github.com/calmato/gran-book/api/server/user/internal/interface/validation"
+	"github.com/calmato/gran-book/api/server/user/pkg/datetime"
 	pb "github.com/calmato/gran-book/api/server/user/proto"
+	"golang.org/x/xerrors"
 )
 
-// AuthServer - Authインターフェースの構造体
+// AuthServer - Authサービスインターフェースの構造体
 type AuthServer struct {
 	pb.UnimplementedAuthServiceServer
-	AuthApplication application.AuthApplication
+	authRequestValidation validation.AuthRequestValidation
+	userApplication       application.UserApplication
 }
 
 // GetAuth - 認証情報取得
-func (s *AuthServer) GetAuth(ctx context.Context, req *pb.EmptyUser) (*pb.AuthResponse, error) {
-	u, err := s.AuthApplication.Authentication(ctx)
+func (s *AuthServer) GetAuth(ctx context.Context) (*pb.AuthResponse, error) {
+	u, err := s.userApplication.Authentication(ctx)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -28,16 +32,20 @@ func (s *AuthServer) GetAuth(ctx context.Context, req *pb.EmptyUser) (*pb.AuthRe
 	return res, nil
 }
 
-// CreateAuth - ユーザ登録
+// CreateAuth - ユーザー登録
 func (s *AuthServer) CreateAuth(ctx context.Context, req *pb.CreateAuthRequest) (*pb.AuthResponse, error) {
-	in := &input.CreateAuth{
-		Username:             req.GetUsername(),
-		Email:                req.GetEmail(),
-		Password:             req.GetPassword(),
-		PasswordConfirmation: req.GetPasswordConfirmation(),
+	err := s.authRequestValidation.CreateAuth(req)
+	if err != nil {
+		return nil, errorHandling(err)
 	}
 
-	u, err := s.AuthApplication.Create(ctx, in)
+	u := &user.User{
+		Username: req.GetUsername(),
+		Email:    strings.ToLower(req.GetEmail()),
+		Password: req.GetPassword(),
+	}
+
+	err = s.userApplication.Create(ctx, u)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -46,18 +54,21 @@ func (s *AuthServer) CreateAuth(ctx context.Context, req *pb.CreateAuthRequest) 
 	return res, nil
 }
 
-// UpdateAuthEmail - ログイン用メールアドレスの更新
+// UpdateAuthEmail - メールアドレス更新
 func (s *AuthServer) UpdateAuthEmail(ctx context.Context, req *pb.UpdateAuthEmailRequest) (*pb.AuthResponse, error) {
-	u, err := s.AuthApplication.Authentication(ctx)
+	u, err := s.userApplication.Authentication(ctx)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
-	in := &input.UpdateAuthEmail{
-		Email: req.GetEmail(),
+	err = s.authRequestValidation.UpdateAuthEmail(req)
+	if err != nil {
+		return nil, errorHandling(err)
 	}
 
-	err = s.AuthApplication.UpdateEmail(ctx, in, u)
+	u.Email = strings.ToLower(req.GetEmail())
+
+	err = s.userApplication.Update(ctx, u)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -66,21 +77,23 @@ func (s *AuthServer) UpdateAuthEmail(ctx context.Context, req *pb.UpdateAuthEmai
 	return res, nil
 }
 
-// UpdateAuthPassword - ログイン用パスワードの更新
+// UpdateAuthPassword - パスワード更新
 func (s *AuthServer) UpdateAuthPassword(
 	ctx context.Context, req *pb.UpdateAuthPasswordRequest,
 ) (*pb.AuthResponse, error) {
-	u, err := s.AuthApplication.Authentication(ctx)
+	u, err := s.userApplication.Authentication(ctx)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
-	in := &input.UpdateAuthPassword{
-		Password:             req.GetPassword(),
-		PasswordConfirmation: req.GetPasswordConfirmation(),
+	err = s.authRequestValidation.UpdateAuthPassword(req)
+	if err != nil {
+		return nil, errorHandling(err)
 	}
 
-	err = s.AuthApplication.UpdatePassword(ctx, in, u)
+	u.Password = req.GetPassword()
+
+	err = s.userApplication.UpdatePassword(ctx, u)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -93,50 +106,56 @@ func (s *AuthServer) UpdateAuthPassword(
 func (s *AuthServer) UpdateAuthProfile(
 	ctx context.Context, req *pb.UpdateAuthProfileRequest,
 ) (*pb.AuthResponse, error) {
-	u, err := s.AuthApplication.Authentication(ctx)
+	u, err := s.userApplication.Authentication(ctx)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
-	in := &input.UpdateAuthProfile{
-		Username:         req.GetUsername(),
-		Gender:           int(req.GetGender()),
-		ThumbnailURL:     req.GetThumbnailUrl(),
-		SelfIntroduction: req.GetSelfIntroduction(),
+	err = s.authRequestValidation.UpdateAuthProfile(req)
+	if err != nil {
+		return nil, errorHandling(err)
 	}
 
-	err = s.AuthApplication.UpdateProfile(ctx, in, u)
+	u.Username = req.GetUsername()
+	u.Gender = int(req.GetGender())
+	u.ThumbnailURL = req.GetThumbnailUrl()
+	u.SelfIntroduction = req.GetSelfIntroduction()
+
+	err = s.userApplication.Update(ctx, u)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
 	res := getAuthResponse(u)
-	return res, err
+	return res, nil
 }
 
 // UpdateAuthAddress - 住所更新
 func (s *AuthServer) UpdateAuthAddress(
 	ctx context.Context, req *pb.UpdateAuthAddressRequest,
 ) (*pb.AuthResponse, error) {
-	u, err := s.AuthApplication.Authentication(ctx)
+	u, err := s.userApplication.Authentication(ctx)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
-	in := &input.UpdateAuthAddress{
-		LastName:      req.GetLastName(),
-		FirstName:     req.GetFirstName(),
-		LastNameKana:  req.GetLastNameKana(),
-		FirstNameKana: req.GetFirstNameKana(),
-		PhoneNumber:   req.GetPhoneNumber(),
-		PostalCode:    req.GetPostalCode(),
-		Prefecture:    req.GetPrefecture(),
-		City:          req.GetCity(),
-		AddressLine1:  req.GetAddressLine1(),
-		AddressLine2:  req.GetAddressLine2(),
+	err = s.authRequestValidation.UpdateAuthAddress(req)
+	if err != nil {
+		return nil, errorHandling(err)
 	}
 
-	err = s.AuthApplication.UpdateAddress(ctx, in, u)
+	u.LastName = req.GetLastName()
+	u.FirstName = req.GetFirstName()
+	u.LastNameKana = req.GetLastNameKana()
+	u.FirstNameKana = req.GetFirstNameKana()
+	u.PhoneNumber = req.GetPhoneNumber()
+	u.PostalCode = req.GetPostalCode()
+	u.Prefecture = req.GetPrefecture()
+	u.City = req.GetCity()
+	u.AddressLine1 = req.GetAddressLine1()
+	u.AddressLine2 = req.GetAddressLine2()
+
+	err = s.userApplication.Update(ctx, u)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -149,10 +168,11 @@ func (s *AuthServer) UpdateAuthAddress(
 func (s *AuthServer) UploadAuthThumbnail(stream pb.AuthService_UploadAuthThumbnailServer) error {
 	ctx := stream.Context()
 	thumbnailBytes := map[int][]byte{}
+
 	for {
 		req, err := stream.Recv()
 		if err == io.EOF {
-			u, err := s.AuthApplication.Authentication(ctx)
+			u, err := s.userApplication.Authentication(ctx)
 			if err != nil {
 				return errorHandling(err)
 			}
@@ -163,19 +183,12 @@ func (s *AuthServer) UploadAuthThumbnail(stream pb.AuthService_UploadAuthThumbna
 				thumbnail = append(thumbnail, thumbnailBytes[i]...)
 			}
 
-			in := &input.UploadAuthThumbnail{
-				Thumbnail: thumbnail,
-			}
-
-			thumbnailURL, err := s.AuthApplication.UploadThumbnail(ctx, in, u)
+			thumbnailURL, err := s.userApplication.UploadThumbnail(ctx, u.ID, thumbnail)
 			if err != nil {
 				return errorHandling(err)
 			}
 
-			res := &pb.AuthThumbnailResponse{
-				ThumbnailUrl: thumbnailURL,
-			}
-
+			res := getAuthThumbnailResponse(thumbnailURL)
 			return stream.SendAndClose(res)
 		}
 
@@ -183,45 +196,41 @@ func (s *AuthServer) UploadAuthThumbnail(stream pb.AuthService_UploadAuthThumbna
 			return errorHandling(err)
 		}
 
+		err = s.authRequestValidation.UploadAuthThumbnail(req)
+		if err != nil {
+			return errorHandling(err)
+		}
+
 		num := int(req.GetPosition())
+		if thumbnailBytes[num] != nil {
+			err = xerrors.New("Position is duplicated")
+			return errorHandling(exception.InvalidRequestValidation.New(err))
+		}
+
 		thumbnailBytes[num] = req.GetThumbnail()
 	}
 }
 
-// DeleteAuth - ユーザ退会
-func (s *AuthServer) DeleteAuth(ctx context.Context, _ *pb.EmptyUser) (*pb.EmptyUser, error) {
-	u, err := s.AuthApplication.Authentication(ctx)
+// DeleteAuth - ユーザー退会
+func (s *AuthServer) DeleteAuth(ctx context.Context) (*pb.Empty, error) {
+	u, err := s.userApplication.Authentication(ctx)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
-	err = s.AuthApplication.Delete(ctx, u)
+	err = s.userApplication.Delete(ctx, u)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
-	return &pb.EmptyUser{}, nil
+	return &pb.Empty{}, nil
 }
 
-// RegisterAuthDevice - デバイス登録
+// RegisterAuthDevice - デバイス情報登録
 func (s *AuthServer) RegisterAuthDevice(
 	ctx context.Context, req *pb.RegisterAuthDeviceRequest,
 ) (*pb.AuthResponse, error) {
-	u, err := s.AuthApplication.Authentication(ctx)
-	if err != nil {
-		return nil, errorHandling(err)
-	}
-
-	in := &input.RegisterAuthDevice{
-		InstanceID: req.GetInstanceId(),
-	}
-
-	err = s.AuthApplication.RegisterDevice(ctx, in, u)
-	if err != nil {
-		return nil, errorHandling(err)
-	}
-
-	res := getAuthResponse(u)
+	res := getAuthResponse(&user.User{})
 	return res, nil
 }
 
@@ -229,10 +238,10 @@ func getAuthResponse(u *user.User) *pb.AuthResponse {
 	return &pb.AuthResponse{
 		Id:               u.ID,
 		Username:         u.Username,
-		Gender:           int32(u.Gender),
+		Gender:           pb.Gender(u.Gender),
 		Email:            u.Email,
 		PhoneNumber:      u.PhoneNumber,
-		Role:             int32(u.Role),
+		Role:             pb.Role(u.Role),
 		ThumbnailUrl:     u.ThumbnailURL,
 		SelfIntroduction: u.SelfIntroduction,
 		LastName:         u.LastName,
@@ -246,5 +255,11 @@ func getAuthResponse(u *user.User) *pb.AuthResponse {
 		AddressLine2:     u.AddressLine2,
 		CreatedAt:        datetime.TimeToString(u.CreatedAt),
 		UpdatedAt:        datetime.TimeToString(u.UpdatedAt),
+	}
+}
+
+func getAuthThumbnailResponse(thumbnailURL string) *pb.AuthThumbnailResponse {
+	return &pb.AuthThumbnailResponse{
+		ThumbnailUrl: thumbnailURL,
 	}
 }

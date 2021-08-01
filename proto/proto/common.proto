@@ -4,18 +4,36 @@ package proto;
 
 option go_package = "github.com/calmato/gran-book/proto";
 
+import "github.com/envoyproxy/protoc-gen-validate/validate/validate.proto";
+
 message Empty {}
 
 // Search - 検索フィールド
 message Search {
-  string field = 1; // フィールド名
-  string value = 2; // 検索値
+  string field = 1 [
+    (validate.rules).string = {
+      min_len: 1
+    }
+  ]; // フィールド名
+  string value = 2 [
+    (validate.rules).string = {
+      min_len: 1
+    }
+  ]; // 検索値
 }
 
 // Order - ソートフィールド
 message Order {
   string field = 1; // フィールド名
-  OrderBy order_by = 2; // ソート順
+  OrderBy order_by = 2 [
+    (validate.rules).enum = {
+      defined_only: true
+      in: [
+        0,
+        1
+      ]
+    }
+  ]; // ソート順
 }
 
 // OrderBy - ソート順
