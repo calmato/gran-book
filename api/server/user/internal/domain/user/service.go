@@ -8,6 +8,7 @@ import (
 
 // Service - Userドメインサービス
 type Service interface {
+	// TODO: refactor
 	Authentication(ctx context.Context) (string, error)
 	List(ctx context.Context, q *domain.ListQuery) ([]*User, error)
 	ListFollow(ctx context.Context, q *domain.ListQuery, uid string) ([]*Follow, error)

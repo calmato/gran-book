@@ -3,9 +3,11 @@ package server
 import (
 	"context"
 
+	"github.com/calmato/gran-book/api/server/user/internal/application"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/user"
 	"github.com/calmato/gran-book/api/server/user/internal/interface/validation"
-	"github.com/calmato/gran-book/api/server/user/lib/datetime"
+	"github.com/calmato/gran-book/api/server/user/pkg/database"
+	"github.com/calmato/gran-book/api/server/user/pkg/datetime"
 	pb "github.com/calmato/gran-book/api/server/user/proto"
 )
 
@@ -13,6 +15,7 @@ import (
 type UserServer struct {
 	pb.UnimplementedUserServiceServer
 	userRequestValidation validation.UserRequestValidation
+	userApplication       application.UserApplication
 }
 
 // ListUser - ユーザー一覧取得
@@ -22,7 +25,39 @@ func (s *UserServer) ListUser(ctx context.Context, req *pb.ListUserRequest) (*pb
 		return nil, errorHandling(err)
 	}
 
-	res := getUserListResponse(nil, 0, 0, 0)
+	limit := int(req.GetLimit())
+	offset := int(req.GetOffset())
+	q := &database.ListQuery{
+		Limit:      limit,
+		Offset:     offset,
+		Conditions: []*database.ConditionQuery{},
+	}
+
+	if req.GetSearch() != nil {
+		c := &database.ConditionQuery{
+			Field:    req.GetSearch().GetField(),
+			Operator: "LIKE",
+			Value:    req.GetSearch().GetValue(),
+		}
+
+		q.Conditions = append(q.Conditions, c)
+	}
+
+	if req.GetOrder() != nil {
+		o := &database.OrderQuery{
+			Field:   req.GetOrder().GetField(),
+			OrderBy: int(req.GetOrder().GetOrderBy()),
+		}
+
+		q.Order = o
+	}
+
+	us, total, err := s.userApplication.List(ctx, q)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	res := getUserListResponse(us, limit, offset, total)
 	return res, nil
 }
 
@@ -33,7 +68,14 @@ func (s *UserServer) ListFollow(ctx context.Context, req *pb.ListFollowRequest) 
 		return nil, errorHandling(err)
 	}
 
-	res := getFollowListResponse(nil, 0, 0, 0)
+	limit := int(req.GetLimit())
+	offset := int(req.GetOffset())
+	fs, total, err := s.userApplication.ListFollow(ctx, req.GetUserId(), limit, offset)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	res := getFollowListResponse(fs, limit, offset, total)
 	return res, nil
 }
 
@@ -44,7 +86,14 @@ func (s *UserServer) ListFollower(ctx context.Context, req *pb.ListFollowerReque
 		return nil, errorHandling(err)
 	}
 
-	res := getFollowerListResponse(nil, 0, 0, 0)
+	limit := int(req.GetLimit())
+	offset := int(req.GetOffset())
+	fs, total, err := s.userApplication.ListFollower(ctx, req.GetUserId(), limit, offset)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	res := getFollowerListResponse(fs, limit, offset, total)
 	return res, nil
 }
 
@@ -55,7 +104,12 @@ func (s *UserServer) MultiGetUser(ctx context.Context, req *pb.MultiGetUserReque
 		return nil, errorHandling(err)
 	}
 
-	res := getUserMapResponse(nil)
+	us, err := s.userApplication.MultiGet(ctx, req.GetIds())
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	res := getUserMapResponse(us)
 	return res, nil
 }
 
@@ -66,7 +120,12 @@ func (s *UserServer) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.U
 		return nil, errorHandling(err)
 	}
 
-	res := getUserResponse(nil)
+	u, err := s.userApplication.Get(ctx, req.GetId())
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	res := getUserResponse(u)
 	return res, nil
 }
 
@@ -77,56 +136,161 @@ func (s *UserServer) GetUserProfile(ctx context.Context, req *pb.GetUserProfileR
 		return nil, errorHandling(err)
 	}
 
-	res := getUserProfileResponse(nil)
-	return res, nil
-}
-
-// RegisterFollow - フォロー登録
-func (s *UserServer) RegisterFollow(ctx context.Context, req *pb.RegisterFollowRequest) (*pb.UserProfileResponse, error) {
-	err := s.userRequestValidation.RegisterFollow(req)
+	u, isFollow, isFollower, followCount, followerCount, err := s.userApplication.GetUserProfile(ctx, req.GetId())
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
-	res := getUserProfileResponse(nil)
+	res := getUserProfileResponse(u, isFollow, isFollower, followCount, followerCount)
 	return res, nil
 }
 
-// UnregisterFollow - フォロー解除
-func (s *UserServer) UnregisterFollow(ctx context.Context, req *pb.UnregisterFollowRequest) (*pb.UserProfileResponse, error) {
-	err := s.userRequestValidation.UnregisterFollow(req)
+// Follow - フォロー登録
+func (s *UserServer) Follow(ctx context.Context, req *pb.FollowRequest) (*pb.UserProfileResponse, error) {
+	err := s.userRequestValidation.Follow(req)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
-	res := getUserProfileResponse(nil)
+	u,
+		isFollow,
+		isFollower,
+		followCount,
+		followerCount,
+		err := s.userApplication.Follow(ctx, req.GetUserId(), req.GetFollowerId())
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	res := getUserProfileResponse(u, isFollow, isFollower, followCount, followerCount)
+	return res, nil
+}
+
+// Unfollow - フォロー解除
+func (s *UserServer) Unfollow(ctx context.Context, req *pb.UnfollowRequest) (*pb.UserProfileResponse, error) {
+	err := s.userRequestValidation.Unfollow(req)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	u,
+		isFollow,
+		isFollower,
+		followCount,
+		followerCount,
+		err := s.userApplication.Unfollow(ctx, req.GetUserId(), req.GetFollowerId())
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	res := getUserProfileResponse(u, isFollow, isFollower, followCount, followerCount)
 	return res, nil
 }
 
 func getUserListResponse(us []*user.User, limit, offset, total int) *pb.UserListResponse {
+	users := make([]*pb.UserListResponse_User, len(us))
+	for i, u := range us {
+		user := &pb.UserListResponse_User{
+			Id:               u.ID,
+			Username:         u.Username,
+			Gender:           pb.Gender(u.Gender),
+			Email:            u.Email,
+			PhoneNumber:      u.PhoneNumber,
+			Role:             pb.Role(u.Role),
+			ThumbnailUrl:     u.ThumbnailURL,
+			SelfIntroduction: u.SelfIntroduction,
+			LastName:         u.LastName,
+			FirstName:        u.FirstName,
+			LastNameKana:     u.LastNameKana,
+			FirstNameKana:    u.FirstNameKana,
+			CreatedAt:        datetime.TimeToString(u.CreatedAt),
+			UpdatedAt:        datetime.TimeToString(u.UpdatedAt),
+		}
+
+		users[i] = user
+	}
+
 	return &pb.UserListResponse{}
 }
 
 func getFollowListResponse(fs []*user.Follow, limit, offset, total int) *pb.FollowListResponse {
-	return &pb.FollowListResponse{}
+	follows := make([]*pb.FollowListResponse_Follow, len(fs))
+	for i, f := range fs {
+		follow := &pb.FollowListResponse_Follow{
+			Id:               f.FollowID,
+			Username:         f.Username,
+			ThumbnailUrl:     f.ThumbnailURL,
+			SelfIntroduction: f.SelfIntroduction,
+			IsFollow:         f.IsFollowing,
+		}
+
+		follows[i] = follow
+	}
+
+	return &pb.FollowListResponse{
+		Follows: follows,
+		Limit:   int64(limit),
+		Offset:  int64(offset),
+		Total:   int64(total),
+	}
 }
 
 func getFollowerListResponse(fs []*user.Follower, limit, offset, total int) *pb.FollowerListResponse {
-	return &pb.FollowerListResponse{}
+	followers := make([]*pb.FollowerListResponse_Follower, len(fs))
+	for i, f := range fs {
+		follower := &pb.FollowerListResponse_Follower{
+			Id:               f.FollowerID,
+			Username:         f.Username,
+			ThumbnailUrl:     f.ThumbnailURL,
+			SelfIntroduction: f.SelfIntroduction,
+			IsFollow:         f.IsFollowing,
+		}
+
+		followers[i] = follower
+	}
+
+	return &pb.FollowerListResponse{
+		Followers: followers,
+		Limit:     int64(limit),
+		Offset:    int64(offset),
+		Total:     int64(total),
+	}
 }
 
 func getUserMapResponse(us []*user.User) *pb.UserMapResponse {
-	return &pb.UserMapResponse{}
+	res := &pb.UserMapResponse{}
+	for _, u := range us {
+		user := &pb.UserMapResponse_User{
+			Id:               u.ID,
+			Username:         u.Username,
+			Gender:           pb.Gender(u.Gender),
+			Email:            u.Email,
+			PhoneNumber:      u.PhoneNumber,
+			Role:             pb.Role(u.Role),
+			ThumbnailUrl:     u.ThumbnailURL,
+			SelfIntroduction: u.SelfIntroduction,
+			LastName:         u.LastName,
+			FirstName:        u.FirstName,
+			LastNameKana:     u.LastNameKana,
+			FirstNameKana:    u.FirstNameKana,
+			CreatedAt:        datetime.TimeToString(u.CreatedAt),
+			UpdatedAt:        datetime.TimeToString(u.UpdatedAt),
+		}
+
+		res.Users[u.ID] = user
+	}
+
+	return res
 }
 
 func getUserResponse(u *user.User) *pb.UserResponse {
 	return &pb.UserResponse{
 		Id:               u.ID,
 		Username:         u.Username,
-		Gender:           u.Gender,
+		Gender:           pb.Gender(u.Gender),
 		Email:            u.Email,
 		PhoneNumber:      u.PhoneNumber,
-		Role:             u.Role,
+		Role:             pb.Role(u.Role),
 		ThumbnailUrl:     u.ThumbnailURL,
 		SelfIntroduction: u.SelfIntroduction,
 		LastName:         u.LastName,
@@ -138,15 +302,17 @@ func getUserResponse(u *user.User) *pb.UserResponse {
 	}
 }
 
-func getUserProfileResponse(u *user.User) *pb.UserProfileResponse {
+func getUserProfileResponse(
+	u *user.User, isFollow, isFollower bool, followCount, followerCount int,
+) *pb.UserProfileResponse {
 	return &pb.UserProfileResponse{
 		Id:               u.ID,
 		Username:         u.Username,
 		ThumbnailUrl:     u.ThumbnailURL,
 		SelfIntroduction: u.SelfIntroduction,
-		// IsFollow:         out.IsFollow,
-		// IsFollower:       out.IsFollower,
-		// FollowCount:      int64(out.FollowCount),
-		// FollowerCount:    int64(out.FollowerCount),
+		IsFollow:         isFollow,
+		IsFollower:       isFollower,
+		FollowCount:      int64(followCount),
+		FollowerCount:    int64(followerCount),
 	}
 }

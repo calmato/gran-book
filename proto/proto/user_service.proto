@@ -14,8 +14,8 @@ service UserService {
   rpc MultiGetUser(MultiGetUserRequest) returns (UserMapResponse);
   rpc GetUser(GetUserRequest) returns (UserResponse);
   rpc GetUserProfile(GetUserProfileRequest) returns (UserProfileResponse);
-  rpc RegisterFollow(RegisterFollowRequest) returns (UserProfileResponse);
-  rpc UnregisterFollow(UnregisterFollowRequest) returns (UserProfileResponse);
+  rpc Follow(FollowRequest) returns (UserProfileResponse);
+  rpc Unfollow(UnfollowRequest) returns (UserProfileResponse);
 }
 
 message ListUserRequest {
@@ -67,16 +67,26 @@ message GetUserProfileRequest {
   ];
 }
 
-message RegisterFollowRequest {
-  string id = 1 [
+message FollowRequest {
+  string user_id = 1 [
+    (validate.rules).string = {
+      min_len: 1
+    }
+  ];
+  string follower_id = 2 [
     (validate.rules).string = {
       min_len: 1
     }
   ];
 }
 
-message UnregisterFollowRequest {
-  string id = 1 [
+message UnfollowRequest {
+  string user_id = 1 [
+    (validate.rules).string = {
+      min_len: 1
+    }
+  ];
+  string follower_id = 2 [
     (validate.rules).string = {
       min_len: 1
     }

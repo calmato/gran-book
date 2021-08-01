@@ -46,21 +46,25 @@ type Relationship struct {
 // Follow - フォローしているUserのエンティティ
 type Follow struct {
 	FollowID         string
-	FollowerID       string
 	Username         string
 	ThumbnailURL     string
 	SelfIntroduction string
-	IsFollow         bool
+	IsFollowing      bool `gorm:"-"`
+	IsFollowed       bool `gorm:"-"`
+	FollowCount      int  `gorm:"-"`
+	FollowerCount    int  `gorm:"-"`
 }
 
 // Follower - フォローされているUserのエンティティ
 type Follower struct {
-	FollowID         string
 	FollowerID       string
 	Username         string
 	ThumbnailURL     string
 	SelfIntroduction string
-	IsFollow         bool
+	IsFollowing      bool `gorm:"-"`
+	IsFollowed       bool `gorm:"-"`
+	FollowCount      int  `gorm:"-"`
+	FollowerCount    int  `gorm:"-"`
 }
 
 // ユーザ権限

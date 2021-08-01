@@ -11,8 +11,8 @@ type UserRequestValidation interface {
 	MultiGetUser(req *pb.MultiGetUserRequest) error
 	GetUser(req *pb.GetUserRequest) error
 	GetUserProfile(req *pb.GetUserProfileRequest) error
-	RegisterFollow(req *pb.RegisterFollowRequest) error
-	UnregisterFollow(req *pb.UnregisterFollowRequest) error
+	Follow(req *pb.FollowRequest) error
+	Unfollow(req *pb.UnfollowRequest) error
 }
 
 type userRequestValidation struct{}
@@ -99,26 +99,26 @@ func (v *userRequestValidation) GetUserProfile(req *pb.GetUserProfileRequest) er
 	return toInternalError()
 }
 
-func (v *userRequestValidation) RegisterFollow(req *pb.RegisterFollowRequest) error {
+func (v *userRequestValidation) Follow(req *pb.FollowRequest) error {
 	err := req.Validate()
 	if err != nil {
 		return nil
 	}
 
-	if err, ok := err.(pb.RegisterFollowRequestValidationError); ok {
+	if err, ok := err.(pb.FollowRequestValidationError); ok {
 		return toValidationError(err.Field(), err.Reason())
 	}
 
 	return toInternalError()
 }
 
-func (v *userRequestValidation) UnregisterFollow(req *pb.UnregisterFollowRequest) error {
+func (v *userRequestValidation) Unfollow(req *pb.UnfollowRequest) error {
 	err := req.Validate()
 	if err != nil {
 		return nil
 	}
 
-	if err, ok := err.(pb.UnregisterFollowRequestValidationError); ok {
+	if err, ok := err.(pb.UnfollowRequestValidationError); ok {
 		return toValidationError(err.Field(), err.Reason())
 	}
 

@@ -8,9 +8,10 @@ import (
 	"github.com/calmato/gran-book/api/server/user/internal/infrastructure/service"
 	"github.com/calmato/gran-book/api/server/user/internal/infrastructure/storage"
 	dv "github.com/calmato/gran-book/api/server/user/internal/infrastructure/validation"
-	"github.com/calmato/gran-book/api/server/user/lib/firebase/authentication"
-	"github.com/calmato/gran-book/api/server/user/lib/firebase/firestore"
-	gcs "github.com/calmato/gran-book/api/server/user/lib/firebase/storage"
+	"github.com/calmato/gran-book/api/server/user/pkg/database"
+	"github.com/calmato/gran-book/api/server/user/pkg/firebase/authentication"
+	"github.com/calmato/gran-book/api/server/user/pkg/firebase/firestore"
+	gcs "github.com/calmato/gran-book/api/server/user/pkg/firebase/storage"
 )
 
 // Registry - DIコンテナ
@@ -23,7 +24,7 @@ type Registry struct {
 
 // NewRegistry - internalディレクトリ配下のファイルを読み込み
 func NewRegistry(
-	db *repository.Client, fa *authentication.Auth, fs *firestore.Firestore, s *gcs.Storage,
+	db *database.Client, fa *authentication.Auth, fs *firestore.Firestore, s *gcs.Storage,
 ) *Registry {
 	admin := adminInjection(db, fa, s)
 	auth := authInjection(db, fa, s)
@@ -38,7 +39,7 @@ func NewRegistry(
 	}
 }
 
-func adminInjection(db *repository.Client, fa *authentication.Auth, s *gcs.Storage) application.AdminApplication {
+func adminInjection(db *database.Client, fa *authentication.Auth, s *gcs.Storage) application.AdminApplication {
 	ur := repository.NewUserRepository(db, fa)
 	udv := dv.NewUserDomainValidation(ur)
 	uu := storage.NewUserUploader(s)
@@ -50,7 +51,7 @@ func adminInjection(db *repository.Client, fa *authentication.Auth, s *gcs.Stora
 	return aa
 }
 
-func authInjection(db *repository.Client, fa *authentication.Auth, s *gcs.Storage) application.AuthApplication {
+func authInjection(db *database.Client, fa *authentication.Auth, s *gcs.Storage) application.AuthApplication {
 	ur := repository.NewUserRepository(db, fa)
 	udv := dv.NewUserDomainValidation(ur)
 	uu := storage.NewUserUploader(s)
@@ -62,20 +63,17 @@ func authInjection(db *repository.Client, fa *authentication.Auth, s *gcs.Storag
 	return aa
 }
 
-func userInjection(db *repository.Client, fa *authentication.Auth, s *gcs.Storage) application.UserApplication {
+func userInjection(db *database.Client, fa *authentication.Auth, s *gcs.Storage) application.UserApplication {
 	ur := repository.NewUserRepository(db, fa)
 	udv := dv.NewUserDomainValidation(ur)
 	uu := storage.NewUserUploader(s)
-	us := service.NewUserService(udv, ur, uu)
 
-	urv := rv.NewUserRequestValidation()
-	ua := application.NewUserApplication(urv, us)
-
+	ua := application.NewUserApplication(udv, ur, uu)
 	return ua
 }
 
 func chatInjection(
-	db *repository.Client, fa *authentication.Auth, fs *firestore.Firestore, s *gcs.Storage,
+	db *database.Client, fa *authentication.Auth, fs *firestore.Firestore, s *gcs.Storage,
 ) application.ChatApplication {
 	ur := repository.NewUserRepository(db, fa)
 	udv := dv.NewUserDomainValidation(ur)

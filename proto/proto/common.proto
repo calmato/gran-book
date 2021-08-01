@@ -8,13 +8,13 @@ message Empty {}
 
 // Search - 検索フィールド
 message Search {
-  string key = 1; // フィールド名
+  string field = 1; // フィールド名
   string value = 2; // 検索値
 }
 
 // Order - ソートフィールド
 message Order {
-  string key = 1; // フィールド名
+  string field = 1; // フィールド名
   OrderBy order_by = 2; // ソート順
 }
 
