@@ -17,13 +17,13 @@ import (
 // AuthServer - Authサービスインターフェースの構造体
 type AuthServer struct {
 	pb.UnimplementedAuthServiceServer
-	authRequestValidation validation.AuthRequestValidation
-	userApplication       application.UserApplication
+	AuthRequestValidation validation.AuthRequestValidation
+	UserApplication       application.UserApplication
 }
 
 // GetAuth - 認証情報取得
-func (s *AuthServer) GetAuth(ctx context.Context) (*pb.AuthResponse, error) {
-	u, err := s.userApplication.Authentication(ctx)
+func (s *AuthServer) GetAuth(ctx context.Context, req *pb.Empty) (*pb.AuthResponse, error) {
+	u, err := s.UserApplication.Authentication(ctx)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -34,7 +34,7 @@ func (s *AuthServer) GetAuth(ctx context.Context) (*pb.AuthResponse, error) {
 
 // CreateAuth - ユーザー登録
 func (s *AuthServer) CreateAuth(ctx context.Context, req *pb.CreateAuthRequest) (*pb.AuthResponse, error) {
-	err := s.authRequestValidation.CreateAuth(req)
+	err := s.AuthRequestValidation.CreateAuth(req)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -45,7 +45,7 @@ func (s *AuthServer) CreateAuth(ctx context.Context, req *pb.CreateAuthRequest) 
 		Password: req.GetPassword(),
 	}
 
-	err = s.userApplication.Create(ctx, u)
+	err = s.UserApplication.Create(ctx, u)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -56,19 +56,19 @@ func (s *AuthServer) CreateAuth(ctx context.Context, req *pb.CreateAuthRequest) 
 
 // UpdateAuthEmail - メールアドレス更新
 func (s *AuthServer) UpdateAuthEmail(ctx context.Context, req *pb.UpdateAuthEmailRequest) (*pb.AuthResponse, error) {
-	u, err := s.userApplication.Authentication(ctx)
+	u, err := s.UserApplication.Authentication(ctx)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
-	err = s.authRequestValidation.UpdateAuthEmail(req)
+	err = s.AuthRequestValidation.UpdateAuthEmail(req)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
 	u.Email = strings.ToLower(req.GetEmail())
 
-	err = s.userApplication.Update(ctx, u)
+	err = s.UserApplication.Update(ctx, u)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -81,19 +81,19 @@ func (s *AuthServer) UpdateAuthEmail(ctx context.Context, req *pb.UpdateAuthEmai
 func (s *AuthServer) UpdateAuthPassword(
 	ctx context.Context, req *pb.UpdateAuthPasswordRequest,
 ) (*pb.AuthResponse, error) {
-	u, err := s.userApplication.Authentication(ctx)
+	u, err := s.UserApplication.Authentication(ctx)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
-	err = s.authRequestValidation.UpdateAuthPassword(req)
+	err = s.AuthRequestValidation.UpdateAuthPassword(req)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
 	u.Password = req.GetPassword()
 
-	err = s.userApplication.UpdatePassword(ctx, u)
+	err = s.UserApplication.UpdatePassword(ctx, u)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -106,12 +106,12 @@ func (s *AuthServer) UpdateAuthPassword(
 func (s *AuthServer) UpdateAuthProfile(
 	ctx context.Context, req *pb.UpdateAuthProfileRequest,
 ) (*pb.AuthResponse, error) {
-	u, err := s.userApplication.Authentication(ctx)
+	u, err := s.UserApplication.Authentication(ctx)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
-	err = s.authRequestValidation.UpdateAuthProfile(req)
+	err = s.AuthRequestValidation.UpdateAuthProfile(req)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -121,7 +121,7 @@ func (s *AuthServer) UpdateAuthProfile(
 	u.ThumbnailURL = req.GetThumbnailUrl()
 	u.SelfIntroduction = req.GetSelfIntroduction()
 
-	err = s.userApplication.Update(ctx, u)
+	err = s.UserApplication.Update(ctx, u)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -134,12 +134,12 @@ func (s *AuthServer) UpdateAuthProfile(
 func (s *AuthServer) UpdateAuthAddress(
 	ctx context.Context, req *pb.UpdateAuthAddressRequest,
 ) (*pb.AuthResponse, error) {
-	u, err := s.userApplication.Authentication(ctx)
+	u, err := s.UserApplication.Authentication(ctx)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
-	err = s.authRequestValidation.UpdateAuthAddress(req)
+	err = s.AuthRequestValidation.UpdateAuthAddress(req)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -155,7 +155,7 @@ func (s *AuthServer) UpdateAuthAddress(
 	u.AddressLine1 = req.GetAddressLine1()
 	u.AddressLine2 = req.GetAddressLine2()
 
-	err = s.userApplication.Update(ctx, u)
+	err = s.UserApplication.Update(ctx, u)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -172,7 +172,7 @@ func (s *AuthServer) UploadAuthThumbnail(stream pb.AuthService_UploadAuthThumbna
 	for {
 		req, err := stream.Recv()
 		if err == io.EOF {
-			u, err := s.userApplication.Authentication(ctx)
+			u, err := s.UserApplication.Authentication(ctx)
 			if err != nil {
 				return errorHandling(err)
 			}
@@ -183,7 +183,7 @@ func (s *AuthServer) UploadAuthThumbnail(stream pb.AuthService_UploadAuthThumbna
 				thumbnail = append(thumbnail, thumbnailBytes[i]...)
 			}
 
-			thumbnailURL, err := s.userApplication.UploadThumbnail(ctx, u.ID, thumbnail)
+			thumbnailURL, err := s.UserApplication.UploadThumbnail(ctx, u.ID, thumbnail)
 			if err != nil {
 				return errorHandling(err)
 			}
@@ -196,7 +196,7 @@ func (s *AuthServer) UploadAuthThumbnail(stream pb.AuthService_UploadAuthThumbna
 			return errorHandling(err)
 		}
 
-		err = s.authRequestValidation.UploadAuthThumbnail(req)
+		err = s.AuthRequestValidation.UploadAuthThumbnail(req)
 		if err != nil {
 			return errorHandling(err)
 		}
@@ -212,13 +212,13 @@ func (s *AuthServer) UploadAuthThumbnail(stream pb.AuthService_UploadAuthThumbna
 }
 
 // DeleteAuth - ユーザー退会
-func (s *AuthServer) DeleteAuth(ctx context.Context) (*pb.Empty, error) {
-	u, err := s.userApplication.Authentication(ctx)
+func (s *AuthServer) DeleteAuth(ctx context.Context, req *pb.Empty) (*pb.Empty, error) {
+	u, err := s.UserApplication.Authentication(ctx)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
-	err = s.userApplication.Delete(ctx, u)
+	err = s.UserApplication.Delete(ctx, u)
 	if err != nil {
 		return nil, errorHandling(err)
 	}

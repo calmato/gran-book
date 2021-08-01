@@ -72,7 +72,7 @@ message ListFollowerRequest {
 }
 
 message MultiGetUserRequest {
-  repeated string ids = 1 [
+  repeated string user_ids = 1 [
     (validate.rules).repeated = {
       min_items: 1
       max_items: 200
@@ -82,7 +82,7 @@ message MultiGetUserRequest {
 }
 
 message GetUserRequest {
-  string id = 1 [
+  string user_id = 1 [
     (validate.rules).string = {
       min_len: 1
     }
@@ -90,7 +90,7 @@ message GetUserRequest {
 }
 
 message GetUserProfileRequest {
-  string id = 1 [
+  string user_id = 1 [
     (validate.rules).string = {
       min_len: 1
     }

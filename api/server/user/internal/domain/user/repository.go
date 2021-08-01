@@ -19,6 +19,7 @@ type Repository interface {
 	CountRelationship(ctx context.Context, q *database.ListQuery) (int, error)
 	MultiGet(ctx context.Context, userIDs []string) ([]*User, error)
 	Get(ctx context.Context, userID string) (*User, error)
+	GetAdmin(ctx context.Context, userID string) (*User, error)
 	GetRelationship(ctx context.Context, followID string, followerID string) (*Relationship, error)
 	GetUserIDByEmail(ctx context.Context, email string) (string, error)
 	GetRelationshipIDByUserID(ctx context.Context, followID string, followerID string) (int, error)

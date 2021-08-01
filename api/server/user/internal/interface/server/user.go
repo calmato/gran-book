@@ -14,13 +14,13 @@ import (
 // UserServer - Userサービスインターフェースの構造体
 type UserServer struct {
 	pb.UnimplementedUserServiceServer
-	userRequestValidation validation.UserRequestValidation
-	userApplication       application.UserApplication
+	UserRequestValidation validation.UserRequestValidation
+	UserApplication       application.UserApplication
 }
 
 // ListUser - ユーザー一覧取得
 func (s *UserServer) ListUser(ctx context.Context, req *pb.ListUserRequest) (*pb.UserListResponse, error) {
-	err := s.userRequestValidation.ListUser(req)
+	err := s.UserRequestValidation.ListUser(req)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -52,7 +52,7 @@ func (s *UserServer) ListUser(ctx context.Context, req *pb.ListUserRequest) (*pb
 		q.Order = o
 	}
 
-	us, total, err := s.userApplication.List(ctx, q)
+	us, total, err := s.UserApplication.List(ctx, q)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -63,14 +63,14 @@ func (s *UserServer) ListUser(ctx context.Context, req *pb.ListUserRequest) (*pb
 
 // ListFollow - フォロー一覧取得
 func (s *UserServer) ListFollow(ctx context.Context, req *pb.ListFollowRequest) (*pb.FollowListResponse, error) {
-	err := s.userRequestValidation.ListFollow(req)
+	err := s.UserRequestValidation.ListFollow(req)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
 	limit := int(req.GetLimit())
 	offset := int(req.GetOffset())
-	fs, total, err := s.userApplication.ListFollow(ctx, req.GetUserId(), limit, offset)
+	fs, total, err := s.UserApplication.ListFollow(ctx, req.GetUserId(), limit, offset)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -81,14 +81,14 @@ func (s *UserServer) ListFollow(ctx context.Context, req *pb.ListFollowRequest) 
 
 // ListFollower - フォロワー一覧取得
 func (s *UserServer) ListFollower(ctx context.Context, req *pb.ListFollowerRequest) (*pb.FollowerListResponse, error) {
-	err := s.userRequestValidation.ListFollower(req)
+	err := s.UserRequestValidation.ListFollower(req)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
 	limit := int(req.GetLimit())
 	offset := int(req.GetOffset())
-	fs, total, err := s.userApplication.ListFollower(ctx, req.GetUserId(), limit, offset)
+	fs, total, err := s.UserApplication.ListFollower(ctx, req.GetUserId(), limit, offset)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -99,12 +99,12 @@ func (s *UserServer) ListFollower(ctx context.Context, req *pb.ListFollowerReque
 
 // MultiGetUser - ユーザー一覧取得 (ID指定)
 func (s *UserServer) MultiGetUser(ctx context.Context, req *pb.MultiGetUserRequest) (*pb.UserMapResponse, error) {
-	err := s.userRequestValidation.MultiGetUser(req)
+	err := s.UserRequestValidation.MultiGetUser(req)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
-	us, err := s.userApplication.MultiGet(ctx, req.GetIds())
+	us, err := s.UserApplication.MultiGet(ctx, req.GetUserIds())
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -115,12 +115,12 @@ func (s *UserServer) MultiGetUser(ctx context.Context, req *pb.MultiGetUserReque
 
 // GetUser - ユーザー取得
 func (s *UserServer) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.UserResponse, error) {
-	err := s.userRequestValidation.GetUser(req)
+	err := s.UserRequestValidation.GetUser(req)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
-	u, err := s.userApplication.Get(ctx, req.GetId())
+	u, err := s.UserApplication.Get(ctx, req.GetUserId())
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -131,12 +131,12 @@ func (s *UserServer) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.U
 
 // GetUserProfile - プロフィール取得
 func (s *UserServer) GetUserProfile(ctx context.Context, req *pb.GetUserProfileRequest) (*pb.UserProfileResponse, error) {
-	err := s.userRequestValidation.GetUserProfile(req)
+	err := s.UserRequestValidation.GetUserProfile(req)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
-	u, isFollow, isFollower, followCount, followerCount, err := s.userApplication.GetUserProfile(ctx, req.GetId())
+	u, isFollow, isFollower, followCount, followerCount, err := s.UserApplication.GetUserProfile(ctx, req.GetUserId())
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -147,7 +147,7 @@ func (s *UserServer) GetUserProfile(ctx context.Context, req *pb.GetUserProfileR
 
 // Follow - フォロー登録
 func (s *UserServer) Follow(ctx context.Context, req *pb.FollowRequest) (*pb.UserProfileResponse, error) {
-	err := s.userRequestValidation.Follow(req)
+	err := s.UserRequestValidation.Follow(req)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -157,7 +157,7 @@ func (s *UserServer) Follow(ctx context.Context, req *pb.FollowRequest) (*pb.Use
 		isFollower,
 		followCount,
 		followerCount,
-		err := s.userApplication.Follow(ctx, req.GetUserId(), req.GetFollowerId())
+		err := s.UserApplication.Follow(ctx, req.GetUserId(), req.GetFollowerId())
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -168,7 +168,7 @@ func (s *UserServer) Follow(ctx context.Context, req *pb.FollowRequest) (*pb.Use
 
 // Unfollow - フォロー解除
 func (s *UserServer) Unfollow(ctx context.Context, req *pb.UnfollowRequest) (*pb.UserProfileResponse, error) {
-	err := s.userRequestValidation.Unfollow(req)
+	err := s.UserRequestValidation.Unfollow(req)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -178,7 +178,7 @@ func (s *UserServer) Unfollow(ctx context.Context, req *pb.UnfollowRequest) (*pb
 		isFollower,
 		followCount,
 		followerCount,
-		err := s.userApplication.Unfollow(ctx, req.GetUserId(), req.GetFollowerId())
+		err := s.UserApplication.Unfollow(ctx, req.GetUserId(), req.GetFollowerId())
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -210,7 +210,12 @@ func getUserListResponse(us []*user.User, limit, offset, total int) *pb.UserList
 		users[i] = user
 	}
 
-	return &pb.UserListResponse{}
+	return &pb.UserListResponse{
+		Users:  users,
+		Limit:  int64(limit),
+		Offset: int64(offset),
+		Total:  int64(total),
+	}
 }
 
 func getFollowListResponse(fs []*user.Follow, limit, offset, total int) *pb.FollowListResponse {

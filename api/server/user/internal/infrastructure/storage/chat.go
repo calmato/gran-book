@@ -5,7 +5,7 @@ import (
 
 	"github.com/calmato/gran-book/api/server/user/internal/domain/chat"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
-	gcs "github.com/calmato/gran-book/api/server/user/lib/firebase/storage"
+	gcs "github.com/calmato/gran-book/api/server/user/pkg/firebase/storage"
 )
 
 type chatUploader struct {

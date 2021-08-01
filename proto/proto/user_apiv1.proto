@@ -4,99 +4,11 @@ package proto;
 
 option go_package = "github.com/calmato/gran-book/proto";
 
-service AdminService {
-  rpc ListAdmin(ListAdminRequest) returns (AdminListResponse);
-  rpc SearchAdmin(SearchAdminRequest) returns (AdminListResponse);
-  rpc GetAdmin(GetAdminRequest) returns (AdminResponse);
-  rpc CreateAdmin(CreateAdminRequest) returns (AdminResponse);
-  rpc UpdateAdminContact(UpdateAdminContactRequest) returns (AdminResponse);
-  rpc UpdateAdminPassword(UpdateAdminPasswordRequest) returns (AdminResponse);
-  rpc UpdateAdminProfile(UpdateAdminProfileRequest) returns (AdminResponse);
-  rpc UploadAdminThumbnail(stream UploadAdminThumbnailRequest) returns (AdminThumbnailResponse);
-  rpc DeleteAdmin(DeleteAdminRequest) returns (EmptyUser);
-}
-
 service ChatService {
   rpc ListRoom(ListChatRoomRequest) returns (ChatRoomListResponse);
   rpc CreateRoom(CreateChatRoomRequest) returns (ChatRoomResponse);
   rpc CreateMessage(CreateChatMessageRequest) returns (ChatMessageResponse);
   rpc UploadImage(stream UploadChatImageRequest) returns (ChatMessageResponse);
-}
-
-message EmptyUser {}
-
-message ListAdminRequest {
-  message Order {
-    string by = 1;
-    string direction = 2;
-  }
-  int64 limit = 1;
-  int64 offset = 2;
-  Order order = 3;
-}
-
-message SearchAdminRequest {
-  message Order {
-    string by = 1;
-    string direction = 2;
-  }
-  message Search {
-    string field = 1;
-    string value = 2;
-  }
-  int64 limit = 1;
-  int64 offset = 2;
-  Order order = 3;
-  Search search = 4;
-}
-
-message GetAdminRequest {
-  string id = 1;
-}
-
-message CreateAdminRequest {
-  string username = 1;
-  string email = 2;
-  string password = 3;
-  string password_confirmation = 4;
-  int32 role = 5;
-  string last_name = 6;
-  string first_name = 7;
-  string last_name_kana = 8;
-  string first_name_kana = 9;
-}
-
-message UpdateAdminContactRequest {
-  string id = 1;
-  string email = 2;
-  string phone_number = 3;
-}
-
-message UpdateAdminPasswordRequest {
-  string id = 1;
-  string password = 2;
-  string password_confirmation = 3;
-}
-
-message UpdateAdminProfileRequest {
-  string id = 1;
-  string username = 2;
-  int32 role = 3;
-  string last_name = 4;
-  string first_name = 5;
-  string last_name_kana = 6;
-  string first_name_kana = 7;
-  string thumbnail_url = 8;
-}
-
-message UploadAdminThumbnailRequest {
-  string user_id = 1;
-  bytes thumbnail = 2;
-  int64 position = 3;
-}
-
-message DeleteAdminRequest {
-  string user_id = 1;
 }
 
 message ListChatRoomRequest {
@@ -118,53 +30,6 @@ message UploadChatImageRequest {
   string room_id = 1;
   bytes image = 2;
   int64 position = 3;
-}
-
-message AdminResponse {
-  string id = 1;
-  string username = 2;
-  string email = 3;
-  string phone_number = 4;
-  int32 role = 5;
-  string thumbnail_url = 6;
-  string self_introduction = 7;
-  string last_name = 8;
-  string first_name = 9;
-  string last_name_kana = 10;
-  string first_name_kana = 11;
-  string created_at = 12;
-  string updated_at = 13;
-}
-
-message AdminListResponse {
-  message User {
-    string id = 1;
-    string username = 2;
-    string email = 3;
-    string phone_number = 4;
-    int32 role = 5;
-    string thumbnail_url = 6;
-    string self_introduction = 7;
-    string last_name = 8;
-    string first_name = 9;
-    string last_name_kana = 10;
-    string first_name_kana = 11;
-    string created_at = 12;
-    string updated_at = 13;
-  }
-  message Order {
-    string by = 1;
-    string direction = 2;
-  }
-  repeated User users = 1;
-  int64 limit = 2;
-  int64 offset = 3;
-  int64 total = 4;
-  Order order = 5;
-}
-
-message AdminThumbnailResponse {
-  string thumbnail_url = 1;
 }
 
 message ChatRoomResponse {

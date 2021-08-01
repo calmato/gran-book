@@ -2,28 +2,36 @@ package application
 
 import (
 	"context"
+	"time"
 
+	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/user"
 	"github.com/calmato/gran-book/api/server/user/pkg/array"
 	"github.com/calmato/gran-book/api/server/user/pkg/database"
+	"golang.org/x/xerrors"
 )
 
 // UserApplication - Userアプリケーションのインターフェース
 type UserApplication interface {
 	Authentication(ctx context.Context) (*user.User, error)
+	Authorization(ctx context.Context) (int, error)
 	List(ctx context.Context, q *database.ListQuery) ([]*user.User, int, error)
+	ListAdmin(ctx context.Context, q *database.ListQuery) ([]*user.User, int, error)
 	ListFollow(ctx context.Context, userID string, limit int, offset int) ([]*user.Follow, int, error)
 	ListFollower(ctx context.Context, userID string, limit int, offset int) ([]*user.Follower, int, error)
 	MultiGet(ctx context.Context, userIDs []string) ([]*user.User, error)
 	Get(ctx context.Context, userID string) (*user.User, error)
+	GetAdmin(ctx context.Context, userID string) (*user.User, error)
 	GetUserProfile(ctx context.Context, userID string) (*user.User, bool, bool, int, int, error)
 	Create(ctx context.Context, u *user.User) error
 	Update(ctx context.Context, u *user.User) error
 	UpdatePassword(ctx context.Context, u *user.User) error
 	Delete(ctx context.Context, u *user.User) error
+	DeleteAdmin(ctx context.Context, u *user.User) error
 	Follow(ctx context.Context, userID string, followerID string) (*user.User, bool, bool, int, int, error)
 	Unfollow(ctx context.Context, userID string, followerID string) (*user.User, bool, bool, int, int, error)
 	UploadThumbnail(ctx context.Context, userID string, thumbnail []byte) (string, error)
+	HasAdminRole(role int) error
 }
 
 type userApplication struct {
@@ -69,7 +77,48 @@ func (a *userApplication) Authentication(ctx context.Context) (*user.User, error
 	return ou, nil
 }
 
+func (a *userApplication) Authorization(ctx context.Context) (int, error) {
+	userID, err := a.userRepository.Authentication(ctx)
+	if err != nil {
+		return user.UserRole, err
+	}
+
+	u, err := a.userRepository.Get(ctx, userID)
+	if err != nil {
+		return user.UserRole, err
+	}
+
+	switch u.Role {
+	case user.AdminRole, user.DeveloperRole, user.OperatorRole:
+		return u.Role, nil
+	default:
+		err := xerrors.New("This account doesn't have administrator privileges")
+		return user.UserRole, exception.Forbidden.New(err)
+	}
+}
+
 func (a *userApplication) List(ctx context.Context, q *database.ListQuery) ([]*user.User, int, error) {
+	us, err := a.userRepository.List(ctx, q)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	total, err := a.userRepository.Count(ctx, q)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	return us, total, nil
+}
+
+func (a *userApplication) ListAdmin(ctx context.Context, q *database.ListQuery) ([]*user.User, int, error) {
+	cq := &database.ConditionQuery{
+		Field:    "role",
+		Operator: "IN",
+		Value:    []int{user.AdminRole, user.DeveloperRole, user.OperatorRole},
+	}
+	q.Conditions = append(q.Conditions, cq)
+
 	us, err := a.userRepository.List(ctx, q)
 	if err != nil {
 		return nil, 0, err
@@ -177,6 +226,10 @@ func (a *userApplication) Get(ctx context.Context, userID string) (*user.User, e
 	return a.userRepository.Get(ctx, userID)
 }
 
+func (a *userApplication) GetAdmin(ctx context.Context, userID string) (*user.User, error) {
+	return a.userRepository.GetAdmin(ctx, userID)
+}
+
 func (a *userApplication) GetUserProfile(
 	ctx context.Context, userID string,
 ) (*user.User, bool, bool, int, int, error) {
@@ -194,6 +247,18 @@ func (a *userApplication) GetUserProfile(
 }
 
 func (a *userApplication) Create(ctx context.Context, u *user.User) error {
+	current := time.Now().Local()
+	u.CreatedAt = current
+	u.UpdatedAt = current
+
+	if u.Gender == 0 {
+		u.Gender = user.UnkownGender
+	}
+
+	if u.Role == 0 {
+		u.Role = user.UserRole
+	}
+
 	err := a.userDomainValidation.User(ctx, u)
 	if err != nil {
 		return err
@@ -203,6 +268,8 @@ func (a *userApplication) Create(ctx context.Context, u *user.User) error {
 }
 
 func (a *userApplication) Update(ctx context.Context, u *user.User) error {
+	u.UpdatedAt = time.Now().Local()
+
 	err := a.userDomainValidation.User(ctx, u)
 	if err != nil {
 		return err
@@ -212,6 +279,8 @@ func (a *userApplication) Update(ctx context.Context, u *user.User) error {
 }
 
 func (a *userApplication) UpdatePassword(ctx context.Context, u *user.User) error {
+	u.UpdatedAt = time.Now().Local()
+
 	err := a.userDomainValidation.User(ctx, u)
 	if err != nil {
 		return err
@@ -224,6 +293,13 @@ func (a *userApplication) Delete(ctx context.Context, u *user.User) error {
 	return a.userRepository.Delete(ctx, u.ID)
 }
 
+func (a *userApplication) DeleteAdmin(ctx context.Context, u *user.User) error {
+	u.UpdatedAt = time.Now().Local()
+	u.Role = user.UserRole
+
+	return a.userRepository.Update(ctx, u)
+}
+
 func (a *userApplication) Follow(
 	ctx context.Context, userID string, followerID string,
 ) (*user.User, bool, bool, int, int, error) {
@@ -232,9 +308,12 @@ func (a *userApplication) Follow(
 		return nil, false, false, 0, 0, err
 	}
 
+	current := time.Now().Local()
 	r := &user.Relationship{
 		FollowID:   userID,
 		FollowerID: fu.ID,
+		CreatedAt:  current,
+		UpdatedAt:  current,
 	}
 
 	err = a.userDomainValidation.Relationship(ctx, r)
@@ -283,6 +362,15 @@ func (a *userApplication) Unfollow(
 
 func (a *userApplication) UploadThumbnail(ctx context.Context, userID string, thumbnail []byte) (string, error) {
 	return a.userUploader.Thumbnail(ctx, userID, thumbnail)
+}
+
+func (a *userApplication) HasAdminRole(role int) error {
+	if role != user.AdminRole {
+		err := xerrors.New("This account doesn't have administrator privileges")
+		return exception.Forbidden.New(err)
+	}
+
+	return nil
 }
 
 func (a *userApplication) getRelationship(ctx context.Context, userID string) (bool, bool, int, int, error) {

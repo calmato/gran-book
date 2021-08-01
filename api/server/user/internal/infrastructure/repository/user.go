@@ -204,6 +204,20 @@ func (r *userRepository) Get(ctx context.Context, userID string) (*user.User, er
 	return u, nil
 }
 
+func (r *userRepository) GetAdmin(ctx context.Context, userID string) (*user.User, error) {
+	u := &user.User{}
+
+	err := r.client.DB.
+		Table("users").
+		Where("role IN (?)", []int{user.AdminRole, user.DeveloperRole, user.OperatorRole}).
+		First(u, "id = ?", userID).Error
+	if err != nil {
+		return nil, exception.NotFound.New(err)
+	}
+
+	return u, nil
+}
+
 func (r *userRepository) GetRelationship(ctx context.Context, followID string, followerID string) (*user.Relationship, error) {
 	rs := &user.Relationship{}
 

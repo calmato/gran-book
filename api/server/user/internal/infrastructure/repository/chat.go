@@ -3,10 +3,10 @@ package repository
 import (
 	"context"
 
-	"github.com/calmato/gran-book/api/server/user/internal/domain"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/chat"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
-	"github.com/calmato/gran-book/api/server/user/lib/firebase/firestore"
+	"github.com/calmato/gran-book/api/server/user/pkg/database"
+	"github.com/calmato/gran-book/api/server/user/pkg/firebase/firestore"
 )
 
 type chatRepository struct {
@@ -20,12 +20,22 @@ func NewChatRepository(fs *firestore.Firestore) chat.Repository {
 	}
 }
 
-func (r *chatRepository) ListRoom(ctx context.Context, q *domain.ListQuery, uid string) ([]*chat.Room, error) {
+func (r *chatRepository) ListRoom(ctx context.Context, q *database.ListQuery, uid string) ([]*chat.Room, error) {
 	c := getChatRoomCollection()
 
+	var sortBy string
+	switch q.Order.OrderBy {
+	case database.OrderByAsc:
+		sortBy = "asc"
+	case database.OrderByDesc:
+		sortBy = "desc"
+	default:
+		sortBy = "asc"
+	}
+
 	params := &firestore.Params{
-		OrderBy: q.Order.By,
-		SortBy:  q.Order.Direction,
+		OrderBy: q.Order.Field,
+		SortBy:  sortBy,
 	}
 
 	qs := []*firestore.Query{

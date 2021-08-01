@@ -9,25 +9,27 @@ import (
 	"github.com/calmato/gran-book/api/server/user/internal/domain/chat"
 	"github.com/calmato/gran-book/api/server/user/lib/datetime"
 	pb "github.com/calmato/gran-book/api/server/user/proto"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 // ChatService - Chatインターフェースの構造体
 type ChatServer struct {
 	pb.UnimplementedChatServiceServer
-	AuthApplication application.AuthApplication
 	ChatApplication application.ChatApplication
+	UserApplication application.UserApplication
 }
 
 // ListRoom - チャットルーム一覧取得
 func (s *ChatServer) ListRoom(ctx context.Context, req *pb.ListChatRoomRequest) (*pb.ChatRoomListResponse, error) {
-	cu, err := s.AuthApplication.Authentication(ctx)
+	cu, err := s.UserApplication.Authentication(ctx)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, status.New(codes.Internal, "リファクタ中...").Err()
 	}
 
 	crs, err := s.ChatApplication.ListRoom(ctx, cu.ID)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, status.New(codes.Internal, "リファクタ中...").Err()
 	}
 
 	res := getChatRoomListResponse(crs)
@@ -36,9 +38,9 @@ func (s *ChatServer) ListRoom(ctx context.Context, req *pb.ListChatRoomRequest) 
 
 // CreateRoom - チャットルーム作成
 func (s *ChatServer) CreateRoom(ctx context.Context, req *pb.CreateChatRoomRequest) (*pb.ChatRoomResponse, error) {
-	cu, err := s.AuthApplication.Authentication(ctx)
+	cu, err := s.UserApplication.Authentication(ctx)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, status.New(codes.Internal, "リファクタ中...").Err()
 	}
 
 	in := &input.CreateRoom{
@@ -47,7 +49,7 @@ func (s *ChatServer) CreateRoom(ctx context.Context, req *pb.CreateChatRoomReque
 
 	cr, err := s.ChatApplication.CreateRoom(ctx, in, cu.ID)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, status.New(codes.Internal, "リファクタ中...").Err()
 	}
 
 	res := getChatRoomResponse(cr)
@@ -58,9 +60,9 @@ func (s *ChatServer) CreateRoom(ctx context.Context, req *pb.CreateChatRoomReque
 func (s *ChatServer) CreateMessage(
 	ctx context.Context, req *pb.CreateChatMessageRequest,
 ) (*pb.ChatMessageResponse, error) {
-	cu, err := s.AuthApplication.Authentication(ctx)
+	cu, err := s.UserApplication.Authentication(ctx)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, status.New(codes.Internal, "リファクタ中...").Err()
 	}
 
 	in := &input.CreateTextMessage{
@@ -69,7 +71,7 @@ func (s *ChatServer) CreateMessage(
 
 	cm, err := s.ChatApplication.CreateTextMessage(ctx, in, req.GetRoomId(), cu.ID) // TODO: add roomID
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, status.New(codes.Internal, "リファクタ中...").Err()
 	}
 
 	res := getChatMessageResponse(cm)
@@ -84,9 +86,9 @@ func (s *ChatServer) UploadImage(stream pb.ChatService_UploadImageServer) error 
 	for {
 		req, err := stream.Recv()
 		if err == io.EOF {
-			cu, err := s.AuthApplication.Authentication(ctx)
+			cu, err := s.UserApplication.Authentication(ctx)
 			if err != nil {
-				return errorHandling(err)
+				return status.New(codes.Internal, "リファクタ中...").Err()
 			}
 
 			image := []byte{}
@@ -100,7 +102,7 @@ func (s *ChatServer) UploadImage(stream pb.ChatService_UploadImageServer) error 
 
 			cm, err := s.ChatApplication.CreateImageMessage(ctx, in, roomID, cu.ID)
 			if err != nil {
-				return errorHandling(err)
+				return status.New(codes.Internal, "リファクタ中...").Err()
 			}
 
 			res := getChatMessageResponse(cm)
@@ -108,7 +110,7 @@ func (s *ChatServer) UploadImage(stream pb.ChatService_UploadImageServer) error 
 		}
 
 		if err != nil {
-			return errorHandling(err)
+			return status.New(codes.Internal, "リファクタ中...").Err()
 		}
 
 		if roomID == "" && req.GetRoomId() != "" {
