@@ -2,6 +2,7 @@ import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import React, { ReactElement, useState } from 'react';
 import { colors, Input } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { FONT_SIZE } from '~~/constants/theme';
 
 interface Props {
   placeholder: string;
@@ -30,7 +31,7 @@ const PasswordInput = function PasswordInput(props: Props): ReactElement {
       }
       errorMessage={props.hasError ? props.errorMessage : ''}
       maxLength={32}
-      inputStyle={{ fontSize: 18 }}
+      inputStyle={{ fontSize: FONT_SIZE.INPUTAREA }}
     />
   );
 };

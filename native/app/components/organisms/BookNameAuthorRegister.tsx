@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
 import { StyleSheet, View, Text, Image } from 'react-native';
-import { COLOR } from '~~/constants/theme';
+import { COLOR, FONT_SIZE } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
   bookInfoStyle: {
@@ -23,8 +23,8 @@ const BookNameAuthorRegister = function BookNameAuthorRegister(props: Props): Re
     <View style={styles.bookInfoStyle}>
       <Image source={{ uri: props.imageUrl }} style={{ width: 75, height: 105 }} />
       <View style={{ justifyContent: 'space-around', marginStart: 20 }}>
-        <Text style={{ fontSize: 16 }}>{props.title}</Text>
-        <Text style={{ fontSize: 14, color: COLOR.GREY }}>{props.author}</Text>
+        <Text style={{ fontSize: FONT_SIZE.ITEM_TITLE }}>{props.title}</Text>
+        <Text style={{ fontSize: FONT_SIZE.ITEM_SUBTITLE, color: COLOR.GREY }}>{props.author}</Text>
       </View>
     </View>
   );

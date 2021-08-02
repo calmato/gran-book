@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import React, { ReactElement } from 'react';
 import { colors, Input } from 'react-native-elements';
+import { FONT_SIZE } from '~~/constants/theme';
 
 const color = colors.grey0;
 
@@ -30,7 +31,7 @@ const MailInput = function MailInput(props: Props): ReactElement {
       keyboardType="email-address"
       placeholder="メールアドレス"
       errorMessage={generateErrorMessage()}
-      inputStyle={{ fontSize: 18 }}
+      inputStyle={{ fontSize: FONT_SIZE.INPUTAREA }}
     />
   );
 };

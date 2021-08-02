@@ -29,6 +29,18 @@ export const COLOR = {
   MESSAGE_BACKGROUND: '#1da1f2',
 };
 
+export const FONT_SIZE = {
+  TAB_TITLE: 14,
+  SUBHEAD: 15,
+  TEXT: 14,
+  INPUTAREA: 18,
+  ALERT: 12,
+  ITEM_TITLE: 16,
+  ITEM_SUBTITLE: 14,
+  BUTTON: 18,
+  BUTTON_ICON: 10,
+};
+
 // react-native-elementsの共通の設定
 export const THEME: Theme = {
   colors: {

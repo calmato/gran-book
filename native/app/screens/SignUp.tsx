@@ -10,6 +10,7 @@ import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import { generateErrorMessage } from '~/lib/util/ErrorUtil';
 import { emailValidation } from '~/lib/validation';
 import { SingUpForm } from '~/types/forms';
+import { FONT_SIZE } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
   container: {
@@ -118,7 +119,7 @@ const SignUp = function SignUp(props: Props): ReactElement {
         onChangeText={(text) => setValue({ ...formData, username: text })}
         value={formData.username}
         placeholder="ニックネーム"
-        inputStyle={{ fontSize: 18 }}
+        inputStyle={{ fontSize: FONT_SIZE.INPUTAREA }}
       />
       <CheckBox
         styles={styles.checkBox}

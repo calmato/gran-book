@@ -12,7 +12,7 @@ import { StyleSheet, View, ScrollView } from 'react-native';
 import { ListItem, Text, Avatar, Header } from 'react-native-elements';
 import HeaderText from '~/components/atoms/HeaderText';
 import { Auth } from '~/store/models';
-import { COLOR } from '~~/constants/theme';
+import { COLOR, FONT_SIZE } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
   container: {
@@ -21,13 +21,13 @@ const styles = StyleSheet.create({
   },
   title: {
     color: COLOR.TEXT_DEFAULT,
-    fontSize: 16,
+    fontSize: FONT_SIZE.ITEM_TITLE,
   },
   subtitle: {
     marginTop: 8,
     marginLeft: 12,
     marginBottom: 4,
-    fontSize: 15,
+    fontSize: FONT_SIZE.SUBHEAD,
     color: COLOR.TEXT_TITLE,
     fontWeight: '600',
   },

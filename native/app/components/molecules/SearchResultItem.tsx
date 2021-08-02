@@ -2,7 +2,7 @@
 import { StyleSheet, Image } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import { ISearchResultItem } from '~/types/response/external/rakuten-books';
-import { COLOR } from '~~/constants/theme';
+import { COLOR, FONT_SIZE } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
   bookCoverStyle: {
@@ -14,11 +14,11 @@ const styles = StyleSheet.create({
     color: COLOR.TEXT_DEFAULT,
     marginBottom: 8,
     fontWeight: '800',
-    fontSize: 16,
+    fontSize: FONT_SIZE.ITEM_TITLE,
   },
   authors: {
     color: COLOR.TEXT_GRAY,
-    fontSize: 14,
+    fontSize: FONT_SIZE.ITEM_SUBTITLE,
   },
 });
 

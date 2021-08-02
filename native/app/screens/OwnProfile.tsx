@@ -5,7 +5,7 @@ import { Text } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import ProfileViewGroup from '~/components/organisms/ProfileViewGroup';
-import { COLOR } from '~~/constants/theme';
+import { COLOR, FONT_SIZE } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
   container: {
@@ -18,12 +18,12 @@ const styles = StyleSheet.create({
     padding: 16,
     alignSelf: 'stretch',
     minHeight: 100,
-    fontSize: 14,
+    fontSize: FONT_SIZE.TEXT,
   },
   title: {
     color: COLOR.TEXT_TITLE,
     padding: 10,
-    fontSize: 15,
+    fontSize: FONT_SIZE.SUBHEAD,
   },
 });
 

@@ -9,11 +9,11 @@ import SearchBar from '~/components/molecules/SearchBar';
 import { ViewBooks } from '~/types/models/book';
 import { HomeTabStackPramList } from '~/types/navigation';
 import { IBook } from '~/types/response';
-import { COLOR } from '~~/constants/theme';
+import { COLOR, FONT_SIZE } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
   tabTitle: {
-    fontSize: 14,
+    fontSize: FONT_SIZE.TAB_TITLE,
     color: COLOR.GREY,
   },
   indicator: {

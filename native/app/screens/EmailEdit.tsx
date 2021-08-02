@@ -6,7 +6,7 @@ import MailInput from '~/components/molecules/MailInput';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import { generateErrorMessage } from '~/lib/util/ErrorUtil';
 import { emailValidation } from '~/lib/validation';
-import { COLOR } from '~~/constants/theme';
+import { COLOR, FONT_SIZE } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
   container: {
@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
   },
   textCard: {
     width: '90%',
-    fontSize: 14,
+    fontSize: FONT_SIZE.TEXT,
     color: COLOR.TEXT_DEFAULT,
     backgroundColor: COLOR.BACKGROUND_YELLOW,
     borderColor: COLOR.PRIMARY,
@@ -27,14 +27,14 @@ const styles = StyleSheet.create({
     marginTop: 30,
     marginLeft: 12,
     marginBottom: 6,
-    fontSize: 15,
+    fontSize: FONT_SIZE.SUBHEAD,
     color: COLOR.TEXT_TITLE,
     fontWeight: '600',
     alignSelf: 'flex-start',
   },
   mailStatus: {
     padding: 16,
-    fontSize: 16,
+    fontSize: FONT_SIZE.ITEM_TITLE,
     textAlign: 'right',
     color: COLOR.TEXT_DEFAULT,
     backgroundColor: COLOR.BACKGROUND_WHITE,
