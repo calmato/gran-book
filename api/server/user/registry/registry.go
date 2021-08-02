@@ -2,10 +2,7 @@ package registry
 
 import (
 	"github.com/calmato/gran-book/api/server/user/internal/application"
-	rv "github.com/calmato/gran-book/api/server/user/internal/application/validation"
-	"github.com/calmato/gran-book/api/server/user/internal/infrastructure/messaging"
 	"github.com/calmato/gran-book/api/server/user/internal/infrastructure/repository"
-	"github.com/calmato/gran-book/api/server/user/internal/infrastructure/service"
 	"github.com/calmato/gran-book/api/server/user/internal/infrastructure/storage"
 	dv "github.com/calmato/gran-book/api/server/user/internal/infrastructure/validation"
 	"github.com/calmato/gran-book/api/server/user/internal/interface/validation"
@@ -20,6 +17,7 @@ type Registry struct {
 	AdminRequestValidation validation.AdminRequestValidation
 	AuthRequsetValidation  validation.AuthRequestValidation
 	ChatApplication        application.ChatApplication
+	ChatRequestValidation  validation.ChatRequestValidation
 	UserApplication        application.UserApplication
 	UserRequestValidation  validation.UserRequestValidation
 }
@@ -30,13 +28,14 @@ func NewRegistry(
 ) *Registry {
 	adminRequestValidation := adminInjection()
 	authRequestValidation := authInjection()
-	chatApplication := chatInjection(db, fa, fs, s)
+	chatApplication, chatRequestValidation := chatInjection(fs, s)
 	userApplication, userRequestValidation := userInjection(db, fa, s)
 
 	return &Registry{
 		AdminRequestValidation: adminRequestValidation,
 		AuthRequsetValidation:  authRequestValidation,
 		ChatApplication:        chatApplication,
+		ChatRequestValidation:  chatRequestValidation,
 		UserApplication:        userApplication,
 		UserRequestValidation:  userRequestValidation,
 	}
@@ -53,18 +52,16 @@ func authInjection() validation.AuthRequestValidation {
 }
 
 func chatInjection(
-	db *database.Client, fa *authentication.Auth, fs *firestore.Firestore, s *gcs.Storage,
-) application.ChatApplication {
-	cm := messaging.NewChatMessaging()
+	fs *firestore.Firestore, s *gcs.Storage,
+) (application.ChatApplication, validation.ChatRequestValidation) {
 	cr := repository.NewChatRepository(fs)
 	cdv := dv.NewChatDomainValidation()
 	cu := storage.NewChatUploader(s)
-	cs := service.NewChatService(cdv, cr, cu, cm)
+	ca := application.NewChatApplication(cdv, cr, cu)
 
-	crv := rv.NewChatRequestValidation()
-	ca := application.NewChatApplication(crv, cs)
+	crv := validation.NewChatRequestValidation()
 
-	return ca
+	return ca, crv
 }
 
 func userInjection(

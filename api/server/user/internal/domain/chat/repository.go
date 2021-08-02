@@ -8,7 +8,7 @@ import (
 
 // Repository - Chatレポジトリ
 type Repository interface {
-	ListRoom(ctx context.Context, q *database.ListQuery, uid string) ([]*Room, error)
+	ListRoom(ctx context.Context, q *database.ListQuery, userID string) ([]*Room, error)
 	GetRoom(ctx context.Context, roomID string) (*Room, error)
 	CreateRoom(ctx context.Context, cr *Room) error
 	UpdateRoom(ctx context.Context, cr *Room) error

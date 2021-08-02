@@ -247,10 +247,6 @@ func (a *userApplication) GetUserProfile(
 }
 
 func (a *userApplication) Create(ctx context.Context, u *user.User) error {
-	current := time.Now().Local()
-	u.CreatedAt = current
-	u.UpdatedAt = current
-
 	if u.Gender == 0 {
 		u.Gender = user.UnkownGender
 	}
@@ -264,27 +260,31 @@ func (a *userApplication) Create(ctx context.Context, u *user.User) error {
 		return err
 	}
 
+	current := time.Now().Local()
+	u.CreatedAt = current
+	u.UpdatedAt = current
+
 	return a.userRepository.Create(ctx, u)
 }
 
 func (a *userApplication) Update(ctx context.Context, u *user.User) error {
-	u.UpdatedAt = time.Now().Local()
-
 	err := a.userDomainValidation.User(ctx, u)
 	if err != nil {
 		return err
 	}
+
+	u.UpdatedAt = time.Now().Local()
 
 	return a.userRepository.Update(ctx, u)
 }
 
 func (a *userApplication) UpdatePassword(ctx context.Context, u *user.User) error {
-	u.UpdatedAt = time.Now().Local()
-
 	err := a.userDomainValidation.User(ctx, u)
 	if err != nil {
 		return err
 	}
+
+	u.UpdatedAt = time.Now().Local()
 
 	return a.userRepository.UpdatePassword(ctx, u.ID, u.Password)
 }

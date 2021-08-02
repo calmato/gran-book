@@ -20,29 +20,30 @@ func NewChatRepository(fs *firestore.Firestore) chat.Repository {
 	}
 }
 
-func (r *chatRepository) ListRoom(ctx context.Context, q *database.ListQuery, uid string) ([]*chat.Room, error) {
+func (r *chatRepository) ListRoom(ctx context.Context, q *database.ListQuery, userID string) ([]*chat.Room, error) {
 	c := getChatRoomCollection()
 
-	var sortBy string
+	var orderBy string
 	switch q.Order.OrderBy {
 	case database.OrderByAsc:
-		sortBy = "asc"
+		orderBy = firestore.OrderByAsc
 	case database.OrderByDesc:
-		sortBy = "desc"
+		orderBy = firestore.OrderByDesc
 	default:
-		sortBy = "asc"
+		orderBy = firestore.OrderByAsc
 	}
 
 	params := &firestore.Params{
-		OrderBy: q.Order.Field,
-		SortBy:  sortBy,
+		Limit:      q.Limit,
+		OrderField: q.Order.Field,
+		OrderBy:    orderBy,
 	}
 
 	qs := []*firestore.Query{
 		{
 			Field:    "users",
 			Operator: "array-contains",
-			Value:    uid,
+			Value:    userID,
 		},
 	}
 

@@ -14,10 +14,10 @@ type Firestore struct {
 
 // Params - Where()メソッドで使用するクエリ構造体
 type Params struct {
-	OrderBy string
-	SortBy  string
-	Offset  string
-	Limit   int
+	Offset     string
+	Limit      int
+	OrderField string
+	OrderBy    string
 }
 
 // Query - Where()メソッドのフィルタリング使用するクエリ構造体
@@ -27,9 +27,10 @@ type Query struct {
 	Value    interface{}
 }
 
+// ソート順
 const (
-	sortByAsc  = "asc"
-	sortByDesc = "desc"
+	OrderByAsc  = "asc"  // 昇順
+	OrderByDesc = "desc" // 降順
 )
 
 // NewClient - Firestoreに接続
@@ -119,19 +120,19 @@ func (f *Firestore) DeleteDoc(ctx context.Context, collection string, document s
  */
 func (f *Firestore) getQuery(ctx context.Context, collection string, params *Params) (firestore.Query, error) {
 	// ソート
-	if params.OrderBy == "" {
-		params.OrderBy = "id"
+	if params.OrderField == "" {
+		params.OrderField = "id"
 	}
 
-	orderBySort := firestore.Asc
-	switch params.SortBy {
-	case sortByAsc:
-		orderBySort = firestore.Asc
-	case sortByDesc:
-		orderBySort = firestore.Desc
+	orderBy := firestore.Asc
+	switch params.OrderBy {
+	case OrderByAsc:
+		orderBy = firestore.Asc
+	case OrderByDesc:
+		orderBy = firestore.Desc
 	}
 
-	c := f.Client.Collection(collection).OrderBy(params.OrderBy, orderBySort)
+	c := f.Client.Collection(collection).OrderBy(params.OrderField, orderBy)
 
 	// 取得開始位置
 	if params.Offset != "" {
@@ -140,7 +141,7 @@ func (f *Firestore) getQuery(ctx context.Context, collection string, params *Par
 			return firestore.Query{}, err
 		}
 
-		c = c.StartAfter(doc.Data()[params.OrderBy])
+		c = c.StartAfter(doc.Data()[params.OrderField])
 	}
 
 	// 取得上限数

@@ -2,138 +2,113 @@ package application
 
 import (
 	"context"
+	"time"
 
-	"github.com/calmato/gran-book/api/server/user/internal/application/input"
-	"github.com/calmato/gran-book/api/server/user/internal/application/validation"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/chat"
+	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
 	"github.com/calmato/gran-book/api/server/user/pkg/array"
 	"github.com/calmato/gran-book/api/server/user/pkg/database"
+	"github.com/google/uuid"
+	"golang.org/x/xerrors"
 )
 
 // ChatApplication - Chatアプリケーションのインターフェース
 type ChatApplication interface {
-	ListRoom(ctx context.Context, cuid string) ([]*chat.Room, error)
-	CreateRoom(ctx context.Context, in *input.CreateRoom, cuid string) (*chat.Room, error)
-	CreateTextMessage(ctx context.Context, in *input.CreateTextMessage, roomID string, cuid string) (*chat.Message, error)
-	CreateImageMessage(
-		ctx context.Context, in *input.CreateImageMessage, roomID string, cuid string,
-	) (*chat.Message, error)
+	ListRoom(ctx context.Context, userID string, q *database.ListQuery) ([]*chat.Room, error)
+	GetRoom(ctx context.Context, roomID string, userID string) (*chat.Room, error)
+	CreateRoom(ctx context.Context, cr *chat.Room) error
+	CreateMessage(ctx context.Context, cr *chat.Room, cm *chat.Message) error
+	UploadImage(ctx context.Context, cr *chat.Room, image []byte) (string, error)
 }
 
 type chatApplication struct {
-	chatRequestValidation validation.ChatRequestValidation
-	chatService           chat.Service
+	chatDomainValidation chat.Validation
+	chatRepository       chat.Repository
+	chatUploader         chat.Uploader
 }
 
 // NewChatApplication - ChatApplicationの生成
-func NewChatApplication(crv validation.ChatRequestValidation, cs chat.Service) ChatApplication {
+func NewChatApplication(cdv chat.Validation, cr chat.Repository, cu chat.Uploader) ChatApplication {
 	return &chatApplication{
-		chatRequestValidation: crv,
-		chatService:           cs,
+		chatDomainValidation: cdv,
+		chatRepository:       cr,
+		chatUploader:         cu,
 	}
 }
 
-func (a *chatApplication) ListRoom(ctx context.Context, cuid string) ([]*chat.Room, error) {
-	q := &database.ListQuery{
-		Order: &database.OrderQuery{
-			Field:   "updatedAt",
-			OrderBy: database.OrderByDesc,
-		},
+func (a *chatApplication) ListRoom(ctx context.Context, userID string, q *database.ListQuery) ([]*chat.Room, error) {
+	q.Order = &database.OrderQuery{
+		Field:   "updatedAt",
+		OrderBy: database.OrderByDesc,
 	}
 
-	return a.chatService.ListRoom(ctx, q, cuid)
+	crs, err := a.chatRepository.ListRoom(ctx, q, userID)
+	if err != nil {
+		return nil, err
+	}
+
+	return crs, nil
 }
 
-func (a *chatApplication) CreateRoom(ctx context.Context, in *input.CreateRoom, cuid string) (*chat.Room, error) {
-	err := a.chatRequestValidation.CreateRoom(in)
+func (a *chatApplication) GetRoom(ctx context.Context, roomID string, userID string) (*chat.Room, error) {
+	cr, err := a.chatRepository.GetRoom(ctx, roomID)
 	if err != nil {
 		return nil, err
 	}
 
-	cr := &chat.Room{
-		UserIDs: in.UserIDs,
-	}
-
-	if ok, _ := array.Contains(cr.UserIDs, cuid); !ok {
-		cr.UserIDs = append(cr.UserIDs, cuid)
-	}
-
-	err = a.chatService.ValidationRoom(ctx, cr)
-	if err != nil {
-		return nil, err
-	}
-
-	err = a.chatService.CreateRoom(ctx, cr)
-	if err != nil {
-		return nil, err
+	isJoin, _ := array.Contains(cr.UserIDs, userID)
+	if !isJoin {
+		err := xerrors.New("This user is not join the room")
+		return nil, exception.Forbidden.New(err)
 	}
 
 	return cr, nil
 }
 
-func (a *chatApplication) CreateTextMessage(
-	ctx context.Context, in *input.CreateTextMessage, roomID string, cuid string,
-) (*chat.Message, error) {
-	err := a.chatRequestValidation.CreateTextMessage(in)
+func (a *chatApplication) CreateRoom(ctx context.Context, cr *chat.Room) error {
+	err := a.chatDomainValidation.Room(ctx, cr)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	cr, err := a.chatService.GetRoom(ctx, roomID)
+	current := time.Now().Local()
+	cr.CreatedAt = current
+	cr.UpdatedAt = current
+	cr.ID = uuid.New().String()
+
+	err = a.chatRepository.CreateRoom(ctx, cr)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	cm := &chat.Message{
-		Text:   in.Text,
-		UserID: cuid,
-	}
-
-	err = a.chatService.ValidationMessage(ctx, cm)
-	if err != nil {
-		return nil, err
-	}
-
-	err = a.chatService.CreateMessage(ctx, cr, cm)
-	if err != nil {
-		return nil, err
-	}
-
-	return cm, nil
+	return nil
 }
 
-func (a *chatApplication) CreateImageMessage(
-	ctx context.Context, in *input.CreateImageMessage, roomID string, cuid string,
-) (*chat.Message, error) {
-	err := a.chatRequestValidation.CreateImageMessage(in)
+func (a *chatApplication) CreateMessage(ctx context.Context, cr *chat.Room, cm *chat.Message) error {
+	err := a.chatDomainValidation.Message(ctx, cm)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	cr, err := a.chatService.GetRoom(ctx, roomID)
+	cm.CreatedAt = time.Now().Local()
+	cm.ID = uuid.New().String()
+
+	err = a.chatRepository.CreateMessage(ctx, cr.ID, cm)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	imageURL, err := a.chatService.UploadImage(ctx, cr.ID, in.Image)
+	cr.LatestMessage = cm
+	cr.UpdatedAt = cm.CreatedAt
+
+	err = a.chatRepository.UpdateRoom(ctx, cr)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	cm := &chat.Message{
-		Image:  imageURL,
-		UserID: cuid,
-	}
+	return nil
+}
 
-	err = a.chatService.ValidationMessage(ctx, cm)
-	if err != nil {
-		return nil, err
-	}
-
-	err = a.chatService.CreateMessage(ctx, cr, cm)
-	if err != nil {
-		return nil, err
-	}
-
-	return cm, nil
+func (a *chatApplication) UploadImage(ctx context.Context, cr *chat.Room, image []byte) (string, error) {
+	return a.chatUploader.Image(ctx, cr.ID, image)
 }

@@ -7,7 +7,6 @@ import (
 	"net"
 	"strings"
 
-	v1 "github.com/calmato/gran-book/api/server/user/internal/interface/grpc/v1"
 	"github.com/calmato/gran-book/api/server/user/internal/interface/server"
 	pb "github.com/calmato/gran-book/api/server/user/proto"
 	"github.com/calmato/gran-book/api/server/user/registry"
@@ -48,9 +47,9 @@ func newGRPCServer(port, logPath, logLevel string, reg *registry.Registry) (*grp
 		AuthRequestValidation: reg.AuthRequsetValidation,
 		UserApplication:       reg.UserApplication,
 	})
-	pb.RegisterChatServiceServer(s, &v1.ChatServer{
-		UserApplication: reg.UserApplication,
-		ChatApplication: reg.ChatApplication,
+	pb.RegisterChatServiceServer(s, &server.ChatServer{
+		ChatRequestValidation: reg.ChatRequestValidation,
+		ChatApplication:       reg.ChatApplication,
 	})
 	pb.RegisterUserServiceServer(s, &server.UserServer{
 		UserRequestValidation: reg.UserRequestValidation,
