@@ -8,8 +8,8 @@ import (
 	context "context"
 	reflect "reflect"
 
-	domain "github.com/calmato/gran-book/api/server/user/internal/domain"
 	chat "github.com/calmato/gran-book/api/server/user/internal/domain/chat"
+	database "github.com/calmato/gran-book/api/server/user/pkg/database"
 	gomock "github.com/golang/mock/gomock"
 )
 
@@ -80,18 +80,18 @@ func (mr *MockRepositoryMockRecorder) GetRoom(ctx, roomID interface{}) *gomock.C
 }
 
 // ListRoom mocks base method.
-func (m *MockRepository) ListRoom(ctx context.Context, q *domain.ListQuery, uid string) ([]*chat.Room, error) {
+func (m *MockRepository) ListRoom(ctx context.Context, q *database.ListQuery, userID string) ([]*chat.Room, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListRoom", ctx, q, uid)
+	ret := m.ctrl.Call(m, "ListRoom", ctx, q, userID)
 	ret0, _ := ret[0].([]*chat.Room)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // ListRoom indicates an expected call of ListRoom.
-func (mr *MockRepositoryMockRecorder) ListRoom(ctx, q, uid interface{}) *gomock.Call {
+func (mr *MockRepositoryMockRecorder) ListRoom(ctx, q, userID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListRoom", reflect.TypeOf((*MockRepository)(nil).ListRoom), ctx, q, uid)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListRoom", reflect.TypeOf((*MockRepository)(nil).ListRoom), ctx, q, userID)
 }
 
 // UpdateRoom mocks base method.

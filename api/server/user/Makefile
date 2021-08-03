@@ -2,7 +2,7 @@ GOLANGCI_VERSION := 1.33.0
 
 BIN := $(abspath ./bin)
 PACKAGES := $(shell go list ./... | grep -v -e "mock" -v -e "proto")
-TEST_PACKAGES := $(shell go list ./internal/... ./lib/... | grep -v -e "domain" -v -e "interface" -v -e "application/input" -v -e "infrastructure/repository" -v -e "infrastructure/storage" -v -e "lib/firebase" -v -e "lib/metadata")
+TEST_PACKAGES := $(shell go list ./internal/... ./pkg/... | grep -v -e "domain" -v -e "infrastructure/repository" -v -e "infrastructure/storage" -v -e "pkg/firebase" -v -e "pkg/metadata")
 
 .PHONY: setup run build start fmt vet lint test
 
