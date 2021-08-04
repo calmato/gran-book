@@ -7,14 +7,14 @@ import (
 	"github.com/calmato/gran-book/api/server/user/internal/domain/chat"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
 	"github.com/calmato/gran-book/api/server/user/pkg/array"
-	"github.com/calmato/gran-book/api/server/user/pkg/database"
+	"github.com/calmato/gran-book/api/server/user/pkg/firebase/firestore"
 	"github.com/google/uuid"
 	"golang.org/x/xerrors"
 )
 
 // ChatApplication - Chatアプリケーションのインターフェース
 type ChatApplication interface {
-	ListRoom(ctx context.Context, userID string, q *database.ListQuery) ([]*chat.Room, error)
+	ListRoom(ctx context.Context, userID string, p *firestore.Params) ([]*chat.Room, error)
 	GetRoom(ctx context.Context, roomID string, userID string) (*chat.Room, error)
 	CreateRoom(ctx context.Context, cr *chat.Room) error
 	CreateMessage(ctx context.Context, cr *chat.Room, cm *chat.Message) error
@@ -36,13 +36,16 @@ func NewChatApplication(cdv chat.Validation, cr chat.Repository, cu chat.Uploade
 	}
 }
 
-func (a *chatApplication) ListRoom(ctx context.Context, userID string, q *database.ListQuery) ([]*chat.Room, error) {
-	q.Order = &database.OrderQuery{
-		Field:   "updatedAt",
-		OrderBy: database.OrderByDesc,
+func (a *chatApplication) ListRoom(ctx context.Context, userID string, p *firestore.Params) ([]*chat.Room, error) {
+	qs := []*firestore.Query{
+		{
+			Field:    "users",
+			Operator: "array-contains",
+			Value:    userID,
+		},
 	}
 
-	crs, err := a.chatRepository.ListRoom(ctx, q, userID)
+	crs, err := a.chatRepository.ListRoom(ctx, p, qs)
 	if err != nil {
 		return nil, err
 	}

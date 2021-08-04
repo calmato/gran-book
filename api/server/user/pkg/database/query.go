@@ -2,7 +2,6 @@ package database
 
 import (
 	"fmt"
-	"strconv"
 
 	"github.com/calmato/gran-book/api/server/user/pkg/array"
 	"gorm.io/gorm"
@@ -11,7 +10,7 @@ import (
 // ListQuery - 一覧取得時のクエリ用構造体
 type ListQuery struct {
 	Limit      int
-	Offset     interface{}
+	Offset     int
 	Order      *OrderQuery
 	Conditions []*ConditionQuery
 }
@@ -133,18 +132,6 @@ func setLimit(db *gorm.DB, limit int) *gorm.DB {
 	return db
 }
 
-func setOffset(db *gorm.DB, offset interface{}) *gorm.DB {
-	switch v := offset.(type) {
-	case int:
-		return db.Offset(v)
-	case string:
-		i, err := strconv.Atoi(v)
-		if err != nil {
-			return db
-		}
-
-		return db.Offset(i)
-	default:
-		return db
-	}
+func setOffset(db *gorm.DB, offset int) *gorm.DB {
+	return db.Offset(offset)
 }

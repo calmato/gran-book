@@ -1,6 +1,7 @@
 package validation
 
 import (
+	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
 	pb "github.com/calmato/gran-book/api/server/user/proto"
 )
 
@@ -109,6 +110,10 @@ func (v *userRequestValidation) Follow(req *pb.FollowRequest) error {
 		return toInternalError()
 	}
 
+	if req.GetUserId() == req.GetFollowerId() {
+		return toValidationError("FollowerId", exception.UniqueMessage)
+	}
+
 	return nil
 }
 
@@ -120,6 +125,10 @@ func (v *userRequestValidation) Unfollow(req *pb.UnfollowRequest) error {
 		}
 
 		return toInternalError()
+	}
+
+	if req.GetUserId() == req.GetFollowerId() {
+		return toValidationError("FollowerId", exception.UniqueMessage)
 	}
 
 	return nil

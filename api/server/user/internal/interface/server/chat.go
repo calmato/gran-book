@@ -8,8 +8,8 @@ import (
 	"github.com/calmato/gran-book/api/server/user/internal/domain/chat"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
 	"github.com/calmato/gran-book/api/server/user/internal/interface/validation"
-	"github.com/calmato/gran-book/api/server/user/pkg/database"
 	"github.com/calmato/gran-book/api/server/user/pkg/datetime"
+	"github.com/calmato/gran-book/api/server/user/pkg/firebase/firestore"
 	pb "github.com/calmato/gran-book/api/server/user/proto"
 	"golang.org/x/xerrors"
 )
@@ -28,14 +28,14 @@ func (s *ChatServer) ListRoom(ctx context.Context, req *pb.ListChatRoomRequest) 
 		return nil, errorHandling(err)
 	}
 
-	limit := int(req.GetLimit())
-	offset := req.GetOffset()
-	q := &database.ListQuery{
-		Limit:  limit,
-		Offset: offset,
+	p := &firestore.Params{
+		Limit:      int(req.GetLimit()),
+		Offset:     req.GetOffset(),
+		OrderField: "updatedAt",
+		OrderBy:    firestore.OrderByDesc,
 	}
 
-	crs, err := s.ChatApplication.ListRoom(ctx, req.GetUserId(), q)
+	crs, err := s.ChatApplication.ListRoom(ctx, req.GetUserId(), p)
 	if err != nil {
 		return nil, errorHandling(err)
 	}

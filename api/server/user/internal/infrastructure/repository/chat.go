@@ -5,7 +5,6 @@ import (
 
 	"github.com/calmato/gran-book/api/server/user/internal/domain/chat"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
-	"github.com/calmato/gran-book/api/server/user/pkg/database"
 	"github.com/calmato/gran-book/api/server/user/pkg/firebase/firestore"
 )
 
@@ -20,34 +19,10 @@ func NewChatRepository(fs *firestore.Firestore) chat.Repository {
 	}
 }
 
-func (r *chatRepository) ListRoom(ctx context.Context, q *database.ListQuery, userID string) ([]*chat.Room, error) {
+func (r *chatRepository) ListRoom(ctx context.Context, p *firestore.Params, qs []*firestore.Query) ([]*chat.Room, error) {
 	c := getChatRoomCollection()
 
-	var orderBy string
-	switch q.Order.OrderBy {
-	case database.OrderByAsc:
-		orderBy = firestore.OrderByAsc
-	case database.OrderByDesc:
-		orderBy = firestore.OrderByDesc
-	default:
-		orderBy = firestore.OrderByAsc
-	}
-
-	params := &firestore.Params{
-		Limit:      q.Limit,
-		OrderField: q.Order.Field,
-		OrderBy:    orderBy,
-	}
-
-	qs := []*firestore.Query{
-		{
-			Field:    "users",
-			Operator: "array-contains",
-			Value:    userID,
-		},
-	}
-
-	docs, err := r.firestore.List(ctx, c, params, qs)
+	docs, err := r.firestore.List(ctx, c, p, qs)
 	if err != nil {
 		return nil, exception.ErrorInDatastore.New(err)
 	}

@@ -51,7 +51,7 @@ message CreateChatMessageRequest {
   string text = 3 [
     (validate.rules).string = {
       min_len: 1
-      max_len: 10000
+      max_len: 1000
     }
   ];
 }

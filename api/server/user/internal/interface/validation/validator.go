@@ -1,8 +1,9 @@
 package validation
 
 import (
+	"errors"
+
 	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
-	"golang.org/x/xerrors"
 )
 
 func toValidationError(field, message string) error {
@@ -11,11 +12,11 @@ func toValidationError(field, message string) error {
 		Message: message,
 	}
 
-	err := xerrors.New("Failed to request validation")
+	err := errors.New("failed to request validation")
 	return exception.InvalidRequestValidation.New(err, ve)
 }
 
 func toInternalError() error {
-	err := xerrors.New("Failed to convert request")
+	err := errors.New("failed to convert request")
 	return exception.Unknown.New(err)
 }
