@@ -8,7 +8,7 @@ import BookNameAuthorRegister from '~/components/organisms/BookNameAuthorRegiste
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import ReadDate from '~/components/organisms/ReadDate';
 import { ImpressionForm } from '~/types/forms';
-import { BookshelfTabStackPramList } from '~/types/navigation';
+import { BookshelfTabStackParamList } from '~/types/navigation';
 import { COLOR } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
@@ -34,8 +34,8 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  route: RouteProp<BookshelfTabStackPramList, 'BookReadRegister'>;
-  navigation: StackNavigationProp<BookshelfTabStackPramList, 'BookReadRegister'>;
+  route: RouteProp<BookshelfTabStackParamList, 'BookReadRegister'>;
+  navigation: StackNavigationProp<BookshelfTabStackParamList, 'BookReadRegister'>;
   actions: {
     registerReadBookImpression: (bookId: number, impression: ImpressionForm) => Promise<void>;
   };

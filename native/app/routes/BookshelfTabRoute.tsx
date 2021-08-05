@@ -4,9 +4,9 @@ import { Bookshelf } from '~/containers';
 import BookReadRegister from '~/containers/BookReadRegister';
 import BookShow from '~/containers/BookShow';
 import SearchResult from '~/screens/SearchResult';
-import { BookshelfTabStackPramList } from '~/types/navigation';
+import { BookshelfTabStackParamList } from '~/types/navigation';
 
-const BookshelfTabStack = createStackNavigator<BookshelfTabStackPramList>();
+const BookshelfTabStack = createStackNavigator<BookshelfTabStackParamList>();
 
 const BookshelfTabRoute = function bookshelfTabRoute(): ReactElement {
   return (

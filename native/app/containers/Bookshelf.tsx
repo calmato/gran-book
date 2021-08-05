@@ -6,10 +6,10 @@ import { useReduxDispatch } from '~/store/modules';
 import { bookSelector } from '~/store/selectors/book';
 import { getAllBookAsync } from '~/store/usecases';
 import { ViewBooks } from '~/types/models/book';
-import { BookshelfTabStackPramList } from '~/types/navigation';
+import { BookshelfTabStackParamList } from '~/types/navigation';
 
 interface Props {
-  navigation?: StackNavigationProp<BookshelfTabStackPramList, 'Bookshelf'>;
+  navigation?: StackNavigationProp<BookshelfTabStackParamList, 'Bookshelf'>;
 }
 
 export default function ConnectedBookshelf(props: Props) {

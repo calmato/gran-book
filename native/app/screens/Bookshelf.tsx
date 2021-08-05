@@ -8,7 +8,7 @@ import HeaderText from '~/components/atoms/HeaderText';
 import BookList from '~/components/molecules/BookList';
 import SearchBar from '~/components/molecules/SearchBar';
 import { ViewBooks } from '~/types/models/book';
-import { BookshelfTabStackPramList } from '~/types/navigation';
+import { BookshelfTabStackParamList } from '~/types/navigation';
 import { IBook } from '~/types/response';
 import { COLOR } from '~~/constants/theme';
 
@@ -36,7 +36,7 @@ const tabList = [
 ];
 
 interface Props {
-  navigation?: StackNavigationProp<BookshelfTabStackPramList, 'Bookshelf'>;
+  navigation?: StackNavigationProp<BookshelfTabStackParamList, 'Bookshelf'>;
   actions: {
     getAllBook: () => Promise<void>;
   };
