@@ -9,7 +9,7 @@ import { ViewBooks } from '~/types/models/book';
 import { BookshelfTabStackParamList } from '~/types/navigation';
 
 interface Props {
-  navigation?: StackNavigationProp<BookshelfTabStackParamList, 'Bookshelf'>;
+  navigation: StackNavigationProp<BookshelfTabStackParamList, 'Bookshelf'>;
 }
 
 export default function ConnectedBookshelf(props: Props) {

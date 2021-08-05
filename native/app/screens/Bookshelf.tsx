@@ -36,7 +36,7 @@ const tabList = [
 ];
 
 interface Props {
-  navigation?: StackNavigationProp<BookshelfTabStackParamList, 'Bookshelf'>;
+  navigation: StackNavigationProp<BookshelfTabStackParamList, 'Bookshelf'>;
   actions: {
     getAllBook: () => Promise<void>;
   };
@@ -55,14 +55,14 @@ const Bookshelf = function Bookshelf(props: Props): ReactElement {
   const onSubmitEditingCallback = useCallback(() => {
     (async () => {
       if (keyword !== '') {
-        navigation?.navigate('SearchResult', { keyword });
+        navigation.navigate('SearchResult', { keyword });
       }
     })();
   }, [keyword, navigation]);
 
   const handleBookClick = useCallback(
     (book: IBook) => {
-      navigation?.navigate('BookShow', { book: book });
+      navigation.navigate('BookShow', { book: book });
     },
     [navigation],
   );
