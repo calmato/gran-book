@@ -10,7 +10,7 @@ import BookInfo from '~/components/organisms/BookInfo';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import { convertToIBook } from '~/lib/converter';
 import { addBookAsync, getAllImpressionByBookIdAsync, getBookByISBNAsync } from '~/store/usecases';
-import { HomeTabStackPramList } from '~/types/navigation';
+import { BookshelfTabStackParamList } from '~/types/navigation';
 import { IBook, IImpressionResponse } from '~/types/response';
 import { ISearchResultItem } from '~/types/response/external/rakuten-books';
 import { COLOR } from '~~/constants/theme';
@@ -35,11 +35,11 @@ const styles = StyleSheet.create({
 
 interface Props {
   route:
-    | RouteProp<HomeTabStackPramList, 'SearchResultBookShow'>
-    | RouteProp<HomeTabStackPramList, 'BookShow'>;
+    | RouteProp<BookshelfTabStackParamList, 'SearchResultBookShow'>
+    | RouteProp<BookshelfTabStackParamList, 'BookShow'>;
   navigation:
-    | StackNavigationProp<HomeTabStackPramList, 'SearchResultBookShow'>
-    | StackNavigationProp<HomeTabStackPramList, 'BookShow'>;
+    | StackNavigationProp<BookshelfTabStackParamList, 'SearchResultBookShow'>
+    | StackNavigationProp<BookshelfTabStackParamList, 'BookShow'>;
   actions: {
     registerOwnBook: (status: string, bookId: number) => Promise<void>;
   };

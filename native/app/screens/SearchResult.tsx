@@ -7,7 +7,7 @@ import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import SearchResultItemList from '~/components/organisms/SearchResultItemList';
 import { searchBookByTitle } from '~/lib/rakuten-books';
 import { generateErrorMessage } from '~/lib/util/ErrorUtil';
-import { HomeTabStackPramList } from '~/types/navigation';
+import { BookshelfTabStackPramList } from '~/types/navigation';
 import { ISearchResponse, ISearchResultItem } from '~/types/response/external/rakuten-books';
 import { COLOR } from '~~/constants/theme';
 
@@ -20,8 +20,8 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  route: RouteProp<HomeTabStackPramList, 'SearchResult'>;
-  navigation: StackNavigationProp<HomeTabStackPramList, 'SearchResult'>;
+  route: RouteProp<BookshelfTabStackPramList, 'SearchResult'>;
+  navigation: StackNavigationProp<BookshelfTabStackPramList, 'SearchResult'>;
 }
 
 const SearchResult = function SearchResult(props: Props): ReactElement {
