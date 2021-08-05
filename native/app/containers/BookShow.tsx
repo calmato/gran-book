@@ -4,15 +4,15 @@ import React, { ReactElement } from 'react';
 import BookShow from '~/screens/BookShow';
 import { useReduxDispatch } from '~/store/modules';
 import { registerOwnBookAsync } from '~/store/usecases';
-import { BookshelfTabStackPramList } from '~/types/navigation';
+import { BookshelfTabStackParamList } from '~/types/navigation';
 
 interface Props {
   route:
-    | RouteProp<BookshelfTabStackPramList, 'SearchResultBookShow'>
-    | RouteProp<BookshelfTabStackPramList, 'BookShow'>;
+    | RouteProp<BookshelfTabStackParamList, 'SearchResultBookShow'>
+    | RouteProp<BookshelfTabStackParamList, 'BookShow'>;
   navigation:
-    | StackNavigationProp<BookshelfTabStackPramList, 'SearchResultBookShow'>
-    | StackNavigationProp<BookshelfTabStackPramList, 'BookShow'>;
+    | StackNavigationProp<BookshelfTabStackParamList, 'SearchResultBookShow'>
+    | StackNavigationProp<BookshelfTabStackParamList, 'BookShow'>;
 }
 
 export default function ConnectedBookShow(props: Props): ReactElement {
