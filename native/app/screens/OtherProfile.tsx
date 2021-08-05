@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
   title: {
     color: COLOR.TEXT_TITLE,
     padding: 10,
-    fontSize: FONT_SIZE.SUBHEAD,
+    fontSize: FONT_SIZE.SUBHEADER,
   },
 });
 

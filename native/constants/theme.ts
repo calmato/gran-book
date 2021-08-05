@@ -31,14 +31,14 @@ export const COLOR = {
 
 export const FONT_SIZE = {
   TAB_TITLE: 14,
-  SUBHEAD: 15,
+  SUBHEADER: 15,
   TEXT: 14,
   INPUTAREA: 18,
   ALERT: 12,
   ITEM_TITLE: 16,
   ITEM_SUBTITLE: 14,
-  BUTTON: 18,
-  BUTTON_ICON: 10,
+  BUTTON_DEFAULT: 18,
+  BUTTON_WITH_ICON: 10,
 };
 
 // react-native-elementsの共通の設定
