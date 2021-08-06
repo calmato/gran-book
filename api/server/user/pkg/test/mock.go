@@ -2,6 +2,7 @@ package test
 
 import (
 	"errors"
+	"testing"
 
 	mock_application "github.com/calmato/gran-book/api/server/user/mock/application"
 	mock_chat "github.com/calmato/gran-book/api/server/user/mock/domain/chat"
@@ -9,7 +10,9 @@ import (
 	mock_validation "github.com/calmato/gran-book/api/server/user/mock/interface/validation"
 	"github.com/golang/mock/gomock"
 	"github.com/golang/protobuf/proto"
+	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 var (
@@ -51,4 +54,18 @@ func NewMocks(ctrl *gomock.Controller) *Mocks {
 		UserRequestValidation:  mock_validation.NewMockUserRequestValidation(ctrl),
 		UserUploader:           mock_user.NewMockUploader(ctrl),
 	}
+}
+
+func TestGRPC(t *testing.T, expect *TestResponse, res interface{}, err error) {
+	if expect.Code != codes.OK {
+		require.Error(t, err)
+
+		status, ok := status.FromError(err)
+		require.True(t, ok)
+		require.Equal(t, expect.Code.String(), status.Code().String())
+		return
+	}
+
+	require.NoError(t, err)
+	require.Equal(t, expect.Message, res)
 }
