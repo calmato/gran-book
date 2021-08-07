@@ -46,4 +46,8 @@ jobs:
         run: make install
 
       - name: Lint
-        run: make format
+        run: |
+          ls -la ./pkg
+          echo ${GOPATH}
+          echo $(go env GOPATH)
+          make format
