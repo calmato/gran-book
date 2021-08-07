@@ -236,7 +236,24 @@ func (s *authServer) DeleteAuth(ctx context.Context, req *pb.Empty) (*pb.Empty, 
 func (s *authServer) RegisterAuthDevice(
 	ctx context.Context, req *pb.RegisterAuthDeviceRequest,
 ) (*pb.AuthResponse, error) {
-	res := getAuthResponse(&user.User{})
+	u, err := s.userApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	err = s.authRequestValidation.RegisterAuthDevice(req)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	u.InstanceID = req.GetInstanceId()
+
+	err = s.userApplication.Update(ctx, u)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	res := getAuthResponse(u)
 	return res, nil
 }
 

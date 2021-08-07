@@ -21,6 +21,13 @@ type adminServer struct {
 	userApplication        application.UserApplication
 }
 
+func NewAdminServer(arv validation.AdminRequestValidation, ua application.UserApplication) pb.AdminServiceServer {
+	return &adminServer{
+		adminRequestValidation: arv,
+		userApplication:        ua,
+	}
+}
+
 // ListAdmin - 管理者一覧取得
 func (s *adminServer) ListAdmin(ctx context.Context, req *pb.ListAdminRequest) (*pb.AdminListResponse, error) {
 	_, err := s.userApplication.Authorization(ctx)
@@ -310,6 +317,11 @@ func (s *adminServer) DeleteAdmin(ctx context.Context, req *pb.DeleteAdminReques
 	}
 
 	err = s.userApplication.HasAdminRole(role)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	err = s.adminRequestValidation.DeleteAdmin(req)
 	if err != nil {
 		return nil, errorHandling(err)
 	}

@@ -681,3 +681,194 @@ func TestAuthServer_UpdateAuthAddress(t *testing.T) {
 		})
 	}
 }
+
+func TestAuthServer_DeleteAuth(t *testing.T) {
+	t.Parallel()
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	testCases := []struct {
+		name  string
+		setup func(context.Context, *testing.T, *test.Mocks)
+		want  *test.TestResponse
+	}{
+		{
+			name: "success",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				u := &user.User{}
+				mocks.UserApplication.EXPECT().
+					Authentication(ctx).
+					Return(u, nil)
+				mocks.UserApplication.EXPECT().
+					Delete(ctx, u).
+					Return(nil)
+			},
+			want: &test.TestResponse{
+				Code:    codes.OK,
+				Message: &pb.Empty{},
+			},
+		},
+		{
+			name: "failed: unauthenticated",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.UserApplication.EXPECT().
+					Authentication(ctx).
+					Return(nil, exception.Unauthorized.New(test.ErrMock))
+			},
+			want: &test.TestResponse{
+				Code:    codes.Unauthenticated,
+				Message: nil,
+			},
+		},
+		{
+			name: "failed: internal error",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				u := &user.User{}
+				mocks.UserApplication.EXPECT().
+					Authentication(ctx).
+					Return(u, nil)
+				mocks.UserApplication.EXPECT().
+					Delete(ctx, u).
+					Return(exception.ErrorInDatastore.New(test.ErrMock))
+			},
+			want: &test.TestResponse{
+				Code:    codes.Internal,
+				Message: nil,
+			},
+		},
+	}
+
+	for _, tt := range testCases {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			mocks := test.NewMocks(ctrl)
+			tt.setup(ctx, t, mocks)
+			target := NewAuthServer(mocks.AuthRequestValidation, mocks.UserApplication)
+
+			res, err := target.DeleteAuth(ctx, &pb.Empty{})
+			test.TestGRPC(t, tt.want, res, err)
+		})
+	}
+}
+
+func TestAuthServer_RegisterAuthDevice(t *testing.T) {
+	t.Parallel()
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	type args struct {
+		req *pb.RegisterAuthDeviceRequest
+	}
+	testCases := []struct {
+		name  string
+		setup func(context.Context, *testing.T, *test.Mocks)
+		args  args
+		want  *test.TestResponse
+	}{
+		{
+			name: "success",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				u := &user.User{}
+				mocks.AuthRequestValidation.EXPECT().
+					RegisterAuthDevice(gomock.Any()).
+					Return(nil)
+				mocks.UserApplication.EXPECT().
+					Authentication(ctx).
+					Return(u, nil)
+				mocks.UserApplication.EXPECT().
+					Update(ctx, u).
+					Return(nil)
+			},
+			args: args{
+				req: &pb.RegisterAuthDeviceRequest{
+					InstanceId: "ExponentPushToken[!Qaz2wsx3edc4rfv5tgb6y]",
+				},
+			},
+			want: &test.TestResponse{
+				Code: codes.OK,
+				Message: &pb.AuthResponse{
+					CreatedAt: datetime.TimeToString(time.Time{}),
+					UpdatedAt: datetime.TimeToString(time.Time{}),
+				},
+			},
+		},
+		{
+			name: "failed: unauthenticated",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.UserApplication.EXPECT().
+					Authentication(ctx).
+					Return(nil, exception.Unauthorized.New(test.ErrMock))
+			},
+			args: args{
+				req: &pb.RegisterAuthDeviceRequest{},
+			},
+			want: &test.TestResponse{
+				Code:    codes.Unauthenticated,
+				Message: nil,
+			},
+		},
+		{
+			name: "failed: invalid argument",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				u := &user.User{}
+				mocks.AuthRequestValidation.EXPECT().
+					RegisterAuthDevice(gomock.Any()).
+					Return(exception.InvalidRequestValidation.New(test.ErrMock))
+				mocks.UserApplication.EXPECT().
+					Authentication(ctx).
+					Return(u, nil)
+			},
+			args: args{
+				req: &pb.RegisterAuthDeviceRequest{},
+			},
+			want: &test.TestResponse{
+				Code:    codes.InvalidArgument,
+				Message: nil,
+			},
+		},
+		{
+			name: "failed: internal error",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				u := &user.User{}
+				mocks.AuthRequestValidation.EXPECT().
+					RegisterAuthDevice(gomock.Any()).
+					Return(nil)
+				mocks.UserApplication.EXPECT().
+					Authentication(ctx).
+					Return(u, nil)
+				mocks.UserApplication.EXPECT().
+					Update(ctx, u).
+					Return(exception.ErrorInDatastore.New(test.ErrMock))
+			},
+			args: args{
+				req: &pb.RegisterAuthDeviceRequest{
+					InstanceId: "ExponentPushToken[!Qaz2wsx3edc4rfv5tgb6y]",
+				},
+			},
+			want: &test.TestResponse{
+				Code:    codes.Internal,
+				Message: nil,
+			},
+		},
+	}
+
+	for _, tt := range testCases {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			mocks := test.NewMocks(ctrl)
+			tt.setup(ctx, t, mocks)
+			target := NewAuthServer(mocks.AuthRequestValidation, mocks.UserApplication)
+
+			res, err := target.RegisterAuthDevice(ctx, tt.args.req)
+			test.TestGRPC(t, tt.want, res, err)
+		})
+	}
+}

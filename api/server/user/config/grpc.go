@@ -39,10 +39,9 @@ func newGRPCServer(port, logPath, logLevel string, reg *registry.Registry) (*grp
 	}
 
 	s := grpc.NewServer(opts...)
-	pb.RegisterAdminServiceServer(s, &server.AdminServer{
-		AdminRequestValidation: reg.AdminRequestValidation,
-		UserApplication:        reg.UserApplication,
-	})
+	pb.RegisterAdminServiceServer(s,
+		server.NewAdminServer(reg.AdminRequestValidation, reg.UserApplication),
+	)
 	pb.RegisterAuthServiceServer(s,
 		server.NewAuthServer(reg.AuthRequsetValidation, reg.UserApplication),
 	)
