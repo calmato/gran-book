@@ -30,12 +30,6 @@ jobs:
       - name: Use Golang ${{ matrix.golang }}
         uses: actions/setup-go@v2
 
-      - name: Export environment
-        run: |
-          export GOPATH="$(go env GOPATH)"
-          export PATH="$PATH:${GOPATH}/bin"
-          echo "${GOPATH}"
-
       - name: Configure prototool
         run: |
           curl -fSLO "https://github.com/uber/prototool/releases/download/v${PROTOTOOL_VERSION}/prototool-$(uname -s)-$(uname -m)"
@@ -49,7 +43,4 @@ jobs:
 
       - name: Lint
         run: |
-          ls -la ./pkg
-          echo ${GOPATH}
-          echo $(go env GOPATH)
           make format

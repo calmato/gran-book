@@ -55,6 +55,7 @@ jobs:
 
       - name: Install gRPC tools
         run: |
+          export GOPATH=$(go env GOPATH)
           npm install -g grpc grpc-tools grpc_tools_node_protoc_ts
           make install
 

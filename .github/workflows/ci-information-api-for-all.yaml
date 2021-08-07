@@ -54,6 +54,7 @@ jobs:
 
       - name: Install gRPC tools
         run: |
+          export GOPATH=$(go env GOPATH)
           make install
 
       - name: Generate proto
