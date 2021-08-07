@@ -2,27 +2,40 @@ package validation
 
 import (
 	"context"
-	"reflect"
 	"testing"
 	"time"
 
 	"github.com/calmato/gran-book/api/server/user/internal/domain/chat"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
+	"github.com/calmato/gran-book/api/server/user/pkg/test"
 	"github.com/golang/mock/gomock"
+	"github.com/stretchr/testify/require"
 	"golang.org/x/xerrors"
 )
 
 func TestChatDomainValidation_Room(t *testing.T) {
+	t.Parallel()
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	current := time.Now().Local()
+
 	type args struct {
 		room *chat.Room
 	}
-
-	current := time.Now().Local()
-	testCases := map[string]struct {
-		args args
-		want error
+	testCases := []struct {
+		name  string
+		setup func(context.Context, *testing.T, *test.Mocks)
+		args  args
+		want  error
 	}{
-		"ok": {
+		{
+			name:  "success",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {},
 			args: args{
 				room: &chat.Room{
 					ID: "00000000-0000-0000-0000-000000000000",
@@ -38,35 +51,47 @@ func TestChatDomainValidation_Room(t *testing.T) {
 		},
 	}
 
-	for name, tc := range testCases {
-		ctx, cancel := context.WithCancel(context.Background())
-		defer cancel()
-
-		ctrl := gomock.NewController(t)
-		defer ctrl.Finish()
-
-		t.Run(name, func(t *testing.T) {
+	for _, tt := range testCases {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			mocks := test.NewMocks(ctrl)
+			tt.setup(ctx, t, mocks)
 			target := NewChatDomainValidation()
 
-			got := target.Room(ctx, tc.args.room)
-			if !reflect.DeepEqual(got, tc.want) {
-				t.Errorf("want %#v, but %#v", tc.want, got)
+			err := target.Room(ctx, tt.args.room)
+			if tt.want != nil {
+				require.Equal(t, tt.want.Error(), err.Error())
+				return
 			}
+			require.NoError(t, err)
 		})
 	}
 }
 
 func TestChatDomainValidation_Message(t *testing.T) {
+	t.Parallel()
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	current := time.Now().Local()
+
 	type args struct {
 		message *chat.Message
 	}
-
-	current := time.Now().Local()
-	testCases := map[string]struct {
-		args args
-		want error
+	testCases := []struct {
+		name  string
+		setup func(context.Context, *testing.T, *test.Mocks)
+		args  args
+		want  error
 	}{
-		"ok": {
+		{
+			name:  "success",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {},
 			args: args{
 				message: &chat.Message{
 					ID:        "00000000-0000-0000-0000-000000000000",
@@ -78,7 +103,9 @@ func TestChatDomainValidation_Message(t *testing.T) {
 			},
 			want: nil,
 		},
-		"ng_requires_either_text_or_image": {
+		{
+			name:  "failed: require either text or image",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {},
 			args: args{
 				message: &chat.Message{
 					ID:        "00000000-0000-0000-0000-000000000000",
@@ -98,28 +125,20 @@ func TestChatDomainValidation_Message(t *testing.T) {
 		},
 	}
 
-	for name, tc := range testCases {
-		ctx, cancel := context.WithCancel(context.Background())
-		defer cancel()
-
-		ctrl := gomock.NewController(t)
-		defer ctrl.Finish()
-
-		t.Run(name, func(t *testing.T) {
+	for _, tt := range testCases {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			mocks := test.NewMocks(ctrl)
+			tt.setup(ctx, t, mocks)
 			target := NewChatDomainValidation()
 
-			got := target.Message(ctx, tc.args.message)
-			if tc.want == nil {
-				if got != nil {
-					t.Errorf("want %#v, but %#v", tc.want, got)
-					return
-				}
-			} else {
-				if got == nil {
-					t.Errorf("want %#v, but %#v", tc.want, got)
-					return
-				}
+			err := target.Message(ctx, tt.args.message)
+			if tt.want != nil {
+				require.Equal(t, tt.want.Error(), err.Error())
+				return
 			}
+			require.NoError(t, err)
 		})
 	}
 }

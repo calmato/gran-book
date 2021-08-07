@@ -45,12 +45,7 @@ func (a *chatApplication) ListRoom(ctx context.Context, userID string, p *firest
 		},
 	}
 
-	crs, err := a.chatRepository.ListRoom(ctx, p, qs)
-	if err != nil {
-		return nil, err
-	}
-
-	return crs, nil
+	return a.chatRepository.ListRoom(ctx, p, qs)
 }
 
 func (a *chatApplication) GetRoom(ctx context.Context, roomID string, userID string) (*chat.Room, error) {
@@ -79,12 +74,7 @@ func (a *chatApplication) CreateRoom(ctx context.Context, cr *chat.Room) error {
 	cr.UpdatedAt = current
 	cr.ID = uuid.New().String()
 
-	err = a.chatRepository.CreateRoom(ctx, cr)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return a.chatRepository.CreateRoom(ctx, cr)
 }
 
 func (a *chatApplication) CreateMessage(ctx context.Context, cr *chat.Room, cm *chat.Message) error {
@@ -104,12 +94,7 @@ func (a *chatApplication) CreateMessage(ctx context.Context, cr *chat.Room, cm *
 	cr.LatestMessage = cm
 	cr.UpdatedAt = cm.CreatedAt
 
-	err = a.chatRepository.UpdateRoom(ctx, cr)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return a.chatRepository.UpdateRoom(ctx, cr)
 }
 
 func (a *chatApplication) UploadImage(ctx context.Context, cr *chat.Room, image []byte) (string, error) {

@@ -2,32 +2,48 @@ package validation
 
 import (
 	"context"
-	"reflect"
 	"testing"
 	"time"
 
 	"github.com/calmato/gran-book/api/server/user/internal/domain/user"
-	mock_user "github.com/calmato/gran-book/api/server/user/mock/domain/user"
+	"github.com/calmato/gran-book/api/server/user/pkg/test"
 	"github.com/golang/mock/gomock"
+	"github.com/stretchr/testify/require"
 )
 
 func TestUserDomainValidation_User(t *testing.T) {
+	t.Parallel()
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	current := time.Now().Local()
+
 	type args struct {
 		user *user.User
 	}
-
-	current := time.Now().Local()
-	testCases := map[string]struct {
-		args args
-		want error
+	testCases := []struct {
+		name  string
+		setup func(context.Context, *testing.T, *test.Mocks)
+		args  args
+		want  error
 	}{
-		"ok": {
+		{
+			name: "success",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.UserRepository.EXPECT().
+					GetUserIDByEmail(ctx, "test-user@calmato.jp").
+					Return("00000000-0000-0000-0000-000000000000", nil)
+			},
 			args: args{
 				user: &user.User{
 					ID:               "00000000-0000-0000-0000-000000000000",
 					Username:         "test-user",
 					Gender:           0,
-					Email:            "test-user@calmato.com",
+					Email:            "test-user@calmato.jp",
 					PhoneNumber:      "000-0000-0000",
 					Role:             0,
 					ThumbnailURL:     "",
@@ -50,38 +66,51 @@ func TestUserDomainValidation_User(t *testing.T) {
 		},
 	}
 
-	for name, tc := range testCases {
-		ctx, cancel := context.WithCancel(context.Background())
-		defer cancel()
+	for _, tt := range testCases {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			mocks := test.NewMocks(ctrl)
+			tt.setup(ctx, t, mocks)
+			target := NewUserDomainValidation(mocks.UserRepository)
 
-		ctrl := gomock.NewController(t)
-		defer ctrl.Finish()
-
-		urm := mock_user.NewMockRepository(ctrl)
-		urm.EXPECT().GetUIDByEmail(ctx, tc.args.user.Email).Return(tc.args.user.ID, nil)
-
-		t.Run(name, func(t *testing.T) {
-			target := NewUserDomainValidation(urm)
-
-			got := target.User(ctx, tc.args.user)
-			if !reflect.DeepEqual(got, tc.want) {
-				t.Fatalf("want %#v, but %#v", tc.want, got)
+			err := target.User(ctx, tt.args.user)
+			if tt.want != nil {
+				require.Equal(t, tt.want.Error(), err.Error())
+				return
 			}
+			require.NoError(t, err)
 		})
 	}
 }
 
 func TestUserDomainValidation_Relationship(t *testing.T) {
+	t.Parallel()
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	current := time.Now().Local()
+
 	type args struct {
 		relationship *user.Relationship
 	}
-
-	current := time.Now().Local()
-	testCases := map[string]struct {
-		args args
-		want error
+	testCases := []struct {
+		name  string
+		setup func(context.Context, *testing.T, *test.Mocks)
+		args  args
+		want  error
 	}{
-		"ok": {
+		{
+			name: "success",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.UserRepository.EXPECT().
+					GetRelationshipIDByUserID(ctx, "00000000-0000-0000-0000-000000000000", "11111111-1111-1111-1111-111111111111").
+					Return(1, nil)
+			},
 			args: args{
 				relationship: &user.Relationship{
 					ID:         1,
@@ -95,25 +124,20 @@ func TestUserDomainValidation_Relationship(t *testing.T) {
 		},
 	}
 
-	for name, tc := range testCases {
-		ctx, cancel := context.WithCancel(context.Background())
-		defer cancel()
+	for _, tt := range testCases {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			mocks := test.NewMocks(ctrl)
+			tt.setup(ctx, t, mocks)
+			target := NewUserDomainValidation(mocks.UserRepository)
 
-		ctrl := gomock.NewController(t)
-		defer ctrl.Finish()
-
-		urm := mock_user.NewMockRepository(ctrl)
-		urm.EXPECT().
-			GetRelationshipIDByUID(ctx, tc.args.relationship.FollowID, tc.args.relationship.FollowerID).
-			Return(tc.args.relationship.ID, nil)
-
-		t.Run(name, func(t *testing.T) {
-			target := NewUserDomainValidation(urm)
-
-			got := target.Relationship(ctx, tc.args.relationship)
-			if !reflect.DeepEqual(got, tc.want) {
-				t.Fatalf("want %#v, but %#v", tc.want, got)
+			err := target.Relationship(ctx, tt.args.relationship)
+			if tt.want != nil {
+				require.Equal(t, tt.want.Error(), err.Error())
+				return
 			}
+			require.NoError(t, err)
 		})
 	}
 }
