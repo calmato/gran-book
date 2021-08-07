@@ -50,10 +50,9 @@ func newGRPCServer(port, logPath, logLevel string, reg *registry.Registry) (*grp
 		ChatRequestValidation: reg.ChatRequestValidation,
 		ChatApplication:       reg.ChatApplication,
 	})
-	pb.RegisterUserServiceServer(s, &server.UserServer{
-		UserRequestValidation: reg.UserRequestValidation,
-		UserApplication:       reg.UserApplication,
-	})
+	pb.RegisterUserServiceServer(s,
+		server.NewUserServer(reg.UserRequestValidation, reg.UserApplication),
+	)
 
 	grpc_prometheus.Register(s)
 	grpc_prometheus.EnableHandlingTimeHistogram()

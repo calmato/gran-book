@@ -15,21 +15,20 @@ import (
 	"golang.org/x/xerrors"
 )
 
-// AdminServer - Adminサービスインターフェースの構造体
-type AdminServer struct {
+type adminServer struct {
 	pb.UnimplementedAdminServiceServer
-	AdminRequestValidation validation.AdminRequestValidation
-	UserApplication        application.UserApplication
+	adminRequestValidation validation.AdminRequestValidation
+	userApplication        application.UserApplication
 }
 
 // ListAdmin - 管理者一覧取得
-func (s *AdminServer) ListAdmin(ctx context.Context, req *pb.ListAdminRequest) (*pb.AdminListResponse, error) {
-	_, err := s.UserApplication.Authorization(ctx)
+func (s *adminServer) ListAdmin(ctx context.Context, req *pb.ListAdminRequest) (*pb.AdminListResponse, error) {
+	_, err := s.userApplication.Authorization(ctx)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
-	err = s.AdminRequestValidation.ListAdmin(req)
+	err = s.adminRequestValidation.ListAdmin(req)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -61,7 +60,7 @@ func (s *AdminServer) ListAdmin(ctx context.Context, req *pb.ListAdminRequest) (
 		q.Order = o
 	}
 
-	us, total, err := s.UserApplication.ListAdmin(ctx, q)
+	us, total, err := s.userApplication.ListAdmin(ctx, q)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -71,18 +70,18 @@ func (s *AdminServer) ListAdmin(ctx context.Context, req *pb.ListAdminRequest) (
 }
 
 // GetAdmin - 管理者取得
-func (s *AdminServer) GetAdmin(ctx context.Context, req *pb.GetAdminRequest) (*pb.AdminResponse, error) {
-	_, err := s.UserApplication.Authorization(ctx)
+func (s *adminServer) GetAdmin(ctx context.Context, req *pb.GetAdminRequest) (*pb.AdminResponse, error) {
+	_, err := s.userApplication.Authorization(ctx)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
-	err = s.AdminRequestValidation.GetAdmin(req)
+	err = s.adminRequestValidation.GetAdmin(req)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
-	u, err := s.UserApplication.GetAdmin(ctx, req.GetUserId())
+	u, err := s.userApplication.GetAdmin(ctx, req.GetUserId())
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -92,18 +91,18 @@ func (s *AdminServer) GetAdmin(ctx context.Context, req *pb.GetAdminRequest) (*p
 }
 
 // CreateAdmin - 管理者登録
-func (s *AdminServer) CreateAdmin(ctx context.Context, req *pb.CreateAdminRequest) (*pb.AdminResponse, error) {
-	role, err := s.UserApplication.Authorization(ctx)
+func (s *adminServer) CreateAdmin(ctx context.Context, req *pb.CreateAdminRequest) (*pb.AdminResponse, error) {
+	role, err := s.userApplication.Authorization(ctx)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
-	err = s.UserApplication.HasAdminRole(role)
+	err = s.userApplication.HasAdminRole(role)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
-	err = s.AdminRequestValidation.CreateAdmin(req)
+	err = s.adminRequestValidation.CreateAdmin(req)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -120,7 +119,7 @@ func (s *AdminServer) CreateAdmin(ctx context.Context, req *pb.CreateAdminReques
 		FirstNameKana: req.GetFirstNameKana(),
 	}
 
-	err = s.UserApplication.Create(ctx, u)
+	err = s.userApplication.Create(ctx, u)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -130,25 +129,25 @@ func (s *AdminServer) CreateAdmin(ctx context.Context, req *pb.CreateAdminReques
 }
 
 // UpdateAdminContact - 連絡先更新
-func (s *AdminServer) UpdateAdminContact(
+func (s *adminServer) UpdateAdminContact(
 	ctx context.Context, req *pb.UpdateAdminContactRequest,
 ) (*pb.AdminResponse, error) {
-	role, err := s.UserApplication.Authorization(ctx)
+	role, err := s.userApplication.Authorization(ctx)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
-	err = s.UserApplication.HasAdminRole(role)
+	err = s.userApplication.HasAdminRole(role)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
-	err = s.AdminRequestValidation.UpdateAdminContact(req)
+	err = s.adminRequestValidation.UpdateAdminContact(req)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
-	u, err := s.UserApplication.GetAdmin(ctx, req.GetUserId())
+	u, err := s.userApplication.GetAdmin(ctx, req.GetUserId())
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -156,7 +155,7 @@ func (s *AdminServer) UpdateAdminContact(
 	u.Email = strings.ToLower(req.GetEmail())
 	u.PhoneNumber = req.GetPhoneNumber()
 
-	err = s.UserApplication.Update(ctx, u)
+	err = s.userApplication.Update(ctx, u)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -166,32 +165,32 @@ func (s *AdminServer) UpdateAdminContact(
 }
 
 // UpdateAdminPassword - パスワード更新
-func (s *AdminServer) UpdateAdminPassword(
+func (s *adminServer) UpdateAdminPassword(
 	ctx context.Context, req *pb.UpdateAdminPasswordRequest,
 ) (*pb.AdminResponse, error) {
-	role, err := s.UserApplication.Authorization(ctx)
+	role, err := s.userApplication.Authorization(ctx)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
-	err = s.UserApplication.HasAdminRole(role)
+	err = s.userApplication.HasAdminRole(role)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
-	err = s.AdminRequestValidation.UpdateAdminPassword(req)
+	err = s.adminRequestValidation.UpdateAdminPassword(req)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
-	u, err := s.UserApplication.GetAdmin(ctx, req.GetUserId())
+	u, err := s.userApplication.GetAdmin(ctx, req.GetUserId())
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
 	u.Password = req.GetPassword()
 
-	err = s.UserApplication.UpdatePassword(ctx, u)
+	err = s.userApplication.UpdatePassword(ctx, u)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -201,25 +200,25 @@ func (s *AdminServer) UpdateAdminPassword(
 }
 
 // UpdateAdminProfile - プロフィール更新
-func (s *AdminServer) UpdateAdminProfile(
+func (s *adminServer) UpdateAdminProfile(
 	ctx context.Context, req *pb.UpdateAdminProfileRequest,
 ) (*pb.AdminResponse, error) {
-	role, err := s.UserApplication.Authorization(ctx)
+	role, err := s.userApplication.Authorization(ctx)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
-	err = s.UserApplication.HasAdminRole(role)
+	err = s.userApplication.HasAdminRole(role)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
-	err = s.AdminRequestValidation.UpdateAdminProfile(req)
+	err = s.adminRequestValidation.UpdateAdminProfile(req)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
-	u, err := s.UserApplication.GetAdmin(ctx, req.GetUserId())
+	u, err := s.userApplication.GetAdmin(ctx, req.GetUserId())
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -232,7 +231,7 @@ func (s *AdminServer) UpdateAdminProfile(
 	u.FirstNameKana = req.GetFirstNameKana()
 	u.ThumbnailURL = req.GetThumbnailUrl()
 
-	err = s.UserApplication.Update(ctx, u)
+	err = s.userApplication.Update(ctx, u)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -242,7 +241,7 @@ func (s *AdminServer) UpdateAdminProfile(
 }
 
 // UploadAdminThumbnail - サムネイルアップロード
-func (s *AdminServer) UploadAdminThumbnail(stream pb.AdminService_UploadAdminThumbnailServer) error {
+func (s *adminServer) UploadAdminThumbnail(stream pb.AdminService_UploadAdminThumbnailServer) error {
 	ctx := stream.Context()
 	thumbnailBytes := map[int][]byte{}
 	userID := ""
@@ -250,17 +249,17 @@ func (s *AdminServer) UploadAdminThumbnail(stream pb.AdminService_UploadAdminThu
 	for {
 		req, err := stream.Recv()
 		if err == io.EOF {
-			role, err := s.UserApplication.Authorization(ctx)
+			role, err := s.userApplication.Authorization(ctx)
 			if err != nil {
 				return errorHandling(err)
 			}
 
-			err = s.UserApplication.HasAdminRole(role)
+			err = s.userApplication.HasAdminRole(role)
 			if err != nil {
 				return errorHandling(err)
 			}
 
-			u, err := s.UserApplication.GetAdmin(ctx, userID)
+			u, err := s.userApplication.GetAdmin(ctx, userID)
 			if err != nil {
 				return errorHandling(err)
 			}
@@ -271,7 +270,7 @@ func (s *AdminServer) UploadAdminThumbnail(stream pb.AdminService_UploadAdminThu
 				thumbnail = append(thumbnail, thumbnailBytes[i]...)
 			}
 
-			thumbnailURL, err := s.UserApplication.UploadThumbnail(ctx, u.ID, thumbnail)
+			thumbnailURL, err := s.userApplication.UploadThumbnail(ctx, u.ID, thumbnail)
 			if err != nil {
 				return errorHandling(err)
 			}
@@ -284,7 +283,7 @@ func (s *AdminServer) UploadAdminThumbnail(stream pb.AdminService_UploadAdminThu
 			return errorHandling(err)
 		}
 
-		err = s.AdminRequestValidation.UploadAdminThumbnail(req)
+		err = s.adminRequestValidation.UploadAdminThumbnail(req)
 		if err != nil {
 			return errorHandling(err)
 		}
@@ -304,23 +303,23 @@ func (s *AdminServer) UploadAdminThumbnail(stream pb.AdminService_UploadAdminThu
 }
 
 // DeleteAdmin - 管理者権限削除
-func (s *AdminServer) DeleteAdmin(ctx context.Context, req *pb.DeleteAdminRequest) (*pb.Empty, error) {
-	role, err := s.UserApplication.Authorization(ctx)
+func (s *adminServer) DeleteAdmin(ctx context.Context, req *pb.DeleteAdminRequest) (*pb.Empty, error) {
+	role, err := s.userApplication.Authorization(ctx)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
-	err = s.UserApplication.HasAdminRole(role)
+	err = s.userApplication.HasAdminRole(role)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
-	u, err := s.UserApplication.GetAdmin(ctx, req.GetUserId())
+	u, err := s.userApplication.GetAdmin(ctx, req.GetUserId())
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
-	err = s.UserApplication.DeleteAdmin(ctx, u)
+	err = s.userApplication.DeleteAdmin(ctx, u)
 	if err != nil {
 		return nil, errorHandling(err)
 	}

@@ -16,6 +16,7 @@ import (
 
 func TestAuthServer_GetAuth(t *testing.T) {
 	t.Parallel()
+
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
@@ -42,7 +43,7 @@ func TestAuthServer_GetAuth(t *testing.T) {
 			},
 		},
 		{
-			name: "unauthorized",
+			name: "failed: unauthorized",
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
 				mocks.UserApplication.EXPECT().
 					Authentication(ctx).
