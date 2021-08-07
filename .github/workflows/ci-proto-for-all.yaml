@@ -34,6 +34,7 @@ jobs:
         run: |
           export GOPATH="$(go env GOPATH)"
           export PATH="$PATH:${GOPATH}/bin"
+          echo "${GOPATH}"
 
       - name: Configure prototool
         run: |
