@@ -47,6 +47,7 @@ jobs:
 
       - name: Lint
         run: |
+          export GOPATH=$(go env GOPATH)
           ls -la ./pkg
           echo ${GOPATH}
           echo $(go env GOPATH)
