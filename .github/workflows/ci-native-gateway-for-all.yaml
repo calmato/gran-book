@@ -60,7 +60,7 @@ jobs:
 
       - name: Generate proto
         run: |
-          make protoc-gateway GATEWAY_PATH='./../api/gateway/native/src'
+          make generate-gateway GATEWAY_PATH='./../api/gateway/native/src'
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
