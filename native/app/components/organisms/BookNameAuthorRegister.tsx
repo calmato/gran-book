@@ -23,8 +23,8 @@ const BookNameAuthorRegister = function BookNameAuthorRegister(props: Props): Re
     <View style={styles.bookInfoStyle}>
       <Image source={{ uri: props.imageUrl }} style={{ width: 75, height: 105 }} />
       <View style={{ justifyContent: 'space-around', marginStart: 20 }}>
-        <Text style={{ fontSize: FONT_SIZE.LISTITEM_TITLE }}>{props.title}</Text>
-        <Text style={{ fontSize: FONT_SIZE.LISTITEM_SUBTITLE, color: COLOR.GREY }}>
+        <Text style={{ fontSize: FONT_SIZE.BOOK_INFO_TITLE }}>{props.title}</Text>
+        <Text style={{ fontSize: FONT_SIZE.BOOK_INFO_AUTHOR, color: COLOR.GREY }}>
           {props.author}
         </Text>
       </View>

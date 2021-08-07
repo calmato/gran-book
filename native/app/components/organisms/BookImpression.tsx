@@ -24,13 +24,13 @@ const styles = StyleSheet.create({
     marginVertical: 8,
   },
   titleStyle: {
-    fontSize: FONT_SIZE.LISTITEM_TITLE,
+    fontSize: FONT_SIZE.BOOK_INFO_TITLE,
     fontWeight: '500',
     color: COLOR.GREY,
     marginBottom: 8,
   },
   authorStyle: {
-    fontSize: FONT_SIZE.LISTITEM_SUBTITLE,
+    fontSize: FONT_SIZE.BOOK_INFO_AUTHOR,
     color: COLOR.GREY,
   },
   listTitleStyle: {

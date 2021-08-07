@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
   titleContainer: {
     paddingTop: 10,
     paddingHorizontal: 16,
-    fontSize: FONT_SIZE.LISTITEM_TITLE,
+    fontSize: FONT_SIZE.BOOK_INFO_TITLE,
     alignSelf: 'stretch',
     color: COLOR.GREY,
     fontWeight: '500',
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingHorizontal: 16,
     paddingBottom: 10,
-    fontSize: FONT_SIZE.LISTITEM_SUBTITLE,
+    fontSize: FONT_SIZE.BOOK_INFO_AUTHOR,
     alignSelf: 'stretch',
     color: COLOR.GREY,
     backgroundColor: COLOR.BACKGROUND_WHITE,
