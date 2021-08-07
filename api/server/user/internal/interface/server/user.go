@@ -69,14 +69,20 @@ func (s *userServer) ListUser(ctx context.Context, req *pb.ListUserRequest) (*pb
 
 // ListFollow - フォロー一覧取得
 func (s *userServer) ListFollow(ctx context.Context, req *pb.ListFollowRequest) (*pb.FollowListResponse, error) {
-	err := s.userRequestValidation.ListFollow(req)
+	// TODO: remove
+	u, err := s.userApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	err = s.userRequestValidation.ListFollow(req)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
 	limit := int(req.GetLimit())
 	offset := int(req.GetOffset())
-	fs, total, err := s.userApplication.ListFollow(ctx, req.GetUserId(), limit, offset)
+	fs, total, err := s.userApplication.ListFollow(ctx, u.ID, req.GetUserId(), limit, offset)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -87,14 +93,20 @@ func (s *userServer) ListFollow(ctx context.Context, req *pb.ListFollowRequest) 
 
 // ListFollower - フォロワー一覧取得
 func (s *userServer) ListFollower(ctx context.Context, req *pb.ListFollowerRequest) (*pb.FollowerListResponse, error) {
-	err := s.userRequestValidation.ListFollower(req)
+	// TODO: remove
+	u, err := s.userApplication.Authentication(ctx)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	err = s.userRequestValidation.ListFollower(req)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
 	limit := int(req.GetLimit())
 	offset := int(req.GetOffset())
-	fs, total, err := s.userApplication.ListFollower(ctx, req.GetUserId(), limit, offset)
+	fs, total, err := s.userApplication.ListFollower(ctx, u.ID, req.GetUserId(), limit, offset)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -137,12 +149,23 @@ func (s *userServer) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.U
 
 // GetUserProfile - プロフィール取得
 func (s *userServer) GetUserProfile(ctx context.Context, req *pb.GetUserProfileRequest) (*pb.UserProfileResponse, error) {
-	err := s.userRequestValidation.GetUserProfile(req)
+	// TODO: remove
+	u, err := s.userApplication.Authentication(ctx)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
-	u, isFollow, isFollower, followCount, followerCount, err := s.userApplication.GetUserProfile(ctx, req.GetUserId())
+	err = s.userRequestValidation.GetUserProfile(req)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	u,
+		isFollow,
+		isFollower,
+		followCount,
+		followerCount,
+		err := s.userApplication.GetUserProfile(ctx, u.ID, req.GetUserId())
 	if err != nil {
 		return nil, errorHandling(err)
 	}

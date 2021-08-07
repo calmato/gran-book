@@ -158,9 +158,9 @@ func (mr *MockUserApplicationMockRecorder) GetAdmin(ctx, userID interface{}) *go
 }
 
 // GetUserProfile mocks base method.
-func (m *MockUserApplication) GetUserProfile(ctx context.Context, userID string) (*user.User, bool, bool, int, int, error) {
+func (m *MockUserApplication) GetUserProfile(ctx context.Context, userID, targetID string) (*user.User, bool, bool, int, int, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetUserProfile", ctx, userID)
+	ret := m.ctrl.Call(m, "GetUserProfile", ctx, userID, targetID)
 	ret0, _ := ret[0].(*user.User)
 	ret1, _ := ret[1].(bool)
 	ret2, _ := ret[2].(bool)
@@ -171,9 +171,9 @@ func (m *MockUserApplication) GetUserProfile(ctx context.Context, userID string)
 }
 
 // GetUserProfile indicates an expected call of GetUserProfile.
-func (mr *MockUserApplicationMockRecorder) GetUserProfile(ctx, userID interface{}) *gomock.Call {
+func (mr *MockUserApplicationMockRecorder) GetUserProfile(ctx, userID, targetID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserProfile", reflect.TypeOf((*MockUserApplication)(nil).GetUserProfile), ctx, userID)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserProfile", reflect.TypeOf((*MockUserApplication)(nil).GetUserProfile), ctx, userID, targetID)
 }
 
 // HasAdminRole mocks base method.
@@ -223,9 +223,9 @@ func (mr *MockUserApplicationMockRecorder) ListAdmin(ctx, q interface{}) *gomock
 }
 
 // ListFollow mocks base method.
-func (m *MockUserApplication) ListFollow(ctx context.Context, userID string, limit, offset int) ([]*user.Follow, int, error) {
+func (m *MockUserApplication) ListFollow(ctx context.Context, userID, targetID string, limit, offset int) ([]*user.Follow, int, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListFollow", ctx, userID, limit, offset)
+	ret := m.ctrl.Call(m, "ListFollow", ctx, userID, targetID, limit, offset)
 	ret0, _ := ret[0].([]*user.Follow)
 	ret1, _ := ret[1].(int)
 	ret2, _ := ret[2].(error)
@@ -233,15 +233,15 @@ func (m *MockUserApplication) ListFollow(ctx context.Context, userID string, lim
 }
 
 // ListFollow indicates an expected call of ListFollow.
-func (mr *MockUserApplicationMockRecorder) ListFollow(ctx, userID, limit, offset interface{}) *gomock.Call {
+func (mr *MockUserApplicationMockRecorder) ListFollow(ctx, userID, targetID, limit, offset interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListFollow", reflect.TypeOf((*MockUserApplication)(nil).ListFollow), ctx, userID, limit, offset)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListFollow", reflect.TypeOf((*MockUserApplication)(nil).ListFollow), ctx, userID, targetID, limit, offset)
 }
 
 // ListFollower mocks base method.
-func (m *MockUserApplication) ListFollower(ctx context.Context, userID string, limit, offset int) ([]*user.Follower, int, error) {
+func (m *MockUserApplication) ListFollower(ctx context.Context, userID, targetID string, limit, offset int) ([]*user.Follower, int, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListFollower", ctx, userID, limit, offset)
+	ret := m.ctrl.Call(m, "ListFollower", ctx, userID, targetID, limit, offset)
 	ret0, _ := ret[0].([]*user.Follower)
 	ret1, _ := ret[1].(int)
 	ret2, _ := ret[2].(error)
@@ -249,9 +249,9 @@ func (m *MockUserApplication) ListFollower(ctx context.Context, userID string, l
 }
 
 // ListFollower indicates an expected call of ListFollower.
-func (mr *MockUserApplicationMockRecorder) ListFollower(ctx, userID, limit, offset interface{}) *gomock.Call {
+func (mr *MockUserApplicationMockRecorder) ListFollower(ctx, userID, targetID, limit, offset interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListFollower", reflect.TypeOf((*MockUserApplication)(nil).ListFollower), ctx, userID, limit, offset)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListFollower", reflect.TypeOf((*MockUserApplication)(nil).ListFollower), ctx, userID, targetID, limit, offset)
 }
 
 // MultiGet mocks base method.

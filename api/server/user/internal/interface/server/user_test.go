@@ -135,7 +135,10 @@ func TestUserServer_ListFollow(t *testing.T) {
 					ListFollow(gomock.Any()).
 					Return(nil)
 				mocks.UserApplication.EXPECT().
-					ListFollow(ctx, gomock.Any(), 100, 0).
+					Authentication(ctx).
+					Return(&user.User{ID: "current-user"}, nil)
+				mocks.UserApplication.EXPECT().
+					ListFollow(ctx, "current-user", "12345678-1234-1234-123456789012", 100, 0).
 					Return([]*user.Follow{follow1, follow2}, 2, nil)
 			},
 			args: args{
@@ -151,11 +154,29 @@ func TestUserServer_ListFollow(t *testing.T) {
 			},
 		},
 		{
+			name: "failed: unauthenticated",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.UserApplication.EXPECT().
+					Authentication(ctx).
+					Return(nil, exception.Unauthorized.New(test.ErrMock))
+			},
+			args: args{
+				req: &pb.ListFollowRequest{},
+			},
+			want: &test.TestResponse{
+				Code:    codes.Unauthenticated,
+				Message: nil,
+			},
+		},
+		{
 			name: "failed: invalid argument",
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
 				mocks.UserRequestValidation.EXPECT().
 					ListFollow(gomock.Any()).
 					Return(exception.InvalidRequestValidation.New(test.ErrMock))
+				mocks.UserApplication.EXPECT().
+					Authentication(ctx).
+					Return(&user.User{ID: "current-user"}, nil)
 			},
 			args: args{
 				req: &pb.ListFollowRequest{},
@@ -172,7 +193,10 @@ func TestUserServer_ListFollow(t *testing.T) {
 					ListFollow(gomock.Any()).
 					Return(nil)
 				mocks.UserApplication.EXPECT().
-					ListFollow(ctx, gomock.Any(), 100, 0).
+					Authentication(ctx).
+					Return(&user.User{ID: "current-user"}, nil)
+				mocks.UserApplication.EXPECT().
+					ListFollow(ctx, "current-user", "12345678-1234-1234-123456789012", 100, 0).
 					Return(nil, 0, exception.ErrorInDatastore.New(test.ErrMock))
 			},
 			args: args{
@@ -231,7 +255,10 @@ func TestUserServer_ListFollower(t *testing.T) {
 					ListFollower(gomock.Any()).
 					Return(nil)
 				mocks.UserApplication.EXPECT().
-					ListFollower(ctx, gomock.Any(), 100, 0).
+					Authentication(ctx).
+					Return(&user.User{ID: "current-user"}, nil)
+				mocks.UserApplication.EXPECT().
+					ListFollower(ctx, "current-user", "12345678-1234-1234-123456789012", 100, 0).
 					Return([]*user.Follower{follower1, follower2}, 2, nil)
 			},
 			args: args{
@@ -247,11 +274,29 @@ func TestUserServer_ListFollower(t *testing.T) {
 			},
 		},
 		{
+			name: "failed: unauthenticated",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.UserApplication.EXPECT().
+					Authentication(ctx).
+					Return(nil, exception.Unauthorized.New(test.ErrMock))
+			},
+			args: args{
+				req: &pb.ListFollowerRequest{},
+			},
+			want: &test.TestResponse{
+				Code:    codes.Unauthenticated,
+				Message: nil,
+			},
+		},
+		{
 			name: "failed: invalid argument",
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
 				mocks.UserRequestValidation.EXPECT().
 					ListFollower(gomock.Any()).
 					Return(exception.InvalidRequestValidation.New(test.ErrMock))
+				mocks.UserApplication.EXPECT().
+					Authentication(ctx).
+					Return(&user.User{ID: "current-user"}, nil)
 			},
 			args: args{
 				req: &pb.ListFollowerRequest{},
@@ -268,7 +313,10 @@ func TestUserServer_ListFollower(t *testing.T) {
 					ListFollower(gomock.Any()).
 					Return(nil)
 				mocks.UserApplication.EXPECT().
-					ListFollower(ctx, gomock.Any(), 100, 0).
+					Authentication(ctx).
+					Return(&user.User{ID: "current-user"}, nil)
+				mocks.UserApplication.EXPECT().
+					ListFollower(ctx, "current-user", "12345678-1234-1234-123456789012", 100, 0).
 					Return(nil, 0, exception.ErrorInDatastore.New(test.ErrMock))
 			},
 			args: args{
@@ -508,7 +556,10 @@ func TestUserServer_GetUserProfile(t *testing.T) {
 					GetUserProfile(gomock.Any()).
 					Return(nil)
 				mocks.UserApplication.EXPECT().
-					GetUserProfile(ctx, "user01").
+					Authentication(ctx).
+					Return(&user.User{ID: "current-user"}, nil)
+				mocks.UserApplication.EXPECT().
+					GetUserProfile(ctx, "current-user", "user01").
 					Return(user1, true, false, 100, 64, nil)
 			},
 			args: args{
@@ -522,8 +573,26 @@ func TestUserServer_GetUserProfile(t *testing.T) {
 			},
 		},
 		{
+			name: "failed: unauthenticated",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.UserApplication.EXPECT().
+					Authentication(ctx).
+					Return(nil, exception.Unauthorized.New(test.ErrMock))
+			},
+			args: args{
+				req: &pb.GetUserProfileRequest{},
+			},
+			want: &test.TestResponse{
+				Code:    codes.Unauthenticated,
+				Message: nil,
+			},
+		},
+		{
 			name: "failed: invalid argument",
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.UserApplication.EXPECT().
+					Authentication(ctx).
+					Return(&user.User{ID: "current-user"}, nil)
 				mocks.UserRequestValidation.EXPECT().
 					GetUserProfile(gomock.Any()).
 					Return(exception.InvalidRequestValidation.New(test.ErrMock))
@@ -543,7 +612,10 @@ func TestUserServer_GetUserProfile(t *testing.T) {
 					GetUserProfile(gomock.Any()).
 					Return(nil)
 				mocks.UserApplication.EXPECT().
-					GetUserProfile(ctx, "user01").
+					Authentication(ctx).
+					Return(&user.User{ID: "current-user"}, nil)
+				mocks.UserApplication.EXPECT().
+					GetUserProfile(ctx, "current-user", "user01").
 					Return(nil, false, false, 0, 0, exception.ErrorInDatastore.New(test.ErrMock))
 			},
 			args: args{
