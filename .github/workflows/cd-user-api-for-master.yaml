@@ -65,12 +65,13 @@ jobs:
 
       - name: Install gRPC tools
         run: |
+          export GOPATH=$(go env GOPATH)
           make install
 
       - name: Generate proto
         run: |
           export PATH="$PATH:$(go env GOPATH)/bin"
-          make protoc-service SERVICE_PATH='./../api/server/user'
+          make generate-server SERVER_PATH='./../api/server/user'
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
