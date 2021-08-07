@@ -126,7 +126,7 @@ const BookShow = function BookShow(props: Props): ReactElement {
             justifyContent: 'center',
             margin: 8,
           }}>
-          <Text style={{ fontSize: FONT_SIZE.ITEM_TITLE, color: COLOR.TEXT_TITLE, margin: 4 }}>
+          <Text style={{ fontSize: FONT_SIZE.BOOK_INFO_TITLE, color: COLOR.TEXT_TITLE, margin: 4 }}>
             「{book.title}」
           </Text>
           <Text> を登録しました。</Text>

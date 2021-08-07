@@ -18,12 +18,12 @@ const styles = StyleSheet.create({
     padding: 16,
     alignSelf: 'stretch',
     minHeight: 100,
-    fontSize: FONT_SIZE.TEXT,
+    fontSize: FONT_SIZE.TEXT_DEFAULT,
   },
   title: {
     color: COLOR.TEXT_TITLE,
     padding: 10,
-    fontSize: FONT_SIZE.SUBHEADER,
+    fontSize: FONT_SIZE.TITLE_SUBHEADER,
   },
 });
 

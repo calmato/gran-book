@@ -119,7 +119,7 @@ const SignUp = function SignUp(props: Props): ReactElement {
         onChangeText={(text) => setValue({ ...formData, username: text })}
         value={formData.username}
         placeholder="ニックネーム"
-        inputStyle={{ fontSize: FONT_SIZE.INPUTAREA }}
+        inputStyle={{ fontSize: FONT_SIZE.TEXT_INPUT }}
       />
       <CheckBox
         styles={styles.checkBox}

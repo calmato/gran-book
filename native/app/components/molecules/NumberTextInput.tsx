@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
     width: '100%',
     padding: 15,
     backgroundColor: COLOR.BACKGROUND_WHITE,
-    fontSize: FONT_SIZE.INPUTAREA,
+    fontSize: FONT_SIZE.TEXT_INPUT,
   },
 });
 

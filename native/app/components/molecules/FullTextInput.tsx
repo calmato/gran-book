@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
     marginRight: 5,
     marginTop: 12,
     backgroundColor: COLOR.BACKGROUND_WHITE,
-    fontSize: FONT_SIZE.INPUTAREA,
+    fontSize: FONT_SIZE.TEXT_INPUT,
   },
 });
 

@@ -31,7 +31,7 @@ const MailInput = function MailInput(props: Props): ReactElement {
       keyboardType="email-address"
       placeholder="メールアドレス"
       errorMessage={generateErrorMessage()}
-      inputStyle={{ fontSize: FONT_SIZE.INPUTAREA }}
+      inputStyle={{ fontSize: FONT_SIZE.TEXT_INPUT }}
     />
   );
 };

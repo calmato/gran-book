@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react';
 import { StyleSheet, View, Text, ImageURISource, ViewStyle, ImageProps } from 'react-native';
 import { Tile } from 'react-native-elements';
-import { COLOR } from '~~/constants/theme';
+import { COLOR, FONT_SIZE } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
   containerStyle: {
@@ -17,11 +17,11 @@ const styles = StyleSheet.create({
   titleStyle: {
     color: COLOR.TEXT_DEFAULT,
     fontWeight: '900',
-    fontSize: 12,
+    fontSize: FONT_SIZE.BOOK_LIST_TITLE,
   },
   authorStyle: {
     color: COLOR.TEXT_GRAY,
-    fontSize: 8,
+    fontSize: FONT_SIZE.BOOK_LIST_AUTHOR,
   },
 });
 

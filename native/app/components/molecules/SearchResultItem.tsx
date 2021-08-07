@@ -14,11 +14,11 @@ const styles = StyleSheet.create({
     color: COLOR.TEXT_DEFAULT,
     marginBottom: 8,
     fontWeight: '800',
-    fontSize: FONT_SIZE.ITEM_TITLE,
+    fontSize: FONT_SIZE.LISTITEM_TITLE,
   },
   authors: {
     color: COLOR.TEXT_GRAY,
-    fontSize: FONT_SIZE.ITEM_SUBTITLE,
+    fontSize: FONT_SIZE.LISTITEM_SUBTITLE,
   },
 });
 

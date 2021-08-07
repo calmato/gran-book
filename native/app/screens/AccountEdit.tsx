@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
     marginLeft: 12,
     marginBottom: 6,
-    fontSize: FONT_SIZE.SUBHEADER,
+    fontSize: FONT_SIZE.TITLE_SUBHEADER,
     color: COLOR.TEXT_TITLE,
     fontWeight: '600',
   },

@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
   },
   icon: {},
   text: {
-    fontSize: FONT_SIZE.TEXT,
+    fontSize: FONT_SIZE.TEXT_DEFAULT,
   },
 });
 

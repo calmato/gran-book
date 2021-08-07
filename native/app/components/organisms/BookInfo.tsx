@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
   titleContainer: {
     paddingTop: 10,
     paddingHorizontal: 16,
-    fontSize: FONT_SIZE.ITEM_TITLE,
+    fontSize: FONT_SIZE.LISTITEM_TITLE,
     alignSelf: 'stretch',
     color: COLOR.GREY,
     fontWeight: '500',
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingHorizontal: 16,
     paddingBottom: 10,
-    fontSize: FONT_SIZE.ITEM_SUBTITLE,
+    fontSize: FONT_SIZE.LISTITEM_SUBTITLE,
     alignSelf: 'stretch',
     color: COLOR.GREY,
     backgroundColor: COLOR.BACKGROUND_WHITE,
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
   detailContainer: {
     paddingHorizontal: 16,
     paddingBottom: 10,
-    fontSize: FONT_SIZE.TEXT,
+    fontSize: FONT_SIZE.TEXT_DEFAULT,
     lineHeight: 16,
     color: COLOR.GREY,
     alignSelf: 'stretch',

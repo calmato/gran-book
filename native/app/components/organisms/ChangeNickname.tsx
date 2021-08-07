@@ -15,12 +15,12 @@ const styles = StyleSheet.create({
   },
   text: {
     color: COLOR.TEXT_DEFAULT,
-    fontSize: FONT_SIZE.ITEM_TITLE,
+    fontSize: FONT_SIZE.LISTITEM_TITLE,
     flex: 1,
   },
   input: {
     flex: 2,
-    fontSize: FONT_SIZE.INPUTAREA,
+    fontSize: FONT_SIZE.TEXT_INPUT,
   },
 });
 

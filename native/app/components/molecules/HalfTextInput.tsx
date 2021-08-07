@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
     padding: 15,
     marginRight: 5,
     backgroundColor: COLOR.BACKGROUND_WHITE,
-    fontSize: FONT_SIZE.INPUTAREA,
+    fontSize: FONT_SIZE.TEXT_INPUT,
   },
 });
 

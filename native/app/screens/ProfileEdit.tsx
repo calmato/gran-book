@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
     minHeight: 100,
     textAlignVertical: 'top',
     paddingRight: 16,
-    fontSize: FONT_SIZE.INPUTAREA,
+    fontSize: FONT_SIZE.TEXT_INPUT,
   },
   button: {
     marginTop: 20,
@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   text: {
-    fontSize: FONT_SIZE.ITEM_TITLE,
+    fontSize: FONT_SIZE.LISTITEM_TITLE,
   },
 });
 

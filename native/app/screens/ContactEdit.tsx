@@ -11,19 +11,19 @@ const styles = StyleSheet.create({
     marginTop: 12,
     marginLeft: 12,
     marginBottom: 6,
-    fontSize: FONT_SIZE.SUBHEADER,
+    fontSize: FONT_SIZE.TITLE_SUBHEADER,
     color: COLOR.TEXT_TITLE,
     fontWeight: '600',
   },
   mailStatus: {
     padding: 15,
-    fontSize: FONT_SIZE.ITEM_TITLE,
+    fontSize: FONT_SIZE.LISTITEM_TITLE,
     textAlign: 'right',
     color: COLOR.TEXT_DEFAULT,
     backgroundColor: COLOR.BACKGROUND_WHITE,
   },
   textStyle: {
-    fontSize: FONT_SIZE.ITEM_TITLE,
+    fontSize: FONT_SIZE.LISTITEM_TITLE,
     color: COLOR.TEXT_DEFAULT,
   },
 });

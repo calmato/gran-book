@@ -21,13 +21,13 @@ const styles = StyleSheet.create({
   },
   title: {
     color: COLOR.TEXT_DEFAULT,
-    fontSize: FONT_SIZE.ITEM_TITLE,
+    fontSize: FONT_SIZE.LISTITEM_TITLE,
   },
   subtitle: {
     marginTop: 8,
     marginLeft: 12,
     marginBottom: 4,
-    fontSize: FONT_SIZE.SUBHEADER,
+    fontSize: FONT_SIZE.TITLE_SUBHEADER,
     color: COLOR.TEXT_TITLE,
     fontWeight: '600',
   },

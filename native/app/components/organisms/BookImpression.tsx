@@ -24,29 +24,29 @@ const styles = StyleSheet.create({
     marginVertical: 8,
   },
   titleStyle: {
-    fontSize: FONT_SIZE.ITEM_TITLE,
+    fontSize: FONT_SIZE.LISTITEM_TITLE,
     fontWeight: '500',
     color: COLOR.GREY,
     marginBottom: 8,
   },
   authorStyle: {
-    fontSize: FONT_SIZE.ITEM_SUBTITLE,
+    fontSize: FONT_SIZE.LISTITEM_SUBTITLE,
     color: COLOR.GREY,
   },
   listTitleStyle: {
     color: COLOR.GREY,
-    fontSize: FONT_SIZE.ITEM_TITLE,
+    fontSize: FONT_SIZE.LISTITEM_TITLE,
     marginBottom: 4,
   },
   listSubTitleStyle: {
     color: COLOR.GREY,
-    fontSize: FONT_SIZE.ITEM_SUBTITLE,
+    fontSize: FONT_SIZE.LISTITEM_SUBTITLE,
   },
   reviewStyle: {
     paddingHorizontal: 16,
     marginBottom: 8,
     color: COLOR.GREY,
-    fontSize: FONT_SIZE.TEXT,
+    fontSize: FONT_SIZE.TEXT_DEFAULT,
   },
   reactionContainerStyle: {
     marginVertical: 4,
