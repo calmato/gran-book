@@ -14,16 +14,22 @@ import (
 	"golang.org/x/xerrors"
 )
 
-// ChatServer - Chatサービスインターフェースの構造体
-type ChatServer struct {
+type chatServer struct {
 	pb.UnimplementedChatServiceServer
-	ChatRequestValidation validation.ChatRequestValidation
-	ChatApplication       application.ChatApplication
+	chatRequestValidation validation.ChatRequestValidation
+	chatApplication       application.ChatApplication
+}
+
+func NewChatServer(crv validation.ChatRequestValidation, ca application.ChatApplication) pb.ChatServiceServer {
+	return &chatServer{
+		chatRequestValidation: crv,
+		chatApplication:       ca,
+	}
 }
 
 // ListRoom - チャットルーム一覧取得
-func (s *ChatServer) ListRoom(ctx context.Context, req *pb.ListChatRoomRequest) (*pb.ChatRoomListResponse, error) {
-	err := s.ChatRequestValidation.ListChatRoom(req)
+func (s *chatServer) ListRoom(ctx context.Context, req *pb.ListChatRoomRequest) (*pb.ChatRoomListResponse, error) {
+	err := s.chatRequestValidation.ListChatRoom(req)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -35,7 +41,7 @@ func (s *ChatServer) ListRoom(ctx context.Context, req *pb.ListChatRoomRequest) 
 		OrderBy:    firestore.OrderByDesc,
 	}
 
-	crs, err := s.ChatApplication.ListRoom(ctx, req.GetUserId(), p)
+	crs, err := s.chatApplication.ListRoom(ctx, req.GetUserId(), p)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -45,8 +51,8 @@ func (s *ChatServer) ListRoom(ctx context.Context, req *pb.ListChatRoomRequest) 
 }
 
 // CreateRoom - チャットルーム作成
-func (s *ChatServer) CreateRoom(ctx context.Context, req *pb.CreateChatRoomRequest) (*pb.ChatRoomResponse, error) {
-	err := s.ChatRequestValidation.CreateChatRoom(req)
+func (s *chatServer) CreateRoom(ctx context.Context, req *pb.CreateChatRoomRequest) (*pb.ChatRoomResponse, error) {
+	err := s.chatRequestValidation.CreateChatRoom(req)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -55,7 +61,7 @@ func (s *ChatServer) CreateRoom(ctx context.Context, req *pb.CreateChatRoomReque
 		UserIDs: req.GetUserIds(),
 	}
 
-	err = s.ChatApplication.CreateRoom(ctx, cr)
+	err = s.chatApplication.CreateRoom(ctx, cr)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -65,13 +71,13 @@ func (s *ChatServer) CreateRoom(ctx context.Context, req *pb.CreateChatRoomReque
 }
 
 // CreateMessage - チャットメッセージ(テキスト)作成
-func (s *ChatServer) CreateMessage(ctx context.Context, req *pb.CreateChatMessageRequest) (*pb.ChatMessageResponse, error) {
-	err := s.ChatRequestValidation.CreateChatMessage(req)
+func (s *chatServer) CreateMessage(ctx context.Context, req *pb.CreateChatMessageRequest) (*pb.ChatMessageResponse, error) {
+	err := s.chatRequestValidation.CreateChatMessage(req)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
-	cr, err := s.ChatApplication.GetRoom(ctx, req.GetRoomId(), req.GetUserId())
+	cr, err := s.chatApplication.GetRoom(ctx, req.GetRoomId(), req.GetUserId())
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -81,7 +87,7 @@ func (s *ChatServer) CreateMessage(ctx context.Context, req *pb.CreateChatMessag
 		Text:   req.GetText(),
 	}
 
-	err = s.ChatApplication.CreateMessage(ctx, cr, cm)
+	err = s.chatApplication.CreateMessage(ctx, cr, cm)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -91,7 +97,7 @@ func (s *ChatServer) CreateMessage(ctx context.Context, req *pb.CreateChatMessag
 }
 
 // UploadImage - チャットメッセージ(イメージ)作成
-func (s *ChatServer) UploadImage(stream pb.ChatService_UploadImageServer) error {
+func (s *chatServer) UploadImage(stream pb.ChatService_UploadImageServer) error {
 	ctx := stream.Context()
 	imageBytes := map[int][]byte{}
 	userID := ""
@@ -100,7 +106,7 @@ func (s *ChatServer) UploadImage(stream pb.ChatService_UploadImageServer) error 
 	for {
 		req, err := stream.Recv()
 		if err == io.EOF {
-			cr, err := s.ChatApplication.GetRoom(ctx, req.GetRoomId(), req.GetUserId())
+			cr, err := s.chatApplication.GetRoom(ctx, req.GetRoomId(), req.GetUserId())
 			if err != nil {
 				return errorHandling(err)
 			}
@@ -111,7 +117,7 @@ func (s *ChatServer) UploadImage(stream pb.ChatService_UploadImageServer) error 
 				image = append(image, imageBytes[i]...)
 			}
 
-			imageURL, err := s.ChatApplication.UploadImage(ctx, cr, image)
+			imageURL, err := s.chatApplication.UploadImage(ctx, cr, image)
 			if err != nil {
 				return errorHandling(err)
 			}
@@ -121,7 +127,7 @@ func (s *ChatServer) UploadImage(stream pb.ChatService_UploadImageServer) error 
 				Image:  imageURL,
 			}
 
-			err = s.ChatApplication.CreateMessage(ctx, cr, cm)
+			err = s.chatApplication.CreateMessage(ctx, cr, cm)
 			if err != nil {
 				return errorHandling(err)
 			}
@@ -134,7 +140,7 @@ func (s *ChatServer) UploadImage(stream pb.ChatService_UploadImageServer) error 
 			return errorHandling(err)
 		}
 
-		err = s.ChatRequestValidation.UploadChatImage(req)
+		err = s.chatRequestValidation.UploadChatImage(req)
 		if err != nil {
 			return errorHandling(err)
 		}

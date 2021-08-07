@@ -45,10 +45,9 @@ func newGRPCServer(port, logPath, logLevel string, reg *registry.Registry) (*grp
 	pb.RegisterAuthServiceServer(s,
 		server.NewAuthServer(reg.AuthRequsetValidation, reg.UserApplication),
 	)
-	pb.RegisterChatServiceServer(s, &server.ChatServer{
-		ChatRequestValidation: reg.ChatRequestValidation,
-		ChatApplication:       reg.ChatApplication,
-	})
+	pb.RegisterChatServiceServer(s,
+		server.NewChatServer(reg.ChatRequestValidation, reg.ChatApplication),
+	)
 	pb.RegisterUserServiceServer(s,
 		server.NewUserServer(reg.UserRequestValidation, reg.UserApplication),
 	)
