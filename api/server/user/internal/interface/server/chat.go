@@ -71,7 +71,9 @@ func (s *chatServer) CreateRoom(ctx context.Context, req *pb.CreateChatRoomReque
 }
 
 // CreateMessage - チャットメッセージ(テキスト)作成
-func (s *chatServer) CreateMessage(ctx context.Context, req *pb.CreateChatMessageRequest) (*pb.ChatMessageResponse, error) {
+func (s *chatServer) CreateMessage(
+	ctx context.Context, req *pb.CreateChatMessageRequest,
+) (*pb.ChatMessageResponse, error) {
 	err := s.chatRequestValidation.CreateChatMessage(req)
 	if err != nil {
 		return nil, errorHandling(err)

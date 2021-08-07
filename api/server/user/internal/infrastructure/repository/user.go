@@ -218,7 +218,9 @@ func (r *userRepository) GetAdmin(ctx context.Context, userID string) (*user.Use
 	return u, nil
 }
 
-func (r *userRepository) GetRelationship(ctx context.Context, followID string, followerID string) (*user.Relationship, error) {
+func (r *userRepository) GetRelationship(
+	ctx context.Context, followID string, followerID string,
+) (*user.Relationship, error) {
 	rs := &user.Relationship{}
 
 	err := r.client.DB.

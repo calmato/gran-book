@@ -19,7 +19,9 @@ func NewChatRepository(fs *firestore.Firestore) chat.Repository {
 	}
 }
 
-func (r *chatRepository) ListRoom(ctx context.Context, p *firestore.Params, qs []*firestore.Query) ([]*chat.Room, error) {
+func (r *chatRepository) ListRoom(
+	ctx context.Context, p *firestore.Params, qs []*firestore.Query,
+) ([]*chat.Room, error) {
 	c := getChatRoomCollection()
 
 	docs, err := r.firestore.List(ctx, c, p, qs)

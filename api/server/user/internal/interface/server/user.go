@@ -148,7 +148,9 @@ func (s *userServer) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.U
 }
 
 // GetUserProfile - プロフィール取得
-func (s *userServer) GetUserProfile(ctx context.Context, req *pb.GetUserProfileRequest) (*pb.UserProfileResponse, error) {
+func (s *userServer) GetUserProfile(
+	ctx context.Context, req *pb.GetUserProfileRequest,
+) (*pb.UserProfileResponse, error) {
 	// TODO: remove
 	u, err := s.userApplication.Authentication(ctx)
 	if err != nil {
