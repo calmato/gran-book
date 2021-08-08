@@ -4,7 +4,7 @@ PROTOC_GEN_TS_PATH=$(shell which protoc-gen-ts)
 PROTOC_GEN_VALIDATE_VERSION=0.6.1
 
 ADMIN_GATEWAY_PATH=./../api/gateway/admin/src
-NATIVE_GATEWAY_PATH=./../api/gateway/native/src
+NATIVE_GATEWAY_PATH=./../api/gateway/native
 USER_SERVER_PATH=./../api/server/user
 BOOK_SERVER_PATH=./../api/server/book
 INFORMATION_SERVER_PATH=./../api/server/information
@@ -46,7 +46,7 @@ format-fix:
 
 clean:
 	$(MAKE) clean-gateway GATEWAY_PATH=${ADMIN_GATEWAY_PATH}
-	$(MAKE) clean-gateway GATEWAY_PATH=${NATIVE_GATEWAY_PATH}
+	$(MAKE) clean-server SERVER_PATH=${NATIVE_GATEWAY_PATH}
 	$(MAKE) clean-server SERVER_PATH=${USER_SERVER_PATH}
 	$(MAKE) clean-server SERVER_PATH=${BOOK_SERVER_PATH}
 	$(MAKE) clean-server SERVER_PATH=${INFORMATION_SERVER_PATH}
@@ -61,7 +61,7 @@ clean-server:
 
 generate:
 	$(MAKE) generate-gateway GATEWAY_PATH=${ADMIN_GATEWAY_PATH}
-	$(MAKE) generate-gateway GATEWAY_PATH=${NATIVE_GATEWAY_PATH}
+	$(MAKE) generate-server SERVER_PATH=${NATIVE_GATEWAY_PATH}
 	$(MAKE) generate-server SERVER_PATH=${USER_SERVER_PATH}
 	$(MAKE) generate-server SERVER_PATH=${BOOK_SERVER_PATH}
 	$(MAKE) generate-server SERVER_PATH=${INFORMATION_SERVER_PATH}

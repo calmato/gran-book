@@ -86,7 +86,7 @@ message ChatRoomListResponse {
     repeated string user_ids = 2; // 参加者ID一覧
     string created_at = 3; // 作成日時
     string updated_at = 4; // 更新日時
-    Message latestMessage = 5; // 最新のメッセージ
+    Message latest_message = 5; // 最新のメッセージ
   }
   repeated Room rooms = 1; // チャットルーム一覧
 }
