@@ -3,6 +3,8 @@ package v1
 import (
 	"net/http"
 
+	"github.com/calmato/gran-book/api/gateway/native/internal/entity"
+	request "github.com/calmato/gran-book/api/gateway/native/internal/request/v1"
 	response "github.com/calmato/gran-book/api/gateway/native/internal/response/v1"
 	"github.com/calmato/gran-book/api/gateway/native/internal/server/util"
 	pb "github.com/calmato/gran-book/api/gateway/native/proto"
@@ -50,7 +52,28 @@ func (h *authHandler) Get(ctx *gin.Context) {
 
 // Create - ユーザー登録
 func (h *authHandler) Create(ctx *gin.Context) {
-	ctx.JSON(http.StatusNotImplemented, nil)
+	req := &request.CreateAuthRequest{}
+	err := ctx.BindJSON(req)
+	if err != nil {
+		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
+		return
+	}
+
+	in := &pb.CreateAuthRequest{
+		Username:             req.Username,
+		Email:                req.Email,
+		Password:             req.Password,
+		PasswordConfirmation: req.PasswordConfirmation,
+	}
+
+	out, err := h.authClient.CreateAuth(ctx, in)
+	if err != nil {
+		util.ErrorHandling(ctx, err)
+		return
+	}
+
+	res := h.getAuthResponse(out)
+	ctx.JSON(http.StatusOK, res)
 }
 
 // UpdateProfile - プロフィール情報更新

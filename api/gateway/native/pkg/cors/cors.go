@@ -1,6 +1,8 @@
 package cors
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/rs/cors"
 	wrapper "github.com/rs/cors/wrapper/gin"
@@ -11,12 +13,12 @@ func NewGinMiddleware() (gin.HandlerFunc, error) {
 	options := cors.Options{
 		AllowedOrigins: []string{"*"},
 		AllowedMethods: []string{
-			"GET",
-			"POST",
-			"PUT",
-			"PATCH",
-			"DELETE",
-			"OPTIONS",
+			http.MethodGet,
+			http.MethodPost,
+			http.MethodPut,
+			http.MethodPatch,
+			http.MethodDelete,
+			http.MethodOptions,
 		},
 		AllowedHeaders: []string{
 			"Accept",
@@ -29,7 +31,7 @@ func NewGinMiddleware() (gin.HandlerFunc, error) {
 		},
 		AllowCredentials:   false,
 		MaxAge:             1440, // 60m * 24h
-		OptionsPassthrough: true,
+		OptionsPassthrough: false,
 		Debug:              false,
 	}
 

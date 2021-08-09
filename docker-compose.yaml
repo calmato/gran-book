@@ -51,6 +51,8 @@ services:
     environment:
       - PORT=8080
       - LOG_PATH=/var/log/gateway
+      - GCP_SERVICE_KEY_JSON=${GCP_SERVICE_KEY_JSON}
+      - GCP_STORAGE_BUCKET_NAME=${GCP_STORAGE_BUCKET_NAME}
     ports:
       - 8080:8080
     networks:

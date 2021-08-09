@@ -1,23 +1,43 @@
 package config
 
 import (
-	"fmt"
+	"context"
 
 	"github.com/calmato/gran-book/api/gateway/native/internal/server"
 	"github.com/calmato/gran-book/api/gateway/native/pkg/cors"
+	"github.com/calmato/gran-book/api/gateway/native/pkg/firebase"
+	"github.com/calmato/gran-book/api/gateway/native/pkg/firebase/authentication"
 	"github.com/calmato/gran-book/api/gateway/native/pkg/logger"
 	"github.com/calmato/gran-book/api/gateway/native/registry"
 	"github.com/gin-gonic/gin"
+	"google.golang.org/api/option"
 )
 
 // Execute - HTTP Serverの起動
 func Execute() error {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
 	env, err := loadEnvironment()
 	if err != nil {
 		return err
 	}
 
-	opts := []gin.HandlerFunc{}
+	// Firebaseの設定
+	opt := option.WithCredentialsJSON([]byte(env.GCPServiceKeyJSON))
+
+	fb, err := firebase.InitializeApp(ctx, nil, opt)
+	if err != nil {
+		return err
+	}
+
+	// Firebase Authenticationの設定
+	fa, err := authentication.NewClient(ctx, fb.App)
+	if err != nil {
+		return err
+	}
+
+	opts := []gin.HandlerFunc{gin.Recovery()}
 
 	// Logger設定
 	lm, err := logger.NewGinMiddleware(env.LogPath, env.LogLevel)
@@ -34,7 +54,7 @@ func Execute() error {
 	opts = append(opts, cm)
 
 	// 依存関係の解決
-	reg, err := registry.NewRegistry(env.AuthServiceURL)
+	reg, err := registry.NewRegistry(fa, env.AuthServiceURL)
 	if err != nil {
 		return err
 	}
@@ -45,7 +65,6 @@ func Execute() error {
 		if err := ms.Serve(); err != nil {
 			panic(err)
 		}
-		fmt.Println("metrics server is runnning...")
 	}()
 
 	// HTTP Serverの起動
@@ -54,7 +73,6 @@ func Execute() error {
 	if err := hs.Serve(); err != nil {
 		panic(err)
 	}
-	fmt.Println("http server is runnning...")
 
 	return nil
 }
