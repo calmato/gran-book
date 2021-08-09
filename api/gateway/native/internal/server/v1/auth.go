@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"io"
 	"net/http"
 
 	"github.com/calmato/gran-book/api/gateway/native/internal/entity"
@@ -78,37 +79,183 @@ func (h *authHandler) Create(ctx *gin.Context) {
 
 // UpdateProfile - プロフィール情報更新
 func (h *authHandler) UpdateProfile(ctx *gin.Context) {
-	ctx.JSON(http.StatusNotImplemented, nil)
+	req := &request.UpdateAuthProfileRequest{}
+	err := ctx.BindJSON(req)
+	if err != nil {
+		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
+	}
+
+	in := &pb.UpdateAuthProfileRequest{
+		Username:         req.Username,
+		Gender:           pb.Gender(req.Gender),
+		ThumbnailUrl:     req.ThumbnailURL,
+		SelfIntroduction: req.SelfIntroduction,
+	}
+
+	out, err := h.authClient.UpdateAuthProfile(ctx, in)
+	if err != nil {
+		util.ErrorHandling(ctx, err)
+		return
+	}
+
+	res := h.getAuthResponse(out)
+	ctx.JSON(http.StatusOK, res)
 }
 
 // UpdateAddress - 住所情報更新
 func (h *authHandler) UpdateAddress(ctx *gin.Context) {
-	ctx.JSON(http.StatusNotImplemented, nil)
+	req := &request.UpdateAuthAddressRequest{}
+	err := ctx.BindJSON(req)
+	if err != nil {
+		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
+	}
+
+	in := &pb.UpdateAuthAddressRequest{
+		LastName:      req.LastName,
+		FirstName:     req.FirstName,
+		LastNameKana:  req.LastNameKana,
+		FirstNameKana: req.FirstNameKana,
+		PhoneNumber:   req.PhoneNumber,
+		PostalCode:    req.PostalCode,
+		Prefecture:    req.Prefecture,
+		City:          req.City,
+		AddressLine1:  req.AddressLine1,
+		AddressLine2:  req.AddressLine2,
+	}
+
+	out, err := h.authClient.UpdateAuthAddress(ctx, in)
+	if err != nil {
+		util.ErrorHandling(ctx, err)
+		return
+	}
+
+	res := h.getAuthResponse(out)
+	ctx.JSON(http.StatusOK, res)
 }
 
 // UpdateEmail - メールアドレス更新
 func (h *authHandler) UpdateEmail(ctx *gin.Context) {
-	ctx.JSON(http.StatusNotImplemented, nil)
+	req := &request.UpdateAuthEmailRequest{}
+	err := ctx.BindJSON(req)
+	if err != nil {
+		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
+	}
+
+	in := &pb.UpdateAuthEmailRequest{
+		Email: req.Email,
+	}
+
+	out, err := h.authClient.UpdateAuthEmail(ctx, in)
+	if err != nil {
+		util.ErrorHandling(ctx, err)
+		return
+	}
+
+	res := h.getAuthResponse(out)
+	ctx.JSON(http.StatusOK, res)
 }
 
 // UpdatePassword - パスワード更新
 func (h *authHandler) UpdatePassword(ctx *gin.Context) {
-	ctx.JSON(http.StatusNotImplemented, nil)
+	req := &request.UpdateAuthPasswordRequest{}
+	err := ctx.BindJSON(req)
+	if err != nil {
+		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
+	}
+
+	in := &pb.UpdateAuthPasswordRequest{
+		Password:             req.Password,
+		PasswordConfirmation: req.PasswordConfirmation,
+	}
+
+	out, err := h.authClient.UpdateAuthPassword(ctx, in)
+	if err != nil {
+		util.ErrorHandling(ctx, err)
+		return
+	}
+
+	res := h.getAuthResponse(out)
+	ctx.JSON(http.StatusOK, res)
 }
 
 // UploadThumbnail サムネイルアップロード
 func (h *authHandler) UploadThumbnail(ctx *gin.Context) {
-	ctx.JSON(http.StatusNotImplemented, nil)
+	file, _, err := ctx.Request.FormFile("thumbnail")
+	if err != nil {
+		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
+		return
+	}
+	defer file.Close()
+
+	stream, err := h.authClient.UploadAuthThumbnail(ctx)
+	if err != nil {
+		util.ErrorHandling(ctx, entity.ErrInternalServerError.New(err))
+		return
+	}
+
+	var count int64           // 読み込み回数
+	buf := make([]byte, 1024) // 1リクエストの上限設定
+	for {
+		_, err := file.Read(buf)
+		if err == io.EOF {
+			break
+		}
+
+		if err != nil {
+			util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
+			return
+		}
+
+		in := &pb.UploadAuthThumbnailRequest{
+			Thumbnail: buf,
+			Position:  count,
+		}
+
+		stream.Send(in)
+		count += 1
+	}
+
+	out, err := stream.CloseAndRecv()
+	if err != nil {
+		util.ErrorHandling(ctx, err)
+		return
+	}
+
+	res := h.getAuthThumbnailResponse(out)
+	ctx.JSON(http.StatusOK, res)
 }
 
 // Delete - ユーザー退会
 func (h *authHandler) Delete(ctx *gin.Context) {
-	ctx.JSON(http.StatusNotImplemented, nil)
+	_, err := h.authClient.DeleteAuth(ctx, &pb.Empty{})
+	if err != nil {
+		util.ErrorHandling(ctx, err)
+		return
+	}
+
+	ctx.JSON(http.StatusNoContent, nil)
 }
 
 // RegisterDevice - デバイス情報登録
 func (h *authHandler) RegisterDevice(ctx *gin.Context) {
-	ctx.JSON(http.StatusNotImplemented, nil)
+	req := &request.RegisterAuthDeviceRequest{}
+	err := ctx.BindJSON(req)
+	if err != nil {
+		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
+	}
+
+	in := &pb.RegisterAuthDeviceRequest{
+		InstanceId: req.InstanceId,
+	}
+
+	out, err := h.authClient.RegisterAuthDevice(ctx, in)
+	if err != nil {
+		util.ErrorHandling(ctx, nil)
+		return
+	}
+
+	res := h.getAuthResponse(out)
+	ctx.JSON(http.StatusOK, res)
 }
 
 func (h *authHandler) getAuthResponse(out *pb.AuthResponse) *response.AuthResponse {
@@ -132,5 +279,11 @@ func (h *authHandler) getAuthResponse(out *pb.AuthResponse) *response.AuthRespon
 		AddressLine2:     out.GetAddressLine2(),
 		CreatedAt:        out.GetCreatedAt(),
 		UpdatedAt:        out.GetUpdatedAt(),
+	}
+}
+
+func (h *authHandler) getAuthThumbnailResponse(out *pb.AuthThumbnailResponse) *response.AuthThumbnailResponse {
+	return &response.AuthThumbnailResponse{
+		ThumbnailURL: out.GetThumbnailUrl(),
 	}
 }
