@@ -1,17 +1,13 @@
 package config
 
 import (
-	"context"
-
 	"github.com/calmato/gran-book/api/gateway/native/internal/server"
+	"github.com/calmato/gran-book/api/gateway/native/registry"
 	"github.com/gin-gonic/gin"
 )
 
 // Execute - HTTP Serverの起動
 func Execute() error {
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-
 	env, err := loadEnvironment()
 	if err != nil {
 		return err
@@ -45,7 +41,7 @@ func Execute() error {
 	}()
 
 	// HTTP Serverの起動
-	r := server.Router(reg, opts)
+	r := server.Router(reg, opts...)
 	hs := server.NewHTTPServer(r, env.Port)
 	if err := hs.Serve(); err != nil {
 		panic(err)

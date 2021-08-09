@@ -21,7 +21,7 @@ type metricsServer struct {
 func NewHTTPServer(r *gin.Engine, port string) *httpServer {
 	s := &httpServer{
 		router: r,
-		port:   fmt.Sprint(":%s", port),
+		port:   fmt.Sprintf(":%s", port),
 	}
 
 	return s
@@ -37,7 +37,7 @@ func NewMetricsServer(port string) *metricsServer {
 
 	s := &metricsServer{
 		serve: mux,
-		port:  fmt.Sprint(":%s", port),
+		port:  fmt.Sprintf(":%s", port),
 	}
 
 	return s

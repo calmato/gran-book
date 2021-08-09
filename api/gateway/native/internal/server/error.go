@@ -63,7 +63,7 @@ func convertStatusGrpcToHttp(st *status.Status) entity.ErrorCode {
 	switch st.Code() {
 	case codes.InvalidArgument:
 		return entity.ErrBadRequest
-	case codes.Unauthorized:
+	case codes.Unauthenticated:
 		return entity.ErrUnauthenticated
 	case codes.PermissionDenied:
 		return entity.ErrForbidden
