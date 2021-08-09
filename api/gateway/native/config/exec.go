@@ -54,7 +54,7 @@ func Execute() error {
 	opts = append(opts, cm)
 
 	// 依存関係の解決
-	reg, err := registry.NewRegistry(fa, env.AuthServiceURL, env.UserServiceURL)
+	reg, err := registry.NewRegistry(fa, env.AuthServiceURL, env.UserServiceURL, env.ChatServiceURL)
 	if err != nil {
 		return err
 	}

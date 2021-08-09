@@ -27,8 +27,8 @@ func Router(reg *registry.Registry, opts ...gin.HandlerFunc) *gin.Engine {
 		// Auth Service
 		apiV1Auth := apiV1.Group("/auth")
 		{
-			apiV1Auth.GET("/", reg.V1Auth.Get)
-			apiV1Auth.DELETE("/", reg.V1Auth.Delete)
+			apiV1Auth.GET("", reg.V1Auth.Get)
+			apiV1Auth.DELETE("", reg.V1Auth.Delete)
 			apiV1Auth.PATCH("/address", reg.V1Auth.UpdateAddress)
 			apiV1Auth.POST("/device", reg.V1Auth.RegisterDevice)
 			apiV1Auth.PATCH("/email", reg.V1Auth.UpdateEmail)
@@ -44,6 +44,14 @@ func Router(reg *registry.Registry, opts ...gin.HandlerFunc) *gin.Engine {
 			apiV1User.GET("/:userID/profile", reg.V1User.GetProfile)
 			apiV1User.POST("/:userID/follow/:followerID", reg.V1User.Follow)
 			apiV1User.DELETE("/:userID/follow/:followerID", reg.V1User.Unfollow)
+		}
+		// Chat Service
+		apiV1Chat := apiV1.Group("/users/:userID/chat")
+		{
+			apiV1Chat.GET("", reg.V1Chat.ListRoom)
+			apiV1Chat.POST("/:roomID", reg.V1Chat.CreateRoom)
+			apiV1Chat.POST("/:roomID/messages/text", reg.V1Chat.CreateTextMessage)
+			apiV1Chat.POST("/:roomID/messages/image", reg.V1Chat.CreateImageMessage)
 		}
 	}
 
