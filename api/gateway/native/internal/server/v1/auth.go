@@ -262,10 +262,10 @@ func (h *authHandler) getAuthResponse(out *pb.AuthResponse) *response.AuthRespon
 	return &response.AuthResponse{
 		ID:               out.GetId(),
 		Username:         out.GetUsername(),
-		Gender:           int(out.GetGender()),
+		Gender:           entity.Gender(out.GetGender()),
 		Email:            out.GetEmail(),
 		PhoneNumber:      out.GetPhoneNumber(),
-		Role:             int(out.GetRole()),
+		Role:             entity.Role(out.GetRole()),
 		ThumbnailURL:     out.GetThumbnailUrl(),
 		SelfIntroduction: out.GetSelfIntroduction(),
 		LastName:         out.GetLastName(),

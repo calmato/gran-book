@@ -13,6 +13,7 @@ type Environment struct {
 	LogPath              string `envconfig:"LOG_PATH" default:""`
 	LogLevel             string `envconfig:"LOG_LEVEL" default:"info"`
 	AuthServiceURL       string `envconfig:"AUTH_SERVICE_URL" default:"user_api:8080"`
+	UserServiceURL       string `envconfig:"USER_SERVICE_URL" default:"user_api:8080"`
 	GCPServiceKeyJSON    string `envconfig:"GCP_SERVICE_KEY_JSON" required:"true"`
 	GCPStorageBucketName string `envconfig:"GCP_STORAGE_BUCKET_NAME" default:""`
 }

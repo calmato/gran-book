@@ -1,5 +1,7 @@
 package v1
 
+import "github.com/calmato/gran-book/api/gateway/native/internal/entity"
+
 type CreateAuthRequest struct {
 	Username             string `json:"username"`
 	Email                string `json:"email"`
@@ -17,10 +19,10 @@ type UpdateAuthPasswordRequest struct {
 }
 
 type UpdateAuthProfileRequest struct {
-	Username         string `json:"username"`
-	Gender           int    `json:"gender"`
-	ThumbnailURL     string `json:"thumbnailUrl"`
-	SelfIntroduction string `json:"selfIntroduction"`
+	Username         string        `json:"username"`
+	Gender           entity.Gender `json:"gender"`
+	ThumbnailURL     string        `json:"thumbnailUrl"`
+	SelfIntroduction string        `json:"selfIntroduction"`
 }
 
 type UpdateAuthAddressRequest struct {

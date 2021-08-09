@@ -36,6 +36,15 @@ func Router(reg *registry.Registry, opts ...gin.HandlerFunc) *gin.Engine {
 			apiV1Auth.PATCH("/profile", reg.V1Auth.UpdateProfile)
 			apiV1Auth.POST("/thumbnail", reg.V1Auth.UploadThumbnail)
 		}
+		// User Service
+		apiV1User := apiV1.Group("/users")
+		{
+			apiV1User.GET("/:userID/follows", reg.V1User.ListFollow)
+			apiV1User.GET("/:userID/followers", reg.V1User.ListFollower)
+			apiV1User.GET("/:userID/profile", reg.V1User.GetProfile)
+			apiV1User.POST("/:userID/follow/:followerID", reg.V1User.Follow)
+			apiV1User.DELETE("/:userID/follow/:followerID", reg.V1User.Unfollow)
+		}
 	}
 
 	r.NoRoute(func(c *gin.Context) {
