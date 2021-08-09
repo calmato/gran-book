@@ -1,3 +1,5 @@
+!.keep
+
 # external packages
+archive/
 pkg/
-!pkg/.keep
