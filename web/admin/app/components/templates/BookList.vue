@@ -8,7 +8,7 @@
             <book-search-form :form="searchForm" @submit="onSubmitSearchForm" @clear="onClearSearchForm" />
           </v-card-text>
           <v-subheader>書籍一括登録</v-subheader>
-          <book-multiple-register @submit="onRegisterMutilpleBooks" />
+          <book-multiple-register @submit="onRegisterMultilpleBooks" />
         </v-card>
       </v-col>
     </v-row>
@@ -61,7 +61,7 @@ export default defineComponent({
       emit('clear')
     }
 
-    const onRegisterMutilpleBooks = () => {
+    const onRegisterMultilpleBooks = () => {
       emit('register')
     }
 
@@ -69,7 +69,7 @@ export default defineComponent({
       onClickBookCard,
       onClearSearchForm,
       onSubmitSearchForm,
-      onRegisterMutilpleBooks,
+      onRegisterMultilpleBooks,
     }
   },
 })
