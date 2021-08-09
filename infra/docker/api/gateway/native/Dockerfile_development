@@ -9,4 +9,4 @@ RUN apk add --update \
   libc-dev \
   make
 
-RUN go install github.com/oxequa/realize
+RUN go install github.com/cosmtrek/air@v1.27.3

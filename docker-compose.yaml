@@ -55,7 +55,7 @@ services:
       - 8080:8080
     networks:
       - api
-    command: realize start
+    command: air -c .air.toml
 
   admin_gateway:
     container_name: gran_book_admin_gateway

@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"github.com/calmato/gran-book/api/gateway/native/internal/entity"
+	"github.com/calmato/gran-book/api/gateway/native/internal/server/util"
 	"github.com/calmato/gran-book/api/gateway/native/registry"
 	"github.com/gin-gonic/gin"
 )
@@ -18,7 +19,7 @@ func Router(reg *registry.Registry, opts ...gin.HandlerFunc) *gin.Engine {
 
 	r.NoRoute(func(c *gin.Context) {
 		err := errors.New("not found")
-		errorHandling(c, entity.ErrNotFound.New(err))
+		util.ErrorHandling(c, entity.ErrNotFound.New(err))
 	})
 
 	// API v1 routes

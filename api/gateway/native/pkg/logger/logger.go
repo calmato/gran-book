@@ -1,4 +1,4 @@
-package config
+package logger
 
 import (
 	"fmt"
@@ -11,8 +11,9 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
-func newLogger(logPath string, logLevel string) (gin.HandlerFunc, error) {
-	logger, err := getLogger(logPath, logLevel)
+// NewGinMiddleware - gin-gonic/gin 用のミドルウェアを生成
+func NewGinMiddleware(logPath string, logLevel string) (gin.HandlerFunc, error) {
+	logger, err := New(logPath, logLevel)
 	if err != nil {
 		return nil, err
 	}
@@ -20,7 +21,8 @@ func newLogger(logPath string, logLevel string) (gin.HandlerFunc, error) {
 	return ginzap.Ginzap(logger, time.RFC3339, true), nil
 }
 
-func getLogger(logPath string, logLevel string) (*zap.Logger, error) {
+// New - Loggerの生成
+func New(logPath string, logLevel string) (*zap.Logger, error) {
 	level := getLogLevel(logLevel)
 
 	encoderConfig := zapcore.EncoderConfig{

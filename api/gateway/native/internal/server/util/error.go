@@ -1,4 +1,4 @@
-package server
+package util
 
 import (
 	"github.com/calmato/gran-book/api/gateway/native/internal/entity"
@@ -8,7 +8,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func errorHandling(ctx *gin.Context, err error) {
+func ErrorHandling(ctx *gin.Context, err error) {
 	// gRPCコードに変換 (ok: gRPCのレスポンス, ng: その他)
 	st, ok := status.FromError(err)
 	if ok {

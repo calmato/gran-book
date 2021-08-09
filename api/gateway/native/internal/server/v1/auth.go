@@ -3,7 +3,11 @@ package v1
 import (
 	"net/http"
 
+	response "github.com/calmato/gran-book/api/gateway/native/internal/response/v1"
+	"github.com/calmato/gran-book/api/gateway/native/internal/server/util"
+	pb "github.com/calmato/gran-book/api/gateway/native/proto"
 	"github.com/gin-gonic/gin"
+	"google.golang.org/grpc"
 )
 
 type AuthHandler interface {
@@ -18,15 +22,30 @@ type AuthHandler interface {
 	RegisterDevice(ctx *gin.Context)
 }
 
-type authHandler struct{}
+type authHandler struct {
+	authClient pb.AuthServiceClient
+}
 
-func NewAuthHandler() AuthHandler {
-	return &authHandler{}
+func NewAuthHandler(authConn *grpc.ClientConn) AuthHandler {
+	ac := pb.NewAuthServiceClient(authConn)
+
+	return &authHandler{
+		authClient: ac,
+	}
 }
 
 // Get - 認証情報取得
 func (h *authHandler) Get(ctx *gin.Context) {
-	ctx.JSON(http.StatusNotImplemented, nil)
+	in := &pb.Empty{}
+
+	out, err := h.authClient.GetAuth(ctx, in)
+	if err != nil {
+		util.ErrorHandling(ctx, err)
+		return
+	}
+
+	res := h.getAuthResponse(out)
+	ctx.JSON(http.StatusOK, res)
 }
 
 // Create - ユーザー登録
@@ -67,4 +86,28 @@ func (h *authHandler) Delete(ctx *gin.Context) {
 // RegisterDevice - デバイス情報登録
 func (h *authHandler) RegisterDevice(ctx *gin.Context) {
 	ctx.JSON(http.StatusNotImplemented, nil)
+}
+
+func (h *authHandler) getAuthResponse(out *pb.AuthResponse) *response.AuthResponse {
+	return &response.AuthResponse{
+		ID:               out.GetId(),
+		Username:         out.GetUsername(),
+		Gender:           int(out.GetGender()),
+		Email:            out.GetEmail(),
+		PhoneNumber:      out.GetPhoneNumber(),
+		Role:             int(out.GetRole()),
+		ThumbnailURL:     out.GetThumbnailUrl(),
+		SelfIntroduction: out.GetSelfIntroduction(),
+		LastName:         out.GetLastName(),
+		FirstName:        out.GetFirstName(),
+		LastNameKana:     out.GetLastNameKana(),
+		FirstNameKana:    out.GetFirstNameKana(),
+		PostalCode:       out.GetPostalCode(),
+		Prefecture:       out.GetPrefecture(),
+		City:             out.GetCity(),
+		AddressLine1:     out.GetAddressLine1(),
+		AddressLine2:     out.GetAddressLine2(),
+		CreatedAt:        out.GetCreatedAt(),
+		UpdatedAt:        out.GetUpdatedAt(),
+	}
 }

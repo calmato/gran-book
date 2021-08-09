@@ -1,4 +1,4 @@
-package config
+package cors
 
 import (
 	"github.com/gin-gonic/gin"
@@ -6,8 +6,8 @@ import (
 	wrapper "github.com/rs/cors/wrapper/gin"
 )
 
-// newCors - CORSの設定
-func newCors() (gin.HandlerFunc, error) {
+// NewGinMiddleware - gin-gonic/gin 用のCORSミドルウェアを生成
+func NewGinMiddleware() (gin.HandlerFunc, error) {
 	options := cors.Options{
 		AllowedOrigins: []string{"*"},
 		AllowedMethods: []string{
