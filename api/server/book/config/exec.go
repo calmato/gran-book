@@ -1,17 +1,12 @@
 package config
 
 import (
-	"context"
-
 	"github.com/calmato/gran-book/api/server/book/pkg/database"
 	"github.com/calmato/gran-book/api/server/book/registry"
 )
 
 // Execute - gRPC Serverの起動
 func Execute() error {
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-
 	env, err := loadEnvironment()
 	if err != nil {
 		return err
