@@ -17,8 +17,8 @@ export type AuthStackParamList = {
   PasswordReset: undefined;
 };
 
-export type HomeTabStackPramList = {
-  Home: undefined;
+export type BookshelfTabStackParamList = {
+  Bookshelf: undefined;
   SearchResult: { keyword: string };
   SearchResultBookShow: { book: ISearchResultItem };
   BookShow: { book: IBook };
