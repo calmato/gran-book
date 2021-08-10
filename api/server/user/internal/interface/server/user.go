@@ -313,7 +313,7 @@ func getUserMapResponse(us []*user.User) *pb.UserMapResponse {
 			UpdatedAt:        datetime.TimeToString(u.UpdatedAt),
 		}
 
-		users[u.ID] = user
+		users[user.Id] = user
 	}
 
 	return &pb.UserMapResponse{

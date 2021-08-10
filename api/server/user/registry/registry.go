@@ -5,7 +5,7 @@ import (
 	"github.com/calmato/gran-book/api/server/user/internal/infrastructure/repository"
 	"github.com/calmato/gran-book/api/server/user/internal/infrastructure/storage"
 	dv "github.com/calmato/gran-book/api/server/user/internal/infrastructure/validation"
-	"github.com/calmato/gran-book/api/server/user/internal/interface/validation"
+	rv "github.com/calmato/gran-book/api/server/user/internal/interface/validation"
 	"github.com/calmato/gran-book/api/server/user/pkg/database"
 	"github.com/calmato/gran-book/api/server/user/pkg/firebase/authentication"
 	"github.com/calmato/gran-book/api/server/user/pkg/firebase/firestore"
@@ -14,12 +14,12 @@ import (
 
 // Registry - DIコンテナ
 type Registry struct {
-	AdminRequestValidation validation.AdminRequestValidation
-	AuthRequsetValidation  validation.AuthRequestValidation
+	AdminRequestValidation rv.AdminRequestValidation
+	AuthRequsetValidation  rv.AuthRequestValidation
 	ChatApplication        application.ChatApplication
-	ChatRequestValidation  validation.ChatRequestValidation
+	ChatRequestValidation  rv.ChatRequestValidation
 	UserApplication        application.UserApplication
-	UserRequestValidation  validation.UserRequestValidation
+	UserRequestValidation  rv.UserRequestValidation
 }
 
 // NewRegistry - internalディレクトリ配下のファイルを読み込み
@@ -41,38 +41,38 @@ func NewRegistry(
 	}
 }
 
-func adminInjection() validation.AdminRequestValidation {
-	arv := validation.NewAdminRequestValidation()
+func adminInjection() rv.AdminRequestValidation {
+	arv := rv.NewAdminRequestValidation()
 	return arv
 }
 
-func authInjection() validation.AuthRequestValidation {
-	arv := validation.NewAuthRequestValidation()
+func authInjection() rv.AuthRequestValidation {
+	arv := rv.NewAuthRequestValidation()
 	return arv
 }
 
 func chatInjection(
 	fs *firestore.Firestore, s *gcs.Storage,
-) (application.ChatApplication, validation.ChatRequestValidation) {
+) (application.ChatApplication, rv.ChatRequestValidation) {
 	cr := repository.NewChatRepository(fs)
 	cdv := dv.NewChatDomainValidation()
 	cu := storage.NewChatUploader(s)
 	ca := application.NewChatApplication(cdv, cr, cu)
 
-	crv := validation.NewChatRequestValidation()
+	crv := rv.NewChatRequestValidation()
 
 	return ca, crv
 }
 
 func userInjection(
 	db *database.Client, fa *authentication.Auth, s *gcs.Storage,
-) (application.UserApplication, validation.UserRequestValidation) {
+) (application.UserApplication, rv.UserRequestValidation) {
 	ur := repository.NewUserRepository(db, fa)
 	udv := dv.NewUserDomainValidation(ur)
 	uu := storage.NewUserUploader(s)
 	ua := application.NewUserApplication(udv, ur, uu)
 
-	urv := validation.NewUserRequestValidation()
+	urv := rv.NewUserRequestValidation()
 
 	return ua, urv
 }

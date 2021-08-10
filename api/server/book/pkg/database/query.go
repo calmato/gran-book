@@ -3,7 +3,7 @@ package database
 import (
 	"fmt"
 
-	"github.com/calmato/gran-book/api/server/user/pkg/array"
+	"github.com/calmato/gran-book/api/server/book/pkg/array"
 	"gorm.io/gorm"
 )
 
