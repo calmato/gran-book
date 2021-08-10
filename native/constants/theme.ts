@@ -29,6 +29,25 @@ export const COLOR = {
   MESSAGE_BACKGROUND: '#1da1f2',
 };
 
+export const FONT_SIZE = {
+  TITLE_HEADER: 16,
+  TITLE_SUBHEADER: 16,
+  TEXT_DEFAULT: 12,
+  TEXT_INFO: 12,
+  TEXT_ALERT: 12,
+  TEXT_WARNING: 12,
+  TEXT_INPUT: 16,
+  TAB_TITLE: 16,
+  BOOK_INFO_TITLE: 16,
+  BOOK_INFO_AUTHOR: 12,
+  BOOK_LIST_TITLE: 12,
+  BOOK_LIST_AUTHOR: 8,
+  LISTITEM_TITLE: 16,
+  LISTITEM_SUBTITLE: 12,
+  BUTTON_DEFAULT: 16,
+  BUTTON_WITH_ICON: 8,
+};
+
 // react-native-elementsの共通の設定
 export const THEME: Theme = {
   colors: {

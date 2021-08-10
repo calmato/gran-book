@@ -13,14 +13,14 @@ import { addBookAsync, getAllImpressionByBookIdAsync, getBookByISBNAsync } from 
 import { BookshelfTabStackParamList } from '~/types/navigation';
 import { IBook, IImpressionResponse } from '~/types/response';
 import { ISearchResultItem } from '~/types/response/external/rakuten-books';
-import { COLOR } from '~~/constants/theme';
+import { COLOR, FONT_SIZE } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
   menuActiveFontStyle: {
     color: COLOR.PRIMARY,
   },
   tabTitle: {
-    fontSize: 14,
+    fontSize: FONT_SIZE.TAB_TITLE,
     color: COLOR.GREY,
   },
   indicator: {
@@ -126,7 +126,9 @@ const BookShow = function BookShow(props: Props): ReactElement {
             justifyContent: 'center',
             margin: 8,
           }}>
-          <Text style={{ fontSize: 16, color: COLOR.TEXT_TITLE, margin: 4 }}>「{book.title}」</Text>
+          <Text style={{ fontSize: FONT_SIZE.BOOK_INFO_TITLE, color: COLOR.TEXT_TITLE, margin: 4 }}>
+            「{book.title}」
+          </Text>
           <Text> を登録しました。</Text>
         </View>
       </Overlay>

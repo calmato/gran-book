@@ -9,13 +9,14 @@ import GenderRadioGroup from '~/components/organisms/GenderRadioGroup';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import { generateErrorMessage } from '~/lib/util/ErrorUtil';
 import { ProfileEditForm } from '~/types/forms';
-import { COLOR } from '~~/constants/theme';
+import { COLOR, FONT_SIZE } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
   selfIntroduction: {
     minHeight: 100,
     textAlignVertical: 'top',
     paddingRight: 16,
+    fontSize: FONT_SIZE.TEXT_INPUT,
   },
   button: {
     marginTop: 20,
@@ -23,7 +24,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   text: {
-    fontSize: 16,
+    fontSize: FONT_SIZE.LISTITEM_TITLE,
   },
 });
 

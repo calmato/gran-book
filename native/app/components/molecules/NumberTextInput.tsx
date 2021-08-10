@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
 import { StyleSheet, TextInput } from 'react-native';
-import { COLOR } from '~~/constants/theme';
+import { COLOR, FONT_SIZE } from '~~/constants/theme';
 
 interface Props {
   placeholder: string;
@@ -14,6 +14,7 @@ const styles = StyleSheet.create({
     width: '100%',
     padding: 15,
     backgroundColor: COLOR.BACKGROUND_WHITE,
+    fontSize: FONT_SIZE.TEXT_INPUT,
   },
 });
 

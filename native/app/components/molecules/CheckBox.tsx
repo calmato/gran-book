@@ -3,6 +3,7 @@ import React, { ReactElement } from 'react';
 import { StyleSheet, View, Text, ViewStyle } from 'react-native';
 import { colors } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { FONT_SIZE } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
   container: {
@@ -10,7 +11,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   icon: {},
-  text: {},
+  text: {
+    fontSize: FONT_SIZE.TEXT_DEFAULT,
+  },
 });
 
 interface Props {
