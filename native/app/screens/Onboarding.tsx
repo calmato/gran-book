@@ -45,7 +45,7 @@ const Onboarding = function Onboarding(props: Props): ReactElement {
       <Image style={styles.logo} source={logo} />
       <Button
         onPress={() => navigation.navigate('SignInSelect')}
-        title="サインイン"
+        title="サインイン / 新規登録"
         buttonStyle={styles.signInButton}
       />
       <Text style={{ margin: 30 }}>利用規約</Text>
