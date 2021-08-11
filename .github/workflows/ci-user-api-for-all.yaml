@@ -55,10 +55,6 @@ jobs:
         run: |
           export PATH="$PATH:$(go env GOPATH)/bin"
           make protoc
-          echo '--- root ---'
-          ls -a .
-          echo '--- archive ---'
-          ls -a ./archive
           make generate SERVICE_PATH='./../api/server/user'
 
       - name: Upload artifact
