@@ -58,6 +58,7 @@ export const THEME: Theme = {
     raised: true,
     titleStyle: {
       fontWeight: 'bold',
+      fontSize: FONT_SIZE.BUTTON_DEFAULT,
     },
     buttonStyle: {
       width: 310,

@@ -1,11 +1,11 @@
 import React, { ReactElement } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { COLOR } from '~~/constants/theme';
+import { COLOR, FONT_SIZE } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
   textStyle: {
-    fontSize: 16,
+    fontSize: FONT_SIZE.TITLE_HEADER,
     fontWeight: 'bold',
     color: COLOR.TEXT_TITLE,
   },

@@ -2,7 +2,7 @@ import RadioButtonRN from 'radio-buttons-react-native';
 import React, { ReactElement } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { RadioGroupForm } from '~/types/forms';
-import { COLOR } from '~~/constants/theme';
+import { COLOR, FONT_SIZE } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
   container: {
@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
     paddingEnd: 10,
   },
   text: {
-    fontSize: 16,
+    fontSize: FONT_SIZE.LISTITEM_TITLE,
     color: COLOR.TEXT_DEFAULT,
     paddingStart: 10,
   },
