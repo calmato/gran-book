@@ -66,9 +66,6 @@ generate-all:
 	$(MAKE) generate SERVICE_PATH=${INFORMATION_SERVER_PATH}
 
 generate:
-	if [ ! -d ${ARCHIVE_PATH}/proto ]; then \
-		$(MAKE) protoc ARCHIVE_PATH=${ARCHIVE_PATH}; \
-	fi
 	cp -r ${ARCHIVE_PATH}/proto ${SERVICE_PATH}
 
 protoc:
