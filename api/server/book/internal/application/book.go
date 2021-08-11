@@ -2,9 +2,11 @@ package application
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/calmato/gran-book/api/server/book/internal/domain/book"
+	"github.com/calmato/gran-book/api/server/book/internal/domain/exception"
 	"github.com/calmato/gran-book/api/server/book/pkg/database"
 )
 
@@ -18,12 +20,14 @@ type BookApplication interface {
 	Get(ctx context.Context, bookID int) (*book.Book, error)
 	GetByIsbn(ctx context.Context, isbn string) (*book.Book, error)
 	GetBookshelfByUserIDAndBookID(ctx context.Context, userID string, bookID int) (*book.Bookshelf, error)
+	GetBookshelfByUserIDAndBookIDWithRelated(ctx context.Context, userID string, bookID int) (*book.Bookshelf, error)
 	GetReview(ctx context.Context, reviewID int) (*book.Review, error)
 	GetReviewByUserIDAndBookID(ctx context.Context, userID string, bookID int) (*book.Review, error)
 	Create(ctx context.Context, b *book.Book) error
 	CreateBookshelf(ctx context.Context, bs *book.Bookshelf) error
 	Update(ctx context.Context, b *book.Book) error
 	UpdateBookshelf(ctx context.Context, bs *book.Bookshelf) error
+	CreateOrUpdateBookshelf(ctx context.Context, bs *book.Bookshelf) error
 	MultipleCreate(ctx context.Context, bs []*book.Book) error
 	MultipleUpdate(ctx context.Context, bs []*book.Book) error
 	Delete(ctx context.Context, b *book.Book) error
@@ -155,6 +159,38 @@ func (a *bookApplication) GetReviewByUserIDAndBookID(
 	return a.bookRepository.GetReviewByUserIDAndBookID(ctx, userID, bookID)
 }
 
+func (a *bookApplication) GetBookshelfByUserIDAndBookIDWithRelated(
+	ctx context.Context, userID string, bookID int,
+) (*book.Bookshelf, error) {
+	b, err := a.bookRepository.Get(ctx, bookID)
+	if err != nil {
+		return nil, err
+	}
+
+	bs, err := a.bookRepository.GetBookshelfByUserIDAndBookID(ctx, userID, bookID)
+	if err != nil {
+		if err.(exception.CustomError).Code() != exception.NotFound {
+			return nil, err
+		}
+
+		bs = &book.Bookshelf{}
+	}
+
+	r, err := a.bookRepository.GetReviewByUserIDAndBookID(ctx, userID, bookID)
+	if err != nil {
+		if err.(exception.CustomError).Code() != exception.NotFound {
+			return nil, err
+		}
+
+		r = &book.Review{}
+	}
+
+	bs.Book = b
+	bs.Review = r
+
+	return bs, nil
+}
+
 func (a *bookApplication) Create(ctx context.Context, b *book.Book) error {
 	current := time.Now().Local()
 
@@ -259,6 +295,19 @@ func (a *bookApplication) UpdateBookshelf(ctx context.Context, bs *book.Bookshel
 	bs.UpdatedAt = current
 
 	return a.bookRepository.CreateBookshelf(ctx, bs)
+}
+
+func (a *bookApplication) CreateOrUpdateBookshelf(ctx context.Context, bs *book.Bookshelf) error {
+	if bs == nil {
+		err := fmt.Errorf("bookshelf is nil")
+		return exception.NotFound.New(err)
+	}
+
+	if bs.ID == 0 {
+		return a.CreateBookshelf(ctx, bs)
+	} else {
+		return a.UpdateBookshelf(ctx, bs)
+	}
 }
 
 func (a *bookApplication) MultipleCreate(ctx context.Context, bs []*book.Book) error {
