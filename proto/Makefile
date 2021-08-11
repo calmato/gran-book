@@ -39,7 +39,7 @@ install:
 ##################################################
 # For Protocol Buffer
 ##################################################
-.PHONY: format clean generate
+.PHONY: format clean generate protoc
 
 format:
 	prototool format -d
