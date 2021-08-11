@@ -64,6 +64,20 @@ func (mr *MockBookApplicationMockRecorder) CreateBookshelf(ctx, bs interface{}) 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateBookshelf", reflect.TypeOf((*MockBookApplication)(nil).CreateBookshelf), ctx, bs)
 }
 
+// CreateOrUpdateBookshelf mocks base method.
+func (m *MockBookApplication) CreateOrUpdateBookshelf(ctx context.Context, bs *book.Bookshelf) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateOrUpdateBookshelf", ctx, bs)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CreateOrUpdateBookshelf indicates an expected call of CreateOrUpdateBookshelf.
+func (mr *MockBookApplicationMockRecorder) CreateOrUpdateBookshelf(ctx, bs interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateOrUpdateBookshelf", reflect.TypeOf((*MockBookApplication)(nil).CreateOrUpdateBookshelf), ctx, bs)
+}
+
 // Delete mocks base method.
 func (m *MockBookApplication) Delete(ctx context.Context, b *book.Book) error {
 	m.ctrl.T.Helper()
@@ -120,6 +134,21 @@ func (m *MockBookApplication) GetBookshelfByUserIDAndBookID(ctx context.Context,
 func (mr *MockBookApplicationMockRecorder) GetBookshelfByUserIDAndBookID(ctx, userID, bookID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBookshelfByUserIDAndBookID", reflect.TypeOf((*MockBookApplication)(nil).GetBookshelfByUserIDAndBookID), ctx, userID, bookID)
+}
+
+// GetBookshelfByUserIDAndBookIDWithRelated mocks base method.
+func (m *MockBookApplication) GetBookshelfByUserIDAndBookIDWithRelated(ctx context.Context, userID string, bookID int) (*book.Bookshelf, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetBookshelfByUserIDAndBookIDWithRelated", ctx, userID, bookID)
+	ret0, _ := ret[0].(*book.Bookshelf)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetBookshelfByUserIDAndBookIDWithRelated indicates an expected call of GetBookshelfByUserIDAndBookIDWithRelated.
+func (mr *MockBookApplicationMockRecorder) GetBookshelfByUserIDAndBookIDWithRelated(ctx, userID, bookID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBookshelfByUserIDAndBookIDWithRelated", reflect.TypeOf((*MockBookApplication)(nil).GetBookshelfByUserIDAndBookIDWithRelated), ctx, userID, bookID)
 }
 
 // GetByIsbn mocks base method.
