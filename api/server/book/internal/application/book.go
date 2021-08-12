@@ -2,7 +2,6 @@ package application
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/calmato/gran-book/api/server/book/internal/domain/book"
@@ -149,16 +148,6 @@ func (a *bookApplication) GetBookshelfByUserIDAndBookID(
 	return a.bookRepository.GetBookshelfByUserIDAndBookID(ctx, userID, bookID)
 }
 
-func (a *bookApplication) GetReview(ctx context.Context, reviewID int) (*book.Review, error) {
-	return a.bookRepository.GetReview(ctx, reviewID)
-}
-
-func (a *bookApplication) GetReviewByUserIDAndBookID(
-	ctx context.Context, userID string, bookID int,
-) (*book.Review, error) {
-	return a.bookRepository.GetReviewByUserIDAndBookID(ctx, userID, bookID)
-}
-
 func (a *bookApplication) GetBookshelfByUserIDAndBookIDWithRelated(
 	ctx context.Context, userID string, bookID int,
 ) (*book.Bookshelf, error) {
@@ -189,6 +178,16 @@ func (a *bookApplication) GetBookshelfByUserIDAndBookIDWithRelated(
 	bs.Review = r
 
 	return bs, nil
+}
+
+func (a *bookApplication) GetReview(ctx context.Context, reviewID int) (*book.Review, error) {
+	return a.bookRepository.GetReview(ctx, reviewID)
+}
+
+func (a *bookApplication) GetReviewByUserIDAndBookID(
+	ctx context.Context, userID string, bookID int,
+) (*book.Review, error) {
+	return a.bookRepository.GetReviewByUserIDAndBookID(ctx, userID, bookID)
 }
 
 func (a *bookApplication) Create(ctx context.Context, b *book.Book) error {
@@ -294,15 +293,10 @@ func (a *bookApplication) UpdateBookshelf(ctx context.Context, bs *book.Bookshel
 
 	bs.UpdatedAt = current
 
-	return a.bookRepository.CreateBookshelf(ctx, bs)
+	return a.bookRepository.UpdateBookshelf(ctx, bs)
 }
 
 func (a *bookApplication) CreateOrUpdateBookshelf(ctx context.Context, bs *book.Bookshelf) error {
-	if bs == nil {
-		err := fmt.Errorf("bookshelf is nil")
-		return exception.NotFound.New(err)
-	}
-
 	if bs.ID == 0 {
 		return a.CreateBookshelf(ctx, bs)
 	} else {

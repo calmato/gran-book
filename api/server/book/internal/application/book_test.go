@@ -154,7 +154,7 @@ func TestBookApplication_ListBookshelf(t *testing.T) {
 					ListBookshelf(ctx, gomock.Any()).
 					Return([]*book.Bookshelf{bookshelf1, bookshelf2}, nil)
 				mocks.BookRepository.EXPECT().
-					Count(ctx, gomock.Any()).
+					CountBookshelf(ctx, gomock.Any()).
 					Return(2, nil)
 			},
 			args: args{
@@ -189,7 +189,7 @@ func TestBookApplication_ListBookshelf(t *testing.T) {
 					ListBookshelf(ctx, gomock.Any()).
 					Return([]*book.Bookshelf{bookshelf1, bookshelf2}, nil)
 				mocks.BookRepository.EXPECT().
-					Count(ctx, gomock.Any()).
+					CountBookshelf(ctx, gomock.Any()).
 					Return(0, exception.ErrorInDatastore.New(test.ErrMock))
 			},
 			args: args{
@@ -264,7 +264,7 @@ func TestBookApplication_ListBookReview(t *testing.T) {
 					ListReview(ctx, gomock.Any()).
 					Return([]*book.Review{review1, review2}, nil)
 				mocks.BookRepository.EXPECT().
-					Count(ctx, gomock.Any()).
+					CountReview(ctx, gomock.Any()).
 					Return(2, nil)
 			},
 			args: args{
@@ -303,7 +303,7 @@ func TestBookApplication_ListBookReview(t *testing.T) {
 					ListReview(ctx, gomock.Any()).
 					Return([]*book.Review{review1, review2}, nil)
 				mocks.BookRepository.EXPECT().
-					Count(ctx, gomock.Any()).
+					CountReview(ctx, gomock.Any()).
 					Return(0, exception.ErrorInDatastore.New(test.ErrMock))
 			},
 			args: args{
@@ -381,7 +381,7 @@ func TestBookApplication_ListUserReview(t *testing.T) {
 					ListReview(ctx, gomock.Any()).
 					Return([]*book.Review{review1, review2}, nil)
 				mocks.BookRepository.EXPECT().
-					Count(ctx, gomock.Any()).
+					CountReview(ctx, gomock.Any()).
 					Return(2, nil)
 			},
 			args: args{
@@ -420,7 +420,7 @@ func TestBookApplication_ListUserReview(t *testing.T) {
 					ListReview(ctx, gomock.Any()).
 					Return([]*book.Review{review1, review2}, nil)
 				mocks.BookRepository.EXPECT().
-					Count(ctx, gomock.Any()).
+					CountReview(ctx, gomock.Any()).
 					Return(0, exception.ErrorInDatastore.New(test.ErrMock))
 			},
 			args: args{
@@ -522,6 +522,1813 @@ func TestBookApplication_MultiGet(t *testing.T) {
 			}
 			require.NoError(t, err)
 			require.Equal(t, tt.want.books, bs)
+		})
+	}
+}
+
+func TestBookApplication_Get(t *testing.T) {
+	t.Parallel()
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	book1 := testBook(1)
+
+	type args struct {
+		bookID int
+	}
+	type want struct {
+		book *book.Book
+		err  error
+	}
+	testCases := []struct {
+		name  string
+		setup func(context.Context, *testing.T, *test.Mocks)
+		args  args
+		want  want
+	}{
+		{
+			name: "success",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.BookRepository.EXPECT().
+					Get(ctx, 1).
+					Return(book1, nil)
+			},
+			args: args{
+				bookID: 1,
+			},
+			want: want{
+				book: book1,
+				err:  nil,
+			},
+		},
+	}
+
+	for _, tt := range testCases {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			mocks := test.NewMocks(ctrl)
+			tt.setup(ctx, t, mocks)
+			target := NewBookApplication(
+				mocks.BookDomainValidation,
+				mocks.BookRepository,
+			)
+
+			b, err := target.Get(ctx, tt.args.bookID)
+			if tt.want.err != nil {
+				require.Equal(t, tt.want.err.Error(), err.Error())
+				require.Equal(t, tt.want.book, b)
+				return
+			}
+			require.NoError(t, err)
+			require.Equal(t, tt.want.book, b)
+		})
+	}
+}
+
+func TestBookApplication_GetByIsbn(t *testing.T) {
+	t.Parallel()
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	book1 := testBook(1)
+
+	type args struct {
+		isbn string
+	}
+	type want struct {
+		book *book.Book
+		err  error
+	}
+	testCases := []struct {
+		name  string
+		setup func(context.Context, *testing.T, *test.Mocks)
+		args  args
+		want  want
+	}{
+		{
+			name: "success",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.BookRepository.EXPECT().
+					GetByIsbn(ctx, "9784062938426").
+					Return(book1, nil)
+			},
+			args: args{
+				isbn: "9784062938426",
+			},
+			want: want{
+				book: book1,
+				err:  nil,
+			},
+		},
+	}
+
+	for _, tt := range testCases {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			mocks := test.NewMocks(ctrl)
+			tt.setup(ctx, t, mocks)
+			target := NewBookApplication(
+				mocks.BookDomainValidation,
+				mocks.BookRepository,
+			)
+
+			b, err := target.GetByIsbn(ctx, tt.args.isbn)
+			if tt.want.err != nil {
+				require.Equal(t, tt.want.err.Error(), err.Error())
+				require.Equal(t, tt.want.book, b)
+				return
+			}
+			require.NoError(t, err)
+			require.Equal(t, tt.want.book, b)
+		})
+	}
+}
+
+func TestBookApplication_GetBookshelfByUserIDAndBookID(t *testing.T) {
+	t.Parallel()
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	book1 := testBook(1)
+	bookshelf1 := testBookshelf(1, book1.ID, "user01")
+
+	type args struct {
+		userID string
+		bookID int
+	}
+	type want struct {
+		bookshelf *book.Bookshelf
+		err       error
+	}
+	testCases := []struct {
+		name  string
+		setup func(context.Context, *testing.T, *test.Mocks)
+		args  args
+		want  want
+	}{
+		{
+			name: "success",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.BookRepository.EXPECT().
+					GetBookshelfByUserIDAndBookID(ctx, "user01", book1.ID).
+					Return(bookshelf1, nil)
+			},
+			args: args{
+				userID: "user01",
+				bookID: 1,
+			},
+			want: want{
+				bookshelf: bookshelf1,
+				err:       nil,
+			},
+		},
+	}
+
+	for _, tt := range testCases {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			mocks := test.NewMocks(ctrl)
+			tt.setup(ctx, t, mocks)
+			target := NewBookApplication(
+				mocks.BookDomainValidation,
+				mocks.BookRepository,
+			)
+
+			bs, err := target.GetBookshelfByUserIDAndBookID(ctx, tt.args.userID, tt.args.bookID)
+			if tt.want.err != nil {
+				require.Equal(t, tt.want.err.Error(), err.Error())
+				require.Equal(t, tt.want.bookshelf, bs)
+				return
+			}
+			require.NoError(t, err)
+			require.Equal(t, tt.want.bookshelf, bs)
+		})
+	}
+}
+
+func TestBookApplication_GetBookshelfByUserIDAndBookIDWithRelated(t *testing.T) {
+	t.Parallel()
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	book1 := testBook(1)
+	review1 := testReview(1, book1.ID, "user01")
+	bookshelf1 := testBookshelf(1, book1.ID, "user01")
+	bookshelf1.ReviewID = review1.ID
+
+	type args struct {
+		userID string
+		bookID int
+	}
+	type want struct {
+		bookshelf *book.Bookshelf
+		err       error
+	}
+	testCases := []struct {
+		name  string
+		setup func(context.Context, *testing.T, *test.Mocks)
+		args  args
+		want  want
+	}{
+		{
+			name: "success",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.BookRepository.EXPECT().
+					Get(ctx, bookshelf1.BookID).
+					Return(book1, nil)
+				mocks.BookRepository.EXPECT().
+					GetBookshelfByUserIDAndBookID(ctx, "user01", bookshelf1.BookID).
+					Return(bookshelf1, nil)
+				mocks.BookRepository.EXPECT().
+					GetReviewByUserIDAndBookID(ctx, "user01", bookshelf1.ReviewID).
+					Return(review1, nil)
+			},
+			args: args{
+				userID: "user01",
+				bookID: 1,
+			},
+			want: want{
+				bookshelf: bookshelf1,
+				err:       nil,
+			},
+		},
+		{
+			name: "success: bookshelf is not found",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.BookRepository.EXPECT().
+					Get(ctx, bookshelf1.BookID).
+					Return(book1, nil)
+				mocks.BookRepository.EXPECT().
+					GetBookshelfByUserIDAndBookID(ctx, "user01", bookshelf1.BookID).
+					Return(nil, exception.NotFound.New(test.ErrMock))
+				mocks.BookRepository.EXPECT().
+					GetReviewByUserIDAndBookID(ctx, "user01", bookshelf1.ReviewID).
+					Return(review1, nil)
+			},
+			args: args{
+				userID: "user01",
+				bookID: 1,
+			},
+			want: want{
+				bookshelf: &book.Bookshelf{Book: book1, Review: review1},
+				err:       nil,
+			},
+		},
+		{
+			name: "success: bookshelf is not found",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.BookRepository.EXPECT().
+					Get(ctx, bookshelf1.BookID).
+					Return(book1, nil)
+				mocks.BookRepository.EXPECT().
+					GetBookshelfByUserIDAndBookID(ctx, "user01", bookshelf1.BookID).
+					Return(bookshelf1, nil)
+				mocks.BookRepository.EXPECT().
+					GetReviewByUserIDAndBookID(ctx, "user01", bookshelf1.ReviewID).
+					Return(nil, exception.NotFound.New(test.ErrMock))
+			},
+			args: args{
+				userID: "user01",
+				bookID: 1,
+			},
+			want: want{
+				bookshelf: bookshelf1,
+				err:       nil,
+			},
+		},
+		{
+			name: "failed: not found in get book",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.BookRepository.EXPECT().
+					Get(ctx, bookshelf1.BookID).
+					Return(nil, exception.NotFound.New(test.ErrMock))
+			},
+			args: args{
+				userID: "user01",
+				bookID: 1,
+			},
+			want: want{
+				bookshelf: nil,
+				err:       exception.NotFound.New(test.ErrMock),
+			},
+		},
+		{
+			name: "failed: internal error in get bookshelf",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.BookRepository.EXPECT().
+					Get(ctx, bookshelf1.BookID).
+					Return(book1, nil)
+				mocks.BookRepository.EXPECT().
+					GetBookshelfByUserIDAndBookID(ctx, "user01", bookshelf1.BookID).
+					Return(nil, exception.ErrorInDatastore.New(test.ErrMock))
+			},
+			args: args{
+				userID: "user01",
+				bookID: 1,
+			},
+			want: want{
+				bookshelf: nil,
+				err:       exception.ErrorInDatastore.New(test.ErrMock),
+			},
+		},
+		{
+			name: "failed: internal error in get review",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.BookRepository.EXPECT().
+					Get(ctx, bookshelf1.BookID).
+					Return(book1, nil)
+				mocks.BookRepository.EXPECT().
+					GetBookshelfByUserIDAndBookID(ctx, "user01", bookshelf1.BookID).
+					Return(bookshelf1, nil)
+				mocks.BookRepository.EXPECT().
+					GetReviewByUserIDAndBookID(ctx, "user01", bookshelf1.ReviewID).
+					Return(nil, exception.ErrorInDatastore.New(test.ErrMock))
+			},
+			args: args{
+				userID: "user01",
+				bookID: 1,
+			},
+			want: want{
+				bookshelf: nil,
+				err:       exception.ErrorInDatastore.New(test.ErrMock),
+			},
+		},
+	}
+
+	for _, tt := range testCases {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			mocks := test.NewMocks(ctrl)
+			tt.setup(ctx, t, mocks)
+			target := NewBookApplication(
+				mocks.BookDomainValidation,
+				mocks.BookRepository,
+			)
+
+			bs, err := target.GetBookshelfByUserIDAndBookIDWithRelated(ctx, tt.args.userID, tt.args.bookID)
+			if tt.want.err != nil {
+				require.Equal(t, tt.want.err.Error(), err.Error())
+				require.Equal(t, tt.want.bookshelf, bs)
+				return
+			}
+			require.NoError(t, err)
+			require.Equal(t, tt.want.bookshelf, bs)
+			require.Equal(t, tt.want.bookshelf.Book, bs.Book)
+			require.Equal(t, tt.want.bookshelf.Review, bs.Review)
+		})
+	}
+}
+
+func TestBookApplication_GetReview(t *testing.T) {
+	t.Parallel()
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	book1 := testBook(1)
+	review1 := testReview(1, book1.ID, "user01")
+
+	type args struct {
+		reviewID int
+	}
+	type want struct {
+		review *book.Review
+		err    error
+	}
+	testCases := []struct {
+		name  string
+		setup func(context.Context, *testing.T, *test.Mocks)
+		args  args
+		want  want
+	}{
+		{
+			name: "success",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.BookRepository.EXPECT().
+					GetReview(ctx, review1.ID).
+					Return(review1, nil)
+			},
+			args: args{
+				reviewID: 1,
+			},
+			want: want{
+				review: review1,
+				err:    nil,
+			},
+		},
+	}
+
+	for _, tt := range testCases {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			mocks := test.NewMocks(ctrl)
+			tt.setup(ctx, t, mocks)
+			target := NewBookApplication(
+				mocks.BookDomainValidation,
+				mocks.BookRepository,
+			)
+
+			bs, err := target.GetReview(ctx, tt.args.reviewID)
+			if tt.want.err != nil {
+				require.Equal(t, tt.want.err.Error(), err.Error())
+				require.Equal(t, tt.want.review, bs)
+				return
+			}
+			require.NoError(t, err)
+			require.Equal(t, tt.want.review, bs)
+		})
+	}
+}
+
+func TestBookApplication_GetReviewByUserIDAndBookID(t *testing.T) {
+	t.Parallel()
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	book1 := testBook(1)
+	review1 := testReview(1, book1.ID, "user01")
+
+	type args struct {
+		userID string
+		bookID int
+	}
+	type want struct {
+		review *book.Review
+		err    error
+	}
+	testCases := []struct {
+		name  string
+		setup func(context.Context, *testing.T, *test.Mocks)
+		args  args
+		want  want
+	}{
+		{
+			name: "success",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.BookRepository.EXPECT().
+					GetReviewByUserIDAndBookID(ctx, "user01", book1.ID).
+					Return(review1, nil)
+			},
+			args: args{
+				userID: "user01",
+				bookID: 1,
+			},
+			want: want{
+				review: review1,
+				err:    nil,
+			},
+		},
+	}
+
+	for _, tt := range testCases {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			mocks := test.NewMocks(ctrl)
+			tt.setup(ctx, t, mocks)
+			target := NewBookApplication(
+				mocks.BookDomainValidation,
+				mocks.BookRepository,
+			)
+
+			r, err := target.GetReviewByUserIDAndBookID(ctx, tt.args.userID, tt.args.bookID)
+			if tt.want.err != nil {
+				require.Equal(t, tt.want.err.Error(), err.Error())
+				require.Equal(t, tt.want.review, r)
+				return
+			}
+			require.NoError(t, err)
+			require.Equal(t, tt.want.review, r)
+		})
+	}
+}
+
+func TestBookApplication_Create(t *testing.T) {
+	t.Parallel()
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	type args struct {
+		book *book.Book
+	}
+	type want struct {
+		err error
+	}
+	testCases := []struct {
+		name  string
+		setup func(context.Context, *testing.T, *test.Mocks)
+		args  args
+		want  want
+	}{
+		{
+			name: "success",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.BookDomainValidation.EXPECT().
+					Author(ctx, gomock.Any()).
+					AnyTimes().Return(nil)
+				mocks.BookDomainValidation.EXPECT().
+					Book(ctx, gomock.Any()).
+					Return(nil)
+				mocks.BookRepository.EXPECT().
+					Create(ctx, gomock.Any()).
+					Return(nil)
+			},
+			args: args{
+				book: &book.Book{
+					Title: "小説　ちはやふる　上の句",
+					Isbn:  "9784062938426",
+					Authors: []*book.Author{
+						{
+							Name: "有沢 ゆう希",
+						},
+					},
+				},
+			},
+			want: want{
+				err: nil,
+			},
+		},
+		{
+			name: "success: authors length is 0",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.BookDomainValidation.EXPECT().
+					Book(ctx, gomock.Any()).
+					Return(nil)
+				mocks.BookRepository.EXPECT().
+					Create(ctx, gomock.Any()).
+					Return(nil)
+			},
+			args: args{
+				book: &book.Book{
+					Title: "小説　ちはやふる　上の句",
+					Isbn:  "9784062938426",
+				},
+			},
+			want: want{
+				err: nil,
+			},
+		},
+		{
+			name: "failed: invalid validation in authors",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.BookDomainValidation.EXPECT().
+					Author(ctx, gomock.Any()).
+					AnyTimes().Return(exception.InvalidDomainValidation.New(test.ErrMock))
+			},
+			args: args{
+				book: &book.Book{
+					Title: "小説　ちはやふる　上の句",
+					Isbn:  "9784062938426",
+					Authors: []*book.Author{
+						{
+							Name: "有沢 ゆう希",
+						},
+					},
+				},
+			},
+			want: want{
+				err: exception.InvalidDomainValidation.New(test.ErrMock),
+			},
+		},
+		{
+			name: "failed: invalid validation in book",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.BookDomainValidation.EXPECT().
+					Author(ctx, gomock.Any()).
+					AnyTimes().Return(nil)
+				mocks.BookDomainValidation.EXPECT().
+					Book(ctx, gomock.Any()).
+					Return(exception.InvalidDomainValidation.New(test.ErrMock))
+			},
+			args: args{
+				book: &book.Book{
+					Title: "小説　ちはやふる　上の句",
+					Isbn:  "9784062938426",
+					Authors: []*book.Author{
+						{
+							Name: "有沢 ゆう希",
+						},
+					},
+				},
+			},
+			want: want{
+				err: exception.InvalidDomainValidation.New(test.ErrMock),
+			},
+		},
+		{
+			name: "failed: internal error in create",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.BookDomainValidation.EXPECT().
+					Author(ctx, gomock.Any()).
+					AnyTimes().Return(nil)
+				mocks.BookDomainValidation.EXPECT().
+					Book(ctx, gomock.Any()).
+					Return(nil)
+				mocks.BookRepository.EXPECT().
+					Create(ctx, gomock.Any()).
+					Return(exception.ErrorInDatastore.New(test.ErrMock))
+			},
+			args: args{
+				book: &book.Book{
+					Title: "小説　ちはやふる　上の句",
+					Isbn:  "9784062938426",
+					Authors: []*book.Author{
+						{
+							Name: "有沢 ゆう希",
+						},
+					},
+				},
+			},
+			want: want{
+				err: exception.ErrorInDatastore.New(test.ErrMock),
+			},
+		},
+	}
+
+	for _, tt := range testCases {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			mocks := test.NewMocks(ctrl)
+			tt.setup(ctx, t, mocks)
+			target := NewBookApplication(
+				mocks.BookDomainValidation,
+				mocks.BookRepository,
+			)
+
+			err := target.Create(ctx, tt.args.book)
+			if tt.want.err != nil {
+				require.Equal(t, tt.want.err.Error(), err.Error())
+				return
+			}
+			require.NoError(t, err)
+			require.NotZero(t, tt.args.book.CreatedAt)
+			require.NotZero(t, tt.args.book.UpdatedAt)
+			for _, a := range tt.args.book.Authors {
+				require.NotZero(t, a.CreatedAt)
+				require.NotZero(t, a.UpdatedAt)
+			}
+		})
+	}
+}
+
+func TestBookApplication_CreateBookshelf(t *testing.T) {
+	t.Parallel()
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	type args struct {
+		bookshelf *book.Bookshelf
+	}
+	type want struct {
+		err error
+	}
+	testCases := []struct {
+		name  string
+		setup func(context.Context, *testing.T, *test.Mocks)
+		args  args
+		want  want
+	}{
+		{
+			name: "success",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.BookDomainValidation.EXPECT().
+					Review(ctx, gomock.Any()).
+					AnyTimes().Return(nil)
+				mocks.BookDomainValidation.EXPECT().
+					Bookshelf(ctx, gomock.Any()).
+					Return(nil)
+				mocks.BookRepository.EXPECT().
+					CreateBookshelf(ctx, gomock.Any()).
+					Return(nil)
+			},
+			args: args{
+				bookshelf: &book.Bookshelf{
+					Status: book.ReadingStatus,
+					Review: &book.Review{
+						Impression: "テストです。",
+					},
+				},
+			},
+			want: want{
+				err: nil,
+			},
+		},
+		{
+			name: "failed: invalid validation in review",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.BookDomainValidation.EXPECT().
+					Review(ctx, gomock.Any()).
+					AnyTimes().Return(exception.InvalidDomainValidation.New(test.ErrMock))
+			},
+			args: args{
+				bookshelf: &book.Bookshelf{
+					Status: book.ReadingStatus,
+					Review: &book.Review{
+						Impression: "テストです。",
+					},
+				},
+			},
+			want: want{
+				err: exception.InvalidDomainValidation.New(test.ErrMock),
+			},
+		},
+		{
+			name: "failed: invalid validation in bookshelf",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.BookDomainValidation.EXPECT().
+					Review(ctx, gomock.Any()).
+					AnyTimes().Return(nil)
+				mocks.BookDomainValidation.EXPECT().
+					Bookshelf(ctx, gomock.Any()).
+					Return(exception.InvalidDomainValidation.New(test.ErrMock))
+			},
+			args: args{
+				bookshelf: &book.Bookshelf{
+					Status: book.ReadingStatus,
+					Review: &book.Review{
+						Impression: "テストです。",
+					},
+				},
+			},
+			want: want{
+				err: exception.InvalidDomainValidation.New(test.ErrMock),
+			},
+		},
+		{
+			name: "failed: internal error in create",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.BookDomainValidation.EXPECT().
+					Review(ctx, gomock.Any()).
+					AnyTimes().Return(nil)
+				mocks.BookDomainValidation.EXPECT().
+					Bookshelf(ctx, gomock.Any()).
+					Return(nil)
+				mocks.BookRepository.EXPECT().
+					CreateBookshelf(ctx, gomock.Any()).
+					Return(exception.ErrorInDatastore.New(test.ErrMock))
+			},
+			args: args{
+				bookshelf: &book.Bookshelf{
+					Status: book.ReadingStatus,
+					Review: &book.Review{
+						Impression: "テストです。",
+					},
+				},
+			},
+			want: want{
+				err: exception.ErrorInDatastore.New(test.ErrMock),
+			},
+		},
+	}
+
+	for _, tt := range testCases {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			mocks := test.NewMocks(ctrl)
+			tt.setup(ctx, t, mocks)
+			target := NewBookApplication(
+				mocks.BookDomainValidation,
+				mocks.BookRepository,
+			)
+
+			err := target.CreateBookshelf(ctx, tt.args.bookshelf)
+			if tt.want.err != nil {
+				require.Equal(t, tt.want.err.Error(), err.Error())
+				return
+			}
+			require.NoError(t, err)
+			require.NotZero(t, tt.args.bookshelf.CreatedAt)
+			require.NotZero(t, tt.args.bookshelf.UpdatedAt)
+			if tt.args.bookshelf.Review != nil {
+				require.NotZero(t, tt.args.bookshelf.Review.CreatedAt)
+				require.NotZero(t, tt.args.bookshelf.Review.UpdatedAt)
+			}
+		})
+	}
+}
+
+func TestBookApplication_Update(t *testing.T) {
+	t.Parallel()
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	type args struct {
+		book *book.Book
+	}
+	type want struct {
+		err error
+	}
+	testCases := []struct {
+		name  string
+		setup func(context.Context, *testing.T, *test.Mocks)
+		args  args
+		want  want
+	}{
+		{
+			name: "success",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.BookDomainValidation.EXPECT().
+					Author(ctx, gomock.Any()).
+					AnyTimes().Return(nil)
+				mocks.BookDomainValidation.EXPECT().
+					Book(ctx, gomock.Any()).
+					Return(nil)
+				mocks.BookRepository.EXPECT().
+					Update(ctx, gomock.Any()).
+					Return(nil)
+			},
+			args: args{
+				book: &book.Book{
+					ID:    1,
+					Title: "小説　ちはやふる　上の句",
+					Isbn:  "9784062938426",
+					Authors: []*book.Author{
+						{
+							Name: "有沢 ゆう希",
+						},
+					},
+				},
+			},
+			want: want{
+				err: nil,
+			},
+		},
+		{
+			name: "success: authors length is 0",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.BookDomainValidation.EXPECT().
+					Book(ctx, gomock.Any()).
+					Return(nil)
+				mocks.BookRepository.EXPECT().
+					Update(ctx, gomock.Any()).
+					Return(nil)
+			},
+			args: args{
+				book: &book.Book{
+					ID:    1,
+					Title: "小説　ちはやふる　上の句",
+					Isbn:  "9784062938426",
+				},
+			},
+			want: want{
+				err: nil,
+			},
+		},
+		{
+			name: "failed: invalid validation in authors",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.BookDomainValidation.EXPECT().
+					Author(ctx, gomock.Any()).
+					AnyTimes().Return(exception.InvalidDomainValidation.New(test.ErrMock))
+			},
+			args: args{
+				book: &book.Book{
+					ID:    1,
+					Title: "小説　ちはやふる　上の句",
+					Isbn:  "9784062938426",
+					Authors: []*book.Author{
+						{
+							Name: "有沢 ゆう希",
+						},
+					},
+				},
+			},
+			want: want{
+				err: exception.InvalidDomainValidation.New(test.ErrMock),
+			},
+		},
+		{
+			name: "failed: invalid validation in book",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.BookDomainValidation.EXPECT().
+					Author(ctx, gomock.Any()).
+					AnyTimes().Return(nil)
+				mocks.BookDomainValidation.EXPECT().
+					Book(ctx, gomock.Any()).
+					Return(exception.InvalidDomainValidation.New(test.ErrMock))
+			},
+			args: args{
+				book: &book.Book{
+					ID:    1,
+					Title: "小説　ちはやふる　上の句",
+					Isbn:  "9784062938426",
+					Authors: []*book.Author{
+						{
+							Name: "有沢 ゆう希",
+						},
+					},
+				},
+			},
+			want: want{
+				err: exception.InvalidDomainValidation.New(test.ErrMock),
+			},
+		},
+		{
+			name: "failed: internal error in create",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.BookDomainValidation.EXPECT().
+					Author(ctx, gomock.Any()).
+					AnyTimes().Return(nil)
+				mocks.BookDomainValidation.EXPECT().
+					Book(ctx, gomock.Any()).
+					Return(nil)
+				mocks.BookRepository.EXPECT().
+					Update(ctx, gomock.Any()).
+					Return(exception.ErrorInDatastore.New(test.ErrMock))
+			},
+			args: args{
+				book: &book.Book{
+					ID:    1,
+					Title: "小説　ちはやふる　上の句",
+					Isbn:  "9784062938426",
+					Authors: []*book.Author{
+						{
+							Name: "有沢 ゆう希",
+						},
+					},
+				},
+			},
+			want: want{
+				err: exception.ErrorInDatastore.New(test.ErrMock),
+			},
+		},
+	}
+
+	for _, tt := range testCases {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			mocks := test.NewMocks(ctrl)
+			tt.setup(ctx, t, mocks)
+			target := NewBookApplication(
+				mocks.BookDomainValidation,
+				mocks.BookRepository,
+			)
+
+			err := target.Update(ctx, tt.args.book)
+			if tt.want.err != nil {
+				require.Equal(t, tt.want.err.Error(), err.Error())
+				return
+			}
+			require.NoError(t, err)
+			require.NotZero(t, tt.args.book.UpdatedAt)
+			for _, a := range tt.args.book.Authors {
+				require.NotZero(t, a.UpdatedAt)
+			}
+		})
+	}
+}
+
+func TestBookApplication_UpdateBookshelf(t *testing.T) {
+	t.Parallel()
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	type args struct {
+		bookshelf *book.Bookshelf
+	}
+	type want struct {
+		err error
+	}
+	testCases := []struct {
+		name  string
+		setup func(context.Context, *testing.T, *test.Mocks)
+		args  args
+		want  want
+	}{
+		{
+			name: "success",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.BookDomainValidation.EXPECT().
+					Review(ctx, gomock.Any()).
+					AnyTimes().Return(nil)
+				mocks.BookDomainValidation.EXPECT().
+					Bookshelf(ctx, gomock.Any()).
+					Return(nil)
+				mocks.BookRepository.EXPECT().
+					UpdateBookshelf(ctx, gomock.Any()).
+					Return(nil)
+			},
+			args: args{
+				bookshelf: &book.Bookshelf{
+					Status: book.ReadingStatus,
+					Review: &book.Review{
+						Impression: "テストです。",
+					},
+				},
+			},
+			want: want{
+				err: nil,
+			},
+		},
+		{
+			name: "failed: invalid validation in review",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.BookDomainValidation.EXPECT().
+					Review(ctx, gomock.Any()).
+					AnyTimes().Return(exception.InvalidDomainValidation.New(test.ErrMock))
+			},
+			args: args{
+				bookshelf: &book.Bookshelf{
+					Status: book.ReadingStatus,
+					Review: &book.Review{
+						Impression: "テストです。",
+					},
+				},
+			},
+			want: want{
+				err: exception.InvalidDomainValidation.New(test.ErrMock),
+			},
+		},
+		{
+			name: "failed: invalid validation in bookshelf",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.BookDomainValidation.EXPECT().
+					Review(ctx, gomock.Any()).
+					AnyTimes().Return(nil)
+				mocks.BookDomainValidation.EXPECT().
+					Bookshelf(ctx, gomock.Any()).
+					Return(exception.InvalidDomainValidation.New(test.ErrMock))
+			},
+			args: args{
+				bookshelf: &book.Bookshelf{
+					Status: book.ReadingStatus,
+					Review: &book.Review{
+						Impression: "テストです。",
+					},
+				},
+			},
+			want: want{
+				err: exception.InvalidDomainValidation.New(test.ErrMock),
+			},
+		},
+		{
+			name: "failed: internal error in create",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.BookDomainValidation.EXPECT().
+					Review(ctx, gomock.Any()).
+					AnyTimes().Return(nil)
+				mocks.BookDomainValidation.EXPECT().
+					Bookshelf(ctx, gomock.Any()).
+					Return(nil)
+				mocks.BookRepository.EXPECT().
+					UpdateBookshelf(ctx, gomock.Any()).
+					Return(exception.ErrorInDatastore.New(test.ErrMock))
+			},
+			args: args{
+				bookshelf: &book.Bookshelf{
+					Status: book.ReadingStatus,
+					Review: &book.Review{
+						Impression: "テストです。",
+					},
+				},
+			},
+			want: want{
+				err: exception.ErrorInDatastore.New(test.ErrMock),
+			},
+		},
+	}
+
+	for _, tt := range testCases {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			mocks := test.NewMocks(ctrl)
+			tt.setup(ctx, t, mocks)
+			target := NewBookApplication(
+				mocks.BookDomainValidation,
+				mocks.BookRepository,
+			)
+
+			err := target.UpdateBookshelf(ctx, tt.args.bookshelf)
+			if tt.want.err != nil {
+				require.Equal(t, tt.want.err.Error(), err.Error())
+				return
+			}
+			require.NoError(t, err)
+			require.NotZero(t, tt.args.bookshelf.UpdatedAt)
+			if tt.args.bookshelf.Review != nil {
+				require.NotZero(t, tt.args.bookshelf.Review.UpdatedAt)
+			}
+		})
+	}
+}
+
+func TestBookApplication_CreateOrUpdateBookshelf(t *testing.T) {
+	t.Parallel()
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	type args struct {
+		bookshelf *book.Bookshelf
+	}
+	type want struct {
+		err error
+	}
+	testCases := []struct {
+		name  string
+		setup func(context.Context, *testing.T, *test.Mocks)
+		args  args
+		want  want
+	}{
+		{
+			name: "success: create",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.BookDomainValidation.EXPECT().
+					Review(ctx, gomock.Any()).
+					AnyTimes().Return(nil)
+				mocks.BookDomainValidation.EXPECT().
+					Bookshelf(ctx, gomock.Any()).
+					Return(nil)
+				mocks.BookRepository.EXPECT().
+					CreateBookshelf(ctx, gomock.Any()).
+					Return(nil)
+			},
+			args: args{
+				bookshelf: &book.Bookshelf{
+					Status: book.ReadingStatus,
+					Review: &book.Review{
+						Impression: "テストです。",
+					},
+				},
+			},
+			want: want{
+				err: nil,
+			},
+		},
+		{
+			name: "success: update",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.BookDomainValidation.EXPECT().
+					Review(ctx, gomock.Any()).
+					AnyTimes().Return(nil)
+				mocks.BookDomainValidation.EXPECT().
+					Bookshelf(ctx, gomock.Any()).
+					Return(nil)
+				mocks.BookRepository.EXPECT().
+					UpdateBookshelf(ctx, gomock.Any()).
+					Return(nil)
+			},
+			args: args{
+				bookshelf: &book.Bookshelf{
+					ID:     1,
+					Status: book.ReadingStatus,
+					Review: &book.Review{
+						Impression: "テストです。",
+					},
+				},
+			},
+			want: want{
+				err: nil,
+			},
+		},
+	}
+
+	for _, tt := range testCases {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			mocks := test.NewMocks(ctrl)
+			tt.setup(ctx, t, mocks)
+			target := NewBookApplication(
+				mocks.BookDomainValidation,
+				mocks.BookRepository,
+			)
+
+			err := target.CreateOrUpdateBookshelf(ctx, tt.args.bookshelf)
+			if tt.want.err != nil {
+				require.Equal(t, tt.want.err.Error(), err.Error())
+				return
+			}
+			require.NoError(t, err)
+			require.NotZero(t, tt.args.bookshelf.UpdatedAt)
+		})
+	}
+}
+
+func TestBookApplication_MultipleCreate(t *testing.T) {
+	t.Parallel()
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	type args struct {
+		books []*book.Book
+	}
+	type want struct {
+		err error
+	}
+	testCases := []struct {
+		name  string
+		setup func(context.Context, *testing.T, *test.Mocks)
+		args  args
+		want  want
+	}{
+		{
+			name: "success",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.BookDomainValidation.EXPECT().
+					Author(ctx, gomock.Any()).
+					AnyTimes().Return(nil)
+				mocks.BookDomainValidation.EXPECT().
+					Book(ctx, gomock.Any()).
+					AnyTimes().Return(nil)
+				mocks.BookRepository.EXPECT().
+					MultipleCreate(ctx, gomock.Any()).
+					Return(nil)
+			},
+			args: args{
+				books: []*book.Book{
+					{
+						Title: "小説　ちはやふる　上の句",
+						Isbn:  "9784062938426",
+						Authors: []*book.Author{
+							{
+								Name: "有沢 ゆう希",
+							},
+						},
+					},
+					{
+						Title: "小説　ちはやふる　下の句",
+						Isbn:  "9784062938471",
+						Authors: []*book.Author{
+							{
+								Name: "有沢 ゆう希",
+							},
+						},
+					},
+				},
+			},
+			want: want{
+				err: nil,
+			},
+		},
+		{
+			name: "success: authors length is 0",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.BookDomainValidation.EXPECT().
+					Book(ctx, gomock.Any()).
+					AnyTimes().Return(nil)
+				mocks.BookRepository.EXPECT().
+					MultipleCreate(ctx, gomock.Any()).
+					Return(nil)
+			},
+			args: args{
+				books: []*book.Book{
+					{
+						Title: "小説　ちはやふる　上の句",
+						Isbn:  "9784062938426",
+					},
+					{
+						Title: "小説　ちはやふる　下の句",
+						Isbn:  "9784062938471",
+					},
+				},
+			},
+			want: want{
+				err: nil,
+			},
+		},
+		{
+			name: "failed: invalid validation in authors",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.BookDomainValidation.EXPECT().
+					Author(ctx, gomock.Any()).
+					AnyTimes().Return(exception.InvalidDomainValidation.New(test.ErrMock))
+			},
+			args: args{
+				books: []*book.Book{
+					{
+						Title: "小説　ちはやふる　上の句",
+						Isbn:  "9784062938426",
+						Authors: []*book.Author{
+							{
+								Name: "有沢 ゆう希",
+							},
+						},
+					},
+					{
+						Title: "小説　ちはやふる　下の句",
+						Isbn:  "9784062938471",
+						Authors: []*book.Author{
+							{
+								Name: "有沢 ゆう希",
+							},
+						},
+					},
+				},
+			},
+			want: want{
+				err: exception.InvalidDomainValidation.New(test.ErrMock),
+			},
+		},
+		{
+			name: "failed: invalid validation in book",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.BookDomainValidation.EXPECT().
+					Author(ctx, gomock.Any()).
+					AnyTimes().Return(nil)
+				mocks.BookDomainValidation.EXPECT().
+					Book(ctx, gomock.Any()).
+					AnyTimes().Return(exception.InvalidDomainValidation.New(test.ErrMock))
+			},
+			args: args{
+				books: []*book.Book{
+					{
+						Title: "小説　ちはやふる　上の句",
+						Isbn:  "9784062938426",
+						Authors: []*book.Author{
+							{
+								Name: "有沢 ゆう希",
+							},
+						},
+					},
+					{
+						Title: "小説　ちはやふる　下の句",
+						Isbn:  "9784062938471",
+						Authors: []*book.Author{
+							{
+								Name: "有沢 ゆう希",
+							},
+						},
+					},
+				},
+			},
+			want: want{
+				err: exception.InvalidDomainValidation.New(test.ErrMock),
+			},
+		},
+		{
+			name: "failed: internal error in multiple create",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.BookDomainValidation.EXPECT().
+					Author(ctx, gomock.Any()).
+					AnyTimes().Return(nil)
+				mocks.BookDomainValidation.EXPECT().
+					Book(ctx, gomock.Any()).
+					AnyTimes().Return(nil)
+				mocks.BookRepository.EXPECT().
+					MultipleCreate(ctx, gomock.Any()).
+					Return(exception.ErrorInDatastore.New(test.ErrMock))
+			},
+			args: args{
+				books: []*book.Book{
+					{
+						Title: "小説　ちはやふる　上の句",
+						Isbn:  "9784062938426",
+						Authors: []*book.Author{
+							{
+								Name: "有沢 ゆう希",
+							},
+						},
+					},
+					{
+						Title: "小説　ちはやふる　下の句",
+						Isbn:  "9784062938471",
+						Authors: []*book.Author{
+							{
+								Name: "有沢 ゆう希",
+							},
+						},
+					},
+				},
+			},
+			want: want{
+				err: exception.ErrorInDatastore.New(test.ErrMock),
+			},
+		},
+	}
+
+	for _, tt := range testCases {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			mocks := test.NewMocks(ctrl)
+			tt.setup(ctx, t, mocks)
+			target := NewBookApplication(
+				mocks.BookDomainValidation,
+				mocks.BookRepository,
+			)
+
+			err := target.MultipleCreate(ctx, tt.args.books)
+			if tt.want.err != nil {
+				require.Equal(t, tt.want.err.Error(), err.Error())
+				return
+			}
+			require.NoError(t, err)
+			for _, b := range tt.args.books {
+				require.NotZero(t, b.CreatedAt)
+				require.NotZero(t, b.UpdatedAt)
+				for _, a := range b.Authors {
+					require.NotZero(t, a.CreatedAt)
+					require.NotZero(t, a.UpdatedAt)
+				}
+			}
+		})
+	}
+}
+
+func TestBookApplication_MultipleUpdate(t *testing.T) {
+	t.Parallel()
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	type args struct {
+		books []*book.Book
+	}
+	type want struct {
+		err error
+	}
+	testCases := []struct {
+		name  string
+		setup func(context.Context, *testing.T, *test.Mocks)
+		args  args
+		want  want
+	}{
+		{
+			name: "success",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.BookDomainValidation.EXPECT().
+					Author(ctx, gomock.Any()).
+					AnyTimes().Return(nil)
+				mocks.BookDomainValidation.EXPECT().
+					Book(ctx, gomock.Any()).
+					AnyTimes().Return(nil)
+				mocks.BookRepository.EXPECT().
+					MultipleUpdate(ctx, gomock.Any()).
+					Return(nil)
+			},
+			args: args{
+				books: []*book.Book{
+					{
+						ID:    1,
+						Title: "小説　ちはやふる　上の句",
+						Isbn:  "9784062938426",
+						Authors: []*book.Author{
+							{
+								Name: "有沢 ゆう希",
+							},
+						},
+					},
+					{
+						ID:    2,
+						Title: "小説　ちはやふる　下の句",
+						Isbn:  "9784062938471",
+						Authors: []*book.Author{
+							{
+								Name: "有沢 ゆう希",
+							},
+						},
+					},
+				},
+			},
+			want: want{
+				err: nil,
+			},
+		},
+		{
+			name: "success: authors length is 0",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.BookDomainValidation.EXPECT().
+					Book(ctx, gomock.Any()).
+					AnyTimes().Return(nil)
+				mocks.BookRepository.EXPECT().
+					MultipleUpdate(ctx, gomock.Any()).
+					Return(nil)
+			},
+			args: args{
+				books: []*book.Book{
+					{
+						ID:    1,
+						Title: "小説　ちはやふる　上の句",
+						Isbn:  "9784062938426",
+					},
+					{
+						ID:    2,
+						Title: "小説　ちはやふる　下の句",
+						Isbn:  "9784062938471",
+					},
+				},
+			},
+			want: want{
+				err: nil,
+			},
+		},
+		{
+			name: "failed: invalid validation in authors",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.BookDomainValidation.EXPECT().
+					Author(ctx, gomock.Any()).
+					AnyTimes().Return(exception.InvalidDomainValidation.New(test.ErrMock))
+			},
+			args: args{
+				books: []*book.Book{
+					{
+						ID:    1,
+						Title: "小説　ちはやふる　上の句",
+						Isbn:  "9784062938426",
+						Authors: []*book.Author{
+							{
+								Name: "有沢 ゆう希",
+							},
+						},
+					},
+					{
+						ID:    2,
+						Title: "小説　ちはやふる　下の句",
+						Isbn:  "9784062938471",
+						Authors: []*book.Author{
+							{
+								Name: "有沢 ゆう希",
+							},
+						},
+					},
+				},
+			},
+			want: want{
+				err: exception.InvalidDomainValidation.New(test.ErrMock),
+			},
+		},
+		{
+			name: "failed: invalid validation in book",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.BookDomainValidation.EXPECT().
+					Author(ctx, gomock.Any()).
+					AnyTimes().Return(nil)
+				mocks.BookDomainValidation.EXPECT().
+					Book(ctx, gomock.Any()).
+					AnyTimes().Return(exception.InvalidDomainValidation.New(test.ErrMock))
+			},
+			args: args{
+				books: []*book.Book{
+					{
+						ID:    1,
+						Title: "小説　ちはやふる　上の句",
+						Isbn:  "9784062938426",
+						Authors: []*book.Author{
+							{
+								Name: "有沢 ゆう希",
+							},
+						},
+					},
+					{
+						ID:    2,
+						Title: "小説　ちはやふる　下の句",
+						Isbn:  "9784062938471",
+						Authors: []*book.Author{
+							{
+								Name: "有沢 ゆう希",
+							},
+						},
+					},
+				},
+			},
+			want: want{
+				err: exception.InvalidDomainValidation.New(test.ErrMock),
+			},
+		},
+		{
+			name: "failed: internal error in multiple update",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.BookDomainValidation.EXPECT().
+					Author(ctx, gomock.Any()).
+					AnyTimes().Return(nil)
+				mocks.BookDomainValidation.EXPECT().
+					Book(ctx, gomock.Any()).
+					AnyTimes().Return(nil)
+				mocks.BookRepository.EXPECT().
+					MultipleUpdate(ctx, gomock.Any()).
+					Return(exception.ErrorInDatastore.New(test.ErrMock))
+			},
+			args: args{
+				books: []*book.Book{
+					{
+						ID:    1,
+						Title: "小説　ちはやふる　上の句",
+						Isbn:  "9784062938426",
+						Authors: []*book.Author{
+							{
+								Name: "有沢 ゆう希",
+							},
+						},
+					},
+					{
+						ID:    2,
+						Title: "小説　ちはやふる　下の句",
+						Isbn:  "9784062938471",
+						Authors: []*book.Author{
+							{
+								Name: "有沢 ゆう希",
+							},
+						},
+					},
+				},
+			},
+			want: want{
+				err: exception.ErrorInDatastore.New(test.ErrMock),
+			},
+		},
+	}
+
+	for _, tt := range testCases {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			mocks := test.NewMocks(ctrl)
+			tt.setup(ctx, t, mocks)
+			target := NewBookApplication(
+				mocks.BookDomainValidation,
+				mocks.BookRepository,
+			)
+
+			err := target.MultipleUpdate(ctx, tt.args.books)
+			if tt.want.err != nil {
+				require.Equal(t, tt.want.err.Error(), err.Error())
+				return
+			}
+			require.NoError(t, err)
+			for _, b := range tt.args.books {
+				require.NotZero(t, b.UpdatedAt)
+				for _, a := range b.Authors {
+					require.NotZero(t, a.UpdatedAt)
+				}
+			}
+		})
+	}
+}
+func TestBookApplication_Delete(t *testing.T) {
+	t.Parallel()
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	type args struct {
+		book *book.Book
+	}
+	type want struct {
+		err error
+	}
+	testCases := []struct {
+		name  string
+		setup func(context.Context, *testing.T, *test.Mocks)
+		args  args
+		want  want
+	}{
+		{
+			name: "success",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.BookRepository.EXPECT().
+					Delete(ctx, 1).
+					Return(nil)
+			},
+			args: args{
+				book: &book.Book{
+					ID: 1,
+				},
+			},
+			want: want{
+				err: nil,
+			},
+		},
+	}
+
+	for _, tt := range testCases {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			mocks := test.NewMocks(ctrl)
+			tt.setup(ctx, t, mocks)
+			target := NewBookApplication(
+				mocks.BookDomainValidation,
+				mocks.BookRepository,
+			)
+
+			err := target.Delete(ctx, tt.args.book)
+			if tt.want.err != nil {
+				require.Equal(t, tt.want.err.Error(), err.Error())
+				return
+			}
+			require.NoError(t, err)
+		})
+	}
+}
+
+func TestBookApplication_DeleteBookshelf(t *testing.T) {
+	t.Parallel()
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	type args struct {
+		bookshelf *book.Bookshelf
+	}
+	type want struct {
+		err error
+	}
+	testCases := []struct {
+		name  string
+		setup func(context.Context, *testing.T, *test.Mocks)
+		args  args
+		want  want
+	}{
+		{
+			name: "success",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.BookRepository.EXPECT().
+					DeleteBookshelf(ctx, 1).
+					Return(nil)
+			},
+			args: args{
+				bookshelf: &book.Bookshelf{
+					ID: 1,
+				},
+			},
+			want: want{
+				err: nil,
+			},
+		},
+	}
+
+	for _, tt := range testCases {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			mocks := test.NewMocks(ctrl)
+			tt.setup(ctx, t, mocks)
+			target := NewBookApplication(
+				mocks.BookDomainValidation,
+				mocks.BookRepository,
+			)
+
+			err := target.DeleteBookshelf(ctx, tt.args.bookshelf)
+			if tt.want.err != nil {
+				require.Equal(t, tt.want.err.Error(), err.Error())
+				return
+			}
+			require.NoError(t, err)
 		})
 	}
 }
