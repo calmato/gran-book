@@ -4,7 +4,7 @@ import { setBooks } from '../modules/book';
 import { internal } from '~/lib/axios';
 import { AppState } from '~/store/modules';
 import { ImpressionForm } from '~/types/forms';
-import { IBook, IBookResponse, IImpressionResponse } from '~/types/response';
+import { IBook, IBookResponse, IImpressionResponse, IReviewResponse } from '~/types/response';
 import { IErrorResponse, ISearchResultItem } from '~/types/response/external/rakuten-books';
 
 /**
@@ -193,5 +193,17 @@ async function registerReleaseBookAsync(userId: string, bookId: number) {
     })
     .catch((err) => {
       console.log('[error]', err);
+    });
+}
+
+export async function getReviewsByUserId(userId: string, reviewId: number) {
+  return internal
+    .get(`/v1/users/${userId}/reviews/${reviewId}`)
+    .then((res: AxiosResponse<IReviewResponse>) => {
+      return res.data;
+    })
+    .catch((err: AxiosResponse<IErrorResponse>) => {
+      console.log(err);
+      return Promise.reject(err);
     });
 }

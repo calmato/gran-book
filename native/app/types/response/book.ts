@@ -52,3 +52,16 @@ interface IUser {
   thumbnailUrl: string;
   username: string;
 }
+
+export interface IReviewResponse {
+  createdAt: string;
+  book: {
+    id: number;
+    title: string;
+    thumbnailUrl: string;
+  };
+  impression: string;
+  id: number;
+  user: IUser;
+  updatedAt: string;
+}
