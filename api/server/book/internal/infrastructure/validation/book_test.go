@@ -6,8 +6,8 @@ import (
 	"testing"
 
 	"github.com/calmato/gran-book/api/server/book/internal/domain/book"
-	"github.com/calmato/gran-book/api/server/book/lib/datetime"
 	mock_book "github.com/calmato/gran-book/api/server/book/mock/domain/book"
+	"github.com/calmato/gran-book/api/server/book/pkg/test"
 	"github.com/golang/mock/gomock"
 )
 
@@ -117,8 +117,8 @@ func TestBookService_Bookshelf(t *testing.T) {
 				bookshelf: &book.Bookshelf{
 					BookID: 1,
 					UserID: "00000000-0000-0000-0000-000000000000",
-					Status: 5,
-					ReadOn: datetime.StringToDate("2020-01-01"),
+					Status: book.ReadingStatus,
+					ReadOn: test.DateMock,
 				},
 			},
 			want: nil,

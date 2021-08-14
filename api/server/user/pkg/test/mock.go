@@ -3,6 +3,7 @@ package test
 import (
 	"errors"
 	"testing"
+	"time"
 
 	mock_application "github.com/calmato/gran-book/api/server/user/mock/application"
 	mock_chat "github.com/calmato/gran-book/api/server/user/mock/domain/chat"
@@ -17,6 +18,10 @@ import (
 
 var (
 	ErrMock = errors.New("some error")
+
+	jst, _   = time.LoadLocation("Asia/Tokyo")
+	TimeMock = time.Date(2021, time.Month(7), 24, 20, 0, 0, 0, jst)
+	DateMock = time.Date(2021, time.Month(7), 24, 0, 0, 0, 0, jst)
 )
 
 type TestResponse struct {

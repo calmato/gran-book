@@ -3,7 +3,6 @@ package validation
 import (
 	"context"
 	"testing"
-	"time"
 
 	"github.com/calmato/gran-book/api/server/user/internal/domain/chat"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
@@ -21,8 +20,6 @@ func TestChatDomainValidation_Room(t *testing.T) {
 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
-
-	current := time.Now().Local()
 
 	type args struct {
 		room *chat.Room
@@ -43,8 +40,8 @@ func TestChatDomainValidation_Room(t *testing.T) {
 						"00000000-0000-0000-0000-000000000000",
 						"11111111-1111-1111-1111-111111111111",
 					},
-					CreatedAt: current,
-					UpdatedAt: current,
+					CreatedAt: test.TimeMock,
+					UpdatedAt: test.TimeMock,
 				},
 			},
 			want: nil,
@@ -78,8 +75,6 @@ func TestChatDomainValidation_Message(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	current := time.Now().Local()
-
 	type args struct {
 		message *chat.Message
 	}
@@ -98,7 +93,7 @@ func TestChatDomainValidation_Message(t *testing.T) {
 					UserID:    "00000000-0000-0000-0000-000000000000",
 					Text:      "テストメッセージ",
 					Image:     "",
-					CreatedAt: current,
+					CreatedAt: test.TimeMock,
 				},
 			},
 			want: nil,
@@ -112,7 +107,7 @@ func TestChatDomainValidation_Message(t *testing.T) {
 					UserID:    "00000000-0000-0000-0000-000000000000",
 					Text:      "",
 					Image:     "",
-					CreatedAt: current,
+					CreatedAt: test.TimeMock,
 				},
 			},
 			want: exception.InvalidDomainValidation.New(

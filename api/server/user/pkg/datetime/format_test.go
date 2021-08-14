@@ -15,6 +15,10 @@ func TestTimeToString(t *testing.T) {
 			Input:    time.Date(2020, 1, 1, 1, 1, 1, 0, time.Local),
 			Expected: "2020-01-01 01:01:01",
 		},
+		"ok_is_zero": {
+			Input:    time.Time{},
+			Expected: "",
+		},
 	}
 
 	for result, tc := range testCases {
@@ -35,6 +39,10 @@ func TestDateToString(t *testing.T) {
 		"ok": {
 			Input:    time.Date(2020, 1, 1, 1, 1, 1, 0, time.Local),
 			Expected: "2020-01-01",
+		},
+		"ok_is_zero": {
+			Input:    time.Time{},
+			Expected: "",
 		},
 	}
 

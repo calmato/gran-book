@@ -3,7 +3,6 @@ package application
 import (
 	"context"
 	"testing"
-	"time"
 
 	"github.com/calmato/gran-book/api/server/book/internal/domain/book"
 	"github.com/calmato/gran-book/api/server/book/internal/domain/exception"
@@ -2334,8 +2333,6 @@ func TestBookApplication_DeleteBookshelf(t *testing.T) {
 }
 
 func testBook(id int) *book.Book {
-	current := time.Now().Local()
-
 	return &book.Book{
 		ID:             id,
 		Title:          "小説　ちはやふる　上の句",
@@ -2348,51 +2345,48 @@ func testBook(id int) *book.Book {
 		RakutenURL:     "https://books.rakuten.co.jp/rb/15271426/",
 		RakutenSize:    "コミック",
 		RakutenGenreID: "001004008001/001004008003/001019001",
-		CreatedAt:      current,
-		UpdatedAt:      current,
+		CreatedAt:      test.TimeMock,
+		UpdatedAt:      test.TimeMock,
 		Authors: []*book.Author{
 			{
 				ID:        1,
 				Name:      "有沢 ゆう希",
 				NameKana:  "アリサワ ユウキ",
-				CreatedAt: current,
-				UpdatedAt: current,
+				CreatedAt: test.TimeMock,
+				UpdatedAt: test.TimeMock,
 			},
 			{
 				ID:        2,
 				Name:      "末次 由紀",
 				NameKana:  "スエツグ ユキ",
-				CreatedAt: current,
-				UpdatedAt: current,
+				CreatedAt: test.TimeMock,
+				UpdatedAt: test.TimeMock,
 			},
 		},
 	}
 }
 
 func testBookshelf(id int, bookID int, userID string) *book.Bookshelf {
-	current := time.Now().Local()
-
 	return &book.Bookshelf{
 		ID:        id,
 		BookID:    bookID,
 		UserID:    userID,
 		ReviewID:  0,
 		Status:    book.ReadingStatus,
-		CreatedAt: current,
-		UpdatedAt: current,
+		ReadOn:    test.DateMock,
+		CreatedAt: test.TimeMock,
+		UpdatedAt: test.TimeMock,
 	}
 }
 
 func testReview(id int, bookID int, userID string) *book.Review {
-	current := time.Now().Local()
-
 	return &book.Review{
 		ID:         id,
 		BookID:     bookID,
 		UserID:     userID,
 		Score:      3,
 		Impression: "テストレビューです",
-		CreatedAt:  current,
-		UpdatedAt:  current,
+		CreatedAt:  test.TimeMock,
+		UpdatedAt:  test.TimeMock,
 	}
 }

@@ -3,7 +3,6 @@ package application
 import (
 	"context"
 	"testing"
-	"time"
 
 	"github.com/calmato/gran-book/api/server/user/internal/domain/chat"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
@@ -428,15 +427,13 @@ func TestChatApplication_UploadImage(t *testing.T) {
 }
 
 func testChatRoom(id string) *chat.Room {
-	current := time.Now().Local()
-
 	return &chat.Room{
 		ID: id,
 		UserIDs: []string{
 			"12345678-1234-1234-123456789012",
 			"23456789-2345-2345-234567890123",
 		},
-		CreatedAt: current,
-		UpdatedAt: current,
+		CreatedAt: test.TimeMock,
+		UpdatedAt: test.TimeMock,
 	}
 }

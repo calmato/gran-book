@@ -3,11 +3,9 @@ package server
 import (
 	"context"
 	"testing"
-	"time"
 
 	"github.com/calmato/gran-book/api/server/user/internal/domain/chat"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
-	"github.com/calmato/gran-book/api/server/user/pkg/datetime"
 	"github.com/calmato/gran-book/api/server/user/pkg/test"
 	pb "github.com/calmato/gran-book/api/server/user/proto"
 	"github.com/golang/mock/gomock"
@@ -143,8 +141,8 @@ func TestAuthServer_CreateRoom(t *testing.T) {
 				Code: codes.OK,
 				Message: &pb.ChatRoomResponse{
 					UserIds:   []string{"user01", "user02"},
-					CreatedAt: datetime.TimeToString(time.Time{}),
-					UpdatedAt: datetime.TimeToString(time.Time{}),
+					CreatedAt: "",
+					UpdatedAt: "",
 				},
 			},
 		},
@@ -244,7 +242,7 @@ func TestAuthServer_CreateMessage(t *testing.T) {
 				Message: &pb.ChatMessageResponse{
 					UserId:    "user01",
 					Text:      "テストメッセージ",
-					CreatedAt: datetime.TimeToString(time.Time{}),
+					CreatedAt: "",
 				},
 			},
 		},
@@ -326,27 +324,23 @@ func TestAuthServer_CreateMessage(t *testing.T) {
 }
 
 func testChatRoom(id string) *chat.Room {
-	current := time.Now().Local()
-
 	return &chat.Room{
 		ID: id,
 		UserIDs: []string{
 			"12345678-1234-1234-123456789012",
 			"23456789-2345-2345-234567890123",
 		},
-		CreatedAt: current,
-		UpdatedAt: current,
+		CreatedAt: test.TimeMock,
+		UpdatedAt: test.TimeMock,
 	}
 }
 
 func testChatMessage(id string) *chat.Message {
-	current := time.Now().Local()
-
 	return &chat.Message{
 		ID:        id,
 		Text:      "テストメッセージです",
 		Image:     "",
 		UserID:    "12345678-1234-1234-123456789012",
-		CreatedAt: current,
+		CreatedAt: test.TimeMock,
 	}
 }

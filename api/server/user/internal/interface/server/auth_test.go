@@ -3,11 +3,9 @@ package server
 import (
 	"context"
 	"testing"
-	"time"
 
 	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/user"
-	"github.com/calmato/gran-book/api/server/user/pkg/datetime"
 	"github.com/calmato/gran-book/api/server/user/pkg/test"
 	pb "github.com/calmato/gran-book/api/server/user/proto"
 	"github.com/golang/mock/gomock"
@@ -110,8 +108,8 @@ func TestAuthServer_CreateAuth(t *testing.T) {
 				Message: &pb.AuthResponse{
 					Username:  "テストユーザー",
 					Email:     "test-user@calmato.jp",
-					CreatedAt: datetime.TimeToString(time.Time{}),
-					UpdatedAt: datetime.TimeToString(time.Time{}),
+					CreatedAt: "",
+					UpdatedAt: "",
 				},
 			},
 		},
@@ -209,8 +207,8 @@ func TestAuthServer_UpdateAuthEmail(t *testing.T) {
 				Code: codes.OK,
 				Message: &pb.AuthResponse{
 					Email:     "test-user@calmato.jp",
-					CreatedAt: datetime.TimeToString(time.Time{}),
-					UpdatedAt: datetime.TimeToString(time.Time{}),
+					CreatedAt: "",
+					UpdatedAt: "",
 				},
 			},
 		},
@@ -328,8 +326,8 @@ func TestAuthServer_UpdateAuthPassword(t *testing.T) {
 			want: &test.TestResponse{
 				Code: codes.OK,
 				Message: &pb.AuthResponse{
-					CreatedAt: datetime.TimeToString(time.Time{}),
-					UpdatedAt: datetime.TimeToString(time.Time{}),
+					CreatedAt: "",
+					UpdatedAt: "",
 				},
 			},
 		},
@@ -454,8 +452,8 @@ func TestAuthServer_UpdateAuthProfile(t *testing.T) {
 					Gender:           pb.Gender_GENDER_MAN,
 					ThumbnailUrl:     "https://go.dev/images/gophers/ladder.svg",
 					SelfIntroduction: "自己紹介",
-					CreatedAt:        datetime.TimeToString(time.Time{}),
-					UpdatedAt:        datetime.TimeToString(time.Time{}),
+					CreatedAt:        "",
+					UpdatedAt:        "",
 				},
 			},
 		},
@@ -594,8 +592,8 @@ func TestAuthServer_UpdateAuthAddress(t *testing.T) {
 					City:          "小金井市",
 					AddressLine1:  "貫井北町4-1-1",
 					AddressLine2:  "",
-					CreatedAt:     datetime.TimeToString(time.Time{}),
-					UpdatedAt:     datetime.TimeToString(time.Time{}),
+					CreatedAt:     "",
+					UpdatedAt:     "",
 				},
 			},
 		},
@@ -794,8 +792,8 @@ func TestAuthServer_RegisterAuthDevice(t *testing.T) {
 			want: &test.TestResponse{
 				Code: codes.OK,
 				Message: &pb.AuthResponse{
-					CreatedAt: datetime.TimeToString(time.Time{}),
-					UpdatedAt: datetime.TimeToString(time.Time{}),
+					CreatedAt: "",
+					UpdatedAt: "",
 				},
 			},
 		},

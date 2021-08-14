@@ -3,7 +3,6 @@ package application
 import (
 	"context"
 	"testing"
-	"time"
 
 	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/user"
@@ -2050,8 +2049,6 @@ func TestUserApplication_HasAdminRole(t *testing.T) {
 }
 
 func testUser(id string) *user.User {
-	current := time.Now().Local()
-
 	return &user.User{
 		ID:               id,
 		Username:         "テストユーザー",
@@ -2071,14 +2068,12 @@ func testUser(id string) *user.User {
 		AddressLine1:     "貫井北町4-1-1",
 		AddressLine2:     "",
 		InstanceID:       "ExponentPushToken[!Qaz2wsx3edc4rfv5tgb6y]",
-		CreatedAt:        current,
-		UpdatedAt:        current,
+		CreatedAt:        test.TimeMock,
+		UpdatedAt:        test.TimeMock,
 	}
 }
 
 func testAdmin(id string) *user.User {
-	current := time.Now().Local()
-
 	return &user.User{
 		ID:               id,
 		Username:         "テストユーザー",
@@ -2098,8 +2093,8 @@ func testAdmin(id string) *user.User {
 		AddressLine1:     "",
 		AddressLine2:     "",
 		InstanceID:       "ExponentPushToken[!Qaz2wsx3edc4rfv5tgb6y]",
-		CreatedAt:        current,
-		UpdatedAt:        current,
+		CreatedAt:        test.TimeMock,
+		UpdatedAt:        test.TimeMock,
 	}
 }
 

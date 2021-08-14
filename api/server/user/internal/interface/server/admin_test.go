@@ -3,11 +3,9 @@ package server
 import (
 	"context"
 	"testing"
-	"time"
 
 	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/user"
-	"github.com/calmato/gran-book/api/server/user/pkg/datetime"
 	"github.com/calmato/gran-book/api/server/user/pkg/test"
 	pb "github.com/calmato/gran-book/api/server/user/proto"
 	"github.com/golang/mock/gomock"
@@ -305,8 +303,8 @@ func TestAdminServer_CreateAdmin(t *testing.T) {
 					FirstName:     "ユーザー",
 					LastNameKana:  "てすと",
 					FirstNameKana: "ゆーざー",
-					CreatedAt:     datetime.TimeToString(time.Time{}),
-					UpdatedAt:     datetime.TimeToString(time.Time{}),
+					CreatedAt:     "",
+					UpdatedAt:     "",
 				},
 			},
 		},
@@ -464,8 +462,8 @@ func TestAdminServer_UpdateAdminContact(t *testing.T) {
 				Message: &pb.AdminResponse{
 					Email:       "test-user@calmato.jp",
 					PhoneNumber: "000-0000-0000",
-					CreatedAt:   datetime.TimeToString(time.Time{}),
-					UpdatedAt:   datetime.TimeToString(time.Time{}),
+					CreatedAt:   "",
+					UpdatedAt:   "",
 				},
 			},
 		},
@@ -644,8 +642,8 @@ func TestAdminServer_UpdateAdminPassword(t *testing.T) {
 			want: &test.TestResponse{
 				Code: codes.OK,
 				Message: &pb.AdminResponse{
-					CreatedAt: datetime.TimeToString(time.Time{}),
-					UpdatedAt: datetime.TimeToString(time.Time{}),
+					CreatedAt: "",
+					UpdatedAt: "",
 				},
 			},
 		},
@@ -836,8 +834,8 @@ func TestAdminServer_UpdateAdminProfile(t *testing.T) {
 					LastNameKana:  "てすと",
 					FirstNameKana: "ゆーざー",
 					ThumbnailUrl:  "https://go.dev/images/gophers/ladder.svg",
-					CreatedAt:     datetime.TimeToString(time.Time{}),
-					UpdatedAt:     datetime.TimeToString(time.Time{}),
+					CreatedAt:     "",
+					UpdatedAt:     "",
 				},
 			},
 		},

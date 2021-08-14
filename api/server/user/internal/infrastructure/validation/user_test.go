@@ -3,7 +3,6 @@ package validation
 import (
 	"context"
 	"testing"
-	"time"
 
 	"github.com/calmato/gran-book/api/server/user/internal/domain/user"
 	"github.com/calmato/gran-book/api/server/user/pkg/test"
@@ -19,8 +18,6 @@ func TestUserDomainValidation_User(t *testing.T) {
 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
-
-	current := time.Now().Local()
 
 	type args struct {
 		user *user.User
@@ -58,8 +55,8 @@ func TestUserDomainValidation_User(t *testing.T) {
 					AddressLine1:     "貫井北町4-1-1",
 					AddressLine2:     "",
 					InstanceID:       "",
-					CreatedAt:        current,
-					UpdatedAt:        current,
+					CreatedAt:        test.TimeMock,
+					UpdatedAt:        test.TimeMock,
 				},
 			},
 			want: nil,
@@ -93,8 +90,6 @@ func TestUserDomainValidation_Relationship(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	current := time.Now().Local()
-
 	type args struct {
 		relationship *user.Relationship
 	}
@@ -116,8 +111,8 @@ func TestUserDomainValidation_Relationship(t *testing.T) {
 					ID:         1,
 					FollowID:   "00000000-0000-0000-0000-000000000000",
 					FollowerID: "11111111-1111-1111-1111-111111111111",
-					CreatedAt:  current,
-					UpdatedAt:  current,
+					CreatedAt:  test.TimeMock,
+					UpdatedAt:  test.TimeMock,
 				},
 			},
 			want: nil,
