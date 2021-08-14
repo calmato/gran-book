@@ -45,7 +45,7 @@ func TestBookService_Book(t *testing.T) {
 			defer ctrl.Finish()
 
 			bvm := mock_book.NewMockRepository(ctrl)
-			bvm.EXPECT().GetIDByIsbn(ctx, tc.args.book.Isbn).Return(tc.args.book.ID, nil)
+			bvm.EXPECT().GetBookIDByIsbn(ctx, tc.args.book.Isbn).Return(tc.args.book.ID, nil)
 
 			t.Run(name, func(t *testing.T) {
 				target := NewBookDomainValidation(bvm)
