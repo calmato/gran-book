@@ -54,14 +54,20 @@ interface IUser {
 }
 
 export interface IReviewResponse {
-  createdAt: string;
-  book: {
-    id: number;
-    title: string;
-    thumbnailUrl: string;
+    total: number;
+    offset: number;
+    limit: number;
+    reviews:IReview[];
   };
-  impression: string;
-  id: number;
-  user: IUser;
-  updatedAt: string;
-}
+
+export interface IReview  {
+    createdAt: string;
+    book: {
+      id: number;
+      title: string;
+      thumbnailUrl: string;
+    };
+    impression: string;
+    id: number;
+    updatedAt: string;
+  }

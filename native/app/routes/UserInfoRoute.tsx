@@ -7,6 +7,7 @@ import {
   ContactEdit,
   ProfileEdit,
   AccountSetting,
+  OwnReviews,
 } from '~/containers';
 
 import { UserInfoStackParamList } from '~/types/navigation';
@@ -18,6 +19,7 @@ const UserInfoRoute = function SettingRoute() {
     <UserInfoStack.Navigator screenOptions={{ headerShown: false }} initialRouteName="MyPage">
       <UserInfoStack.Screen name="MyPage" component={MyPage} />
       <UserInfoStack.Screen name="OwnProfile" component={OwnProfile} />
+      <UserInfoStack.Screen name="OwnReviews" component={OwnReviews} />
       <UserInfoStack.Screen name="AccountSetting" component={AccountSetting} />
       <UserInfoStack.Screen name="ContactEdit" component={ContactEdit} />
       <UserInfoStack.Screen name="EmailEdit" component={EmailEdit} />

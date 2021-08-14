@@ -196,11 +196,11 @@ async function registerReleaseBookAsync(userId: string, bookId: number) {
     });
 }
 
-export async function getReviewsByUserId(userId: string, reviewId: number) {
+export async function getOwnReviews(userId: string, ) {
   return internal
-    .get(`/v1/users/${userId}/reviews/${reviewId}`)
+    .get(`/v1/users/${userId}/reviews`)
     .then((res: AxiosResponse<IReviewResponse>) => {
-      return res.data;
+      return res;
     })
     .catch((err: AxiosResponse<IErrorResponse>) => {
       console.log(err);
