@@ -21,6 +21,17 @@ func ErrorHandling(ctx *gin.Context, err error) {
 	ctx.Abort()
 }
 
+func IsNotFound(err error) bool {
+	// gRPCコードに変換 (ok: gRPCのレスポンス, ng: その他)
+	st, ok := status.FromError(err)
+	if !ok {
+		return false
+	}
+
+	ec := convertStatusGrpcToHttp(st)
+	return ec == entity.ErrNotFound
+}
+
 func getHTTPError(err error) (int, *response.ErrorResponse) {
 	res := &response.ErrorResponse{}
 	res.ErrorCode = getErrorCode(err)

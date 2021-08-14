@@ -53,6 +53,15 @@ func Router(reg *registry.Registry, opts ...gin.HandlerFunc) *gin.Engine {
 			apiV1Chat.POST("/:roomID/messages/text", reg.V1Chat.CreateTextMessage)
 			apiV1Chat.POST("/:roomID/messages/image", reg.V1Chat.CreateImageMessage)
 		}
+		// Book Servicea
+		apiV1Book := apiV1.Group("/books")
+		{
+			apiV1Book.POST("", reg.V1Book.Create)
+			apiV1Book.PATCH("", reg.V1Book.Update)
+			apiV1Book.GET("/:isbn", reg.V1Book.Get)
+			apiV1Book.GET("/:bookID/reviews", reg.V1Book.ListReview)
+			apiV1Book.GET("/:bookID/reviews/:reviewID", reg.V1Book.GetReview)
+		}
 	}
 
 	r.NoRoute(func(c *gin.Context) {

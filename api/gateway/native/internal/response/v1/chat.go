@@ -3,7 +3,7 @@ package v1
 type ChatRoomResponse struct {
 	ID            string           `json:"id"`
 	Users         []*ChatRoomUser  `json:"users"`
-	LatestMessage *ChatRoomMessage `json:"latestMessage"`
+	LatestMessage *ChatRoomMessage `json:"latestMessage,omitempty"`
 	CreatedAt     string           `json:"createdAt"`
 	UpdatedAt     string           `json:"updatedAt"`
 }
@@ -28,7 +28,7 @@ type ChatRoomListResponse struct {
 type ChatRoomListRoom struct {
 	ID            string               `json:"id"`
 	Users         []*ChatRoomListUser  `json:"users"`
-	LatestMessage *ChatRoomListMessage `json:"latestMessage"`
+	LatestMessage *ChatRoomListMessage `json:"latestMessage,omitempty"`
 	CreatedAt     string               `json:"createdAt"`
 	UpdatedAt     string               `json:"updatedAt"`
 }
