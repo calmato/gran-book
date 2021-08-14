@@ -4,12 +4,12 @@ package entity
 type BookshelfStatus int32
 
 const (
-	BOOKSHELF_STATUS_NONE    BookshelfStatus = 0 // 不明なステータス
-	BOOKSHELF_STATUS_READ    BookshelfStatus = 1 // 読み終えた本
-	BOOKSHELF_STATUS_READING BookshelfStatus = 2 // 読んでいる本
-	BOOKSHELF_STATUS_STACKED BookshelfStatus = 3 // 積読本
-	BOOKSHELF_STATUS_WANT    BookshelfStatus = 4 // 読みたい本
-	BOOKSHELF_STATUS_RELEASE BookshelfStatus = 5 // 手放したい本
+	BookshelfStatusNone    BookshelfStatus = 0 // 不明なステータス
+	BookshelfStatusRead    BookshelfStatus = 1 // 読み終えた本
+	BookshelfStatusReading BookshelfStatus = 2 // 読んでいる本
+	BookshelfStatusStacked BookshelfStatus = 3 // 積読本
+	BookshelfStatusWant    BookshelfStatus = 4 // 読みたい本
+	BookshelfStatusRelease BookshelfStatus = 5 // 手放したい本
 )
 
 var (
@@ -44,5 +44,5 @@ func (s BookshelfStatus) Value(key string) BookshelfStatus {
 		return BookshelfStatus(value)
 	}
 
-	return BOOKSHELF_STATUS_NONE
+	return BookshelfStatusNone
 }

@@ -39,5 +39,5 @@ type UpdateAuthAddressRequest struct {
 }
 
 type RegisterAuthDeviceRequest struct {
-	InstanceId string `json:"instanceId"`
+	InstanceID string `json:"instanceId"`
 }

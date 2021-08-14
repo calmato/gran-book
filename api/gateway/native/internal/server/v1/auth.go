@@ -211,8 +211,13 @@ func (h *authHandler) UploadThumbnail(ctx *gin.Context) {
 			Position:  count,
 		}
 
-		stream.Send(in)
-		count += 1
+		err = stream.Send(in)
+		if err != nil {
+			util.ErrorHandling(ctx, entity.ErrInternalServerError.New(err))
+			return
+		}
+
+		count++
 	}
 
 	out, err := stream.CloseAndRecv()
@@ -245,7 +250,7 @@ func (h *authHandler) RegisterDevice(ctx *gin.Context) {
 	}
 
 	in := &pb.RegisterAuthDeviceRequest{
-		InstanceId: req.InstanceId,
+		InstanceId: req.InstanceID,
 	}
 
 	out, err := h.authClient.RegisterAuthDevice(ctx, in)

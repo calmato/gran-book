@@ -8,18 +8,18 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
-type httpServer struct {
+type HTTPServer struct {
 	router *gin.Engine
 	port   string
 }
 
-type metricsServer struct {
+type MetricsServer struct {
 	serve *http.ServeMux
 	port  string
 }
 
-func NewHTTPServer(r *gin.Engine, port string) *httpServer {
-	s := &httpServer{
+func NewHTTPServer(r *gin.Engine, port string) *HTTPServer {
+	s := &HTTPServer{
 		router: r,
 		port:   fmt.Sprintf(":%s", port),
 	}
@@ -27,15 +27,15 @@ func NewHTTPServer(r *gin.Engine, port string) *httpServer {
 	return s
 }
 
-func (s *httpServer) Serve() error {
+func (s *HTTPServer) Serve() error {
 	return http.ListenAndServe(s.port, s.router)
 }
 
-func NewMetricsServer(port string) *metricsServer {
+func NewMetricsServer(port string) *MetricsServer {
 	mux := http.NewServeMux()
 	mux.Handle("/metrics", promhttp.Handler())
 
-	s := &metricsServer{
+	s := &MetricsServer{
 		serve: mux,
 		port:  fmt.Sprintf(":%s", port),
 	}
@@ -43,6 +43,6 @@ func NewMetricsServer(port string) *metricsServer {
 	return s
 }
 
-func (s *metricsServer) Serve() error {
+func (s *MetricsServer) Serve() error {
 	return http.ListenAndServe(s.port, s.serve)
 }

@@ -55,6 +55,7 @@ issues:
     - lines are duplicate of
     - a blank import should be only in a main or test package, or have a comment justifying it
     - use strings.ReplaceAll method in
+    - can be `google.golang.org/grpc.ClientConnInterface`
   exclude-rules:
     - path: _test\.go
       linters:

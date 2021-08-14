@@ -44,7 +44,7 @@ func (a *authenticator) Authentication() gin.HandlerFunc {
 func (a *authenticator) getToken(ctx *gin.Context) (string, error) {
 	token := ctx.GetHeader("Authorization")
 	if token == "" {
-		return "", fmt.Errorf("Authorization Header is not contain.")
+		return "", fmt.Errorf("authorization header is not contain")
 	}
 
 	t := strings.Replace(token, "Bearer ", "", 1)

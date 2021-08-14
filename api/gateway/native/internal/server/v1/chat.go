@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"net/http"
@@ -43,7 +44,7 @@ func NewChatHandler(chatConn *grpc.ClientConn, authConn *grpc.ClientConn, userCo
 // ListRoom - チャットルーム一覧取得
 func (h *chatHandler) ListRoom(ctx *gin.Context) {
 	userID := ctx.Param("userID")
-	limit := ctx.GetInt64(ctx.DefaultQuery("limit", entity.LIST_LIMIT_DEFAULT))
+	limit := ctx.GetInt64(ctx.DefaultQuery("limit", entity.ListLimitDefault))
 	offset := ctx.DefaultQuery("offset", "")
 
 	_, err := h.currentUser(ctx, userID)
@@ -188,8 +189,13 @@ func (h *chatHandler) CreateImageMessage(ctx *gin.Context) {
 		Position: count,
 	}
 
-	stream.Send(in)
-	count += 1
+	err = stream.Send(in)
+	if err != nil {
+		util.ErrorHandling(ctx, entity.ErrInternalServerError.New(err))
+		return
+	}
+
+	count++
 
 	for {
 		_, err := file.Read(buf)
@@ -207,8 +213,13 @@ func (h *chatHandler) CreateImageMessage(ctx *gin.Context) {
 			Position: count,
 		}
 
-		stream.Send(in)
-		count += 1
+		err = stream.Send(in)
+		if err != nil {
+			util.ErrorHandling(ctx, entity.ErrInternalServerError.New(err))
+			return
+		}
+
+		count++
 	}
 
 	messageOutput, err := stream.CloseAndRecv()
@@ -221,7 +232,7 @@ func (h *chatHandler) CreateImageMessage(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, res)
 }
 
-func (h *chatHandler) currentUser(ctx *gin.Context, userID string) (*pb.AuthResponse, error) {
+func (h *chatHandler) currentUser(ctx context.Context, userID string) (*pb.AuthResponse, error) {
 	out, err := h.authClient.GetAuth(ctx, &pb.Empty{})
 	if err != nil {
 		return nil, err

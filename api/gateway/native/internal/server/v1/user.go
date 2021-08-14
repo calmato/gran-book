@@ -34,8 +34,8 @@ func NewUserHandler(userConn *grpc.ClientConn) UserHandler {
 // ListFollow - フォロー一覧取得
 func (h *userHandler) ListFollow(ctx *gin.Context) {
 	userID := ctx.Param("userID")
-	limit := ctx.GetInt64(ctx.DefaultQuery("limit", entity.LIST_LIMIT_DEFAULT))
-	offset := ctx.GetInt64(ctx.DefaultQuery("offset", entity.LIST_OFFSET_DEFAULT))
+	limit := ctx.GetInt64(ctx.DefaultQuery("limit", entity.ListLimitDefault))
+	offset := ctx.GetInt64(ctx.DefaultQuery("offset", entity.ListOffsetDefault))
 
 	in := &pb.ListFollowRequest{
 		UserId: userID,
@@ -56,8 +56,8 @@ func (h *userHandler) ListFollow(ctx *gin.Context) {
 // ListFollower - フォロワー一覧取得
 func (h *userHandler) ListFollower(ctx *gin.Context) {
 	userID := ctx.Param("userID")
-	limit := ctx.GetInt64(ctx.DefaultQuery("limit", entity.LIST_LIMIT_DEFAULT))
-	offset := ctx.GetInt64(ctx.DefaultQuery("offset", entity.LIST_OFFSET_DEFAULT))
+	limit := ctx.GetInt64(ctx.DefaultQuery("limit", entity.ListLimitDefault))
+	offset := ctx.GetInt64(ctx.DefaultQuery("offset", entity.ListOffsetDefault))
 
 	in := &pb.ListFollowerRequest{
 		UserId: userID,

@@ -42,8 +42,8 @@ func NewBookHandler(bookConn *grpc.ClientConn, authConn *grpc.ClientConn, userCo
 
 // ListReview - 書籍のレビュー一覧取得
 func (h *bookHandler) ListReview(ctx *gin.Context) {
-	limit := ctx.GetInt64(ctx.DefaultQuery("limit", entity.LIST_LIMIT_DEFAULT))
-	offset := ctx.GetInt64(ctx.DefaultQuery("offset", entity.LIST_OFFSET_DEFAULT))
+	limit := ctx.GetInt64(ctx.DefaultQuery("limit", entity.ListLimitDefault))
+	offset := ctx.GetInt64(ctx.DefaultQuery("offset", entity.ListOffsetDefault))
 	bookID, err := strconv.ParseInt(ctx.Param("bookID"), 10, 64)
 	if err != nil {
 		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))

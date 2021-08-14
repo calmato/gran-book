@@ -12,7 +12,7 @@ func ErrorHandling(ctx *gin.Context, err error) {
 	// gRPCコードに変換 (ok: gRPCのレスポンス, ng: その他)
 	st, ok := status.FromError(err)
 	if ok {
-		ec := convertStatusGrpcToHttp(st)
+		ec := convertStatusGrpcToHTTP(st)
 		err = ec.New(err)
 	}
 
@@ -28,7 +28,7 @@ func IsNotFound(err error) bool {
 		return false
 	}
 
-	ec := convertStatusGrpcToHttp(st)
+	ec := convertStatusGrpcToHTTP(st)
 	return ec == entity.ErrNotFound
 }
 
@@ -70,7 +70,7 @@ func getHTTPError(err error) (int, *response.ErrorResponse) {
 	return res.StatusCode, res
 }
 
-func convertStatusGrpcToHttp(st *status.Status) entity.ErrorCode {
+func convertStatusGrpcToHTTP(st *status.Status) entity.ErrorCode {
 	switch st.Code() {
 	case codes.InvalidArgument:
 		return entity.ErrBadRequest
