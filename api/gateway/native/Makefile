@@ -8,8 +8,8 @@ TEST_PACKAGES := $(shell go list ./internal/... ./pkg/... | grep -v -e "pkg/meta
 
 setup:
 	wget -O - -nv https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v${GOLANGCI_VERSION}
-	go install github.com/golang/mock/gomock
-	go install github.com/golang/mock/mockgen
+	go install github.com/golang/mock/gomock@latest
+	go install github.com/golang/mock/mockgen@latest
 
 run:
 	go run ./cmd/main.go
