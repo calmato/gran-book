@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import { COLOR } from '~~/constants/theme';
+import { COLOR, FONT_SIZE } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
   boxLayout: {
@@ -17,6 +17,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: COLOR.TEXT_GRAY,
+    fontSize: FONT_SIZE.TEXT_INFO,
   },
   name: {
     marginLeft: 32,
