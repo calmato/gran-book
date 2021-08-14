@@ -1,7 +1,7 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { ReactElement } from 'react';
 import { StyleSheet, View, Image } from 'react-native';
-import { Button, colors, Text } from 'react-native-elements';
+import { Button, Text } from 'react-native-elements';
 import TitleLogoText from '~/components/atoms/TitleLogoText';
 import { RootStackParamList } from '~/types/navigation';
 import logo from '~~/assets/logo.png';
@@ -23,18 +23,9 @@ const styles = StyleSheet.create({
   subTitleStyle: {
     margin: 12,
   },
-  registerButton: {
+  signInButton: {
     width: 300,
     height: 50,
-  },
-  signInButton: {
-    borderColor: colors.grey0,
-    width: 120,
-    height: 30,
-  },
-  signInButtonFont: {
-    fontSize: 14,
-    color: colors.grey0,
   },
 });
 
@@ -54,15 +45,8 @@ const Onboarding = function Onboarding(props: Props): ReactElement {
       <Image style={styles.logo} source={logo} />
       <Button
         onPress={() => navigation.navigate('SignInSelect')}
-        title="新規登録する"
-        buttonStyle={styles.registerButton}
-      />
-      <Text style={{ marginTop: 30, marginBottom: 12 }}>既にIDをお持ちの方はこちら</Text>
-      <Button
-        title="サインイン"
+        title="サインイン / 新規登録"
         buttonStyle={styles.signInButton}
-        titleStyle={styles.signInButtonFont}
-        type="outline"
       />
       <Text style={{ margin: 30 }}>利用規約</Text>
     </View>
