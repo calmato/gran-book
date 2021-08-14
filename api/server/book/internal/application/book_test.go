@@ -794,7 +794,7 @@ func TestBookApplication_GetBookshelfByUserIDAndBookIDWithRelated(t *testing.T) 
 			},
 		},
 		{
-			name: "success: bookshelf is not found",
+			name: "success: review is not found",
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
 				mocks.BookRepository.EXPECT().
 					Get(ctx, bookshelf1.BookID).

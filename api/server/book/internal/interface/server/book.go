@@ -303,7 +303,7 @@ func (s *bookServer) ReadBookshelf(ctx context.Context, req *pb.ReadBookshelfReq
 }
 
 // ReadBookshelf - 読んでいる本の登録
-func (s *bookServer) ReaddingBookshelf(
+func (s *bookServer) ReadingBookshelf(
 	ctx context.Context, req *pb.ReadingBookshelfRequest,
 ) (*pb.BookshelfResponse, error) {
 	err := s.bookRequestValidation.ReadingBookshelf(req)
@@ -516,33 +516,6 @@ func getBookMapResponse(bs []*book.Book) *pb.BookMapResponse {
 }
 
 func getBookshelfResponse(bs *book.Bookshelf) *pb.BookshelfResponse {
-	authors := make([]*pb.BookshelfResponse_Author, len(bs.Book.Authors))
-	for i, a := range bs.Book.Authors {
-		author := &pb.BookshelfResponse_Author{
-			Name:     a.Name,
-			NameKana: a.NameKana,
-		}
-
-		authors[i] = author
-	}
-
-	book := &pb.BookshelfResponse_Book{
-		Id:             int64(bs.Book.ID),
-		Title:          bs.Book.Title,
-		TitleKana:      bs.Book.TitleKana,
-		Description:    bs.Book.Description,
-		Isbn:           bs.Book.Isbn,
-		Publisher:      bs.Book.Publisher,
-		PublishedOn:    bs.Book.PublishedOn,
-		ThumbnailUrl:   bs.Book.ThumbnailURL,
-		RakutenUrl:     bs.Book.RakutenURL,
-		RakutenSize:    bs.Book.RakutenSize,
-		RakutenGenreId: bs.Book.RakutenGenreID,
-		CreatedAt:      datetime.TimeToString(bs.Book.CreatedAt),
-		UpdatedAt:      datetime.TimeToString(bs.Book.UpdatedAt),
-		Authors:        authors,
-	}
-
 	res := &pb.BookshelfResponse{
 		Id:        int64(bs.ID),
 		BookId:    int64(bs.BookID),
@@ -552,7 +525,37 @@ func getBookshelfResponse(bs *book.Bookshelf) *pb.BookshelfResponse {
 		ReadOn:    datetime.DateToString(bs.ReadOn),
 		CreatedAt: datetime.TimeToString(bs.CreatedAt),
 		UpdatedAt: datetime.TimeToString(bs.UpdatedAt),
-		Book:      book,
+	}
+
+	if bs.Book != nil {
+		authors := make([]*pb.BookshelfResponse_Author, len(bs.Book.Authors))
+		for i, a := range bs.Book.Authors {
+			author := &pb.BookshelfResponse_Author{
+				Name:     a.Name,
+				NameKana: a.NameKana,
+			}
+
+			authors[i] = author
+		}
+
+		book := &pb.BookshelfResponse_Book{
+			Id:             int64(bs.Book.ID),
+			Title:          bs.Book.Title,
+			TitleKana:      bs.Book.TitleKana,
+			Description:    bs.Book.Description,
+			Isbn:           bs.Book.Isbn,
+			Publisher:      bs.Book.Publisher,
+			PublishedOn:    bs.Book.PublishedOn,
+			ThumbnailUrl:   bs.Book.ThumbnailURL,
+			RakutenUrl:     bs.Book.RakutenURL,
+			RakutenSize:    bs.Book.RakutenSize,
+			RakutenGenreId: bs.Book.RakutenGenreID,
+			CreatedAt:      datetime.TimeToString(bs.Book.CreatedAt),
+			UpdatedAt:      datetime.TimeToString(bs.Book.UpdatedAt),
+			Authors:        authors,
+		}
+
+		res.Book = book
 	}
 
 	if bs.Review != nil {
@@ -570,33 +573,6 @@ func getBookshelfResponse(bs *book.Bookshelf) *pb.BookshelfResponse {
 func getBookshelfListResponse(bss []*book.Bookshelf, limit, offset, total int) *pb.BookshelfListResponse {
 	bookshelves := make([]*pb.BookshelfListResponse_Bookshelf, len(bss))
 	for i, bs := range bss {
-		authors := make([]*pb.BookshelfListResponse_Author, len(bs.Book.Authors))
-		for j, a := range bs.Book.Authors {
-			author := &pb.BookshelfListResponse_Author{
-				Name:     a.Name,
-				NameKana: a.NameKana,
-			}
-
-			authors[j] = author
-		}
-
-		book := &pb.BookshelfListResponse_Book{
-			Id:             int64(bs.Book.ID),
-			Title:          bs.Book.Title,
-			TitleKana:      bs.Book.TitleKana,
-			Description:    bs.Book.Description,
-			Isbn:           bs.Book.Isbn,
-			Publisher:      bs.Book.Publisher,
-			PublishedOn:    bs.Book.PublishedOn,
-			ThumbnailUrl:   bs.Book.ThumbnailURL,
-			RakutenUrl:     bs.Book.RakutenURL,
-			RakutenSize:    bs.Book.RakutenSize,
-			RakutenGenreId: bs.Book.RakutenGenreID,
-			CreatedAt:      datetime.TimeToString(bs.CreatedAt),
-			UpdatedAt:      datetime.TimeToString(bs.UpdatedAt),
-			Authors:        authors,
-		}
-
 		bookshelf := &pb.BookshelfListResponse_Bookshelf{
 			Id:        int64(bs.ID),
 			BookId:    int64(bs.BookID),
@@ -606,7 +582,37 @@ func getBookshelfListResponse(bss []*book.Bookshelf, limit, offset, total int) *
 			ReadOn:    datetime.DateToString(bs.ReadOn),
 			CreatedAt: datetime.TimeToString(bs.CreatedAt),
 			UpdatedAt: datetime.TimeToString(bs.UpdatedAt),
-			Book:      book,
+		}
+
+		if bs.Book != nil {
+			authors := make([]*pb.BookshelfListResponse_Author, len(bs.Book.Authors))
+			for j, a := range bs.Book.Authors {
+				author := &pb.BookshelfListResponse_Author{
+					Name:     a.Name,
+					NameKana: a.NameKana,
+				}
+
+				authors[j] = author
+			}
+
+			book := &pb.BookshelfListResponse_Book{
+				Id:             int64(bs.Book.ID),
+				Title:          bs.Book.Title,
+				TitleKana:      bs.Book.TitleKana,
+				Description:    bs.Book.Description,
+				Isbn:           bs.Book.Isbn,
+				Publisher:      bs.Book.Publisher,
+				PublishedOn:    bs.Book.PublishedOn,
+				ThumbnailUrl:   bs.Book.ThumbnailURL,
+				RakutenUrl:     bs.Book.RakutenURL,
+				RakutenSize:    bs.Book.RakutenSize,
+				RakutenGenreId: bs.Book.RakutenGenreID,
+				CreatedAt:      datetime.TimeToString(bs.CreatedAt),
+				UpdatedAt:      datetime.TimeToString(bs.UpdatedAt),
+				Authors:        authors,
+			}
+
+			bookshelf.Book = book
 		}
 
 		bookshelves[i] = bookshelf

@@ -466,7 +466,7 @@ func (r *bookRepository) associateBook(tx *gorm.DB, b *book.Book) error {
 
 func (r *bookRepository) associateBookshelf(tx *gorm.DB, bs *book.Bookshelf) error {
 	// 現状の実装内容として、読んだ本のステータスの時のみレビューをすることになってるため
-	if bs.Status != book.ReadStatus {
+	if bs.Status != book.ReadStatus && bs.ReviewID == 0 {
 		return nil
 	}
 
