@@ -299,9 +299,9 @@ func (a *bookApplication) UpdateBookshelf(ctx context.Context, bs *book.Bookshel
 func (a *bookApplication) CreateOrUpdateBookshelf(ctx context.Context, bs *book.Bookshelf) error {
 	if bs.ID == 0 {
 		return a.CreateBookshelf(ctx, bs)
-	} else {
-		return a.UpdateBookshelf(ctx, bs)
 	}
+
+	return a.UpdateBookshelf(ctx, bs)
 }
 
 func (a *bookApplication) MultipleCreate(ctx context.Context, bs []*book.Book) error {
