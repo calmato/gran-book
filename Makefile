@@ -63,7 +63,7 @@ start-swagger:
 .PHONY: proto swagger migrate
 
 proto:
-	docker-compose run --rm proto make generate
+	docker-compose run --rm proto make build
 
 swagger:
 	docker-compose run --rm swagger_generator yarn generate

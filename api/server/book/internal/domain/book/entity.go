@@ -69,7 +69,7 @@ const (
 	NoneStatus    int = iota // 未登録
 	ReadStatus               // 読んだ本
 	ReadingStatus            // 読んでいる本
-	StackStatus              // 積読本
+	StackedStatus            // 積読本
 	WantStatus               // 欲しい本
 	ReleaseStatus            // 手放したい本
 )

@@ -8,16 +8,17 @@ import (
 	"strings"
 	"time"
 
-	"github.com/calmato/gran-book/api/server/user/internal/domain"
+	"firebase.google.com/go/v4/auth"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/user"
-	"github.com/calmato/gran-book/api/server/user/lib/firebase/authentication"
-	"github.com/calmato/gran-book/api/server/user/lib/metadata"
+	"github.com/calmato/gran-book/api/server/user/pkg/database"
+	"github.com/calmato/gran-book/api/server/user/pkg/firebase/authentication"
+	"github.com/calmato/gran-book/api/server/user/pkg/metadata"
 	"golang.org/x/xerrors"
 )
 
 type userRepository struct {
-	client *Client
+	client *database.Client
 	auth   *authentication.Auth
 }
 
@@ -32,7 +33,7 @@ type firebaseToken struct {
 }
 
 // NewUserRepository - UserRepositoryの生成
-func NewUserRepository(c *Client, auth *authentication.Auth) user.Repository {
+func NewUserRepository(c *database.Client, auth *authentication.Auth) user.Repository {
 	return &userRepository{
 		client: c,
 		auth:   auth,
@@ -40,12 +41,12 @@ func NewUserRepository(c *Client, auth *authentication.Auth) user.Repository {
 }
 
 func (r *userRepository) Authentication(ctx context.Context) (string, error) {
-	t, err := getToken(ctx)
+	t, err := r.getToken(ctx)
 	if err != nil {
 		return "", exception.Unauthorized.New(err)
 	}
 
-	fbToken, err := decodeToken(t)
+	fbToken, err := r.decodeToken(t)
 	if err != nil {
 		return "", exception.Unauthorized.New(err)
 	}
@@ -53,13 +54,10 @@ func (r *userRepository) Authentication(ctx context.Context) (string, error) {
 	return fbToken.Subject, nil
 }
 
-func (r *userRepository) List(ctx context.Context, q *domain.ListQuery) ([]*user.User, error) {
+func (r *userRepository) List(ctx context.Context, q *database.ListQuery) ([]*user.User, error) {
 	us := []*user.User{}
 
-	sql := r.client.db
-	db := r.client.getListQuery(sql, q)
-
-	err := db.Find(&us).Error
+	err := r.client.GetListQuery("users", r.client.DB, q).Scan(&us).Error
 	if err != nil {
 		return nil, exception.ErrorInDatastore.New(err)
 	}
@@ -67,23 +65,21 @@ func (r *userRepository) List(ctx context.Context, q *domain.ListQuery) ([]*user
 	return us, nil
 }
 
-func (r *userRepository) ListFollow(ctx context.Context, q *domain.ListQuery) ([]*user.Follow, error) {
+func (r *userRepository) ListFollow(ctx context.Context, q *database.ListQuery) ([]*user.Follow, error) {
 	fs := []*user.Follow{}
 
-	columns := []string{
+	fields := []string{
 		"relationships.follow_id",
 		"relationships.follower_id",
 		"users.username",
 		"users.thumbnail_url",
 		"users.self_introduction",
 	}
-	sql := r.client.db.
-		Table("relationships").
-		Select(strings.Join(columns, ", ")).
-		Joins("LEFT JOIN users ON relationships.follower_id = users.id")
-	db := r.client.getListQuery(sql, q)
-
-	err := db.Scan(&fs).Error
+	err := r.client.
+		GetListQuery("relationshops", r.client.DB, q).
+		Select(fields).
+		Joins("LEFT JOIN users ON relationships.follower_id = users.id").
+		Scan(&fs).Error
 	if err != nil {
 		return nil, exception.ErrorInDatastore.New(err)
 	}
@@ -91,23 +87,22 @@ func (r *userRepository) ListFollow(ctx context.Context, q *domain.ListQuery) ([
 	return fs, nil
 }
 
-func (r *userRepository) ListFollower(ctx context.Context, q *domain.ListQuery) ([]*user.Follower, error) {
+func (r *userRepository) ListFollower(ctx context.Context, q *database.ListQuery) ([]*user.Follower, error) {
 	fs := []*user.Follower{}
 
-	columns := []string{
+	fields := []string{
 		"relationships.follow_id",
 		"relationships.follower_id",
 		"users.username",
 		"users.thumbnail_url",
 		"users.self_introduction",
 	}
-	sql := r.client.db.
-		Table("relationships").
-		Select(strings.Join(columns, ", ")).
-		Joins("LEFT JOIN users ON relationships.follow_id = users.id")
-	db := r.client.getListQuery(sql, q)
 
-	err := db.Scan(&fs).Error
+	err := r.client.
+		GetListQuery("relationships", r.client.DB, q).
+		Select(fields).
+		Joins("LEFT JOIN users ON relationships.follow_id = users.id").
+		Scan(&fs).Error
 	if err != nil {
 		return nil, exception.ErrorInDatastore.New(err)
 	}
@@ -115,13 +110,13 @@ func (r *userRepository) ListFollower(ctx context.Context, q *domain.ListQuery) 
 	return fs, nil
 }
 
-func (r *userRepository) ListInstanceID(ctx context.Context, q *domain.ListQuery) ([]string, error) {
+func (r *userRepository) ListInstanceID(ctx context.Context, q *database.ListQuery) ([]string, error) {
 	instanceIDs := []string{}
 
-	sql := r.client.db.Table("users").Select("instance_id")
-	db := r.client.getListQuery(sql, q)
-
-	err := db.Scan(&instanceIDs).Error
+	err := r.client.
+		GetListQuery("users", r.client.DB, q).
+		Select("instance_id").
+		Scan(&instanceIDs).Error
 	if err != nil {
 		return nil, exception.ErrorInDatastore.New(err)
 	}
@@ -129,34 +124,79 @@ func (r *userRepository) ListInstanceID(ctx context.Context, q *domain.ListQuery
 	return instanceIDs, nil
 }
 
-func (r *userRepository) ListFollowerID(ctx context.Context, q *domain.ListQuery) ([]string, error) {
-	followerIDs := []string{}
+func (r *userRepository) ListFollowID(ctx context.Context, followerID string, followIDs ...string) ([]string, error) {
+	ids := []string{}
 
-	sql := r.client.db.Table("relationships").Select("follower_id")
-	db := r.client.getListQuery(sql, q)
+	sql := r.client.DB.
+		Table("relationships").
+		Select("follow_id").
+		Where("follower_id = ?", followerID)
 
-	err := db.Scan(&followerIDs).Error
+	if len(followIDs) > 0 {
+		sql = sql.Where("follow_id IN (?)", followIDs)
+	}
+
+	err := sql.Scan(&ids).Error
 	if err != nil {
 		return nil, exception.ErrorInDatastore.New(err)
 	}
 
-	return followerIDs, nil
+	return ids, nil
 }
 
-func (r *userRepository) ListCount(ctx context.Context, q *domain.ListQuery) (int, error) {
-	sql := r.client.db.Table("users")
-	return r.client.getListCount(sql, q)
+func (r *userRepository) ListFollowerID(ctx context.Context, followID string, followerIDs ...string) ([]string, error) {
+	ids := []string{}
+
+	sql := r.client.DB.
+		Table("relationships").
+		Select("follower_id").
+		Where("follow_id = ?", followID)
+
+	if len(followerIDs) > 0 {
+		sql = sql.Where("follower_id IN (?)", followerIDs)
+	}
+
+	err := sql.Scan(&ids).Error
+	if err != nil {
+		return nil, exception.ErrorInDatastore.New(err)
+	}
+
+	return ids, nil
 }
 
-func (r *userRepository) ListRelationshipCount(ctx context.Context, q *domain.ListQuery) (int, error) {
-	sql := r.client.db.Table("relationships")
-	return r.client.getListCount(sql, q)
+func (r *userRepository) Count(ctx context.Context, q *database.ListQuery) (int, error) {
+	total, err := r.client.GetListCount("users", r.client.DB, q)
+	if err != nil {
+		return 0, exception.ErrorInDatastore.New(err)
+	}
+
+	return total, nil
 }
 
-func (r *userRepository) Show(ctx context.Context, uid string) (*user.User, error) {
+func (r *userRepository) CountRelationship(ctx context.Context, q *database.ListQuery) (int, error) {
+	total, err := r.client.GetListCount("relationships", r.client.DB, q)
+	if err != nil {
+		return 0, exception.ErrorInDatastore.New(err)
+	}
+
+	return total, nil
+}
+
+func (r *userRepository) MultiGet(ctx context.Context, userIDs []string) ([]*user.User, error) {
+	us := []*user.User{}
+
+	err := r.client.DB.Table("users").Where("id IN (?)", userIDs).Find(&us).Error
+	if err != nil {
+		return nil, exception.NotFound.New(err)
+	}
+
+	return us, nil
+}
+
+func (r *userRepository) Get(ctx context.Context, userID string) (*user.User, error) {
 	u := &user.User{}
 
-	err := r.client.db.First(u, "id = ?", uid).Error
+	err := r.client.DB.Table("users").First(u, "id = ?", userID).Error
 	if err != nil {
 		return nil, exception.NotFound.New(err)
 	}
@@ -164,15 +204,58 @@ func (r *userRepository) Show(ctx context.Context, uid string) (*user.User, erro
 	return u, nil
 }
 
-func (r *userRepository) ShowRelationship(ctx context.Context, id int) (*user.Relationship, error) {
+func (r *userRepository) GetAdmin(ctx context.Context, userID string) (*user.User, error) {
+	u := &user.User{}
+
+	err := r.client.DB.
+		Table("users").
+		Where("role IN (?)", []int{user.AdminRole, user.DeveloperRole, user.OperatorRole}).
+		First(u, "id = ?", userID).Error
+	if err != nil {
+		return nil, exception.NotFound.New(err)
+	}
+
+	return u, nil
+}
+
+func (r *userRepository) GetRelationship(
+	ctx context.Context, followID string, followerID string,
+) (*user.Relationship, error) {
 	rs := &user.Relationship{}
 
-	err := r.client.db.First(rs, "id = ?", id).Error
+	err := r.client.DB.
+		Table("relationships").
+		First(rs, "follow_id = ? AND follower_id = ?", followID, followerID).Error
 	if err != nil {
 		return nil, exception.NotFound.New(err)
 	}
 
 	return rs, nil
+}
+
+func (r *userRepository) GetUserIDByEmail(ctx context.Context, email string) (string, error) {
+	uid, err := r.auth.GetUIDByEmail(ctx, email)
+	if err != nil {
+		return "", exception.NotFound.New(err)
+	}
+
+	return uid, nil
+}
+
+func (r *userRepository) GetRelationshipIDByUserID(
+	ctx context.Context, followID string, followerID string,
+) (int, error) {
+	rs := &user.Relationship{}
+
+	err := r.client.DB.
+		Table("relationships").
+		Select("id").
+		First(rs, "follow_id = ? AND follower_id = ?", followID, followerID).Error
+	if err != nil {
+		return 0, exception.NotFound.New(err)
+	}
+
+	return rs.ID, nil
 }
 
 func (r *userRepository) Create(ctx context.Context, u *user.User) error {
@@ -181,7 +264,7 @@ func (r *userRepository) Create(ctx context.Context, u *user.User) error {
 		return exception.ErrorInDatastore.New(err)
 	}
 
-	err = r.client.db.Create(&u).Error
+	err = r.client.DB.Table("users").Create(&u).Error
 	if err != nil {
 		return exception.ErrorInDatastore.New(err)
 	}
@@ -190,30 +273,25 @@ func (r *userRepository) Create(ctx context.Context, u *user.User) error {
 }
 
 func (r *userRepository) CreateWithOAuth(ctx context.Context, u *user.User) error {
-	au, err := r.auth.GetUserByUID(ctx, u.ID)
+	au, err := r.getAuth(ctx, u.ID)
 	if err != nil {
-		return exception.NotFound.New(err)
+		return exception.Unauthorized.New(err)
 	}
 
-	if au.UserInfo == nil {
-		err = xerrors.New("UserInfo is not exists in Firebase Authentication")
-		return exception.NotFound.New(err)
-	}
-
-	u.Username = getUsername(au.UserInfo.DisplayName, u.ID)
+	u.Username = r.getUsername(au.UserInfo.DisplayName, u.ID)
 	u.Email = au.UserInfo.Email
 	u.ThumbnailURL = au.UserInfo.PhotoURL
 
-	err = r.client.db.Create(&u).Error
+	err = r.client.DB.Table("users").Create(&u).Error
 	if err != nil {
-		return exception.ErrorInOtherAPI.New(err)
+		return exception.ErrorInDatastore.New(err)
 	}
 
 	return nil
 }
 
 func (r *userRepository) CreateRelationship(ctx context.Context, rs *user.Relationship) error {
-	err := r.client.db.Create(&rs).Error
+	err := r.client.DB.Table("relationships").Create(&rs).Error
 	if err != nil {
 		return exception.ErrorInDatastore.New(err)
 	}
@@ -222,14 +300,9 @@ func (r *userRepository) CreateRelationship(ctx context.Context, rs *user.Relati
 }
 
 func (r *userRepository) Update(ctx context.Context, u *user.User) error {
-	au, err := r.auth.GetUserByUID(ctx, u.ID)
+	au, err := r.getAuth(ctx, u.ID)
 	if err != nil {
-		return exception.NotFound.New(err)
-	}
-
-	if au.UserInfo == nil {
-		err = xerrors.New("UserInfo is not exists in Firebase Authentication")
-		return exception.ErrorInDatastore.New(err)
+		return exception.Unauthorized.New(err)
 	}
 
 	if u.Email != au.UserInfo.Email {
@@ -239,7 +312,7 @@ func (r *userRepository) Update(ctx context.Context, u *user.User) error {
 		}
 	}
 
-	err = r.client.db.Save(u).Error
+	err = r.client.DB.Table("users").Save(u).Error
 	if err != nil {
 		return exception.ErrorInDatastore.New(err)
 	}
@@ -256,22 +329,13 @@ func (r *userRepository) UpdatePassword(ctx context.Context, uid string, passwor
 	return nil
 }
 
-func (r *userRepository) Delete(ctx context.Context, uid string) error {
-	err := r.client.db.Where("id = ?", uid).Delete(&user.User{}).Error
+func (r *userRepository) Delete(ctx context.Context, userID string) error {
+	err := r.client.DB.Table("users").Where("id = ?", userID).Delete(&user.User{}).Error
 	if err != nil {
 		return exception.ErrorInDatastore.New(err)
 	}
 
-	err = r.auth.DeleteUser(ctx, uid)
-	if err != nil {
-		return exception.ErrorInDatastore.New(err)
-	}
-
-	return nil
-}
-
-func (r *userRepository) DeleteRelationship(ctx context.Context, id int) error {
-	err := r.client.db.Delete(&user.Relationship{}, id).Error
+	err = r.auth.DeleteUser(ctx, userID)
 	if err != nil {
 		return exception.ErrorInDatastore.New(err)
 	}
@@ -279,29 +343,29 @@ func (r *userRepository) DeleteRelationship(ctx context.Context, id int) error {
 	return nil
 }
 
-func (r *userRepository) GetUIDByEmail(ctx context.Context, email string) (string, error) {
-	uid, err := r.auth.GetUIDByEmail(ctx, email)
+func (r *userRepository) DeleteRelationship(ctx context.Context, relationshipID int) error {
+	err := r.client.DB.Table("relationships").Where("id = ?", relationshipID).Delete(&user.Relationship{}).Error
 	if err != nil {
-		return "", err
+		return exception.ErrorInDatastore.New(err)
 	}
 
-	return uid, nil
+	return nil
 }
 
-func (r *userRepository) GetRelationshipIDByUID(
-	ctx context.Context, followID string, followerID string,
-) (int, error) {
-	rs := &user.Relationship{}
-
-	err := r.client.db.Select("id").First(rs, "follow_id = ? AND follower_id = ?", followID, followerID).Error
+func (r *userRepository) getAuth(ctx context.Context, userID string) (*auth.UserRecord, error) {
+	au, err := r.auth.GetUserByUID(ctx, userID)
 	if err != nil {
-		return 0, exception.NotFound.New(err)
+		return nil, err
 	}
 
-	return rs.ID, nil
+	if au.UserInfo == nil {
+		return nil, xerrors.New("UserInfo is not exists in Firebase Authentication")
+	}
+
+	return au, nil
 }
 
-func getToken(ctx context.Context) (string, error) {
+func (r *userRepository) getToken(ctx context.Context) (string, error) {
 	authorization, err := metadata.Get(ctx, "Authorization")
 	if err != nil {
 		return "", err
@@ -315,7 +379,7 @@ func getToken(ctx context.Context) (string, error) {
 	return t, nil
 }
 
-func decodeToken(token string) (*firebaseToken, error) {
+func (r *userRepository) decodeToken(token string) (*firebaseToken, error) {
 	s := strings.Split(token, ".")
 	if len(s) != 3 {
 		return nil, xerrors.New("Authorization header is invalid.")
@@ -333,7 +397,7 @@ func decodeToken(token string) (*firebaseToken, error) {
 		return nil, err
 	}
 
-	err = verifyToken(fbToken)
+	err = r.verifyToken(fbToken)
 	if err != nil {
 		return nil, err
 	}
@@ -341,7 +405,7 @@ func decodeToken(token string) (*firebaseToken, error) {
 	return fbToken, nil
 }
 
-func verifyToken(t *firebaseToken) error {
+func (r *userRepository) verifyToken(t *firebaseToken) error {
 	now := time.Now().Unix()
 
 	verifyTokenMsg := "See https://firebase.google.com/docs/auth/admin/verify-id-tokens for details on how to " +
@@ -368,7 +432,7 @@ func verifyToken(t *firebaseToken) error {
 
 // OAuth認証による初回User登録時、UIDの先頭12文字を取得して作成
 // e.g.) 12345678-qwer-asdf-zxcv-uiophjklvbnm -> 12345678qwer
-func getUsername(displayName string, uid string) string {
+func (r *userRepository) getUsername(displayName string, uid string) string {
 	if displayName != "" {
 		return displayName
 	}

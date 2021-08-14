@@ -55,12 +55,13 @@ jobs:
 
       - name: Install gRPC tools
         run: |
+          export GOPATH=$(go env GOPATH)
           npm install -g grpc grpc-tools grpc_tools_node_protoc_ts
           make install
 
       - name: Generate proto
         run: |
-          make protoc-gateway GATEWAY_PATH='./../api/gateway/admin/src'
+          make generate-gateway GATEWAY_PATH='./../api/gateway/admin/src'
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2

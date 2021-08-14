@@ -57,8 +57,6 @@ chatRoomListResponse:
 chatMessageResponse:
   type: object
   properties:
-    id:
-      type: string
     text:
       type: string
     image:
