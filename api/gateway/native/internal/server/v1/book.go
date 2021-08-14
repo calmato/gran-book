@@ -56,14 +56,14 @@ func (h *bookHandler) ListReview(ctx *gin.Context) {
 		Offset: offset,
 	}
 
-	reviewsOuput, err := h.bookClient.ListBookReview(ctx, reviewsInput)
+	reviewsOutput, err := h.bookClient.ListBookReview(ctx, reviewsInput)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
 	}
 
-	userIDs := make([]string, len(reviewsOuput.GetReviews()))
-	for i, r := range reviewsOuput.GetReviews() {
+	userIDs := make([]string, len(reviewsOutput.GetReviews()))
+	for i, r := range reviewsOutput.GetReviews() {
 		userIDs[i] = r.GetUserId()
 	}
 
@@ -77,7 +77,7 @@ func (h *bookHandler) ListReview(ctx *gin.Context) {
 		return
 	}
 
-	res := h.getBookReviewListResponse(reviewsOuput, usersOutput)
+	res := h.getBookReviewListResponse(reviewsOutput, usersOutput)
 	ctx.JSON(http.StatusOK, res)
 }
 

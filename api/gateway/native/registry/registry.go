@@ -3,6 +3,7 @@ package registry
 import (
 	"github.com/calmato/gran-book/api/gateway/native/internal/server/util"
 	v1 "github.com/calmato/gran-book/api/gateway/native/internal/server/v1"
+	v2 "github.com/calmato/gran-book/api/gateway/native/internal/server/v2"
 	"github.com/calmato/gran-book/api/gateway/native/pkg/firebase/authentication"
 	"google.golang.org/grpc"
 )
@@ -15,6 +16,7 @@ type Registry struct {
 	V1Book        v1.BookHandler
 	V1Chat        v1.ChatHandler
 	V1User        v1.UserHandler
+	V2Book        v2.BookHandler
 }
 
 // NewRegistry - internalディレクトリ配下の依存関係の解決
@@ -23,22 +25,22 @@ func NewRegistry(
 	authServiceURL string, userServiceURL string, chatServiceURL string,
 	bookServiceURL string,
 ) (*Registry, error) {
-	v1AuthConn, err := grpc.Dial(authServiceURL, grpc.WithInsecure(), grpc.WithBlock())
+	authConn, err := grpc.Dial(authServiceURL, grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
 		return nil, err
 	}
 
-	v1UserConn, err := grpc.Dial(userServiceURL, grpc.WithInsecure(), grpc.WithBlock())
+	userConn, err := grpc.Dial(userServiceURL, grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
 		return nil, err
 	}
 
-	v1ChatConn, err := grpc.Dial(chatServiceURL, grpc.WithInsecure(), grpc.WithBlock())
+	chatConn, err := grpc.Dial(chatServiceURL, grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
 		return nil, err
 	}
 
-	v1BookConn, err := grpc.Dial(bookServiceURL, grpc.WithInsecure(), grpc.WithBlock())
+	bookConn, err := grpc.Dial(bookServiceURL, grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
 		return nil, err
 	}
@@ -46,9 +48,10 @@ func NewRegistry(
 	return &Registry{
 		Authenticator: util.NewAuthenticator(fa),
 		Health:        util.NewHealthHandler(),
-		V1Auth:        v1.NewAuthHandler(v1AuthConn),
-		V1Book:        v1.NewBookHandler(v1BookConn, v1AuthConn, v1UserConn),
-		V1Chat:        v1.NewChatHandler(v1ChatConn, v1AuthConn, v1UserConn),
-		V1User:        v1.NewUserHandler(v1UserConn),
+		V1Auth:        v1.NewAuthHandler(authConn),
+		V1Book:        v1.NewBookHandler(bookConn, authConn, userConn),
+		V1Chat:        v1.NewChatHandler(chatConn, authConn, userConn),
+		V1User:        v1.NewUserHandler(userConn),
+		V2Book:        v2.NewBookHandler(bookConn, authConn, userConn),
 	}, nil
 }
