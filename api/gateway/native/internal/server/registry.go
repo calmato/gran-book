@@ -19,6 +19,7 @@ type Registry struct {
 	V1Review      v1.ReviewHandler
 	V1User        v1.UserHandler
 	V2Book        v2.BookHandler
+	V2Bookshelf   v2.BookshelfHandler
 }
 
 // NewRegistry - internalディレクトリ配下の依存関係の解決
@@ -56,5 +57,6 @@ func NewRegistry(
 		V1Review:      v1.NewReviewHandler(bookConn, authConn, userConn),
 		V1User:        v1.NewUserHandler(userConn),
 		V2Book:        v2.NewBookHandler(bookConn, authConn, userConn),
+		V2Bookshelf:   v2.NewBookshelfHandler(bookConn, userConn),
 	}, nil
 }

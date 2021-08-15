@@ -37,6 +37,7 @@ func NewBookHandler(bookConn *grpc.ClientConn, authConn *grpc.ClientConn, userCo
 	}
 }
 
+// Get - 書籍情報取得
 func (h *bookHandler) Get(ctx *gin.Context) {
 	bookID := ctx.Param("bookID")
 	key := ctx.DefaultQuery("key", "id")

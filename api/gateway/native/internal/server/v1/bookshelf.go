@@ -45,7 +45,7 @@ func NewBookshelfHandler(
 	}
 }
 
-// List - 本棚の書籍一覧取得
+// List - 本棚の書籍一覧取得 ※廃止予定
 func (h *bookshelfHandler) List(ctx *gin.Context) {
 	limit := ctx.GetInt64(ctx.DefaultQuery("limit", entity.ListLimitDefault))
 	offset := ctx.GetInt64(ctx.DefaultQuery("offset", entity.ListOffsetDefault))
@@ -67,7 +67,7 @@ func (h *bookshelfHandler) List(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, res)
 }
 
-// Get - 本棚の書籍情報取得
+// Get - 本棚の書籍情報取得 ※廃止予定
 func (h *bookshelfHandler) Get(ctx *gin.Context) {
 	userID := ctx.Param("userID")
 	bookID, err := strconv.ParseInt(ctx.Param("bookID"), 10, 64)

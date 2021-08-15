@@ -85,6 +85,12 @@ func Router(reg *Registry, opts ...gin.HandlerFunc) *gin.Engine {
 		{
 			apiV2Book.GET("/:bookID", reg.V2Book.Get)
 		}
+		// Bookshelf Service
+		apiV2Bookshelf := apiV2.Group("/users/:userID/books")
+		{
+			apiV2Bookshelf.GET("", reg.V2Bookshelf.List)
+			apiV2Bookshelf.GET("/:bookID", reg.V2Bookshelf.Get)
+		}
 	}
 
 	r.NoRoute(func(c *gin.Context) {
