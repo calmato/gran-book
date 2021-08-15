@@ -2,7 +2,6 @@ package v1
 
 import (
 	"net/http"
-	"strconv"
 	"strings"
 
 	"github.com/calmato/gran-book/api/gateway/native/internal/entity"
@@ -15,9 +14,7 @@ import (
 )
 
 type BookHandler interface {
-	ListReview(ctx *gin.Context)
 	Get(ctx *gin.Context)
-	GetReview(ctx *gin.Context)
 	Create(ctx *gin.Context)
 	Update(ctx *gin.Context)
 }
@@ -25,60 +22,16 @@ type BookHandler interface {
 type bookHandler struct {
 	bookClient pb.BookServiceClient
 	authClient pb.AuthServiceClient
-	userClient pb.UserServiceClient
 }
 
-func NewBookHandler(bookConn *grpc.ClientConn, authConn *grpc.ClientConn, userConn *grpc.ClientConn) BookHandler {
+func NewBookHandler(bookConn *grpc.ClientConn, authConn *grpc.ClientConn) BookHandler {
 	bc := pb.NewBookServiceClient(bookConn)
 	ac := pb.NewAuthServiceClient(authConn)
-	uc := pb.NewUserServiceClient(userConn)
 
 	return &bookHandler{
 		bookClient: bc,
 		authClient: ac,
-		userClient: uc,
 	}
-}
-
-// ListReview - 書籍のレビュー一覧取得
-func (h *bookHandler) ListReview(ctx *gin.Context) {
-	limit := ctx.GetInt64(ctx.DefaultQuery("limit", entity.ListLimitDefault))
-	offset := ctx.GetInt64(ctx.DefaultQuery("offset", entity.ListOffsetDefault))
-	bookID, err := strconv.ParseInt(ctx.Param("bookID"), 10, 64)
-	if err != nil {
-		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
-		return
-	}
-
-	reviewsInput := &pb.ListBookReviewRequest{
-		BookId: bookID,
-		Limit:  limit,
-		Offset: offset,
-	}
-
-	reviewsOutput, err := h.bookClient.ListBookReview(ctx, reviewsInput)
-	if err != nil {
-		util.ErrorHandling(ctx, err)
-		return
-	}
-
-	userIDs := make([]string, len(reviewsOutput.GetReviews()))
-	for i, r := range reviewsOutput.GetReviews() {
-		userIDs[i] = r.GetUserId()
-	}
-
-	usersInput := &pb.MultiGetUserRequest{
-		UserIds: userIDs,
-	}
-
-	usersOutput, err := h.userClient.MultiGetUser(ctx, usersInput)
-	if err != nil {
-		util.ErrorHandling(ctx, err)
-		return
-	}
-
-	res := h.getBookReviewListResponse(reviewsOutput, usersOutput)
-	ctx.JSON(http.StatusOK, res)
 }
 
 // Get - 書籍情報取得 (ISBN指定) ※廃止予定
@@ -113,54 +66,6 @@ func (h *bookHandler) Get(ctx *gin.Context) {
 	}
 
 	res := h.getBookResponse(bookOutput, bookshelfOutput)
-	ctx.JSON(http.StatusOK, res)
-}
-
-// GetReview - 書籍のレビュー情報取得
-func (h *bookHandler) GetReview(ctx *gin.Context) {
-	bookID, err := strconv.ParseInt(ctx.Param("bookID"), 10, 64)
-	if err != nil {
-		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
-		return
-	}
-
-	reviewID, err := strconv.ParseInt(ctx.Param("reviewID"), 10, 64)
-	if err != nil {
-		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
-		return
-	}
-
-	bookInput := &pb.GetBookRequest{
-		BookId: bookID,
-	}
-
-	_, err = h.bookClient.GetBook(ctx, bookInput)
-	if err != nil {
-		util.ErrorHandling(ctx, err)
-		return
-	}
-
-	reviewInput := &pb.GetReviewRequest{
-		ReviewId: reviewID,
-	}
-
-	reviewOutput, err := h.bookClient.GetReview(ctx, reviewInput)
-	if err != nil {
-		util.ErrorHandling(ctx, err)
-		return
-	}
-
-	userInput := &pb.GetUserRequest{
-		UserId: reviewOutput.GetUserId(),
-	}
-
-	userOutput, err := h.userClient.GetUser(ctx, userInput)
-	if err != nil && !util.IsNotFound(err) {
-		util.ErrorHandling(ctx, err)
-		return
-	}
-
-	res := h.getBookReviewResponse(reviewOutput, userOutput)
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -314,59 +219,4 @@ func (h *bookHandler) getBookResponse(
 	}
 
 	return res
-}
-
-func (h *bookHandler) getBookReviewResponse(
-	reviewOutput *pb.ReviewResponse, userOutput *pb.UserResponse,
-) *response.BookReviewResponse {
-	user := &response.BookReviewUser{
-		ID:       reviewOutput.GetUserId(),
-		Username: "unknown",
-	}
-
-	if userOutput != nil {
-		user.Username = userOutput.GetUsername()
-		user.ThumbnailURL = userOutput.GetThumbnailUrl()
-	}
-
-	return &response.BookReviewResponse{
-		ID:         reviewOutput.GetId(),
-		Impression: reviewOutput.GetImpression(),
-		CreatedAt:  reviewOutput.GetCreatedAt(),
-		UpdatedAt:  reviewOutput.GetUpdatedAt(),
-		User:       user,
-	}
-}
-
-func (h *bookHandler) getBookReviewListResponse(
-	reviewsOutput *pb.ReviewListResponse, usersOutput *pb.UserMapResponse,
-) *response.BookReviewListResponse {
-	reviews := make([]*response.BookReviewListReview, len(reviewsOutput.GetReviews()))
-	for i, r := range reviewsOutput.GetReviews() {
-		user := &response.BookReviewListUser{
-			Username: "unknown",
-		}
-
-		if usersOutput.GetUsers()[r.GetUserId()] != nil {
-			user.Username = usersOutput.GetUsers()[r.GetUserId()].GetUsername()
-			user.ThumbnailURL = usersOutput.GetUsers()[r.GetUserId()].GetThumbnailUrl()
-		}
-
-		review := &response.BookReviewListReview{
-			ID:         r.GetId(),
-			Impression: r.GetImpression(),
-			CreatedAt:  r.GetCreatedAt(),
-			UpdatedAt:  r.GetUpdatedAt(),
-			User:       user,
-		}
-
-		reviews[i] = review
-	}
-
-	return &response.BookReviewListResponse{
-		Reviews: reviews,
-		Limit:   reviewsOutput.GetLimit(),
-		Offset:  reviewsOutput.GetOffset(),
-		Total:   reviewsOutput.GetTotal(),
-	}
 }

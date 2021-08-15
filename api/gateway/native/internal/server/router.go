@@ -58,9 +58,24 @@ func Router(reg *Registry, opts ...gin.HandlerFunc) *gin.Engine {
 			apiV1Book.POST("", reg.V1Book.Create)
 			apiV1Book.PATCH("", reg.V1Book.Update)
 			apiV1Book.GET("/:isbn", reg.V1Book.Get)
-			apiV1Book.GET("/:bookID/reviews", reg.V1Book.ListReview)
-			apiV1Book.GET("/:bookID/reviews/:reviewID", reg.V1Book.GetReview)
 		}
+		// Bookshelf Service
+		apiV1Bookshelf := apiV1.Group("/users/:userID/books")
+		{
+			apiV1Bookshelf.GET("", reg.V1Bookshelf.List)
+			apiV1Bookshelf.GET("/:bookID", reg.V1Bookshelf.Get)
+			apiV1Bookshelf.POST("/:bookID/read", reg.V1Bookshelf.Read)
+			apiV1Bookshelf.POST("/:bookID/reading", reg.V1Bookshelf.Reading)
+			apiV1Bookshelf.POST("/:bookID/stack", reg.V1Bookshelf.Stacked)
+			apiV1Bookshelf.POST("/:bookID/want", reg.V1Bookshelf.Want)
+			apiV1Bookshelf.POST("/:bookID/release", reg.V1Bookshelf.Release)
+			apiV1Bookshelf.DELETE("/:bookID", reg.V1Bookshelf.Delete)
+		}
+		// Other
+		apiV1.GET("/books/:bookID/reviews", reg.V1Review.ListByBook)
+		apiV1.GET("/books/:bookID/reviews/:reviewID", reg.V1Review.GetByBook)
+		apiV1.GET("/users/:userID/reviews", reg.V1Review.ListByUser)
+		apiV1.GET("/users/:userID/reviews/:reviewID", reg.V1Review.GetByUser)
 	}
 	// API v2 routes
 	apiV2 := authRequiredGroup.Group("/v2")

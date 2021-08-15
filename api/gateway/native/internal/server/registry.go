@@ -14,7 +14,9 @@ type Registry struct {
 	Health        util.HealthHandler
 	V1Auth        v1.AuthHandler
 	V1Book        v1.BookHandler
+	V1Bookshelf   v1.BookshelfHandler
 	V1Chat        v1.ChatHandler
+	V1Review      v1.ReviewHandler
 	V1User        v1.UserHandler
 	V2Book        v2.BookHandler
 }
@@ -22,8 +24,7 @@ type Registry struct {
 // NewRegistry - internalディレクトリ配下の依存関係の解決
 func NewRegistry(
 	fa *authentication.Auth,
-	authServiceURL string, userServiceURL string, chatServiceURL string,
-	bookServiceURL string,
+	authServiceURL string, userServiceURL string, chatServiceURL string, bookServiceURL string,
 ) (*Registry, error) {
 	authConn, err := grpc.Dial(authServiceURL, grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
@@ -49,8 +50,10 @@ func NewRegistry(
 		Authenticator: util.NewAuthenticator(fa),
 		Health:        util.NewHealthHandler(),
 		V1Auth:        v1.NewAuthHandler(authConn),
-		V1Book:        v1.NewBookHandler(bookConn, authConn, userConn),
+		V1Book:        v1.NewBookHandler(bookConn, authConn),
+		V1Bookshelf:   v1.NewBookshelfHandler(bookConn, authConn, userConn),
 		V1Chat:        v1.NewChatHandler(chatConn, authConn, userConn),
+		V1Review:      v1.NewReviewHandler(bookConn, authConn, userConn),
 		V1User:        v1.NewUserHandler(userConn),
 		V2Book:        v2.NewBookHandler(bookConn, authConn, userConn),
 	}, nil
