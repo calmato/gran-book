@@ -13,6 +13,9 @@ func Router(reg *Registry, opts ...gin.HandlerFunc) *gin.Engine {
 	r := gin.Default()
 	r.Use(opts...)
 
+	// non auth required routes
+	r.GET("/health", reg.Health.Check)
+
 	r.NoRoute(func(c *gin.Context) {
 		err := fmt.Errorf("not found")
 		util.ErrorHandling(c, entity.ErrNotFound.New(err))

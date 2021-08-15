@@ -4,7 +4,9 @@
 .PHONY: setup build install start stop down remove logs
 
 setup:
-	cp $(PWD)/.env.temp $(PWD)/.env
+	if [ ! -f $(PWD)/.env ]; then \
+		cp $(PWD)/.env.temp $(PWD)/.env; \
+	fi
 	$(MAKE) build
 	$(MAKE) install
 	$(MAKE) proto

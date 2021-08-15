@@ -1,5 +1,5 @@
 root = "."
-tmp_dir = "/var/log/gateway"
+tmp_dir = "tmp"
 
 [build]
   bin = "./app"
