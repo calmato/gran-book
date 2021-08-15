@@ -36,7 +36,7 @@ func NewBookHandler(bookConn *grpc.ClientConn, authConn *grpc.ClientConn) BookHa
 
 // Get - 書籍情報取得 (ISBN指定) ※廃止予定
 func (h *bookHandler) Get(ctx *gin.Context) {
-	isbn := ctx.Param("isbn")
+	isbn := ctx.Param("bookID")
 
 	authOutput, err := h.authClient.GetAuth(ctx, &pb.Empty{})
 	if err != nil {

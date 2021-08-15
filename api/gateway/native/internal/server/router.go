@@ -57,7 +57,7 @@ func Router(reg *Registry, opts ...gin.HandlerFunc) *gin.Engine {
 		{
 			apiV1Book.POST("", reg.V1Book.Create)
 			apiV1Book.PATCH("", reg.V1Book.Update)
-			apiV1Book.GET("/:isbn", reg.V1Book.Get)
+			apiV1Book.GET("/:bookID", reg.V1Book.Get)
 		}
 		// Bookshelf Service
 		apiV1Bookshelf := apiV1.Group("/users/:userID/books")
