@@ -8,7 +8,6 @@ import (
 	"github.com/calmato/gran-book/api/gateway/native/pkg/firebase"
 	"github.com/calmato/gran-book/api/gateway/native/pkg/firebase/authentication"
 	"github.com/calmato/gran-book/api/gateway/native/pkg/logger"
-	"github.com/calmato/gran-book/api/gateway/native/registry"
 	"github.com/gin-gonic/gin"
 	"google.golang.org/api/option"
 )
@@ -54,7 +53,7 @@ func Execute() error {
 	opts = append(opts, cm)
 
 	// 依存関係の解決
-	reg, err := registry.NewRegistry(
+	reg, err := server.NewRegistry(
 		fa,
 		env.AuthServiceURL, env.UserServiceURL, env.ChatServiceURL,
 		env.BookServiceURL,

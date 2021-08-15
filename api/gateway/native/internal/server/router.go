@@ -5,12 +5,11 @@ import (
 
 	"github.com/calmato/gran-book/api/gateway/native/internal/entity"
 	"github.com/calmato/gran-book/api/gateway/native/internal/server/util"
-	"github.com/calmato/gran-book/api/gateway/native/registry"
 	"github.com/gin-gonic/gin"
 )
 
 // Router - ルーティングの定義
-func Router(reg *registry.Registry, opts ...gin.HandlerFunc) *gin.Engine {
+func Router(reg *Registry, opts ...gin.HandlerFunc) *gin.Engine {
 	r := gin.Default()
 	r.Use(opts...)
 

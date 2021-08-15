@@ -1,4 +1,4 @@
-package registry
+package server
 
 import (
 	"github.com/calmato/gran-book/api/gateway/native/internal/server/util"
