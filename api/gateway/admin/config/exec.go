@@ -53,7 +53,7 @@ func Execute() error {
 	opts = append(opts, cm)
 
 	// 依存関係の解決
-	reg, err := server.NewRegistry(fa)
+	reg, err := server.NewRegistry(fa, env.AuthServiceURL)
 	if err != nil {
 		return err
 	}
