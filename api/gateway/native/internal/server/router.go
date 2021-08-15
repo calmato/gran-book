@@ -20,8 +20,21 @@ func Router(reg *Registry, opts ...gin.HandlerFunc) *gin.Engine {
 	r.GET("/health", reg.Health.Check)
 	r.POST("/v1/auth", reg.V1Auth.Create)
 
-	// API v1 routes
-	apiV1 := authRequiredGroup.Group("/v1")
+	// auth required routes
+	apiV1Router(reg, authRequiredGroup)
+	apiV2Router(reg, authRequiredGroup)
+
+	r.NoRoute(func(c *gin.Context) {
+		err := fmt.Errorf("not found")
+		util.ErrorHandling(c, entity.ErrNotFound.New(err))
+	})
+
+	return r
+}
+
+// apiV1Router - API v1 routes
+func apiV1Router(reg *Registry, rg *gin.RouterGroup) {
+	apiV1 := rg.Group("/v1")
 	{
 		// Auth Service
 		apiV1Auth := apiV1.Group("/auth")
@@ -77,8 +90,11 @@ func Router(reg *Registry, opts ...gin.HandlerFunc) *gin.Engine {
 		apiV1.GET("/users/:userID/reviews", reg.V1Review.ListByUser)
 		apiV1.GET("/users/:userID/reviews/:reviewID", reg.V1Review.GetByUser)
 	}
-	// API v2 routes
-	apiV2 := authRequiredGroup.Group("/v2")
+}
+
+// apiV2Router - API v2 routes
+func apiV2Router(reg *Registry, rg *gin.RouterGroup) {
+	apiV2 := rg.Group("/v2")
 	{
 		// Book Service
 		apiV2Book := apiV2.Group("/books")
@@ -92,11 +108,4 @@ func Router(reg *Registry, opts ...gin.HandlerFunc) *gin.Engine {
 			apiV2Bookshelf.GET("/:bookID", reg.V2Bookshelf.Get)
 		}
 	}
-
-	r.NoRoute(func(c *gin.Context) {
-		err := fmt.Errorf("not found")
-		util.ErrorHandling(c, entity.ErrNotFound.New(err))
-	})
-
-	return r
 }
