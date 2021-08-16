@@ -3,31 +3,32 @@ package repository
 import (
 	"context"
 
-	"github.com/calmato/gran-book/api/server/book/internal/domain"
 	"github.com/calmato/gran-book/api/server/book/internal/domain/book"
 	"github.com/calmato/gran-book/api/server/book/internal/domain/exception"
+	"github.com/calmato/gran-book/api/server/book/pkg/array"
+	"github.com/calmato/gran-book/api/server/book/pkg/database"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
 type bookRepository struct {
-	client *Client
+	client *database.Client
 }
 
 // NewBookRepository - BookRepositoryの生成
-func NewBookRepository(c *Client) book.Repository {
+func NewBookRepository(c *database.Client) book.Repository {
 	return &bookRepository{
 		client: c,
 	}
 }
 
-func (r *bookRepository) List(ctx context.Context, q *domain.ListQuery) ([]*book.Book, error) {
+func (r *bookRepository) List(ctx context.Context, q *database.ListQuery) ([]*book.Book, error) {
 	bs := []*book.Book{}
 
-	sql := r.client.db.Preload("Authors")
-	db := r.client.getListQuery(sql, q)
-
-	err := db.Find(&bs).Error
+	err := r.client.
+		GetListQuery("books", r.client.DB, q).
+		Preload("Authors").
+		Scan(&bs).Error
 	if err != nil {
 		return nil, exception.ErrorInDatastore.New(err)
 	}
@@ -35,13 +36,14 @@ func (r *bookRepository) List(ctx context.Context, q *domain.ListQuery) ([]*book
 	return bs, nil
 }
 
-func (r *bookRepository) ListBookshelf(ctx context.Context, q *domain.ListQuery) ([]*book.Bookshelf, error) {
+func (r *bookRepository) ListBookshelf(ctx context.Context, q *database.ListQuery) ([]*book.Bookshelf, error) {
 	bss := []*book.Bookshelf{}
 
-	sql := r.client.db.Preload("Book").Preload("Book.Authors")
-	db := r.client.getListQuery(sql, q)
-
-	err := db.Find(&bss).Error
+	err := r.client.
+		GetListQuery("bookshelves", r.client.DB, q).
+		Preload("Book").
+		Preload("Book.Authors").
+		Scan(&bss).Error
 	if err != nil {
 		return nil, exception.ErrorInDatastore.New(err)
 	}
@@ -49,13 +51,10 @@ func (r *bookRepository) ListBookshelf(ctx context.Context, q *domain.ListQuery)
 	return bss, nil
 }
 
-func (r *bookRepository) ListReview(ctx context.Context, q *domain.ListQuery) ([]*book.Review, error) {
+func (r *bookRepository) ListReview(ctx context.Context, q *database.ListQuery) ([]*book.Review, error) {
 	rvs := []*book.Review{}
 
-	sql := r.client.db
-	db := r.client.getListQuery(sql, q)
-
-	err := db.Find(&rvs).Error
+	err := r.client.GetListQuery("reviews", r.client.DB, q).Scan(&rvs).Error
 	if err != nil {
 		return nil, exception.ErrorInDatastore.New(err)
 	}
@@ -63,10 +62,8 @@ func (r *bookRepository) ListReview(ctx context.Context, q *domain.ListQuery) ([
 	return rvs, nil
 }
 
-func (r *bookRepository) ListCount(ctx context.Context, q *domain.ListQuery) (int, error) {
-	sql := r.client.db.Table("books")
-
-	total, err := r.client.getListCount(sql, q)
+func (r *bookRepository) Count(ctx context.Context, q *database.ListQuery) (int, error) {
+	total, err := r.client.GetListCount("books", r.client.DB, q)
 	if err != nil {
 		return 0, exception.ErrorInDatastore.New(err)
 	}
@@ -74,10 +71,8 @@ func (r *bookRepository) ListCount(ctx context.Context, q *domain.ListQuery) (in
 	return total, nil
 }
 
-func (r *bookRepository) ListBookshelfCount(ctx context.Context, q *domain.ListQuery) (int, error) {
-	sql := r.client.db.Table("bookshelves")
-
-	total, err := r.client.getListCount(sql, q)
+func (r *bookRepository) CountBookshelf(ctx context.Context, q *database.ListQuery) (int, error) {
+	total, err := r.client.GetListCount("bookshelves", r.client.DB, q)
 	if err != nil {
 		return 0, exception.ErrorInDatastore.New(err)
 	}
@@ -85,10 +80,8 @@ func (r *bookRepository) ListBookshelfCount(ctx context.Context, q *domain.ListQ
 	return total, nil
 }
 
-func (r *bookRepository) ListReviewCount(ctx context.Context, q *domain.ListQuery) (int, error) {
-	sql := r.client.db.Table("reviews")
-
-	total, err := r.client.getListCount(sql, q)
+func (r *bookRepository) CountReview(ctx context.Context, q *database.ListQuery) (int, error) {
+	total, err := r.client.GetListCount("reviews", r.client.DB, q)
 	if err != nil {
 		return 0, exception.ErrorInDatastore.New(err)
 	}
@@ -96,10 +89,21 @@ func (r *bookRepository) ListReviewCount(ctx context.Context, q *domain.ListQuer
 	return total, nil
 }
 
-func (r *bookRepository) Show(ctx context.Context, bookID int) (*book.Book, error) {
+func (r *bookRepository) MultiGet(ctx context.Context, bookIDs []int) ([]*book.Book, error) {
+	bs := []*book.Book{}
+
+	err := r.client.DB.Table("books").Where("id IN (?)", bookIDs).Find(&bs).Error
+	if err != nil {
+		return nil, exception.NotFound.New(err)
+	}
+
+	return bs, nil
+}
+
+func (r *bookRepository) Get(ctx context.Context, bookID int) (*book.Book, error) {
 	b := &book.Book{}
 
-	err := r.client.db.Preload("Authors").First(b, "id = ?", bookID).Error
+	err := r.client.DB.Table("books").Preload("Authors").First(b, "id = ?", bookID).Error
 	if err != nil {
 		return nil, exception.NotFound.New(err)
 	}
@@ -107,10 +111,10 @@ func (r *bookRepository) Show(ctx context.Context, bookID int) (*book.Book, erro
 	return b, nil
 }
 
-func (r *bookRepository) ShowByIsbn(ctx context.Context, isbn string) (*book.Book, error) {
+func (r *bookRepository) GetByIsbn(ctx context.Context, isbn string) (*book.Book, error) {
 	b := &book.Book{}
 
-	err := r.client.db.Preload("Authors").First(b, "isbn = ?", isbn).Error
+	err := r.client.DB.Table("books").Preload("Authors").First(b, "isbn = ?", isbn).Error
 	if err != nil {
 		return nil, exception.NotFound.New(err)
 	}
@@ -118,13 +122,26 @@ func (r *bookRepository) ShowByIsbn(ctx context.Context, isbn string) (*book.Boo
 	return b, nil
 }
 
-func (r *bookRepository) ShowBookshelfByUserIDAndBookID(
+func (r *bookRepository) GetBookIDByIsbn(ctx context.Context, isbn string) (int, error) {
+	b := &book.Book{}
+
+	err := r.client.DB.Table("books").Select("id").First(b, "isbn = ?", isbn).Error
+	if err != nil {
+		return 0, exception.NotFound.New(err)
+	}
+
+	return b.ID, nil
+}
+
+func (r *bookRepository) GetBookshelfByUserIDAndBookID(
 	ctx context.Context, userID string, bookID int,
 ) (*book.Bookshelf, error) {
 	b := &book.Bookshelf{}
 
-	err := r.client.db.
-		Preload("Book").Preload("Book.Authors").
+	err := r.client.DB.
+		Table("bookshelves").
+		Preload("Book").
+		Preload("Book.Authors").
 		First(b, "user_id = ? AND book_id = ?", userID, bookID).Error
 	if err != nil {
 		return nil, exception.NotFound.New(err)
@@ -133,10 +150,26 @@ func (r *bookRepository) ShowBookshelfByUserIDAndBookID(
 	return b, nil
 }
 
-func (r *bookRepository) ShowReview(ctx context.Context, reviewID int) (*book.Review, error) {
+func (r *bookRepository) GetBookshelfIDByUserIDAndBookID(
+	ctx context.Context, userID string, bookID int,
+) (int, error) {
+	b := &book.Bookshelf{}
+
+	err := r.client.DB.
+		Table("bookshelves").
+		Select("id").
+		First(b, "user_id = ? AND book_id = ?", userID, bookID).Error
+	if err != nil {
+		return 0, exception.NotFound.New(err)
+	}
+
+	return b.ID, nil
+}
+
+func (r *bookRepository) GetReview(ctx context.Context, reviewID int) (*book.Review, error) {
 	rv := &book.Review{}
 
-	err := r.client.db.First(rv, "id = ?", reviewID).Error
+	err := r.client.DB.Table("reviews").First(rv, "id = ?", reviewID).Error
 	if err != nil {
 		return nil, exception.NotFound.New(err)
 	}
@@ -144,12 +177,14 @@ func (r *bookRepository) ShowReview(ctx context.Context, reviewID int) (*book.Re
 	return rv, nil
 }
 
-func (r *bookRepository) ShowReviewByUserIDAndBookID(
+func (r *bookRepository) GetReviewByUserIDAndBookID(
 	ctx context.Context, userID string, bookID int,
 ) (*book.Review, error) {
 	rv := &book.Review{}
 
-	err := r.client.db.First(rv, "user_id = ? AND book_id = ?", userID, bookID).Error
+	err := r.client.DB.
+		Table("reviews").
+		First(rv, "user_id = ? AND book_id = ?", userID, bookID).Error
 	if err != nil {
 		return nil, exception.NotFound.New(err)
 	}
@@ -157,17 +192,46 @@ func (r *bookRepository) ShowReviewByUserIDAndBookID(
 	return rv, nil
 }
 
-func (r *bookRepository) ShowOrCreateAuthor(ctx context.Context, a *book.Author) error {
-	err := r.client.db.Table("authors").Where("name = ?", a.Name).FirstOrCreate(&a).Error
+func (r *bookRepository) GetReviewIDByUserIDAndBookID(
+	ctx context.Context, userID string, bookID int,
+) (int, error) {
+	rv := &book.Review{}
+
+	err := r.client.DB.
+		Table("reviews").
+		Select("id").
+		First(rv, "user_id = ? AND book_id = ?", userID, bookID).Error
 	if err != nil {
-		return exception.ErrorInDatastore.New(err)
+		return 0, exception.NotFound.New(err)
 	}
 
-	return nil
+	return rv.ID, nil
+}
+
+func (r *bookRepository) GetAuthorByName(ctx context.Context, name string) (*book.Author, error) {
+	a := &book.Author{}
+
+	err := r.client.DB.Table("authors").Where("name = ?", name).First(a).Error
+	if err != nil {
+		return nil, exception.ErrorInDatastore.New(err)
+	}
+
+	return a, nil
+}
+
+func (r *bookRepository) GetAuthorIDByName(ctx context.Context, name string) (int, error) {
+	a := &book.Author{}
+
+	err := r.client.DB.Table("authors").Select("id").First(a, "name = ?", name).Error
+	if err != nil {
+		return 0, exception.NotFound.New(err)
+	}
+
+	return a.ID, nil
 }
 
 func (r *bookRepository) Create(ctx context.Context, b *book.Book) error {
-	tx := r.client.db.Begin()
+	tx := r.client.DB.Begin()
 	defer func() {
 		if r := recover(); r != nil {
 			tx.Rollback()
@@ -178,13 +242,13 @@ func (r *bookRepository) Create(ctx context.Context, b *book.Book) error {
 		return err
 	}
 
-	err := tx.Omit(clause.Associations).Create(&b).Error
+	err := tx.Table("books").Omit(clause.Associations).Create(&b).Error
 	if err != nil {
 		tx.Rollback()
 		return exception.ErrorInDatastore.New(err)
 	}
 
-	err = associateBook(tx, b)
+	err = r.associateBook(tx, b)
 	if err != nil {
 		tx.Rollback()
 		return err
@@ -194,7 +258,7 @@ func (r *bookRepository) Create(ctx context.Context, b *book.Book) error {
 }
 
 func (r *bookRepository) CreateBookshelf(ctx context.Context, bs *book.Bookshelf) error {
-	tx := r.client.db.Begin()
+	tx := r.client.DB.Begin()
 	defer func() {
 		if r := recover(); r != nil {
 			tx.Rollback()
@@ -205,20 +269,20 @@ func (r *bookRepository) CreateBookshelf(ctx context.Context, bs *book.Bookshelf
 		return err
 	}
 
-	err := associateBookshelf(tx, bs)
+	err := r.associateBookshelf(tx, bs)
 	if err != nil {
 		tx.Rollback()
 		return err
 	}
 
 	if bs.ReadOn.IsZero() {
-		err = tx.Omit(clause.Associations, "read_on").Create(&bs).Error
+		err = tx.Table("bookshelves").Omit(clause.Associations, "read_on").Create(&bs).Error
 		if err != nil {
 			tx.Rollback()
 			return exception.ErrorInDatastore.New(err)
 		}
 	} else {
-		err = tx.Omit(clause.Associations).Create(&bs).Error
+		err = tx.Table("bookshelves").Omit(clause.Associations).Create(&bs).Error
 		if err != nil {
 			tx.Rollback()
 			return exception.ErrorInDatastore.New(err)
@@ -229,7 +293,16 @@ func (r *bookRepository) CreateBookshelf(ctx context.Context, bs *book.Bookshelf
 }
 
 func (r *bookRepository) CreateReview(ctx context.Context, rv *book.Review) error {
-	err := r.client.db.Create(&rv).Error
+	err := r.client.DB.Table("reviews").Create(&rv).Error
+	if err != nil {
+		return exception.ErrorInDatastore.New(err)
+	}
+
+	return nil
+}
+
+func (r *bookRepository) CreateAuthor(ctx context.Context, a *book.Author) error {
+	err := r.client.DB.Table("authors").Create(a).Error
 	if err != nil {
 		return exception.ErrorInDatastore.New(err)
 	}
@@ -238,7 +311,7 @@ func (r *bookRepository) CreateReview(ctx context.Context, rv *book.Review) erro
 }
 
 func (r *bookRepository) Update(ctx context.Context, b *book.Book) error {
-	tx := r.client.db.Begin()
+	tx := r.client.DB.Begin()
 	defer func() {
 		if r := recover(); r != nil {
 			tx.Rollback()
@@ -249,13 +322,13 @@ func (r *bookRepository) Update(ctx context.Context, b *book.Book) error {
 		return err
 	}
 
-	err := tx.Omit(clause.Associations).Save(&b).Error
+	err := tx.Table("books").Omit(clause.Associations).Save(&b).Error
 	if err != nil {
 		tx.Rollback()
 		return exception.ErrorInDatastore.New(err)
 	}
 
-	err = associateBook(tx, b)
+	err = r.associateBook(tx, b)
 	if err != nil {
 		tx.Rollback()
 		return err
@@ -265,7 +338,7 @@ func (r *bookRepository) Update(ctx context.Context, b *book.Book) error {
 }
 
 func (r *bookRepository) UpdateBookshelf(ctx context.Context, bs *book.Bookshelf) error {
-	tx := r.client.db.Begin()
+	tx := r.client.DB.Begin()
 	defer func() {
 		if r := recover(); r != nil {
 			tx.Rollback()
@@ -276,19 +349,19 @@ func (r *bookRepository) UpdateBookshelf(ctx context.Context, bs *book.Bookshelf
 		return err
 	}
 
-	err := associateBookshelf(tx, bs)
+	err := r.associateBookshelf(tx, bs)
 	if err != nil {
 		tx.Rollback()
 		return err
 	}
 
 	if bs.ReadOn.IsZero() {
-		err = r.client.db.Omit(clause.Associations, "read_on").Save(&bs).Error
+		err = r.client.DB.Table("bookshelves").Omit(clause.Associations, "read_on").Save(&bs).Error
 		if err != nil {
 			return exception.ErrorInDatastore.New(err)
 		}
 	} else {
-		err = r.client.db.Omit(clause.Associations).Save(&bs).Error
+		err = r.client.DB.Table("bookshelves").Omit(clause.Associations).Save(&bs).Error
 		if err != nil {
 			return exception.ErrorInDatastore.New(err)
 		}
@@ -298,7 +371,7 @@ func (r *bookRepository) UpdateBookshelf(ctx context.Context, bs *book.Bookshelf
 }
 
 func (r *bookRepository) UpdateReview(ctx context.Context, rv *book.Review) error {
-	err := r.client.db.Save(&rv).Error
+	err := r.client.DB.Save(&rv).Error
 	if err != nil {
 		return exception.ErrorInDatastore.New(err)
 	}
@@ -307,7 +380,7 @@ func (r *bookRepository) UpdateReview(ctx context.Context, rv *book.Review) erro
 }
 
 func (r *bookRepository) MultipleCreate(ctx context.Context, bs []*book.Book) error {
-	tx := r.client.db.Begin()
+	tx := r.client.DB.Begin()
 	defer func() {
 		if r := recover(); r != nil {
 			tx.Rollback()
@@ -319,13 +392,13 @@ func (r *bookRepository) MultipleCreate(ctx context.Context, bs []*book.Book) er
 	}
 
 	for _, b := range bs {
-		err := tx.Omit(clause.Associations).Create(b).Error
+		err := tx.Table("books").Omit(clause.Associations).Create(b).Error
 		if err != nil {
 			tx.Rollback()
 			return exception.ErrorInDatastore.New(err)
 		}
 
-		err = associateBook(tx, b)
+		err = r.associateBook(tx, b)
 		if err != nil {
 			tx.Rollback()
 			return err
@@ -336,7 +409,7 @@ func (r *bookRepository) MultipleCreate(ctx context.Context, bs []*book.Book) er
 }
 
 func (r *bookRepository) MultipleUpdate(ctx context.Context, bs []*book.Book) error {
-	tx := r.client.db.Begin()
+	tx := r.client.DB.Begin()
 	defer func() {
 		if r := recover(); r != nil {
 			tx.Rollback()
@@ -348,13 +421,13 @@ func (r *bookRepository) MultipleUpdate(ctx context.Context, bs []*book.Book) er
 	}
 
 	for _, b := range bs {
-		err := tx.Omit(clause.Associations).Save(b).Error
+		err := tx.Table("books").Omit(clause.Associations).Save(b).Error
 		if err != nil {
 			tx.Rollback()
 			return exception.ErrorInDatastore.New(err)
 		}
 
-		err = associateBook(tx, b)
+		err = r.associateBook(tx, b)
 		if err != nil {
 			tx.Rollback()
 			return err
@@ -365,7 +438,7 @@ func (r *bookRepository) MultipleUpdate(ctx context.Context, bs []*book.Book) er
 }
 
 func (r *bookRepository) Delete(ctx context.Context, bookID int) error {
-	err := r.client.db.Where("id = ?", bookID).Delete(&book.Book{}).Error
+	err := r.client.DB.Table("books").Where("id = ?", bookID).Delete(&book.Book{}).Error
 	if err != nil {
 		return exception.ErrorInDatastore.New(err)
 	}
@@ -374,7 +447,7 @@ func (r *bookRepository) Delete(ctx context.Context, bookID int) error {
 }
 
 func (r *bookRepository) DeleteBookshelf(ctx context.Context, bookshelfID int) error {
-	err := r.client.db.Where("id = ?", bookshelfID).Delete(&book.Bookshelf{}).Error
+	err := r.client.DB.Table("bookshelves").Where("id = ?", bookshelfID).Delete(&book.Bookshelf{}).Error
 	if err != nil {
 		return exception.ErrorInDatastore.New(err)
 	}
@@ -382,56 +455,8 @@ func (r *bookRepository) DeleteBookshelf(ctx context.Context, bookshelfID int) e
 	return nil
 }
 
-func (r *bookRepository) GetIDByIsbn(ctx context.Context, isbn string) (int, error) {
-	b := &book.Book{}
-
-	err := r.client.db.Select("id").First(b, "isbn = ?", isbn).Error
-	if err != nil {
-		return 0, exception.NotFound.New(err)
-	}
-
-	return b.ID, nil
-}
-
-func (r *bookRepository) GetAuthorIDByName(ctx context.Context, name string) (int, error) {
-	a := &book.Author{}
-
-	err := r.client.db.Select("id").First(a, "name = ?", name).Error
-	if err != nil {
-		return 0, exception.NotFound.New(err)
-	}
-
-	return a.ID, nil
-}
-
-func (r *bookRepository) GetBookshelfIDByUserIDAndBookID(
-	ctx context.Context, userID string, bookID int,
-) (int, error) {
-	b := &book.Bookshelf{}
-
-	err := r.client.db.Select("id").First(b, "user_id = ? AND book_id = ?", userID, bookID).Error
-	if err != nil {
-		return 0, exception.NotFound.New(err)
-	}
-
-	return b.ID, nil
-}
-
-func (r *bookRepository) GetReviewIDByUserIDAndBookID(
-	ctx context.Context, userID string, bookID int,
-) (int, error) {
-	rv := &book.Review{}
-
-	err := r.client.db.Select("id").First(rv, "user_id = ? AND book_id = ?", userID, bookID).Error
-	if err != nil {
-		return 0, exception.NotFound.New(err)
-	}
-
-	return rv.ID, nil
-}
-
-func associateBook(tx *gorm.DB, b *book.Book) error {
-	err := associateAuthor(tx, b)
+func (r *bookRepository) associateBook(tx *gorm.DB, b *book.Book) error {
+	err := r.associateAuthor(tx, b)
 	if err != nil {
 		return err
 	}
@@ -439,13 +464,13 @@ func associateBook(tx *gorm.DB, b *book.Book) error {
 	return nil
 }
 
-func associateBookshelf(tx *gorm.DB, bs *book.Bookshelf) error {
+func (r *bookRepository) associateBookshelf(tx *gorm.DB, bs *book.Bookshelf) error {
 	// 現状の実装内容として、読んだ本のステータスの時のみレビューをすることになってるため
-	if bs.Status != book.ReadStatus {
+	if bs.Status != book.ReadStatus && bs.ReviewID == 0 {
 		return nil
 	}
 
-	err := associateReview(tx, bs)
+	err := r.associateReview(tx, bs)
 	if err != nil {
 		return err
 	}
@@ -455,12 +480,14 @@ func associateBookshelf(tx *gorm.DB, bs *book.Bookshelf) error {
 	return nil
 }
 
-func associateAuthor(tx *gorm.DB, b *book.Book) error {
+func (r *bookRepository) associateAuthor(tx *gorm.DB, b *book.Book) error {
 	beforeAuthorIDs := []int{}
 
 	// 既存の関連レコード取得
-	db := tx.Table("authors_books").Select("author_id").Where("book_id = ?", b.ID)
-	err := db.Scan(&beforeAuthorIDs).Error
+	err := tx.
+		Table("authors_books").
+		Select("author_id").
+		Where("book_id = ?", b.ID).Scan(&beforeAuthorIDs).Error
 	if err != nil {
 		return exception.ErrorInDatastore.New(err)
 	}
@@ -473,9 +500,11 @@ func associateAuthor(tx *gorm.DB, b *book.Book) error {
 
 	// 不要なもの削除
 	for _, authorID := range beforeAuthorIDs {
-		if !isContain(authorID, currentAuthorIDs) {
-			sql := "DELETE FROM authors_books WHERE book_id = ? AND author_id = ?"
-			err := tx.Exec(sql, b.ID, authorID).Error
+		if isExists, _ := array.Contains(authorID, currentAuthorIDs); !isExists {
+			err := tx.
+				Table("authors_books").
+				Where("book_id = ? AND author_id = ?", b.ID, authorID).
+				Delete(&book.BookAuthor{}).Error
 			if err != nil {
 				return exception.ErrorInDatastore.New(err)
 			}
@@ -484,7 +513,7 @@ func associateAuthor(tx *gorm.DB, b *book.Book) error {
 
 	// 既存レコードとしてない場合、新たに関連レコードの作成
 	for _, a := range b.Authors {
-		if isContain(a.ID, beforeAuthorIDs) {
+		if isExists, _ := array.Contains(beforeAuthorIDs, a.ID); isExists {
 			continue
 		}
 
@@ -504,7 +533,7 @@ func associateAuthor(tx *gorm.DB, b *book.Book) error {
 	return nil
 }
 
-func associateReview(tx *gorm.DB, bs *book.Bookshelf) error {
+func (r *bookRepository) associateReview(tx *gorm.DB, bs *book.Bookshelf) error {
 	if bs.Review == nil {
 		return nil
 	}
@@ -513,28 +542,18 @@ func associateReview(tx *gorm.DB, bs *book.Bookshelf) error {
 		bs.Review.CreatedAt = bs.UpdatedAt
 		bs.Review.UpdatedAt = bs.UpdatedAt
 
-		err := tx.Create(&bs.Review).Error
+		err := tx.Table("reviews").Create(&bs.Review).Error
 		if err != nil {
 			return exception.ErrorInDatastore.New(err)
 		}
 	} else {
 		bs.Review.UpdatedAt = bs.UpdatedAt
 
-		err := tx.Save(&bs.Review).Error
+		err := tx.Table("reviews").Save(&bs.Review).Error
 		if err != nil {
 			return exception.ErrorInDatastore.New(err)
 		}
 	}
 
 	return nil
-}
-
-func isContain(target int, ids []int) bool {
-	for _, id := range ids {
-		if target == id {
-			return true
-		}
-	}
-
-	return false
 }

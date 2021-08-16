@@ -4,7 +4,9 @@
 .PHONY: setup build install start stop down remove logs
 
 setup:
-	cp $(PWD)/.env.temp $(PWD)/.env
+	if [ ! -f $(PWD)/.env ]; then \
+		cp $(PWD)/.env.temp $(PWD)/.env; \
+	fi
 	$(MAKE) build
 	$(MAKE) install
 	$(MAKE) proto
@@ -63,7 +65,7 @@ start-swagger:
 .PHONY: proto swagger migrate
 
 proto:
-	docker-compose run --rm proto make generate
+	docker-compose run --rm proto make build
 
 swagger:
 	docker-compose run --rm swagger_generator yarn generate

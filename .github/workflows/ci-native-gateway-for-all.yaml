@@ -23,8 +23,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node: ['^16.1']
-        golang: ['^1.16.3']
+        golang: ['^1.16.7']
 
     steps:
       - name: Check out code
@@ -32,11 +31,6 @@ jobs:
 
       - name: Use Golang ${{ matrix.golang }}
         uses: actions/setup-go@v2
-
-      - name: Use Node.js ${{ matrix.node }}
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node }}
 
       - name: Install protobuf
         run: |
@@ -55,18 +49,20 @@ jobs:
 
       - name: Install gRPC tools
         run: |
-          npm install -g grpc grpc-tools grpc_tools_node_protoc_ts
+          export GOPATH=$(go env GOPATH)
           make install
 
       - name: Generate proto
         run: |
-          make protoc-gateway GATEWAY_PATH='./../api/gateway/native/src'
+          export PATH="$PATH:$(go env GOPATH)/bin"
+          make protoc
+          make generate SERVICE_PATH='./../api/gateway/native'
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: artifact-native-gateway-${ARTIFACT_TAG}
-          path: api/gateway/native/src/proto
+          name: artifact-${ARTIFACT_TAG}
+          path: api/gateway/native/proto
 
   build_and_test:
     name: Build and Test
@@ -80,43 +76,52 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest] # exclude: macos-latest, windows-latest
-        node: [16.1]
+        golang: ['^1.16.7']
 
     steps:
       - name: Check out code
         uses: actions/checkout@v2
 
-      - name: Use Node.js ${{ matrix.node }}
-        uses: actions/setup-node@v2
+      - name: Use Golang ${{ matrix.golang }}
+        uses: actions/setup-go@v2
         with:
-          node-version: ${{ matrix.node }}
+          go-version: ${{ matrix.golang }}
 
       - name: Download artifact for setup proto
         uses: actions/download-artifact@v2
         with:
-          name: artifact-native-gateway-${ARTIFACT_TAG}
-          path: api/gateway/native/src/proto
+          name: artifact-${ARTIFACT_TAG}
+          path: api/gateway/native/proto
 
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
+      - name: Check golang version
+        run: go version
 
-      - uses: actions/cache@v2
-        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+      - name: Restore cache
+        uses: actions/cache@v2
         with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
           restore-keys: |
-            ${{ runner.os }}-yarn-
+            ${{ runner.os }}-go-
 
-      - name: Install
-        run: yarn --check-files --frozen-lockfile --non-interactive
+      - name: Download modules
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: go mod download
+
+      - name: Setup
+        run: make setup
+
+      - name: Fmt
+        run: make fmt
+
+      - name: Vet
+        run: make vet
 
       - name: Lint
-        run: yarn lint
+        run: make lint
 
       - name: Test
-        run: yarn test
+        run: make test
 
       - name: Build
-        run: yarn build
+        run: make build

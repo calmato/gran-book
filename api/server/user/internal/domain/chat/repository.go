@@ -3,12 +3,12 @@ package chat
 import (
 	"context"
 
-	"github.com/calmato/gran-book/api/server/user/internal/domain"
+	"github.com/calmato/gran-book/api/server/user/pkg/firebase/firestore"
 )
 
 // Repository - Chatレポジトリ
 type Repository interface {
-	ListRoom(ctx context.Context, q *domain.ListQuery, uid string) ([]*Room, error)
+	ListRoom(ctx context.Context, p *firestore.Params, qs []*firestore.Query) ([]*Room, error)
 	GetRoom(ctx context.Context, roomID string) (*Room, error)
 	CreateRoom(ctx context.Context, cr *Room) error
 	UpdateRoom(ctx context.Context, cr *Room) error

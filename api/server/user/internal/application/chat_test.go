@@ -2,293 +2,438 @@ package application
 
 import (
 	"context"
-	"reflect"
 	"testing"
-	"time"
 
-	"github.com/calmato/gran-book/api/server/user/internal/application/input"
-	"github.com/calmato/gran-book/api/server/user/internal/domain"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/chat"
-	mock_validation "github.com/calmato/gran-book/api/server/user/mock/application/validation"
-	mock_chat "github.com/calmato/gran-book/api/server/user/mock/domain/chat"
-	mock_user "github.com/calmato/gran-book/api/server/user/mock/domain/user"
+	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
+	"github.com/calmato/gran-book/api/server/user/pkg/firebase/firestore"
+	"github.com/calmato/gran-book/api/server/user/pkg/test"
 	"github.com/golang/mock/gomock"
+	"github.com/stretchr/testify/require"
+	"golang.org/x/xerrors"
 )
 
 func TestChatApplication_ListRoom(t *testing.T) {
+	t.Parallel()
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	room1 := testChatRoom("room01")
+	room2 := testChatRoom("room02")
+
 	type args struct {
-		uid string
+		userID string
+		params *firestore.Params
 	}
 	type want struct {
 		rooms []*chat.Room
 		err   error
 	}
-
-	current := time.Now().Local()
-	testCases := map[string]struct {
-		args args
-		want want
+	testCases := []struct {
+		name  string
+		setup func(context.Context, *testing.T, *test.Mocks)
+		args  args
+		want  want
 	}{
-		"ok": {
+		{
+			name: "success",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.ChatRepository.EXPECT().
+					ListRoom(ctx, gomock.Any(), gomock.Any()).
+					Return([]*chat.Room{room1, room2}, nil)
+			},
 			args: args{
-				uid: "00000000-0000-0000-0000-000000000000",
+				userID: "user01",
+				params: &firestore.Params{},
 			},
 			want: want{
-				rooms: []*chat.Room{
-					{
-						ID:        "11111111-1111-1111-1111-111111111111",
-						UserIDs:   []string{"00000000-0000-0000-0000-000000000000"},
-						CreatedAt: current,
-						UpdatedAt: current,
-					},
-				},
-				err: nil,
+				rooms: []*chat.Room{room1, room2},
+				err:   nil,
 			},
 		},
 	}
 
-	for name, tc := range testCases {
-		ctx, cancel := context.WithCancel(context.Background())
-		defer cancel()
+	for _, tt := range testCases {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			mocks := test.NewMocks(ctrl)
+			tt.setup(ctx, t, mocks)
+			target := NewChatApplication(
+				mocks.ChatDomainValidation,
+				mocks.ChatRepository,
+				mocks.ChatUploader,
+			)
 
-		ctrl := gomock.NewController(t)
-		defer ctrl.Finish()
-
-		q := &domain.ListQuery{
-			Order: &domain.QueryOrder{
-				By:        "updatedAt",
-				Direction: "desc",
-			},
-		}
-
-		crvm := mock_validation.NewMockChatRequestValidation(ctrl)
-
-		csm := mock_chat.NewMockService(ctrl)
-		csm.EXPECT().ListRoom(ctx, q, tc.args.uid).Return(tc.want.rooms, tc.want.err)
-
-		usm := mock_user.NewMockService(ctrl)
-
-		t.Run(name, func(t *testing.T) {
-			target := NewChatApplication(crvm, csm, usm)
-
-			rooms, err := target.ListRoom(ctx, tc.args.uid)
-			if !reflect.DeepEqual(err, tc.want.err) {
-				t.Fatalf("want %#v, but %#v", tc.want.err, err)
+			crs, err := target.ListRoom(ctx, tt.args.userID, tt.args.params)
+			if tt.want.err != nil {
+				require.Equal(t, tt.want.err.Error(), err.Error())
+				require.Equal(t, tt.want.rooms, crs)
 				return
 			}
-
-			if !reflect.DeepEqual(rooms, tc.want.rooms) {
-				t.Fatalf("want %#v, but %#v", tc.want.rooms, rooms)
-				return
-			}
+			require.NoError(t, err)
+			require.Equal(t, tt.want.rooms, crs)
 		})
 	}
 }
 
-func TestChatApplication_CreateRoom(t *testing.T) {
+func TestChatApplication_GetRoom(t *testing.T) {
+	t.Parallel()
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	room1 := testChatRoom("room01")
+	room1.UserIDs = append(room1.UserIDs, "user01")
+
 	type args struct {
-		uid   string
-		input *input.CreateRoom
+		roomID string
+		userID string
 	}
 	type want struct {
 		room *chat.Room
 		err  error
 	}
-
-	testCases := map[string]struct {
-		args args
-		want want
+	testCases := []struct {
+		name  string
+		setup func(context.Context, *testing.T, *test.Mocks)
+		args  args
+		want  want
 	}{
-		"ok": {
+		{
+			name: "success",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.ChatRepository.EXPECT().
+					GetRoom(ctx, "room01").
+					Return(room1, nil)
+			},
 			args: args{
-				uid: "00000000-0000-0000-0000-000000000000",
-				input: &input.CreateRoom{
-					UserIDs: []string{"00000000-0000-0000-0000-000000000000"},
-				},
+				roomID: "room01",
+				userID: "user01",
 			},
 			want: want{
-				room: &chat.Room{
-					UserIDs: []string{"00000000-0000-0000-0000-000000000000"},
-				},
-				err: nil,
+				room: room1,
+				err:  nil,
+			},
+		},
+		{
+			name: "failed: forbidden",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.ChatRepository.EXPECT().
+					GetRoom(ctx, "room01").
+					Return(&chat.Room{ID: "room01"}, nil)
+			},
+			args: args{
+				roomID: "room01",
+				userID: "user01",
+			},
+			want: want{
+				room: nil,
+				err:  exception.Forbidden.New(xerrors.New("This user is not join the room")),
 			},
 		},
 	}
 
-	for name, tc := range testCases {
-		ctx, cancel := context.WithCancel(context.Background())
-		defer cancel()
+	for _, tt := range testCases {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			mocks := test.NewMocks(ctrl)
+			tt.setup(ctx, t, mocks)
+			target := NewChatApplication(
+				mocks.ChatDomainValidation,
+				mocks.ChatRepository,
+				mocks.ChatUploader,
+			)
 
-		ctrl := gomock.NewController(t)
-		defer ctrl.Finish()
-
-		crvm := mock_validation.NewMockChatRequestValidation(ctrl)
-		crvm.EXPECT().CreateRoom(tc.args.input).Return(nil)
-
-		csm := mock_chat.NewMockService(ctrl)
-		csm.EXPECT().ValidationRoom(ctx, tc.want.room).Return(nil)
-		csm.EXPECT().PushCreateRoom(ctx, tc.want.room).Return(nil)
-		csm.EXPECT().CreateRoom(ctx, tc.want.room).Return(tc.want.err)
-
-		usm := mock_user.NewMockService(ctrl)
-		usm.EXPECT().ListInstanceID(ctx, tc.want.room.UserIDs).Return(tc.want.room.InstanceIDs, nil)
-
-		t.Run(name, func(t *testing.T) {
-			target := NewChatApplication(crvm, csm, usm)
-
-			room, err := target.CreateRoom(ctx, tc.args.input, tc.args.uid)
-			if !reflect.DeepEqual(err, tc.want.err) {
-				t.Fatalf("want %#v, but %#v", tc.want.err, err)
+			cr, err := target.GetRoom(ctx, tt.args.roomID, tt.args.userID)
+			if tt.want.err != nil {
+				require.Equal(t, tt.want.err.Error(), err.Error())
+				require.Equal(t, tt.want.room, cr)
 				return
 			}
-
-			if !reflect.DeepEqual(room, tc.want.room) {
-				t.Fatalf("want %#v, but %#v", tc.want.room, room)
-				return
-			}
+			require.NoError(t, err)
+			require.Equal(t, tt.want.room, cr)
 		})
 	}
 }
 
-func TestChatApplication_CreateTextMessage(t *testing.T) {
+func TestChatApplication_CreateRoom(t *testing.T) {
+	t.Parallel()
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
 	type args struct {
-		uid    string
-		roomID string
-		input  *input.CreateTextMessage
+		room *chat.Room
 	}
 	type want struct {
-		message *chat.Message
-		err     error
+		err error
+	}
+	testCases := []struct {
+		name  string
+		setup func(context.Context, *testing.T, *test.Mocks)
+		args  args
+		want  want
+	}{
+		{
+			name: "success",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.ChatDomainValidation.EXPECT().
+					Room(ctx, gomock.Any()).
+					Return(nil)
+				mocks.ChatRepository.EXPECT().
+					CreateRoom(ctx, gomock.Any()).
+					Return(nil)
+			},
+			args: args{
+				room: &chat.Room{
+					UserIDs: []string{"user01"},
+				},
+			},
+			want: want{
+				err: nil,
+			},
+		},
+		{
+			name: "failed: domain validation",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.ChatDomainValidation.EXPECT().
+					Room(ctx, gomock.Any()).
+					Return(exception.InvalidDomainValidation.New(test.ErrMock))
+			},
+			args: args{
+				room: &chat.Room{
+					UserIDs: []string{"user01"},
+				},
+			},
+			want: want{
+				err: exception.InvalidDomainValidation.New(test.ErrMock),
+			},
+		},
 	}
 
-	testCases := map[string]struct {
-		args args
-		want want
+	for _, tt := range testCases {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			mocks := test.NewMocks(ctrl)
+			tt.setup(ctx, t, mocks)
+			target := NewChatApplication(
+				mocks.ChatDomainValidation,
+				mocks.ChatRepository,
+				mocks.ChatUploader,
+			)
+
+			err := target.CreateRoom(ctx, tt.args.room)
+			if tt.want.err != nil {
+				require.Equal(t, tt.want.err.Error(), err.Error())
+				return
+			}
+			require.NoError(t, err)
+			require.NotEqual(t, tt.args.room.ID, "")
+			require.NotZero(t, tt.args.room.CreatedAt)
+			require.NotZero(t, tt.args.room.UpdatedAt)
+		})
+	}
+}
+
+func TestChatApplication_CreateMessage(t *testing.T) {
+	t.Parallel()
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	room1 := testChatRoom("room01")
+
+	type args struct {
+		room    *chat.Room
+		message *chat.Message
+	}
+	type want struct {
+		err error
+	}
+	testCases := []struct {
+		name  string
+		setup func(context.Context, *testing.T, *test.Mocks)
+		args  args
+		want  want
 	}{
-		"ok": {
+		{
+			name: "success",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.ChatDomainValidation.EXPECT().
+					Message(ctx, gomock.Any()).
+					Return(nil)
+				mocks.ChatRepository.EXPECT().
+					CreateMessage(ctx, "room01", gomock.Any()).
+					Return(nil)
+				mocks.ChatRepository.EXPECT().
+					UpdateRoom(ctx, gomock.Any()).
+					Return(nil)
+			},
 			args: args{
-				uid:    "00000000-0000-0000-0000-000000000000",
-				roomID: "00000000-0000-0000-0000-000000000000",
-				input: &input.CreateTextMessage{
+				room: room1,
+				message: &chat.Message{
 					Text: "テストメッセージ",
 				},
 			},
 			want: want{
-				message: &chat.Message{
-					Text:   "テストメッセージ",
-					UserID: "00000000-0000-0000-0000-000000000000",
-				},
 				err: nil,
+			},
+		},
+		{
+			name: "failed: domain validation",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.ChatDomainValidation.EXPECT().
+					Message(ctx, gomock.Any()).
+					Return(exception.InvalidDomainValidation.New(test.ErrMock))
+			},
+			args: args{
+				room: room1,
+				message: &chat.Message{
+					Text: "テストメッセージ",
+				},
+			},
+			want: want{
+				err: exception.InvalidDomainValidation.New(test.ErrMock),
+			},
+		},
+		{
+			name: "failed: internal error",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.ChatDomainValidation.EXPECT().
+					Message(ctx, gomock.Any()).
+					Return(nil)
+				mocks.ChatRepository.EXPECT().
+					CreateMessage(ctx, "room01", gomock.Any()).
+					Return(exception.ErrorInDatastore.New(test.ErrMock))
+			},
+			args: args{
+				room: room1,
+				message: &chat.Message{
+					Text: "テストメッセージ",
+				},
+			},
+			want: want{
+				err: exception.ErrorInDatastore.New(test.ErrMock),
 			},
 		},
 	}
 
-	for name, tc := range testCases {
-		ctx, cancel := context.WithCancel(context.Background())
-		defer cancel()
+	for _, tt := range testCases {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			mocks := test.NewMocks(ctrl)
+			tt.setup(ctx, t, mocks)
+			target := NewChatApplication(
+				mocks.ChatDomainValidation,
+				mocks.ChatRepository,
+				mocks.ChatUploader,
+			)
 
-		ctrl := gomock.NewController(t)
-		defer ctrl.Finish()
-
-		cm := &chat.Room{}
-
-		crvm := mock_validation.NewMockChatRequestValidation(ctrl)
-		crvm.EXPECT().CreateTextMessage(tc.args.input).Return(nil)
-
-		csm := mock_chat.NewMockService(ctrl)
-		csm.EXPECT().ValidationMessage(ctx, tc.want.message).Return(nil)
-		csm.EXPECT().PushNewMessage(ctx, cm, tc.want.message).Return(nil)
-		csm.EXPECT().GetRoom(ctx, tc.args.roomID).Return(cm, nil)
-		csm.EXPECT().CreateMessage(ctx, cm, tc.want.message).Return(tc.want.err)
-
-		usm := mock_user.NewMockService(ctrl)
-
-		t.Run(name, func(t *testing.T) {
-			target := NewChatApplication(crvm, csm, usm)
-
-			message, err := target.CreateTextMessage(ctx, tc.args.input, tc.args.roomID, tc.args.uid)
-			if !reflect.DeepEqual(err, tc.want.err) {
-				t.Fatalf("want %#v, but %#v", tc.want.err, err)
+			err := target.CreateMessage(ctx, tt.args.room, tt.args.message)
+			if tt.want.err != nil {
+				require.Equal(t, tt.want.err.Error(), err.Error())
 				return
 			}
-
-			if !reflect.DeepEqual(message, tc.want.message) {
-				t.Fatalf("want %#v, but %#v", tc.want.message, message)
-				return
-			}
+			require.NoError(t, err)
+			require.NotNil(t, tt.args.room.LatestMessage)
+			require.NotZero(t, tt.args.room.UpdatedAt)
+			require.NotEqual(t, tt.args.message.ID, "")
+			require.NotZero(t, tt.args.message.CreatedAt)
 		})
 	}
 }
 
-func TestChatApplication_CreateImageMessage(t *testing.T) {
+func TestChatApplication_UploadImage(t *testing.T) {
+	t.Parallel()
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	room1 := testChatRoom("room01")
+
 	type args struct {
-		uid    string
-		roomID string
-		input  *input.CreateImageMessage
+		room  *chat.Room
+		image []byte
 	}
 	type want struct {
-		message *chat.Message
-		err     error
+		imageURL string
+		err      error
 	}
-
-	testCases := map[string]struct {
-		args args
-		want want
+	testCases := []struct {
+		name  string
+		setup func(context.Context, *testing.T, *test.Mocks)
+		args  args
+		want  want
 	}{
-		"ok": {
+		{
+			name: "succeess",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.ChatUploader.EXPECT().
+					Image(ctx, "room01", []byte{}).
+					Return("https://go.dev/images/gophers/ladder.svg", nil)
+			},
 			args: args{
-				uid:    "00000000-0000-0000-0000-000000000000",
-				roomID: "00000000-0000-0000-0000-000000000000",
-				input: &input.CreateImageMessage{
-					Image: []byte("あいうえお"),
-				},
+				room:  room1,
+				image: []byte{},
 			},
 			want: want{
-				message: &chat.Message{
-					Image:  "http://example.com",
-					UserID: "00000000-0000-0000-0000-000000000000",
-				},
-				err: nil,
+				imageURL: "https://go.dev/images/gophers/ladder.svg",
+				err:      nil,
 			},
 		},
 	}
 
-	for name, tc := range testCases {
-		ctx, cancel := context.WithCancel(context.Background())
-		defer cancel()
+	for _, tt := range testCases {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			mocks := test.NewMocks(ctrl)
+			tt.setup(ctx, t, mocks)
+			target := NewChatApplication(
+				mocks.ChatDomainValidation,
+				mocks.ChatRepository,
+				mocks.ChatUploader,
+			)
 
-		ctrl := gomock.NewController(t)
-		defer ctrl.Finish()
-
-		cm := &chat.Room{
-			ID: tc.args.roomID,
-		}
-
-		crvm := mock_validation.NewMockChatRequestValidation(ctrl)
-		crvm.EXPECT().CreateImageMessage(tc.args.input).Return(nil)
-
-		csm := mock_chat.NewMockService(ctrl)
-		csm.EXPECT().ValidationMessage(ctx, tc.want.message).Return(nil)
-		csm.EXPECT().PushNewMessage(ctx, cm, tc.want.message).Return(nil)
-		csm.EXPECT().GetRoom(ctx, tc.args.roomID).Return(cm, nil)
-		csm.EXPECT().UploadImage(ctx, cm.ID, tc.args.input.Image).Return(tc.want.message.Image, nil)
-		csm.EXPECT().CreateMessage(ctx, cm, tc.want.message).Return(tc.want.err)
-
-		usm := mock_user.NewMockService(ctrl)
-
-		t.Run(name, func(t *testing.T) {
-			target := NewChatApplication(crvm, csm, usm)
-
-			message, err := target.CreateImageMessage(ctx, tc.args.input, tc.args.roomID, tc.args.uid)
-			if !reflect.DeepEqual(err, tc.want.err) {
-				t.Fatalf("want %#v, but %#v", tc.want.err, err)
+			imageURL, err := target.UploadImage(ctx, tt.args.room, tt.args.image)
+			if tt.want.err != nil {
+				require.Equal(t, tt.want.err.Error(), err.Error())
 				return
 			}
-
-			if !reflect.DeepEqual(message, tc.want.message) {
-				t.Fatalf("want %#v, but %#v", tc.want.message, message)
-				return
-			}
+			require.NoError(t, err)
+			require.Equal(t, tt.want.imageURL, imageURL)
 		})
+	}
+}
+
+func testChatRoom(id string) *chat.Room {
+	return &chat.Room{
+		ID: id,
+		UserIDs: []string{
+			"12345678-1234-1234-123456789012",
+			"23456789-2345-2345-234567890123",
+		},
+		CreatedAt: test.TimeMock,
+		UpdatedAt: test.TimeMock,
 	}
 }
