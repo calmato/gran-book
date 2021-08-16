@@ -1,6 +1,7 @@
 package server
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 
@@ -9,40 +10,54 @@ import (
 )
 
 type HTTPServer struct {
-	router *gin.Engine
-	port   string
+	ctx    context.Context
+	server *http.Server
 }
 
 type MetricsServer struct {
-	serve *http.ServeMux
-	port  string
+	ctx    context.Context
+	server *http.Server
 }
 
-func NewHTTPServer(r *gin.Engine, port string) *HTTPServer {
-	s := &HTTPServer{
-		router: r,
-		port:   fmt.Sprintf(":%s", port),
+func NewHTTPServer(ctx context.Context, port string, r *gin.Engine) *HTTPServer {
+	server := &http.Server{
+		Addr:    fmt.Sprintf(":%s", port),
+		Handler: r,
 	}
 
-	return s
+	return &HTTPServer{
+		ctx:    ctx,
+		server: server,
+	}
 }
 
 func (s *HTTPServer) Serve() error {
-	return http.ListenAndServe(s.port, s.router)
+	return s.server.ListenAndServe()
 }
 
-func NewMetricsServer(port string) *MetricsServer {
+func (s *HTTPServer) Stop() error {
+	return s.server.Shutdown(s.ctx)
+}
+
+func NewMetricsServer(ctx context.Context, port string) *MetricsServer {
 	mux := http.NewServeMux()
 	mux.Handle("/metrics", promhttp.Handler())
 
-	s := &MetricsServer{
-		serve: mux,
-		port:  fmt.Sprintf(":%s", port),
+	server := &http.Server{
+		Addr:    fmt.Sprintf(":%s", port),
+		Handler: mux,
 	}
 
-	return s
+	return &MetricsServer{
+		ctx:    ctx,
+		server: server,
+	}
 }
 
 func (s *MetricsServer) Serve() error {
-	return http.ListenAndServe(s.port, s.serve)
+	return s.server.ListenAndServe()
+}
+
+func (s *MetricsServer) Stop() error {
+	return s.server.Shutdown(s.ctx)
 }
