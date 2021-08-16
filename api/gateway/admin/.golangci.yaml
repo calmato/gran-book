@@ -1,0 +1,62 @@
+run:
+  skip-dirs:
+    - bin
+    - mock
+    - proto
+  skip-files:
+    - '.*_test.go'
+
+service:
+  golangci-lint-version: 1.33.0
+
+linters:
+  disable-all: true
+  enable:
+    - bodyclose
+    - deadcode
+    - depguard
+    - dogsled
+    - dupl
+    - errcheck
+    - funlen
+    - gochecknoinits
+    - goconst
+    - gocritic
+    - gocyclo
+    - goimports
+    - golint
+    - gosimple
+    - govet
+    - ineffassign
+    - interfacer
+    - lll
+    - misspell
+    - nakedret
+    - scopelint
+    - staticcheck
+    - structcheck
+    - stylecheck
+    - typecheck
+    - unconvert
+    - unparam
+    - unused
+    - varcheck
+    - whitespace
+
+linters-settings:
+  funlen:
+    lines: 100
+    statements: 50
+
+issues:
+  exclude:
+    - Using the variable on range scope .* in function literal
+    - func name will be used as * by other packages, and that stutters; consider calling this
+    - lines are duplicate of
+    - a blank import should be only in a main or test package, or have a comment justifying it
+    - use strings.ReplaceAll method in
+    - can be `google.golang.org/grpc.ClientConnInterface`
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - dupl

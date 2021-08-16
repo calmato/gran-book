@@ -47,7 +47,6 @@ services:
       - ./api/gateway/native:/go/src/github.com/calmato/gran-book/api/gateway/native:cached
       - ./tmp/data/go/pkg/mod:/go/pkg/mod:delegated
       - ./tmp/logs/native_gateway:/var/log/gateway:delegated
-      - ./tmp/uploads/native_gateway:/var/gateway/tmp/uploads:delegated
     environment:
       - PORT=8080
       - LOG_PATH=/var/log/gateway
@@ -64,25 +63,21 @@ services:
     build:
       context: ./infra/docker/api/gateway/admin
       dockerfile: Dockerfile_development
-    working_dir: /var/gateway
+    working_dir: /go/src/github.com/calmato/gran-book/api/gateway/admin
     volumes:
-      - ./api/gateway/admin:/var/gateway:cached
+      - ./api/gateway/admin:/go/src/github.com/calmato/gran-book/api/gateway/admin:cached
+      - ./tmp/data/go/pkg/mod:/go/pkg/mod:delegated
       - ./tmp/logs/admin_gateway:/var/log/gateway:delegated
-      - ./tmp/uploads/admin_gateway:/var/gateway/tmp/uploads:delegated
     environment:
-      - HOST=0.0.0.0
       - PORT=8080
       - LOG_PATH=/var/log/gateway
-      - USER_API_URL=${USER_API_URL}
-      - BOOK_API_URL=${BOOK_API_URL}
-      - FIREBASE_PROJECT_ID=${FIREBASE_PROJECT_ID}
-      - FIREBASE_CLIENT_EMAIL=${FIREBASE_CLIENT_EMAIL}
-      - FIREBASE_PRIVATE_KEY=${FIREBASE_PRIVATE_KEY}
+      - GCP_SERVICE_KEY_JSON=${GCP_SERVICE_KEY_JSON}
+      - GCP_STORAGE_BUCKET_NAME=${GCP_STORAGE_BUCKET_NAME}
     ports:
       - 8081:8080
     networks:
       - api
-    command: yarn dev
+    command: air -c .air.toml
 
   user_api:
     container_name: gran_book_user_api
