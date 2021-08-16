@@ -24,7 +24,7 @@ WORKDIR /var/gateway
 RUN apk add --update \
   ca-certificates
 
-COPY --from=builder /go/src/github.com/calmato/gran-book/api/gateway/native ./app
+COPY --from=builder /go/src/github.com/calmato/gran-book/api/gateway/native/app ./app
 
 EXPOSE 8080
 CMD ["./app"]

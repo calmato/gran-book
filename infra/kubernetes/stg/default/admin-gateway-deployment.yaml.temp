@@ -37,30 +37,38 @@ spec:
         readinessProbe:
           httpGet:
             path: /health
-            port: 8080
+            port: 9090
           initialDelaySeconds: 20
           periodSeconds: 3
         env:
-        - name: HOST
-          value: '0.0.0.0'
         - name: PORT
           value: '8080'
+        - name: METRICS_PORT
+          value: '9090'
+        - name: LOG_LEVEL
+          value: 'info'
+        - name: AUTH_SERVICE_URL
+          value: 'user-api.default.svc.cluster.local:8080'
         - name: USER_API_URL
+          value: 'user-api.default.svc.cluster.local:8080'
+        - name: CHAT_API_URL
           value: 'user-api.default.svc.cluster.local:8080'
         - name: BOOK_API_URL
           value: 'book-api.default.svc.cluster.local:8080'
-        - name: FIREBASE_PROJECT_ID
+        - name: GCP_SERVICE_KEY_JSON
           valueFrom:
             secretKeyRef:
               name: common-secret
-              key: FIREBASE_PROJECT_ID
-        - name: FIREBASE_CLIENT_EMAIL
+              key: gcp-service-key.json
+        - name: GCP_STORAGE_BUCKET_NAME
           valueFrom:
             secretKeyRef:
               name: common-secret
-              key: FIREBASE_CLIENT_EMAIL
-        - name: FIREBASE_PRIVATE_KEY
-          valueFrom:
-            secretKeyRef:
-              name: common-secret
-              key: FIREBASE_PRIVATE_KEY
+              key: GCP_STORAGE_BUCKET_NAME
+      volumes:
+      - name: gcp-secret-volume
+        secret:
+          secretName: common-secret
+          items:
+          - key: gcp-service-key.json
+            path: gcp-service-key.json
