@@ -45,11 +45,11 @@ spec:
           value: 'info'
         - name: AUTH_SERVICE_URL
           value: 'user-api.default.svc.cluster.local:8080'
-        - name: USER_API_URL
+        - name: USER_SERVICE_URL
           value: 'user-api.default.svc.cluster.local:8080'
-        - name: CHAT_API_URL
+        - name: CHAT_SERVICE_URL
           value: 'user-api.default.svc.cluster.local:8080'
-        - name: BOOK_API_URL
+        - name: BOOK_SERVICE_URL
           value: 'book-api.default.svc.cluster.local:8080'
         - name: GCP_SERVICE_KEY_JSON
           valueFrom:
