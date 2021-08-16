@@ -4,6 +4,7 @@ on:
     paths:
       - '.github/workflows/cd-native-gateway-for-master.yaml'
       - 'api/gateway/native/**'
+      - 'infra/docker/api/gateway/native/*'
     branches:
       - master
 

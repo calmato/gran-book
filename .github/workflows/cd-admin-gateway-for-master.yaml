@@ -4,6 +4,7 @@ on:
     paths:
       - '.github/workflows/cd-admin-gateway-for-master.yaml'
       - 'api/gateway/admin/**'
+      - 'infra/docker/api/gateway/admin/*'
     branches:
       - master
 

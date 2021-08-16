@@ -4,6 +4,7 @@ on:
     paths:
       - '.github/workflows/cd-book-api-for-master.yaml'
       - 'api/server/book/**'
+      - 'infra/docker/api/server/book/*'
     branches:
       - master
 

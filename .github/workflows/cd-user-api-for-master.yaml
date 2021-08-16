@@ -4,6 +4,7 @@ on:
     paths:
       - '.github/workflows/cd-user-api-for-master.yaml'
       - 'api/server/user/**'
+      - 'infra/docker/api/server/user/*'
     branches:
       - master
 
