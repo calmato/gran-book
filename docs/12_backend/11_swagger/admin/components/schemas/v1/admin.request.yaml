@@ -45,6 +45,8 @@ updateAdminProfileRequest:
       type: string
     firstNameKana:
       type: string
+    username:
+      type: string
     thumbnailUrl:
       type: string
     role:
