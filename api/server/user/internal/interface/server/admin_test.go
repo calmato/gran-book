@@ -40,9 +40,6 @@ func TestAdminServer_ListAdmin(t *testing.T) {
 					ListAdmin(gomock.Any()).
 					Return(nil)
 				mocks.UserApplication.EXPECT().
-					Authorization(ctx).
-					Return(user.AdminRole, nil)
-				mocks.UserApplication.EXPECT().
 					ListAdmin(ctx, gomock.Any()).
 					Return([]*user.User{user1, user2}, 2, nil)
 			},
@@ -58,29 +55,11 @@ func TestAdminServer_ListAdmin(t *testing.T) {
 			},
 		},
 		{
-			name: "failed: permission denied",
-			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
-				mocks.UserApplication.EXPECT().
-					Authorization(ctx).
-					Return(user.UserRole, exception.Forbidden.New(test.ErrMock))
-			},
-			args: args{
-				req: &pb.ListAdminRequest{},
-			},
-			want: &test.TestResponse{
-				Code:    codes.PermissionDenied,
-				Message: nil,
-			},
-		},
-		{
 			name: "failed: invalid argument",
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
 				mocks.AdminRequestValidation.EXPECT().
 					ListAdmin(gomock.Any()).
 					Return(exception.InvalidRequestValidation.New(test.ErrMock))
-				mocks.UserApplication.EXPECT().
-					Authorization(ctx).
-					Return(user.AdminRole, nil)
 			},
 			args: args{
 				req: &pb.ListAdminRequest{},
@@ -96,9 +75,6 @@ func TestAdminServer_ListAdmin(t *testing.T) {
 				mocks.AdminRequestValidation.EXPECT().
 					ListAdmin(gomock.Any()).
 					Return(nil)
-				mocks.UserApplication.EXPECT().
-					Authorization(ctx).
-					Return(user.UserRole, nil)
 				mocks.UserApplication.EXPECT().
 					ListAdmin(ctx, gomock.Any()).
 					Return(nil, 0, exception.ErrorInDatastore.New(test.ErrMock))
@@ -157,9 +133,6 @@ func TestAdminServer_GetAdmin(t *testing.T) {
 					GetAdmin(gomock.Any()).
 					Return(nil)
 				mocks.UserApplication.EXPECT().
-					Authorization(ctx).
-					Return(user.AdminRole, nil)
-				mocks.UserApplication.EXPECT().
 					GetAdmin(ctx, "user01").
 					Return(user1, nil)
 			},
@@ -174,29 +147,11 @@ func TestAdminServer_GetAdmin(t *testing.T) {
 			},
 		},
 		{
-			name: "failed: permission denied",
-			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
-				mocks.UserApplication.EXPECT().
-					Authorization(ctx).
-					Return(user.UserRole, exception.Forbidden.New(test.ErrMock))
-			},
-			args: args{
-				req: &pb.GetAdminRequest{},
-			},
-			want: &test.TestResponse{
-				Code:    codes.PermissionDenied,
-				Message: nil,
-			},
-		},
-		{
 			name: "failed: invalid argument",
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
 				mocks.AdminRequestValidation.EXPECT().
 					GetAdmin(gomock.Any()).
 					Return(exception.InvalidRequestValidation.New(test.ErrMock))
-				mocks.UserApplication.EXPECT().
-					Authorization(ctx).
-					Return(user.AdminRole, nil)
 			},
 			args: args{
 				req: &pb.GetAdminRequest{},
@@ -212,9 +167,6 @@ func TestAdminServer_GetAdmin(t *testing.T) {
 				mocks.AdminRequestValidation.EXPECT().
 					GetAdmin(gomock.Any()).
 					Return(nil)
-				mocks.UserApplication.EXPECT().
-					Authorization(ctx).
-					Return(user.AdminRole, nil)
 				mocks.UserApplication.EXPECT().
 					GetAdmin(ctx, "user01").
 					Return(nil, exception.ErrorInDatastore.New(test.ErrMock))
@@ -269,12 +221,6 @@ func TestAdminServer_CreateAdmin(t *testing.T) {
 					CreateAdmin(gomock.Any()).
 					Return(nil)
 				mocks.UserApplication.EXPECT().
-					Authorization(ctx).
-					Return(user.AdminRole, nil)
-				mocks.UserApplication.EXPECT().
-					HasAdminRole(user.AdminRole).
-					Return(nil)
-				mocks.UserApplication.EXPECT().
 					Create(ctx, gomock.Any()).
 					Return(nil)
 			},
@@ -309,50 +255,11 @@ func TestAdminServer_CreateAdmin(t *testing.T) {
 			},
 		},
 		{
-			name: "failed: unauthenticated",
-			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
-				mocks.UserApplication.EXPECT().
-					Authorization(ctx).
-					Return(user.UserRole, exception.Unauthorized.New(test.ErrMock))
-			},
-			args: args{
-				req: &pb.CreateAdminRequest{},
-			},
-			want: &test.TestResponse{
-				Code:    codes.Unauthenticated,
-				Message: nil,
-			},
-		},
-		{
-			name: "failed: permission denied",
-			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
-				mocks.UserApplication.EXPECT().
-					Authorization(ctx).
-					Return(user.DeveloperRole, nil)
-				mocks.UserApplication.EXPECT().
-					HasAdminRole(user.DeveloperRole).
-					Return(exception.Forbidden.New(test.ErrMock))
-			},
-			args: args{
-				req: &pb.CreateAdminRequest{},
-			},
-			want: &test.TestResponse{
-				Code:    codes.PermissionDenied,
-				Message: nil,
-			},
-		},
-		{
 			name: "failed: invalid argument",
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
 				mocks.AdminRequestValidation.EXPECT().
 					CreateAdmin(gomock.Any()).
 					Return(exception.InvalidRequestValidation.New(test.ErrMock))
-				mocks.UserApplication.EXPECT().
-					Authorization(ctx).
-					Return(user.AdminRole, nil)
-				mocks.UserApplication.EXPECT().
-					HasAdminRole(user.AdminRole).
-					Return(nil)
 			},
 			args: args{
 				req: &pb.CreateAdminRequest{},
@@ -367,12 +274,6 @@ func TestAdminServer_CreateAdmin(t *testing.T) {
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
 				mocks.AdminRequestValidation.EXPECT().
 					CreateAdmin(gomock.Any()).
-					Return(nil)
-				mocks.UserApplication.EXPECT().
-					Authorization(ctx).
-					Return(user.AdminRole, nil)
-				mocks.UserApplication.EXPECT().
-					HasAdminRole(user.AdminRole).
 					Return(nil)
 				mocks.UserApplication.EXPECT().
 					Create(ctx, gomock.Any()).
@@ -438,12 +339,6 @@ func TestAdminServer_UpdateAdminContact(t *testing.T) {
 					UpdateAdminContact(gomock.Any()).
 					Return(nil)
 				mocks.UserApplication.EXPECT().
-					Authorization(ctx).
-					Return(user.AdminRole, nil)
-				mocks.UserApplication.EXPECT().
-					HasAdminRole(user.AdminRole).
-					Return(nil)
-				mocks.UserApplication.EXPECT().
 					GetAdmin(ctx, "user01").
 					Return(u, nil)
 				mocks.UserApplication.EXPECT().
@@ -468,50 +363,11 @@ func TestAdminServer_UpdateAdminContact(t *testing.T) {
 			},
 		},
 		{
-			name: "failed: unauthenticated",
-			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
-				mocks.UserApplication.EXPECT().
-					Authorization(ctx).
-					Return(user.UserRole, exception.Unauthorized.New(test.ErrMock))
-			},
-			args: args{
-				req: &pb.UpdateAdminContactRequest{},
-			},
-			want: &test.TestResponse{
-				Code:    codes.Unauthenticated,
-				Message: nil,
-			},
-		},
-		{
-			name: "failed: permission denied",
-			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
-				mocks.UserApplication.EXPECT().
-					Authorization(ctx).
-					Return(user.DeveloperRole, nil)
-				mocks.UserApplication.EXPECT().
-					HasAdminRole(user.DeveloperRole).
-					Return(exception.Forbidden.New(test.ErrMock))
-			},
-			args: args{
-				req: &pb.UpdateAdminContactRequest{},
-			},
-			want: &test.TestResponse{
-				Code:    codes.PermissionDenied,
-				Message: nil,
-			},
-		},
-		{
 			name: "failed: invalid argument",
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
 				mocks.AdminRequestValidation.EXPECT().
 					UpdateAdminContact(gomock.Any()).
 					Return(exception.InvalidRequestValidation.New(test.ErrMock))
-				mocks.UserApplication.EXPECT().
-					Authorization(ctx).
-					Return(user.AdminRole, nil)
-				mocks.UserApplication.EXPECT().
-					HasAdminRole(user.AdminRole).
-					Return(nil)
 			},
 			args: args{
 				req: &pb.UpdateAdminContactRequest{},
@@ -526,12 +382,6 @@ func TestAdminServer_UpdateAdminContact(t *testing.T) {
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
 				mocks.AdminRequestValidation.EXPECT().
 					UpdateAdminContact(gomock.Any()).
-					Return(nil)
-				mocks.UserApplication.EXPECT().
-					Authorization(ctx).
-					Return(user.AdminRole, nil)
-				mocks.UserApplication.EXPECT().
-					HasAdminRole(user.AdminRole).
 					Return(nil)
 				mocks.UserApplication.EXPECT().
 					GetAdmin(ctx, "user01").
@@ -554,12 +404,6 @@ func TestAdminServer_UpdateAdminContact(t *testing.T) {
 				u := &user.User{}
 				mocks.AdminRequestValidation.EXPECT().
 					UpdateAdminContact(gomock.Any()).
-					Return(nil)
-				mocks.UserApplication.EXPECT().
-					Authorization(ctx).
-					Return(user.AdminRole, nil)
-				mocks.UserApplication.EXPECT().
-					HasAdminRole(user.AdminRole).
 					Return(nil)
 				mocks.UserApplication.EXPECT().
 					GetAdmin(ctx, "user01").
@@ -620,12 +464,6 @@ func TestAdminServer_UpdateAdminPassword(t *testing.T) {
 					UpdateAdminPassword(gomock.Any()).
 					Return(nil)
 				mocks.UserApplication.EXPECT().
-					Authorization(ctx).
-					Return(user.AdminRole, nil)
-				mocks.UserApplication.EXPECT().
-					HasAdminRole(user.AdminRole).
-					Return(nil)
-				mocks.UserApplication.EXPECT().
 					GetAdmin(ctx, "user01").
 					Return(u, nil)
 				mocks.UserApplication.EXPECT().
@@ -648,50 +486,11 @@ func TestAdminServer_UpdateAdminPassword(t *testing.T) {
 			},
 		},
 		{
-			name: "failed: unauthenticated",
-			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
-				mocks.UserApplication.EXPECT().
-					Authorization(ctx).
-					Return(user.UserRole, exception.Unauthorized.New(test.ErrMock))
-			},
-			args: args{
-				req: &pb.UpdateAdminPasswordRequest{},
-			},
-			want: &test.TestResponse{
-				Code:    codes.Unauthenticated,
-				Message: nil,
-			},
-		},
-		{
-			name: "failed: permission denied",
-			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
-				mocks.UserApplication.EXPECT().
-					Authorization(ctx).
-					Return(user.DeveloperRole, nil)
-				mocks.UserApplication.EXPECT().
-					HasAdminRole(user.DeveloperRole).
-					Return(exception.Forbidden.New(test.ErrMock))
-			},
-			args: args{
-				req: &pb.UpdateAdminPasswordRequest{},
-			},
-			want: &test.TestResponse{
-				Code:    codes.PermissionDenied,
-				Message: nil,
-			},
-		},
-		{
 			name: "failed: invalid argument",
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
 				mocks.AdminRequestValidation.EXPECT().
 					UpdateAdminPassword(gomock.Any()).
 					Return(exception.InvalidRequestValidation.New(test.ErrMock))
-				mocks.UserApplication.EXPECT().
-					Authorization(ctx).
-					Return(user.AdminRole, nil)
-				mocks.UserApplication.EXPECT().
-					HasAdminRole(user.AdminRole).
-					Return(nil)
 			},
 			args: args{
 				req: &pb.UpdateAdminPasswordRequest{},
@@ -706,12 +505,6 @@ func TestAdminServer_UpdateAdminPassword(t *testing.T) {
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
 				mocks.AdminRequestValidation.EXPECT().
 					UpdateAdminPassword(gomock.Any()).
-					Return(nil)
-				mocks.UserApplication.EXPECT().
-					Authorization(ctx).
-					Return(user.AdminRole, nil)
-				mocks.UserApplication.EXPECT().
-					HasAdminRole(user.AdminRole).
 					Return(nil)
 				mocks.UserApplication.EXPECT().
 					GetAdmin(ctx, "user01").
@@ -733,12 +526,6 @@ func TestAdminServer_UpdateAdminPassword(t *testing.T) {
 				u := &user.User{}
 				mocks.AdminRequestValidation.EXPECT().
 					UpdateAdminPassword(gomock.Any()).
-					Return(nil)
-				mocks.UserApplication.EXPECT().
-					Authorization(ctx).
-					Return(user.AdminRole, nil)
-				mocks.UserApplication.EXPECT().
-					HasAdminRole(user.AdminRole).
 					Return(nil)
 				mocks.UserApplication.EXPECT().
 					GetAdmin(ctx, "user01").
@@ -800,12 +587,6 @@ func TestAdminServer_UpdateAdminProfile(t *testing.T) {
 					UpdateAdminProfile(gomock.Any()).
 					Return(nil)
 				mocks.UserApplication.EXPECT().
-					Authorization(ctx).
-					Return(user.AdminRole, nil)
-				mocks.UserApplication.EXPECT().
-					HasAdminRole(user.AdminRole).
-					Return(nil)
-				mocks.UserApplication.EXPECT().
 					GetAdmin(ctx, "user01").
 					Return(u, nil)
 				mocks.UserApplication.EXPECT().
@@ -840,50 +621,11 @@ func TestAdminServer_UpdateAdminProfile(t *testing.T) {
 			},
 		},
 		{
-			name: "failed: UnAuthenticated",
-			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
-				mocks.UserApplication.EXPECT().
-					Authorization(ctx).
-					Return(user.UserRole, exception.Unauthorized.New(test.ErrMock))
-			},
-			args: args{
-				req: &pb.UpdateAdminProfileRequest{},
-			},
-			want: &test.TestResponse{
-				Code:    codes.Unauthenticated,
-				Message: nil,
-			},
-		},
-		{
-			name: "failed: permission denied",
-			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
-				mocks.UserApplication.EXPECT().
-					Authorization(ctx).
-					Return(user.DeveloperRole, nil)
-				mocks.UserApplication.EXPECT().
-					HasAdminRole(user.DeveloperRole).
-					Return(exception.Forbidden.New(test.ErrMock))
-			},
-			args: args{
-				req: &pb.UpdateAdminProfileRequest{},
-			},
-			want: &test.TestResponse{
-				Code:    codes.PermissionDenied,
-				Message: nil,
-			},
-		},
-		{
 			name: "failed: invalid argument",
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
 				mocks.AdminRequestValidation.EXPECT().
 					UpdateAdminProfile(gomock.Any()).
 					Return(exception.InvalidRequestValidation.New(test.ErrMock))
-				mocks.UserApplication.EXPECT().
-					Authorization(ctx).
-					Return(user.AdminRole, nil)
-				mocks.UserApplication.EXPECT().
-					HasAdminRole(user.AdminRole).
-					Return(nil)
 			},
 			args: args{
 				req: &pb.UpdateAdminProfileRequest{},
@@ -898,12 +640,6 @@ func TestAdminServer_UpdateAdminProfile(t *testing.T) {
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
 				mocks.AdminRequestValidation.EXPECT().
 					UpdateAdminProfile(gomock.Any()).
-					Return(nil)
-				mocks.UserApplication.EXPECT().
-					Authorization(ctx).
-					Return(user.AdminRole, nil)
-				mocks.UserApplication.EXPECT().
-					HasAdminRole(user.AdminRole).
 					Return(nil)
 				mocks.UserApplication.EXPECT().
 					GetAdmin(ctx, "user01").
@@ -925,12 +661,6 @@ func TestAdminServer_UpdateAdminProfile(t *testing.T) {
 				u := &user.User{}
 				mocks.AdminRequestValidation.EXPECT().
 					UpdateAdminProfile(gomock.Any()).
-					Return(nil)
-				mocks.UserApplication.EXPECT().
-					Authorization(ctx).
-					Return(user.AdminRole, nil)
-				mocks.UserApplication.EXPECT().
-					HasAdminRole(user.AdminRole).
 					Return(nil)
 				mocks.UserApplication.EXPECT().
 					GetAdmin(ctx, "user01").
@@ -997,12 +727,6 @@ func TestAdminServer_DeleteAdmin(t *testing.T) {
 					DeleteAdmin(gomock.Any()).
 					Return(nil)
 				mocks.UserApplication.EXPECT().
-					Authorization(ctx).
-					Return(user.AdminRole, nil)
-				mocks.UserApplication.EXPECT().
-					HasAdminRole(user.AdminRole).
-					Return(nil)
-				mocks.UserApplication.EXPECT().
 					GetAdmin(ctx, "user01").
 					Return(u, nil)
 				mocks.UserApplication.EXPECT().
@@ -1020,50 +744,11 @@ func TestAdminServer_DeleteAdmin(t *testing.T) {
 			},
 		},
 		{
-			name: "failed: unauthenticated",
-			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
-				mocks.UserApplication.EXPECT().
-					Authorization(ctx).
-					Return(user.UserRole, exception.Unauthorized.New(test.ErrMock))
-			},
-			args: args{
-				req: &pb.DeleteAdminRequest{},
-			},
-			want: &test.TestResponse{
-				Code:    codes.Unauthenticated,
-				Message: nil,
-			},
-		},
-		{
-			name: "failed: permission denied",
-			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
-				mocks.UserApplication.EXPECT().
-					Authorization(ctx).
-					Return(user.DeveloperRole, nil)
-				mocks.UserApplication.EXPECT().
-					HasAdminRole(user.DeveloperRole).
-					Return(exception.Forbidden.New(test.ErrMock))
-			},
-			args: args{
-				req: &pb.DeleteAdminRequest{},
-			},
-			want: &test.TestResponse{
-				Code:    codes.PermissionDenied,
-				Message: nil,
-			},
-		},
-		{
 			name: "failed: invalid argument",
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
 				mocks.AdminRequestValidation.EXPECT().
 					DeleteAdmin(gomock.Any()).
 					Return(exception.InvalidRequestValidation.New(test.ErrMock))
-				mocks.UserApplication.EXPECT().
-					Authorization(ctx).
-					Return(user.AdminRole, nil)
-				mocks.UserApplication.EXPECT().
-					HasAdminRole(user.AdminRole).
-					Return(nil)
 			},
 			args: args{
 				req: &pb.DeleteAdminRequest{},
@@ -1078,12 +763,6 @@ func TestAdminServer_DeleteAdmin(t *testing.T) {
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
 				mocks.AdminRequestValidation.EXPECT().
 					DeleteAdmin(gomock.Any()).
-					Return(nil)
-				mocks.UserApplication.EXPECT().
-					Authorization(ctx).
-					Return(user.AdminRole, nil)
-				mocks.UserApplication.EXPECT().
-					HasAdminRole(user.AdminRole).
 					Return(nil)
 				mocks.UserApplication.EXPECT().
 					GetAdmin(ctx, "user01").
@@ -1105,12 +784,6 @@ func TestAdminServer_DeleteAdmin(t *testing.T) {
 				u := &user.User{}
 				mocks.AdminRequestValidation.EXPECT().
 					DeleteAdmin(gomock.Any()).
-					Return(nil)
-				mocks.UserApplication.EXPECT().
-					Authorization(ctx).
-					Return(user.AdminRole, nil)
-				mocks.UserApplication.EXPECT().
-					HasAdminRole(user.AdminRole).
 					Return(nil)
 				mocks.UserApplication.EXPECT().
 					GetAdmin(ctx, "user01").

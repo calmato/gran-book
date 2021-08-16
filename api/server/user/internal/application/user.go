@@ -4,17 +4,14 @@ import (
 	"context"
 	"time"
 
-	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/user"
 	"github.com/calmato/gran-book/api/server/user/pkg/array"
 	"github.com/calmato/gran-book/api/server/user/pkg/database"
-	"golang.org/x/xerrors"
 )
 
 // UserApplication - Userアプリケーションのインターフェース
 type UserApplication interface {
 	Authentication(ctx context.Context) (*user.User, error)
-	Authorization(ctx context.Context) (int, error)
 	List(ctx context.Context, q *database.ListQuery) ([]*user.User, int, error)
 	ListAdmin(ctx context.Context, q *database.ListQuery) ([]*user.User, int, error)
 	ListFollow(ctx context.Context, userID, targetID string, limit, offset int) ([]*user.Follow, int, error)
@@ -31,7 +28,6 @@ type UserApplication interface {
 	Follow(ctx context.Context, userID, followerID string) (*user.User, bool, bool, int, int, error)
 	Unfollow(ctx context.Context, userID, followerID string) (*user.User, bool, bool, int, int, error)
 	UploadThumbnail(ctx context.Context, userID string, thumbnail []byte) (string, error)
-	HasAdminRole(role int) error
 }
 
 type userApplication struct {
@@ -77,26 +73,6 @@ func (a *userApplication) Authentication(ctx context.Context) (*user.User, error
 	}
 
 	return ou, nil
-}
-
-func (a *userApplication) Authorization(ctx context.Context) (int, error) {
-	userID, err := a.userRepository.Authentication(ctx)
-	if err != nil {
-		return user.UserRole, err
-	}
-
-	u, err := a.userRepository.Get(ctx, userID)
-	if err != nil {
-		return user.UserRole, exception.Forbidden.New(err)
-	}
-
-	switch u.Role {
-	case user.AdminRole, user.DeveloperRole, user.OperatorRole:
-		return u.Role, nil
-	default:
-		err := xerrors.New("This account doesn't have administrator privileges")
-		return user.UserRole, exception.Forbidden.New(err)
-	}
 }
 
 func (a *userApplication) List(ctx context.Context, q *database.ListQuery) ([]*user.User, int, error) {
@@ -389,15 +365,6 @@ func (a *userApplication) Unfollow(
 
 func (a *userApplication) UploadThumbnail(ctx context.Context, userID string, thumbnail []byte) (string, error) {
 	return a.userUploader.Thumbnail(ctx, userID, thumbnail)
-}
-
-func (a *userApplication) HasAdminRole(role int) error {
-	if role != user.AdminRole {
-		err := xerrors.New("This account doesn't have administrator privileges")
-		return exception.Forbidden.New(err)
-	}
-
-	return nil
 }
 
 func (a *userApplication) getRelationship(

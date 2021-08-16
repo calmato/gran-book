@@ -53,6 +53,7 @@ func (h *authHandler) UpdateProfile(ctx *gin.Context) {
 	err := ctx.BindJSON(req)
 	if err != nil {
 		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
+		return
 	}
 
 	// TODO: 実装...
@@ -66,6 +67,7 @@ func (h *authHandler) UpdateEmail(ctx *gin.Context) {
 	err := ctx.BindJSON(req)
 	if err != nil {
 		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
+		return
 	}
 
 	in := &pb.UpdateAuthEmailRequest{
@@ -88,6 +90,7 @@ func (h *authHandler) UpdatePassword(ctx *gin.Context) {
 	err := ctx.BindJSON(req)
 	if err != nil {
 		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
+		return
 	}
 
 	in := &pb.UpdateAuthPasswordRequest{

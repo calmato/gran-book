@@ -10,7 +10,6 @@ import (
 	"github.com/calmato/gran-book/api/server/user/pkg/test"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
-	"golang.org/x/xerrors"
 )
 
 func TestUserApplication_Authentication(t *testing.T) {
@@ -125,111 +124,6 @@ func TestUserApplication_Authentication(t *testing.T) {
 			require.Equal(t, tt.want.user.Role, u.Role)
 			require.NotZero(t, u.CreatedAt)
 			require.NotZero(t, u.UpdatedAt)
-		})
-	}
-}
-
-func TestUserApplication_Authorization(t *testing.T) {
-	t.Parallel()
-
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	user1 := testUser("user01")
-	admin1 := testUser("admin01")
-	admin1.Role = user.AdminRole
-
-	type want struct {
-		role int
-		err  error
-	}
-	testCases := []struct {
-		name  string
-		setup func(context.Context, *testing.T, *test.Mocks)
-		want  want
-	}{
-		{
-			name: "success",
-			setup: func(context context.Context, t *testing.T, mocks *test.Mocks) {
-				mocks.UserRepository.EXPECT().
-					Authentication(ctx).
-					Return("admin01", nil)
-				mocks.UserRepository.EXPECT().
-					Get(ctx, "admin01").
-					Return(admin1, nil)
-			},
-			want: want{
-				role: user.AdminRole,
-				err:  nil,
-			},
-		},
-		{
-			name: "failed: unauthorized",
-			setup: func(context context.Context, t *testing.T, mocks *test.Mocks) {
-				mocks.UserRepository.EXPECT().
-					Authentication(ctx).
-					Return("", exception.Unauthorized.New(test.ErrMock))
-			},
-			want: want{
-				role: user.UserRole,
-				err:  exception.Unauthorized.New(test.ErrMock),
-			},
-		},
-		{
-			name: "failed: not found",
-			setup: func(context context.Context, t *testing.T, mocks *test.Mocks) {
-				mocks.UserRepository.EXPECT().
-					Authentication(ctx).
-					Return("user01", nil)
-				mocks.UserRepository.EXPECT().
-					Get(ctx, "user01").
-					Return(nil, exception.NotFound.New(test.ErrMock))
-			},
-			want: want{
-				role: user.UserRole,
-				err:  exception.Forbidden.New(exception.NotFound.New(test.ErrMock)),
-			},
-		},
-		{
-			name: "failed: forbidden",
-			setup: func(context context.Context, t *testing.T, mocks *test.Mocks) {
-				mocks.UserRepository.EXPECT().
-					Authentication(ctx).
-					Return("user01", nil)
-				mocks.UserRepository.EXPECT().
-					Get(ctx, "user01").
-					Return(user1, nil)
-			},
-			want: want{
-				role: user.UserRole,
-				err:  exception.Forbidden.New(xerrors.New("This account doesn't have administrator privileges")),
-			},
-		},
-	}
-
-	for _, tt := range testCases {
-		tt := tt
-		t.Run(tt.name, func(t *testing.T) {
-			t.Parallel()
-			mocks := test.NewMocks(ctrl)
-			tt.setup(ctx, t, mocks)
-			target := NewUserApplication(
-				mocks.UserDomainValidation,
-				mocks.UserRepository,
-				mocks.UserUploader,
-			)
-
-			role, err := target.Authorization(ctx)
-			if tt.want.err != nil {
-				require.Equal(t, tt.want.err.Error(), err.Error())
-				require.Equal(t, tt.want.role, role)
-				return
-			}
-			require.NoError(t, err)
-			require.Equal(t, tt.want.role, role)
 		})
 	}
 }
@@ -1979,71 +1873,6 @@ func TestUserApplication_UploadThumbnail(t *testing.T) {
 			}
 			require.NoError(t, err)
 			require.Equal(t, tt.want.thumbnailURL, thumbnailURL)
-		})
-	}
-}
-
-func TestUserApplication_HasAdminRole(t *testing.T) {
-	t.Parallel()
-
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	type args struct {
-		role int
-	}
-	type want struct {
-		err error
-	}
-	testCases := []struct {
-		name  string
-		setup func(context.Context, *testing.T, *test.Mocks)
-		args  args
-		want  want
-	}{
-		{
-			name:  "success",
-			setup: func(context context.Context, t *testing.T, mocks *test.Mocks) {},
-			args: args{
-				role: user.AdminRole,
-			},
-			want: want{
-				err: nil,
-			},
-		},
-		{
-			name:  "failed: forbidden",
-			setup: func(context context.Context, t *testing.T, mocks *test.Mocks) {},
-			args: args{
-				role: user.UserRole,
-			},
-			want: want{
-				err: exception.Forbidden.New(xerrors.New("This account doesn't have administrator privileges")),
-			},
-		},
-	}
-
-	for _, tt := range testCases {
-		tt := tt
-		t.Run(tt.name, func(t *testing.T) {
-			t.Parallel()
-			mocks := test.NewMocks(ctrl)
-			tt.setup(ctx, t, mocks)
-			target := NewUserApplication(
-				mocks.UserDomainValidation,
-				mocks.UserRepository,
-				mocks.UserUploader,
-			)
-
-			err := target.HasAdminRole(tt.args.role)
-			if tt.want.err != nil {
-				require.Equal(t, tt.want.err.Error(), err.Error())
-				return
-			}
-			require.NoError(t, err)
 		})
 	}
 }
