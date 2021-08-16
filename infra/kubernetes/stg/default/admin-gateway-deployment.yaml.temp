@@ -30,16 +30,12 @@ spec:
         - name: default
           containerPort: 8080
         livenessProbe:
-          tcpSocket:
+          httpGet:
+            path: /health
             port: 8080
           initialDelaySeconds: 10
           periodSeconds: 5
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: 9090
-          initialDelaySeconds: 20
-          periodSeconds: 3
+          failureThreshold: 3
         env:
         - name: PORT
           value: '8080'
