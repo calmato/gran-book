@@ -5,8 +5,5 @@ import (
 )
 
 func main() {
-	err := config.Execute()
-	if err != nil {
-		panic(err)
-	}
+	config.CheckError(config.Execute())
 }

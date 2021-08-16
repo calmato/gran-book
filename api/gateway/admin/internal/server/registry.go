@@ -22,22 +22,22 @@ func NewRegistry(
 	fa *authentication.Auth,
 	authServiceURL string, adminServiceURL string, userServiceURL string, bookServiceURL string,
 ) (*Registry, error) {
-	authConn, err := grpc.Dial(authServiceURL, grpc.WithInsecure(), grpc.WithBlock())
+	authConn, err := grpc.Dial(authServiceURL, grpc.WithInsecure())
 	if err != nil {
 		return nil, err
 	}
 
-	adminConn, err := grpc.Dial(adminServiceURL, grpc.WithInsecure(), grpc.WithBlock())
+	adminConn, err := grpc.Dial(adminServiceURL, grpc.WithInsecure())
 	if err != nil {
 		return nil, err
 	}
 
-	userConn, err := grpc.Dial(userServiceURL, grpc.WithInsecure(), grpc.WithBlock())
+	userConn, err := grpc.Dial(userServiceURL, grpc.WithInsecure())
 	if err != nil {
 		return nil, err
 	}
 
-	bookConn, err := grpc.Dial(bookServiceURL, grpc.WithInsecure(), grpc.WithBlock())
+	bookConn, err := grpc.Dial(bookServiceURL, grpc.WithInsecure())
 	if err != nil {
 		return nil, err
 	}
