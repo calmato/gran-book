@@ -37,4 +37,5 @@ func apiV1Router(reg *Registry, rg *gin.RouterGroup) {
 			apiV1Auth.PATCH("/profile", reg.V1Auth.UpdateProfile)
 			apiV1Auth.POST("/thumbnail", reg.V1Auth.UploadThumbnail)
 		}
+	}
 }

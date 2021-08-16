@@ -1,5 +1,7 @@
 package v1
 
+import "github.com/calmato/gran-book/api/gateway/admin/internal/entity"
+
 type AuthResponse struct {
 	ID               string      `json:"id"`               // ユーザーID
 	Username         string      `json:"username"`         // ユーザー名

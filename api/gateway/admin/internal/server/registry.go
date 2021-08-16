@@ -24,6 +24,6 @@ func NewRegistry(fa *authentication.Auth, authServiceURL string) (*Registry, err
 	return &Registry{
 		Authenticator: util.NewAuthenticator(fa),
 		Health:        util.NewHealthHandler(),
-		V1Auth:        v1.NewUserHandler(authConn),
+		V1Auth:        v1.NewAuthHandler(authConn),
 	}, nil
 }

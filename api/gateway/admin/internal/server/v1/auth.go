@@ -55,25 +55,9 @@ func (h *authHandler) UpdateProfile(ctx *gin.Context) {
 		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
 	}
 
-	in := &pb.UpdateAuthProfileRequest{
-		LastName:         req.LastName,
-		FirstName:        req.FirstName,
-		LastNameKana:     req.LastNameKana,
-		FirstNameKana:    req.FirstNameKana,
-		Username:         req.Username,
-		PhoneNumber:      req.PhoneNumber,
-		ThumbnailUrl:     req.ThumbnailURL,
-		SelfIntroduction: req.SelfIntroduction,
-	}
+	// TODO: 実装...
 
-	out, err := h.authClient.UpdateAuthProfile(ctx, in)
-	if err != nil {
-		util.ErrorHandling(ctx, err)
-		return
-	}
-
-	res := h.getAuthResponse(out)
-	ctx.JSON(http.StatusOK, res)
+	ctx.JSON(http.StatusNotImplemented, nil)
 }
 
 // UpdateEmail - メールアドレス更新
