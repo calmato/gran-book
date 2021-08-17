@@ -57,7 +57,7 @@ func (r *userRepository) Authentication(ctx context.Context) (string, error) {
 func (r *userRepository) List(ctx context.Context, q *database.ListQuery) ([]*user.User, error) {
 	us := []*user.User{}
 
-	err := r.client.GetListQuery("users", r.client.DB, q).Scan(&us).Error
+	err := r.client.GetListQuery("users", r.client.DB, q).Find(&us).Error
 	if err != nil {
 		return nil, exception.ErrorInDatastore.New(err)
 	}
@@ -76,10 +76,10 @@ func (r *userRepository) ListFollow(ctx context.Context, q *database.ListQuery) 
 		"users.self_introduction",
 	}
 	err := r.client.
-		GetListQuery("relationshops", r.client.DB, q).
+		GetListQuery("relationships", r.client.DB, q).
 		Select(fields).
 		Joins("LEFT JOIN users ON relationships.follower_id = users.id").
-		Scan(&fs).Error
+		Find(&fs).Error
 	if err != nil {
 		return nil, exception.ErrorInDatastore.New(err)
 	}
@@ -102,7 +102,7 @@ func (r *userRepository) ListFollower(ctx context.Context, q *database.ListQuery
 		GetListQuery("relationships", r.client.DB, q).
 		Select(fields).
 		Joins("LEFT JOIN users ON relationships.follow_id = users.id").
-		Scan(&fs).Error
+		Find(&fs).Error
 	if err != nil {
 		return nil, exception.ErrorInDatastore.New(err)
 	}
@@ -116,7 +116,7 @@ func (r *userRepository) ListInstanceID(ctx context.Context, q *database.ListQue
 	err := r.client.
 		GetListQuery("users", r.client.DB, q).
 		Select("instance_id").
-		Scan(&instanceIDs).Error
+		Find(&instanceIDs).Error
 	if err != nil {
 		return nil, exception.ErrorInDatastore.New(err)
 	}
@@ -136,7 +136,7 @@ func (r *userRepository) ListFollowID(ctx context.Context, followerID string, fo
 		sql = sql.Where("follow_id IN (?)", followIDs)
 	}
 
-	err := sql.Scan(&ids).Error
+	err := sql.Find(&ids).Error
 	if err != nil {
 		return nil, exception.ErrorInDatastore.New(err)
 	}
@@ -156,7 +156,7 @@ func (r *userRepository) ListFollowerID(ctx context.Context, followID string, fo
 		sql = sql.Where("follower_id IN (?)", followerIDs)
 	}
 
-	err := sql.Scan(&ids).Error
+	err := sql.Find(&ids).Error
 	if err != nil {
 		return nil, exception.ErrorInDatastore.New(err)
 	}

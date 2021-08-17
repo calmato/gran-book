@@ -43,7 +43,8 @@ func (h *userHandler) ListFollow(ctx *gin.Context) {
 		Offset: offset,
 	}
 
-	out, err := h.userClient.ListFollow(ctx, in)
+	c := util.SetMetadata(ctx)
+	out, err := h.userClient.ListFollow(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -65,7 +66,8 @@ func (h *userHandler) ListFollower(ctx *gin.Context) {
 		Offset: offset,
 	}
 
-	out, err := h.userClient.ListFollower(ctx, in)
+	c := util.SetMetadata(ctx)
+	out, err := h.userClient.ListFollower(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -83,7 +85,8 @@ func (h *userHandler) GetProfile(ctx *gin.Context) {
 		UserId: userID,
 	}
 
-	out, err := h.userClient.GetUserProfile(ctx, in)
+	c := util.SetMetadata(ctx)
+	out, err := h.userClient.GetUserProfile(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -103,7 +106,8 @@ func (h *userHandler) Follow(ctx *gin.Context) {
 		FollowerId: followerID,
 	}
 
-	out, err := h.userClient.Follow(ctx, in)
+	c := util.SetMetadata(ctx)
+	out, err := h.userClient.Follow(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -123,7 +127,8 @@ func (h *userHandler) Unfollow(ctx *gin.Context) {
 		FollowerId: followerID,
 	}
 
-	out, err := h.userClient.Unfollow(ctx, in)
+	c := util.SetMetadata(ctx)
+	out, err := h.userClient.Unfollow(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return

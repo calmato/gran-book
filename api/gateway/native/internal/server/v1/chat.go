@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 
 	"github.com/calmato/gran-book/api/gateway/native/internal/entity"
@@ -47,25 +48,48 @@ func (h *chatHandler) ListRoom(ctx *gin.Context) {
 	limit := ctx.GetInt64(ctx.DefaultQuery("limit", entity.ListLimitDefault))
 	offset := ctx.DefaultQuery("offset", "")
 
-	_, err := h.currentUser(ctx, userID)
+	c := util.SetMetadata(ctx)
+	_, err := h.currentUser(c, userID)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
 	}
 
-	in := &pb.ListChatRoomRequest{
+	roomsInput := &pb.ListChatRoomRequest{
 		UserId: userID,
 		Limit:  limit,
 		Offset: offset,
 	}
 
-	out, err := h.chatClient.ListRoom(ctx, in)
+	roomsOutput, err := h.chatClient.ListRoom(c, roomsInput)
+	if err != nil {
+		util.ErrorHandling(ctx, err)
+		return
+	}
+	log.Printf("debug: %v\n", roomsOutput)
+
+	userIDs := []string{}
+	users := map[string]bool{}
+	for _, r := range roomsOutput.GetRooms() {
+		for _, userID := range r.GetUserIds() {
+			if !users[userID] {
+				users[userID] = true
+				userIDs = append(userIDs, userID)
+			}
+		}
+	}
+
+	usersInput := &pb.MultiGetUserRequest{
+		UserIds: userIDs,
+	}
+
+	usersOutput, err := h.userClient.MultiGetUser(c, usersInput)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
 	}
 
-	res := h.getChatRoomListResponse(out)
+	res := h.getChatRoomListResponse(roomsOutput, usersOutput)
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -79,7 +103,8 @@ func (h *chatHandler) CreateRoom(ctx *gin.Context) {
 		return
 	}
 
-	_, err = h.currentUser(ctx, userID)
+	c := util.SetMetadata(ctx)
+	_, err = h.currentUser(c, userID)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -94,7 +119,7 @@ func (h *chatHandler) CreateRoom(ctx *gin.Context) {
 		UserIds: userIDs,
 	}
 
-	usersOutput, err := h.userClient.MultiGetUser(ctx, usersInput)
+	usersOutput, err := h.userClient.MultiGetUser(c, usersInput)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -113,7 +138,7 @@ func (h *chatHandler) CreateRoom(ctx *gin.Context) {
 		UserIds: userIDs,
 	}
 
-	roomOutput, err := h.chatClient.CreateRoom(ctx, roomInput)
+	roomOutput, err := h.chatClient.CreateRoom(c, roomInput)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -134,7 +159,8 @@ func (h *chatHandler) CreateTextMessage(ctx *gin.Context) {
 		return
 	}
 
-	userOutput, err := h.currentUser(ctx, userID)
+	c := util.SetMetadata(ctx)
+	userOutput, err := h.currentUser(c, userID)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -146,7 +172,7 @@ func (h *chatHandler) CreateTextMessage(ctx *gin.Context) {
 		Text:   req.Text,
 	}
 
-	messageOutput, err := h.chatClient.CreateMessage(ctx, in)
+	messageOutput, err := h.chatClient.CreateMessage(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -161,7 +187,8 @@ func (h *chatHandler) CreateImageMessage(ctx *gin.Context) {
 	roomID := ctx.Param("roomID")
 	userID := ctx.Param("userID")
 
-	userOutput, err := h.currentUser(ctx, userID)
+	c := util.SetMetadata(ctx)
+	userOutput, err := h.currentUser(c, userID)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -174,7 +201,7 @@ func (h *chatHandler) CreateImageMessage(ctx *gin.Context) {
 	}
 	defer file.Close()
 
-	stream, err := h.chatClient.UploadImage(ctx)
+	stream, err := h.chatClient.UploadImage(c)
 	if err != nil {
 		util.ErrorHandling(ctx, entity.ErrInternalServerError.New(err))
 		return
@@ -271,8 +298,48 @@ func (h *chatHandler) getChatRoomResponse(
 	}
 }
 
-func (h *chatHandler) getChatRoomListResponse(out *pb.ChatRoomListResponse) *response.ChatRoomListResponse {
-	return &response.ChatRoomListResponse{}
+func (h *chatHandler) getChatRoomListResponse(
+	roomsOutput *pb.ChatRoomListResponse, usersOutput *pb.UserMapResponse,
+) *response.ChatRoomListResponse {
+	rooms := make([]*response.ChatRoomListRoom, len(roomsOutput.GetRooms()))
+	for i, r := range roomsOutput.GetRooms() {
+		users := make([]*response.ChatRoomListUser, len(r.GetUserIds()))
+		for j, userID := range r.GetUserIds() {
+			user := &response.ChatRoomListUser{
+				ID:       userID,
+				Username: "unknown",
+			}
+
+			if usersOutput.GetUsers()[userID] != nil {
+				user.Username = usersOutput.GetUsers()[userID].GetUsername()
+				user.ThumbnailURL = usersOutput.GetUsers()[userID].GetThumbnailUrl()
+			}
+
+			users[j] = user
+		}
+
+		message := &response.ChatRoomListMessage{}
+		if r.GetLatestMessage() != nil {
+			message.UserID = r.GetLatestMessage().GetUserId()
+			message.Text = r.GetLatestMessage().GetText()
+			message.Image = r.GetLatestMessage().GetImage()
+			message.CreatedAt = r.GetLatestMessage().GetCreatedAt()
+		}
+
+		room := &response.ChatRoomListRoom{
+			ID:            r.GetId(),
+			CreatedAt:     r.GetCreatedAt(),
+			UpdatedAt:     r.GetUpdatedAt(),
+			Users:         users,
+			LatestMessage: message,
+		}
+
+		rooms[i] = room
+	}
+
+	return &response.ChatRoomListResponse{
+		Rooms: rooms,
+	}
 }
 
 func (h *chatHandler) getChatMessageResponse(

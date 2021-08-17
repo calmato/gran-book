@@ -25,10 +25,8 @@ func NewBookRepository(c *database.Client) book.Repository {
 func (r *bookRepository) List(ctx context.Context, q *database.ListQuery) ([]*book.Book, error) {
 	bs := []*book.Book{}
 
-	err := r.client.
-		GetListQuery("books", r.client.DB, q).
-		Preload("Authors").
-		Scan(&bs).Error
+	sql := r.client.DB.Preload("Authors")
+	err := r.client.GetListQuery("books", sql, q).Find(&bs).Error
 	if err != nil {
 		return nil, exception.ErrorInDatastore.New(err)
 	}
@@ -39,11 +37,8 @@ func (r *bookRepository) List(ctx context.Context, q *database.ListQuery) ([]*bo
 func (r *bookRepository) ListBookshelf(ctx context.Context, q *database.ListQuery) ([]*book.Bookshelf, error) {
 	bss := []*book.Bookshelf{}
 
-	err := r.client.
-		GetListQuery("bookshelves", r.client.DB, q).
-		Preload("Book").
-		Preload("Book.Authors").
-		Scan(&bss).Error
+	sql := r.client.DB.Preload("Book").Preload("Book.Authors")
+	err := r.client.GetListQuery("bookshelves", sql, q).Find(&bss).Error
 	if err != nil {
 		return nil, exception.ErrorInDatastore.New(err)
 	}
@@ -54,7 +49,7 @@ func (r *bookRepository) ListBookshelf(ctx context.Context, q *database.ListQuer
 func (r *bookRepository) ListReview(ctx context.Context, q *database.ListQuery) ([]*book.Review, error) {
 	rvs := []*book.Review{}
 
-	err := r.client.GetListQuery("reviews", r.client.DB, q).Scan(&rvs).Error
+	err := r.client.GetListQuery("reviews", r.client.DB, q).Find(&rvs).Error
 	if err != nil {
 		return nil, exception.ErrorInDatastore.New(err)
 	}

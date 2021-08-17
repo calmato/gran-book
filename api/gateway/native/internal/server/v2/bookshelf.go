@@ -45,7 +45,8 @@ func (h *bookshelfHandler) List(ctx *gin.Context) {
 		Offset: offset,
 	}
 
-	out, err := h.bookClient.ListBookshelf(ctx, in)
+	c := util.SetMetadata(ctx)
+	out, err := h.bookClient.ListBookshelf(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -69,7 +70,8 @@ func (h *bookshelfHandler) Get(ctx *gin.Context) {
 		BookId: bookID,
 	}
 
-	bookshelfOutput, err := h.bookClient.GetBookshelf(ctx, bookshelfInput)
+	c := util.SetMetadata(ctx)
+	bookshelfOutput, err := h.bookClient.GetBookshelf(c, bookshelfInput)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -81,7 +83,7 @@ func (h *bookshelfHandler) Get(ctx *gin.Context) {
 		Offset: 0,
 	}
 
-	reviewsOutput, err := h.bookClient.ListBookReview(ctx, reviewsInput)
+	reviewsOutput, err := h.bookClient.ListBookReview(c, reviewsInput)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -96,7 +98,7 @@ func (h *bookshelfHandler) Get(ctx *gin.Context) {
 		UserIds: userIDs,
 	}
 
-	usersOutput, err := h.userClient.MultiGetUser(ctx, usersInput)
+	usersOutput, err := h.userClient.MultiGetUser(c, usersInput)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return

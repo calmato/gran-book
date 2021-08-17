@@ -54,7 +54,8 @@ func (h *reviewHandler) ListByBook(ctx *gin.Context) {
 		Offset: offset,
 	}
 
-	reviewsOutput, err := h.bookClient.ListBookReview(ctx, reviewsInput)
+	c := util.SetMetadata(ctx)
+	reviewsOutput, err := h.bookClient.ListBookReview(c, reviewsInput)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -69,7 +70,7 @@ func (h *reviewHandler) ListByBook(ctx *gin.Context) {
 		UserIds: userIDs,
 	}
 
-	usersOutput, err := h.userClient.MultiGetUser(ctx, usersInput)
+	usersOutput, err := h.userClient.MultiGetUser(c, usersInput)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -91,7 +92,8 @@ func (h *reviewHandler) ListByUser(ctx *gin.Context) {
 		Offset: offset,
 	}
 
-	reviewsOutput, err := h.bookClient.ListUserReview(ctx, reviewsInput)
+	c := util.SetMetadata(ctx)
+	reviewsOutput, err := h.bookClient.ListUserReview(c, reviewsInput)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -106,7 +108,7 @@ func (h *reviewHandler) ListByUser(ctx *gin.Context) {
 		BookIds: bookIDs,
 	}
 
-	booksOutput, err := h.bookClient.MultiGetBooks(ctx, booksInput)
+	booksOutput, err := h.bookClient.MultiGetBooks(c, booksInput)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -134,7 +136,8 @@ func (h *reviewHandler) GetByBook(ctx *gin.Context) {
 		BookId: bookID,
 	}
 
-	_, err = h.bookClient.GetBook(ctx, bookInput)
+	c := util.SetMetadata(ctx)
+	_, err = h.bookClient.GetBook(c, bookInput)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -144,7 +147,7 @@ func (h *reviewHandler) GetByBook(ctx *gin.Context) {
 		ReviewId: reviewID,
 	}
 
-	reviewOutput, err := h.bookClient.GetReview(ctx, reviewInput)
+	reviewOutput, err := h.bookClient.GetReview(c, reviewInput)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -154,7 +157,7 @@ func (h *reviewHandler) GetByBook(ctx *gin.Context) {
 		UserId: reviewOutput.GetUserId(),
 	}
 
-	userOutput, err := h.userClient.GetUser(ctx, userInput)
+	userOutput, err := h.userClient.GetUser(c, userInput)
 	if err != nil && !util.IsNotFound(err) {
 		util.ErrorHandling(ctx, err)
 		return
@@ -177,7 +180,8 @@ func (h *reviewHandler) GetByUser(ctx *gin.Context) {
 		ReviewId: reviewID,
 	}
 
-	reviewOutput, err := h.bookClient.GetReview(ctx, reviewInput)
+	c := util.SetMetadata(ctx)
+	reviewOutput, err := h.bookClient.GetReview(c, reviewInput)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -193,7 +197,7 @@ func (h *reviewHandler) GetByUser(ctx *gin.Context) {
 		BookId: reviewOutput.GetBookId(),
 	}
 
-	bookOutput, err := h.bookClient.GetBook(ctx, bookInput)
+	bookOutput, err := h.bookClient.GetBook(c, bookInput)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return

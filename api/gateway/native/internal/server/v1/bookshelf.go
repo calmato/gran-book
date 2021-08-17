@@ -57,7 +57,8 @@ func (h *bookshelfHandler) List(ctx *gin.Context) {
 		Offset: offset,
 	}
 
-	out, err := h.bookClient.ListBookshelf(ctx, in)
+	c := util.SetMetadata(ctx)
+	out, err := h.bookClient.ListBookshelf(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -81,7 +82,8 @@ func (h *bookshelfHandler) Get(ctx *gin.Context) {
 		BookId: bookID,
 	}
 
-	out, err := h.bookClient.GetBookshelf(ctx, in)
+	c := util.SetMetadata(ctx)
+	out, err := h.bookClient.GetBookshelf(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -114,7 +116,8 @@ func (h *bookshelfHandler) Read(ctx *gin.Context) {
 		ReadOn:     req.ReadOn,
 	}
 
-	out, err := h.bookClient.ReadBookshelf(ctx, in)
+	c := util.SetMetadata(ctx)
+	out, err := h.bookClient.ReadBookshelf(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -138,7 +141,8 @@ func (h *bookshelfHandler) Reading(ctx *gin.Context) {
 		BookId: bookID,
 	}
 
-	out, err := h.bookClient.ReadingBookshelf(ctx, in)
+	c := util.SetMetadata(ctx)
+	out, err := h.bookClient.ReadingBookshelf(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -162,7 +166,8 @@ func (h *bookshelfHandler) Stacked(ctx *gin.Context) {
 		BookId: bookID,
 	}
 
-	out, err := h.bookClient.StackedBookshelf(ctx, in)
+	c := util.SetMetadata(ctx)
+	out, err := h.bookClient.StackedBookshelf(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -186,7 +191,8 @@ func (h *bookshelfHandler) Want(ctx *gin.Context) {
 		BookId: bookID,
 	}
 
-	out, err := h.bookClient.WantBookshelf(ctx, in)
+	c := util.SetMetadata(ctx)
+	out, err := h.bookClient.WantBookshelf(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -210,7 +216,8 @@ func (h *bookshelfHandler) Release(ctx *gin.Context) {
 		BookId: bookID,
 	}
 
-	out, err := h.bookClient.ReleaseBookshelf(ctx, in)
+	c := util.SetMetadata(ctx)
+	out, err := h.bookClient.ReleaseBookshelf(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -234,7 +241,8 @@ func (h *bookshelfHandler) Delete(ctx *gin.Context) {
 		BookId: bookID,
 	}
 
-	_, err = h.bookClient.DeleteBookshelf(ctx, in)
+	c := util.SetMetadata(ctx)
+	_, err = h.bookClient.DeleteBookshelf(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return

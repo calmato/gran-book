@@ -41,7 +41,8 @@ func NewAuthHandler(authConn *grpc.ClientConn) AuthHandler {
 func (h *authHandler) Get(ctx *gin.Context) {
 	in := &pb.Empty{}
 
-	out, err := h.authClient.GetAuth(ctx, in)
+	c := util.SetMetadata(ctx)
+	out, err := h.authClient.GetAuth(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -67,7 +68,8 @@ func (h *authHandler) Create(ctx *gin.Context) {
 		PasswordConfirmation: req.PasswordConfirmation,
 	}
 
-	out, err := h.authClient.CreateAuth(ctx, in)
+	c := util.SetMetadata(ctx)
+	out, err := h.authClient.CreateAuth(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -92,7 +94,8 @@ func (h *authHandler) UpdateProfile(ctx *gin.Context) {
 		SelfIntroduction: req.SelfIntroduction,
 	}
 
-	out, err := h.authClient.UpdateAuthProfile(ctx, in)
+	c := util.SetMetadata(ctx)
+	out, err := h.authClient.UpdateAuthProfile(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -123,7 +126,8 @@ func (h *authHandler) UpdateAddress(ctx *gin.Context) {
 		AddressLine2:  req.AddressLine2,
 	}
 
-	out, err := h.authClient.UpdateAuthAddress(ctx, in)
+	c := util.SetMetadata(ctx)
+	out, err := h.authClient.UpdateAuthAddress(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -145,7 +149,8 @@ func (h *authHandler) UpdateEmail(ctx *gin.Context) {
 		Email: req.Email,
 	}
 
-	out, err := h.authClient.UpdateAuthEmail(ctx, in)
+	c := util.SetMetadata(ctx)
+	out, err := h.authClient.UpdateAuthEmail(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -168,7 +173,8 @@ func (h *authHandler) UpdatePassword(ctx *gin.Context) {
 		PasswordConfirmation: req.PasswordConfirmation,
 	}
 
-	out, err := h.authClient.UpdateAuthPassword(ctx, in)
+	c := util.SetMetadata(ctx)
+	out, err := h.authClient.UpdateAuthPassword(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -187,7 +193,8 @@ func (h *authHandler) UploadThumbnail(ctx *gin.Context) {
 	}
 	defer file.Close()
 
-	stream, err := h.authClient.UploadAuthThumbnail(ctx)
+	c := util.SetMetadata(ctx)
+	stream, err := h.authClient.UploadAuthThumbnail(c)
 	if err != nil {
 		util.ErrorHandling(ctx, entity.ErrInternalServerError.New(err))
 		return
@@ -232,7 +239,8 @@ func (h *authHandler) UploadThumbnail(ctx *gin.Context) {
 
 // Delete - ユーザー退会
 func (h *authHandler) Delete(ctx *gin.Context) {
-	_, err := h.authClient.DeleteAuth(ctx, &pb.Empty{})
+	c := util.SetMetadata(ctx)
+	_, err := h.authClient.DeleteAuth(c, &pb.Empty{})
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -253,7 +261,8 @@ func (h *authHandler) RegisterDevice(ctx *gin.Context) {
 		InstanceId: req.InstanceID,
 	}
 
-	out, err := h.authClient.RegisterAuthDevice(ctx, in)
+	c := util.SetMetadata(ctx)
+	out, err := h.authClient.RegisterAuthDevice(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, nil)
 		return

@@ -42,7 +42,8 @@ func (h *bookHandler) Get(ctx *gin.Context) {
 	bookID := ctx.Param("bookID")
 	key := ctx.DefaultQuery("key", "id")
 
-	bookOutput, err := h.getBook(ctx, bookID, key)
+	c := util.SetMetadata(ctx)
+	bookOutput, err := h.getBook(c, bookID, key)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -54,7 +55,7 @@ func (h *bookHandler) Get(ctx *gin.Context) {
 		Offset: 0,
 	}
 
-	reviewsOutput, err := h.bookClient.ListBookReview(ctx, reviewsInput)
+	reviewsOutput, err := h.bookClient.ListBookReview(c, reviewsInput)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -69,7 +70,7 @@ func (h *bookHandler) Get(ctx *gin.Context) {
 		UserIds: userIDs,
 	}
 
-	usersOutput, err := h.userClient.MultiGetUser(ctx, usersInput)
+	usersOutput, err := h.userClient.MultiGetUser(c, usersInput)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return

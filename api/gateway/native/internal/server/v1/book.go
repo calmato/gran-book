@@ -38,7 +38,8 @@ func NewBookHandler(bookConn *grpc.ClientConn, authConn *grpc.ClientConn) BookHa
 func (h *bookHandler) Get(ctx *gin.Context) {
 	isbn := ctx.Param("bookID")
 
-	authOutput, err := h.authClient.GetAuth(ctx, &pb.Empty{})
+	c := util.SetMetadata(ctx)
+	authOutput, err := h.authClient.GetAuth(c, &pb.Empty{})
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -48,7 +49,7 @@ func (h *bookHandler) Get(ctx *gin.Context) {
 		Isbn: isbn,
 	}
 
-	bookOutput, err := h.bookClient.GetBookByIsbn(ctx, bookInput)
+	bookOutput, err := h.bookClient.GetBookByIsbn(c, bookInput)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -59,7 +60,7 @@ func (h *bookHandler) Get(ctx *gin.Context) {
 		UserId: authOutput.GetId(),
 	}
 
-	bookshelfOutput, err := h.bookClient.GetBookshelf(ctx, bookshelfInput)
+	bookshelfOutput, err := h.bookClient.GetBookshelf(c, bookshelfInput)
 	if err != nil && !util.IsNotFound(err) {
 		util.ErrorHandling(ctx, err)
 		return
@@ -104,7 +105,8 @@ func (h *bookHandler) Create(ctx *gin.Context) {
 		Authors:        authors,
 	}
 
-	out, err := h.bookClient.CreateBook(ctx, in)
+	c := util.SetMetadata(ctx)
+	out, err := h.bookClient.CreateBook(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -149,7 +151,8 @@ func (h *bookHandler) Update(ctx *gin.Context) {
 		Authors:        authors,
 	}
 
-	out, err := h.bookClient.UpdateBook(ctx, in)
+	c := util.SetMetadata(ctx)
+	out, err := h.bookClient.UpdateBook(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
