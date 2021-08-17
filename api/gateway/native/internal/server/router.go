@@ -14,10 +14,11 @@ func Router(reg *Registry, opts ...gin.HandlerFunc) *gin.Engine {
 	r.Use(opts...)
 
 	authRequiredGroup := r.Group("")
+	authRequiredGroup.Use(reg.HTTP.SetRequestID())
 	authRequiredGroup.Use(reg.Authenticator.Authentication())
 
 	// non auth required routes
-	r.GET("/health", reg.Health.Check)
+	r.GET("/health", reg.HTTP.HealthCheck)
 	r.POST("/v1/auth", reg.V1Auth.Create)
 
 	// auth required routes

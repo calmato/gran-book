@@ -45,7 +45,9 @@ func (a *authenticator) Authentication() gin.HandlerFunc {
 }
 
 func (a *authenticator) setAuth(ctx *gin.Context, userID string) {
-	ctx.Set("userId", userID)
+	if userID != "" {
+		ctx.Set("userId", userID)
+	}
 }
 
 func (a *authenticator) setToken(ctx *gin.Context, token string) {

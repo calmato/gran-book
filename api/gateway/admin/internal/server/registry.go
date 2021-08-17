@@ -10,7 +10,7 @@ import (
 // Registry - DIコンテナ
 type Registry struct {
 	Authenticator util.Authenticator
-	Health        util.HealthHandler
+	HTTP          util.HTTP
 	V1Admin       v1.AdminHandler
 	V1Auth        v1.AuthHandler
 	V1Book        v1.BookHandler
@@ -44,7 +44,7 @@ func NewRegistry(
 
 	return &Registry{
 		Authenticator: util.NewAuthenticator(fa, authConn),
-		Health:        util.NewHealthHandler(),
+		HTTP:          v1.NewHTTPHandler(),
 		V1Admin:       v1.NewAdminHandler(adminConn),
 		V1Auth:        v1.NewAuthHandler(authConn),
 		V1Book:        v1.NewBookHandler(bookConn),

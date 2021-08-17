@@ -45,6 +45,9 @@ func (a *authenticator) Authentication() gin.HandlerFunc {
 			return
 		}
 
+		a.setToken(ctx, token)
+		a.setAuth(ctx, userID, entity.RoleUser)
+
 		ctx.Next()
 	}
 }
@@ -62,6 +65,8 @@ func (a *authenticator) Authorization() gin.HandlerFunc {
 			ErrorHandling(ctx, entity.ErrForbidden.New(err))
 			return
 		}
+
+		a.setAuth(ctx, out.GetId(), role)
 
 		ctx.Next()
 	}
@@ -81,8 +86,24 @@ func (a *authenticator) HasAdminRole() gin.HandlerFunc {
 			return
 		}
 
+		a.setAuth(ctx, out.GetId(), role)
+
 		ctx.Next()
 	}
+}
+
+func (a *authenticator) setAuth(ctx *gin.Context, userID string, role entity.Role) {
+	if userID != "" {
+		ctx.Set("userId", userID)
+	}
+
+	if role != entity.RoleUser {
+		ctx.Set("role", role)
+	}
+}
+
+func (a *authenticator) setToken(ctx *gin.Context, token string) {
+	ctx.Set("Authorization", fmt.Sprintf("Bearer %s", token))
 }
 
 func (a *authenticator) getToken(ctx *gin.Context) (string, error) {
