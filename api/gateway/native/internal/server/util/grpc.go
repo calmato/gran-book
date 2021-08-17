@@ -24,11 +24,11 @@ func SetMetadata(ctx *gin.Context) context.Context {
 		md.Ctx = gmd.AppendToOutgoingContext(md.Ctx, "userId", userID)
 	}
 
-	requestId := ctx.GetHeader("X-Request-ID")
-	if requestId == "" {
-		requestId = uuid.New().String()
+	requestID := ctx.GetHeader("X-Request-ID")
+	if requestID == "" {
+		requestID = uuid.New().String()
 	}
-	md.Ctx = gmd.AppendToOutgoingContext(md.Ctx, "X-Request-ID", requestId)
+	md.Ctx = gmd.AppendToOutgoingContext(md.Ctx, "X-Request-ID", requestID)
 
 	return md.Ctx
 }
