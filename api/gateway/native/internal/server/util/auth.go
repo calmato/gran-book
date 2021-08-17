@@ -37,8 +37,19 @@ func (a *authenticator) Authentication() gin.HandlerFunc {
 			return
 		}
 
+		a.setToken(ctx, token)
+		a.setAuth(ctx, userID)
+
 		ctx.Next()
 	}
+}
+
+func (a *authenticator) setAuth(ctx *gin.Context, userID string) {
+	ctx.Set("userId", userID)
+}
+
+func (a *authenticator) setToken(ctx *gin.Context, token string) {
+	ctx.Set("Authorization", fmt.Sprintf("Bearer %s", token))
 }
 
 func (a *authenticator) getToken(ctx *gin.Context) (string, error) {
