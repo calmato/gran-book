@@ -38,7 +38,8 @@ func (h *bookHandler) Delete(ctx *gin.Context) {
 		BookId: bookID,
 	}
 
-	_, err = h.bookClient.DeleteBook(ctx, in)
+	c := util.SetMetadata(ctx)
+	_, err = h.bookClient.DeleteBook(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return

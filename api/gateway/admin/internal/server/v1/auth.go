@@ -37,7 +37,8 @@ func NewAuthHandler(authConn *grpc.ClientConn) AuthHandler {
 func (h *authHandler) Get(ctx *gin.Context) {
 	in := &pb.Empty{}
 
-	out, err := h.authClient.GetAuth(ctx, in)
+	c := util.SetMetadata(ctx)
+	out, err := h.authClient.GetAuth(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -74,7 +75,8 @@ func (h *authHandler) UpdateEmail(ctx *gin.Context) {
 		Email: req.Email,
 	}
 
-	out, err := h.authClient.UpdateAuthEmail(ctx, in)
+	c := util.SetMetadata(ctx)
+	out, err := h.authClient.UpdateAuthEmail(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -98,7 +100,8 @@ func (h *authHandler) UpdatePassword(ctx *gin.Context) {
 		PasswordConfirmation: req.PasswordConfirmation,
 	}
 
-	out, err := h.authClient.UpdateAuthPassword(ctx, in)
+	c := util.SetMetadata(ctx)
+	out, err := h.authClient.UpdateAuthPassword(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -117,7 +120,8 @@ func (h *authHandler) UploadThumbnail(ctx *gin.Context) {
 	}
 	defer file.Close()
 
-	stream, err := h.authClient.UploadAuthThumbnail(ctx)
+	c := util.SetMetadata(ctx)
+	stream, err := h.authClient.UploadAuthThumbnail(c)
 	if err != nil {
 		util.ErrorHandling(ctx, entity.ErrInternalServerError.New(err))
 		return

@@ -69,7 +69,8 @@ func (h *adminHandler) List(ctx *gin.Context) {
 		in.Order = order
 	}
 
-	out, err := h.adminClient.ListAdmin(ctx, in)
+	c := util.SetMetadata(ctx)
+	out, err := h.adminClient.ListAdmin(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -87,7 +88,8 @@ func (h *adminHandler) Get(ctx *gin.Context) {
 		UserId: userID,
 	}
 
-	out, err := h.adminClient.GetAdmin(ctx, in)
+	c := util.SetMetadata(ctx)
+	out, err := h.adminClient.GetAdmin(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -118,7 +120,8 @@ func (h *adminHandler) Create(ctx *gin.Context) {
 		PasswordConfirmation: req.PasswordConfirmation,
 	}
 
-	out, err := h.adminClient.CreateAdmin(ctx, in)
+	c := util.SetMetadata(ctx)
+	out, err := h.adminClient.CreateAdmin(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -142,7 +145,8 @@ func (h *adminHandler) UpdateContact(ctx *gin.Context) {
 		PhoneNumber: req.PhoneNumber,
 	}
 
-	out, err := h.adminClient.UpdateAdminContact(ctx, in)
+	c := util.SetMetadata(ctx)
+	out, err := h.adminClient.UpdateAdminContact(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -171,7 +175,8 @@ func (h *adminHandler) UpdateProfile(ctx *gin.Context) {
 		ThumbnailUrl:  req.ThumbnailURL,
 	}
 
-	out, err := h.adminClient.UpdateAdminProfile(ctx, in)
+	c := util.SetMetadata(ctx)
+	out, err := h.adminClient.UpdateAdminProfile(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -195,7 +200,8 @@ func (h *adminHandler) UpdatePassword(ctx *gin.Context) {
 		PasswordConfirmation: req.PasswordConfirmation,
 	}
 
-	out, err := h.adminClient.UpdateAdminPassword(ctx, in)
+	c := util.SetMetadata(ctx)
+	out, err := h.adminClient.UpdateAdminPassword(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -216,7 +222,8 @@ func (h *adminHandler) UploadThumbnail(ctx *gin.Context) {
 	}
 	defer file.Close()
 
-	stream, err := h.adminClient.UploadAdminThumbnail(ctx)
+	c := util.SetMetadata(ctx)
+	stream, err := h.adminClient.UploadAdminThumbnail(c)
 	if err != nil {
 		util.ErrorHandling(ctx, entity.ErrInternalServerError.New(err))
 		return
@@ -281,7 +288,8 @@ func (h *adminHandler) Delete(ctx *gin.Context) {
 		UserId: userID,
 	}
 
-	_, err := h.adminClient.DeleteAdmin(ctx, in)
+	c := util.SetMetadata(ctx)
+	_, err := h.adminClient.DeleteAdmin(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return

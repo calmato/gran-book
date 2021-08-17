@@ -60,7 +60,8 @@ func (h *userHandler) List(ctx *gin.Context) {
 		in.Order = order
 	}
 
-	out, err := h.userClient.ListUser(ctx, in)
+	c := util.SetMetadata(ctx)
+	out, err := h.userClient.ListUser(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -77,7 +78,8 @@ func (h *userHandler) Get(ctx *gin.Context) {
 		UserId: userID,
 	}
 
-	out, err := h.userClient.GetUser(ctx, in)
+	c := util.SetMetadata(ctx)
+	out, err := h.userClient.GetUser(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
