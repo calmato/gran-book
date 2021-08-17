@@ -26,7 +26,7 @@ func (h *httpHandler) SetRequestID() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		requestID := ctx.GetHeader("X-Request-ID")
 		if requestID == "" {
-			requestID = uuid.NewUUID()
+			requestID = uuid.New().String()
 		}
 
 		ctx.Set("X-Request-ID", requestID)
