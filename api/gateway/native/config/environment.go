@@ -15,7 +15,7 @@ type Environment struct {
 	AuthServiceURL       string `envconfig:"AUTH_SERVICE_URL" default:"user_api:8080"`
 	UserServiceURL       string `envconfig:"USER_SERVICE_URL" default:"user_api:8080"`
 	ChatServiceURL       string `envconfig:"CHAT_SERVICE_URL" default:"user_api:8080"`
-	BookServiceURL       string `envconfig:"CHAT_SERVICE_URL" default:"book_api:8080"`
+	BookServiceURL       string `envconfig:"BOOK_SERVICE_URL" default:"book_api:8080"`
 	GCPServiceKeyJSON    string `envconfig:"GCP_SERVICE_KEY_JSON" required:"true"`
 	GCPStorageBucketName string `envconfig:"GCP_STORAGE_BUCKET_NAME" default:""`
 }
