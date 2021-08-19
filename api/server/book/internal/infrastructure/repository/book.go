@@ -481,7 +481,7 @@ func (r *bookRepository) associateAuthor(tx *gorm.DB, b *book.Book) error {
 		err := tx.
 			Table("authors").
 			Where("name = ? AND name_kana", a.Name, a.NameKana).
-			FirstOrCreate(&a).Error
+			FirstOrCreate(a).Error
 		if err != nil {
 			return exception.ErrorInDatastore.New(err)
 		}
