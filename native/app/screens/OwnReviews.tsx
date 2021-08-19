@@ -1,10 +1,11 @@
 import { MaterialIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 import React, { ReactElement, useEffect, useState } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import { Header, ListItem, Avatar } from 'react-native-elements';
+import { ListItem, Avatar } from 'react-native-elements';
 import { Badge } from 'react-native-elements/dist/badge/Badge';
 import { ScrollView } from 'react-native-gesture-handler';
-import HeaderText from '~/components/atoms/HeaderText';
+import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import { Auth } from '~/store/models';
 import { getOwnReviews } from '~/store/usecases';
 import { IReviewResponse } from '~/types/response';
@@ -22,6 +23,7 @@ const styles = StyleSheet.create({
   },
   reviewListStyle: {
     marginTop: 8,
+    marginBottom: 'auto',
     height: '100%',
   },
   reviewStyle: {
@@ -65,6 +67,7 @@ const nullData: IReviewResponse = {
 
 export const OwnReviews = function OwnReviews(props: Props): ReactElement {
   const [reviewList, setReviewList] = useState<IReviewResponse>(nullData);
+  const navigation = useNavigation();
 
   useEffect(() => {
     const f = async () => {
@@ -77,7 +80,7 @@ export const OwnReviews = function OwnReviews(props: Props): ReactElement {
   const review = reviewList.reviews;
   return (
     <View>
-      <Header centerComponent={<HeaderText title="自分の感想" />} />
+      <HeaderWithBackButton title="自分の感想" onPress={() => navigation.goBack()} />
       <Badge
         value={<Text style={{ fontSize: 16 }}>{`${reviewList.total}件`}</Text>}
         badgeStyle={styles.badgeStyle}
