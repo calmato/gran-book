@@ -10,7 +10,7 @@ env:
   PROTOTOOL_VERSION: 1.10.0
   ARTIFACT_TAG: ${{ github.sha }}
   TEST_DB_HOST: 127.0.0.1
-  TEST_DB_PORT: 3326
+  TEST_DB_PORT: 3306
   TEST_DB_USERNAME: root
   TEST_DB_PASSWORD: 12345678
 
@@ -98,9 +98,10 @@ jobs:
 
       - name: Start MySQL container
         working-directory: .
-        run: docker-compose up -d mysql_test
-        env:
-          MYSQL_PASSWORD: ${{ env.TEST_DB_PASSWORD }}
+        run: docker-compose -f docker-compose.ci.yaml up -d mysql
+
+      - name: Wait start MySQL
+        run: docker-compose -f docker-compose.ci.yaml run --rm wait mysql:3306 -- echo 'MySQL init process done. Ready for start up.'
 
       - name: Check golang version
         run: go version
