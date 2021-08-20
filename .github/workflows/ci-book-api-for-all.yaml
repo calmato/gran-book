@@ -100,7 +100,7 @@ jobs:
         working-directory: .
         run: docker-compose -f docker-compose.ci.yaml up -d mysql
 
-      - name: Wait start MySQL
+      - name: Wait start MySQL (debug)
         working-directory: .
         run: docker-compose -f docker-compose.ci.yaml run --rm wait mysql:3306 -- echo 'MySQL init process done. Ready for start up.'
 
