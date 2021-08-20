@@ -193,7 +193,7 @@ CREATE TABLE IF NOT EXISTS `books`.`bookshelves` (
   `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `book_id` BIGINT(20) UNSIGNED NOT NULL,
   `user_id` VARCHAR(36) NOT NULL,
-  `review_id` BIGINT(20) UNSIGNED NULL,
+  `review_id` BIGINT(20) UNSIGNED NULL DEFAULT 0,
   `status` TINYINT(4) UNSIGNED NOT NULL DEFAULT 0,
   `read_on` DATE NULL DEFAULT NULL,
   `created_at` DATETIME NOT NULL,
@@ -201,10 +201,8 @@ CREATE TABLE IF NOT EXISTS `books`.`bookshelves` (
   PRIMARY KEY (`id`),
   INDEX `idx_bookshelves_01` (`user_id` ASC) VISIBLE,
   INDEX `idx_bookshelves_02` (`book_id` ASC) VISIBLE,
-  INDEX `idx_bookshelves_03` (`review_id` ASC) VISIBLE,
   UNIQUE INDEX `ui_bookshelves_01` (`book_id` ASC, `user_id` ASC) VISIBLE,
   UNIQUE INDEX `ui_bookshelves_02` (`user_id` ASC, `book_id` ASC) VISIBLE,
-  UNIQUE INDEX `review_id_UNIQUE` (`review_id` ASC) VISIBLE,
   CONSTRAINT `fk_bookshelves_books_01`
     FOREIGN KEY (`book_id`)
     REFERENCES `books`.`books` (`id`)
@@ -214,11 +212,6 @@ CREATE TABLE IF NOT EXISTS `books`.`bookshelves` (
     FOREIGN KEY (`user_id`)
     REFERENCES `users`.`users` (`id`)
     ON DELETE CASCADE
-    ON UPDATE CASCADE,
-  CONSTRAINT `fk_bookshelves_reviews_01`
-    FOREIGN KEY (`review_id`)
-    REFERENCES `books`.`reviews` (`id`)
-    ON DELETE SET NULL
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
