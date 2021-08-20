@@ -108,7 +108,7 @@ jobs:
       - name: Wait start MySQL
         run: |
           #!/bin/bash
-          until nc -z 127.0.0.1 3326; do
+          until nc -z 127.0.0.1 3306; do
             >&2 echo 'mysql is unavailable - sleeping'
             sleep 3
           done
