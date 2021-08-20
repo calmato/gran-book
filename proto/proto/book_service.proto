@@ -105,7 +105,8 @@ message GetBookRequest {
 message GetBookByIsbnRequest {
   string isbn = 1 [
     (validate.rules).string = {
-      min_len: 1
+      min_len: 10
+      max_len: 16
     }
   ];
 }

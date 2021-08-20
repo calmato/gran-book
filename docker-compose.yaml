@@ -93,13 +93,18 @@ services:
       - PORT=8080
       - LOG_PATH=/var/log/api
       - LOG_LEVEL=${LOG_LEVEL}
-      - DB_HOST=${MYSQL_HOST}
-      - DB_PORT=${MYSQL_PORT}
+      - DB_HOST=mysql
+      - DB_PORT=3306
       - DB_USERNAME=${MYSQL_USERNAME}
       - DB_PASSWORD=${MYSQL_PASSWORD}
       - DB_DATABASE=${MYSQL_USER_DATABASE}
       - GCP_SERVICE_KEY_JSON=${GCP_SERVICE_KEY_JSON}
       - GCP_STORAGE_BUCKET_NAME=${GCP_STORAGE_BUCKET_NAME}
+      - TEST_DB_HOST=mysql_test
+      - TEST_DB_PORT=3306
+      - TEST_DB_USERNAME=${MYSQL_USERNAME}
+      - TEST_DB_PASSWORD=${MYSQL_PASSWORD}
+      - TEST_DB_DATABASE=${MYSQL_USER_DATABASE}
     ports:
       - 18080:8080
     networks:
@@ -122,13 +127,18 @@ services:
       - PORT=8080
       - LOG_PATH=/var/log/api
       - LOG_LEVEL=${LOG_LEVEL}
-      - DB_HOST=${MYSQL_HOST}
-      - DB_PORT=${MYSQL_PORT}
+      - DB_HOST=mysql
+      - DB_PORT=3306
       - DB_USERNAME=${MYSQL_USERNAME}
       - DB_PASSWORD=${MYSQL_PASSWORD}
       - DB_DATABASE=${MYSQL_BOOK_DATABASE}
       - GCP_SERVICE_KEY_JSON=${GCP_SERVICE_KEY_JSON}
       - GCP_STORAGE_BUCKET_NAME=${GCP_STORAGE_BUCKET_NAME}
+      - TEST_DB_HOST=mysql_test
+      - TEST_DB_PORT=3306
+      - TEST_DB_USERNAME=${MYSQL_USERNAME}
+      - TEST_DB_PASSWORD=${MYSQL_PASSWORD}
+      - TEST_DB_DATABASE=${MYSQL_BOOK_DATABASE}
     ports:
       - 18081:8080
     networks:
@@ -151,13 +161,18 @@ services:
       - PORT=8080
       - LOG_PATH=/var/log/api
       - LOG_LEVEL=${LOG_LEVEL}
-      - DB_HOST=${MYSQL_HOST}
-      - DB_PORT=${MYSQL_PORT}
+      - DB_HOST=mysql
+      - DB_PORT=3306
       - DB_USERNAME=${MYSQL_USERNAME}
       - DB_PASSWORD=${MYSQL_PASSWORD}
       - DB_DATABASE=${MYSQL_INFORMATION_DATABASE}
       - GCP_SERVICE_KEY_JSON=${GCP_SERVICE_KEY_JSON}
       - GCP_STORAGE_BUCKET_NAME=${GCP_STORAGE_BUCKET_NAME}
+      - TEST_DB_HOST=mysql_test
+      - TEST_DB_PORT=3306
+      - TEST_DB_USERNAME=${MYSQL_USERNAME}
+      - TEST_DB_PASSWORD=${MYSQL_PASSWORD}
+      - TEST_DB_DATABASE=${MYSQL_INFORMATION_DATABASE}
     ports:
       - 18082:8080
     networks:
@@ -182,6 +197,24 @@ services:
       - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD}
     ports:
       - 3316:3306
+    networks:
+      - api
+
+  mysql_test:
+    container_name: gran_book_mysql_test
+    platform: linux/x86_64
+    build:
+      context: ./infra/docker/infra/mysql
+      dockerfile: Dockerfile.test
+    volumes:
+      - ./infra/mysql/test.cnf:/etc/mysql/conf.d/my.cnf
+      - ./infra/mysql/sql:/docker-entrypoint-initdb.d
+      - ./tmp/logs/mysql_test:/var/log/mysql:delegated
+      - ./tmp/data/mysql_test:/var/lib/mysql:delegated
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD}
+    ports:
+      - 3326:3306
     networks:
       - api
 
