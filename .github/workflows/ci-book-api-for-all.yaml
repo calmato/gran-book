@@ -83,12 +83,12 @@ jobs:
 
     services:
       db:
-        image: mysql:8.0.23
+        image: mysql:8.0.22
         ports:
           - 33060:3306
         options: |
-          -v ./../../../infra/mysql/test.conf:/etc/mysql/conf.d/my.cnf
-          -v ./../../../infra/mysql/sql:/docker-entrypoint-initdb.d
+          -v ./infra/mysql/test.conf:/etc/mysql/conf.d/my.cnf
+          -v ./infra/mysql/sql:/docker-entrypoint-initdb.d
         env:
           MYSQL_ROOT_PASSWORD: 12345678
 
