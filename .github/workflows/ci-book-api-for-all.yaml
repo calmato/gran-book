@@ -100,9 +100,18 @@ jobs:
         working-directory: .
         run: docker-compose -f docker-compose.ci.yaml up -d mysql
 
-      - name: Wait start MySQL (debug)
-        working-directory: .
-        run: docker-compose -f docker-compose.ci.yaml run --rm wait mysql:3306 -- echo 'MySQL init process done. Ready for start up.'
+      # - name: Wait start MySQL (debug)
+      #   working-directory: .
+      #   run: docker-compose -f docker-compose.ci.yaml run --rm wait mysql:3306 -- echo 'MySQL init process done. Ready for start up.'
+
+      - name: Wait start MySQL
+        run: |
+          #!/bin/bash
+          until nc -z mysql 3306; do
+            >&2 echo 'mysql is unavailable - sleeping'
+            sleep 3
+          done
+          >&2 echo 'mysql is up - executing command'
 
       - name: Check golang version
         run: go version
