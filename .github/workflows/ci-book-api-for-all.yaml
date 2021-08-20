@@ -114,6 +114,9 @@ jobs:
           done
           >&2 echo 'mysql is up - executing command'
 
+      - name: Migrate
+        run: docker-compose exec mysql bash -c "mysql -uroot -p12345678 < /tmp/sql/*.sql"
+
       - name: Check golang version
         run: go version
 
