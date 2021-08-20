@@ -450,7 +450,7 @@ func TestBookRequestValidation_GetBookByIsbn(t *testing.T) {
 			name: "validation error: Isbn.min_len",
 			args: args{
 				req: &pb.GetBookByIsbnRequest{
-					Isbn: "123456789",
+					Isbn: strings.Repeat("x", 9),
 				},
 			},
 			want: false,
@@ -459,7 +459,7 @@ func TestBookRequestValidation_GetBookByIsbn(t *testing.T) {
 			name: "validation error: Isbn.max_len",
 			args: args{
 				req: &pb.GetBookByIsbnRequest{
-					Isbn: "12345678901234567",
+					Isbn: strings.Repeat("x", 17),
 				},
 			},
 			want: false,
