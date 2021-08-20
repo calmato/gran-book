@@ -9,6 +9,10 @@ env:
   PROTOBUF_VERSION: 3.9.0
   PROTOTOOL_VERSION: 1.10.0
   ARTIFACT_TAG: ${{ github.sha }}
+  TEST_DB_HOST: 127.0.0.1
+  TEST_DB_PORT: 3306
+  TEST_DB_USERNAME: root
+  TEST_DB_PASSWORD: 12345678
 
 jobs:
   setup_proto:
@@ -76,6 +80,17 @@ jobs:
       matrix:
         os: [ubuntu-latest] # exclude: macos-latest, windows-latest
         golang: ['^1.15.6']
+
+    services:
+      db:
+        image: mysql:8.0.23
+        ports:
+          - 33060:3306
+        options: |
+          -v ./../../../infra/mysql/test.conf:/etc/mysql/conf.d/my.cnf
+          -v ./../../../infra/mysql/sql:/docker-entrypoint-initdb.d
+        env:
+          MYSQL_ROOT_PASSWORD: 12345678
 
     steps:
       - name: Check out code
