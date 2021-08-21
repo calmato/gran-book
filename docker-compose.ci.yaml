@@ -11,6 +11,7 @@ services:
     volumes:
       - ./infra/mysql/test.cnf:/etc/mysql/conf.d/my.cnf
       # - ./infra/mysql/sql:/docker-entrypoint-initdb.d # 完了検知が難しいので手動で
+      - ./infra/mysql/sql:/tmp/sql # 完了検知が難しいので手動で
     environment:
       - MYSQL_ROOT_PASSWORD=12345678
     ports:
