@@ -109,6 +109,7 @@ jobs:
         run: |
           #!/bin/bash
 
+          docker exec mysql ls -a /tmp/sql
           for file in $(ls ./infra/mysql/sql); do
             echo "debug: file=${file}"
             docker exec mysql mysql -uroot -p12345678 < /tmp/sql/${file}
