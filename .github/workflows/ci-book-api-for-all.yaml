@@ -108,7 +108,6 @@ jobs:
             echo 'mysql is unavailable - sleeping'
             sleep 3
           done
-
           echo 'mysql is up - executing command'
 
       - name: Check golang version
