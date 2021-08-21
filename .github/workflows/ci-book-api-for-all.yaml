@@ -113,7 +113,6 @@ jobs:
             echo "debug: file=${file}"
             docker exec mysql mysql -uroot -p12345678 < /tmp/sql/${file}
           done
-
           # ddl=$(ls ./infra/mysql/sql' | sort)
           # echo "debug: ddl=${ddl}"
           # for i in "${ddl}"; do
