@@ -102,8 +102,10 @@ jobs:
           #/bin/bash
 
           docker-compose -f docker-compose.ci.yaml up -d mysql
-          ddl=$(ls ./infra/mysql/sql')
-          for i in ${ddl}; do
+          ddl=$(ls ./infra/mysql/sql' | sort)
+          echo "debug: ddl=${ddl}"
+          for i in "${ddl}"; do
+            echo "debug: i=${i}"
             docker-compose -f docker-compose.ci.yaml exec mysql bash -c "mysql -uroot -p12345678 < /tmp/sql/${i}"
           done
 
