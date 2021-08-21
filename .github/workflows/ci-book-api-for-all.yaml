@@ -106,35 +106,32 @@ jobs:
 
       - name: Start MySQL container
         working-directory: .
+        run: docker-compose -f docker-compose.ci.yaml up --build --detach mysql
+
+      - name: Wait start MySQL (debug)
+        working-directory: .
+        run: docker-compose -f docker-compose.ci.yaml run --rm wait mysql:3306 -- echo 'MySQL init process done. Ready for start up.'
+
+      - name: Wait start MySQL
         run: |
           #!/bin/bash
 
-          docker-compose -f docker-compose.ci.yaml up --force-recreate --detach mysql
+          until nc -z 127.0.0.1 3306; do
+            echo 'mysql is unavailable - sleeping'
+            sleep 3
+          done
+
+          echo 'mysql is up - executing command'
+
+      - name: Migrate
+        run: |
+          #!/bin/bash
+
           docker exec mysql ls -a /tmp/sql
+
           for file in $(ls ./infra/mysql/sql); do
-            echo "debug: file=${file}"
             docker exec mysql mysql -uroot -p12345678 < /tmp/sql/${file}
           done
-          # ddl=$(ls ./infra/mysql/sql' | sort)
-          # echo "debug: ddl=${ddl}"
-          # for i in "${ddl}"; do
-          #   echo "debug: i=${i}"
-          #   docker-compose -f docker-compose.ci.yaml exec mysql bash -c "mysql -uroot -p12345678 < /tmp/sql/${i}"
-          # done
-
-      # - name: Wait start MySQL (debug)
-      #   working-directory: .
-      #   run: docker-compose -f docker-compose.ci.yaml run --rm wait mysql:3306 -- echo 'MySQL init process done. Ready for start up.'
-
-      # TODO: タイムアウト処理追加する
-      # - name: Wait start MySQL
-      #   run: |
-      #     #!/bin/bash
-      #     until nc -z 127.0.0.1 3306; do
-      #       >&2 echo 'mysql is unavailable - sleeping'
-      #       sleep 3
-      #     done
-      #     >&2 echo 'mysql is up - executing command'
 
       - name: Migrate
         run: docker-compose -f docker-compose.ci.yaml exec mysql bash -c "mysql -uroot -p12345678 < /tmp/sql/*.sql"
