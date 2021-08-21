@@ -108,33 +108,16 @@ jobs:
         working-directory: .
         run: docker-compose -f docker-compose.ci.yaml up --build --detach mysql
 
-      - name: Wait start MySQL (debug)
-        working-directory: .
-        run: docker-compose -f docker-compose.ci.yaml run --rm wait mysql:3306 -- echo 'MySQL init process done. Ready for start up.'
-
       - name: Wait start MySQL
         run: |
           #!/bin/bash
 
-          until nc -z 127.0.0.1 3306; do
+          until mysqladmin ping -h${TEST_DB_HOST} -P${TEST_DB_PORT} -u${TEST_DB_USERNAME} -p${TEST_DB_PASSWORD}; do
             echo 'mysql is unavailable - sleeping'
             sleep 3
           done
 
           echo 'mysql is up - executing command'
-
-      - name: Migrate
-        run: |
-          #!/bin/bash
-
-          docker exec mysql ls -a /tmp/sql
-
-          for file in $(ls ./infra/mysql/sql); do
-            docker exec mysql mysql -uroot -p12345678 < /tmp/sql/${file}
-          done
-
-      - name: Migrate
-        run: docker-compose -f docker-compose.ci.yaml exec mysql bash -c "mysql -uroot -p12345678 < /tmp/sql/*.sql"
 
       - name: Check golang version
         run: go version
