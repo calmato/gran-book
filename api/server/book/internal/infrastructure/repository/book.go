@@ -461,13 +461,24 @@ func (r *bookRepository) associateBookshelf(tx *gorm.DB, bs *book.Bookshelf) err
 }
 
 func (r *bookRepository) associateAuthor(tx *gorm.DB, b *book.Book) error {
+	// 著者情報の取得 or 新規登録
+	for _, a := range b.Authors {
+		err := tx.
+			Table("authors").
+			Where("name = ? AND name_kana", a.Name, a.NameKana).
+			FirstOrCreate(a).Error
+		if err != nil {
+			return exception.ErrorInDatastore.New(err)
+		}
+	}
+
 	beforeAuthorIDs := []int{}
 
 	// 既存の関連レコード取得
 	err := tx.
 		Table("authors_books").
 		Select("author_id").
-		Where("book_id = ?", b.ID).Scan(&beforeAuthorIDs).Error
+		Where("book_id = ?", b.ID).Find(&beforeAuthorIDs).Error
 	if err != nil {
 		return exception.ErrorInDatastore.New(err)
 	}

@@ -12,8 +12,8 @@ type testEnv struct {
 	DBPort     string `envconfig:"TEST_DB_PORT" default:"3326"`
 	DBUsername string `envconfig:"TEST_DB_USERNAME" default:"root"`
 	DBPassword string `envconfig:"TEST_DB_PASSWORD" default:"12345678"`
-	DBUserDB   string `envconfig:"TEST_DB_DATABASE" default:"users"`
-	DBBookDB   string `envconfig:"TEST_DB_DATABASE" default:"books"`
+	DBUserDB   string `envconfig:"TEST_DB_USER_DB" default:"users"`
+	DBBookDB   string `envconfig:"TEST_DB_BOOK_DB" default:"books"`
 }
 
 func newTestEnv() (*testEnv, error) {
