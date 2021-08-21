@@ -110,17 +110,17 @@ jobs:
           #/bin/bash
 
           # docker-compose -f docker-compose.ci.yaml up -d mysql
-          until mysqladmin ping -u root -p12345678; do
-            >&2 echo 'mysql is unavailable - sleeping'
-            sleep 3
-          done
-          >&2 echo 'mysql is up - executing command'
+          # until mysqladmin ping -u root -p12345678; do
+          #   >&2 echo 'mysql is unavailable - sleeping'
+          #   sleep 3
+          # done
+          # >&2 echo 'mysql is up - executing command'
 
           ddl=$(ls ./infra/mysql/sql' | sort)
           echo "debug: ddl=${ddl}"
           for i in "${ddl}"; do
             echo "debug: i=${i}"
-            mysql -uroot -p12345678 < /tmp/sql/${i}
+            mysql --host 127.0.0.1 --port 3306 -uroot -p12345678 < /tmp/sql/${i}
           done
           # ddl=$(ls ./infra/mysql/sql' | sort)
           # echo "debug: ddl=${ddl}"
