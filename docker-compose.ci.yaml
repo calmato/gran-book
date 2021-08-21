@@ -9,7 +9,7 @@ services:
       context: ./infra/docker/infra/mysql
       dockerfile: Dockerfile.test
     volumes:
-      - ./infra/mysql/test.cnf:/etc/mysql/conf.d/my.cnf
+      - ./infra/mysql/ci.cnf:/etc/mysql/conf.d/my.cnf
       - ./infra/mysql/sql:/docker-entrypoint-initdb.d
     environment:
       - MYSQL_ROOT_PASSWORD=12345678

@@ -81,14 +81,6 @@ jobs:
         os: [ubuntu-latest] # exclude: macos-latest, windows-latest
         golang: ['^1.15.6']
 
-    # services:
-    #   mysql:
-    #     image: mysql:8.0.22
-    #     env:
-    #       MYSQL_ROOT_PASSWORD: 12345678
-    #       TZ: "Asia/Tokyo"
-    #       BIND-ADDRESS: 0.0.0.0
-
     steps:
       - name: Check out code
         uses: actions/checkout@v2
