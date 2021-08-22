@@ -195,7 +195,7 @@ CREATE TABLE IF NOT EXISTS `books`.`bookshelves` (
   `user_id` VARCHAR(36) NOT NULL,
   `review_id` BIGINT(20) UNSIGNED NULL DEFAULT 0,
   `status` TINYINT(4) UNSIGNED NOT NULL DEFAULT 0,
-  `read_on` DATE NULL DEFAULT NULL,
+  `read_on` DATETIME NULL DEFAULT NULL,
   `created_at` DATETIME NOT NULL,
   `updated_at` DATETIME NOT NULL,
   PRIMARY KEY (`id`),

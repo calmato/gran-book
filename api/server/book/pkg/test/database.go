@@ -14,16 +14,30 @@ func NewDBMock(ctrl *gomock.Controller) (*DBMocks, error) {
 		return nil, err
 	}
 
-	udb, err := database.NewClient(
-		env.DBSocket, env.DBHost, env.DBPort, env.DBUserDB, env.DBUsername, env.DBPassword,
-	)
+	udbp := &database.Params{
+		Socket:        env.DBSocket,
+		Host:          env.DBHost,
+		Port:          env.DBPort,
+		Database:      env.DBUserDB,
+		Username:      env.DBUsername,
+		Password:      env.DBPassword,
+		DisableLogger: true,
+	}
+	udb, err := database.NewClient(udbp)
 	if err != nil {
 		return nil, err
 	}
 
-	bdb, err := database.NewClient(
-		env.DBSocket, env.DBHost, env.DBPort, env.DBBookDB, env.DBUsername, env.DBPassword,
-	)
+	bdbp := &database.Params{
+		Socket:        env.DBSocket,
+		Host:          env.DBHost,
+		Port:          env.DBPort,
+		Database:      env.DBBookDB,
+		Username:      env.DBUsername,
+		Password:      env.DBPassword,
+		DisableLogger: true,
+	}
+	bdb, err := database.NewClient(bdbp)
 	if err != nil {
 		return nil, err
 	}
