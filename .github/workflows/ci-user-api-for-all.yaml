@@ -9,6 +9,10 @@ env:
   PROTOBUF_VERSION: 3.9.0
   PROTOTOOL_VERSION: 1.10.0
   ARTIFACT_TAG: ${{ github.sha }}
+  TEST_DB_HOST: 127.0.0.1
+  TEST_DB_PORT: 3306
+  TEST_DB_USERNAME: root
+  TEST_DB_PASSWORD: 12345678
 
 jobs:
   setup_proto:
@@ -91,6 +95,20 @@ jobs:
         with:
           name: artifact-${ARTIFACT_TAG}
           path: api/server/user/proto
+
+      - name: Start MySQL container
+        working-directory: .
+        run: docker-compose -f docker-compose.ci.yaml up --build --detach mysql
+
+      - name: Wait start MySQL
+        run: |
+          #!/bin/bash
+
+          until mysqladmin ping -h${TEST_DB_HOST} -P${TEST_DB_PORT} -u${TEST_DB_USERNAME} -p${TEST_DB_PASSWORD}; do
+            echo 'mysql is unavailable - sleeping'
+            sleep 3
+          done
+          echo 'mysql is up - executing command'
 
       - name: Check golang version
         run: go version
