@@ -36,7 +36,7 @@ func authInjection() application.AuthApplication {
 	return aa
 }
 
-func notificationInjection(db *repository.Client) application.NotificationApplication {
+func notificationInjection(db *database.Client) application.NotificationApplication {
 	nr := repository.NewNotificationRepository(db)
 	ndv := dv.NewNotificationDomainValidation()
 	ns := service.NewNotificationService(ndv, nr)

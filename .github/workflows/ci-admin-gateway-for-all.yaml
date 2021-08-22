@@ -130,5 +130,5 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
-          flags: unittests,backend,gateway,admin-gateway
+          flags: backend,backend/gateway,admin-gateway
           verbose: true
