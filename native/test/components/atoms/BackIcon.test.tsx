@@ -5,7 +5,6 @@ import React from 'react';
 import { colors } from 'react-native-elements';
 import * as ShallowRenderer from 'react-test-renderer/shallow';
 
-
 describe('<BackIcon />', () => {
   let render: ShallowRenderer.ShallowRenderer;
 

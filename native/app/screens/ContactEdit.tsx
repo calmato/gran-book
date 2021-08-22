@@ -4,26 +4,26 @@ import React, { ReactElement } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
-import { COLOR } from '~~/constants/theme';
+import { COLOR, FONT_SIZE } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
   subtitle: {
     marginTop: 12,
     marginLeft: 12,
     marginBottom: 6,
-    fontSize: 15,
+    fontSize: FONT_SIZE.TITLE_SUBHEADER,
     color: COLOR.TEXT_TITLE,
     fontWeight: '600',
   },
   mailStatus: {
     padding: 15,
-    fontSize: 16,
+    fontSize: FONT_SIZE.LISTITEM_TITLE,
     textAlign: 'right',
     color: COLOR.TEXT_DEFAULT,
     backgroundColor: COLOR.BACKGROUND_WHITE,
   },
   textStyle: {
-    fontSize: 16,
+    fontSize: FONT_SIZE.LISTITEM_TITLE,
     color: COLOR.TEXT_DEFAULT,
   },
 });

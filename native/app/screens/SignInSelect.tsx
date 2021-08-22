@@ -15,6 +15,7 @@ import { generateErrorMessage } from '~/lib/util/ErrorUtil';
 import { Auth } from '~/store/models';
 import { useReduxDispatch } from '~/store/modules';
 import { setAuth } from '~/store/modules/auth';
+import { FONT_SIZE } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
   container: {
@@ -25,7 +26,7 @@ const styles = StyleSheet.create({
     margin: 24,
   },
   text: {
-    fontSize: 12,
+    fontSize: FONT_SIZE.TEXT_ALERT,
     lineHeight: 18.5,
   },
 });

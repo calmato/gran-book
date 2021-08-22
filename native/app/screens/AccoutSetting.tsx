@@ -1,19 +1,18 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/core';
 import React, { ReactElement, useState } from 'react';
-import { Switch , StyleSheet, View, Text, SafeAreaView, ScrollView } from 'react-native';
+import { Switch, StyleSheet, View, Text, SafeAreaView, ScrollView } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
-
 import { UiContext } from '~/lib/context';
 import { Status } from '~/lib/context/ui';
-import { COLOR } from '~~/constants/theme';
+import { COLOR, FONT_SIZE } from '~~/constants/theme';
 const styles = StyleSheet.create({
   subtilte: {
     marginTop: 12,
     marginLeft: 12,
     marginBottom: 6,
-    fontSize: 15,
+    fontSize: FONT_SIZE.TITLE_SUBHEADER,
     color: COLOR.TEXT_TITLE,
     fontWeight: '600',
   },
@@ -21,7 +20,7 @@ const styles = StyleSheet.create({
     paddingBottom: 200,
   },
   textStyle: {
-    fontSize: 16,
+    fontSize: FONT_SIZE.LISTITEM_TITLE,
     color: COLOR.TEXT_DEFAULT,
   },
 });

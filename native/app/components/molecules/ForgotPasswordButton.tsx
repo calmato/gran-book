@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import React, { ReactElement } from 'react';
 import { StyleSheet, ViewStyle } from 'react-native';
 import { Button } from 'react-native-elements';
+import { FONT_SIZE } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
   buttonStyle: {
@@ -9,7 +10,7 @@ const styles = StyleSheet.create({
   },
   titleStyle: {
     fontWeight: 'normal',
-    fontSize: 14,
+    fontSize: FONT_SIZE.TEXT_INFO,
     color: 'black',
   },
   iconStyle: {

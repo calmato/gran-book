@@ -1,10 +1,11 @@
 import React, { ReactElement } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import { COLOR } from '~~/constants/theme';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { COLOR, FONT_SIZE } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
   textStyle: {
-    fontSize: 16,
+    fontSize: FONT_SIZE.TITLE_HEADER,
     fontWeight: 'bold',
     color: COLOR.TEXT_TITLE,
   },
@@ -15,14 +16,25 @@ const styles = StyleSheet.create({
 
 interface Props {
   title: string;
+  onPress?: () => void;
 }
 
 const HeaderText = function HeaderText(props: Props): ReactElement {
+  const headerText = (text: string) => {
+    return (
+      <Text style={styles.textStyle} numberOfLines={1}>
+        {text}
+      </Text>
+    );
+  };
+
   return (
     <View style={styles.layout}>
-      <Text style={styles.textStyle} numberOfLines={1}>
-        {props.title}
-      </Text>
+      {props.onPress ? (
+        <TouchableOpacity onPress={props.onPress}>{headerText(props.title)}</TouchableOpacity>
+      ) : (
+        headerText(props.title)
+      )}
     </View>
   );
 };

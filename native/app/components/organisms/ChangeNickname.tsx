@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
-import { COLOR } from '~~/constants/theme';
+import { COLOR, FONT_SIZE } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
   container: {
@@ -15,12 +15,12 @@ const styles = StyleSheet.create({
   },
   text: {
     color: COLOR.TEXT_DEFAULT,
-    fontSize: 16,
+    fontSize: FONT_SIZE.LISTITEM_TITLE,
     flex: 1,
   },
   input: {
     flex: 2,
-    fontSize: 16,
+    fontSize: FONT_SIZE.TEXT_INPUT,
   },
 });
 
@@ -37,7 +37,6 @@ const ChangeNickname = function ChangeNickname(props: Props): ReactElement {
         style={styles.input}
         maxLength={32}
         textAlign="right"
-        multiline={true}
         value={props.value}
         onChangeText={(text) => props.handelOnChangeText(text)}
         placeholder={'ニックネームを入力してください'}

@@ -17,11 +17,12 @@ export type AuthStackParamList = {
   PasswordReset: undefined;
 };
 
-export type HomeTabStackPramList = {
-  Home: undefined;
-  SearchResult: { keyword: string; };
+export type BookshelfTabStackParamList = {
+  Bookshelf: undefined;
+  SearchResult: { keyword: string };
   SearchResultBookShow: { book: ISearchResultItem };
   BookShow: { book: IBook };
+  BookReadRegister: { book: IBook };
 };
 
 export type UserInfoStackParamList = {

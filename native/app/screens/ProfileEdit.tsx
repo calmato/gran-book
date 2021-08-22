@@ -9,12 +9,14 @@ import GenderRadioGroup from '~/components/organisms/GenderRadioGroup';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import { generateErrorMessage } from '~/lib/util/ErrorUtil';
 import { ProfileEditForm } from '~/types/forms';
+import { COLOR, FONT_SIZE } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
   selfIntroduction: {
     minHeight: 100,
     textAlignVertical: 'top',
-    paddingRight: 20,
+    paddingRight: 16,
+    fontSize: FONT_SIZE.TEXT_INPUT,
   },
   button: {
     marginTop: 20,
@@ -22,7 +24,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   text: {
-    fontSize: 16,
+    fontSize: FONT_SIZE.LISTITEM_TITLE,
   },
 });
 
@@ -104,17 +106,21 @@ const ProfileEdit = function ProfileEdit(props: Props): ReactElement {
 
   return (
     <View>
-      <ScrollView stickyHeaderIndices={[0]}>
-        <HeaderWithBackButton title="プロフィール編集" onPress={() => navigation.goBack()} />
+      <HeaderWithBackButton title="プロフィール編集" onPress={() => navigation.goBack()} />
+      <ScrollView>
         <ListItem
           style={{ alignItems: 'flex-start' }}
           Component={TouchableOpacity}
           onPress={pickImage}>
-          <Avatar source={{ uri: userInfo.avatar }} rounded size="medium" />
+          {userInfo.avatar !== '' ? (
+            <Avatar source={{ uri: userInfo.avatar }} rounded size="medium" />
+          ) : (
+            <MaterialIcons name="person-outline" size={36} color={COLOR.GREY} />
+          )}
           <ListItem.Content>
             <Text style={styles.text}>アイコン変更</Text>
           </ListItem.Content>
-          <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
+          <MaterialIcons name="keyboard-arrow-right" size={24} color={COLOR.GREY} />
         </ListItem>
         <ChangeNickname
           value={userInfo.name}

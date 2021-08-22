@@ -9,7 +9,7 @@ import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import { external } from '~/lib/axios';
 import { generateErrorMessage } from '~/lib/util/ErrorUtil';
 import { AccountEditForm } from '~/types/forms';
-import { COLOR } from '~~/constants/theme';
+import { COLOR, FONT_SIZE } from '~~/constants/theme';
 
 const maxNameLength7 = 7;
 const maxNameLength16 = 16;
@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
     marginLeft: 12,
     marginBottom: 6,
-    fontSize: 15,
+    fontSize: FONT_SIZE.TITLE_SUBHEADER,
     color: COLOR.TEXT_TITLE,
     fontWeight: '600',
   },
