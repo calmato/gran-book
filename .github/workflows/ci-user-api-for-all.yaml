@@ -149,5 +149,4 @@ jobs:
           fail_ci_if_error: true
           files: ./tmp/coverage.txt
           flags: unittests
-          name: user-api
           verbose: true
