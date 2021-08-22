@@ -78,7 +78,7 @@ func (r *userRepository) ListFollow(ctx context.Context, q *database.ListQuery) 
 	err := r.client.
 		GetListQuery("relationships", r.client.DB, q).
 		Select(fields).
-		Joins("LEFT JOIN users ON relationships.follower_id = users.id").
+		Joins("LEFT JOIN users ON relationships.follow_id = users.id").
 		Find(&fs).Error
 	if err != nil {
 		return nil, exception.ErrorInDatastore.New(err)
@@ -101,7 +101,7 @@ func (r *userRepository) ListFollower(ctx context.Context, q *database.ListQuery
 	err := r.client.
 		GetListQuery("relationships", r.client.DB, q).
 		Select(fields).
-		Joins("LEFT JOIN users ON relationships.follow_id = users.id").
+		Joins("LEFT JOIN users ON relationships.follower_id = users.id").
 		Find(&fs).Error
 	if err != nil {
 		return nil, exception.ErrorInDatastore.New(err)

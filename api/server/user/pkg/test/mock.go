@@ -17,8 +17,8 @@ var (
 	ErrMock = errors.New("some error")
 
 	jst, _   = time.LoadLocation("Asia/Tokyo")
-	TimeMock = time.Date(2021, time.Month(7), 24, 20, 0, 0, 0, jst)
-	DateMock = time.Date(2021, time.Month(7), 24, 0, 0, 0, 0, jst)
+	TimeMock = time.Date(2021, time.Month(7), 24, 20, 0, 0, 0, jst).Local()
+	DateMock = time.Date(2021, time.Month(7), 24, 0, 0, 0, 0, jst).Local()
 )
 
 type TestResponse struct {
