@@ -622,7 +622,6 @@ func (r *bookRepository) associateAuthor(tx *gorm.DB, b *book.Book) error {
 	}
 
 	// 既存レコードとしてない場合、新たに関連レコードの作成
-	bas := []*book.BookAuthor{}
 	for _, a := range b.Authors {
 		if isExists, _ := array.Contains(beforeAuthorIDs, a.ID); isExists {
 			continue
@@ -635,12 +634,10 @@ func (r *bookRepository) associateAuthor(tx *gorm.DB, b *book.Book) error {
 			UpdatedAt: current,
 		}
 
-		bas = append(bas, ba)
-	}
-
-	err = tx.Table("authors_books").Create(&bas).Error
-	if err != nil {
-		return exception.ErrorInDatastore.New(err)
+		err = tx.Table("authors_books").Create(ba).Error
+		if err != nil {
+			return exception.ErrorInDatastore.New(err)
+		}
 	}
 
 	return nil
