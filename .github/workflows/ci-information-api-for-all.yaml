@@ -147,5 +147,5 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
-          flags: backend,backend/server,information-api
+          flags: backend,information-api
           verbose: true
