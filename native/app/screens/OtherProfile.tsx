@@ -1,6 +1,8 @@
-import React, { ReactElement } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import React, { ReactElement, useState } from 'react';
+import { RefreshControl, StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-elements';
+import { ScrollView } from 'react-native-gesture-handler';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import ProfileViewGroup from '~/components/organisms/ProfileViewGroup';
 import { COLOR, FONT_SIZE } from '~~/constants/theme';
@@ -13,7 +15,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLOR.BACKGROUND_WHITE,
     color: COLOR.TEXT_DEFAULT,
     marginTop: 10,
-    padding: 10,
+    padding: 16,
     alignSelf: 'stretch',
     minHeight: 100,
     fontSize: FONT_SIZE.TEXT_DEFAULT,
@@ -25,34 +27,72 @@ const styles = StyleSheet.create({
   },
 });
 
-const userInfo = {
-  name: 'にしくん',
-  avatarUrl: 'https://pbs.twimg.com/profile_images/1312909954148253696/Utr-sa_Y_400x400.jpg',
-  rating: 4.8,
-  reviewNum: 20,
-  saleNum: 3,
-  followerNum: 1,
-  followNum: 1,
-  selfIntroduction: 'たくさん買うぞー。',
-};
+interface Props {
+  username: string;
+  selfIntroduction: string;
+  thumbnailUrl: string | undefined;
+  gender: number;
+  rating: number;
+  reviewCount: number;
+  saleCount: number;
+  followerCount: number;
+  followCount: number;
+  actions: {
+    getOtherProfile: () => Promise<void>;
+  };
+}
 
-const OtherProfile = function OtherProfile(): ReactElement {
+const OtherProfile = function OtherProfile(props: Props): ReactElement {
+  const userInfo = {
+    rating: props.rating,
+    reviewCount: props.reviewCount,
+    saleCount: props.saleCount,
+    followerCount: props.followCount,
+    followCount: props.followCount,
+  };
+  const navigation = useNavigation();
+
+  const [hasGottonProfile, setHasGottonProfile] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const { getOtherProfile } = props.actions;
+
+  const handleGetOtherProfile = () => {
+    setIsLoading(true);
+    getOtherProfile()
+      .then(() => {
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.log('debug', err);
+      });
+  };
+
+  if (!hasGottonProfile) {
+    setHasGottonProfile(true);
+    handleGetOtherProfile();
+  }
+
   return (
     <View style={styles.container}>
-      <HeaderWithBackButton title="プロフィール" onPress={() => undefined} />
-      <ProfileViewGroup
-        name={userInfo.name}
-        avatarUrl={userInfo.avatarUrl}
-        rating={userInfo.rating}
-        reviewCount={userInfo.reviewNum}
-        saleCount={userInfo.saleNum}
-        followerCount={userInfo.followerNum}
-        followCount={userInfo.followNum}
-        buttonTitle={'フォローする'}
-        handleClick={() => undefined}
-      />
-      <Text style={styles.selfIntroduction}>{userInfo.selfIntroduction}</Text>
-      <Text style={styles.title}>出品リスト</Text>
+      <HeaderWithBackButton title={props.username} onPress={() => navigation.goBack()} />
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={isLoading} onRefresh={handleGetOtherProfile} />
+        }>
+        <ProfileViewGroup
+          name={props.username}
+          avatarUrl={props.thumbnailUrl}
+          rating={userInfo.rating}
+          reviewCount={userInfo.reviewCount}
+          saleCount={userInfo.saleCount}
+          followerCount={userInfo.followerCount}
+          followCount={userInfo.followCount}
+          buttonTitle={'プロフィールを編集'}
+          handleClick={() => navigation.navigate('ProfileEdit')}
+        />
+        <Text style={styles.selfIntroduction}>{props.selfIntroduction}</Text>
+        <Text style={styles.title}>出品リスト</Text>
+      </ScrollView>
     </View>
   );
 };
