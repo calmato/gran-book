@@ -9,6 +9,9 @@ npm-debug.*
 *.orig.*
 web-build/
 
+# Coverage directory used by tools like istanbul
+coverage
+
 # macOS
 .DS_Store
 
