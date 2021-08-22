@@ -3,9 +3,11 @@ package repository
 import (
 	"context"
 	"testing"
+	"time"
 
 	"github.com/calmato/gran-book/api/server/book/internal/domain/book"
 	"github.com/calmato/gran-book/api/server/book/pkg/database"
+	"github.com/calmato/gran-book/api/server/book/pkg/datetime"
 	"github.com/calmato/gran-book/api/server/book/pkg/test"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
@@ -1320,6 +1322,23 @@ func TestBookRepository_CreateBookshelf(t *testing.T) {
 					BookID:    b.ID,
 					UserID:    userID,
 					Status:    book.ReadStatus,
+					ReadOn:    datetime.StringToDate("2021-07-24"),
+					CreatedAt: test.TimeMock,
+					UpdatedAt: test.TimeMock,
+				},
+			},
+			want: want{
+				isErr: false,
+			},
+		},
+		{
+			name: "success: ReadOn is zero",
+			args: args{
+				bookshelf: &book.Bookshelf{
+					BookID:    b.ID,
+					UserID:    userID,
+					Status:    book.ReadStatus,
+					ReadOn:    time.Time{},
 					CreatedAt: test.TimeMock,
 					UpdatedAt: test.TimeMock,
 				},
