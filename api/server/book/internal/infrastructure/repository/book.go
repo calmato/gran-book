@@ -357,7 +357,7 @@ func (r *bookRepository) CreateAuthor(ctx context.Context, a *book.Author) error
 }
 
 func (r *bookRepository) createAuthor(tx *gorm.DB, a *book.Author) error {
-	err := r.client.DB.Table("authors").Create(a).Error
+	err := tx.Table("authors").Create(a).Error
 	if err != nil {
 		return exception.ErrorInDatastore.New(err)
 	}
