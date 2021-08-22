@@ -125,3 +125,10 @@ jobs:
 
       - name: Build
         run: make build
+
+      - uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true
+          flags: unittests,backend,gateway,native-gateway
+          verbose: true

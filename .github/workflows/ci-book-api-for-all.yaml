@@ -147,5 +147,5 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
-          flags: unittests,backend,book-api
+          flags: unittests,backend,server,book-api
           verbose: true
