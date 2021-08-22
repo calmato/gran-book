@@ -32,7 +32,7 @@ func NewDBMock(ctrl *gomock.Controller) (*DBMocks, error) {
 		Socket:        env.DBSocket,
 		Host:          env.DBHost,
 		Port:          env.DBPort,
-		Database:      env.DBInfomationDB,
+		Database:      env.DBInformationDB,
 		Username:      env.DBUsername,
 		Password:      env.DBPassword,
 		DisableLogger: true,

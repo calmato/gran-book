@@ -7,13 +7,13 @@ import (
 )
 
 type testEnv struct {
-	DBSocket       string `envconfig:"DB_SOCKET" default:"tcp"`
-	DBHost         string `envconfig:"TEST_DB_HOST" default:"127.0.0.1"`
-	DBPort         string `envconfig:"TEST_DB_PORT" default:"3326"`
-	DBUsername     string `envconfig:"TEST_DB_USERNAME" default:"root"`
-	DBPassword     string `envconfig:"TEST_DB_PASSWORD" default:"12345678"`
-	DBUserDB       string `envconfig:"TEST_DB_USER_DB" default:"users"`
-	DBInfomationDB string `envconfig:"TEST_DB_INFOMATION_DB" default:"informations"`
+	DBSocket        string `envconfig:"DB_SOCKET" default:"tcp"`
+	DBHost          string `envconfig:"TEST_DB_HOST" default:"127.0.0.1"`
+	DBPort          string `envconfig:"TEST_DB_PORT" default:"3326"`
+	DBUsername      string `envconfig:"TEST_DB_USERNAME" default:"root"`
+	DBPassword      string `envconfig:"TEST_DB_PASSWORD" default:"12345678"`
+	DBUserDB        string `envconfig:"TEST_DB_USER_DB" default:"users"`
+	DBInformationDB string `envconfig:"TEST_DB_INFORMATION_DB" default:"informations"`
 }
 
 func newTestEnv() (*testEnv, error) {
