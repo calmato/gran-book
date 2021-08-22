@@ -1,11 +1,21 @@
 PROTOC_GEN_GRPC_PATH=$(shell which grpc_tools_node_protoc_plugin)
-PROTOC_GEN_TS_PATH=$(shell which protoc-gen-ts)
+PROTOC_GEN_VALIDATE_VERSION=0.6.1
 
-ADMIN_GATEWAY_PATH='./../api/gateway/admin/src'
-NATIVE_GATEWAY_PATH='./../api/gateway/native/src'
-USER_API_PATH='./../api/server/user'
-BOOK_API_PATH='./../api/server/book'
-INFORMATION_API_PATH='./../api/server/information'
+PACKAGE_PATH=./pkg
+ARCHIVE_PATH=./archive
+
+ADMIN_GATEWAY_PATH=./../api/gateway/admin
+NATIVE_GATEWAY_PATH=./../api/gateway/native
+USER_SERVER_PATH=./../api/server/user
+BOOK_SERVER_PATH=./../api/server/book
+INFORMATION_SERVER_PATH=./../api/server/information
+
+##################################################
+# Main
+##################################################
+.PHONY: build
+
+build: install clean-all generate-all
 
 ##################################################
 # For Configuration
@@ -13,14 +23,23 @@ INFORMATION_API_PATH='./../api/server/information'
 .PHONY: install
 
 install:
+	go get \
+		github.com/envoyproxy/protoc-gen-validate@v${PROTOC_GEN_VALIDATE_VERSION}
 	go install \
-    google.golang.org/protobuf/cmd/protoc-gen-go \
-    google.golang.org/grpc/cmd/protoc-gen-go-grpc
+		google.golang.org/protobuf/cmd/protoc-gen-go \
+		google.golang.org/grpc/cmd/protoc-gen-go-grpc
+	mkdir -p ${PACKAGE_PATH}/github.com/envoyproxy
+	if [ -L ${PACKAGE_PATH}/github.com/envoyproxy/protoc-gen-validate ]; then \
+		unlink ${PACKAGE_PATH}/github.com/envoyproxy/protoc-gen-validate; \
+	fi
+	ln -s \
+		${GOPATH}/pkg/mod/github.com/envoyproxy/protoc-gen-validate@v${PROTOC_GEN_VALIDATE_VERSION} \
+		${PACKAGE_PATH}/github.com/envoyproxy/protoc-gen-validate
 
 ##################################################
 # For Protocol Buffer
 ##################################################
-.PHONY: generate format
+.PHONY: format clean generate protoc
 
 format:
 	prototool format -d
@@ -28,27 +47,37 @@ format:
 format-fix:
 	prototool format -w
 
+clean-all:
+	rm -rf ${ARCHIVE_PATH}/proto
+	$(MAKE) clean SERVICE_PATH=${NATIVE_GATEWAY_PATH}
+	$(MAKE) clean SERVICE_PATH=${ADMIN_GATEWAY_PATH}
+	$(MAKE) clean SERVICE_PATH=${USER_SERVER_PATH}
+	$(MAKE) clean SERVICE_PATH=${BOOK_SERVER_PATH}
+	$(MAKE) clean SERVICE_PATH=${INFORMATION_SERVER_PATH}
+
+clean:
+	rm -rf ${SERVICE_PATH}/proto/*.pb.go
+	rm -rf ${SERVICE_PATH}/proto/*.pb.validate.go
+
+generate-all:
+	$(MAKE) protoc ARCHIVE_PATH=${ARCHIVE_PATH}
+	$(MAKE) generate SERVICE_PATH=${NATIVE_GATEWAY_PATH}
+	$(MAKE) generate SERVICE_PATH=${ADMIN_GATEWAY_PATH}
+	$(MAKE) generate SERVICE_PATH=${USER_SERVER_PATH}
+	$(MAKE) generate SERVICE_PATH=${BOOK_SERVER_PATH}
+	$(MAKE) generate SERVICE_PATH=${INFORMATION_SERVER_PATH}
+
 generate:
-	$(MAKE) install
-	$(MAKE) protoc-gateway GATEWAY_PATH=${ADMIN_GATEWAY_PATH}
-	$(MAKE) protoc-gateway GATEWAY_PATH=${NATIVE_GATEWAY_PATH}
-	$(MAKE) protoc-service SERVICE_PATH=${USER_API_PATH}
-	$(MAKE) protoc-service SERVICE_PATH=${BOOK_API_PATH}
-	$(MAKE) protoc-service SERVICE_PATH=${INFORMATION_API_PATH}
+	cp -r ${ARCHIVE_PATH}/proto ${SERVICE_PATH}
 
-protoc-gateway:
-	protoc -I . \
-		--plugin=protoc-gen-ts=${PROTOC_GEN_TS_PATH} \
-		--plugin=protoc-gen-grpc=${PROTOC_GEN_GRPC_PATH} \
-		--js_out=import_style=commonjs,binary:${GATEWAY_PATH} \
-		--grpc_out=grpc_js:${GATEWAY_PATH} \
-		--ts_out=grpc_js:${GATEWAY_PATH} \
-		./proto/*.proto
-
-protoc-service:
-	protoc -I . \
-		--go_out ${SERVICE_PATH} \
+protoc:
+	protoc \
+		-I . \
+		-I ./pkg \
+		--go_out ${ARCHIVE_PATH} \
 		--go_opt paths=source_relative \
-		--go-grpc_out ${SERVICE_PATH} \
+		--go-grpc_out ${ARCHIVE_PATH} \
 		--go-grpc_opt paths=source_relative \
-		./proto/*api*.proto
+		--validate_out lang=go:${ARCHIVE_PATH} \
+		--validate_opt paths=source_relative \
+		./proto/*.proto

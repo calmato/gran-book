@@ -2,418 +2,369 @@ package application
 
 import (
 	"context"
+	"time"
 
-	"github.com/calmato/gran-book/api/server/book/internal/application/input"
-	"github.com/calmato/gran-book/api/server/book/internal/application/output"
-	"github.com/calmato/gran-book/api/server/book/internal/application/validation"
-	"github.com/calmato/gran-book/api/server/book/internal/domain"
 	"github.com/calmato/gran-book/api/server/book/internal/domain/book"
-	"github.com/calmato/gran-book/api/server/book/lib/datetime"
+	"github.com/calmato/gran-book/api/server/book/internal/domain/exception"
+	"github.com/calmato/gran-book/api/server/book/pkg/database"
 )
 
 // BookApplication - Bookアプリケーションのインターフェース
 type BookApplication interface {
-	ListByBookIDs(ctx context.Context, in *input.ListBookByBookIDs) ([]*book.Book, error)
-	ListBookshelf(ctx context.Context, in *input.ListBookshelf) ([]*book.Bookshelf, *output.ListQuery, error)
-	ListBookReview(ctx context.Context, in *input.ListBookReview) ([]*book.Review, *output.ListQuery, error)
-	ListUserReview(ctx context.Context, in *input.ListUserReview) ([]*book.Review, *output.ListQuery, error)
-	Show(ctx context.Context, id int) (*book.Book, error)
-	ShowByIsbn(ctx context.Context, isbn string) (*book.Book, error)
-	ShowBookshelf(ctx context.Context, userID string, bookID int) (*book.Bookshelf, error)
-	ShowReview(ctx context.Context, reviewID int) (*book.Review, error)
-	Create(ctx context.Context, in *input.Book) (*book.Book, error)
-	Update(ctx context.Context, in *input.Book) (*book.Book, error)
-	CreateOrUpdateBookshelf(ctx context.Context, in *input.Bookshelf) (*book.Bookshelf, error)
-	Delete(ctx context.Context, bookID int) error
-	DeleteBookshelf(ctx context.Context, bookID int, uid string) error
+	List(ctx context.Context, q *database.ListQuery) ([]*book.Book, int, error)
+	ListBookshelf(ctx context.Context, q *database.ListQuery) ([]*book.Bookshelf, int, error)
+	ListBookReview(ctx context.Context, bookID, limit, offset int) ([]*book.Review, int, error)
+	ListUserReview(ctx context.Context, userID string, limit, offset int) ([]*book.Review, int, error)
+	MultiGet(ctx context.Context, bookIDs []int) ([]*book.Book, error)
+	Get(ctx context.Context, bookID int) (*book.Book, error)
+	GetByIsbn(ctx context.Context, isbn string) (*book.Book, error)
+	GetBookshelfByUserIDAndBookID(ctx context.Context, userID string, bookID int) (*book.Bookshelf, error)
+	GetBookshelfByUserIDAndBookIDWithRelated(ctx context.Context, userID string, bookID int) (*book.Bookshelf, error)
+	GetReview(ctx context.Context, reviewID int) (*book.Review, error)
+	GetReviewByUserIDAndBookID(ctx context.Context, userID string, bookID int) (*book.Review, error)
+	Create(ctx context.Context, b *book.Book) error
+	CreateBookshelf(ctx context.Context, bs *book.Bookshelf) error
+	Update(ctx context.Context, b *book.Book) error
+	UpdateBookshelf(ctx context.Context, bs *book.Bookshelf) error
+	CreateOrUpdateBookshelf(ctx context.Context, bs *book.Bookshelf) error
+	MultipleCreate(ctx context.Context, bs []*book.Book) error
+	MultipleUpdate(ctx context.Context, bs []*book.Book) error
+	Delete(ctx context.Context, b *book.Book) error
+	DeleteBookshelf(ctx context.Context, bs *book.Bookshelf) error
 }
 
 type bookApplication struct {
-	bookRequestValidation validation.BookRequestValidation
-	bookService           book.Service
+	bookDomainValidation book.Validation
+	bookRepository       book.Repository
 }
 
 // NewBookApplication - BookApplicationの生成
-func NewBookApplication(brv validation.BookRequestValidation, bs book.Service) BookApplication {
+func NewBookApplication(bdv book.Validation, br book.Repository) BookApplication {
 	return &bookApplication{
-		bookRequestValidation: brv,
-		bookService:           bs,
+		bookDomainValidation: bdv,
+		bookRepository:       br,
 	}
 }
 
-func (a *bookApplication) ListByBookIDs(ctx context.Context, in *input.ListBookByBookIDs) ([]*book.Book, error) {
-	err := a.bookRequestValidation.ListBookByBookIDs(in)
+func (a *bookApplication) List(ctx context.Context, q *database.ListQuery) ([]*book.Book, int, error) {
+	bs, err := a.bookRepository.List(ctx, q)
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 
-	q := &domain.ListQuery{
-		Limit:  0,
-		Offset: 0,
-		Conditions: []*domain.QueryCondition{
-			{
-				Field:    "id",
-				Operator: "IN",
-				Value:    in.BookIDs,
-			},
-		},
+	total, err := a.bookRepository.Count(ctx, q)
+	if err != nil {
+		return nil, 0, err
 	}
 
-	return a.bookService.List(ctx, q)
+	return bs, total, nil
 }
 
-func (a *bookApplication) ListBookshelf(
-	ctx context.Context, in *input.ListBookshelf,
-) ([]*book.Bookshelf, *output.ListQuery, error) {
-	err := a.bookRequestValidation.ListBookshelf(in)
+func (a *bookApplication) ListBookshelf(ctx context.Context, q *database.ListQuery) ([]*book.Bookshelf, int, error) {
+	bss, err := a.bookRepository.ListBookshelf(ctx, q)
 	if err != nil {
-		return nil, nil, err
+		return nil, 0, err
 	}
 
-	query := &domain.ListQuery{
-		Limit:  in.Limit,
-		Offset: in.Offset,
-		Conditions: []*domain.QueryCondition{
-			{
-				Field:    "user_id",
-				Operator: "==",
-				Value:    in.UserID,
-			},
-		},
-	}
-
-	bss, err := a.bookService.ListBookshelf(ctx, query)
+	total, err := a.bookRepository.CountBookshelf(ctx, q)
 	if err != nil {
-		return nil, nil, err
+		return nil, 0, err
 	}
 
-	total, err := a.bookService.ListBookshelfCount(ctx, query)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	out := &output.ListQuery{
-		Limit:  in.Limit,
-		Offset: in.Offset,
-		Total:  total,
-	}
-
-	return bss, out, nil
+	return bss, total, nil
 }
 
 func (a *bookApplication) ListBookReview(
-	ctx context.Context, in *input.ListBookReview,
-) ([]*book.Review, *output.ListQuery, error) {
-	err := a.bookRequestValidation.ListBookReview(in)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	q := &domain.ListQuery{
-		Limit:  in.Limit,
-		Offset: in.Offset,
-		Conditions: []*domain.QueryCondition{
+	ctx context.Context, bookID int, limit int, offset int,
+) ([]*book.Review, int, error) {
+	q := &database.ListQuery{
+		Limit:  limit,
+		Offset: offset,
+		Conditions: []*database.ConditionQuery{
 			{
 				Field:    "book_id",
 				Operator: "==",
-				Value:    in.BookID,
+				Value:    bookID,
 			},
 		},
 	}
 
-	if in.By != "" {
-		o := &domain.QueryOrder{
-			By:        in.By,
-			Direction: in.Direction,
-		}
-
-		q.Order = o
-	}
-
-	rvs, err := a.bookService.ListReview(ctx, q)
+	rs, err := a.bookRepository.ListReview(ctx, q)
 	if err != nil {
-		return nil, nil, err
+		return nil, 0, err
 	}
 
-	total, err := a.bookService.ListReviewCount(ctx, q)
+	total, err := a.bookRepository.CountReview(ctx, q)
 	if err != nil {
-		return nil, nil, err
+		return nil, 0, err
 	}
 
-	out := &output.ListQuery{
-		Limit:  q.Limit,
-		Offset: q.Offset,
-		Total:  total,
-	}
-
-	if q.Order != nil {
-		o := &output.QueryOrder{
-			By:        q.Order.By,
-			Direction: q.Order.Direction,
-		}
-
-		out.Order = o
-	}
-
-	return rvs, out, nil
+	return rs, total, nil
 }
 
 func (a *bookApplication) ListUserReview(
-	ctx context.Context, in *input.ListUserReview,
-) ([]*book.Review, *output.ListQuery, error) {
-	err := a.bookRequestValidation.ListUserReview(in)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	q := &domain.ListQuery{
-		Limit:  in.Limit,
-		Offset: in.Offset,
-		Conditions: []*domain.QueryCondition{
+	ctx context.Context, userID string, limit int, offset int,
+) ([]*book.Review, int, error) {
+	q := &database.ListQuery{
+		Limit:  limit,
+		Offset: offset,
+		Conditions: []*database.ConditionQuery{
 			{
 				Field:    "user_id",
 				Operator: "==",
-				Value:    in.UserID,
+				Value:    userID,
 			},
 		},
 	}
 
-	if in.By != "" {
-		o := &domain.QueryOrder{
-			By:        in.By,
-			Direction: in.Direction,
-		}
-
-		q.Order = o
-	}
-
-	rvs, err := a.bookService.ListReview(ctx, q)
+	rs, err := a.bookRepository.ListReview(ctx, q)
 	if err != nil {
-		return nil, nil, err
+		return nil, 0, err
 	}
 
-	total, err := a.bookService.ListReviewCount(ctx, q)
+	total, err := a.bookRepository.CountReview(ctx, q)
 	if err != nil {
-		return nil, nil, err
+		return nil, 0, err
 	}
 
-	out := &output.ListQuery{
-		Limit:  q.Limit,
-		Offset: q.Offset,
-		Total:  total,
-	}
-
-	if q.Order != nil {
-		o := &output.QueryOrder{
-			By:        q.Order.By,
-			Direction: q.Order.Direction,
-		}
-
-		out.Order = o
-	}
-
-	return rvs, out, nil
+	return rs, total, nil
 }
 
-func (a *bookApplication) Show(ctx context.Context, id int) (*book.Book, error) {
-	return a.bookService.Show(ctx, id)
+func (a *bookApplication) MultiGet(ctx context.Context, bookIDs []int) ([]*book.Book, error) {
+	return a.bookRepository.MultiGet(ctx, bookIDs)
 }
 
-func (a *bookApplication) ShowByIsbn(ctx context.Context, isbn string) (*book.Book, error) {
-	return a.bookService.ShowByIsbn(ctx, isbn)
+func (a *bookApplication) Get(ctx context.Context, bookID int) (*book.Book, error) {
+	return a.bookRepository.Get(ctx, bookID)
 }
 
-func (a *bookApplication) ShowBookshelf(ctx context.Context, userID string, bookID int) (*book.Bookshelf, error) {
-	bs, err := a.bookService.ShowBookshelfByUserIDAndBookID(ctx, userID, bookID)
-	if err != nil {
-		return nil, err
-	}
-
-	rv, _ := a.bookService.ShowReviewByUserIDAndBookID(ctx, userID, bookID)
-
-	bs.Review = rv
-
-	return bs, nil
+func (a *bookApplication) GetByIsbn(ctx context.Context, isbn string) (*book.Book, error) {
+	return a.bookRepository.GetByIsbn(ctx, isbn)
 }
 
-func (a *bookApplication) ShowReview(ctx context.Context, reviewID int) (*book.Review, error) {
-	return a.bookService.ShowReview(ctx, reviewID)
-}
-
-func (a *bookApplication) Create(ctx context.Context, in *input.Book) (*book.Book, error) {
-	err := a.bookRequestValidation.Book(in)
-	if err != nil {
-		return nil, err
-	}
-
-	as := make([]*book.Author, len(in.Authors))
-	for i, v := range in.Authors {
-		author := &book.Author{
-			Name:     v.Name,
-			NameKana: v.NameKana,
-		}
-
-		err = a.bookService.ValidationAuthor(ctx, author)
-		if err != nil {
-			return nil, err
-		}
-
-		as[i] = author
-	}
-
-	b := &book.Book{
-		Title:          in.Title,
-		TitleKana:      in.TitleKana,
-		Description:    in.Description,
-		Isbn:           in.Isbn,
-		Publisher:      in.Publisher,
-		PublishedOn:    in.PublishedOn,
-		ThumbnailURL:   in.ThumbnailURL,
-		RakutenURL:     in.RakutenURL,
-		RakutenSize:    in.RakutenSize,
-		RakutenGenreID: in.RakutenGenreID,
-		Authors:        as,
-	}
-
-	err = a.bookService.Validation(ctx, b)
-	if err != nil {
-		return nil, err
-	}
-
-	err = a.bookService.Create(ctx, b)
-	if err != nil {
-		return nil, err
-	}
-
-	return b, nil
-}
-
-func (a *bookApplication) Update(ctx context.Context, in *input.Book) (*book.Book, error) {
-	err := a.bookRequestValidation.Book(in)
-	if err != nil {
-		return nil, err
-	}
-
-	b, err := a.bookService.ShowByIsbn(ctx, in.Isbn)
-	if err != nil {
-		return nil, err
-	}
-
-	as := make([]*book.Author, len(in.Authors))
-	for i, v := range in.Authors {
-		author := &book.Author{
-			Name:     v.Name,
-			NameKana: v.NameKana,
-		}
-
-		err = a.bookService.ValidationAuthor(ctx, author)
-		if err != nil {
-			return nil, err
-		}
-
-		as[i] = author
-	}
-
-	b.Title = in.Title
-	b.TitleKana = in.TitleKana
-	b.Description = in.Description
-	b.Isbn = in.Isbn
-	b.Publisher = in.Publisher
-	b.PublishedOn = in.PublishedOn
-	b.ThumbnailURL = in.ThumbnailURL
-	b.RakutenURL = in.RakutenURL
-	b.RakutenSize = in.RakutenSize
-	b.RakutenGenreID = in.RakutenGenreID
-	b.Authors = as
-
-	err = a.bookService.Validation(ctx, b)
-	if err != nil {
-		return nil, err
-	}
-
-	err = a.bookService.Update(ctx, b)
-	if err != nil {
-		return nil, err
-	}
-
-	return b, nil
-}
-
-func (a *bookApplication) CreateOrUpdateBookshelf(
-	ctx context.Context, in *input.Bookshelf,
+func (a *bookApplication) GetBookshelfByUserIDAndBookID(
+	ctx context.Context, userID string, bookID int,
 ) (*book.Bookshelf, error) {
-	err := a.bookRequestValidation.Bookshelf(in)
+	return a.bookRepository.GetBookshelfByUserIDAndBookID(ctx, userID, bookID)
+}
+
+func (a *bookApplication) GetBookshelfByUserIDAndBookIDWithRelated(
+	ctx context.Context, userID string, bookID int,
+) (*book.Bookshelf, error) {
+	b, err := a.bookRepository.Get(ctx, bookID)
 	if err != nil {
 		return nil, err
 	}
 
-	b, err := a.bookService.Show(ctx, in.BookID)
+	bs, err := a.bookRepository.GetBookshelfByUserIDAndBookID(ctx, userID, bookID)
 	if err != nil {
-		return nil, err
-	}
+		if err.(exception.CustomError).Code() != exception.NotFound {
+			return nil, err
+		}
 
-	rv, _ := a.bookService.ShowReviewByUserIDAndBookID(ctx, in.UserID, b.ID)
-	bs, _ := a.bookService.ShowBookshelfByUserIDAndBookID(ctx, in.UserID, b.ID)
-	if bs == nil {
 		bs = &book.Bookshelf{}
 	}
 
-	bs.BookID = b.ID
-	bs.UserID = in.UserID
-	bs.Status = in.Status
-	bs.ReadOn = datetime.StringToDate(in.ReadOn)
-	bs.Book = b
-	bs.Review = rv
-
-	if bs.Status == book.ReadStatus && in.Impression != "" {
-		if bs.Review == nil {
-			bs.Review = &book.Review{}
-		}
-
-		bs.Review.BookID = b.ID
-		bs.Review.UserID = in.UserID
-		bs.Review.Impression = in.Impression
-
-		err = a.bookService.ValidationReview(ctx, bs.Review)
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	err = a.bookService.ValidationBookshelf(ctx, bs)
+	r, err := a.bookRepository.GetReviewByUserIDAndBookID(ctx, userID, bookID)
 	if err != nil {
-		return nil, err
+		if err.(exception.CustomError).Code() != exception.NotFound {
+			return nil, err
+		}
+
+		r = &book.Review{}
 	}
 
-	if bs.ID == 0 {
-		err = a.bookService.CreateBookshelf(ctx, bs)
-		if err != nil {
-			return nil, err
-		}
-	} else {
-		err = a.bookService.UpdateBookshelf(ctx, bs)
-		if err != nil {
-			return nil, err
-		}
-	}
+	bs.Book = b
+	bs.Review = r
 
 	return bs, nil
 }
 
-func (a *bookApplication) Delete(ctx context.Context, bookID int) error {
-	b, err := a.bookService.Show(ctx, bookID)
-	if err != nil {
-		return err
-	}
-
-	return a.bookService.Delete(ctx, b.ID)
+func (a *bookApplication) GetReview(ctx context.Context, reviewID int) (*book.Review, error) {
+	return a.bookRepository.GetReview(ctx, reviewID)
 }
 
-func (a *bookApplication) DeleteBookshelf(ctx context.Context, bookID int, uid string) error {
-	b, err := a.bookService.ShowBookshelfByUserIDAndBookID(ctx, uid, bookID)
+func (a *bookApplication) GetReviewByUserIDAndBookID(
+	ctx context.Context, userID string, bookID int,
+) (*book.Review, error) {
+	return a.bookRepository.GetReviewByUserIDAndBookID(ctx, userID, bookID)
+}
+
+func (a *bookApplication) Create(ctx context.Context, b *book.Book) error {
+	current := time.Now().Local()
+
+	for _, author := range b.Authors {
+		err := a.bookDomainValidation.Author(ctx, author)
+		if err != nil {
+			return err
+		}
+
+		if author.ID == 0 {
+			author.CreatedAt = current
+		}
+
+		author.UpdatedAt = current
+	}
+
+	err := a.bookDomainValidation.Book(ctx, b)
 	if err != nil {
 		return err
 	}
 
-	return a.bookService.DeleteBookshelf(ctx, b.ID)
+	b.CreatedAt = current
+	b.UpdatedAt = current
+
+	return a.bookRepository.Create(ctx, b)
+}
+
+func (a *bookApplication) CreateBookshelf(ctx context.Context, bs *book.Bookshelf) error {
+	current := time.Now().Local()
+
+	if bs.Review != nil {
+		err := a.bookDomainValidation.Review(ctx, bs.Review)
+		if err != nil {
+			return err
+		}
+
+		if bs.Review.ID == 0 {
+			bs.Review.CreatedAt = current
+		}
+
+		bs.Review.UpdatedAt = current
+	}
+
+	err := a.bookDomainValidation.Bookshelf(ctx, bs)
+	if err != nil {
+		return err
+	}
+
+	bs.CreatedAt = current
+	bs.UpdatedAt = current
+
+	return a.bookRepository.CreateBookshelf(ctx, bs)
+}
+
+func (a *bookApplication) Update(ctx context.Context, b *book.Book) error {
+	current := time.Now().Local()
+
+	for _, author := range b.Authors {
+		err := a.bookDomainValidation.Author(ctx, author)
+		if err != nil {
+			return err
+		}
+
+		if author.ID == 0 {
+			author.CreatedAt = current
+		}
+
+		author.UpdatedAt = current
+	}
+
+	err := a.bookDomainValidation.Book(ctx, b)
+	if err != nil {
+		return err
+	}
+
+	b.UpdatedAt = current
+
+	return a.bookRepository.Update(ctx, b)
+}
+
+func (a *bookApplication) UpdateBookshelf(ctx context.Context, bs *book.Bookshelf) error {
+	current := time.Now().Local()
+
+	if bs.Review != nil {
+		err := a.bookDomainValidation.Review(ctx, bs.Review)
+		if err != nil {
+			return err
+		}
+
+		if bs.Review.ID == 0 {
+			bs.Review.CreatedAt = current
+		}
+
+		bs.Review.UpdatedAt = current
+	}
+
+	err := a.bookDomainValidation.Bookshelf(ctx, bs)
+	if err != nil {
+		return err
+	}
+
+	bs.UpdatedAt = current
+
+	return a.bookRepository.UpdateBookshelf(ctx, bs)
+}
+
+func (a *bookApplication) CreateOrUpdateBookshelf(ctx context.Context, bs *book.Bookshelf) error {
+	if bs.ID == 0 {
+		return a.CreateBookshelf(ctx, bs)
+	}
+
+	return a.UpdateBookshelf(ctx, bs)
+}
+
+func (a *bookApplication) MultipleCreate(ctx context.Context, bs []*book.Book) error {
+	current := time.Now().Local()
+
+	for _, b := range bs {
+		for _, author := range b.Authors {
+			err := a.bookDomainValidation.Author(ctx, author)
+			if err != nil {
+				return err
+			}
+
+			if author.ID == 0 {
+				author.CreatedAt = current
+			}
+
+			author.UpdatedAt = current
+		}
+
+		err := a.bookDomainValidation.Book(ctx, b)
+		if err != nil {
+			return err
+		}
+
+		b.CreatedAt = current
+		b.UpdatedAt = current
+	}
+
+	return a.bookRepository.MultipleCreate(ctx, bs)
+}
+
+func (a *bookApplication) MultipleUpdate(ctx context.Context, bs []*book.Book) error {
+	current := time.Now().Local()
+
+	for _, b := range bs {
+		for _, author := range b.Authors {
+			err := a.bookDomainValidation.Author(ctx, author)
+			if err != nil {
+				return err
+			}
+
+			if author.ID == 0 {
+				author.CreatedAt = current
+			}
+
+			author.UpdatedAt = current
+		}
+
+		err := a.bookDomainValidation.Book(ctx, b)
+		if err != nil {
+			return err
+		}
+
+		b.UpdatedAt = current
+	}
+
+	return a.bookRepository.MultipleUpdate(ctx, bs)
+}
+
+func (a *bookApplication) Delete(ctx context.Context, b *book.Book) error {
+	return a.bookRepository.Delete(ctx, b.ID)
+}
+
+func (a *bookApplication) DeleteBookshelf(ctx context.Context, bs *book.Bookshelf) error {
+	return a.bookRepository.DeleteBookshelf(ctx, bs.ID)
 }

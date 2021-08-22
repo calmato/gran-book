@@ -2,163 +2,101 @@ package application
 
 import (
 	"context"
-	"log"
+	"time"
 
-	"github.com/calmato/gran-book/api/server/user/internal/application/input"
-	"github.com/calmato/gran-book/api/server/user/internal/application/validation"
-	"github.com/calmato/gran-book/api/server/user/internal/domain"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/chat"
-	"github.com/calmato/gran-book/api/server/user/internal/domain/user"
-	"github.com/calmato/gran-book/api/server/user/lib/array"
+	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
+	"github.com/calmato/gran-book/api/server/user/pkg/array"
+	"github.com/calmato/gran-book/api/server/user/pkg/firebase/firestore"
+	"github.com/google/uuid"
+	"golang.org/x/xerrors"
 )
 
 // ChatApplication - Chatアプリケーションのインターフェース
 type ChatApplication interface {
-	ListRoom(ctx context.Context, cuid string) ([]*chat.Room, error)
-	CreateRoom(ctx context.Context, in *input.CreateRoom, cuid string) (*chat.Room, error)
-	CreateTextMessage(ctx context.Context, in *input.CreateTextMessage, roomID string, cuid string) (*chat.Message, error)
-	CreateImageMessage(
-		ctx context.Context, in *input.CreateImageMessage, roomID string, cuid string,
-	) (*chat.Message, error)
+	ListRoom(ctx context.Context, userID string, p *firestore.Params) ([]*chat.Room, error)
+	GetRoom(ctx context.Context, roomID string, userID string) (*chat.Room, error)
+	CreateRoom(ctx context.Context, cr *chat.Room) error
+	CreateMessage(ctx context.Context, cr *chat.Room, cm *chat.Message) error
+	UploadImage(ctx context.Context, cr *chat.Room, image []byte) (string, error)
 }
 
 type chatApplication struct {
-	chatRequestValidation validation.ChatRequestValidation
-	chatService           chat.Service
-	userService           user.Service
+	chatDomainValidation chat.Validation
+	chatRepository       chat.Repository
+	chatUploader         chat.Uploader
 }
 
 // NewChatApplication - ChatApplicationの生成
-func NewChatApplication(crv validation.ChatRequestValidation, cs chat.Service, us user.Service) ChatApplication {
+func NewChatApplication(cdv chat.Validation, cr chat.Repository, cu chat.Uploader) ChatApplication {
 	return &chatApplication{
-		chatRequestValidation: crv,
-		chatService:           cs,
-		userService:           us,
+		chatDomainValidation: cdv,
+		chatRepository:       cr,
+		chatUploader:         cu,
 	}
 }
 
-func (a *chatApplication) ListRoom(ctx context.Context, cuid string) ([]*chat.Room, error) {
-	q := &domain.ListQuery{
-		Order: &domain.QueryOrder{
-			By:        "updatedAt",
-			Direction: "desc",
+func (a *chatApplication) ListRoom(ctx context.Context, userID string, p *firestore.Params) ([]*chat.Room, error) {
+	qs := []*firestore.Query{
+		{
+			Field:    "users",
+			Operator: "array-contains",
+			Value:    userID,
 		},
 	}
 
-	return a.chatService.ListRoom(ctx, q, cuid)
+	return a.chatRepository.ListRoom(ctx, p, qs)
 }
 
-func (a *chatApplication) CreateRoom(ctx context.Context, in *input.CreateRoom, cuid string) (*chat.Room, error) {
-	err := a.chatRequestValidation.CreateRoom(in)
+func (a *chatApplication) GetRoom(ctx context.Context, roomID string, userID string) (*chat.Room, error) {
+	cr, err := a.chatRepository.GetRoom(ctx, roomID)
 	if err != nil {
 		return nil, err
 	}
 
-	cr := &chat.Room{
-		UserIDs: in.UserIDs,
-	}
-
-	if ok, _ := array.Contains(cr.UserIDs, cuid); !ok {
-		cr.UserIDs = append(cr.UserIDs, cuid)
-	}
-
-	err = a.chatService.ValidationRoom(ctx, cr)
-	if err != nil {
-		return nil, err
-	}
-
-	instanceIDs, err := a.userService.ListInstanceID(ctx, cr.UserIDs)
-	if err != nil {
-		return nil, err
-	}
-	cr.InstanceIDs = instanceIDs
-
-	err = a.chatService.CreateRoom(ctx, cr)
-	if err != nil {
-		return nil, err
-	}
-
-	err = a.chatService.PushCreateRoom(ctx, cr)
-	if err != nil {
-		log.Printf("Failed to push notification: %v", err) // TODO: エラーの出し方考える
+	isJoin, _ := array.Contains(cr.UserIDs, userID)
+	if !isJoin {
+		err := xerrors.New("This user is not join the room")
+		return nil, exception.Forbidden.New(err)
 	}
 
 	return cr, nil
 }
 
-func (a *chatApplication) CreateTextMessage(
-	ctx context.Context, in *input.CreateTextMessage, roomID string, cuid string,
-) (*chat.Message, error) {
-	err := a.chatRequestValidation.CreateTextMessage(in)
+func (a *chatApplication) CreateRoom(ctx context.Context, cr *chat.Room) error {
+	err := a.chatDomainValidation.Room(ctx, cr)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	cr, err := a.chatService.GetRoom(ctx, roomID)
-	if err != nil {
-		return nil, err
-	}
+	current := time.Now().Local()
+	cr.CreatedAt = current
+	cr.UpdatedAt = current
+	cr.ID = uuid.New().String()
 
-	cm := &chat.Message{
-		Text:   in.Text,
-		UserID: cuid,
-	}
-
-	err = a.chatService.ValidationMessage(ctx, cm)
-	if err != nil {
-		return nil, err
-	}
-
-	err = a.chatService.CreateMessage(ctx, cr, cm)
-	if err != nil {
-		return nil, err
-	}
-
-	err = a.chatService.PushNewMessage(ctx, cr, cm)
-	if err != nil {
-		log.Printf("Failed to push notification: %v", err) // TODO: エラーの出し方考える
-	}
-
-	return cm, nil
+	return a.chatRepository.CreateRoom(ctx, cr)
 }
 
-func (a *chatApplication) CreateImageMessage(
-	ctx context.Context, in *input.CreateImageMessage, roomID string, cuid string,
-) (*chat.Message, error) {
-	err := a.chatRequestValidation.CreateImageMessage(in)
+func (a *chatApplication) CreateMessage(ctx context.Context, cr *chat.Room, cm *chat.Message) error {
+	err := a.chatDomainValidation.Message(ctx, cm)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	cr, err := a.chatService.GetRoom(ctx, roomID)
+	cm.CreatedAt = time.Now().Local()
+	cm.ID = uuid.New().String()
+
+	err = a.chatRepository.CreateMessage(ctx, cr.ID, cm)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	imageURL, err := a.chatService.UploadImage(ctx, cr.ID, in.Image)
-	if err != nil {
-		return nil, err
-	}
+	cr.LatestMessage = cm
+	cr.UpdatedAt = cm.CreatedAt
 
-	cm := &chat.Message{
-		Image:  imageURL,
-		UserID: cuid,
-	}
+	return a.chatRepository.UpdateRoom(ctx, cr)
+}
 
-	err = a.chatService.ValidationMessage(ctx, cm)
-	if err != nil {
-		return nil, err
-	}
-
-	err = a.chatService.CreateMessage(ctx, cr, cm)
-	if err != nil {
-		return nil, err
-	}
-
-	err = a.chatService.PushNewMessage(ctx, cr, cm)
-	if err != nil {
-		log.Printf("Failed to push notification: %v", err) // TODO: エラーの出し方考える
-	}
-
-	return cm, nil
+func (a *chatApplication) UploadImage(ctx context.Context, cr *chat.Room, image []byte) (string, error) {
+	return a.chatUploader.Image(ctx, cr.ID, image)
 }

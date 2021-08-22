@@ -5,7 +5,7 @@ import { StyleSheet, View, Text, Switch, Platform } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import DefaultDataPicker from '~/components/molecules/DefaultDatePicker';
-import { COLOR } from '~~/constants/theme';
+import { COLOR, FONT_SIZE } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
   containerStyle: {
@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   textStyle: {
-    fontSize: 16,
+    fontSize: FONT_SIZE.LISTITEM_TITLE,
     color: COLOR.TEXT_DEFAULT,
   },
 });

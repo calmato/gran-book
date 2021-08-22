@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     margin: 24,
   },
   text: {
-    fontSize: FONT_SIZE.ALERT,
+    fontSize: FONT_SIZE.TEXT_ALERT,
     lineHeight: 18.5,
   },
 });

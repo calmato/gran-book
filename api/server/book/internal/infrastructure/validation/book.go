@@ -39,8 +39,8 @@ func (v *bookDomainValidation) Author(ctx context.Context, a *book.Author) error
 	return nil
 }
 
-func (v *bookDomainValidation) Bookshelf(ctx context.Context, b *book.Bookshelf) error {
-	err := v.uniqueCheckBookshelf(ctx, b.ID, b.UserID, b.BookID)
+func (v *bookDomainValidation) Bookshelf(ctx context.Context, bs *book.Bookshelf) error {
+	err := v.uniqueCheckBookshelf(ctx, bs.ID, bs.UserID, bs.BookID)
 	if err != nil {
 		ves := []*exception.ValidationError{
 			{
@@ -76,7 +76,7 @@ func (v *bookDomainValidation) uniqueCheckIsbn(ctx context.Context, id int, isbn
 		return nil
 	}
 
-	bookID, _ := v.bookRepository.GetIDByIsbn(ctx, isbn)
+	bookID, _ := v.bookRepository.GetBookIDByIsbn(ctx, isbn)
 	if bookID == 0 || bookID == id {
 		return nil
 	}

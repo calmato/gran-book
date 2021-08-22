@@ -2,384 +2,389 @@ package application
 
 import (
 	"context"
+	"time"
 
-	"github.com/calmato/gran-book/api/server/user/internal/application/input"
-	"github.com/calmato/gran-book/api/server/user/internal/application/output"
-	"github.com/calmato/gran-book/api/server/user/internal/application/validation"
-	"github.com/calmato/gran-book/api/server/user/internal/domain"
-	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/user"
+	"github.com/calmato/gran-book/api/server/user/pkg/array"
+	"github.com/calmato/gran-book/api/server/user/pkg/database"
 )
 
 // UserApplication - Userアプリケーションのインターフェース
 type UserApplication interface {
-	List(ctx context.Context, in *input.ListUser) ([]*user.User, *output.ListQuery, error)
-	ListByUserIDs(ctx context.Context, in *input.ListUserByUserIDs) ([]*user.User, error)
-	ListFollow(
-		ctx context.Context, in *input.ListFollow, uid string, cuid string,
-	) ([]*user.Follow, *output.ListQuery, error)
-	ListFollower(
-		ctx context.Context, in *input.ListFollower, uid string, cuid string,
-	) ([]*user.Follower, *output.ListQuery, error)
-	Search(ctx context.Context, in *input.SearchUser) ([]*user.User, *output.ListQuery, error)
-	Show(ctx context.Context, uid string) (*user.User, error)
-	GetUserProfile(ctx context.Context, uid string, cuid string) (*user.User, *output.UserProfile, error)
-	RegisterFollow(ctx context.Context, uid string, cuid string) (*user.User, *output.UserProfile, error)
-	UnregisterFollow(ctx context.Context, uid string, cuid string) (*user.User, *output.UserProfile, error)
+	Authentication(ctx context.Context) (*user.User, error)
+	List(ctx context.Context, q *database.ListQuery) ([]*user.User, int, error)
+	ListAdmin(ctx context.Context, q *database.ListQuery) ([]*user.User, int, error)
+	ListFollow(ctx context.Context, userID, targetID string, limit, offset int) ([]*user.Follow, int, error)
+	ListFollower(ctx context.Context, userID, targetID string, limit, offset int) ([]*user.Follower, int, error)
+	MultiGet(ctx context.Context, userIDs []string) ([]*user.User, error)
+	Get(ctx context.Context, userID string) (*user.User, error)
+	GetAdmin(ctx context.Context, userID string) (*user.User, error)
+	GetUserProfile(ctx context.Context, userID, targetID string) (*user.User, bool, bool, int, int, error)
+	Create(ctx context.Context, u *user.User) error
+	Update(ctx context.Context, u *user.User) error
+	UpdatePassword(ctx context.Context, u *user.User) error
+	Delete(ctx context.Context, u *user.User) error
+	DeleteAdmin(ctx context.Context, u *user.User) error
+	Follow(ctx context.Context, userID, followerID string) (*user.User, bool, bool, int, int, error)
+	Unfollow(ctx context.Context, userID, followerID string) (*user.User, bool, bool, int, int, error)
+	UploadThumbnail(ctx context.Context, userID string, thumbnail []byte) (string, error)
 }
 
 type userApplication struct {
-	userRequestValidation validation.UserRequestValidation
-	userService           user.Service
+	userDomainValidation user.Validation
+	userRepository       user.Repository
+	userUploader         user.Uploader
 }
 
 // NewUserApplication - UserApplicationの生成
-func NewUserApplication(urv validation.UserRequestValidation, us user.Service) UserApplication {
+func NewUserApplication(udv user.Validation, ur user.Repository, uu user.Uploader) UserApplication {
 	return &userApplication{
-		userRequestValidation: urv,
-		userService:           us,
+		userDomainValidation: udv,
+		userRepository:       ur,
+		userUploader:         uu,
 	}
 }
 
-func (a *userApplication) List(ctx context.Context, in *input.ListUser) ([]*user.User, *output.ListQuery, error) {
-	err := a.userRequestValidation.ListUser(in)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	query := &domain.ListQuery{
-		Limit:      in.Limit,
-		Offset:     in.Offset,
-		Conditions: []*domain.QueryCondition{},
-	}
-
-	if in.By != "" {
-		o := &domain.QueryOrder{
-			By:        in.By,
-			Direction: in.Direction,
-		}
-
-		query.Order = o
-	}
-
-	us, err := a.userService.List(ctx, query)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	total, err := a.userService.ListCount(ctx, query)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	out := &output.ListQuery{
-		Limit:  query.Limit,
-		Offset: query.Offset,
-		Total:  total,
-	}
-
-	if query.Order != nil {
-		o := &output.QueryOrder{
-			By:        query.Order.By,
-			Direction: query.Order.Direction,
-		}
-
-		out.Order = o
-	}
-
-	return us, out, nil
-}
-
-func (a *userApplication) ListByUserIDs(ctx context.Context, in *input.ListUserByUserIDs) ([]*user.User, error) {
-	err := a.userRequestValidation.ListUserByUserIDs(in)
+func (a *userApplication) Authentication(ctx context.Context) (*user.User, error) {
+	userID, err := a.userRepository.Authentication(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	q := &domain.ListQuery{
-		Limit:  0,
-		Offset: 0,
-		Conditions: []*domain.QueryCondition{
-			{
-				Field:    "id",
-				Operator: "IN",
-				Value:    in.UserIDs,
-			},
-		},
+	u, err := a.userRepository.Get(ctx, userID)
+	if err == nil {
+		return u, nil
 	}
 
-	return a.userService.List(ctx, q)
+	// err: Auth APIにはデータがあるが、User DBにはレコードがない
+	// -> Auth APIのデータを基にUser DBに登録
+	current := time.Now().Local()
+	ou := &user.User{
+		ID:        userID,
+		Gender:    user.UnkownGender,
+		Role:      user.UserRole,
+		CreatedAt: current,
+		UpdatedAt: current,
+	}
+
+	err = a.userRepository.CreateWithOAuth(ctx, ou)
+	if err != nil {
+		return nil, err
+	}
+
+	return ou, nil
+}
+
+func (a *userApplication) List(ctx context.Context, q *database.ListQuery) ([]*user.User, int, error) {
+	us, err := a.userRepository.List(ctx, q)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	total, err := a.userRepository.Count(ctx, q)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	return us, total, nil
+}
+
+func (a *userApplication) ListAdmin(ctx context.Context, q *database.ListQuery) ([]*user.User, int, error) {
+	cq := &database.ConditionQuery{
+		Field:    "role",
+		Operator: "IN",
+		Value:    []int{user.AdminRole, user.DeveloperRole, user.OperatorRole},
+	}
+	q.Conditions = append(q.Conditions, cq)
+
+	us, err := a.userRepository.List(ctx, q)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	total, err := a.userRepository.Count(ctx, q)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	return us, total, nil
 }
 
 func (a *userApplication) ListFollow(
-	ctx context.Context, in *input.ListFollow, uid string, cuid string,
-) ([]*user.Follow, *output.ListQuery, error) {
-	err := a.userRequestValidation.ListFollow(in)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	q := &domain.ListQuery{
-		Limit:  in.Limit,
-		Offset: in.Offset,
-		Conditions: []*domain.QueryCondition{
+	ctx context.Context, currentUserID, targetUserID string, limit int, offset int,
+) ([]*user.Follow, int, error) {
+	// フォローしているユーザーの一覧を取得
+	q := &database.ListQuery{
+		Limit:  limit,
+		Offset: offset,
+		Conditions: []*database.ConditionQuery{
 			{
 				Field:    "follow_id",
 				Operator: "==",
-				Value:    uid,
+				Value:    targetUserID,
 			},
 		},
 	}
 
-	if in.By != "" {
-		o := &domain.QueryOrder{
-			By:        in.By,
-			Direction: in.Direction,
-		}
-
-		q.Order = o
-	}
-
-	fs, err := a.userService.ListFollow(ctx, q, cuid)
+	fs, err := a.userRepository.ListFollow(ctx, q)
 	if err != nil {
-		return nil, nil, err
+		return nil, 0, err
 	}
 
-	total, _, err := a.userService.ListFriendCount(ctx, uid)
+	followingUserIDs := make([]string, len(fs))
+	for i, f := range fs {
+		followingUserIDs[i] = f.FollowID
+	}
+
+	// ログインユーザーのフォロー/フォローワー検証
+	followIDs, err := a.userRepository.ListFollowID(ctx, currentUserID, followingUserIDs...)
 	if err != nil {
-		return nil, nil, err
+		return nil, 0, err
 	}
 
-	out := &output.ListQuery{
-		Limit:  q.Limit,
-		Offset: q.Offset,
-		Total:  total,
+	followerIDs, err := a.userRepository.ListFollowerID(ctx, currentUserID, followingUserIDs...)
+	if err != nil {
+		return nil, 0, err
 	}
 
-	if q.Order != nil {
-		o := &output.QueryOrder{
-			By:        q.Order.By,
-			Direction: q.Order.Direction,
-		}
+	for _, f := range fs {
+		isFollowing, _ := array.Contains(followerIDs, f.FollowID)
+		isFollowed, _ := array.Contains(followIDs, f.FollowID)
 
-		out.Order = o
+		f.IsFollowing = isFollowing
+		f.IsFollowed = isFollowed
 	}
 
-	return fs, out, nil
+	total, err := a.userRepository.CountRelationship(ctx, q)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	return fs, total, nil
 }
 
 func (a *userApplication) ListFollower(
-	ctx context.Context, in *input.ListFollower, uid string, cuid string,
-) ([]*user.Follower, *output.ListQuery, error) {
-	err := a.userRequestValidation.ListFollower(in)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	q := &domain.ListQuery{
-		Limit:  in.Limit,
-		Offset: in.Offset,
-		Conditions: []*domain.QueryCondition{
+	ctx context.Context, currentUserID, targetUserID string, limit int, offset int,
+) ([]*user.Follower, int, error) {
+	// フォローされているユーザーの一覧を取得
+	q := &database.ListQuery{
+		Limit:  limit,
+		Offset: offset,
+		Conditions: []*database.ConditionQuery{
 			{
 				Field:    "follower_id",
 				Operator: "==",
-				Value:    uid,
+				Value:    targetUserID,
 			},
 		},
 	}
 
-	if in.By != "" {
-		o := &domain.QueryOrder{
-			By:        in.By,
-			Direction: in.Direction,
-		}
-
-		q.Order = o
-	}
-
-	fs, err := a.userService.ListFollower(ctx, q, cuid)
+	fs, err := a.userRepository.ListFollower(ctx, q)
 	if err != nil {
-		return nil, nil, err
+		return nil, 0, err
 	}
 
-	_, total, err := a.userService.ListFriendCount(ctx, uid)
+	followedUserIDs := make([]string, len(fs))
+	for i, f := range fs {
+		followedUserIDs[i] = f.FollowerID
+	}
+
+	// ログインユーザーのフォロー/フォローワー検証
+	followIDs, err := a.userRepository.ListFollowID(ctx, currentUserID, followedUserIDs...)
 	if err != nil {
-		return nil, nil, err
+		return nil, 0, err
 	}
 
-	out := &output.ListQuery{
-		Limit:  q.Limit,
-		Offset: q.Offset,
-		Total:  total,
+	followerIDs, err := a.userRepository.ListFollowerID(ctx, currentUserID, followedUserIDs...)
+	if err != nil {
+		return nil, 0, err
 	}
 
-	if q.Order != nil {
-		o := &output.QueryOrder{
-			By:        q.Order.By,
-			Direction: q.Order.Direction,
-		}
+	for _, f := range fs {
+		isFollowing, _ := array.Contains(followerIDs, f.FollowerID)
+		isFollowed, _ := array.Contains(followIDs, f.FollowerID)
 
-		out.Order = o
+		f.IsFollowing = isFollowing
+		f.IsFollowed = isFollowed
 	}
 
-	return fs, out, nil
+	total, err := a.userRepository.CountRelationship(ctx, q)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	return fs, total, nil
 }
 
-func (a *userApplication) Search(ctx context.Context, in *input.SearchUser) ([]*user.User, *output.ListQuery, error) {
-	err := a.userRequestValidation.SearchUser(in)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	query := &domain.ListQuery{
-		Limit:  in.Limit,
-		Offset: in.Offset,
-		Conditions: []*domain.QueryCondition{
-			{
-				Field:    in.Field,
-				Operator: "LIKE",
-				Value:    in.Value,
-			},
-		},
-	}
-
-	if in.By != "" {
-		o := &domain.QueryOrder{
-			By:        in.By,
-			Direction: in.Direction,
-		}
-
-		query.Order = o
-	}
-
-	us, err := a.userService.List(ctx, query)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	total, err := a.userService.ListCount(ctx, query)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	out := &output.ListQuery{
-		Limit:  query.Limit,
-		Offset: query.Offset,
-		Total:  total,
-	}
-
-	if query.Order != nil {
-		o := &output.QueryOrder{
-			By:        query.Order.By,
-			Direction: query.Order.Direction,
-		}
-
-		out.Order = o
-	}
-
-	return us, out, nil
+func (a *userApplication) MultiGet(ctx context.Context, userIDs []string) ([]*user.User, error) {
+	return a.userRepository.MultiGet(ctx, userIDs)
 }
 
-func (a *userApplication) Show(ctx context.Context, uid string) (*user.User, error) {
-	return a.userService.Show(ctx, uid)
+func (a *userApplication) Get(ctx context.Context, userID string) (*user.User, error) {
+	return a.userRepository.Get(ctx, userID)
+}
+
+func (a *userApplication) GetAdmin(ctx context.Context, userID string) (*user.User, error) {
+	return a.userRepository.GetAdmin(ctx, userID)
 }
 
 func (a *userApplication) GetUserProfile(
-	ctx context.Context, uid string, cuid string,
-) (*user.User, *output.UserProfile, error) {
-	u, err := a.userService.Show(ctx, uid)
+	ctx context.Context, userID, targetID string,
+) (*user.User, bool, bool, int, int, error) {
+	u, err := a.userRepository.Get(ctx, targetID)
 	if err != nil {
-		return nil, nil, exception.NotFound.New(err)
+		return nil, false, false, 0, 0, err
 	}
 
-	followCount, followerCount, err := a.userService.ListFriendCount(ctx, uid)
+	isFollowing, isFollowed, followCount, followerCount, err := a.getRelationship(ctx, userID, u.ID)
 	if err != nil {
-		return nil, nil, err
+		return nil, false, false, 0, 0, err
 	}
 
-	isFollow, isFollower := a.userService.IsFriend(ctx, uid, cuid)
-
-	out := &output.UserProfile{
-		IsFollow:      isFollow,
-		IsFollower:    isFollower,
-		FollowCount:   followCount,
-		FollowerCount: followerCount,
-	}
-
-	return u, out, nil
+	return u, isFollowing, isFollowed, followCount, followerCount, nil
 }
 
-func (a *userApplication) RegisterFollow(
-	ctx context.Context, uid string, cuid string,
-) (*user.User, *output.UserProfile, error) {
-	u, err := a.userService.Show(ctx, uid)
-	if err != nil {
-		return nil, nil, exception.NotFound.New(err)
+func (a *userApplication) Create(ctx context.Context, u *user.User) error {
+	if u.Gender == 0 {
+		u.Gender = user.UnkownGender
 	}
 
+	if u.Role == 0 {
+		u.Role = user.UserRole
+	}
+
+	err := a.userDomainValidation.User(ctx, u)
+	if err != nil {
+		return err
+	}
+
+	current := time.Now().Local()
+	u.CreatedAt = current
+	u.UpdatedAt = current
+
+	return a.userRepository.Create(ctx, u)
+}
+
+func (a *userApplication) Update(ctx context.Context, u *user.User) error {
+	err := a.userDomainValidation.User(ctx, u)
+	if err != nil {
+		return err
+	}
+
+	u.UpdatedAt = time.Now().Local()
+
+	return a.userRepository.Update(ctx, u)
+}
+
+func (a *userApplication) UpdatePassword(ctx context.Context, u *user.User) error {
+	err := a.userDomainValidation.User(ctx, u)
+	if err != nil {
+		return err
+	}
+
+	u.UpdatedAt = time.Now().Local()
+
+	return a.userRepository.UpdatePassword(ctx, u.ID, u.Password)
+}
+
+func (a *userApplication) Delete(ctx context.Context, u *user.User) error {
+	return a.userRepository.Delete(ctx, u.ID)
+}
+
+func (a *userApplication) DeleteAdmin(ctx context.Context, u *user.User) error {
+	err := a.userDomainValidation.User(ctx, u)
+	if err != nil {
+		return err
+	}
+
+	u.UpdatedAt = time.Now().Local()
+	u.Role = user.UserRole
+
+	return a.userRepository.Update(ctx, u)
+}
+
+func (a *userApplication) Follow(
+	ctx context.Context, userID string, followerID string,
+) (*user.User, bool, bool, int, int, error) {
+	fu, err := a.userRepository.Get(ctx, followerID)
+	if err != nil {
+		return nil, false, false, 0, 0, err
+	}
+
+	current := time.Now().Local()
 	r := &user.Relationship{
-		FollowID:   cuid,
-		FollowerID: uid,
+		FollowID:   userID,
+		FollowerID: fu.ID,
+		CreatedAt:  current,
+		UpdatedAt:  current,
 	}
 
-	err = a.userService.ValidationRelationship(ctx, r)
+	err = a.userDomainValidation.Relationship(ctx, r)
 	if err != nil {
-		return nil, nil, err
+		return nil, false, false, 0, 0, err
 	}
 
-	err = a.userService.CreateRelationship(ctx, r)
+	err = a.userRepository.CreateRelationship(ctx, r)
 	if err != nil {
-		return nil, nil, err
+		return nil, false, false, 0, 0, err
 	}
 
-	followCount, followerCount, err := a.userService.ListFriendCount(ctx, uid)
+	isFollowing, isFollowed, followCount, followerCount, err := a.getRelationship(ctx, userID, fu.ID)
 	if err != nil {
-		return nil, nil, err
+		return nil, false, false, 0, 0, err
 	}
 
-	isFollow, isFollower := a.userService.IsFriend(ctx, uid, cuid)
-
-	out := &output.UserProfile{
-		IsFollow:      isFollow,
-		IsFollower:    isFollower,
-		FollowCount:   followCount,
-		FollowerCount: followerCount,
-	}
-
-	return u, out, nil
+	return fu, isFollowing, isFollowed, followCount, followerCount, nil
 }
 
-func (a *userApplication) UnregisterFollow(
-	ctx context.Context, uid string, cuid string,
-) (*user.User, *output.UserProfile, error) {
-	u, err := a.userService.Show(ctx, uid)
+func (a *userApplication) Unfollow(
+	ctx context.Context, userID string, followerID string,
+) (*user.User, bool, bool, int, int, error) {
+	fu, err := a.userRepository.Get(ctx, followerID)
 	if err != nil {
-		return nil, nil, exception.NotFound.New(err)
+		return nil, false, false, 0, 0, err
 	}
 
-	r, err := a.userService.ShowRelationshipByUID(ctx, uid, cuid)
+	relationshipID, err := a.userRepository.GetRelationshipIDByUserID(ctx, userID, fu.ID)
 	if err != nil {
-		return nil, nil, exception.NotFound.New(err)
+		return nil, false, false, 0, 0, err
 	}
 
-	err = a.userService.DeleteRelationship(ctx, r.ID)
+	err = a.userRepository.DeleteRelationship(ctx, relationshipID)
 	if err != nil {
-		return nil, nil, err
+		return nil, false, false, 0, 0, err
 	}
 
-	followCount, followerCount, err := a.userService.ListFriendCount(ctx, r.FollowerID)
+	isFollowing, isFollowed, followCount, followerCount, err := a.getRelationship(ctx, userID, fu.ID)
 	if err != nil {
-		return nil, nil, err
+		return nil, false, false, 0, 0, err
 	}
 
-	isFollow, isFollower := a.userService.IsFriend(ctx, r.FollowerID, r.FollowID)
+	return fu, isFollowing, isFollowed, followCount, followerCount, nil
+}
 
-	out := &output.UserProfile{
-		IsFollow:      isFollow,
-		IsFollower:    isFollower,
-		FollowCount:   followCount,
-		FollowerCount: followerCount,
+func (a *userApplication) UploadThumbnail(ctx context.Context, userID string, thumbnail []byte) (string, error) {
+	return a.userUploader.Thumbnail(ctx, userID, thumbnail)
+}
+
+func (a *userApplication) getRelationship(
+	ctx context.Context, currentUserID, targetUserID string,
+) (isFollowing, isFollowed bool, followCount, followerCount int, err error) {
+	followIDs, err := a.userRepository.ListFollowID(ctx, targetUserID)
+	if err != nil {
+		return
 	}
 
-	return u, out, nil
+	followerIDs, err := a.userRepository.ListFollowerID(ctx, targetUserID)
+	if err != nil {
+		return
+	}
+
+	isFollowing, _ = array.Contains(followIDs, currentUserID)
+	isFollowed, _ = array.Contains(followerIDs, currentUserID)
+
+	followCount = len(followIDs)
+	followerCount = len(followerIDs)
+
+	return
 }

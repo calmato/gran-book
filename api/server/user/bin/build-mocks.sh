@@ -7,6 +7,8 @@ if [ ! -f "${MOCKGEN_PATH}" ]; then
   exit 1
 fi
 
+rm -rf mock
+
 #############################
 # Variables
 #############################
@@ -54,13 +56,13 @@ build_package() {
 #############################
 # --- Domain ---
 build_file 'domain' 'repository.go'
-build_file 'domain' 'service.go'
 build_file 'domain' 'uploader.go'
-build_file 'domain' 'messaging.go'
 build_file 'domain' 'validation.go'
 
 # --- Application ---
-build_package 'application' 'validation'
+build_package 'application'
 
 # --- Infrastructure ---
-# build_package 'infrastructure' 'api'
+
+# --- Interface ---
+build_package 'interface' 'validation'

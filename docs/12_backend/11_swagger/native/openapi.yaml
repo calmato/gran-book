@@ -36,10 +36,12 @@ paths:
   /v1/auth/thumbnail:
     $ref: './paths/v1/auth.thumbnail.yaml'
   # User Service
-  /v1/users/{userId}/follow:
+  /v1/users/{userId}/follow/{followerId}:
     $ref: './paths/v1/user.follow.yaml'
-  /v1/users/{userId}/follower:
-    $ref: './paths/v1/user.follower.yaml'
+  /v1/users/{userId}/follows:
+    $ref: './paths/v1/user.follows.yaml'
+  /v1/users/{userId}/followers:
+    $ref: './paths/v1/user.followers.yaml'
   /v1/users/{userId}/profile:
     $ref: './paths/v1/user.profile.yaml'
   # Chat Service

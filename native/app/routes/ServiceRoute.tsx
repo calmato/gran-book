@@ -7,11 +7,12 @@ import UserInfoRoute from '~/routes/UserInfoRoute';
 import Home from '~/screens/Home';
 import Sale from '~/screens/Sale';
 import Store from '~/screens/Store';
-import { COLOR } from '~~/constants/theme';
+import { COLOR, FONT_SIZE } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
   labelStyle: {
     fontWeight: 'bold',
+    fontSize: FONT_SIZE.BUTTON_WITH_ICON,
   },
 });
 

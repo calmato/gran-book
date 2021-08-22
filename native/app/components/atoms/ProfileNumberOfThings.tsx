@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-elements';
-import { COLOR } from '~~/constants/theme';
+import { COLOR, FONT_SIZE } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
   container: {
@@ -12,6 +12,7 @@ const styles = StyleSheet.create({
   number: {
     paddingBottom: 10,
     color: COLOR.TEXT_DEFAULT,
+    fontSize: FONT_SIZE.TEXT_INFO,
   },
 });
 
