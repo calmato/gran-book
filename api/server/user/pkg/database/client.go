@@ -13,12 +13,22 @@ type Client struct {
 	DB *gorm.DB
 }
 
+type Params struct {
+	Socket        string
+	Host          string
+	Port          string
+	Database      string
+	Username      string
+	Password      string
+	DisableLogger bool
+}
+
 // NewClient - DBクライアントの構造体
-func NewClient(socket, host, port, database, username, password string) (*Client, error) {
-	con := getConfig(socket, host, port, database, username, password)
+func NewClient(params *Params) (*Client, error) {
+	con := getConfig(params)
 
 	// プライマリレプリカの作成
-	db, err := getDBClient(con)
+	db, err := getDBClient(con, params)
 	if err != nil {
 		return nil, err
 	}
@@ -30,32 +40,34 @@ func NewClient(socket, host, port, database, username, password string) (*Client
 	return c, nil
 }
 
-func getDBClient(config string) (*gorm.DB, error) {
-	opt := &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Info),
+func getDBClient(config string, params *Params) (*gorm.DB, error) {
+	opt := &gorm.Config{}
+
+	if !params.DisableLogger {
+		opt.Logger = logger.Default.LogMode(logger.Info)
 	}
 
 	return gorm.Open(mysql.Open(config), opt)
 }
 
-func getConfig(socket, host, port, database, username, password string) string {
-	switch socket {
+func getConfig(params *Params) string {
+	switch params.Socket {
 	case "tcp":
 		return fmt.Sprintf(
 			"%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
-			username,
-			password,
-			host,
-			port,
-			database,
+			params.Username,
+			params.Password,
+			params.Host,
+			params.Port,
+			params.Database,
 		)
 	case "unix":
 		return fmt.Sprintf(
 			"%s:%s@unix(%s)/%s?charset=utf8mb4&parseTime=true",
-			username,
-			password,
-			host,
-			database,
+			params.Username,
+			params.Password,
+			params.Host,
+			params.Database,
 		)
 	default:
 		return ""
