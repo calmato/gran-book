@@ -30,7 +30,7 @@ lint:
 	$(BIN)/golangci-lint run -c .golangci.yaml ./...
 
 test:
-	go test -v -cover -coverprofile=./tmp/coverage.txt -covermode=atomic $(TEST_PACKAGES)
+	go test -v -cover -coverprofile=coverage.txt -covermode=atomic $(TEST_PACKAGES)
 
 mockgen:
 	$(BIN)/build-mocks.sh
