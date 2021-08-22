@@ -150,5 +150,4 @@ jobs:
           files: ./tmp/coverage.txt
           flags: unittests
           name: user-api
-          path_to_write_report: ./tmp/codecov_report.txt
           verbose: true
