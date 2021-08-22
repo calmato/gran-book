@@ -2,7 +2,7 @@ GOLANGCI_VERSION := 1.33.0
 
 BIN := $(abspath ./bin)
 PACKAGES := $(shell go list ./... | grep -v -e "mock" -v -e "proto")
-TEST_PACKAGES := $(shell go list ./internal/... ./pkg/... | grep -v -e "domain" -v -e "infrastructure/storage" -v -e "pkg/firebase" -v -e "pkg/metadata")
+TEST_PACKAGES := $(shell go list ./internal/... ./pkg/... | grep -v -e "domain" -v -e "infrastructure/storage" -v -e "pkg/firebase" -v -e "pkg/metadata" -v -e "pkg/test")
 
 .PHONY: setup run build start fmt vet lint test
 
@@ -30,7 +30,7 @@ lint:
 	$(BIN)/golangci-lint run -c .golangci.yaml ./...
 
 test:
-	go test -v -cover $(TEST_PACKAGES)
+	go test -v -cover -coverprofile=coverage.txt -covermode=atomic $(TEST_PACKAGES)
 
 mockgen:
 	$(BIN)/build-mocks.sh

@@ -8,63 +8,63 @@ import (
 
 // User - Userエンティティ
 type User struct {
-	ID               string
-	Username         string
-	Gender           int
-	Email            string
-	PhoneNumber      string
-	Role             int
-	Password         string `gorm:"-"`
-	ThumbnailURL     string
-	SelfIntroduction string
-	LastName         string
-	FirstName        string
-	LastNameKana     string
-	FirstNameKana    string
-	PostalCode       string
-	Prefecture       string
-	City             string
-	AddressLine1     string
-	AddressLine2     string
-	InstanceID       string
-	CreatedAt        time.Time
-	UpdatedAt        time.Time
-	DeletedAt        gorm.DeletedAt
-	Follows          []*Follow   `gorm:"foreignKey:FollowID"`
-	Followers        []*Follower `gorm:"foreignKey:FollowerID"`
+	ID               string         `gorm:"default:null;primaryKey;<-:create"`
+	Username         string         `gorm:"default:null"`
+	Gender           int            `gorm:"default:null"`
+	Email            string         `gorm:"default:null"`
+	PhoneNumber      string         `gorm:"default:null"`
+	Role             int            `gorm:"default:null"`
+	Password         string         `gorm:"-"`
+	ThumbnailURL     string         `gorm:"default:null"`
+	SelfIntroduction string         `gorm:"default:null"`
+	LastName         string         `gorm:"default:null"`
+	FirstName        string         `gorm:"default:null"`
+	LastNameKana     string         `gorm:"default:null"`
+	FirstNameKana    string         `gorm:"default:null"`
+	PostalCode       string         `gorm:"default:null"`
+	Prefecture       string         `gorm:"default:null"`
+	City             string         `gorm:"default:null"`
+	AddressLine1     string         `gorm:"default:null"`
+	AddressLine2     string         `gorm:"default:null"`
+	InstanceID       string         `gorm:"default:null"`
+	CreatedAt        time.Time      `gorm:"default:null;<-:create"`
+	UpdatedAt        time.Time      `gorm:"default:null"`
+	DeletedAt        gorm.DeletedAt `gorm:"default:null"`
+	Follows          []*Follow      `gorm:"foreignKey:FollowID"`
+	Followers        []*Follower    `gorm:"foreignKey:FollowerID"`
 }
 
 // Relationship - Relationshipエンティティ (中間テーブル)
 type Relationship struct {
-	ID         int
-	FollowID   string
-	FollowerID string
-	CreatedAt  time.Time
-	UpdatedAt  time.Time
+	ID         int       `gorm:"default:null;primaryKey;autoIncrement;<-:create"`
+	FollowID   string    `gorm:"default:null"`
+	FollowerID string    `gorm:"default:null"`
+	CreatedAt  time.Time `gorm:"default:null"`
+	UpdatedAt  time.Time `gorm:"default:null"`
 }
 
 // Follow - フォローしているUserのエンティティ
 type Follow struct {
-	FollowID         string
-	Username         string
-	ThumbnailURL     string
-	SelfIntroduction string
-	IsFollowing      bool `gorm:"-"`
-	IsFollowed       bool `gorm:"-"`
-	FollowCount      int  `gorm:"-"`
-	FollowerCount    int  `gorm:"-"`
+	FollowID         string `gorm:"<-:false"`
+	Username         string `gorm:"<-:false"`
+	ThumbnailURL     string `gorm:"<-:false"`
+	SelfIntroduction string `gorm:"<-:false"`
+	IsFollowing      bool   `gorm:"-"`
+	IsFollowed       bool   `gorm:"-"`
+	FollowCount      int    `gorm:"-"`
+	FollowerCount    int    `gorm:"-"`
 }
 
 // Follower - フォローされているUserのエンティティ
 type Follower struct {
-	FollowerID       string
-	Username         string
-	ThumbnailURL     string
-	SelfIntroduction string
-	IsFollowing      bool `gorm:"-"`
-	IsFollowed       bool `gorm:"-"`
-	FollowCount      int  `gorm:"-"`
-	FollowerCount    int  `gorm:"-"`
+	FollowerID       string `gorm:"<-:false"`
+	Username         string `gorm:"<-:false"`
+	ThumbnailURL     string `gorm:"<-:false"`
+	SelfIntroduction string `gorm:"<-:false"`
+	IsFollowing      bool   `gorm:"-"`
+	IsFollowed       bool   `gorm:"-"`
+	FollowCount      int    `gorm:"-"`
+	FollowerCount    int    `gorm:"-"`
 }
 
 // ユーザ権限

@@ -87,9 +87,9 @@ func (r *bookRepository) CountReview(ctx context.Context, q *database.ListQuery)
 func (r *bookRepository) MultiGet(ctx context.Context, bookIDs []int) ([]*book.Book, error) {
 	bs := []*book.Book{}
 
-	err := r.client.DB.Table("books").Where("id IN (?)", bookIDs).Find(&bs).Error
+	err := r.client.DB.Table("books").Preload("Authors").Where("id IN (?)", bookIDs).Find(&bs).Error
 	if err != nil {
-		return nil, exception.NotFound.New(err)
+		return nil, exception.ErrorInDatastore.New(err)
 	}
 
 	return bs, nil
@@ -208,7 +208,7 @@ func (r *bookRepository) GetAuthorByName(ctx context.Context, name string) (*boo
 
 	err := r.client.DB.Table("authors").Where("name = ?", name).First(a).Error
 	if err != nil {
-		return nil, exception.ErrorInDatastore.New(err)
+		return nil, exception.NotFound.New(err)
 	}
 
 	return a, nil
@@ -270,18 +270,10 @@ func (r *bookRepository) CreateBookshelf(ctx context.Context, bs *book.Bookshelf
 		return err
 	}
 
-	if bs.ReadOn.IsZero() {
-		err = tx.Table("bookshelves").Omit(clause.Associations, "read_on").Create(&bs).Error
-		if err != nil {
-			tx.Rollback()
-			return exception.ErrorInDatastore.New(err)
-		}
-	} else {
-		err = tx.Table("bookshelves").Omit(clause.Associations).Create(&bs).Error
-		if err != nil {
-			tx.Rollback()
-			return exception.ErrorInDatastore.New(err)
-		}
+	err = tx.Table("bookshelves").Omit(clause.Associations).Create(&bs).Error
+	if err != nil {
+		tx.Rollback()
+		return exception.ErrorInDatastore.New(err)
 	}
 
 	return tx.Commit().Error
@@ -350,16 +342,9 @@ func (r *bookRepository) UpdateBookshelf(ctx context.Context, bs *book.Bookshelf
 		return err
 	}
 
-	if bs.ReadOn.IsZero() {
-		err = r.client.DB.Table("bookshelves").Omit(clause.Associations, "read_on").Save(&bs).Error
-		if err != nil {
-			return exception.ErrorInDatastore.New(err)
-		}
-	} else {
-		err = r.client.DB.Table("bookshelves").Omit(clause.Associations).Save(&bs).Error
-		if err != nil {
-			return exception.ErrorInDatastore.New(err)
-		}
+	err = r.client.DB.Table("bookshelves").Omit(clause.Associations).Save(&bs).Error
+	if err != nil {
+		return exception.ErrorInDatastore.New(err)
 	}
 
 	return tx.Commit().Error
