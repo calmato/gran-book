@@ -622,7 +622,7 @@ func (r *bookRepository) associateAuthor(tx *gorm.DB, b *book.Book) error {
 	}
 
 	// 既存レコードとしてない場合、新たに関連レコードの作成
-	bas := make([]*book.BookAuthor, 0, len(b.Authors))
+	bas := []*book.BookAuthor{}
 	for _, a := range b.Authors {
 		if isExists, _ := array.Contains(beforeAuthorIDs, a.ID); isExists {
 			continue
