@@ -142,3 +142,13 @@ jobs:
 
       - name: Build
         run: make build
+
+      - uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true
+          files: ./tmp/coverage.txt
+          flags: unittests
+          name: user-api
+          path_to_write_report: ./tmp/codecov_report.txt
+          verbose: true
