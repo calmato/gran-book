@@ -9,7 +9,7 @@ import (
 
 	"github.com/calmato/gran-book/api/server/information/internal/domain/auth"
 	"github.com/calmato/gran-book/api/server/information/internal/domain/exception"
-	"github.com/calmato/gran-book/api/server/information/lib/metadata"
+	"github.com/calmato/gran-book/api/server/information/pkg/metadata"
 	"golang.org/x/xerrors"
 )
 

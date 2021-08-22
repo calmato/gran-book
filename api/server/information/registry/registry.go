@@ -6,7 +6,8 @@ import (
 	"github.com/calmato/gran-book/api/server/information/internal/infrastructure/repository"
 	"github.com/calmato/gran-book/api/server/information/internal/infrastructure/service"
 	dv "github.com/calmato/gran-book/api/server/information/internal/infrastructure/validation"
-	gcs "github.com/calmato/gran-book/api/server/information/lib/firebase/storage"
+	"github.com/calmato/gran-book/api/server/information/pkg/database"
+	gcs "github.com/calmato/gran-book/api/server/information/pkg/firebase/storage"
 )
 
 // Registry - DIコンテナ
@@ -16,7 +17,7 @@ type Registry struct {
 }
 
 // NewRegistry - internalディレクトリ配下のファイルを読み込み
-func NewRegistry(db *repository.Client, s *gcs.Storage) *Registry {
+func NewRegistry(db *database.Client, s *gcs.Storage) *Registry {
 	auth := authInjection()
 	notification := notificationInjection(db)
 
