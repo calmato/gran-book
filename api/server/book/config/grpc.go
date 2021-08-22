@@ -7,7 +7,7 @@ import (
 	"net"
 	"strings"
 
-	v1 "github.com/calmato/gran-book/api/server/book/internal/interface/grpc/v1"
+	"github.com/calmato/gran-book/api/server/book/internal/interface/server"
 	pb "github.com/calmato/gran-book/api/server/book/proto"
 	"github.com/calmato/gran-book/api/server/book/registry"
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
@@ -39,10 +39,9 @@ func newGRPCServer(port, logPath, logLevel string, reg *registry.Registry) (*grp
 	}
 
 	s := grpc.NewServer(opts...)
-	pb.RegisterBookServiceServer(s, &v1.BookServer{
-		AuthApplication: reg.AuthApplication,
-		BookApplication: reg.BookApplication,
-	})
+	pb.RegisterBookServiceServer(s,
+		server.NewBookServer(reg.BookRequestValidation, reg.BookApplication),
+	)
 
 	grpc_prometheus.Register(s)
 	grpc_prometheus.EnableHandlingTimeHistogram()

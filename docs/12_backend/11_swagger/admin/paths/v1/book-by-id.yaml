@@ -1,4 +1,4 @@
-post:
+delete:
   summary: 書籍削除
   tags:
     - BookService

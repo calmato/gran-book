@@ -4,6 +4,7 @@ on:
     paths:
       - '.github/workflows/cd-admin-gateway-for-master.yaml'
       - 'api/gateway/admin/**'
+      - 'infra/docker/api/gateway/admin/*'
     branches:
       - master
 
@@ -33,8 +34,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node: ['^16.1']
-        golang: ['^1.16.3']
+        golang: ['^1.16.7']
 
     steps:
       - name: Check out code
@@ -42,11 +42,6 @@ jobs:
 
       - name: Use Golang ${{ matrix.golang }}
         uses: actions/setup-go@v2
-
-      - name: Use Node.js ${{ matrix.node }}
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node }}
 
       - name: Install protobuf
         run: |
@@ -65,18 +60,20 @@ jobs:
 
       - name: Install gRPC tools
         run: |
-          npm install -g grpc grpc-tools grpc_tools_node_protoc_ts
+          export GOPATH=$(go env GOPATH)
           make install
 
       - name: Generate proto
         run: |
-          make protoc-gateway GATEWAY_PATH='./../api/gateway/admin/src'
+          export PATH="$PATH:$(go env GOPATH)/bin"
+          make protoc
+          make generate SERVICE_PATH='./../api/gateway/admin'
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
           name: artifact-${ARTIFACT_TAG}
-          path: api/gateway/admin/src/proto
+          path: api/gateway/admin/proto
 
   deploy_image_for_stg:
     name: Deploy container image for staging
@@ -98,7 +95,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: artifact-${ARTIFACT_TAG}
-          path: api/gateway/admin/src/proto
+          path: api/gateway/admin/proto
 
       - name: Setup Cloud SDK
         uses: google-github-actions/setup-gcloud@master

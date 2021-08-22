@@ -8,65 +8,77 @@ import (
 
 // User - Userエンティティ
 type User struct {
-	ID               string    `gorm:"primaryKey;not null;<-:create"`
-	Username         string    `gorm:"size:32;not null"`
-	Gender           int       `gorm:"not null;default:0"`
-	Email            string    `gorm:"size:256"`
-	PhoneNumber      string    `gorm:"size:16"`
-	Role             int       `gorm:"not null;default:0"`
-	Password         string    `gorm:"-"`
-	ThumbnailURL     string    `gorm:""`
-	SelfIntroduction string    `gorm:"size:256"`
-	LastName         string    `gorm:"size:16"`
-	FirstName        string    `gorm:"size:16"`
-	LastNameKana     string    `gorm:"size:32"`
-	FirstNameKana    string    `gorm:"size:32"`
-	PostalCode       string    `gorm:"size:16"`
-	Prefecture       string    `gorm:"size:32"`
-	City             string    `gorm:"size:32"`
-	AddressLine1     string    `gorm:"size:64"`
-	AddressLine2     string    `gorm:"size:64"`
-	InstanceID       string    `gorm:"size:256"`
-	CreatedAt        time.Time `gorm:"not null;<-:create"`
-	UpdatedAt        time.Time `gorm:"not null"`
-	DeletedAt        gorm.DeletedAt
-	Follows          []*Follow   `gorm:"foreignKey:FollowID;constraint:OnDelete:CASCADE"`
-	Followers        []*Follower `gorm:"foreignKey:FollowerID;constraint:OnDelete:CASCADE"`
+	ID               string         `gorm:"default:null;primaryKey;<-:create"`
+	Username         string         `gorm:"default:null"`
+	Gender           int            `gorm:"default:null"`
+	Email            string         `gorm:"default:null"`
+	PhoneNumber      string         `gorm:"default:null"`
+	Role             int            `gorm:"default:null"`
+	Password         string         `gorm:"-"`
+	ThumbnailURL     string         `gorm:"default:null"`
+	SelfIntroduction string         `gorm:"default:null"`
+	LastName         string         `gorm:"default:null"`
+	FirstName        string         `gorm:"default:null"`
+	LastNameKana     string         `gorm:"default:null"`
+	FirstNameKana    string         `gorm:"default:null"`
+	PostalCode       string         `gorm:"default:null"`
+	Prefecture       string         `gorm:"default:null"`
+	City             string         `gorm:"default:null"`
+	AddressLine1     string         `gorm:"default:null"`
+	AddressLine2     string         `gorm:"default:null"`
+	InstanceID       string         `gorm:"default:null"`
+	CreatedAt        time.Time      `gorm:"default:null;<-:create"`
+	UpdatedAt        time.Time      `gorm:"default:null"`
+	DeletedAt        gorm.DeletedAt `gorm:"default:null"`
+	Follows          []*Follow      `gorm:"foreignKey:FollowID"`
+	Followers        []*Follower    `gorm:"foreignKey:FollowerID"`
 }
 
 // Relationship - Relationshipエンティティ (中間テーブル)
 type Relationship struct {
-	ID         int       `gorm:"primaryKey;not null;autoIncrement;<-:create"`
-	FollowID   string    `gorm:"not null;uniqueIndex:ui_follows_01;uniqueIndex:ui_follows_02"`
-	FollowerID string    `gorm:"not null;uniqueIndex:ui_follows_01;uniqueIndex:ui_follows_02"`
-	CreatedAt  time.Time `gorm:"not null;<-:create"`
-	UpdatedAt  time.Time `gorm:"not null"`
+	ID         int       `gorm:"default:null;primaryKey;autoIncrement;<-:create"`
+	FollowID   string    `gorm:"default:null"`
+	FollowerID string    `gorm:"default:null"`
+	CreatedAt  time.Time `gorm:"default:null"`
+	UpdatedAt  time.Time `gorm:"default:null"`
 }
 
 // Follow - フォローしているUserのエンティティ
 type Follow struct {
-	FollowID         string
-	FollowerID       string
-	Username         string
-	ThumbnailURL     string
-	SelfIntroduction string
-	IsFollow         bool
+	FollowID         string `gorm:"<-:false"`
+	Username         string `gorm:"<-:false"`
+	ThumbnailURL     string `gorm:"<-:false"`
+	SelfIntroduction string `gorm:"<-:false"`
+	IsFollowing      bool   `gorm:"-"`
+	IsFollowed       bool   `gorm:"-"`
+	FollowCount      int    `gorm:"-"`
+	FollowerCount    int    `gorm:"-"`
 }
 
 // Follower - フォローされているUserのエンティティ
 type Follower struct {
-	FollowID         string
-	FollowerID       string
-	Username         string
-	ThumbnailURL     string
-	SelfIntroduction string
-	IsFollow         bool
+	FollowerID       string `gorm:"<-:false"`
+	Username         string `gorm:"<-:false"`
+	ThumbnailURL     string `gorm:"<-:false"`
+	SelfIntroduction string `gorm:"<-:false"`
+	IsFollowing      bool   `gorm:"-"`
+	IsFollowed       bool   `gorm:"-"`
+	FollowCount      int    `gorm:"-"`
+	FollowerCount    int    `gorm:"-"`
 }
 
 // ユーザ権限
 const (
-	UserRole int = iota
-	AdminRole
-	DeveloperRole
-	OperatorRole
+	UserRole      int = iota // ユーザー
+	AdminRole                // 管理者
+	DeveloperRole            // 開発者
+	OperatorRole             // 運用者
+)
+
+// ユーザ性別
+const (
+	UnkownGender        int = iota // 未選択
+	MaleGender                     // 男性
+	FemaleGender                   // 女性
+	NotApplicableGender            // 適用不能
 )

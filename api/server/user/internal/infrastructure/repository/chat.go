@@ -3,10 +3,9 @@ package repository
 import (
 	"context"
 
-	"github.com/calmato/gran-book/api/server/user/internal/domain"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/chat"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
-	"github.com/calmato/gran-book/api/server/user/lib/firebase/firestore"
+	"github.com/calmato/gran-book/api/server/user/pkg/firebase/firestore"
 )
 
 type chatRepository struct {
@@ -20,23 +19,12 @@ func NewChatRepository(fs *firestore.Firestore) chat.Repository {
 	}
 }
 
-func (r *chatRepository) ListRoom(ctx context.Context, q *domain.ListQuery, uid string) ([]*chat.Room, error) {
+func (r *chatRepository) ListRoom(
+	ctx context.Context, p *firestore.Params, qs []*firestore.Query,
+) ([]*chat.Room, error) {
 	c := getChatRoomCollection()
 
-	params := &firestore.Params{
-		OrderBy: q.Order.By,
-		SortBy:  q.Order.Direction,
-	}
-
-	qs := []*firestore.Query{
-		{
-			Field:    "users",
-			Operator: "array-contains",
-			Value:    uid,
-		},
-	}
-
-	docs, err := r.firestore.List(ctx, c, params, qs)
+	docs, err := r.firestore.List(ctx, c, p, qs)
 	if err != nil {
 		return nil, exception.ErrorInDatastore.New(err)
 	}

@@ -4,6 +4,7 @@ on:
     paths:
       - '.github/workflows/cd-user-api-for-master.yaml'
       - 'api/server/user/**'
+      - 'infra/docker/api/server/user/*'
     branches:
       - master
 
@@ -33,8 +34,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node: ['^16.1']
-        golang: ['^1.16.3']
+        golang: ['^1.16.7']
 
     steps:
       - name: Check out code
@@ -42,11 +42,6 @@ jobs:
 
       - name: Use Golang ${{ matrix.golang }}
         uses: actions/setup-go@v2
-
-      - name: Use Node.js ${{ matrix.node }}
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node }}
 
       - name: Install protobuf
         run: |
@@ -65,12 +60,14 @@ jobs:
 
       - name: Install gRPC tools
         run: |
+          export GOPATH=$(go env GOPATH)
           make install
 
       - name: Generate proto
         run: |
           export PATH="$PATH:$(go env GOPATH)/bin"
-          make protoc-service SERVICE_PATH='./../api/server/user'
+          make protoc
+          make generate SERVICE_PATH='./../api/server/user'
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2

@@ -56,7 +56,7 @@ func (v *userDomainValidation) uniqueCheckEmail(ctx context.Context, id string, 
 		return nil
 	}
 
-	uid, _ := v.userRepository.GetUIDByEmail(ctx, email)
+	uid, _ := v.userRepository.GetUserIDByEmail(ctx, email)
 	if uid == "" || id == uid {
 		return nil
 	}
@@ -71,7 +71,7 @@ func (v *userDomainValidation) uniqueCheckRelationship(
 		return nil
 	}
 
-	rid, _ := v.userRepository.GetRelationshipIDByUID(ctx, followID, followerID)
+	rid, _ := v.userRepository.GetRelationshipIDByUserID(ctx, followID, followerID)
 	if rid == 0 || rid == id {
 		return nil
 	}

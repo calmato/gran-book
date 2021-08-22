@@ -4,7 +4,9 @@
 .PHONY: setup build install start stop down remove logs
 
 setup:
-	cp $(PWD)/.env.temp $(PWD)/.env
+	if [ ! -f $(PWD)/.env ]; then \
+		cp $(PWD)/.env.temp $(PWD)/.env; \
+	fi
 	$(MAKE) build
 	$(MAKE) install
 	$(MAKE) proto
@@ -52,7 +54,7 @@ start-admin:
 
 start-api:
 	$(MAKE) proto
-	docker-compose up native_gateway admin_gateway user_api book_api information_api mysql
+	docker-compose up native_gateway admin_gateway user_api book_api information_api mysql mysql_test
 
 start-swagger:
 	docker-compose up swagger_native swagger_admin swagger_generator
@@ -63,15 +65,16 @@ start-swagger:
 .PHONY: proto swagger migrate
 
 proto:
-	docker-compose run --rm proto make generate
+	docker-compose run --rm proto make build
 
 swagger:
 	docker-compose run --rm swagger_generator yarn generate
 
 migrate:
-	docker-compose start mysql
+	docker-compose start mysql mysql_test
 	docker-compose exec mysql bash -c "mysql -u root -p${MYSQL_ROOT_PASSWORD} < /docker-entrypoint-initdb.d/*.sql"
-	docker-compose stop mysql
+	docker-compose exec mysql_test bash -c "mysql -u root -p${MYSQL_ROOT_PASSWORD} < /docker-entrypoint-initdb.d/*.sql"
+	docker-compose stop mysql mysql_test
 
 ##################################################
 # Container Commands - Terraform

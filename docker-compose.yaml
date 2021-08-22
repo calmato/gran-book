@@ -42,50 +42,42 @@ services:
     build:
       context: ./infra/docker/api/gateway/native
       dockerfile: Dockerfile_development
-    working_dir: /var/gateway
+    working_dir: /go/src/github.com/calmato/gran-book/api/gateway/native
     volumes:
-      - ./api/gateway/native:/var/gateway:cached
+      - ./api/gateway/native:/go/src/github.com/calmato/gran-book/api/gateway/native:cached
+      - ./tmp/data/go/pkg/mod:/go/pkg/mod:delegated
       - ./tmp/logs/native_gateway:/var/log/gateway:delegated
-      - ./tmp/uploads/native_gateway:/var/gateway/tmp/uploads:delegated
     environment:
-      - HOST=0.0.0.0
       - PORT=8080
       - LOG_PATH=/var/log/gateway
-      - USER_API_URL=${USER_API_URL}
-      - BOOK_API_URL=${BOOK_API_URL}
-      - FIREBASE_PROJECT_ID=${FIREBASE_PROJECT_ID}
-      - FIREBASE_CLIENT_EMAIL=${FIREBASE_CLIENT_EMAIL}
-      - FIREBASE_PRIVATE_KEY=${FIREBASE_PRIVATE_KEY}
+      - GCP_SERVICE_KEY_JSON=${GCP_SERVICE_KEY_JSON}
+      - GCP_STORAGE_BUCKET_NAME=${GCP_STORAGE_BUCKET_NAME}
     ports:
       - 8080:8080
     networks:
       - api
-    command: yarn dev
+    command: air -c .air.toml
 
   admin_gateway:
     container_name: gran_book_admin_gateway
     build:
       context: ./infra/docker/api/gateway/admin
       dockerfile: Dockerfile_development
-    working_dir: /var/gateway
+    working_dir: /go/src/github.com/calmato/gran-book/api/gateway/admin
     volumes:
-      - ./api/gateway/admin:/var/gateway:cached
+      - ./api/gateway/admin:/go/src/github.com/calmato/gran-book/api/gateway/admin:cached
+      - ./tmp/data/go/pkg/mod:/go/pkg/mod:delegated
       - ./tmp/logs/admin_gateway:/var/log/gateway:delegated
-      - ./tmp/uploads/admin_gateway:/var/gateway/tmp/uploads:delegated
     environment:
-      - HOST=0.0.0.0
       - PORT=8080
       - LOG_PATH=/var/log/gateway
-      - USER_API_URL=${USER_API_URL}
-      - BOOK_API_URL=${BOOK_API_URL}
-      - FIREBASE_PROJECT_ID=${FIREBASE_PROJECT_ID}
-      - FIREBASE_CLIENT_EMAIL=${FIREBASE_CLIENT_EMAIL}
-      - FIREBASE_PRIVATE_KEY=${FIREBASE_PRIVATE_KEY}
+      - GCP_SERVICE_KEY_JSON=${GCP_SERVICE_KEY_JSON}
+      - GCP_STORAGE_BUCKET_NAME=${GCP_STORAGE_BUCKET_NAME}
     ports:
       - 8081:8080
     networks:
       - api
-    command: yarn dev
+    command: air -c .air.toml
 
   user_api:
     container_name: gran_book_user_api
@@ -101,13 +93,18 @@ services:
       - PORT=8080
       - LOG_PATH=/var/log/api
       - LOG_LEVEL=${LOG_LEVEL}
-      - DB_HOST=${MYSQL_HOST}
-      - DB_PORT=${MYSQL_PORT}
+      - DB_HOST=mysql
+      - DB_PORT=3306
       - DB_USERNAME=${MYSQL_USERNAME}
       - DB_PASSWORD=${MYSQL_PASSWORD}
       - DB_DATABASE=${MYSQL_USER_DATABASE}
       - GCP_SERVICE_KEY_JSON=${GCP_SERVICE_KEY_JSON}
       - GCP_STORAGE_BUCKET_NAME=${GCP_STORAGE_BUCKET_NAME}
+      - TEST_DB_HOST=mysql_test
+      - TEST_DB_PORT=3306
+      - TEST_DB_USERNAME=${MYSQL_USERNAME}
+      - TEST_DB_PASSWORD=${MYSQL_PASSWORD}
+      - TEST_DB_DATABASE=${MYSQL_USER_DATABASE}
     ports:
       - 18080:8080
     networks:
@@ -130,13 +127,17 @@ services:
       - PORT=8080
       - LOG_PATH=/var/log/api
       - LOG_LEVEL=${LOG_LEVEL}
-      - DB_HOST=${MYSQL_HOST}
-      - DB_PORT=${MYSQL_PORT}
+      - DB_HOST=mysql
+      - DB_PORT=3306
       - DB_USERNAME=${MYSQL_USERNAME}
       - DB_PASSWORD=${MYSQL_PASSWORD}
       - DB_DATABASE=${MYSQL_BOOK_DATABASE}
       - GCP_SERVICE_KEY_JSON=${GCP_SERVICE_KEY_JSON}
       - GCP_STORAGE_BUCKET_NAME=${GCP_STORAGE_BUCKET_NAME}
+      - TEST_DB_HOST=mysql_test
+      - TEST_DB_PORT=3306
+      - TEST_DB_USERNAME=${MYSQL_USERNAME}
+      - TEST_DB_PASSWORD=${MYSQL_PASSWORD}
     ports:
       - 18081:8080
     networks:
@@ -159,13 +160,17 @@ services:
       - PORT=8080
       - LOG_PATH=/var/log/api
       - LOG_LEVEL=${LOG_LEVEL}
-      - DB_HOST=${MYSQL_HOST}
-      - DB_PORT=${MYSQL_PORT}
+      - DB_HOST=mysql
+      - DB_PORT=3306
       - DB_USERNAME=${MYSQL_USERNAME}
       - DB_PASSWORD=${MYSQL_PASSWORD}
       - DB_DATABASE=${MYSQL_INFORMATION_DATABASE}
       - GCP_SERVICE_KEY_JSON=${GCP_SERVICE_KEY_JSON}
       - GCP_STORAGE_BUCKET_NAME=${GCP_STORAGE_BUCKET_NAME}
+      - TEST_DB_HOST=mysql_test
+      - TEST_DB_PORT=3306
+      - TEST_DB_USERNAME=${MYSQL_USERNAME}
+      - TEST_DB_PASSWORD=${MYSQL_PASSWORD}
     ports:
       - 18082:8080
     networks:
@@ -193,6 +198,24 @@ services:
     networks:
       - api
 
+  mysql_test:
+    container_name: gran_book_mysql_test
+    platform: linux/x86_64
+    build:
+      context: ./infra/docker/infra/mysql
+      dockerfile: Dockerfile.test
+    volumes:
+      - ./infra/mysql/test.cnf:/etc/mysql/conf.d/my.cnf
+      - ./infra/mysql/sql:/docker-entrypoint-initdb.d
+      - ./tmp/logs/mysql_test:/var/log/mysql:delegated
+      - ./tmp/data/mysql_test:/var/lib/mysql:delegated
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD}
+    ports:
+      - 3326:3306
+    networks:
+      - api
+
   # Other
   proto:
     container_name: gran_book_proto
@@ -201,12 +224,8 @@ services:
       dockerfile: Dockerfile
     working_dir: /go/src/github.com/calmato/gran-book/proto
     volumes:
+      - ./api:/go/src/github.com/calmato/gran-book/api:cached
       - ./proto:/go/src/github.com/calmato/gran-book/proto:cached
-      - ./api/server/book:/go/src/github.com/calmato/gran-book/api/server/book:cached
-      - ./api/server/user:/go/src/github.com/calmato/gran-book/api/server/user:cached
-      - ./api/server/information:/go/src/github.com/calmato/gran-book/api/server/information:cached
-      - ./api/gateway/admin:/go/src/github.com/calmato/gran-book/api/gateway/admin:cached
-      - ./api/gateway/native:/go/src/github.com/calmato/gran-book/api/gateway/native:cached
       - ./tmp/data/go/pkg/mod:/go/pkg/mod:delegated
 
   swagger_native:

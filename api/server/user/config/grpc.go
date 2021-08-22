@@ -7,7 +7,7 @@ import (
 	"net"
 	"strings"
 
-	v1 "github.com/calmato/gran-book/api/server/user/internal/interface/grpc/v1"
+	"github.com/calmato/gran-book/api/server/user/internal/interface/server"
 	pb "github.com/calmato/gran-book/api/server/user/proto"
 	"github.com/calmato/gran-book/api/server/user/registry"
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
@@ -39,21 +39,18 @@ func newGRPCServer(port, logPath, logLevel string, reg *registry.Registry) (*grp
 	}
 
 	s := grpc.NewServer(opts...)
-	pb.RegisterAdminServiceServer(s, &v1.AdminServer{
-		AdminApplication: reg.AdminApplication,
-		AuthApplication:  reg.AuthApplication,
-	})
-	pb.RegisterAuthServiceServer(s, &v1.AuthServer{
-		AuthApplication: reg.AuthApplication,
-	})
-	pb.RegisterUserServiceServer(s, &v1.UserServer{
-		AuthApplication: reg.AuthApplication,
-		UserApplication: reg.UserApplication,
-	})
-	pb.RegisterChatServiceServer(s, &v1.ChatServer{
-		AuthApplication: reg.AuthApplication,
-		ChatApplication: reg.ChatApplication,
-	})
+	pb.RegisterAdminServiceServer(s,
+		server.NewAdminServer(reg.AdminRequestValidation, reg.UserApplication),
+	)
+	pb.RegisterAuthServiceServer(s,
+		server.NewAuthServer(reg.AuthRequsetValidation, reg.UserApplication),
+	)
+	pb.RegisterChatServiceServer(s,
+		server.NewChatServer(reg.ChatRequestValidation, reg.ChatApplication),
+	)
+	pb.RegisterUserServiceServer(s,
+		server.NewUserServer(reg.UserRequestValidation, reg.UserApplication),
+	)
 
 	grpc_prometheus.Register(s)
 	grpc_prometheus.EnableHandlingTimeHistogram()

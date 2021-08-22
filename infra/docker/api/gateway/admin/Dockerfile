@@ -1,41 +1,30 @@
 # ビルド用コンテナ
-FROM node:16.1.0-alpine as builder
+FROM golang:1.16.7-alpine AS builder
 
 ENV LANG C.UTF-8
 ENV TZ Asia/Tokyo
 
-WORKDIR /var/gateway
+WORKDIR /go/src/github.com/calmato/gran-book/api/gateway/admin
 
-RUN apk add --update \
-  g++ \
-  make \
-  python3 \
-  && ln -fs python3 /usr/bin/python
+RUN apk add --update --no-cache \
+  git \
+  make
 
 ADD ./api/gateway/admin ./
-RUN yarn install --production=false
-
-RUN yarn build
+RUN make build
 
 # 実行用コンテナ
-FROM node:16.1.0-alpine
+FROM alpine
 
 ENV LANG C.UTF-8
 ENV TZ Asia/Tokyo
-ENV NODE_ENV production
 
 WORKDIR /var/gateway
 
 RUN apk add --update \
-  g++ \
-  make \
-  python3 \
-  && ln -fs python3 /usr/bin/python
+  ca-certificates
 
-COPY --from=builder /var/gateway/package.json ./package.json
-RUN yarn install --production=true
+COPY --from=builder /go/src/github.com/calmato/gran-book/api/gateway/admin/app ./app
 
-COPY --from=builder /var/gateway/dist ./dist
-
-EXPOSE 3000
-CMD ["yarn", "start"]
+EXPOSE 8080
+CMD ["./app"]
