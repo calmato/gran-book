@@ -119,5 +119,5 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
-          flags: frontend,admin-web
+          flags: admin-web
           verbose: true

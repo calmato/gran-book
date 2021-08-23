@@ -129,5 +129,5 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
-          flags: backend,native-gateway
+          flags: native-gateway
           verbose: true
