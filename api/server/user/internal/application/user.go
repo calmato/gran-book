@@ -7,6 +7,7 @@ import (
 	"github.com/calmato/gran-book/api/server/user/internal/domain/user"
 	"github.com/calmato/gran-book/api/server/user/pkg/array"
 	"github.com/calmato/gran-book/api/server/user/pkg/database"
+	"github.com/google/uuid"
 )
 
 // UserApplication - Userアプリケーションのインターフェース
@@ -261,6 +262,7 @@ func (a *userApplication) Create(ctx context.Context, u *user.User) error {
 	current := time.Now().Local()
 	u.CreatedAt = current
 	u.UpdatedAt = current
+	u.ID = uuid.New().String()
 
 	return a.userRepository.Create(ctx, u)
 }
