@@ -1,11 +1,11 @@
 syntax = "proto3";
 
-package proto;
+package service;
 
 option go_package = "github.com/calmato/gran-book/proto";
 
 import "github.com/envoyproxy/protoc-gen-validate/validate/validate.proto";
-import "proto/common.proto";
+import "common/common.proto";
 
 service UserService {
   rpc ListUser(ListUserRequest) returns (UserListResponse);
@@ -19,8 +19,8 @@ service UserService {
 }
 
 message ListUserRequest {
-  Search search = 1;
-  Order order = 2;
+  common.Search search = 1;
+  common.Order order = 2;
   int64 limit = 3 [
     (validate.rules).int64 = {
       lte: 200
@@ -39,7 +39,7 @@ message ListFollowRequest {
       min_len: 1
     }
   ];
-  Order order = 2;
+  common.Order order = 2;
   int64 limit = 3 [
     (validate.rules).int64 = {
       lte: 200
@@ -58,7 +58,7 @@ message ListFollowerRequest {
       min_len: 1
     }
   ];
-  Order order = 2;
+  common.Order order = 2;
   int64 limit = 3 [
     (validate.rules).int64 = {
       lte: 200
@@ -126,10 +126,10 @@ message UnfollowRequest {
 message UserResponse {
   string id = 1; // ユーザーID
   string username = 2; // ユーザー名
-  Gender gender = 3; // 性別
+  common.Gender gender = 3; // 性別
   string email = 4; // メールアドレス
   string phone_number = 5; // 電話番号
-  Role role = 6; // ユーザー権限
+  common.Role role = 6; // ユーザー権限
   string thumbnail_url = 7; // サムネイルURL
   string self_introduction = 8; // 自己紹介
   string last_name = 9; // 姓
@@ -144,10 +144,10 @@ message UserListResponse {
   message User {
     string id = 1; // ユーザーID
     string username = 2; // ユーザー名
-    Gender gender = 3; // 性別
+    common.Gender gender = 3; // 性別
     string email = 4; // メールアドレス
     string phone_number = 5; // 電話番号
-    Role role = 6; // ユーザー権限
+    common.Role role = 6; // ユーザー権限
     string thumbnail_url = 7; // サムネイルURL
     string self_introduction = 8; // 自己紹介
     string last_name = 9; // 姓
@@ -167,10 +167,10 @@ message UserMapResponse {
   message User {
     string id = 1; // ユーザーID
     string username = 2; // ユーザー名
-    Gender gender = 3; // 性別
+    common.Gender gender = 3; // 性別
     string email = 4; // メールアドレス
     string phone_number = 5; // 電話番号
-    Role role = 6; // ユーザー権限
+    common.Role role = 6; // ユーザー権限
     string thumbnail_url = 7; // サムネイルURL
     string self_introduction = 8; // 自己紹介
     string last_name = 9; // 姓
