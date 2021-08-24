@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"github.com/calmato/gran-book/api/gateway/native/internal/entity"
-	response "github.com/calmato/gran-book/api/gateway/native/internal/response/v2"
 	"github.com/calmato/gran-book/api/gateway/native/internal/server/util"
 	pb "github.com/calmato/gran-book/api/gateway/native/proto"
 	"github.com/gin-gonic/gin"
@@ -110,29 +109,29 @@ func (h *bookshelfHandler) Get(ctx *gin.Context) {
 
 func (h *bookshelfHandler) getBookshelfResponse(
 	bookshelfOutput *pb.BookshelfResponse, reviewsOutput *pb.ReviewListResponse, usersOutput *pb.UserMapResponse,
-) *response.BookshelfResponse {
-	bookshelf := &response.BookshelfBookshelf{
-		ReviewID:  bookshelfOutput.GetReviewId(),
+) *pb.BookshelfV2Response {
+	bookshelf := &pb.BookshelfV2Response_Bookshelf{
 		Status:    entity.BookshelfStatus(bookshelfOutput.GetStatus()).Name(),
 		ReadOn:    bookshelfOutput.GetReadOn(),
+		ReviewId:  bookshelfOutput.GetReviewId(),
 		CreatedAt: bookshelfOutput.GetCreatedAt(),
 		UpdatedAt: bookshelfOutput.GetUpdatedAt(),
 	}
 
-	reviews := make([]*response.BookshelfReview, len(reviewsOutput.GetReviews()))
+	reviews := make([]*pb.BookshelfV2Response_Review, len(reviewsOutput.GetReviews()))
 	for i, r := range reviewsOutput.GetReviews() {
-		user := &response.BookshelfUser{
-			ID:       r.GetUserId(),
+		user := &pb.BookshelfV2Response_User{
+			Id:       r.GetUserId(),
 			Username: "unknown",
 		}
 
 		if usersOutput.GetUsers()[r.GetUserId()] != nil {
 			user.Username = usersOutput.GetUsers()[r.GetUserId()].GetUsername()
-			user.ThumbnailURL = usersOutput.GetUsers()[r.GetUserId()].GetThumbnailUrl()
+			user.ThumbnailUrl = usersOutput.GetUsers()[r.GetUserId()].GetThumbnailUrl()
 		}
 
-		review := &response.BookshelfReview{
-			ID:         r.GetId(),
+		review := &pb.BookshelfV2Response_Review{
+			Id:         r.GetId(),
 			Impression: r.GetImpression(),
 			CreatedAt:  r.GetCreatedAt(),
 			UpdatedAt:  r.GetUpdatedAt(),
@@ -149,16 +148,16 @@ func (h *bookshelfHandler) getBookshelfResponse(
 		authorNameKanas[i] = a.GetNameKana()
 	}
 
-	return &response.BookshelfResponse{
-		ID:           bookshelfOutput.GetBook().GetId(),
+	return &pb.BookshelfV2Response{
+		Id:           bookshelfOutput.GetBook().GetId(),
 		Title:        bookshelfOutput.GetBook().GetTitle(),
 		TitleKana:    bookshelfOutput.GetBook().GetTitleKana(),
 		Description:  bookshelfOutput.GetBook().GetDescription(),
 		Isbn:         bookshelfOutput.GetBook().GetIsbn(),
 		Publisher:    bookshelfOutput.GetBook().GetPublisher(),
 		PublishedOn:  bookshelfOutput.GetBook().GetPublishedOn(),
-		ThumbnailURL: bookshelfOutput.GetBook().GetThumbnailUrl(),
-		RakutenURL:   bookshelfOutput.GetBook().GetRakutenUrl(),
+		ThumbnailUrl: bookshelfOutput.GetBook().GetThumbnailUrl(),
+		RakutenUrl:   bookshelfOutput.GetBook().GetRakutenUrl(),
 		Size:         bookshelfOutput.GetBook().GetRakutenSize(),
 		Author:       strings.Join(authorNames, "/"),
 		AuthorKana:   strings.Join(authorNameKanas, "/"),
@@ -172,13 +171,13 @@ func (h *bookshelfHandler) getBookshelfResponse(
 	}
 }
 
-func (h *bookshelfHandler) getBookshelfListResponse(out *pb.BookshelfListResponse) *response.BookshelfListResponse {
-	books := make([]*response.BookshelfListBook, len(out.GetBookshelves()))
+func (h *bookshelfHandler) getBookshelfListResponse(out *pb.BookshelfListResponse) *pb.BookshelfListV2Response {
+	books := make([]*pb.BookshelfListV2Response_Book, len(out.GetBookshelves()))
 	for i, b := range out.GetBookshelves() {
-		bookshelf := &response.BookshelfListBookshelf{
+		bookshelf := &pb.BookshelfListV2Response_Bookshelf{
 			Status:    entity.BookshelfStatus(b.GetStatus()).Name(),
 			ReadOn:    b.GetReadOn(),
-			ReviewID:  b.GetReviewId(),
+			ReviewId:  b.GetReviewId(),
 			CreatedAt: b.GetCreatedAt(),
 			UpdatedAt: b.GetUpdatedAt(),
 		}
@@ -190,16 +189,16 @@ func (h *bookshelfHandler) getBookshelfListResponse(out *pb.BookshelfListRespons
 			authorNameKanas[i] = a.GetNameKana()
 		}
 
-		book := &response.BookshelfListBook{
-			ID:           b.GetBook().GetId(),
+		book := &pb.BookshelfListV2Response_Book{
+			Id:           b.GetBook().GetId(),
 			Title:        b.GetBook().GetTitle(),
 			TitleKana:    b.GetBook().GetTitleKana(),
 			Description:  b.GetBook().GetDescription(),
 			Isbn:         b.GetBook().GetIsbn(),
 			Publisher:    b.GetBook().GetPublisher(),
 			PublishedOn:  b.GetBook().GetPublishedOn(),
-			ThumbnailURL: b.GetBook().GetThumbnailUrl(),
-			RakutenURL:   b.GetBook().GetRakutenUrl(),
+			ThumbnailUrl: b.GetBook().GetThumbnailUrl(),
+			RakutenUrl:   b.GetBook().GetRakutenUrl(),
 			Size:         b.GetBook().GetRakutenSize(),
 			Author:       strings.Join(authorNames, "/"),
 			AuthorKana:   strings.Join(authorNameKanas, "/"),
@@ -211,7 +210,7 @@ func (h *bookshelfHandler) getBookshelfListResponse(out *pb.BookshelfListRespons
 		books[i] = book
 	}
 
-	return &response.BookshelfListResponse{
+	return &pb.BookshelfListV2Response{
 		Books:  books,
 		Limit:  out.GetLimit(),
 		Offset: out.GetOffset(),
