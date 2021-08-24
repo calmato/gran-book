@@ -11,3 +11,7 @@ web-build/
 
 # macOS
 .DS_Store
+
+# proto file
+*_pb.js
+*_pb.d.ts
