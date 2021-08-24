@@ -1,6 +1,8 @@
 package datetime
 
-import "time"
+import (
+	"time"
+)
 
 const (
 	timeFormat = "2006-01-02 15:04:05"
@@ -29,12 +31,20 @@ func DateToString(t time.Time) string {
 
 // StringToTime - String型 -> Time型
 func StringToTime(str string) time.Time {
-	t, _ := time.ParseInLocation(timeFormat, str, time.Local)
+	t, err := time.ParseInLocation(timeFormat, str, time.Local)
+	if err != nil {
+		return time.Time{}
+	}
+
 	return t.Local()
 }
 
 // StringToDate - String型 -> Time型
 func StringToDate(str string) time.Time {
-	t, _ := time.ParseInLocation(dateFormat, str, time.Local)
+	t, err := time.ParseInLocation(dateFormat, str, time.Local)
+	if err != nil {
+		return time.Time{}
+	}
+
 	return t.Local()
 }

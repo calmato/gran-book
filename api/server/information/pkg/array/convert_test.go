@@ -32,11 +32,11 @@ func TestConvertStrings(t *testing.T) {
 		},
 	}
 
-	for result, tc := range testCases {
+	for result, tt := range testCases {
 		t.Run(result, func(t *testing.T) {
-			got, _ := ConvertStrings(tc.Input)
-			if !reflect.DeepEqual(got, tc.Expected) {
-				t.Fatalf("want %#v, but %#v", tc.Expected, got)
+			got, _ := ConvertStrings(tt.Input)
+			if !reflect.DeepEqual(got, tt.Expected) {
+				t.Fatalf("want %#v, but %#v", tt.Expected, got)
 			}
 		})
 	}

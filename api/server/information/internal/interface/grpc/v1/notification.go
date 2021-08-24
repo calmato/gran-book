@@ -6,7 +6,7 @@ import (
 	"github.com/calmato/gran-book/api/server/information/internal/application"
 	"github.com/calmato/gran-book/api/server/information/internal/application/input"
 	"github.com/calmato/gran-book/api/server/information/internal/domain/notification"
-	"github.com/calmato/gran-book/api/server/information/lib/datetime"
+	"github.com/calmato/gran-book/api/server/information/pkg/datetime"
 	pb "github.com/calmato/gran-book/api/server/information/proto"
 )
 

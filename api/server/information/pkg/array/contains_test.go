@@ -85,11 +85,11 @@ func TestContains(t *testing.T) {
 		},
 	}
 
-	for result, tc := range testCases {
+	for result, tt := range testCases {
 		t.Run(result, func(t *testing.T) {
-			got, _ := Contains(tc.Input.Items, tc.Input.Target)
-			if !reflect.DeepEqual(got, tc.Expected) {
-				t.Fatalf("want %#v, but %#v", tc.Expected, got)
+			got, _ := Contains(tt.Input.Items, tt.Input.Target)
+			if !reflect.DeepEqual(got, tt.Expected) {
+				t.Fatalf("want %#v, but %#v", tt.Expected, got)
 			}
 		})
 	}

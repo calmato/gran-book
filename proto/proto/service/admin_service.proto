@@ -1,11 +1,11 @@
 syntax = "proto3";
 
-package proto;
+package service;
 
 option go_package = "github.com/calmato/gran-book/proto";
 
 import "github.com/envoyproxy/protoc-gen-validate/validate/validate.proto";
-import "proto/common.proto";
+import "common/common.proto";
 
 service AdminService {
   rpc ListAdmin(ListAdminRequest) returns (AdminListResponse);
@@ -15,12 +15,12 @@ service AdminService {
   rpc UpdateAdminPassword(UpdateAdminPasswordRequest) returns (AdminResponse);
   rpc UpdateAdminProfile(UpdateAdminProfileRequest) returns (AdminResponse);
   rpc UploadAdminThumbnail(stream UploadAdminThumbnailRequest) returns (AdminThumbnailResponse);
-  rpc DeleteAdmin(DeleteAdminRequest) returns (Empty);
+  rpc DeleteAdmin(DeleteAdminRequest) returns (common.Empty);
 }
 
 message ListAdminRequest {
-  Search search = 1;
-  Order order = 2;
+  common.Search search = 1;
+  common.Order order = 2;
   int64 limit = 3 [
     (validate.rules).int64 = {
       lte: 200
@@ -73,7 +73,7 @@ message CreateAdminRequest {
       min_len: 1
     }
   ];
-  Role role = 6 [
+  common.Role role = 6 [
     (validate.rules).enum = {
       defined_only: true
       not_in: [
@@ -162,7 +162,7 @@ message UpdateAdminProfileRequest {
       max_len: 32
     }
   ];
-  Role role = 3 [
+  common.Role role = 3 [
     (validate.rules).enum = {
       defined_only: true
       not_in: [
@@ -222,7 +222,7 @@ message AdminResponse {
   string username = 2; // ユーザー名
   string email = 3; // メールアドレス
   string phone_number = 4; // 電話番号
-  Role role = 5; // ユーザー権限
+  common.Role role = 5; // ユーザー権限
   string thumbnail_url = 6; // サムネイルURL
   string self_introduction = 7; // 自己紹介
   string last_name = 8; // 姓
@@ -239,7 +239,7 @@ message AdminListResponse {
     string username = 2; // ユーザー名
     string email = 3; // メールアドレス
     string phone_number = 4; // 電話番号
-    Role role = 5; // ユーザー権限
+    common.Role role = 5; // ユーザー権限
     string thumbnail_url = 6; // サムネイルURL
     string self_introduction = 7; // 自己紹介
     string last_name = 8; // 姓

@@ -25,14 +25,14 @@ RUN rm -rf /var/lib/apt/lists/*
 WORKDIR /tmp
 
 # Install Node
-# RUN curl -fSLO "https://nodejs.org/dist/v${NODE_VERSION}/node-v{$NODE_VERSION}-linux-x64.tar.gz"
-# RUN curl -fSLO "https://nodejs.org/dist/v${NODE_VERSION}/SHASUMS256.txt"
-# RUN NODE_CHECKSUM=`cat SHASUMS256.txt | grep "node-v${NODE_VERSION}-linux-x64.tar.gz"` \
-#   && echo ${NODE_CHECKSUM} | sha256sum -c - \
-#   && tar -xvzf "node-v${NODE_VERSION}-linux-x64.tar.gz" -C . \
-#   && mv node-v${NODE_VERSION}-linux-x64/bin/* /usr/local/bin/ \
-#   && mv node-v${NODE_VERSION}-linux-x64/lib/node_modules/ /usr/local/lib/ \
-#   && rm -f "node-v${NODE_VERSION}-linux-x64.tar.gz" SHASUMS256.txt
+RUN curl -fSLO "https://nodejs.org/dist/v${NODE_VERSION}/node-v{$NODE_VERSION}-linux-x64.tar.gz"
+RUN curl -fSLO "https://nodejs.org/dist/v${NODE_VERSION}/SHASUMS256.txt"
+RUN NODE_CHECKSUM=`cat SHASUMS256.txt | grep "node-v${NODE_VERSION}-linux-x64.tar.gz"` \
+  && echo ${NODE_CHECKSUM} | sha256sum -c - \
+  && tar -xvzf "node-v${NODE_VERSION}-linux-x64.tar.gz" -C . \
+  && mv node-v${NODE_VERSION}-linux-x64/bin/* /usr/local/bin/ \
+  && mv node-v${NODE_VERSION}-linux-x64/lib/node_modules/ /usr/local/lib/ \
+  && rm -f "node-v${NODE_VERSION}-linux-x64.tar.gz" SHASUMS256.txt
 
 # Protocol Buffers
 RUN curl -fSLO "https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOBUF_VERSION}/protoc-${PROTOBUF_VERSION}-linux-x86_64.zip"
@@ -59,6 +59,6 @@ RUN mv ./prototool-$(uname -s)-$(uname -m) /usr/local/bin/prototool \
   && chmod +x /usr/local/bin/prototool
 
 # Install gRPC tools for Node.js
-# RUN npm install -g grpc grpc-tools grpc_tools_node_protoc_ts
+RUN npm install -g grpc grpc-tools grpc_tools_node_protoc_ts
 
 RUN ldconfig

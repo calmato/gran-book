@@ -55,8 +55,7 @@ jobs:
       - name: Generate proto
         run: |
           export PATH="$PATH:$(go env GOPATH)/bin"
-          make protoc
-          make generate SERVICE_PATH='./../api/gateway/native'
+          make generate
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
@@ -125,3 +124,10 @@ jobs:
 
       - name: Build
         run: make build
+
+      - uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true
+          flags: native-gateway
+          verbose: true
