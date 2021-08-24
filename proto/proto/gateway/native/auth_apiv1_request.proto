@@ -6,12 +6,6 @@ option go_package = "github.com/calmato/gran-book/proto";
 
 import "common/common.proto";
 
-/*
- * -----------------------------------------------
- * Auth Service
- * -----------------------------------------------
- */
-
 // 新規登録
 message AuthV1CreateRequest {
   string username = 1; // 表示名
