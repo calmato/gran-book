@@ -66,6 +66,7 @@ jobs:
 
   build_and_test:
     name: Build and Test
+    needs: setup_proto
     runs-on: ${{ matrix.os }}
     defaults:
       run:
