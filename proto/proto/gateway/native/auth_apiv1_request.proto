@@ -57,8 +57,3 @@ message AuthV1UpdateAddressRequest {
 message AuthV1RegisterDeviceRequest {
   string instance_id = 1; // 端末ID
 }
-
-// サムネイルアップロード
-message AuthV1UploadThumbnailRequest {
-  string thumbnail = 1;
-}

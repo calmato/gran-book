@@ -5,8 +5,6 @@ import (
 	"net/http"
 
 	"github.com/calmato/gran-book/api/gateway/native/internal/entity"
-	request "github.com/calmato/gran-book/api/gateway/native/internal/request/v1"
-	response "github.com/calmato/gran-book/api/gateway/native/internal/response/v1"
 	"github.com/calmato/gran-book/api/gateway/native/internal/server/util"
 	pb "github.com/calmato/gran-book/api/gateway/native/proto"
 	"github.com/gin-gonic/gin"
@@ -54,7 +52,7 @@ func (h *authHandler) Get(ctx *gin.Context) {
 
 // Create - ユーザー登録
 func (h *authHandler) Create(ctx *gin.Context) {
-	req := &request.CreateAuthRequest{}
+	req := &pb.AuthV1CreateRequest{}
 	err := ctx.BindJSON(req)
 	if err != nil {
 		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
@@ -81,7 +79,7 @@ func (h *authHandler) Create(ctx *gin.Context) {
 
 // UpdateProfile - プロフィール情報更新
 func (h *authHandler) UpdateProfile(ctx *gin.Context) {
-	req := &request.UpdateAuthProfileRequest{}
+	req := &pb.AuthV1UpdateProfileRequest{}
 	err := ctx.BindJSON(req)
 	if err != nil {
 		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
@@ -90,7 +88,7 @@ func (h *authHandler) UpdateProfile(ctx *gin.Context) {
 	in := &pb.UpdateAuthProfileRequest{
 		Username:         req.Username,
 		Gender:           pb.Gender(req.Gender),
-		ThumbnailUrl:     req.ThumbnailURL,
+		ThumbnailUrl:     req.ThumbnailUrl,
 		SelfIntroduction: req.SelfIntroduction,
 	}
 
@@ -107,7 +105,7 @@ func (h *authHandler) UpdateProfile(ctx *gin.Context) {
 
 // UpdateAddress - 住所情報更新
 func (h *authHandler) UpdateAddress(ctx *gin.Context) {
-	req := &request.UpdateAuthAddressRequest{}
+	req := &pb.AuthV1UpdateAddressRequest{}
 	err := ctx.BindJSON(req)
 	if err != nil {
 		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
@@ -139,7 +137,7 @@ func (h *authHandler) UpdateAddress(ctx *gin.Context) {
 
 // UpdateEmail - メールアドレス更新
 func (h *authHandler) UpdateEmail(ctx *gin.Context) {
-	req := &request.UpdateAuthEmailRequest{}
+	req := &pb.AuthV1UpdateEmailRequest{}
 	err := ctx.BindJSON(req)
 	if err != nil {
 		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
@@ -162,7 +160,7 @@ func (h *authHandler) UpdateEmail(ctx *gin.Context) {
 
 // UpdatePassword - パスワード更新
 func (h *authHandler) UpdatePassword(ctx *gin.Context) {
-	req := &request.UpdateAuthPasswordRequest{}
+	req := &pb.AuthV1UpdatePasswordRequest{}
 	err := ctx.BindJSON(req)
 	if err != nil {
 		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
@@ -251,14 +249,14 @@ func (h *authHandler) Delete(ctx *gin.Context) {
 
 // RegisterDevice - デバイス情報登録
 func (h *authHandler) RegisterDevice(ctx *gin.Context) {
-	req := &request.RegisterAuthDeviceRequest{}
+	req := &pb.AuthV1RegisterDeviceRequest{}
 	err := ctx.BindJSON(req)
 	if err != nil {
 		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
 	}
 
 	in := &pb.RegisterAuthDeviceRequest{
-		InstanceId: req.InstanceID,
+		InstanceId: req.InstanceId,
 	}
 
 	c := util.SetMetadata(ctx)
@@ -272,15 +270,14 @@ func (h *authHandler) RegisterDevice(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, res)
 }
 
-func (h *authHandler) getAuthResponse(out *pb.AuthResponse) *response.AuthResponse {
-	return &response.AuthResponse{
-		ID:               out.GetId(),
+func (h *authHandler) getAuthResponse(out *pb.AuthResponse) *pb.AuthV1Response {
+	return &pb.AuthV1Response{
+		Id:               out.GetId(),
 		Username:         out.GetUsername(),
-		Gender:           entity.Gender(out.GetGender()),
+		Gender:           out.GetGender(),
 		Email:            out.GetEmail(),
 		PhoneNumber:      out.GetPhoneNumber(),
-		Role:             entity.Role(out.GetRole()),
-		ThumbnailURL:     out.GetThumbnailUrl(),
+		ThumbnailUrl:     out.GetThumbnailUrl(),
 		SelfIntroduction: out.GetSelfIntroduction(),
 		LastName:         out.GetLastName(),
 		FirstName:        out.GetFirstName(),
@@ -296,8 +293,8 @@ func (h *authHandler) getAuthResponse(out *pb.AuthResponse) *response.AuthRespon
 	}
 }
 
-func (h *authHandler) getAuthThumbnailResponse(out *pb.AuthThumbnailResponse) *response.AuthThumbnailResponse {
-	return &response.AuthThumbnailResponse{
-		ThumbnailURL: out.GetThumbnailUrl(),
+func (h *authHandler) getAuthThumbnailResponse(out *pb.AuthThumbnailResponse) *pb.AuthV1ThumbnailResponse {
+	return &pb.AuthV1ThumbnailResponse{
+		ThumbnailUrl: out.GetThumbnailUrl(),
 	}
 }
