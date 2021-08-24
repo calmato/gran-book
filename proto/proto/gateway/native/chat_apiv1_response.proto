@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package native;
+
+option go_package = "github.com/calmato/gran-book/proto";
+
+// チャットルーム情報
+message ChatRoomV1Response {
+  message User {
+    string id = 1; // ユーザーID
+    string username = 2; // 表示名
+    string thumbnail_url = 3; // サムネイルURL
+  }
+  message Message {
+    string user_id = 1; // ユーザーID
+    string text = 2; // テキストメッセージ
+    string image = 3; // 添付画像URL
+    string created_at = 4; // 送信日時
+  }
+  string id = 1; // チャットルームID
+  repeated User users = 2; // 参加者一覧
+  Message latest_message = 3; // 最新のメッセージ
+  string created_at = 4; // 作成日時
+  string updated_at = 5; // 更新日時
+}
+
+// チャットルーム一覧
+message ChatRoomListV1Response {
+  message User {
+    string id = 1; // ユーザーID
+    string username = 2; // 表示名
+    string thumbnail_url = 3; // サムネイルURL
+  }
+  message Message {
+    string user_id = 1; // ユーザーID
+    string text = 2; // テキストメッセージ
+    string image = 3; // 添付画像URL
+    string created_at = 4; // 送信日時
+  }
+  message Room {
+    string id = 1; // チャットルームID
+    repeated User users = 2; // 参加者一覧
+    Message latest_message = 3; // 最新のメッセージ
+    string created_at = 4; // 作成日時
+    string updated_at = 5; // 更新日時
+  }
+  repeated Room rooms = 1; // チャットルーム一覧
+}
+
+// チャットメッセージ情報
+message ChatMessageV1Response {
+  message User {
+    string id = 1; // ユーザーID
+    string username = 2; // 表示名
+    string thumbnail_url = 3; // サムネイルURL
+  }
+  string text = 1; // テキストメッセージ
+  string image = 2; // 添付画像URL
+  User user = 3; // 送信者
+  string created_at = 4; // 送信日時
+}

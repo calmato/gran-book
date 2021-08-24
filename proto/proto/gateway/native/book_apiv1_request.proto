@@ -5,7 +5,7 @@ package native;
 option go_package = "github.com/calmato/gran-book/proto";
 
 // 書籍登録
-message BookV1CreateRequest {
+message CreateBookV1Request {
   string title = 1; // タイトル
   string title_kana = 2; // タイトル(かな)
   string item_caption = 3; // 説明
@@ -23,7 +23,7 @@ message BookV1CreateRequest {
 }
 
 // 書籍更新
-message BookV1UpdateRequest {
+message UpdateBookV1Request {
   string title = 1; // タイトル
   string title_kana = 2; // タイトル(かな)
   string item_caption = 3; // 説明

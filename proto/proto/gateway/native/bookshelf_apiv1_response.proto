@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+package native;
+
+option go_package = "github.com/calmato/gran-book/proto";
+
+// 本棚の書籍情報
+message BookshelfV1Response {
+  message Bookshelf {
+    int64 id = 1; // 本棚ID
+    string status = 2; // 読書ステータス
+    string read_on = 3; // 読み終えた日
+    string impression = 4; // 感想
+    string created_at = 5; // 登録日時
+    string updated_at = 6; // 更新日時
+  }
+  int64 id = 1; // 書籍ID
+  string title = 2; // タイトル
+  string title_kana = 3; // タイトル(かな)
+  string description = 4; // 説明
+  string isbn = 5; // ISBN
+  string publisher = 6; // 出版社名
+  string published_on = 7; // 出版日
+  string thumbnail_url = 8; // サムネイルURL
+  string rakuten_url = 9; // 楽天ショップURL
+  string size = 10; // 楽天書籍サイズ
+  string author = 11; // 著者名一覧
+  string author_kana = 12; /// 著者名一覧(かな)
+  Bookshelf bookshelf = 13; // ユーザーの本棚情報
+  string created_at = 14; // 登録日時
+  string updated_at = 15; // 更新日時
+}
+
+// 本棚の書籍一覧
+message BookshelfListV1Response {
+  message Bookshelf {
+    int64 id = 1; // 本棚ID
+    string status = 2; // 読書ステータス
+    string read_on = 3; // 読み終えた日
+    string created_at = 4; // 登録日時
+    string updated_at = 5; // 更新日時
+  }
+  message Book {
+    int64 id = 1; // 書籍ID
+    string title = 2; // タイトル
+    string title_kana = 3; // タイトル(かな)
+    string description = 4; // 説明
+    string isbn = 5; // ISBN
+    string publisher = 6; // 出版社名
+    string published_on = 7; // 出版日
+    string thumbnail_url = 8; // サムネイルURL
+    string rakuten_url = 9; // 楽天ショップURL
+    string size = 10; // 楽天書籍サイズ
+    string author = 11; // 著者名一覧
+    string author_kana = 12; /// 著者名一覧(かな)
+    Bookshelf bookshelf = 13; // ユーザーの本棚情報
+    string created_at = 14; // 登録日時
+    string updated_at = 15; // 更新日時
+  }
+  repeated Book books = 1; // 書籍一覧
+  int64 limit = 2; // 取得上限数
+  int64 offset = 3; // 取得開始位置
+  int64 total = 4; // 検索一致数
+}

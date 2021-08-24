@@ -7,7 +7,7 @@ option go_package = "github.com/calmato/gran-book/proto";
 import "common/common.proto";
 
 // 新規登録
-message AuthV1CreateRequest {
+message CreateAuthV1Request {
   string username = 1; // 表示名
   string email = 2; // メールアドレス
   string password = 3; // パスワード
@@ -15,18 +15,18 @@ message AuthV1CreateRequest {
 }
 
 // メールアドレス更新
-message AuthV1UpdateEmailRequest {
+message UpdateAuthEmailV1Request {
   string email = 1; // メールアドレス
 }
 
 // パスワード更新
-message AuthV1UpdatePasswordRequest {
+message UpdateAuthPasswordV1Request {
   string password = 1; // パスワード
   string password_confirmation = 2; // パスワード(確認用)
 }
 
 // プロフィール更新
-message AuthV1UpdateProfileRequest {
+message UpdateAuthProfileV1Request {
   string username = 1; // 表示名
   common.Gender gender = 2; // 性別
   string thumbnail_url = 3; // サムネイルURL
@@ -34,7 +34,7 @@ message AuthV1UpdateProfileRequest {
 }
 
 // 住所更新
-message AuthV1UpdateAddressRequest {
+message UpdateAuthAddressV1Request {
   string last_name = 1; // 姓
   string first_name = 2; // 名
   string last_name_kana = 3; // 姓(かな)
@@ -48,6 +48,6 @@ message AuthV1UpdateAddressRequest {
 }
 
 // 端末ID登録
-message AuthV1RegisterDeviceRequest {
+message RegisterAuthDeviceV1Request {
   string instance_id = 1; // 端末ID
 }

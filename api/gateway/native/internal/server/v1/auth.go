@@ -52,7 +52,7 @@ func (h *authHandler) Get(ctx *gin.Context) {
 
 // Create - ユーザー登録
 func (h *authHandler) Create(ctx *gin.Context) {
-	req := &pb.AuthV1CreateRequest{}
+	req := &pb.CreateAuthV1Request{}
 	err := ctx.BindJSON(req)
 	if err != nil {
 		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
@@ -79,7 +79,7 @@ func (h *authHandler) Create(ctx *gin.Context) {
 
 // UpdateProfile - プロフィール情報更新
 func (h *authHandler) UpdateProfile(ctx *gin.Context) {
-	req := &pb.AuthV1UpdateProfileRequest{}
+	req := &pb.UpdateAuthProfileV1Request{}
 	err := ctx.BindJSON(req)
 	if err != nil {
 		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
@@ -105,7 +105,7 @@ func (h *authHandler) UpdateProfile(ctx *gin.Context) {
 
 // UpdateAddress - 住所情報更新
 func (h *authHandler) UpdateAddress(ctx *gin.Context) {
-	req := &pb.AuthV1UpdateAddressRequest{}
+	req := &pb.UpdateAuthAddressV1Request{}
 	err := ctx.BindJSON(req)
 	if err != nil {
 		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
@@ -137,7 +137,7 @@ func (h *authHandler) UpdateAddress(ctx *gin.Context) {
 
 // UpdateEmail - メールアドレス更新
 func (h *authHandler) UpdateEmail(ctx *gin.Context) {
-	req := &pb.AuthV1UpdateEmailRequest{}
+	req := &pb.UpdateAuthEmailV1Request{}
 	err := ctx.BindJSON(req)
 	if err != nil {
 		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
@@ -160,7 +160,7 @@ func (h *authHandler) UpdateEmail(ctx *gin.Context) {
 
 // UpdatePassword - パスワード更新
 func (h *authHandler) UpdatePassword(ctx *gin.Context) {
-	req := &pb.AuthV1UpdatePasswordRequest{}
+	req := &pb.UpdateAuthPasswordV1Request{}
 	err := ctx.BindJSON(req)
 	if err != nil {
 		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
@@ -249,7 +249,7 @@ func (h *authHandler) Delete(ctx *gin.Context) {
 
 // RegisterDevice - デバイス情報登録
 func (h *authHandler) RegisterDevice(ctx *gin.Context) {
-	req := &pb.AuthV1RegisterDeviceRequest{}
+	req := &pb.RegisterAuthDeviceV1Request{}
 	err := ctx.BindJSON(req)
 	if err != nil {
 		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
@@ -293,8 +293,8 @@ func (h *authHandler) getAuthResponse(out *pb.AuthResponse) *pb.AuthV1Response {
 	}
 }
 
-func (h *authHandler) getAuthThumbnailResponse(out *pb.AuthThumbnailResponse) *pb.AuthV1ThumbnailResponse {
-	return &pb.AuthV1ThumbnailResponse{
+func (h *authHandler) getAuthThumbnailResponse(out *pb.AuthThumbnailResponse) *pb.AuthThumbnailV1Response {
+	return &pb.AuthThumbnailV1Response{
 		ThumbnailUrl: out.GetThumbnailUrl(),
 	}
 }

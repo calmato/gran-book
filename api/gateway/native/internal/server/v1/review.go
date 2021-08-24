@@ -6,7 +6,6 @@ import (
 	"strconv"
 
 	"github.com/calmato/gran-book/api/gateway/native/internal/entity"
-	response "github.com/calmato/gran-book/api/gateway/native/internal/response/v1"
 	"github.com/calmato/gran-book/api/gateway/native/internal/server/util"
 	pb "github.com/calmato/gran-book/api/gateway/native/proto"
 	"github.com/gin-gonic/gin"
@@ -209,19 +208,19 @@ func (h *reviewHandler) GetByUser(ctx *gin.Context) {
 
 func (h *reviewHandler) getBookReviewResponse(
 	reviewOutput *pb.ReviewResponse, userOutput *pb.UserResponse,
-) *response.BookReviewResponse {
-	user := &response.BookReviewUser{
-		ID:       reviewOutput.GetUserId(),
+) *pb.BookReviewV1Response {
+	user := &pb.BookReviewV1Response_User{
+		Id:       reviewOutput.GetUserId(),
 		Username: "unknown",
 	}
 
 	if userOutput != nil {
 		user.Username = userOutput.GetUsername()
-		user.ThumbnailURL = userOutput.GetThumbnailUrl()
+		user.ThumbnailUrl = userOutput.GetThumbnailUrl()
 	}
 
-	return &response.BookReviewResponse{
-		ID:         reviewOutput.GetId(),
+	return &pb.BookReviewV1Response{
+		Id:         reviewOutput.GetId(),
 		Impression: reviewOutput.GetImpression(),
 		CreatedAt:  reviewOutput.GetCreatedAt(),
 		UpdatedAt:  reviewOutput.GetUpdatedAt(),
@@ -231,15 +230,15 @@ func (h *reviewHandler) getBookReviewResponse(
 
 func (h *reviewHandler) getUserReviewResponse(
 	reviewOutput *pb.ReviewResponse, bookOutput *pb.BookResponse,
-) *response.UserReviewResponse {
-	book := &response.UserReviewBook{
-		ID:           bookOutput.GetId(),
+) *pb.UserReviewV1Response {
+	book := &pb.UserReviewV1Response_Book{
+		Id:           bookOutput.GetId(),
 		Title:        bookOutput.GetTitle(),
-		ThumbnailURL: bookOutput.GetThumbnailUrl(),
+		ThumbnailUrl: bookOutput.GetThumbnailUrl(),
 	}
 
-	return &response.UserReviewResponse{
-		ID:         reviewOutput.GetId(),
+	return &pb.UserReviewV1Response{
+		Id:         reviewOutput.GetId(),
 		Impression: reviewOutput.GetImpression(),
 		CreatedAt:  reviewOutput.GetCreatedAt(),
 		UpdatedAt:  reviewOutput.GetUpdatedAt(),
@@ -249,21 +248,21 @@ func (h *reviewHandler) getUserReviewResponse(
 
 func (h *reviewHandler) getBookReviewListResponse(
 	reviewsOutput *pb.ReviewListResponse, usersOutput *pb.UserMapResponse,
-) *response.BookReviewListResponse {
-	reviews := make([]*response.BookReviewListReview, len(reviewsOutput.GetReviews()))
+) *pb.BookReviewListV1Response {
+	reviews := make([]*pb.BookReviewListV1Response_Review, len(reviewsOutput.GetReviews()))
 	for i, r := range reviewsOutput.GetReviews() {
-		user := &response.BookReviewListUser{
-			ID:       r.GetUserId(),
+		user := &pb.BookReviewListV1Response_User{
+			Id:       r.GetUserId(),
 			Username: "unknown",
 		}
 
 		if usersOutput.GetUsers()[r.GetUserId()] != nil {
 			user.Username = usersOutput.GetUsers()[r.GetUserId()].GetUsername()
-			user.ThumbnailURL = usersOutput.GetUsers()[r.GetUserId()].GetThumbnailUrl()
+			user.ThumbnailUrl = usersOutput.GetUsers()[r.GetUserId()].GetThumbnailUrl()
 		}
 
-		review := &response.BookReviewListReview{
-			ID:         r.GetId(),
+		review := &pb.BookReviewListV1Response_Review{
+			Id:         r.GetId(),
 			Impression: r.GetImpression(),
 			CreatedAt:  r.GetCreatedAt(),
 			UpdatedAt:  r.GetUpdatedAt(),
@@ -273,7 +272,7 @@ func (h *reviewHandler) getBookReviewListResponse(
 		reviews[i] = review
 	}
 
-	return &response.BookReviewListResponse{
+	return &pb.BookReviewListV1Response{
 		Reviews: reviews,
 		Limit:   reviewsOutput.GetLimit(),
 		Offset:  reviewsOutput.GetOffset(),
@@ -283,17 +282,17 @@ func (h *reviewHandler) getBookReviewListResponse(
 
 func (h *reviewHandler) getUserReviewListResponse(
 	reviewsOutput *pb.ReviewListResponse, booksOutput *pb.BookMapResponse,
-) *response.UserReviewListResponse {
-	reviews := make([]*response.UserReviewListReview, len(reviewsOutput.GetReviews()))
+) *pb.UserReviewListV1Response {
+	reviews := make([]*pb.UserReviewListV1Response_Review, len(reviewsOutput.GetReviews()))
 	for i, r := range reviewsOutput.GetReviews() {
-		book := &response.UserReviewListBook{
-			ID:           booksOutput.GetBooks()[r.GetBookId()].GetId(),
+		book := &pb.UserReviewListV1Response_Book{
+			Id:           booksOutput.GetBooks()[r.GetBookId()].GetId(),
 			Title:        booksOutput.GetBooks()[r.GetBookId()].GetTitle(),
-			ThumbnailURL: booksOutput.GetBooks()[r.GetBookId()].GetThumbnailUrl(),
+			ThumbnailUrl: booksOutput.GetBooks()[r.GetBookId()].GetThumbnailUrl(),
 		}
 
-		review := &response.UserReviewListReview{
-			ID:         r.GetId(),
+		review := &pb.UserReviewListV1Response_Review{
+			Id:         r.GetId(),
 			Impression: r.GetImpression(),
 			CreatedAt:  r.GetCreatedAt(),
 			UpdatedAt:  r.GetUpdatedAt(),
@@ -303,7 +302,7 @@ func (h *reviewHandler) getUserReviewListResponse(
 		reviews[i] = review
 	}
 
-	return &response.UserReviewListResponse{
+	return &pb.UserReviewListV1Response{
 		Reviews: reviews,
 		Limit:   reviewsOutput.GetLimit(),
 		Offset:  reviewsOutput.GetOffset(),

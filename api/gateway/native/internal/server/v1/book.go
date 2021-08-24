@@ -70,7 +70,7 @@ func (h *bookHandler) Get(ctx *gin.Context) {
 
 // Create - 書籍登録
 func (h *bookHandler) Create(ctx *gin.Context) {
-	req := &pb.BookV1CreateRequest{}
+	req := &pb.CreateBookV1Request{}
 	err := ctx.BindJSON(req)
 	if err != nil {
 		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
@@ -116,7 +116,7 @@ func (h *bookHandler) Create(ctx *gin.Context) {
 
 // Update - 書籍更新
 func (h *bookHandler) Update(ctx *gin.Context) {
-	req := &pb.BookV1UpdateRequest{}
+	req := &pb.UpdateBookV1Request{}
 	err := ctx.BindJSON(req)
 	if err != nil {
 		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
