@@ -162,7 +162,7 @@ export function signUpWithEmailAsync(
         username,
       })
       .then(async (res: AxiosResponse<IAuthResponse>) => {
-        console.log('debug', res);
+        return sendEmailVerification()
       })
       .catch((err: Error) => {
         throw err;
