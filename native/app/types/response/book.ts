@@ -53,21 +53,21 @@ interface IUser {
   username: string;
 }
 
-export interface IReviewResponse {
-    total: number;
-    offset: number;
-    limit: number;
-    reviews:IReview[];
-  };
+export interface IReviewListResponse {
+  total: number;
+  offset: number;
+  limit: number;
+  reviews: IReview[];
+};
 
 export interface IReview  {
-    createdAt: string;
-    book: {
-      id: number;
-      title: string;
-      thumbnailUrl: string;
-    };
-    impression: string;
+  id: number;
+  impression: string;
+  book: {
     id: number;
-    updatedAt: string;
-  }
+    title: string;
+    thumbnailUrl: string;
+  };
+  createdAt: string;
+  updatedAt: string;
+}
