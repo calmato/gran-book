@@ -8,23 +8,23 @@ export interface RoomInfoResponse {
 export interface RoomInfo {
   rooms: [
     {
-      createdAt?: string,
-      id: string,
+      createdAt?: string;
+      id: string;
       latestMessage: {
-        createdAt: string,
-        id: string,
-        text: string,
-        image: string,
-        userId: string,
-      },
+        createdAt: string;
+        id: string;
+        text: string;
+        image: string;
+        userId: string;
+      };
       users: [
         {
-          id: string,
-          username: string,
-          thumbnailUrl: string
-        }
-      ],
-      updatedAt?: string
-    }
-  ]
+          id: string;
+          username: string;
+          thumbnailUrl: string;
+        },
+      ];
+      updatedAt?: string;
+    },
+  ];
 }
