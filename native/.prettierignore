@@ -1,0 +1,13 @@
+.expo
+.expo-shared
+app/types/api
+.eslintignore
+.eslintrc.js
+.gitignore
+.prettierignore
+.prettierrc.js
+babel.config.js
+jest.config.js
+package.json
+tsconfig.json
+yarn.lock
