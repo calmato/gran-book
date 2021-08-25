@@ -8,7 +8,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import { Auth } from '~/store/models';
 import { getOwnReviews } from '~/store/usecases';
-import { IReviewResponse } from '~/types/response';
+import { IReviewListResponse } from '~/types/response';
 import { COLOR, FONT_SIZE } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
@@ -46,7 +46,7 @@ interface Props {
   auth: Auth.Model;
 }
 
-const nullData: IReviewResponse = {
+const nullData: IReviewListResponse = {
   total: 0,
   offset: 1,
   limit: 1,
@@ -65,8 +65,17 @@ const nullData: IReviewResponse = {
   ],
 };
 
+const BookAvatar = (isAvatar: boolean, AvatarUri: string) => {
+  if (isAvatar) {
+    <Avatar source={{ uri: AvatarUri }} size="large" />;
+  } else {
+    <Avatar>
+      <MaterialIcons name="person-outline" size={36} color={COLOR.GREY} />
+    </Avatar>;
+  }
+};
 export const OwnReviews = function OwnReviews(props: Props): ReactElement {
-  const [reviewList, setReviewList] = useState<IReviewResponse>(nullData);
+  const [reviewList, setReviewList] = useState<IReviewListResponse>(nullData);
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -77,7 +86,7 @@ export const OwnReviews = function OwnReviews(props: Props): ReactElement {
     f();
   }, []);
 
-  const review = reviewList.reviews;
+  const reviews = reviewList.reviews;
   return (
     <View>
       <HeaderWithBackButton title="自分の感想" onPress={() => navigation.goBack()} />
@@ -86,16 +95,10 @@ export const OwnReviews = function OwnReviews(props: Props): ReactElement {
         badgeStyle={styles.badgeStyle}
       />
       <ScrollView style={styles.reviewListStyle}>
-        {review.map((review) => (
+        {reviews.map((review) => (
           <View key={review.id}>
             <ListItem key={review.id} bottomDivider={true} pad={20}>
-              {review.book.thumbnailUrl !== '' ? (
-                <Avatar source={{ uri: review.book.thumbnailUrl }} size="large" />
-              ) : (
-                <Avatar>
-                  <MaterialIcons name="person-outline" size={36} color={COLOR.GREY} />
-                </Avatar>
-              )}
+              {BookAvatar(review.book.thumbnailUrl !== '', review.book.thumbnailUrl)}
               <ListItem.Content style={styles.reviewStyle}>
                 <ListItem.Title style={styles.titleStyle}>{review.book.title}</ListItem.Title>
                 <ListItem.Subtitle style={styles.subtitleStyle}>
