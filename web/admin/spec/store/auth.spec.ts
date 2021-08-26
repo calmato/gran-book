@@ -104,7 +104,12 @@ describe('store/auth', () => {
         })
 
         it('rejectが返されること', async () => {
-          const err = new ApiError(400, 'api error', { status: 400, code: 0, message: 'api error', errors: [] })
+          const err = new ApiError(400, 'api error', {
+            status: 400,
+            code: 0,
+            message: 'api error',
+            detail: 'some error',
+          })
           await expect(AuthStore.showAuth()).rejects.toThrow(err)
         })
       })
@@ -138,7 +143,12 @@ describe('store/auth', () => {
         })
 
         it('rejectが返されること', async () => {
-          const err = new ApiError(400, 'api error', { status: 400, code: 0, message: 'api error', errors: [] })
+          const err = new ApiError(400, 'api error', {
+            status: 400,
+            code: 0,
+            message: 'api error',
+            detail: 'some error',
+          })
           await expect(AuthStore.updateEmail(form)).rejects.toThrow(err)
         })
       })
@@ -167,7 +177,12 @@ describe('store/auth', () => {
         })
 
         it('rejectが返されること', async () => {
-          const err = new ApiError(400, 'api error', { status: 400, code: 0, message: 'api error', errors: [] })
+          const err = new ApiError(400, 'api error', {
+            status: 400,
+            code: 0,
+            message: 'api error',
+            detail: 'some error',
+          })
           await expect(AuthStore.updatePassword(form)).rejects.toThrow(err)
         })
       })
@@ -216,7 +231,12 @@ describe('store/auth', () => {
         })
 
         it('rejectが返されること', async () => {
-          const err = new ApiError(400, 'api error', { status: 400, code: 0, message: 'api error', errors: [] })
+          const err = new ApiError(400, 'api error', {
+            status: 400,
+            code: 0,
+            message: 'api error',
+            detail: 'some error',
+          })
           await expect(AuthStore.updateProfile(form)).rejects.toThrow(err)
         })
       })
@@ -243,7 +263,12 @@ describe('store/auth', () => {
         })
 
         it('rejectが返されること', async () => {
-          const err = new ApiError(400, 'api error', { status: 400, code: 0, message: 'api error', errors: [] })
+          const err = new ApiError(400, 'api error', {
+            status: 400,
+            code: 0,
+            message: 'api error',
+            detail: 'some error',
+          })
           await expect(AuthStore.uploadThumbnail(file)).rejects.toThrow(err)
         })
       })
