@@ -1,6 +1,11 @@
 import { Action, Module, Mutation, VuexModule } from 'vuex-module-decorators'
 import { $axios } from '~/plugins/axios'
-import { CreateAdminV1Request, UpdateAdminContactV1Request, UpdateAdminPasswordV1Request, UpdateAdminProfileV1Request } from '~/types/api/admin_apiv1_request_pb'
+import {
+  CreateAdminV1Request,
+  UpdateAdminContactV1Request,
+  UpdateAdminPasswordV1Request,
+  UpdateAdminProfileV1Request,
+} from '~/types/api/admin_apiv1_request_pb'
 import { AdminListV1Response, AdminThumbnailV1Response, AdminV1Response } from '~/types/api/admin_apiv1_response_pb'
 import { ApiError, IErrorResponse } from '~/types/exception'
 import {

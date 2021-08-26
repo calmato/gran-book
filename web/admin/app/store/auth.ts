@@ -5,7 +5,11 @@ import { ApiError, IErrorResponse } from '~/types/exception'
 import { ISignInForm, IAuthEditEmailForm, IAuthEditPasswordForm, IAuthEditProfileForm } from '~/types/forms'
 import { IAuthState, IAuthProfile } from '~/types/store'
 import { AuthThumbnailV1Response, AuthV1Response } from '~/types/api/auth_apiv1_response_pb'
-import { UpdateAuthEmailV1Request, UpdateAuthPasswordV1Request, UpdateAuthProfileV1Request } from '~/types/api/auth_apiv1_request_pb'
+import {
+  UpdateAuthEmailV1Request,
+  UpdateAuthPasswordV1Request,
+  UpdateAuthProfileV1Request,
+} from '~/types/api/auth_apiv1_request_pb'
 
 const initialState: IAuthState = {
   id: '',
