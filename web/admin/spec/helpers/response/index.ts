@@ -1,14 +1,15 @@
 import * as AdminStore from './admin'
 import * as AuthStore from './auth'
+import { IErrorResponse } from '~/types/exception'
 
-const err = {
+const err: { response: IErrorResponse } = {
   response: {
     status: 400,
     data: {
       status: 400,
       code: 0,
       message: 'api error',
-      errors: [],
+      detail: 'some error',
     },
   },
 }

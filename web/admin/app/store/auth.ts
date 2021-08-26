@@ -1,11 +1,15 @@
 import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
 import { $axios } from '~/plugins/axios'
 import firebase from '~/plugins/firebase'
-import { ApiError } from '~/types/exception'
+import { ApiError, IErrorResponse } from '~/types/exception'
 import { ISignInForm, IAuthEditEmailForm, IAuthEditPasswordForm, IAuthEditProfileForm } from '~/types/forms'
-import { IAuthUpdateEmailRequest, IAuthUpdatePasswordRequest, IAuthUpdateProfileRequest } from '~/types/requests'
-import { IAuthResponse, IAuthThumbnailResponse, IErrorResponse } from '~/types/responses'
 import { IAuthState, IAuthProfile } from '~/types/store'
+import { AuthThumbnailV1Response, AuthV1Response } from '~/types/api/auth_apiv1_response_pb'
+import {
+  UpdateAuthEmailV1Request,
+  UpdateAuthPasswordV1Request,
+  UpdateAuthProfileV1Request,
+} from '~/types/api/auth_apiv1_request_pb'
 
 const initialState: IAuthState = {
   id: '',
@@ -229,10 +233,10 @@ export default class AuthModule extends VuexModule {
 
   @Action({ rawError: true })
   public showAuth(): Promise<number> {
-    return new Promise((resolve: (role: number) => void, reject: (reason: ApiError) => void) => {
+    return new Promise((resolve: (role: number) => void, reject: (reason: Error) => void) => {
       $axios
         .$get('/v1/auth')
-        .then((res: IAuthResponse) => {
+        .then((res: AuthV1Response.AsObject) => {
           const data: IAuthProfile = { ...res }
           this.setProfile(data)
           resolve(res.role)
@@ -248,14 +252,14 @@ export default class AuthModule extends VuexModule {
   public updateEmail(payload: IAuthEditEmailForm): Promise<void> {
     const { email } = payload.params
 
-    const req: IAuthUpdateEmailRequest = {
+    const req: UpdateAuthEmailV1Request.AsObject = {
       email,
     }
 
-    return new Promise((resolve: () => void, reject: (reason: ApiError) => void) => {
+    return new Promise((resolve: () => void, reject: (reason: Error) => void) => {
       $axios
         .$patch('/v1/auth/email', req)
-        .then((res: IAuthResponse) => {
+        .then((res: AuthV1Response.AsObject) => {
           this.setEmail(res.email)
           this.setEmailVerified(false)
           this.setUpdatedAt(res.updatedAt)
@@ -272,15 +276,15 @@ export default class AuthModule extends VuexModule {
   public updatePassword(payload: IAuthEditPasswordForm): Promise<void> {
     const { password, passwordConfirmation } = payload.params
 
-    const req: IAuthUpdatePasswordRequest = {
+    const req: UpdateAuthPasswordV1Request.AsObject = {
       password,
       passwordConfirmation,
     }
 
-    return new Promise((resolve: () => void, reject: (reason: ApiError) => void) => {
+    return new Promise((resolve: () => void, reject: (reason: Error) => void) => {
       $axios
         .$patch('/v1/auth/password', req)
-        .then((res: IAuthResponse) => {
+        .then((res: AuthV1Response.AsObject) => {
           this.setUpdatedAt(res.updatedAt)
           resolve()
         })
@@ -304,7 +308,7 @@ export default class AuthModule extends VuexModule {
       phoneNumber,
     } = payload.params
 
-    const req: IAuthUpdateProfileRequest = {
+    const req: UpdateAuthProfileV1Request.AsObject = {
       username,
       thumbnailUrl: String(thumbnailUrl) || '',
       selfIntroduction,
@@ -315,10 +319,10 @@ export default class AuthModule extends VuexModule {
       phoneNumber,
     }
 
-    return new Promise((resolve: () => void, reject: (reason: ApiError) => void) => {
+    return new Promise((resolve: () => void, reject: (reason: Error) => void) => {
       $axios
         .$patch('/v1/auth/profile', req)
-        .then((res: IAuthResponse) => {
+        .then((res: AuthV1Response.AsObject) => {
           const data: IAuthProfile = { ...res }
           this.setProfile(data)
           resolve()
@@ -341,10 +345,10 @@ export default class AuthModule extends VuexModule {
     const params = new FormData()
     params.append('thumbnail', payload)
 
-    return new Promise((resolve: (thumbnailUrl: string) => void, reject: (reason: ApiError) => void) => {
+    return new Promise((resolve: (thumbnailUrl: string) => void, reject: (reason: Error) => void) => {
       $axios
         .$post('/v1/auth/thumbnail', params, config)
-        .then((res: IAuthThumbnailResponse) => {
+        .then((res: AuthThumbnailV1Response.AsObject) => {
           this.setThumbnailUrl(res.thumbnailUrl)
           resolve(res.thumbnailUrl)
         })
