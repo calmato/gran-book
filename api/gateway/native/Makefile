@@ -32,4 +32,4 @@ test:
 	go test -v -cover -coverprofile=coverage.txt -covermode=atomic $(TEST_PACKAGES)
 
 mockgen:
-	$(BIN)/build-mocks
+	$(BIN)/build-mocks.sh

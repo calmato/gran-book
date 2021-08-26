@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/calmato/gran-book/api/gateway/native/internal/entity"
-	response "github.com/calmato/gran-book/api/gateway/native/internal/response/v2"
 	"github.com/calmato/gran-book/api/gateway/native/internal/server/util"
 	pb "github.com/calmato/gran-book/api/gateway/native/proto"
 	"github.com/gin-gonic/gin"
@@ -109,7 +108,7 @@ func (h *bookHandler) getBookResponse(
 	bookOutput *pb.BookResponse,
 	reviewsOutput *pb.ReviewListResponse,
 	usersOutput *pb.UserMapResponse,
-) *response.BookResponse {
+) *pb.BookV2Response {
 	authorNames := make([]string, len(bookOutput.GetAuthors()))
 	authorNameKanas := make([]string, len(bookOutput.GetAuthors()))
 	for i, a := range bookOutput.GetAuthors() {
@@ -117,20 +116,20 @@ func (h *bookHandler) getBookResponse(
 		authorNameKanas[i] = a.GetNameKana()
 	}
 
-	reviews := make([]*response.BookReview, len(reviewsOutput.GetReviews()))
+	reviews := make([]*pb.BookV2Response_Review, len(reviewsOutput.GetReviews()))
 	for i, r := range reviewsOutput.GetReviews() {
-		user := &response.BookUser{
-			ID:       r.GetUserId(),
+		user := &pb.BookV2Response_User{
+			Id:       r.GetUserId(),
 			Username: "unknown",
 		}
 
 		if usersOutput.GetUsers()[r.GetUserId()] != nil {
 			user.Username = usersOutput.GetUsers()[r.GetUserId()].GetUsername()
-			user.ThumbnailURL = usersOutput.GetUsers()[r.GetUserId()].GetThumbnailUrl()
+			user.ThumbnailUrl = usersOutput.GetUsers()[r.GetUserId()].GetThumbnailUrl()
 		}
 
-		review := &response.BookReview{
-			ID:         r.GetId(),
+		review := &pb.BookV2Response_Review{
+			Id:         r.GetId(),
 			Impression: r.GetImpression(),
 			CreatedAt:  r.GetCreatedAt(),
 			UpdatedAt:  r.GetUpdatedAt(),
@@ -140,16 +139,16 @@ func (h *bookHandler) getBookResponse(
 		reviews[i] = review
 	}
 
-	return &response.BookResponse{
-		ID:           bookOutput.GetId(),
+	return &pb.BookV2Response{
+		Id:           bookOutput.GetId(),
 		Title:        bookOutput.GetTitle(),
 		TitleKana:    bookOutput.GetTitleKana(),
 		Description:  bookOutput.GetDescription(),
 		Isbn:         bookOutput.GetIsbn(),
 		Publisher:    bookOutput.GetPublisher(),
 		PublishedOn:  bookOutput.GetPublishedOn(),
-		ThumbnailURL: bookOutput.GetThumbnailUrl(),
-		RakutenURL:   bookOutput.GetRakutenUrl(),
+		ThumbnailUrl: bookOutput.GetThumbnailUrl(),
+		RakutenUrl:   bookOutput.GetRakutenUrl(),
 		Size:         bookOutput.GetRakutenSize(),
 		Author:       strings.Join(authorNames, "/"),
 		AuthorKana:   strings.Join(authorNameKanas, "/"),

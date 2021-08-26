@@ -29,6 +29,6 @@ message AuthV1Response {
 }
 
 // サムネイルURL
-message AuthV1ThumbnailResponse {
+message AuthThumbnailV1Response {
   string thumbnail_url = 1; // サムネイルURL
 }

@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package native;
+
+option go_package = "github.com/calmato/gran-book/proto";
+
+// チャットルーム作成
+message CreateChatRoomV1Request {
+  repeated string user_ids = 1; // 参加ユーザーID一覧
+}
+
+// チャットメッセージ送信
+message CreateChatMessageV1Request {
+  string text = 1; // テキストメッセージ
+}

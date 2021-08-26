@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/calmato/gran-book/api/gateway/native/internal/entity"
-	response "github.com/calmato/gran-book/api/gateway/native/internal/response/v1"
 	"github.com/calmato/gran-book/api/gateway/native/internal/server/util"
 	pb "github.com/calmato/gran-book/api/gateway/native/proto"
 	"github.com/gin-gonic/gin"
@@ -138,13 +137,13 @@ func (h *userHandler) Unfollow(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, res)
 }
 
-func (h *userHandler) getFollowListResponse(out *pb.FollowListResponse) *response.FollowListResponse {
-	users := make([]*response.FollowListUser, len(out.GetFollows()))
+func (h *userHandler) getFollowListResponse(out *pb.FollowListResponse) *pb.FollowListV1Response {
+	users := make([]*pb.FollowListV1Response_User, len(out.GetFollows()))
 	for i, f := range out.GetFollows() {
-		user := &response.FollowListUser{
-			ID:               f.GetId(),
+		user := &pb.FollowListV1Response_User{
+			Id:               f.GetId(),
 			Username:         f.GetUsername(),
-			ThumbnailURL:     f.GetThumbnailUrl(),
+			ThumbnailUrl:     f.GetThumbnailUrl(),
 			SelfIntroduction: f.GetSelfIntroduction(),
 			IsFollow:         f.GetIsFollow(),
 		}
@@ -152,7 +151,7 @@ func (h *userHandler) getFollowListResponse(out *pb.FollowListResponse) *respons
 		users[i] = user
 	}
 
-	return &response.FollowListResponse{
+	return &pb.FollowListV1Response{
 		Users:  users,
 		Limit:  out.GetLimit(),
 		Offset: out.GetOffset(),
@@ -160,13 +159,13 @@ func (h *userHandler) getFollowListResponse(out *pb.FollowListResponse) *respons
 	}
 }
 
-func (h *userHandler) getFollowerListResponse(out *pb.FollowerListResponse) *response.FollowerListResponse {
-	users := make([]*response.FollowerListUser, len(out.GetFollowers()))
+func (h *userHandler) getFollowerListResponse(out *pb.FollowerListResponse) *pb.FollowerListV1Response {
+	users := make([]*pb.FollowerListV1Response_User, len(out.GetFollowers()))
 	for i, f := range out.GetFollowers() {
-		user := &response.FollowerListUser{
-			ID:               f.GetId(),
+		user := &pb.FollowerListV1Response_User{
+			Id:               f.GetId(),
 			Username:         f.GetUsername(),
-			ThumbnailURL:     f.GetThumbnailUrl(),
+			ThumbnailUrl:     f.GetThumbnailUrl(),
 			SelfIntroduction: f.GetSelfIntroduction(),
 			IsFollow:         f.GetIsFollow(),
 		}
@@ -174,7 +173,7 @@ func (h *userHandler) getFollowerListResponse(out *pb.FollowerListResponse) *res
 		users[i] = user
 	}
 
-	return &response.FollowerListResponse{
+	return &pb.FollowerListV1Response{
 		Users:  users,
 		Limit:  out.GetLimit(),
 		Offset: out.GetOffset(),
@@ -182,13 +181,13 @@ func (h *userHandler) getFollowerListResponse(out *pb.FollowerListResponse) *res
 	}
 }
 
-func (h *userHandler) getUserProfileResponse(out *pb.UserProfileResponse) *response.UserProfileResponse {
-	products := make([]*response.UserProfileProduct, 0)
+func (h *userHandler) getUserProfileResponse(out *pb.UserProfileResponse) *pb.UserProfileV1Response {
+	products := make([]*pb.UserProfileV1Response_Product, 0)
 
-	return &response.UserProfileResponse{
-		ID:               out.GetId(),
+	return &pb.UserProfileV1Response{
+		Id:               out.GetId(),
 		Username:         out.GetUsername(),
-		ThumbnailURL:     out.GetThumbnailUrl(),
+		ThumbnailUrl:     out.GetThumbnailUrl(),
 		SelfIntroduction: out.GetSelfIntroduction(),
 		IsFollow:         out.GetIsFollow(),
 		IsFollower:       out.GetIsFollower(),
