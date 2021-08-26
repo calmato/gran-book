@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package admin;
+
+option go_package = "github.com/calmato/gran-book/proto";
+
+import "common/common.proto";
+
+// 管理者登録
+message CreateAdminV1Request {
+  string username = 1; // 表示名
+  string email = 2; // メールアドレス
+  string password = 3; // パスワード
+  string password_confirmation = 4; // パスワード(確認用)
+  common.Role role = 5; // 権限
+  string last_name = 6; // 姓
+  string first_name = 7; // 名
+  string last_name_kana = 8; // 姓(かな)
+  string first_name_kana = 9; // 名(かな)
+}
+
+// 連絡先更新
+message UpdateAdminContactV1Request {
+  string phone_number = 1; // 電話番号
+  string email = 2; // メールアドレス
+}
+
+// パスワード更新
+message UpdateAdminPasswordV1Request {
+  string password = 1; // パスワード
+  string password_confirmation = 2; // パスワード(確認用)
+}
+
+// プロフィール更新
+message UpdateAdminProfileV1Request {
+  string username = 1; // 表示名
+  string thumbnail_url = 2; // サムネイルURL
+  common.Role role = 3; // 権限
+  string last_name = 4; // 姓
+  string first_name = 5; // 名
+  string last_name_kana = 6; // 姓(かな)
+  string first_name_kana = 7; // 名(かな)
+}
