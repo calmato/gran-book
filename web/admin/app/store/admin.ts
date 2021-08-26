@@ -1,6 +1,8 @@
 import { Action, Module, Mutation, VuexModule } from 'vuex-module-decorators'
 import { $axios } from '~/plugins/axios'
-import { ApiError } from '~/types/exception'
+import { CreateAdminV1Request, UpdateAdminContactV1Request, UpdateAdminPasswordV1Request, UpdateAdminProfileV1Request } from '~/types/api/admin_apiv1_request_pb'
+import { AdminListV1Response, AdminThumbnailV1Response, AdminV1Response } from '~/types/api/admin_apiv1_response_pb'
+import { ApiError, IErrorResponse } from '~/types/exception'
 import {
   IAdminEditContactForm,
   IAdminEditProfileForm,
@@ -8,19 +10,6 @@ import {
   IAdminListForm,
   IAdminNewForm,
 } from '~/types/forms'
-import {
-  IAdminCreateRequest,
-  IAdminUpdateContactRequest,
-  IAdminUpdatePasswordRequest,
-  IAdminUpdateProfileRequest,
-} from '~/types/requests'
-import {
-  IAdminListResponse,
-  IAdminListResponseUser,
-  IAdminResponse,
-  IAdminThumbnailResponse,
-  IErrorResponse,
-} from '~/types/responses'
 import { IAdminState, IAdminUser } from '~/types/store'
 
 const initialState: IAdminState = {
@@ -106,10 +95,10 @@ export default class AdminModule extends VuexModule {
     return new Promise((resolve: () => void, reject: (reason: Error) => void) => {
       $axios
         .$get(`/v1/admin?${query}`)
-        .then((res: IAdminListResponse) => {
-          const { users, total } = res
-          const data: IAdminUser[] = users.map(
-            (user: IAdminListResponseUser): IAdminUser => {
+        .then((res: AdminListV1Response.AsObject) => {
+          const { usersList, total } = res
+          const data: IAdminUser[] = usersList.map(
+            (user: AdminListV1Response.User.AsObject): IAdminUser => {
               return { ...user } as IAdminUser
             }
           )
@@ -129,7 +118,7 @@ export default class AdminModule extends VuexModule {
     return new Promise((resolve: () => void, reject: (reason: Error) => void) => {
       $axios
         .$get(`/v1/admin/${userId}`)
-        .then((res: IAdminResponse) => {
+        .then((res: AdminV1Response.AsObject) => {
           const data: IAdminUser = { ...res }
           this.setUser(data)
           resolve()
@@ -154,7 +143,7 @@ export default class AdminModule extends VuexModule {
       firstNameKana,
     } = payload.params
 
-    const req: IAdminCreateRequest = {
+    const req: CreateAdminV1Request.AsObject = {
       username: `${lastName} ${firstName}`,
       email,
       password,
@@ -166,10 +155,10 @@ export default class AdminModule extends VuexModule {
       firstNameKana,
     }
 
-    return new Promise((resolve: () => void, reject: (reason: ApiError) => void) => {
+    return new Promise((resolve: () => void, reject: (reason: Error) => void) => {
       $axios
         .$post('/v1/admin', req)
-        .then((res: IAdminResponse) => {
+        .then((res: AdminV1Response.AsObject) => {
           const data: IAdminUser = { ...res }
           this.addUser(data)
           resolve()
@@ -185,8 +174,9 @@ export default class AdminModule extends VuexModule {
   public updateProfile({ userId, form }: { userId: string; form: IAdminEditProfileForm }): Promise<void> {
     const { role, lastName, firstName, lastNameKana, firstNameKana, thumbnailUrl } = form.params
 
-    const req: IAdminUpdateProfileRequest = {
+    const req: UpdateAdminProfileV1Request.AsObject = {
       role,
+      username: '', // TODO: refactor
       lastName,
       firstName,
       lastNameKana,
@@ -194,10 +184,10 @@ export default class AdminModule extends VuexModule {
       thumbnailUrl: String(thumbnailUrl) || '',
     }
 
-    return new Promise((resolve: () => void, reject: (reason: ApiError) => void) => {
+    return new Promise((resolve: () => void, reject: (reason: Error) => void) => {
       $axios
         .$patch(`/v1/admin/${userId}/profile`, req)
-        .then((res: IAdminResponse) => {
+        .then((res: AdminV1Response.AsObject) => {
           const data: IAdminUser = { ...res }
           this.addUser(data)
           resolve()
@@ -213,15 +203,15 @@ export default class AdminModule extends VuexModule {
   public updateContact({ userId, form }: { userId: string; form: IAdminEditContactForm }): Promise<void> {
     const { email, phoneNumber } = form.params
 
-    const req: IAdminUpdateContactRequest = {
+    const req: UpdateAdminContactV1Request.AsObject = {
       email,
       phoneNumber,
     }
 
-    return new Promise((resolve: () => void, reject: (reason: ApiError) => void) => {
+    return new Promise((resolve: () => void, reject: (reason: Error) => void) => {
       $axios
         .$patch(`/v1/admin/${userId}/contact`, req)
-        .then((res: IAdminResponse) => {
+        .then((res: AdminV1Response.AsObject) => {
           const data: IAdminUser = { ...res }
           this.addUser(data)
           resolve()
@@ -237,15 +227,15 @@ export default class AdminModule extends VuexModule {
   public updatePassword({ userId, form }: { userId: string; form: IAdminEditSecurityForm }): Promise<void> {
     const { password, passwordConfirmation } = form.params
 
-    const req: IAdminUpdatePasswordRequest = {
+    const req: UpdateAdminPasswordV1Request.AsObject = {
       password,
       passwordConfirmation,
     }
 
-    return new Promise((resolve: () => void, reject: (reason: ApiError) => void) => {
+    return new Promise((resolve: () => void, reject: (reason: Error) => void) => {
       $axios
         .$patch(`/v1/admin/${userId}/password`, req)
-        .then((res: IAdminResponse) => {
+        .then((res: AdminV1Response.AsObject) => {
           const data: IAdminUser = { ...res }
           this.addUser(data)
           resolve()
@@ -268,10 +258,10 @@ export default class AdminModule extends VuexModule {
     const params = new FormData()
     params.append('thumbnail', file)
 
-    return new Promise((resolve: (thumbnailUrl: string) => void, reject: (reason: ApiError) => void) => {
+    return new Promise((resolve: (thumbnailUrl: string) => void, reject: (reason: Error) => void) => {
       $axios
         .$post(`/v1/admin/${userId}/thumbnail`, params, config)
-        .then((res: IAdminThumbnailResponse) => {
+        .then((res: AdminThumbnailV1Response.AsObject) => {
           resolve(res.thumbnailUrl)
         })
         .catch((err: any) => {
@@ -283,7 +273,7 @@ export default class AdminModule extends VuexModule {
 
   @Action({ rawError: true })
   public deleteAdmin(userId: string): Promise<void> {
-    return new Promise((resolve: () => void, reject: (reason: ApiError) => void) => {
+    return new Promise((resolve: () => void, reject: (reason: Error) => void) => {
       $axios
         .$delete(`/v1/admin/${userId}`)
         .then(() => {
