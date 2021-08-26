@@ -34,9 +34,7 @@ generate: protoc
 	$(MAKE) generate-service OUTPUT_PATH=${INFORMATION_SERVER_PATH}
 
 generate-client:
-	cp -r ${ARCHIVE_PATH}/common/*_pb.js ${OUTPUT_PATH}/app/types/api
 	cp -r ${ARCHIVE_PATH}/common/*_pb.d.ts ${OUTPUT_PATH}/app/types/api
-	cp -r ${ARCHIVE_PATH}/gateway/${CLIENT}/*_pb.js ${OUTPUT_PATH}/app/types/api
 	cp -r ${ARCHIVE_PATH}/gateway/${CLIENT}/*_pb.d.ts ${OUTPUT_PATH}/app/types/api
 
 generate-gateway:
@@ -65,13 +63,11 @@ clean: clean-archive
 	$(MAKE) clean-service OUTPUT_PATH=${INFORMATION_SERVER_PATH}
 
 clean-archive:
-	rm -rf ${ARCHIVE_PATH}/**/*_pb.js
 	rm -rf ${ARCHIVE_PATH}/**/*_pb.d.ts
 	rm -rf ${ARCHIVE_PATH}/**/*.pb.go
 	rm -rf ${ARCHIVE_PATH}/**/*.pb.validate.go
 
 clean-client:
-	rm -rf ${OUTPUT_PATH}/app/types/api/*_pb.js
 	rm -rf ${OUTPUT_PATH}/app/types/api/*_pb.d.ts
 
 clean-gateway:
