@@ -1,17 +1,12 @@
-export interface IErrorData {
-  status: number
-  code: number
-  message: string
-  errors: IErrorDetail[]
-}
+import { ErrorResponse } from '~/types/api/common_pb'
 
-export interface IErrorDetail {
-  field: string
-  reason: string
+export interface IErrorResponse {
+  data: ErrorResponse.AsObject
+  status: number
 }
 
 export class ApiError extends Error {
-  constructor(public status: number, public message: string, public data?: IErrorData) {
+  constructor(public status: number, public message: string, public data?: ErrorResponse.AsObject) {
     super(message)
   }
 }
