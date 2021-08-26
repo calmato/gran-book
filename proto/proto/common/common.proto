@@ -6,6 +6,13 @@ option go_package = "github.com/calmato/gran-book/proto";
 
 message Empty {}
 
+message ErrorResponse {
+  int64 status = 1; // ステータスコード
+  int64 code = 2; // エラーコード
+  string message = 3; // エラー概要
+  string detail = 4; // エラー詳細
+}
+
 // Search - 検索フィールド
 message Search {
   string field = 1; // フィールド名

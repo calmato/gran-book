@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package native;
+
+option go_package = "github.com/calmato/gran-book/proto";
+
+// フォロー一覧
+message FollowListV1Response {
+  message User {
+    string id = 1; // ユーザーID
+    string username = 2; // 表示名
+    string thumbnail_url = 3; // サムネイルURL
+    string self_introduction = 4; // 自己紹介
+    bool is_follow = 5; // 自分がフォローしているか
+  }
+  repeated User users = 1; // フォロー一覧
+  int64 limit = 2; // 取得上限数
+  int64 offset = 3; // 取得開始位置
+  int64 total = 4; // 検索一致数
+}
+
+// フォロワー一覧
+message FollowerListV1Response {
+  message User {
+    string id = 1; // ユーザーID
+    string username = 2; // 表示名
+    string thumbnail_url = 3; // サムネイルURL
+    string self_introduction = 4; // 自己紹介
+    bool is_follow = 5; // 自分がフォローしているか
+  }
+  repeated User users = 1; // フォロワー一覧
+  int64 limit = 2; // 取得上限数
+  int64 offset = 3; // 取得開始位置
+  int64 total = 4; // 検索一致数
+}
+
+// プロフィール情報
+message UserProfileV1Response {
+  message Product {
+    int64 id = 1; // 商品ID
+    string name = 2; // 商品名
+    string thumbnail_url = 3; // サムネイルURL
+    repeated string authors = 4; // 著者名一覧
+  }
+  string id = 1; // ユーザーID
+  string username = 2; // 表示名
+  string thumbnail_url = 3; // サムネイルURL
+  string self_introduction = 4; // 自己紹介
+  bool is_follow = 5; // 自分がフォローしているか
+  bool is_follower = 6; // 自分がフォローされているか
+  int64 follow_count = 7; // フォロー数
+  int64 follower_count = 8; // フォロワー数
+  int32 rating = 9; // ユーザーからの平均評価
+  int64 review_count = 10; // ユーザーからのレビュー数
+  repeated Product products = 11; // 出品商品一覧
+}

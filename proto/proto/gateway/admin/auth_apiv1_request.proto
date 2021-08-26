@@ -3,3 +3,26 @@ syntax = "proto3";
 package admin;
 
 option go_package = "github.com/calmato/gran-book/proto";
+
+// メールアドレス更新
+message UpdateAuthEmailV1Request {
+  string email = 1; // メールアドレス
+}
+
+// パスワード更新
+message UpdateAuthPasswordV1Request {
+  string password = 1; // パスワード
+  string password_confirmation = 2; // パスワード(確認用)
+}
+
+// プロフィール更新
+message UpdateAuthProfileV1Request {
+  string username = 1; // 表示名
+  string thumbnail_url = 2; // サムネイルURL
+  string self_introduction = 3; // 自己紹介
+  string last_name = 4; // 姓
+  string first_name = 5; // 名
+  string last_name_kana = 6; // 姓(かな)
+  string first_name_kana = 7; // 名(かな)
+  string phone_number = 8; // 電話番号
+}

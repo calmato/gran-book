@@ -1,7 +1,7 @@
 import { Action, Module, Mutation, VuexModule } from 'vuex-module-decorators'
-import axios, { AxiosResponse } from 'axios'
+import axios, { AxiosResponse, AxiosError } from 'axios'
 import { IBook, IBookState } from '~/types/store'
-import { IErrorResponse, IRakutenBookItem, IRakutenBookResponse } from '~/types/responses'
+import { IRakutenBookItem, IRakutenBookResponse } from '~/types/responses'
 import { ApiError } from '~/types/exception'
 import { IBookSearchForm } from '~/types/forms'
 
@@ -66,9 +66,9 @@ export default class BookModule extends VuexModule {
           this.setBooks(books)
           resolve()
         })
-        .catch((err: any) => {
-          const { data, status }: IErrorResponse = err.response
-          reject(new ApiError(status, data.message, data))
+        .catch((err: AxiosError) => {
+          const status: number = err.response?.status || 500
+          reject(new ApiError(status, err.message))
         })
     })
   }
