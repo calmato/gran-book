@@ -358,15 +358,6 @@ func TestUserRequestValidation_MultiGetUser(t *testing.T) {
 			want: true,
 		},
 		{
-			name: "validation error: UserIds.min_items",
-			args: args{
-				req: &pb.MultiGetUserRequest{
-					UserIds: []string{},
-				},
-			},
-			want: false,
-		},
-		{
 			name: "validation error: UserIds.max_items",
 			args: args{
 				req: &pb.MultiGetUserRequest{

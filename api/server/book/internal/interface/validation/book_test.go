@@ -329,15 +329,6 @@ func TestBookRequestValidation_MultiGetBooks(t *testing.T) {
 			want: true,
 		},
 		{
-			name: "validation error: BookIds.min_items",
-			args: args{
-				req: &pb.MultiGetBooksRequest{
-					BookIds: []int64{},
-				},
-			},
-			want: false,
-		},
-		{
 			name: "validation error: BookIds.max_items",
 			args: args{
 				req: &pb.MultiGetBooksRequest{
