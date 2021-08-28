@@ -4,6 +4,7 @@ app/types/api
 coverage
 dist
 node_modules
+tmp
 .babel.config.js
 .eslintignore
 .eslintrc.js

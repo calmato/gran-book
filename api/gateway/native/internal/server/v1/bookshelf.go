@@ -6,6 +6,8 @@ import (
 	"strings"
 
 	"github.com/calmato/gran-book/api/gateway/native/internal/entity"
+	request "github.com/calmato/gran-book/api/gateway/native/internal/request/v1"
+	response "github.com/calmato/gran-book/api/gateway/native/internal/response/v1"
 	"github.com/calmato/gran-book/api/gateway/native/internal/server/util"
 	pb "github.com/calmato/gran-book/api/gateway/native/proto"
 	"github.com/gin-gonic/gin"
@@ -100,7 +102,7 @@ func (h *bookshelfHandler) Read(ctx *gin.Context) {
 		return
 	}
 
-	req := &pb.ReadBookshelfV1Request{}
+	req := &request.ReadBookshelfRequest{}
 	err = ctx.BindJSON(req)
 	if err != nil {
 		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
@@ -249,9 +251,9 @@ func (h *bookshelfHandler) Delete(ctx *gin.Context) {
 	ctx.JSON(http.StatusNoContent, nil)
 }
 
-func (h *bookshelfHandler) getBookshelfResponse(out *pb.BookshelfResponse) *pb.BookshelfV1Response {
-	bookshelf := &pb.BookshelfV1Response_Bookshelf{
-		Id:        out.GetId(),
+func (h *bookshelfHandler) getBookshelfResponse(out *pb.BookshelfResponse) *response.BookshelfResponse {
+	bookshelf := &response.BookshelfResponse_Bookshelf{
+		ID:        out.GetId(),
 		Status:    entity.BookshelfStatus(out.GetStatus()).Name(),
 		ReadOn:    out.GetReadOn(),
 		CreatedAt: out.GetCreatedAt(),
@@ -269,16 +271,16 @@ func (h *bookshelfHandler) getBookshelfResponse(out *pb.BookshelfResponse) *pb.B
 		authorNameKanas[i] = a.GetNameKana()
 	}
 
-	return &pb.BookshelfV1Response{
-		Id:           out.GetBook().GetId(),
+	return &response.BookshelfResponse{
+		ID:           out.GetBook().GetId(),
 		Title:        out.GetBook().GetTitle(),
 		TitleKana:    out.GetBook().GetTitleKana(),
 		Description:  out.GetBook().GetDescription(),
 		Isbn:         out.GetBook().GetIsbn(),
 		Publisher:    out.GetBook().GetPublisher(),
 		PublishedOn:  out.GetBook().GetPublishedOn(),
-		ThumbnailUrl: out.GetBook().GetThumbnailUrl(),
-		RakutenUrl:   out.GetBook().GetRakutenUrl(),
+		ThumbnailURL: out.GetBook().GetThumbnailUrl(),
+		RakutenURL:   out.GetBook().GetRakutenUrl(),
 		Size:         out.GetBook().GetRakutenSize(),
 		Author:       strings.Join(authorNames, "/"),
 		AuthorKana:   strings.Join(authorNameKanas, "/"),
@@ -288,11 +290,11 @@ func (h *bookshelfHandler) getBookshelfResponse(out *pb.BookshelfResponse) *pb.B
 	}
 }
 
-func (h *bookshelfHandler) getBookshelfListResponse(out *pb.BookshelfListResponse) *pb.BookshelfListV1Response {
-	books := make([]*pb.BookshelfListV1Response_Book, len(out.GetBookshelves()))
+func (h *bookshelfHandler) getBookshelfListResponse(out *pb.BookshelfListResponse) *response.BookshelfListResponse {
+	books := make([]*response.BookshelfListResponse_Book, len(out.GetBookshelves()))
 	for i, b := range out.GetBookshelves() {
-		bookshelf := &pb.BookshelfListV1Response_Bookshelf{
-			Id:        b.GetId(),
+		bookshelf := &response.BookshelfListResponse_Bookshelf{
+			ID:        b.GetId(),
 			Status:    entity.BookshelfStatus(b.GetStatus()).Name(),
 			ReadOn:    b.GetReadOn(),
 			CreatedAt: b.GetCreatedAt(),
@@ -306,16 +308,16 @@ func (h *bookshelfHandler) getBookshelfListResponse(out *pb.BookshelfListRespons
 			authorNameKanas[i] = a.GetNameKana()
 		}
 
-		book := &pb.BookshelfListV1Response_Book{
-			Id:           b.GetBook().GetId(),
+		book := &response.BookshelfListResponse_Book{
+			ID:           b.GetBook().GetId(),
 			Title:        b.GetBook().GetTitle(),
 			TitleKana:    b.GetBook().GetTitleKana(),
 			Description:  b.GetBook().GetDescription(),
 			Isbn:         b.GetBook().GetIsbn(),
 			Publisher:    b.GetBook().GetPublisher(),
 			PublishedOn:  b.GetBook().GetPublishedOn(),
-			ThumbnailUrl: b.GetBook().GetThumbnailUrl(),
-			RakutenUrl:   b.GetBook().GetRakutenUrl(),
+			ThumbnailURL: b.GetBook().GetThumbnailUrl(),
+			RakutenURL:   b.GetBook().GetRakutenUrl(),
 			Size:         b.GetBook().GetRakutenSize(),
 			Author:       strings.Join(authorNames, "/"),
 			AuthorKana:   strings.Join(authorNameKanas, "/"),
@@ -327,7 +329,7 @@ func (h *bookshelfHandler) getBookshelfListResponse(out *pb.BookshelfListRespons
 		books[i] = book
 	}
 
-	return &pb.BookshelfListV1Response{
+	return &response.BookshelfListResponse{
 		Books:  books,
 		Limit:  out.GetLimit(),
 		Offset: out.GetOffset(),
