@@ -293,8 +293,8 @@ type ChatRoomV1Response_User struct {
 
 func (h *chatHandler) getChatRoomResponse(
 	roomOutput *pb.ChatRoomResponse, usersOutput *pb.UserMapResponse,
-) *pb.ChatRoomV1Response {
-	users := make([]*pb.ChatRoomV1Response_User, len(roomOutput.GetUserIds()))
+) *ChatRoomV1Response {
+	users := make([]*ChatRoomV1Response_User, len(roomOutput.GetUserIds()))
 	for i, userID := range roomOutput.GetUserIds() {
 		user := &pb.ChatRoomV1Response_User{
 			Id:       userID,
@@ -309,7 +309,7 @@ func (h *chatHandler) getChatRoomResponse(
 		users[i] = user
 	}
 
-	return &pb.ChatRoomV1Response{
+	return &ChatRoomV1Response{
 		Id:        roomOutput.GetId(),
 		Users:     users,
 		CreatedAt: roomOutput.GetCreatedAt(),
@@ -318,10 +318,6 @@ func (h *chatHandler) getChatRoomResponse(
 }
 
 type ChatRoomListV1Response struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
 	Rooms []*ChatRoomListV1Response_Room `json:"rooms,omitempty"` // チャットルーム一覧
 }
 
@@ -349,11 +345,11 @@ type ChatRoomListV1Response_User struct {
 func (h *chatHandler) getChatRoomListResponse(
 	roomsOutput *pb.ChatRoomListResponse, usersOutput *pb.UserMapResponse,
 ) *ChatRoomListV1Response {
-	rooms := make([]*pb.ChatRoomListV1Response_Room, len(roomsOutput.GetRooms()))
+	rooms := make([]*ChatRoomListV1Response_Room, len(roomsOutput.GetRooms()))
 	for i, r := range roomsOutput.GetRooms() {
-		users := make([]*pb.ChatRoomListV1Response_User, len(r.GetUserIds()))
+		users := make([]*ChatRoomListV1Response_User, len(r.GetUserIds()))
 		for j, userID := range r.GetUserIds() {
-			user := &pb.ChatRoomListV1Response_User{
+			user := &ChatRoomListV1Response_User{
 				Id:       userID,
 				Username: "unknown",
 			}
@@ -366,7 +362,7 @@ func (h *chatHandler) getChatRoomListResponse(
 			users[j] = user
 		}
 
-		message := &pb.ChatRoomListV1Response_Message{}
+		message := &ChatRoomListV1Response_Message{}
 		if r.GetLatestMessage() != nil {
 			message.UserId = r.GetLatestMessage().GetUserId()
 			message.Text = r.GetLatestMessage().GetText()
@@ -374,7 +370,7 @@ func (h *chatHandler) getChatRoomListResponse(
 			message.CreatedAt = r.GetLatestMessage().GetCreatedAt()
 		}
 
-		room := &pb.ChatRoomListV1Response_Room{
+		room := &ChatRoomListV1Response_Room{
 			Id:            r.GetId(),
 			CreatedAt:     r.GetCreatedAt(),
 			UpdatedAt:     r.GetUpdatedAt(),
@@ -405,14 +401,14 @@ type ChatMessageV1Response_User struct {
 
 func (h *chatHandler) getChatMessageResponse(
 	messageOutput *pb.ChatMessageResponse, userOutput *pb.AuthResponse,
-) *pb.ChatMessageV1Response {
-	user := &pb.ChatMessageV1Response_User{
+) *ChatMessageV1Response {
+	user := &ChatMessageV1Response_User{
 		Id:           userOutput.GetId(),
 		Username:     userOutput.GetUsername(),
 		ThumbnailUrl: userOutput.GetThumbnailUrl(),
 	}
 
-	return &pb.ChatMessageV1Response{
+	return &ChatMessageV1Response{
 		Text:      messageOutput.GetText(),
 		Image:     messageOutput.GetImage(),
 		CreatedAt: messageOutput.GetCreatedAt(),
