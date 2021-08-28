@@ -1,4 +1,5 @@
 {
+  "private": true,
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
@@ -8,7 +9,7 @@
     "eject": "expo eject",
     "lint": "eslint --ext .js,.ts,.tsx .",
     "lint:fix": "yarn lint --fix && prettier --write ./app ./test",
-    "test": "jest --config jest.config.js --coverage --verbose",
+    "test": "jest --config jest.config.js",
     "protoc": "yarn protoc:setup; yarn protoc:generate && yarn protoc:update",
     "protoc:setup": "mkdir -p ./tmp/proto; rm -rf ./tmp/proto/**/*.ts",
     "protoc:generate": "grpc_tools_node_protoc -I ./../proto/pkg -I ./../proto/proto --plugin=protoc-gen-ts=$(yarn bin)/protoc-gen-ts --ts_out=service=grpc-node,mode=grpc-js:./tmp/proto ./../proto/proto/common/*.proto ./../proto/proto/gateway/native/*.proto",
@@ -92,17 +93,5 @@
     "ts-jest": "^26.4.4",
     "ts-protoc-gen": "^0.15.0",
     "typescript": "^4.1.3"
-  },
-  "jest": {
-    "global": {
-      "ts-jest": {
-        "tsConfigFile": "tsconfig.json"
-      }
-    },
-    "preset": "jest-expo",
-    "transformIgnorePatterns": [
-      "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|@react-native-community|expo(nent)?|@expo(nent)?/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|@sentry/.*)"
-    ]
-  },
-  "private": true
+  }
 }
