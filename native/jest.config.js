@@ -3,14 +3,13 @@ module.exports = {
   verbose: true,
   collectCoverage: true,
   collectCoverageFrom: [
-    '**/app/**/*.{js,jsx,ts,tsx}',
-    '!**/node_modules/**',
-    '!**/tmp/**',
+    '<rootDir>/app/**/*.{js,jsx,ts,tsx}',
   ],
   coveragePathIgnorePatterns: [
     '<rootDir>/node_modules/',
     '<rootDir>/tmp/',
-    '<rootDir>/app/types/api/',
+    '<rootDir>/app/containers/',
+    '<rootDir>/app/types/',
   ],
   moduleFileExtensions: [
     'js',
