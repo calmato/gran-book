@@ -9,7 +9,11 @@
     "generate": "nuxt generate",
     "lint": "eslint --ext .js,.ts,.vue --ignore-path .gitignore .",
     "lint:fix": "yarn lint --fix",
-    "test": "jest --config jest.config.js --coverage --verbose"
+    "test": "jest --config jest.config.js --coverage --verbose",
+    "protoc": "yarn protoc:setup; yarn protoc:generate && yarn protoc:update",
+    "protoc:setup": "mkdir -p ./tmp/proto; rm -rf ./tmp/proto/**/*.ts",
+    "protoc:generate": "grpc_tools_node_protoc -I ./../../proto/pkg -I ./../../proto/proto --plugin=protoc-gen-ts=$(yarn bin)/protoc-gen-ts --ts_out=service=grpc-node,mode=grpc-js:./tmp/proto ./../../proto/proto/common/*.proto ./../../proto/proto/gateway/admin/*.proto",
+    "protoc:update": "mkdir -p ./app/types/api; rm -rf ./app/types/api/*.ts; cp -r ./tmp/proto/common/*.ts ./tmp/proto/gateway/admin/*.ts ./app/types/api"
   },
   "dependencies": {
     "@nuxt/content": "^1.9.0",
@@ -27,6 +31,7 @@
     "@babel/core": "^7.12.10",
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-typescript": "^7.12.7",
+    "@grpc/grpc-js": "^1.3.7",
     "@nuxt/types": "^2.14.6",
     "@nuxt/typescript-build": "^2.0.3",
     "@nuxtjs/eslint-config": "^3.1.0",
@@ -42,10 +47,13 @@
     "eslint-config-prettier": "^6.12.0",
     "eslint-plugin-nuxt": "^1.0.0",
     "eslint-plugin-prettier": "^3.1.4",
+    "google-protobuf": "^3.18.0-rc.1",
+    "grpc-tools": "^1.11.2",
     "jest": "^26.5.0",
     "lodash.clonedeep": "^4.5.0",
     "prettier": "^2.1.2",
     "ts-jest": "^26.4.1",
+    "ts-protoc-gen": "^0.15.0",
     "vue-jest": "^3.0.4",
     "vuex-module-decorators": "^1.0.1"
   }
