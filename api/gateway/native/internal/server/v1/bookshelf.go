@@ -249,8 +249,35 @@ func (h *bookshelfHandler) Delete(ctx *gin.Context) {
 	ctx.JSON(http.StatusNoContent, nil)
 }
 
-func (h *bookshelfHandler) getBookshelfResponse(out *pb.BookshelfResponse) *pb.BookshelfV1Response {
-	bookshelf := &pb.BookshelfV1Response_Bookshelf{
+type BookshelfV1Response struct {
+	Id           int64                          `json:"id,omitempty"`           // 書籍ID
+	Title        string                         `json:"title,omitempty"`        // タイトル
+	TitleKana    string                         `json:"titleKana,omitempty"`    // タイトル(かな)
+	Description  string                         `json:"description,omitempty"`  // 説明
+	Isbn         string                         `json:"isbn,omitempty"`         // ISBN
+	Publisher    string                         `json:"publisher,omitempty"`    // 出版社名
+	PublishedOn  string                         `json:"publishedOn,omitempty"`  // 出版日
+	ThumbnailUrl string                         `json:"thumbnailUrl,omitempty"` // サムネイルURL
+	RakutenUrl   string                         `json:"rakutenUrl,omitempty"`   // 楽天ショップURL
+	Size         string                         `json:"size,omitempty"`         // 楽天書籍サイズ
+	Author       string                         `json:"author,omitempty"`       // 著者名一覧
+	AuthorKana   string                         `json:"author_kana,omitempty"`  /// 著者名一覧(かな)
+	Bookshelf    *BookshelfV1Response_Bookshelf `json:"bookshelf,omitempty"`    // ユーザーの本棚情報
+	CreatedAt    string                         `json:"createdAt,omitempty"`    // 登録日時
+	UpdatedAt    string                         `json:"updatedAt,omitempty"`    // 更新日時
+}
+
+type BookshelfV1Response_Bookshelf struct {
+	Id         int64  `json:"id,omitempty"`         // 本棚ID
+	Status     string `json:"status,omitempty"`     // 読書ステータス
+	ReadOn     string `json:"readOn,omitempty"`     // 読み終えた日
+	Impression string `json:"impression,omitempty"` // 感想
+	CreatedAt  string `json:"createdAt,omitempty"`  // 登録日時
+	UpdatedAt  string `json:"updatedAt,omitempty"`  // 更新日時
+}
+
+func (h *bookshelfHandler) getBookshelfResponse(out *pb.BookshelfResponse) *BookshelfV1Response {
+	bookshelf := &BookshelfV1Response_Bookshelf{
 		Id:        out.GetId(),
 		Status:    entity.BookshelfStatus(out.GetStatus()).Name(),
 		ReadOn:    out.GetReadOn(),
@@ -269,7 +296,7 @@ func (h *bookshelfHandler) getBookshelfResponse(out *pb.BookshelfResponse) *pb.B
 		authorNameKanas[i] = a.GetNameKana()
 	}
 
-	return &pb.BookshelfV1Response{
+	return &BookshelfV1Response{
 		Id:           out.GetBook().GetId(),
 		Title:        out.GetBook().GetTitle(),
 		TitleKana:    out.GetBook().GetTitleKana(),
@@ -290,16 +317,42 @@ func (h *bookshelfHandler) getBookshelfResponse(out *pb.BookshelfResponse) *pb.B
 
 // TODO: refactor
 type BookshelfListV1Response struct {
-	Books  []*pb.BookshelfListV1Response_Book `protobuf:"bytes,1,rep,name=books,proto3" json:"booksList,omitempty"` // 書籍一覧
-	Limit  int64                              `protobuf:"varint,2,opt,name=limit,proto3" json:"limit,omitempty"`    // 取得上限数
-	Offset int64                              `protobuf:"varint,3,opt,name=offset,proto3" json:"offset,omitempty"`  // 取得開始位置
-	Total  int64                              `protobuf:"varint,4,opt,name=total,proto3" json:"total,omitempty"`    // 検索一致数
+	Books  []*BookshelfListV1Response_Book `json:"booksList,omitempty"` // 書籍一覧
+	Limit  int64                           `json:"limit,omitempty"`     // 取得上限数
+	Offset int64                           `json:"offset,omitempty"`    // 取得開始位置
+	Total  int64                           `json:"total,omitempty"`     // 検索一致数
+}
+
+type BookshelfListV1Response_Book struct {
+	Id           int64                              `json:"id,omitempty"`           // 書籍ID
+	Title        string                             `json:"title,omitempty"`        // タイトル
+	TitleKana    string                             `json:"titleKana,omitempty"`    // タイトル(かな)
+	Description  string                             `json:"description,omitempty"`  // 説明
+	Isbn         string                             `json:"isbn,omitempty"`         // ISBN
+	Publisher    string                             `json:"publisher,omitempty"`    // 出版社名
+	PublishedOn  string                             `json:"publishedOn,omitempty"`  // 出版日
+	ThumbnailUrl string                             `json:"thumbnailUrl,omitempty"` // サムネイルURL
+	RakutenUrl   string                             `json:"rakutenUrl,omitempty"`   // 楽天ショップURL
+	Size         string                             `json:"size,omitempty"`         // 楽天書籍サイズ
+	Author       string                             `json:"author,omitempty"`       // 著者名一覧
+	AuthorKana   string                             `json:"authorKana,omitempty"`   /// 著者名一覧(かな)
+	Bookshelf    *BookshelfListV1Response_Bookshelf `json:"bookshelf,omitempty"`    // ユーザーの本棚情報
+	CreatedAt    string                             `json:"createdAt,omitempty"`    // 登録日時
+	UpdatedAt    string                             `json:"updatedAt,omitempty"`    // 更新日時
+}
+
+type BookshelfListV1Response_Bookshelf struct {
+	Id        int64  `json:"id,omitempty"`        // 本棚ID
+	Status    string `json:"status,omitempty"`    // 読書ステータス
+	ReadOn    string `json:"readOn,omitempty"`    // 読み終えた日
+	CreatedAt string `json:"createdAt,omitempty"` // 登録日時
+	UpdatedAt string `json:"updatedAt,omitempty"` // 更新日時
 }
 
 func (h *bookshelfHandler) getBookshelfListResponse(out *pb.BookshelfListResponse) *BookshelfListV1Response {
-	books := make([]*pb.BookshelfListV1Response_Book, len(out.GetBookshelves()))
+	books := make([]*BookshelfListV1Response_Book, len(out.GetBookshelves()))
 	for i, b := range out.GetBookshelves() {
-		bookshelf := &pb.BookshelfListV1Response_Bookshelf{
+		bookshelf := &BookshelfListV1Response_Bookshelf{
 			Id:        b.GetId(),
 			Status:    entity.BookshelfStatus(b.GetStatus()).Name(),
 			ReadOn:    b.GetReadOn(),
@@ -314,7 +367,7 @@ func (h *bookshelfHandler) getBookshelfListResponse(out *pb.BookshelfListRespons
 			authorNameKanas[i] = a.GetNameKana()
 		}
 
-		book := &pb.BookshelfListV1Response_Book{
+		book := &BookshelfListV1Response_Book{
 			Id:           b.GetBook().GetId(),
 			Title:        b.GetBook().GetTitle(),
 			TitleKana:    b.GetBook().GetTitleKana(),
