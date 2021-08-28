@@ -10,8 +10,8 @@ import * as LocalStorage from '~/lib/local-storage';
 import { Auth } from '~/store/models';
 import { AppState } from '~/store/modules';
 import { setAuth, setProfile } from '~/store/modules/auth';
+import { AuthV1Response } from '~/types/api/auth_apiv1_response_pb';
 import { AccountEditForm } from '~/types/forms';
-import { IAuthResponse } from '~/types/response';
 
 interface IAuth {
   user: Firebase.User;
@@ -161,8 +161,8 @@ export function signUpWithEmailAsync(
         passwordConfirmation,
         username,
       })
-      .then(async (res: AxiosResponse<IAuthResponse>) => {
-        console.log('debug', res);
+      .then(async (_: AxiosResponse<AuthV1Response.AsObject>) => {
+        return sendEmailVerification();
       })
       .catch((err: Error) => {
         throw err;
@@ -177,7 +177,7 @@ export function editPasswordAsync(password: string, passwordConfirmation: string
         password,
         passwordConfirmation,
       })
-      .then(async (res: AxiosResponse<IAuthResponse>) => {
+      .then(async (res: AxiosResponse<AuthV1Response.AsObject>) => {
         console.log('debug', res);
       })
       .catch((err: Error) => {
@@ -193,7 +193,7 @@ export function editAccountAsync(formData: AccountEditForm) {
       .patch('/v1/auth/address', {
         formData,
       })
-      .then(async (res: AxiosResponse<IAuthResponse>) => {
+      .then(async (res: AxiosResponse<AuthV1Response.AsObject>) => {
         console.log('debug', res);
       })
       .catch((err: Error) => {
@@ -206,12 +206,11 @@ export function getAuthAsync() {
   return async (dispatch: Dispatch, getState: () => AppState): Promise<void> => {
     return await internal
       .get('/v1/auth')
-      .then(async (res: AxiosResponse<IAuthResponse>) => {
+      .then(async (res: AxiosResponse<AuthV1Response.AsObject>) => {
         const {
           username,
           gender,
           phoneNumber,
-          role,
           thumbnailUrl,
           selfIntroduction,
           lastName,
@@ -231,7 +230,7 @@ export function getAuthAsync() {
           username,
           gender,
           phoneNumber,
-          role,
+          role: 0, // TODO: remove
           thumbnailUrl,
           selfIntroduction,
           lastName,
@@ -331,7 +330,7 @@ export function editEmailAsync(email: string) {
       .patch('/v1/auth/email', {
         email,
       })
-      .then(async (res: AxiosResponse<IAuthResponse>) => {
+      .then(async (res: AxiosResponse<AuthV1Response.AsObject>) => {
         console.log('debug', res);
       })
       .catch((err: Error) => {
@@ -354,13 +353,12 @@ export function profileEditAsync(
         thumbnail,
         selfIntroduction,
       })
-      .then(async (res: AxiosResponse<IAuthResponse>) => {
+      .then(async (res: AxiosResponse<AuthV1Response.AsObject>) => {
         console.log('debug', res);
         const {
           username,
           gender,
           phoneNumber,
-          role,
           thumbnailUrl,
           selfIntroduction,
           lastName,
@@ -380,7 +378,7 @@ export function profileEditAsync(
           username,
           gender,
           phoneNumber,
-          role,
+          role: 0, // TODO: remove
           thumbnailUrl,
           selfIntroduction,
           lastName,

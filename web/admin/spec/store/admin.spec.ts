@@ -128,7 +128,12 @@ describe('store/admin', () => {
         })
 
         it('rejectが返されること', async () => {
-          const err = new ApiError(400, 'api error', { status: 400, code: 0, message: 'api error', errors: [] })
+          const err = new ApiError(400, 'api error', {
+            status: 400,
+            code: 0,
+            message: 'api error',
+            detail: 'some error',
+          })
           await expect(AdminStore.indexAdmin(form)).rejects.toThrow(err)
         })
       })
@@ -166,7 +171,12 @@ describe('store/admin', () => {
         })
 
         it('rejectが返されること', async () => {
-          const err = new ApiError(400, 'api error', { status: 400, code: 0, message: 'api error', errors: [] })
+          const err = new ApiError(400, 'api error', {
+            status: 400,
+            code: 0,
+            message: 'api error',
+            detail: 'some error',
+          })
           await expect(AdminStore.showAdmin('')).rejects.toThrow(err)
         })
       })
@@ -231,7 +241,12 @@ describe('store/admin', () => {
         })
 
         it('rejectが返されること', async () => {
-          const err = new ApiError(400, 'api error', { status: 400, code: 0, message: 'api error', errors: [] })
+          const err = new ApiError(400, 'api error', {
+            status: 400,
+            code: 0,
+            message: 'api error',
+            detail: 'some error',
+          })
           await expect(AdminStore.createAdmin(form)).rejects.toThrow(err)
         })
       })
@@ -295,7 +310,12 @@ describe('store/admin', () => {
         })
 
         it('rejectが返されること', async () => {
-          const err = new ApiError(400, 'api error', { status: 400, code: 0, message: 'api error', errors: [] })
+          const err = new ApiError(400, 'api error', {
+            status: 400,
+            code: 0,
+            message: 'api error',
+            detail: 'some error',
+          })
           await expect(AdminStore.updateProfile(payload)).rejects.toThrow(err)
         })
       })
@@ -349,7 +369,12 @@ describe('store/admin', () => {
         })
 
         it('rejectが返されること', async () => {
-          const err = new ApiError(400, 'api error', { status: 400, code: 0, message: 'api error', errors: [] })
+          const err = new ApiError(400, 'api error', {
+            status: 400,
+            code: 0,
+            message: 'api error',
+            detail: 'some error',
+          })
           await expect(AdminStore.updateContact(payload)).rejects.toThrow(err)
         })
       })
@@ -403,7 +428,12 @@ describe('store/admin', () => {
         })
 
         it('rejectが返されること', async () => {
-          const err = new ApiError(400, 'api error', { status: 400, code: 0, message: 'api error', errors: [] })
+          const err = new ApiError(400, 'api error', {
+            status: 400,
+            code: 0,
+            message: 'api error',
+            detail: 'some error',
+          })
           await expect(AdminStore.updatePassword(payload)).rejects.toThrow(err)
         })
       })
@@ -434,7 +464,12 @@ describe('store/admin', () => {
         })
 
         it('rejectが返されること', async () => {
-          const err = new ApiError(400, 'api error', { status: 400, code: 0, message: 'api error', errors: [] })
+          const err = new ApiError(400, 'api error', {
+            status: 400,
+            code: 0,
+            message: 'api error',
+            detail: 'some error',
+          })
           await expect(AdminStore.uploadThumbnail(payload)).rejects.toThrow(err)
         })
       })
@@ -457,7 +492,12 @@ describe('store/admin', () => {
         })
 
         it('rejectが返されること', async () => {
-          const err = new ApiError(400, 'api error', { status: 400, code: 0, message: 'api error', errors: [] })
+          const err = new ApiError(400, 'api error', {
+            status: 400,
+            code: 0,
+            message: 'api error',
+            detail: 'some error',
+          })
           await expect(AdminStore.deleteAdmin('')).rejects.toThrow(err)
         })
       })

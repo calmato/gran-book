@@ -66,8 +66,7 @@ jobs:
       - name: Generate proto
         run: |
           export PATH="$PATH:$(go env GOPATH)/bin"
-          make protoc
-          make generate SERVICE_PATH='./../api/server/user'
+          make generate
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2

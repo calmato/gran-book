@@ -1,4 +1,4 @@
-/*
+/**
  * URL: https://webservice.rakuten.co.jp/api/booksbooksearch/
  */
 export interface IRakutenBookResponse {

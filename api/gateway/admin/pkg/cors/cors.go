@@ -11,7 +11,10 @@ import (
 // NewGinMiddleware - gin-gonic/gin 用のCORSミドルウェアを生成
 func NewGinMiddleware() (gin.HandlerFunc, error) {
 	options := cors.Options{
-		AllowedOrigins: []string{"*"},
+		AllowedOrigins: []string{
+			"http://*",
+			"https://*",
+		},
 		AllowedMethods: []string{
 			http.MethodGet,
 			http.MethodPost,
@@ -29,7 +32,7 @@ func NewGinMiddleware() (gin.HandlerFunc, error) {
 			"X-Forwarded-Proto",
 			"X-Real-Ip",
 		},
-		AllowCredentials:   false,
+		AllowCredentials:   true,
 		MaxAge:             1440, // 60m * 24h
 		OptionsPassthrough: false,
 		Debug:              false,
