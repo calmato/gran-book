@@ -3,8 +3,9 @@ import dayjs from 'dayjs';
 import React, { ReactElement } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { ListItem, Avatar, Divider, Image, Badge } from 'react-native-elements';
-import { IBook, IImpressionResponse } from '~/types/response';
+import { BookReviewListV1Response } from '~/types/api/review_apiv1_response_pb';
 import { COLOR, FONT_SIZE } from '~~/constants/theme';
+import { BookshelfV1Response } from '~~/tmp/proto/gateway/native/bookshelf_apiv1_response_pb';
 
 const styles = StyleSheet.create({
   badgeStyle: {
@@ -57,13 +58,13 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  impressionResponse: IImpressionResponse;
-  book: IBook;
+  impressionResponse: BookReviewListV1Response.AsObject;
+  book: BookshelfV1Response.AsObject;
 }
 
 const BookImpression = function BookImpression(props: Props): ReactElement {
   const book = props.book;
-  const reviews = props.impressionResponse.reviews;
+  const reviews = props.impressionResponse.reviewsList;
   const total = props.impressionResponse.total;
 
   return (
@@ -90,8 +91,8 @@ const BookImpression = function BookImpression(props: Props): ReactElement {
         {reviews.map((review) => (
           <View style={{ backgroundColor: COLOR.TEXT_WHITE, marginBottom: 4 }} key={review.id}>
             <ListItem key={review.id}>
-              {review.user.thumbnailUrl !== '' ? (
-                <Avatar source={{ uri: review.user.thumbnailUrl }} rounded />
+              {review.user?.thumbnailUrl !== '' ? (
+                <Avatar source={{ uri: review.user?.thumbnailUrl }} rounded />
               ) : (
                 <Avatar rounded>
                   <MaterialIcons name="person-outline" size={36} color={COLOR.GREY} />
@@ -99,7 +100,7 @@ const BookImpression = function BookImpression(props: Props): ReactElement {
               )}
               <ListItem.Content>
                 <ListItem.Title style={styles.listTitleStyle}>
-                  {review.user.username + ' が感想を投稿しました'}
+                  {review.user?.username + ' が感想を投稿しました'}
                 </ListItem.Title>
                 <ListItem.Subtitle style={styles.listSubTitleStyle}>
                   {dayjs(review.createdAt).format('YYYY/MM/DD')}

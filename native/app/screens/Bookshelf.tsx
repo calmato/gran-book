@@ -53,11 +53,9 @@ const Bookshelf = function Bookshelf(props: Props): ReactElement {
   const tabScrollViewRef = useRef<ScrollView>(null);
 
   const onSubmitEditingCallback = useCallback(() => {
-    (async () => {
-      if (keyword !== '') {
-        navigation.navigate('SearchResult', { keyword });
-      }
-    })();
+    if (keyword !== '') {
+      navigation.navigate('SearchResult', { keyword });
+    }
   }, [keyword, navigation]);
 
   const handleBookClick = useCallback(

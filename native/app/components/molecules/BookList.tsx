@@ -1,7 +1,7 @@
 ﻿import React, { ReactElement } from 'react';
 import { StyleSheet, View, Dimensions } from 'react-native';
 import Book from '../atoms/Book';
-import { IBook } from '~/types/response';
+import { BookshelfV1Response } from '~/types/api/bookshelf_apiv1_response_pb';
 
 const styles = StyleSheet.create({
   containerStyle: {
@@ -17,8 +17,8 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  books: IBook[];
-  handleClick: (book: IBook) => void;
+  books: BookshelfV1Response.AsObject[];
+  handleClick: (book: BookshelfV1Response.AsObject) => void;
 }
 
 const BookList = function BookList(props: Props): ReactElement {
@@ -28,7 +28,7 @@ const BookList = function BookList(props: Props): ReactElement {
 
   return (
     <View style={styles.containerStyle}>
-      {bookList.map((book: IBook, i: number) => (
+      {bookList.map((book: BookshelfV1Response.AsObject, i: number) => (
         <Book
           style={styles.childStyle}
           title={book.title}

@@ -5,15 +5,17 @@ import React, { ReactElement, useCallback, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Overlay, Tab, TabView, Text } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
-import BookImpression from '../components/organisms/BookImpression';
+import BookImpression from '~/components/organisms/BookImpression';
 import BookInfo from '~/components/organisms/BookInfo';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import { convertToIBook } from '~/lib/converter';
 import { addBookAsync, getAllImpressionByBookIdAsync, getBookByISBNAsync } from '~/store/usecases';
+import { BookshelfV1Response } from '~/types/api/bookshelf_apiv1_response_pb';
+import { BookReviewListV1Response } from '~/types/api/review_apiv1_response_pb';
 import { BookshelfTabStackParamList } from '~/types/navigation';
-import { IBook, IImpressionResponse } from '~/types/response';
 import { ISearchResultItem } from '~/types/response/external/rakuten-books';
 import { COLOR, FONT_SIZE } from '~~/constants/theme';
+import { BookReviewV1Response } from '~~/tmp/proto/gateway/native/review_apiv1_response_pb';
 
 const styles = StyleSheet.create({
   menuActiveFontStyle: {
@@ -53,11 +55,16 @@ const BookShow = function BookShow(props: Props): ReactElement {
   const [showMessage, setShowMessage] = useState<boolean>(false);
 
   const [isRegister, setIsRegister] = useState<boolean>('id' in routeParam.book);
-  const [book, setBook] = useState<IBook>(
+  const [book, setBook] = useState<BookshelfV1Response.AsObject>(
     'id' in routeParam.book ? routeParam.book : convertToIBook(routeParam.book),
   );
 
-  const [impressions, setImpressions] = useState<IImpressionResponse>();
+  const [impressions, setImpressions] = useState<BookReviewListV1Response.AsObject>({
+    total: 0,
+    offset: 0,
+    limit: 0,
+    reviewsList: [] as BookReviewV1Response.AsObject[],
+  });
 
   const [index, setIndex] = useState<number>(0);
 
@@ -78,12 +85,14 @@ const BookShow = function BookShow(props: Props): ReactElement {
         props.navigation.push('BookReadRegister', { book: book });
         return;
       }
+
       props.actions.registerOwnBook(status, book.id);
+
       setBook({
         ...book,
         bookshelf: {
           ...book.bookshelf,
-          status: status,
+          status,
         },
       });
     },
@@ -95,12 +104,11 @@ const BookShow = function BookShow(props: Props): ReactElement {
     setWbResult(r);
   };
 
-  // TODO エラーハンドリングの処理を分ける
   useEffect(() => {
     const f = async () => {
       try {
         const res = await getBookByISBNAsync(book.isbn);
-        setBook(res.data);
+        setBook(res);
         setIsRegister(true);
         const impRes = await getAllImpressionByBookIdAsync(book.id);
         setImpressions(impRes);
