@@ -7,6 +7,14 @@
     "*.ts": "typescript"
   },
 
+  "[typescript]": {
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true,
+    },
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+  },
+
   "[typescriptreact]": {
     "editor.formatOnSave": true,
     "editor.codeActionsOnSave": {
