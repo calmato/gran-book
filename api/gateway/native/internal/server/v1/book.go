@@ -98,10 +98,10 @@ func (h *bookHandler) Create(ctx *gin.Context) {
 		Isbn:           req.Isbn,
 		Publisher:      req.PublisherName,
 		PublishedOn:    req.SalesDate,
-		ThumbnailUrl:   h.getThumbnailURLByRequest(req.SmallImageUrl, req.MediumImageUrl, req.LargeImageUrl),
-		RakutenUrl:     req.ItemUrl,
+		ThumbnailUrl:   h.getThumbnailURLByRequest(req.SmallImageURL, req.MediumImageURL, req.LargeImageURL),
+		RakutenUrl:     req.ItemURL,
 		RakutenSize:    req.Size,
-		RakutenGenreId: req.BooksGenreId,
+		RakutenGenreId: req.BooksGenreID,
 		Authors:        authors,
 	}
 
@@ -144,10 +144,10 @@ func (h *bookHandler) Update(ctx *gin.Context) {
 		Isbn:           req.Isbn,
 		Publisher:      req.PublisherName,
 		PublishedOn:    req.SalesDate,
-		ThumbnailUrl:   h.getThumbnailURLByRequest(req.SmallImageUrl, req.MediumImageUrl, req.LargeImageUrl),
-		RakutenUrl:     req.ItemUrl,
+		ThumbnailUrl:   h.getThumbnailURLByRequest(req.SmallImageURL, req.MediumImageURL, req.LargeImageURL),
+		RakutenUrl:     req.ItemURL,
 		RakutenSize:    req.Size,
-		RakutenGenreId: req.BooksGenreId,
+		RakutenGenreId: req.BooksGenreID,
 		Authors:        authors,
 	}
 

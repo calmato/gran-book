@@ -90,7 +90,7 @@ func (h *authHandler) UpdateProfile(ctx *gin.Context) {
 	in := &pb.UpdateAuthProfileRequest{
 		Username:         req.Username,
 		Gender:           pb.Gender(req.Gender),
-		ThumbnailUrl:     req.ThumbnailUrl,
+		ThumbnailUrl:     req.ThumbnailURL,
 		SelfIntroduction: req.SelfIntroduction,
 	}
 

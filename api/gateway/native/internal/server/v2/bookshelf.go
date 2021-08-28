@@ -132,7 +132,7 @@ func (h *bookshelfHandler) getBookshelfResponse(
 		}
 
 		review := &response.BookshelfResponse_Review{
-			Id:         r.GetId(),
+			ID:         r.GetId(),
 			Impression: r.GetImpression(),
 			CreatedAt:  r.GetCreatedAt(),
 			UpdatedAt:  r.GetUpdatedAt(),
@@ -178,7 +178,7 @@ func (h *bookshelfHandler) getBookshelfListResponse(out *pb.BookshelfListRespons
 		bookshelf := &response.BookshelfListResponse_Bookshelf{
 			Status:    entity.BookshelfStatus(b.GetStatus()).Name(),
 			ReadOn:    b.GetReadOn(),
-			ReviewId:  b.GetReviewId(),
+			ReviewID:  b.GetReviewId(),
 			CreatedAt: b.GetCreatedAt(),
 			UpdatedAt: b.GetUpdatedAt(),
 		}
@@ -191,15 +191,15 @@ func (h *bookshelfHandler) getBookshelfListResponse(out *pb.BookshelfListRespons
 		}
 
 		book := &response.BookshelfListResponse_Book{
-			Id:           b.GetBook().GetId(),
+			ID:           b.GetBook().GetId(),
 			Title:        b.GetBook().GetTitle(),
 			TitleKana:    b.GetBook().GetTitleKana(),
 			Description:  b.GetBook().GetDescription(),
 			Isbn:         b.GetBook().GetIsbn(),
 			Publisher:    b.GetBook().GetPublisher(),
 			PublishedOn:  b.GetBook().GetPublishedOn(),
-			ThumbnailUrl: b.GetBook().GetThumbnailUrl(),
-			RakutenUrl:   b.GetBook().GetRakutenUrl(),
+			ThumbnailURL: b.GetBook().GetThumbnailUrl(),
+			RakutenURL:   b.GetBook().GetRakutenUrl(),
 			Size:         b.GetBook().GetRakutenSize(),
 			Author:       strings.Join(authorNames, "/"),
 			AuthorKana:   strings.Join(authorNameKanas, "/"),
