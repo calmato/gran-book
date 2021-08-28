@@ -246,9 +246,16 @@ func (h *reviewHandler) getUserReviewResponse(
 	}
 }
 
+type BookReviewListV1Response struct {
+	Reviews []*pb.BookReviewListV1Response_Review `protobuf:"bytes,1,rep,name=reviews,proto3" json:"reviewsList,omitempty"` // レビュー一覧
+	Limit   int64                                 `protobuf:"varint,2,opt,name=limit,proto3" json:"limit,omitempty"`        // 取得上限数
+	Offset  int64                                 `protobuf:"varint,3,opt,name=offset,proto3" json:"offset,omitempty"`      // 取得開始位置
+	Total   int64                                 `protobuf:"varint,4,opt,name=total,proto3" json:"total,omitempty"`        // 検索一致数
+}
+
 func (h *reviewHandler) getBookReviewListResponse(
 	reviewsOutput *pb.ReviewListResponse, usersOutput *pb.UserMapResponse,
-) *pb.BookReviewListV1Response {
+) *BookReviewListV1Response {
 	reviews := make([]*pb.BookReviewListV1Response_Review, len(reviewsOutput.GetReviews()))
 	for i, r := range reviewsOutput.GetReviews() {
 		user := &pb.BookReviewListV1Response_User{
@@ -272,7 +279,7 @@ func (h *reviewHandler) getBookReviewListResponse(
 		reviews[i] = review
 	}
 
-	return &pb.BookReviewListV1Response{
+	return &BookReviewListV1Response{
 		Reviews: reviews,
 		Limit:   reviewsOutput.GetLimit(),
 		Offset:  reviewsOutput.GetOffset(),
@@ -280,9 +287,16 @@ func (h *reviewHandler) getBookReviewListResponse(
 	}
 }
 
+type UserReviewListV1Response struct {
+	Reviews []*pb.UserReviewListV1Response_Review `protobuf:"bytes,1,rep,name=reviews,proto3" json:"reviewsList,omitempty"` // レビュー一覧
+	Limit   int64                                 `protobuf:"varint,2,opt,name=limit,proto3" json:"limit,omitempty"`        // 取得上限数
+	Offset  int64                                 `protobuf:"varint,3,opt,name=offset,proto3" json:"offset,omitempty"`      // 取得開始位置
+	Total   int64                                 `protobuf:"varint,4,opt,name=total,proto3" json:"total,omitempty"`        // 検索一致数
+}
+
 func (h *reviewHandler) getUserReviewListResponse(
 	reviewsOutput *pb.ReviewListResponse, booksOutput *pb.BookMapResponse,
-) *pb.UserReviewListV1Response {
+) *UserReviewListV1Response {
 	reviews := make([]*pb.UserReviewListV1Response_Review, len(reviewsOutput.GetReviews()))
 	for i, r := range reviewsOutput.GetReviews() {
 		book := &pb.UserReviewListV1Response_Book{

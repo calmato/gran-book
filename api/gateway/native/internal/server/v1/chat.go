@@ -296,9 +296,13 @@ func (h *chatHandler) getChatRoomResponse(
 	}
 }
 
+type ChatRoomListV1Response struct {
+	Rooms []*ChatRoomListV1Response_Room `protobuf:"bytes,1,rep,name=rooms,proto3" json:"roomsList,omitempty"` // チャットルーム一覧
+}
+
 func (h *chatHandler) getChatRoomListResponse(
 	roomsOutput *pb.ChatRoomListResponse, usersOutput *pb.UserMapResponse,
-) *pb.ChatRoomListV1Response {
+) *ChatRoomListV1Response {
 	rooms := make([]*pb.ChatRoomListV1Response_Room, len(roomsOutput.GetRooms()))
 	for i, r := range roomsOutput.GetRooms() {
 		users := make([]*pb.ChatRoomListV1Response_User, len(r.GetUserIds()))
@@ -335,7 +339,7 @@ func (h *chatHandler) getChatRoomListResponse(
 		rooms[i] = room
 	}
 
-	return &pb.ChatRoomListV1Response{
+	return &ChatRoomListV1Response{
 		Rooms: rooms,
 	}
 }
