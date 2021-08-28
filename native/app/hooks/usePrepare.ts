@@ -16,22 +16,25 @@ export function usePrepare() {
   const wait = async (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
   const waitTime = 1600;
 
-  const actions = useMemo(()=> ({
-    authentication() {
-      return dispatch(authenticationAsync());
-    },
-    getAuth() {
-      return dispatch(getAuthAsync());
-    },
-    getAllBook() {
-      return dispatch(getAllBookAsync());
-    }
-  }),[dispatch],);
-
+  const actions = useMemo(
+    () => ({
+      authentication() {
+        return dispatch(authenticationAsync());
+      },
+      getAuth() {
+        return dispatch(getAuthAsync());
+      },
+      getAllBook() {
+        return dispatch(getAllBookAsync());
+      },
+    }),
+    [dispatch],
+  );
 
   useEffect(() => {
     const f = async () => {
-      actions.authentication()
+      actions
+        .authentication()
         .then(() => {
           return actions.getAuth();
         })
