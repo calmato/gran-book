@@ -297,7 +297,7 @@ func (h *chatHandler) getChatRoomResponse(
 }
 
 type ChatRoomListV1Response struct {
-	Rooms []*ChatRoomListV1Response_Room `protobuf:"bytes,1,rep,name=rooms,proto3" json:"roomsList,omitempty"` // チャットルーム一覧
+	Rooms []*pb.ChatRoomListV1Response_Room `protobuf:"bytes,1,rep,name=rooms,proto3" json:"roomsList,omitempty"` // チャットルーム一覧
 }
 
 func (h *chatHandler) getChatRoomListResponse(
