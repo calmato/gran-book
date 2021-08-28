@@ -172,10 +172,10 @@ func (h *bookshelfHandler) getBookshelfResponse(
 }
 
 type BookshelfListV2Response struct {
-	Books  []*pb.BookshelfListV2Response_Book `protobuf:"bytes,1,rep,name=books,proto3" json:"books,omitempty"`    // 書籍一覧
-	Limit  int64                              `protobuf:"varint,2,opt,name=limit,proto3" json:"limit,omitempty"`   // 取得上限数
-	Offset int64                              `protobuf:"varint,3,opt,name=offset,proto3" json:"offset,omitempty"` // 取得開始位置
-	Total  int64                              `protobuf:"varint,4,opt,name=total,proto3" json:"total,omitempty"`   // 検索一致数
+	Books  []*pb.BookshelfListV2Response_Book `protobuf:"bytes,1,rep,name=books,proto3" json:"booksList,omitempty"` // 書籍一覧
+	Limit  int64                              `protobuf:"varint,2,opt,name=limit,proto3" json:"limit,omitempty"`    // 取得上限数
+	Offset int64                              `protobuf:"varint,3,opt,name=offset,proto3" json:"offset,omitempty"`  // 取得開始位置
+	Total  int64                              `protobuf:"varint,4,opt,name=total,proto3" json:"total,omitempty"`    // 検索一致数
 }
 
 func (h *bookshelfHandler) getBookshelfListResponse(out *pb.BookshelfListResponse) *BookshelfListV2Response {
