@@ -1,9 +1,9 @@
+import { BookshelfListV1Response } from '~/types/api/bookshelf_apiv1_response_pb';
 import { ViewBooks } from '~/types/models/book';
-import { IBook } from '~/types/response';
 
 // Model
 export interface Model {
-  readonly books: IBook[];
+  readonly books: BookshelfListV1Response.Book.AsObject[];
 }
 
 export const initialState: Model = {
@@ -12,7 +12,7 @@ export const initialState: Model = {
 
 // input
 export interface BookValues {
-  books: IBook[];
+  books: Array<BookshelfListV1Response.Book.AsObject>;
 }
 
 export function factory(): Model {
@@ -46,8 +46,8 @@ export function filterBooks(model: Model): ViewBooks {
  * @param books 登録されている全ての本
  * @returns 読んでいる本の一覧
  */
-function readingBooks(books: IBook[]): IBook[] {
-  return books.filter((book: IBook) => {
+function readingBooks(books: Array<BookshelfListV1Response.Book.AsObject>): Array<BookshelfListV1Response.Book.AsObject> {
+  return books.filter((book: BookshelfListV1Response.Book.AsObject) => {
     return book.bookshelf?.status === 'reading';
   });
 }
@@ -57,8 +57,8 @@ function readingBooks(books: IBook[]): IBook[] {
  * @param books 登録されている全ての本
  * @returns 読んだ本の一覧
  */
-function readBooks(books: IBook[]): IBook[] {
-  return books.filter((book: IBook) => {
+function readBooks(books: BookshelfListV1Response.Book.AsObject[]): BookshelfListV1Response.Book.AsObject[] {
+  return books.filter((book: BookshelfListV1Response.Book.AsObject) => {
     return book.bookshelf?.status === 'read';
   });
 }
@@ -68,8 +68,8 @@ function readBooks(books: IBook[]): IBook[] {
  * @param books 登録されている全ての本
  * @returns 積読本の一覧
  */
-function stackBooks(books: IBook[]): IBook[] {
-  return books.filter((book: IBook) => {
+function stackBooks(books: BookshelfListV1Response.Book.AsObject[]): BookshelfListV1Response.Book.AsObject[] {
+  return books.filter((book: BookshelfListV1Response.Book.AsObject) => {
     return book.bookshelf?.status === 'stack';
   });
 }
@@ -79,8 +79,8 @@ function stackBooks(books: IBook[]): IBook[] {
  * @param books 登録されている全ての本
  * @returns 手放したい本の一覧
  */
-function releaseBooks(books: IBook[]): IBook[] {
-  return books.filter((book: IBook) => {
+function releaseBooks(books: BookshelfListV1Response.Book.AsObject[]): BookshelfListV1Response.Book.AsObject[] {
+  return books.filter((book: BookshelfListV1Response.Book.AsObject) => {
     return book.bookshelf?.status === 'release';
   });
 }
@@ -90,8 +90,8 @@ function releaseBooks(books: IBook[]): IBook[] {
  * @param books 登録されている全ての本
  * @returns 欲しい本の一覧
  */
-function wantBooks(books: IBook[]): IBook[] {
-  return books.filter((book: IBook) => {
+function wantBooks(books: BookshelfListV1Response.Book.AsObject[]): BookshelfListV1Response.Book.AsObject[] {
+  return books.filter((book: BookshelfListV1Response.Book.AsObject) => {
     return book.bookshelf?.status === 'want';
   });
 }

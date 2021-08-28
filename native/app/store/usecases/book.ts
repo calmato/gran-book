@@ -3,8 +3,10 @@ import { Dispatch } from 'redux';
 import { setBooks } from '../modules/book';
 import { internal } from '~/lib/axios';
 import { AppState } from '~/store/modules';
+import { BookV1Response } from '~/types/api/book_apiv1_response_pb';
+import { BookshelfListV1Response, BookshelfV1Response } from '~/types/api/bookshelf_apiv1_response_pb';
+import { BookReviewV1Response } from '~/types/api/review_apiv1_response_pb';
 import { ImpressionForm } from '~/types/forms';
-import { IBook, IBookResponse, IImpressionResponse } from '~/types/response';
 import { IErrorResponse, ISearchResultItem } from '~/types/response/external/rakuten-books';
 
 /**
@@ -33,8 +35,8 @@ export async function addBookAsync(
  */
 export async function getBookByISBNAsync(isbn: string) {
   return internal
-    .get(`/v1/books/${isbn}`)
-    .then((res: AxiosResponse<IBook>) => {
+    .get(`/v1/books/${isbn}?key=isbn`)
+    .then((res: AxiosResponse<BookV1Response.AsObject>) => {
       return res;
     })
     .catch((err: AxiosResponse<IErrorResponse>) => {
@@ -51,7 +53,7 @@ export function getAllBookAsync() {
   return async (dispatch: Dispatch, getState: () => AppState) => {
     const user = getState().auth;
     const res = await getAllBookByUserId(user.id);
-    const books = res.data.books;
+    const books = res.booksList;
     dispatch(setBooks({ books }));
   };
 }
@@ -110,7 +112,7 @@ export function registerReadBookImpressionAsync(bookId: number, impressionForm: 
 export async function getAllImpressionByBookIdAsync(bookId: number) {
   return internal
     .get(`/v1/books/${bookId}/reviews`)
-    .then((res: AxiosResponse<IImpressionResponse>) => {
+    .then((res: AxiosResponse<BookReviewV1Response.AsObject>) => {
       return res.data;
     })
     .catch((err: AxiosResponse<IErrorResponse>) => {
@@ -126,11 +128,11 @@ export async function getAllImpressionByBookIdAsync(bookId: number) {
  */
 async function getAllBookByUserId(
   userId: string,
-): Promise<AxiosResponse<any> | AxiosResponse<IErrorResponse>> {
+): Promise<BookshelfListV1Response.AsObject> {
   return internal
     .get(`/v1/users/${userId}/books`)
-    .then((res: AxiosResponse<IBookResponse>) => {
-      return res;
+    .then((res: AxiosResponse<BookshelfListV1Response.AsObject>) => {
+      return res.data;
     })
     .catch((err: AxiosResponse<IErrorResponse>) => {
       return Promise.reject(err);
@@ -144,7 +146,7 @@ async function registerReadBookAsync(
 ) {
   return internal
     .post(`v1/users/${userId}/books/${bookId}/read`, impressionForm)
-    .then((res) => {
+    .then((res: AxiosResponse<BookshelfV1Response.AsObject>) => {
       console.log('[success]', res.data);
     })
     .catch((err) => {
@@ -155,7 +157,7 @@ async function registerReadBookAsync(
 async function registerReadingBookAsync(userId: string, bookId: number) {
   return internal
     .post(`v1/users/${userId}/books/${bookId}/reading`)
-    .then((res) => {
+    .then((res: AxiosResponse<BookshelfV1Response.AsObject>) => {
       console.log('[success]', res.data);
     })
     .catch((err) => {
@@ -166,7 +168,7 @@ async function registerReadingBookAsync(userId: string, bookId: number) {
 async function registerStackBookAsync(userId: string, bookId: number) {
   return internal
     .post(`v1/users/${userId}/books/${bookId}/stack`)
-    .then((res) => {
+    .then((res: AxiosResponse<BookshelfV1Response.AsObject>) => {
       console.log('[success]', res.data);
     })
     .catch((err) => {
@@ -177,7 +179,7 @@ async function registerStackBookAsync(userId: string, bookId: number) {
 async function registerWantBookAsync(userId: string, bookId: number) {
   return internal
     .post(`v1/users/${userId}/books/${bookId}/want`)
-    .then((res) => {
+    .then((res: AxiosResponse<BookshelfV1Response.AsObject>) => {
       console.log('[success]', res.data);
     })
     .catch((err) => {
@@ -188,7 +190,7 @@ async function registerWantBookAsync(userId: string, bookId: number) {
 async function registerReleaseBookAsync(userId: string, bookId: number) {
   return internal
     .post(`v1/users/${userId}/books/${bookId}/release`)
-    .then((res) => {
+    .then((res: AxiosResponse<BookshelfV1Response.AsObject>) => {
       console.log('[success]', res.data);
     })
     .catch((err) => {
