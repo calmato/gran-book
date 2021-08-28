@@ -1,7 +1,7 @@
 package response
 
 import (
-	"github.com/calmato/gran-book/api/gateway/admin/internal/entity"
+	"github.com/calmato/gran-book/api/gateway/native/internal/entity"
 )
 
 // ErrorResponse - エラーのレスポンス
