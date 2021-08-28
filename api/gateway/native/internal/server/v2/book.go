@@ -104,11 +104,47 @@ func (h *bookHandler) getBook(ctx context.Context, bookID, key string) (*pb.Book
 	}
 }
 
+// 書籍情報
+type BookV2Response struct {
+	Id           int64                    `json:"id,omitempty"`           // 書籍ID
+	Title        string                   `json:"title,omitempty"`        // タイトル
+	TitleKana    string                   `json:"titleKana,omitempty"`    // タイトル(かな)
+	Description  string                   `json:"description,omitempty"`  // 説明
+	Isbn         string                   `json:"isbn,omitempty"`         // ISBN
+	Publisher    string                   `json:"publisher,omitempty"`    // 出版社名
+	PublishedOn  string                   `json:"publishedOn,omitempty"`  // 出版日
+	ThumbnailUrl string                   `json:"thumbnailUrl,omitempty"` // サムネイルURL
+	RakutenUrl   string                   `json:"rakutenUrl,omitempty"`   // 楽天ショップURL
+	Size         string                   `json:"size,omitempty"`         // 楽天書籍サイズ
+	Author       string                   `json:"author,omitempty"`       // 著者名一覧
+	AuthorKana   string                   `json:"authorKana,omitempty"`   /// 著者名一覧(かな)
+	Reviews      []*BookV2Response_Review `json:"reviewsList,omitempty"`  // レビュー一覧
+	ReviewLimit  int64                    `json:"reviewLimit,omitempty"`  // レビュー取得上限
+	ReviewOffset int64                    `json:"reviewOffset,omitempty"` // レビュー取得開始位置
+	ReviewTotal  int64                    `json:"reviewTotal,omitempty"`  // レビュー検索一致件数
+	CreatedAt    string                   `json:"createdAt,omitempty"`    // 登録日時
+	UpdatedAt    string                   `json:"updatedAt,omitempty"`    // 更新日時
+}
+
+type BookV2Response_Review struct {
+	Id         int64                `json:"id,omitempty"`         // レビューID
+	Impression string               `json:"impression,omitempty"` // 感想
+	User       *BookV2Response_User `json:"user,omitempty"`       // 投稿者
+	CreatedAt  string               `json:"createdAt,omitempty"`  // 登録日時
+	UpdatedAt  string               `json:"updatedAt,omitempty"`  // 更新日時
+}
+
+type BookV2Response_User struct {
+	Id           string `json:"id,omitempty"`           // ユーザーID
+	Username     string `json:"username,omitempty"`     // 表示名
+	ThumbnailUrl string `json:"thumbnailUrl,omitempty"` // サムネイルURL
+}
+
 func (h *bookHandler) getBookResponse(
 	bookOutput *pb.BookResponse,
 	reviewsOutput *pb.ReviewListResponse,
 	usersOutput *pb.UserMapResponse,
-) *pb.BookV2Response {
+) *BookV2Response {
 	authorNames := make([]string, len(bookOutput.GetAuthors()))
 	authorNameKanas := make([]string, len(bookOutput.GetAuthors()))
 	for i, a := range bookOutput.GetAuthors() {
@@ -116,9 +152,9 @@ func (h *bookHandler) getBookResponse(
 		authorNameKanas[i] = a.GetNameKana()
 	}
 
-	reviews := make([]*pb.BookV2Response_Review, len(reviewsOutput.GetReviews()))
+	reviews := make([]*BookV2Response_Review, len(reviewsOutput.GetReviews()))
 	for i, r := range reviewsOutput.GetReviews() {
-		user := &pb.BookV2Response_User{
+		user := &BookV2Response_User{
 			Id:       r.GetUserId(),
 			Username: "unknown",
 		}
@@ -128,7 +164,7 @@ func (h *bookHandler) getBookResponse(
 			user.ThumbnailUrl = usersOutput.GetUsers()[r.GetUserId()].GetThumbnailUrl()
 		}
 
-		review := &pb.BookV2Response_Review{
+		review := &BookV2Response_Review{
 			Id:         r.GetId(),
 			Impression: r.GetImpression(),
 			CreatedAt:  r.GetCreatedAt(),
@@ -139,7 +175,7 @@ func (h *bookHandler) getBookResponse(
 		reviews[i] = review
 	}
 
-	return &pb.BookV2Response{
+	return &BookV2Response{
 		Id:           bookOutput.GetId(),
 		Title:        bookOutput.GetTitle(),
 		TitleKana:    bookOutput.GetTitleKana(),
