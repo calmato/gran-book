@@ -1,0 +1,512 @@
+syntax = "proto3";
+
+package service;
+
+option go_package = "github.com/calmato/gran-book/proto";
+
+import "github.com/envoyproxy/protoc-gen-validate/validate/validate.proto";
+import "common/common.proto";
+
+service BookService {
+  rpc ListBookshelf(ListBookshelfRequest) returns (BookshelfListResponse);
+  rpc ListBookReview(ListBookReviewRequest) returns (ReviewListResponse);
+  rpc ListUserReview(ListUserReviewRequest) returns (ReviewListResponse);
+  rpc MultiGetBooks(MultiGetBooksRequest) returns (BookMapResponse);
+  rpc GetBook(GetBookRequest) returns (BookResponse);
+  rpc GetBookByIsbn(GetBookByIsbnRequest) returns (BookResponse);
+  rpc GetBookshelf(GetBookshelfRequest) returns (BookshelfResponse);
+  rpc GetReview(GetReviewRequest) returns (ReviewResponse);
+  rpc CreateBook(CreateBookRequest) returns (BookResponse);
+  rpc UpdateBook(UpdateBookRequest) returns (BookResponse);
+  rpc ReadBookshelf(ReadBookshelfRequest) returns (BookshelfResponse);
+  rpc ReadingBookshelf(ReadingBookshelfRequest) returns (BookshelfResponse);
+  rpc StackedBookshelf(StackedBookshelfRequest) returns (BookshelfResponse);
+  rpc WantBookshelf(WantBookshelfRequest) returns (BookshelfResponse);
+  rpc ReleaseBookshelf(ReleaseBookshelfRequest) returns (BookshelfResponse);
+  rpc DeleteBook(DeleteBookRequest) returns (common.Empty);
+  rpc DeleteBookshelf(DeleteBookshelfRequest) returns (common.Empty);
+}
+
+message ListBookshelfRequest {
+  string user_id = 1 [
+    (validate.rules).string = {
+      min_len: 1
+    }
+  ];
+  common.Order order = 2;
+  int64 limit = 3 [
+    (validate.rules).int64 = {
+      lte: 200
+    }
+  ];
+  int64 offset = 4 [
+    (validate.rules).int64 = {
+      gte: 0
+    }
+  ];
+}
+
+message ListBookReviewRequest {
+  int64 book_id = 1 [
+    (validate.rules).int64 = {
+      gt: 0
+    }
+  ];
+  common.Order order = 2;
+  int64 limit = 3 [
+    (validate.rules).int64 = {
+      lte: 200
+    }
+  ];
+  int64 offset = 4 [
+    (validate.rules).int64 = {
+      gte: 0
+    }
+  ];
+}
+
+message ListUserReviewRequest {
+  string user_id = 1 [
+    (validate.rules).string = {
+      min_len: 1
+    }
+  ];
+  common.Order order = 2;
+  int64 limit = 3 [
+    (validate.rules).int64 = {
+      lte: 200
+    }
+  ];
+  int64 offset = 4 [
+    (validate.rules).int64 = {
+      gte: 0
+    }
+  ];
+}
+
+message MultiGetBooksRequest {
+  repeated int64 book_ids = 1 [
+    (validate.rules).repeated = {
+      min_items: 1
+      max_items: 200
+      unique: true
+    }
+  ];
+}
+
+message GetBookRequest {
+  int64 book_id = 1 [
+    (validate.rules).int64 = {
+      gt: 0
+    }
+  ];
+}
+
+message GetBookByIsbnRequest {
+  string isbn = 1 [
+    (validate.rules).string = {
+      min_len: 10
+      max_len: 16
+    }
+  ];
+}
+
+message GetBookshelfRequest {
+  string user_id = 1 [
+    (validate.rules).string = {
+      min_len: 1
+    }
+  ];
+  int64 book_id = 2 [
+    (validate.rules).int64 = {
+      gt: 0
+    }
+  ];
+}
+
+message GetReviewRequest {
+  int64 review_id = 1 [
+    (validate.rules).int64 = {
+      gt: 0
+    }
+  ];
+}
+
+message CreateBookRequest {
+  message Author {
+    string name = 1 [
+      (validate.rules).string = {
+        min_len: 1
+        max_len: 32
+      }
+    ];
+    string name_kana = 2 [
+      (validate.rules).string = {
+        min_len: 1
+        max_len: 64
+      }
+    ];
+  }
+  string title = 1 [
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 64
+    }
+  ];
+  string title_kana = 2 [
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 128
+    }
+  ];
+  string description = 3 [
+    (validate.rules).string = {
+      max_len: 2000
+    }
+  ];
+  string isbn = 4 [
+    (validate.rules).string = {
+      min_len: 10
+      max_len: 17
+    }
+  ];
+  string publisher = 5 [
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 32
+    }
+  ];
+  string published_on = 6 [
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 16
+    }
+  ];
+  string thumbnail_url = 7;
+  string rakuten_url = 8;
+  string rakuten_size = 9;
+  string rakuten_genre_id = 10;
+  repeated Author authors = 11;
+}
+
+message UpdateBookRequest {
+  message Author {
+    string name = 1 [
+      (validate.rules).string = {
+        min_len: 1
+        max_len: 32
+      }
+    ];
+    string name_kana = 2 [
+      (validate.rules).string = {
+        min_len: 1
+        max_len: 64
+      }
+    ];
+  }
+  string title = 1 [
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 64
+    }
+  ];
+  string title_kana = 2 [
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 128
+    }
+  ];
+  string description = 3 [
+    (validate.rules).string = {
+      max_len: 2000
+    }
+  ];
+  string isbn = 4 [
+    (validate.rules).string = {
+      min_len: 10
+      max_len: 17
+    }
+  ];
+  string publisher = 5 [
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 32
+    }
+  ];
+  string published_on = 6 [
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 16
+    }
+  ];
+  string thumbnail_url = 7;
+  string rakuten_url = 8;
+  string rakuten_size = 9;
+  string rakuten_genre_id = 10;
+  repeated Author authors = 11;
+}
+
+message DeleteBookRequest {
+  int64 book_id = 1 [
+    (validate.rules).int64 = {
+      gt: 0
+    }
+  ];
+}
+
+message DeleteBookshelfRequest {
+  string user_id = 1 [
+    (validate.rules).string = {
+      min_len: 1
+    }
+  ];
+  int64 book_id = 2 [
+    (validate.rules).int64 = {
+      gt: 0
+    }
+  ];
+}
+
+message ReadBookshelfRequest {
+  string user_id = 1 [
+    (validate.rules).string = {
+      min_len: 1
+    }
+  ];
+  int64 book_id = 2 [
+    (validate.rules).int64 = {
+      gt: 0
+    }
+  ];
+  string impression = 3 [
+    (validate.rules).string = {
+      max_len: 1000
+    }
+  ];
+  string read_on = 4;
+}
+
+message ReadingBookshelfRequest {
+  string user_id = 1 [
+    (validate.rules).string = {
+      min_len: 1
+    }
+  ];
+  int64 book_id = 2 [
+    (validate.rules).int64 = {
+      gt: 0
+    }
+  ];
+}
+
+message StackedBookshelfRequest {
+  string user_id = 1 [
+    (validate.rules).string = {
+      min_len: 1
+    }
+  ];
+  int64 book_id = 2 [
+    (validate.rules).int64 = {
+      gt: 0
+    }
+  ];
+}
+
+message WantBookshelfRequest {
+  string user_id = 1 [
+    (validate.rules).string = {
+      min_len: 1
+    }
+  ];
+  int64 book_id = 2 [
+    (validate.rules).int64 = {
+      gt: 0
+    }
+  ];
+}
+
+message ReleaseBookshelfRequest {
+  string user_id = 1 [
+    (validate.rules).string = {
+      min_len: 1
+    }
+  ];
+  int64 book_id = 2 [
+    (validate.rules).int64 = {
+      gt: 0
+    }
+  ];
+}
+
+message BookResponse {
+  message Author {
+    string name = 1; // 著者名
+    string name_kana = 2; // 著者名(かな)
+  }
+  int64 id = 1; // 書籍ID
+  string title = 2; // 本のタイトル
+  string title_kana = 3; // 本のタイトル(かな)
+  string description = 4; // 本の説明
+  string isbn = 5; // ISBN
+  string publisher = 6; // 出版社名
+  string published_on = 7; // 出版日
+  string thumbnail_url = 8; // サムネイルURL
+  string rakuten_url = 9; // 楽天ショップ URL
+  string rakuten_size = 10; // 楽天ショップ 本のサイズ
+  string rakuten_genre_id = 11; // 楽天ショップ 本のカテゴリ
+  string created_at = 12; // 作成日時
+  string updated_at = 13; // 更新日時
+  repeated Author authors = 14; // 著者一覧
+}
+
+message BookListResponse {
+  message Author {
+    string name = 1; // 著者名
+    string name_kana = 2; // 著者名(かな)
+  }
+  message Book {
+    int64 id = 1; // 書籍ID
+    string title = 2; // 本のタイトル
+    string title_kana = 3; // 本のタイトル(かな)
+    string description = 4; // 本の説明
+    string isbn = 5; // ISBN
+    string publisher = 6; // 出版社名
+    string published_on = 7; // 出版日
+    string thumbnail_url = 8; // サムネイルURL
+    string rakuten_url = 9; // 楽天ショップ URL
+    string rakuten_size = 10; // 楽天ショップ 本のサイズ
+    string rakuten_genre_id = 11; // 楽天ショップ 本のカテゴリ
+    string created_at = 12; // 作成日時
+    string updated_at = 13; // 更新日時
+    repeated Author authors = 14; // 著者一覧
+  }
+  repeated Book books = 1; // 書籍一覧
+  int64 limit = 2; // 取得上限
+  int64 offset = 3; // 取得開始位置
+  int64 total = 4; // 条件一致数
+}
+
+message BookMapResponse {
+  message Author {
+    string name = 1; // 著者名
+    string name_kana = 2; // 著者名(かな)
+  }
+  message Book {
+    int64 id = 1; // 書籍ID
+    string title = 2; // 本のタイトル
+    string title_kana = 3; // 本のタイトル(かな)
+    string description = 4; // 本の説明
+    string isbn = 5; // ISBN
+    string publisher = 6; // 出版社名
+    string published_on = 7; // 出版日
+    string thumbnail_url = 8; // サムネイルURL
+    string rakuten_url = 9; // 楽天ショップ URL
+    string rakuten_size = 10; // 楽天ショップ 本のサイズ
+    string rakuten_genre_id = 11; // 楽天ショップ 本のカテゴリ
+    string created_at = 12; // 作成日時
+    string updated_at = 13; // 更新日時
+    repeated Author authors = 14; // 著者一覧
+  }
+  map<int64, Book> books = 1; // 書籍一覧
+}
+
+message BookshelfResponse {
+  message Author {
+    string name = 1; // 著者名
+    string name_kana = 2; // 著者名(かな)
+  }
+  message Book {
+    int64 id = 1; // 書籍ID
+    string title = 2; // 本のタイトル
+    string title_kana = 3; // 本のタイトル(かな)
+    string description = 4; // 本の説明
+    string isbn = 5; // ISBN
+    string publisher = 6; // 出版社名
+    string published_on = 7; // 出版日
+    string thumbnail_url = 8; // サムネイルURL
+    string rakuten_url = 9; // 楽天ショップ URL
+    string rakuten_size = 10; // 楽天ショップ 本のサイズ
+    string rakuten_genre_id = 11; // 楽天ショップ 本のカテゴリ
+    string created_at = 12; // 作成日時
+    string updated_at = 13; // 更新日時
+    repeated Author authors = 14; // 著者一覧
+  }
+  message Review {
+    int32 score = 1; // 評価
+    string impression = 2; // 感想
+  }
+  int64 id = 1; // 本棚ID
+  int64 book_id = 2; // 書籍ID
+  string user_id = 3; // ユーザーID
+  int32 status = 4; // 読書ステータス
+  string read_on = 5; // 読み終えた日
+  int64 review_id = 6; // レビューID
+  string created_at = 7; // 登録日時
+  string updated_at = 8; // 更新日時
+  Book book = 9; // 書籍情報
+  Review review = 10; // レビュー情報
+}
+
+message BookshelfListResponse {
+  message Author {
+    string name = 1; // 著者名
+    string name_kana = 2; // 著者名(かな)
+  }
+  message Book {
+    int64 id = 1; // 書籍ID
+    string title = 2; // 本のタイトル
+    string title_kana = 3; // 本のタイトル(かな)
+    string description = 4; // 本の説明
+    string isbn = 5; // ISBN
+    string publisher = 6; // 出版社名
+    string published_on = 7; // 出版日
+    string thumbnail_url = 8; // サムネイルURL
+    string rakuten_url = 9; // 楽天ショップ URL
+    string rakuten_size = 10; // 楽天ショップ 本のサイズ
+    string rakuten_genre_id = 11; // 楽天ショップ 本のカテゴリ
+    string created_at = 12; // 作成日時
+    string updated_at = 13; // 更新日時
+    repeated Author authors = 14; // 著者一覧
+  }
+  message Bookshelf {
+    int64 id = 1; // 本棚ID
+    int64 book_id = 2; // 書籍ID
+    string user_id = 3; // ユーザーID
+    int32 status = 4; // 読書ステータス
+    string read_on = 5; // 読み終えた日
+    int64 review_id = 6; // レビューID
+    string created_at = 7; // 登録日時
+    string updated_at = 8; // 更新日時
+    Book book = 9; // 書籍情報
+  }
+  repeated Bookshelf bookshelves = 1; // 本棚の書籍一覧
+  int64 limit = 2; // 取得上限
+  int64 offset = 3; // 取得開始位置
+  int64 total = 4; // 条件一致数
+}
+
+message ReviewResponse {
+  int64 id = 1; // レビューID
+  int64 book_id = 2; // 書籍ID
+  string user_id = 3; // ユーザーID
+  int32 score = 4; // 評価
+  string impression = 5; // 感想
+  string created_at = 6; // 作成日時
+  string updated_at = 7; // 更新日時
+}
+
+message ReviewListResponse {
+  message Review {
+    int64 id = 1; // レビューID
+    int64 book_id = 2; // 書籍ID
+    string user_id = 3; // ユーザーID
+    int32 score = 4; // 評価
+    string impression = 5; // 感想
+    string created_at = 6; // 作成日時
+    string updated_at = 7; // 更新日時
+  }
+  repeated Review reviews = 1; // レビュー一覧
+  int64 limit = 2; // 取得上限
+  int64 offset = 3; // 取得開始位置
+  int64 total = 4; // 条件一致数
+}

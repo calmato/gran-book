@@ -4,7 +4,7 @@ import React, { ReactElement } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { ListItem, Avatar, Divider, Image, Badge } from 'react-native-elements';
 import { IBook, IImpressionResponse } from '~/types/response';
-import { COLOR } from '~~/constants/theme';
+import { COLOR, FONT_SIZE } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
   badgeStyle: {
@@ -24,29 +24,29 @@ const styles = StyleSheet.create({
     marginVertical: 8,
   },
   titleStyle: {
-    fontSize: 16,
+    fontSize: FONT_SIZE.BOOK_INFO_TITLE,
     fontWeight: '500',
     color: COLOR.GREY,
     marginBottom: 8,
   },
   authorStyle: {
-    fontSize: 12,
+    fontSize: FONT_SIZE.BOOK_INFO_AUTHOR,
     color: COLOR.GREY,
   },
   listTitleStyle: {
     color: COLOR.GREY,
-    fontSize: 16,
+    fontSize: FONT_SIZE.LISTITEM_TITLE,
     marginBottom: 4,
   },
   listSubTitleStyle: {
     color: COLOR.GREY,
-    fontSize: 12,
+    fontSize: FONT_SIZE.LISTITEM_SUBTITLE,
   },
   reviewStyle: {
     paddingHorizontal: 16,
     marginBottom: 8,
     color: COLOR.GREY,
-    fontSize: 14,
+    fontSize: FONT_SIZE.TEXT_DEFAULT,
   },
   reactionContainerStyle: {
     marginVertical: 4,

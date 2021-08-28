@@ -9,5 +9,12 @@ npm-debug.*
 *.orig.*
 web-build/
 
+# Coverage directory used by tools like istanbul
+coverage
+
 # macOS
 .DS_Store
+
+# proto file
+*_pb.js
+*_pb.d.ts

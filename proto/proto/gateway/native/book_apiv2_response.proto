@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package native;
+
+option go_package = "github.com/calmato/gran-book/proto";
+
+// 書籍情報
+message BookV2Response {
+  message User {
+    string id = 1; // ユーザーID
+    string username = 2; // 表示名
+    string thumbnail_url = 3; // サムネイルURL
+  }
+  message Review {
+    int64 id = 1; // レビューID
+    string impression = 2; // 感想
+    User user = 3; // 投稿者
+    string created_at = 4; // 登録日時
+    string updated_at = 5; // 更新日時
+  }
+  int64 id = 1; // 書籍ID
+  string title = 2; // タイトル
+  string title_kana = 3; // タイトル(かな)
+  string description = 4; // 説明
+  string isbn = 5; // ISBN
+  string publisher = 6; // 出版社名
+  string published_on = 7; // 出版日
+  string thumbnail_url = 8; // サムネイルURL
+  string rakuten_url = 9; // 楽天ショップURL
+  string size = 10; // 楽天書籍サイズ
+  string author = 11; // 著者名一覧
+  string author_kana = 12; /// 著者名一覧(かな)
+  repeated Review reviews = 13; // レビュー一覧
+  int64 review_limit = 14; // レビュー取得上限
+  int64 review_offset = 15; // レビュー取得開始位置
+  int64 review_total = 16; // レビュー検索一致件数
+  string created_at = 17; // 登録日時
+  string updated_at = 18; // 更新日時
+}

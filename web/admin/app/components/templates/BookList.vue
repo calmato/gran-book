@@ -3,10 +3,12 @@
     <v-row>
       <v-col cols="12">
         <v-card class="pa-4">
-          <v-subheader>書籍管理トップ</v-subheader>
+          <v-subheader>書籍検索</v-subheader>
           <v-card-text>
             <book-search-form :form="searchForm" @submit="onSubmitSearchForm" @clear="onClearSearchForm" />
           </v-card-text>
+          <v-subheader>書籍一括登録</v-subheader>
+          <book-multiple-register @submit="onRegisterMultilpleBooks" />
         </v-card>
       </v-col>
     </v-row>
@@ -22,6 +24,7 @@
 import { defineComponent, PropType, SetupContext } from '@nuxtjs/composition-api'
 import BookListItem from '~/components/organisms/BookListItem.vue'
 import BookSearchForm from '~/components/organisms/BookSearchForm.vue'
+import BookMultipleRegister from '~/components/organisms/BookMultipleRegister.vue'
 import { IBookSearchForm } from '~/types/forms'
 import { IBook } from '~/types/store'
 
@@ -29,6 +32,7 @@ export default defineComponent({
   components: {
     BookListItem,
     BookSearchForm,
+    BookMultipleRegister,
   },
 
   props: {
@@ -57,10 +61,15 @@ export default defineComponent({
       emit('clear')
     }
 
+    const onRegisterMultilpleBooks = () => {
+      emit('register')
+    }
+
     return {
       onClickBookCard,
       onClearSearchForm,
       onSubmitSearchForm,
+      onRegisterMultilpleBooks,
     }
   },
 })

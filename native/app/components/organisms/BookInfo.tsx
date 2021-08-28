@@ -5,7 +5,7 @@ import ButtonGroupBookFooter from './ButtonGroupBookFooter';
 import FlexBoxBookCategory from './FlexBoxBookCategory';
 import { fullWidth2halfWidth } from '~/lib/util';
 import { IBook } from '~/types/response';
-import { COLOR } from '~~/constants/theme';
+import { COLOR, FONT_SIZE } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
   container: {
@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
   titleContainer: {
     paddingTop: 10,
     paddingHorizontal: 16,
-    fontSize: 16,
+    fontSize: FONT_SIZE.BOOK_INFO_TITLE,
     alignSelf: 'stretch',
     color: COLOR.GREY,
     fontWeight: '500',
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingHorizontal: 16,
     paddingBottom: 10,
-    fontSize: 12,
+    fontSize: FONT_SIZE.BOOK_INFO_AUTHOR,
     alignSelf: 'stretch',
     color: COLOR.GREY,
     backgroundColor: COLOR.BACKGROUND_WHITE,
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
   detailContainer: {
     paddingHorizontal: 16,
     paddingBottom: 10,
-    fontSize: 14,
+    fontSize: FONT_SIZE.TEXT_DEFAULT,
     lineHeight: 16,
     color: COLOR.GREY,
     alignSelf: 'stretch',

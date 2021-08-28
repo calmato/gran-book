@@ -3,11 +3,11 @@ package config
 import (
 	"context"
 
-	"github.com/calmato/gran-book/api/server/user/internal/infrastructure/repository"
-	"github.com/calmato/gran-book/api/server/user/lib/firebase"
-	"github.com/calmato/gran-book/api/server/user/lib/firebase/authentication"
-	"github.com/calmato/gran-book/api/server/user/lib/firebase/firestore"
-	"github.com/calmato/gran-book/api/server/user/lib/firebase/storage"
+	"github.com/calmato/gran-book/api/server/user/pkg/database"
+	"github.com/calmato/gran-book/api/server/user/pkg/firebase"
+	"github.com/calmato/gran-book/api/server/user/pkg/firebase/authentication"
+	"github.com/calmato/gran-book/api/server/user/pkg/firebase/firestore"
+	"github.com/calmato/gran-book/api/server/user/pkg/firebase/storage"
 	"github.com/calmato/gran-book/api/server/user/registry"
 	"google.golang.org/api/option"
 )
@@ -23,9 +23,15 @@ func Execute() error {
 	}
 
 	// MySQL Clientの設定
-	db, err := repository.NewDBClient(
-		env.DBSocket, env.DBHost, env.DBPort, env.DBDatabase, env.DBUsername, env.DBPassword,
-	)
+	dbp := &database.Params{
+		Socket:   env.DBSocket,
+		Host:     env.DBHost,
+		Port:     env.DBPort,
+		Database: env.DBDatabase,
+		Username: env.DBUsername,
+		Password: env.DBPassword,
+	}
+	db, err := database.NewClient(dbp)
 	if err != nil {
 		return err
 	}

@@ -1,6 +1,8 @@
-export const get = {
+import { AdminListV1Response, AdminThumbnailV1Response, AdminV1Response } from '~/types/api/admin_apiv1_response_pb'
+
+export const get: { [key: string]: AdminV1Response.AsObject | AdminListV1Response.AsObject } = {
   '/v1/admin?limit=20&offset=0': {
-    users: [
+    usersList: [
       {
         id: '00000000-0000-0000-00000000',
         username: 'test-user',
@@ -20,13 +22,9 @@ export const get = {
     limit: 20,
     offset: 0,
     total: 2,
-    order: {
-      by: 'id',
-      direction: 'asc',
-    },
   },
   '/v1/admin?limit=20&offset=0&by=email&direction=asc': {
-    users: [
+    usersList: [
       {
         id: '00000000-0000-0000-00000000',
         username: 'test-user',
@@ -46,10 +44,6 @@ export const get = {
     limit: 20,
     offset: 0,
     total: 1,
-    order: {
-      by: 'email',
-      direction: 'asc',
-    },
   },
   '/v1/admin/00000000-0000-0000-00000000': {
     id: '00000000-0000-0000-00000000',
@@ -68,7 +62,7 @@ export const get = {
   },
 }
 
-export const post = {
+export const post: { [key: string]: AdminV1Response.AsObject | AdminThumbnailV1Response.AsObject } = {
   '/v1/admin': {
     id: '00000000-0000-0000-00000000',
     username: 'test-user',
@@ -89,7 +83,7 @@ export const post = {
   },
 }
 
-export const patch = {
+export const patch: { [key: string]: AdminV1Response.AsObject } = {
   '/v1/admin/00000000-0000-0000-00000000': {
     id: '00000000-0000-0000-00000000',
     username: 'test-user',
@@ -152,6 +146,6 @@ export const patch = {
   },
 }
 
-export const destroy = {
+export const destroy: { [key: string]: {} } = {
   '/v1/admin/00000000-0000-0000-00000000': {},
 }

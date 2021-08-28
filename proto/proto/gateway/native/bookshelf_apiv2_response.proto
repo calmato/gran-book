@@ -1,0 +1,79 @@
+syntax = "proto3";
+
+package native;
+
+option go_package = "github.com/calmato/gran-book/proto";
+
+// 本棚の書籍情報
+message BookshelfV2Response {
+  message Bookshelf {
+    string status = 1; // 読書ステータス
+    string read_on = 2; // 読み終えた日
+    int64 review_id = 3; // レビューID
+    string created_at = 4; // 登録日時
+    string updated_at = 5; // 更新日時
+  }
+  message User {
+    string id = 1; // ユーザーID
+    string username = 2; // 表示名
+    string thumbnail_url = 3; // サムネイルURL
+  }
+  message Review {
+    int64 id = 1; // レビューID
+    string impression = 2; // 感想
+    User user = 3; // 投稿者
+    string created_at = 4; // 登録日時
+    string updated_at = 5; // 更新日時
+  }
+  int64 id = 1; // 書籍ID
+  string title = 2; // タイトル
+  string title_kana = 3; // タイトル(かな)
+  string description = 4; // 説明
+  string isbn = 5; // ISBN
+  string publisher = 6; // 出版社名
+  string published_on = 7; // 出版日
+  string thumbnail_url = 8; // サムネイルURL
+  string rakuten_url = 9; // 楽天ショップURL
+  string size = 10; // 楽天書籍サイズ
+  string author = 11; // 著者名一覧
+  string author_kana = 12; /// 著者名一覧(かな)
+  Bookshelf bookshelf = 13; // ユーザーの本棚情報
+  repeated Review reviews = 14; // レビュー一覧
+  int64 review_limit = 15; // レビュー取得上限
+  int64 review_offset = 16; // レビュー取得開始位置
+  int64 review_total = 17; // レビュー検索一致件
+  string created_at = 18; // 登録日時
+  string updated_at = 19; // 更新日時
+}
+
+// 本棚の書籍一覧
+message BookshelfListV2Response {
+  message Bookshelf {
+    string status = 1; // 読書ステータス
+    string read_on = 2; // 読み終えた日
+    int64 review_id = 3; // レビューID
+    string created_at = 4; // 登録日時
+    string updated_at = 5; // 更新日時
+  }
+  message Book {
+    int64 id = 1; // 書籍ID
+    string title = 2; // タイトル
+    string title_kana = 3; // タイトル(かな)
+    string description = 4; // 説明
+    string isbn = 5; // ISBN
+    string publisher = 6; // 出版社名
+    string published_on = 7; // 出版日
+    string thumbnail_url = 8; // サムネイルURL
+    string rakuten_url = 9; // 楽天ショップURL
+    string size = 10; // 楽天書籍サイズ
+    string author = 11; // 著者名一覧
+    string author_kana = 12; /// 著者名一覧(かな)
+    Bookshelf bookshelf = 13; // ユーザーの本棚情報
+    string created_at = 14; // 登録日時
+    string updated_at = 15; // 更新日時
+  }
+  repeated Book books = 1; // 書籍一覧
+  int64 limit = 2; // 取得上限数
+  int64 offset = 3; // 取得開始位置
+  int64 total = 4; // 検索一致数
+}

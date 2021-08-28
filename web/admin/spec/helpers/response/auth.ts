@@ -1,4 +1,6 @@
-export const get = {
+import { AuthThumbnailV1Response, AuthV1Response } from '~/types/api/auth_apiv1_response_pb'
+
+export const get: { [key: string]: AuthV1Response.AsObject } = {
   '/v1/auth': {
     id: '00000000-0000-0000-00000000',
     username: 'test-user',
@@ -16,13 +18,13 @@ export const get = {
   },
 }
 
-export const post = {
+export const post: { [key: string]: AuthThumbnailV1Response.AsObject } = {
   '/v1/auth/thumbnail': {
     thumbnailUrl: 'https://calmato.com/images/01',
   },
 }
 
-export const patch = {
+export const patch: { [key: string]: AuthV1Response.AsObject } = {
   '/v1/auth/email': {
     id: '00000000-0000-0000-00000000',
     username: 'test-user',

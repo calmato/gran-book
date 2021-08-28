@@ -35,16 +35,16 @@ func (m *MockUploader) EXPECT() *MockUploaderMockRecorder {
 }
 
 // Thumbnail mocks base method.
-func (m *MockUploader) Thumbnail(ctx context.Context, uid string, data []byte) (string, error) {
+func (m *MockUploader) Thumbnail(ctx context.Context, userID string, data []byte) (string, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Thumbnail", ctx, uid, data)
+	ret := m.ctrl.Call(m, "Thumbnail", ctx, userID, data)
 	ret0, _ := ret[0].(string)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Thumbnail indicates an expected call of Thumbnail.
-func (mr *MockUploaderMockRecorder) Thumbnail(ctx, uid, data interface{}) *gomock.Call {
+func (mr *MockUploaderMockRecorder) Thumbnail(ctx, userID, data interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Thumbnail", reflect.TypeOf((*MockUploader)(nil).Thumbnail), ctx, uid, data)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Thumbnail", reflect.TypeOf((*MockUploader)(nil).Thumbnail), ctx, userID, data)
 }

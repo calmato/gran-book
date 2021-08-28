@@ -9,14 +9,14 @@ import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import ReadDate from '~/components/organisms/ReadDate';
 import { ImpressionForm } from '~/types/forms';
 import { BookshelfTabStackParamList } from '~/types/navigation';
-import { COLOR } from '~~/constants/theme';
+import { COLOR, FONT_SIZE } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
   impressionFormLabel: {
-    fontSize: 16,
+    fontSize: FONT_SIZE.TITLE_SUBHEADER,
     paddingLeft: 16,
     marginTop: 10,
     marginBottom: 8,
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
   impressionForm: {
     backgroundColor: COLOR.BACKGROUND_WHITE,
     padding: 0,
-    fontSize: 16,
+    fontSize: FONT_SIZE.TEXT_INPUT,
     paddingHorizontal: 16,
     height: 160,
     marginBottom: 16,

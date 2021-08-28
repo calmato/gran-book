@@ -9,6 +9,10 @@ env:
   PROTOBUF_VERSION: 3.9.0
   PROTOTOOL_VERSION: 1.10.0
   ARTIFACT_TAG: ${{ github.sha }}
+  TEST_DB_HOST: 127.0.0.1
+  TEST_DB_PORT: 3306
+  TEST_DB_USERNAME: root
+  TEST_DB_PASSWORD: 12345678
 
 jobs:
   setup_proto:
@@ -22,8 +26,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node: ['^16.1']
-        golang: ['^1.16.3']
+        golang: ['^1.16.7']
 
     steps:
       - name: Check out code
@@ -31,11 +34,6 @@ jobs:
 
       - name: Use Golang ${{ matrix.golang }}
         uses: actions/setup-go@v2
-
-      - name: Use Node.js ${{ matrix.node }}
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node }}
 
       - name: Install protobuf
         run: |
@@ -54,12 +52,13 @@ jobs:
 
       - name: Install gRPC tools
         run: |
+          export GOPATH=$(go env GOPATH)
           make install
 
       - name: Generate proto
         run: |
           export PATH="$PATH:$(go env GOPATH)/bin"
-          make protoc-service SERVICE_PATH='./../api/server/user'
+          make generate
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
@@ -96,6 +95,20 @@ jobs:
           name: artifact-${ARTIFACT_TAG}
           path: api/server/user/proto
 
+      - name: Start MySQL container
+        working-directory: .
+        run: docker-compose -f docker-compose.ci.yaml up --build --detach mysql
+
+      - name: Wait start MySQL
+        run: |
+          #!/bin/bash
+
+          until mysqladmin ping -h${TEST_DB_HOST} -P${TEST_DB_PORT} -u${TEST_DB_USERNAME} -p${TEST_DB_PASSWORD}; do
+            echo 'mysql is unavailable - sleeping'
+            sleep 3
+          done
+          echo 'mysql is up - executing command'
+
       - name: Check golang version
         run: go version
 
@@ -128,3 +141,10 @@ jobs:
 
       - name: Build
         run: make build
+
+      - uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true
+          flags: user-api
+          verbose: true

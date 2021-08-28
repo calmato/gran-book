@@ -6,3 +6,7 @@ bin
 
 # proto file
 *.pb.go
+*.pb.validate.go
+
+# coverage file
+coverage.txt

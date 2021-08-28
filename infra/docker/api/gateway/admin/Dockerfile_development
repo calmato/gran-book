@@ -1,12 +1,12 @@
-FROM node:16.1.0-alpine
+FROM golang:1.16.7-alpine
 
 ENV LANG C.UTF-8
 ENV TZ Asia/Tokyo
 
-RUN apk add --update --no-cache \
-  g++ \
-  make \
-  python3 \
-  && ln -fs python3 /usr/bin/python
+RUN apk add --update \
+  git \
+  gcc \
+  libc-dev \
+  make
 
-RUN yarn global add express-generator
+RUN go install github.com/cosmtrek/air@v1.27.3
