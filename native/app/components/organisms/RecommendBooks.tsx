@@ -4,13 +4,14 @@ import {
   StyleSheet,
   View,
   Text,
+  Image,
   NativeScrollEvent,
   NativeSyntheticEvent,
 } from 'react-native';
 
-import { Image } from 'react-native-elements';
 import { FlatList } from 'react-native-gesture-handler';
-import { IBook } from '~/types/response';
+import { fullWidth2halfWidth } from '~/lib/util';
+import { BookshelfV1Response } from '~/types/api/bookshelf_apiv1_response_pb';
 import { COLOR } from '~~/constants/theme';
 
 const { width } = Dimensions.get('screen');
@@ -20,10 +21,18 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFD996',
     opacity: 0.8,
   },
+  title: {
+    marginLeft: 8,
+    marginTop: 8,
+    fontWeight: 'bold',
+    fontSize: 16,
+    color: COLOR.TEXT_TITLE,
+  },
   contentArea: {
     display: 'flex',
     alignItems: 'center',
-    paddingVertical: 16,
+    paddingVertical: 8,
+    paddingBottom: 16,
   },
   carousel: {
     width: 0.85 * width,
@@ -34,7 +43,7 @@ const styles = StyleSheet.create({
   },
   recommendBookCard: {
     backgroundColor: COLOR.BACKGROUND_WHITE,
-    marginHorizontal: 16,
+    marginHorizontal: 8,
     height: 200,
     width: '100%',
     borderRadius: 16,
@@ -62,13 +71,13 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  books: IBook[];
+  books: BookshelfV1Response.AsObject[];
 }
 
 const RecommendBooks = function RecommendBooks(props: Props): ReactElement {
   const recommendBooks = props.books;
 
-  const carouselRef = useRef<FlatList<IBook>>(null);
+  const carouselRef = useRef<FlatList<BookshelfV1Response.AsObject>>(null);
 
   const onResponderReleaseHandler = useCallback(
     (event: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -94,6 +103,7 @@ const RecommendBooks = function RecommendBooks(props: Props): ReactElement {
 
   return (
     <View style={styles.root}>
+      <Text style={styles.title}>おすすめ書籍</Text>
       <View style={styles.contentArea}>
         <FlatList
           initialNumToRender={5}
@@ -109,8 +119,8 @@ const RecommendBooks = function RecommendBooks(props: Props): ReactElement {
                 <Text style={styles.bookTitle}>{item.title}</Text>
                 <View style={styles.recommendBookCardContent}>
                   <Image source={{ uri: item.thumbnailUrl }} style={[styles.imageContainer]} />
-                  <Text style={styles.bookDescription} numberOfLines={10}>
-                    {item.description}
+                  <Text style={styles.bookDescription} numberOfLines={8}>
+                    {fullWidth2halfWidth(item.description)}
                   </Text>
                 </View>
               </View>
