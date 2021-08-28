@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/calmato/gran-book/api/gateway/native/internal/entity"
+	response "github.com/calmato/gran-book/api/gateway/native/internal/response/v1"
 	"github.com/calmato/gran-book/api/gateway/native/internal/server/util"
 	pb "github.com/calmato/gran-book/api/gateway/native/proto"
 	"github.com/gin-gonic/gin"
@@ -206,24 +207,10 @@ func (h *reviewHandler) GetByUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, res)
 }
 
-type BookReviewV1Response struct {
-	Id         int64                      `json:"id"`         // レビューID
-	Impression string                     `json:"impression"` // 感想
-	User       *BookReviewV1Response_User `json:"user"`       // 投稿者
-	CreatedAt  string                     `json:"createdAt"`  // 登録日時
-	UpdatedAt  string                     `json:"updatedAt"`  // 更新日時
-}
-
-type BookReviewV1Response_User struct {
-	Id           string `json:"id"`           // ユーザーID
-	Username     string `json:"username"`     // 表示名
-	ThumbnailUrl string `json:"thumbnailUrl"` // サムネイルURL
-}
-
 func (h *reviewHandler) getBookReviewResponse(
 	reviewOutput *pb.ReviewResponse, userOutput *pb.UserResponse,
-) *BookReviewV1Response {
-	user := &BookReviewV1Response_User{
+) *response.BookReviewResponse {
+	user := &response.BookReviewResponse_User{
 		Id:       reviewOutput.GetUserId(),
 		Username: "unknown",
 	}
@@ -233,7 +220,7 @@ func (h *reviewHandler) getBookReviewResponse(
 		user.ThumbnailUrl = userOutput.GetThumbnailUrl()
 	}
 
-	return &BookReviewV1Response{
+	return &response.BookReviewResponse{
 		Id:         reviewOutput.GetId(),
 		Impression: reviewOutput.GetImpression(),
 		CreatedAt:  reviewOutput.GetCreatedAt(),
@@ -242,30 +229,16 @@ func (h *reviewHandler) getBookReviewResponse(
 	}
 }
 
-type UserReviewV1Response struct {
-	Id         int64                      `json:"id"`         // レビューID
-	Impression string                     `json:"impression"` // 感想
-	Book       *UserReviewV1Response_Book `json:"book"`       // 書籍情報
-	CreatedAt  string                     `json:"createdAt"`  // 登録日時
-	UpdatedAt  string                     `json:"updatedAt"`  // 更新日時
-}
-
-type UserReviewV1Response_Book struct {
-	Id           int64  `json:"id"`           // 書籍ID
-	Title        string `json:"title"`        // タイトル
-	ThumbnailUrl string `json:"thumbnailUrl"` // サムネイルURL
-}
-
 func (h *reviewHandler) getUserReviewResponse(
 	reviewOutput *pb.ReviewResponse, bookOutput *pb.BookResponse,
-) *UserReviewV1Response {
-	book := &UserReviewV1Response_Book{
+) *response.UserReviewResponse {
+	book := &response.UserReviewResponse_Book{
 		Id:           bookOutput.GetId(),
 		Title:        bookOutput.GetTitle(),
 		ThumbnailUrl: bookOutput.GetThumbnailUrl(),
 	}
 
-	return &UserReviewV1Response{
+	return &response.UserReviewResponse{
 		Id:         reviewOutput.GetId(),
 		Impression: reviewOutput.GetImpression(),
 		CreatedAt:  reviewOutput.GetCreatedAt(),
@@ -274,33 +247,12 @@ func (h *reviewHandler) getUserReviewResponse(
 	}
 }
 
-type BookReviewListV1Response struct {
-	Reviews []*BookReviewListV1Response_Review `json:"reviewsList"` // レビュー一覧
-	Limit   int64                              `json:"limit"`       // 取得上限数
-	Offset  int64                              `json:"offset"`      // 取得開始位置
-	Total   int64                              `json:"total"`       // 検索一致数
-}
-
-type BookReviewListV1Response_Review struct {
-	Id         int64                          `json:"id"`         // レビューID
-	Impression string                         `json:"impression"` // 感想
-	User       *BookReviewListV1Response_User `json:"user"`       // 投稿者
-	CreatedAt  string                         `json:"createdAt"`  // 登録日時
-	UpdatedAt  string                         `json:"updatedAt"`  // 更新日時
-}
-
-type BookReviewListV1Response_User struct {
-	Id           string `json:"id"`           // ユーザーID
-	Username     string `json:"username"`     // 表示名
-	ThumbnailUrl string `json:"thumbnailUrl"` // サムネイルURL
-}
-
 func (h *reviewHandler) getBookReviewListResponse(
 	reviewsOutput *pb.ReviewListResponse, usersOutput *pb.UserMapResponse,
-) *BookReviewListV1Response {
-	reviews := make([]*BookReviewListV1Response_Review, len(reviewsOutput.GetReviews()))
+) *response.BookReviewListResponse {
+	reviews := make([]*response.BookReviewListResponse_Review, len(reviewsOutput.GetReviews()))
 	for i, r := range reviewsOutput.GetReviews() {
-		user := &BookReviewListV1Response_User{
+		user := &response.BookReviewListResponse_User{
 			Id:       r.GetUserId(),
 			Username: "unknown",
 		}
@@ -310,7 +262,7 @@ func (h *reviewHandler) getBookReviewListResponse(
 			user.ThumbnailUrl = usersOutput.GetUsers()[r.GetUserId()].GetThumbnailUrl()
 		}
 
-		review := &BookReviewListV1Response_Review{
+		review := &response.BookReviewListResponse_Review{
 			Id:         r.GetId(),
 			Impression: r.GetImpression(),
 			CreatedAt:  r.GetCreatedAt(),
@@ -321,7 +273,7 @@ func (h *reviewHandler) getBookReviewListResponse(
 		reviews[i] = review
 	}
 
-	return &BookReviewListV1Response{
+	return &response.BookReviewListResponse{
 		Reviews: reviews,
 		Limit:   reviewsOutput.GetLimit(),
 		Offset:  reviewsOutput.GetOffset(),
@@ -329,39 +281,18 @@ func (h *reviewHandler) getBookReviewListResponse(
 	}
 }
 
-type UserReviewListV1Response struct {
-	Reviews []*UserReviewListV1Response_Review `json:"reviewsList"` // レビュー一覧
-	Limit   int64                              `json:"limit"`       // 取得上限数
-	Offset  int64                              `json:"offset"`      // 取得開始位置
-	Total   int64                              `json:"total"`       // 検索一致数
-}
-
-type UserReviewListV1Response_Review struct {
-	Id         int64                          `json:"id"`         // レビューID
-	Impression string                         `json:"impression"` // 感想
-	Book       *UserReviewListV1Response_Book `json:"book"`       // 書籍情報
-	CreatedAt  string                         `json:"createdAt"`  // 登録日時
-	UpdatedAt  string                         `json:"updatedAt"`  // 更新日時
-}
-
-type UserReviewListV1Response_Book struct {
-	Id           int64  `json:"id"`           // 書籍ID
-	Title        string `json:"title"`        // タイトル
-	ThumbnailUrl string `json:"thumbnailUrl"` // サムネイルURL
-}
-
 func (h *reviewHandler) getUserReviewListResponse(
 	reviewsOutput *pb.ReviewListResponse, booksOutput *pb.BookMapResponse,
-) *UserReviewListV1Response {
-	reviews := make([]*UserReviewListV1Response_Review, len(reviewsOutput.GetReviews()))
+) *response.UserReviewListResponse {
+	reviews := make([]*response.UserReviewListResponse_Review, len(reviewsOutput.GetReviews()))
 	for i, r := range reviewsOutput.GetReviews() {
-		book := &UserReviewListV1Response_Book{
+		book := &response.UserReviewListResponse_Book{
 			Id:           booksOutput.GetBooks()[r.GetBookId()].GetId(),
 			Title:        booksOutput.GetBooks()[r.GetBookId()].GetTitle(),
 			ThumbnailUrl: booksOutput.GetBooks()[r.GetBookId()].GetThumbnailUrl(),
 		}
 
-		review := &UserReviewListV1Response_Review{
+		review := &response.UserReviewListResponse_Review{
 			Id:         r.GetId(),
 			Impression: r.GetImpression(),
 			CreatedAt:  r.GetCreatedAt(),
@@ -372,7 +303,7 @@ func (h *reviewHandler) getUserReviewListResponse(
 		reviews[i] = review
 	}
 
-	return &UserReviewListV1Response{
+	return &response.UserReviewListResponse{
 		Reviews: reviews,
 		Limit:   reviewsOutput.GetLimit(),
 		Offset:  reviewsOutput.GetOffset(),

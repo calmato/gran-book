@@ -8,6 +8,8 @@ import (
 	"net/http"
 
 	"github.com/calmato/gran-book/api/gateway/native/internal/entity"
+	request "github.com/calmato/gran-book/api/gateway/native/internal/request/v1"
+	response "github.com/calmato/gran-book/api/gateway/native/internal/response/v1"
 	"github.com/calmato/gran-book/api/gateway/native/internal/server/util"
 	"github.com/calmato/gran-book/api/gateway/native/pkg/array"
 	pb "github.com/calmato/gran-book/api/gateway/native/proto"
@@ -94,7 +96,7 @@ func (h *chatHandler) ListRoom(ctx *gin.Context) {
 // CreateRoom - チャットルーム作成
 func (h *chatHandler) CreateRoom(ctx *gin.Context) {
 	userID := ctx.Param("userID")
-	req := &pb.CreateChatRoomV1Request{}
+	req := &request.CreateChatRoomRequest{}
 	err := ctx.BindJSON(req)
 	if err != nil {
 		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
@@ -150,7 +152,7 @@ func (h *chatHandler) CreateRoom(ctx *gin.Context) {
 func (h *chatHandler) CreateTextMessage(ctx *gin.Context) {
 	roomID := ctx.Param("roomID")
 	userID := ctx.Param("userID")
-	req := &pb.CreateChatMessageV1Request{}
+	req := &request.CreateChatMessageRequest{}
 	err := ctx.BindJSON(req)
 	if err != nil {
 		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
@@ -270,33 +272,12 @@ func (h *chatHandler) currentUser(ctx context.Context, userID string) (*pb.AuthR
 	return out, nil
 }
 
-type ChatRoomV1Response struct {
-	Id            string                      `json:"id"`            // チャットルームID
-	Users         []*ChatRoomV1Response_User  `json:"usersList"`     // 参加者一覧
-	LatestMessage *ChatRoomV1Response_Message `json:"latestMessage"` // 最新のメッセージ
-	CreatedAt     string                      `json:"createdAt"`     // 作成日時
-	UpdatedAt     string                      `json:"updatedAt"`     // 更新日時
-}
-
-type ChatRoomV1Response_Message struct {
-	UserId    string `json:"userId"`    // ユーザーID
-	Text      string `json:"text"`      // テキストメッセージ
-	Image     string `json:"image"`     // 添付画像URL
-	CreatedAt string `json:"createdAt"` // 送信日時
-}
-
-type ChatRoomV1Response_User struct {
-	Id           string `json:"id"`           // ユーザーID
-	Username     string `json:"username"`     // 表示名
-	ThumbnailUrl string `json:"thumbnailUrl"` // サムネイルURL
-}
-
 func (h *chatHandler) getChatRoomResponse(
 	roomOutput *pb.ChatRoomResponse, usersOutput *pb.UserMapResponse,
-) *ChatRoomV1Response {
-	users := make([]*ChatRoomV1Response_User, len(roomOutput.GetUserIds()))
+) *response.ChatRoomResponse {
+	users := make([]*response.ChatRoomResponse_User, len(roomOutput.GetUserIds()))
 	for i, userID := range roomOutput.GetUserIds() {
-		user := &ChatRoomV1Response_User{
+		user := &response.ChatRoomResponse_User{
 			Id:       userID,
 			Username: "unknown",
 		}
@@ -309,7 +290,7 @@ func (h *chatHandler) getChatRoomResponse(
 		users[i] = user
 	}
 
-	return &ChatRoomV1Response{
+	return &response.ChatRoomResponse{
 		Id:        roomOutput.GetId(),
 		Users:     users,
 		CreatedAt: roomOutput.GetCreatedAt(),
@@ -317,39 +298,14 @@ func (h *chatHandler) getChatRoomResponse(
 	}
 }
 
-type ChatRoomListV1Response struct {
-	Rooms []*ChatRoomListV1Response_Room `json:"rooms"` // チャットルーム一覧
-}
-
-type ChatRoomListV1Response_Room struct {
-	Id            string                          `json:"id"`            // チャットルームID
-	Users         []*ChatRoomListV1Response_User  `json:"usersList"`     // 参加者一覧
-	LatestMessage *ChatRoomListV1Response_Message `json:"latestMessage"` // 最新のメッセージ
-	CreatedAt     string                          `json:"createdAt"`     // 作成日時
-	UpdatedAt     string                          `json:"updatedAt"`     // 更新日時
-}
-
-type ChatRoomListV1Response_Message struct {
-	UserId    string `json:"userId"`    // ユーザーID
-	Text      string `json:"text"`      // テキストメッセージ
-	Image     string `json:"image"`     // 添付画像URL
-	CreatedAt string `json:"createdAt"` // 送信日時
-}
-
-type ChatRoomListV1Response_User struct {
-	Id           string `json:"id"`           // ユーザーID
-	Username     string `json:"username"`     // 表示名
-	ThumbnailUrl string `json:"thumbnailUrl"` // サムネイルURL
-}
-
 func (h *chatHandler) getChatRoomListResponse(
 	roomsOutput *pb.ChatRoomListResponse, usersOutput *pb.UserMapResponse,
-) *ChatRoomListV1Response {
-	rooms := make([]*ChatRoomListV1Response_Room, len(roomsOutput.GetRooms()))
+) *response.ChatRoomListResponse {
+	rooms := make([]*response.ChatRoomListResponse_Room, len(roomsOutput.GetRooms()))
 	for i, r := range roomsOutput.GetRooms() {
-		users := make([]*ChatRoomListV1Response_User, len(r.GetUserIds()))
+		users := make([]*response.ChatRoomListResponse_User, len(r.GetUserIds()))
 		for j, userID := range r.GetUserIds() {
-			user := &ChatRoomListV1Response_User{
+			user := &response.ChatRoomListResponse_User{
 				Id:       userID,
 				Username: "unknown",
 			}
@@ -362,7 +318,7 @@ func (h *chatHandler) getChatRoomListResponse(
 			users[j] = user
 		}
 
-		message := &ChatRoomListV1Response_Message{}
+		message := &response.ChatRoomListResponse_Message{}
 		if r.GetLatestMessage() != nil {
 			message.UserId = r.GetLatestMessage().GetUserId()
 			message.Text = r.GetLatestMessage().GetText()
@@ -370,7 +326,7 @@ func (h *chatHandler) getChatRoomListResponse(
 			message.CreatedAt = r.GetLatestMessage().GetCreatedAt()
 		}
 
-		room := &ChatRoomListV1Response_Room{
+		room := &response.ChatRoomListResponse_Room{
 			Id:            r.GetId(),
 			CreatedAt:     r.GetCreatedAt(),
 			UpdatedAt:     r.GetUpdatedAt(),
@@ -381,34 +337,21 @@ func (h *chatHandler) getChatRoomListResponse(
 		rooms[i] = room
 	}
 
-	return &ChatRoomListV1Response{
+	return &response.ChatRoomListResponse{
 		Rooms: rooms,
 	}
 }
 
-type ChatMessageV1Response struct {
-	Text      string                      `json:"text"`      // テキストメッセージ
-	Image     string                      `json:"image"`     // 添付画像URL
-	User      *ChatMessageV1Response_User `json:"user"`      // 送信者
-	CreatedAt string                      `json:"createdAt"` // 送信日時
-}
-
-type ChatMessageV1Response_User struct {
-	Id           string `json:"id"`           // ユーザーID
-	Username     string `json:"username"`     // 表示名
-	ThumbnailUrl string `json:"thumbnailUrl"` // サムネイルURL
-}
-
 func (h *chatHandler) getChatMessageResponse(
 	messageOutput *pb.ChatMessageResponse, userOutput *pb.AuthResponse,
-) *ChatMessageV1Response {
-	user := &ChatMessageV1Response_User{
+) *response.ChatMessageResponse {
+	user := &response.ChatMessageResponse_User{
 		Id:           userOutput.GetId(),
 		Username:     userOutput.GetUsername(),
 		ThumbnailUrl: userOutput.GetThumbnailUrl(),
 	}
 
-	return &ChatMessageV1Response{
+	return &response.ChatMessageResponse{
 		Text:      messageOutput.GetText(),
 		Image:     messageOutput.GetImage(),
 		CreatedAt: messageOutput.GetCreatedAt(),

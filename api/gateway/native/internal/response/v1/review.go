@@ -1,75 +1,75 @@
 package v1
 
 // 書籍毎のレビュー情報
-type BookReviewV1Response struct {
-	Id         int64                      `json:"id,omitempty"`         // レビューID
-	Impression string                     `json:"impression,omitempty"` // 感想
-	User       *BookReviewV1Response_User `json:"user,omitempty"`       // 投稿者
-	CreatedAt  string                     `json:"createdAt,omitempty"`  // 登録日時
-	UpdatedAt  string                     `json:"updatedAt,omitempty"`  // 更新日時
+type BookReviewResponse struct {
+	Id         int64                    `json:"id"`         // レビューID
+	Impression string                   `json:"impression"` // 感想
+	User       *BookReviewResponse_User `json:"user"`       // 投稿者
+	CreatedAt  string                   `json:"createdAt"`  // 登録日時
+	UpdatedAt  string                   `json:"updatedAt"`  // 更新日時
 }
 
-type BookReviewV1Response_User struct {
-	Id           string `json:"id,omitempty"`           // ユーザーID
-	Username     string `json:"username,omitempty"`     // 表示名
-	ThumbnailUrl string `json:"thumbnailUrl,omitempty"` // サムネイルURL
+type BookReviewResponse_User struct {
+	Id           string `json:"id"`           // ユーザーID
+	Username     string `json:"username"`     // 表示名
+	ThumbnailUrl string `json:"thumbnailUrl"` // サムネイルURL
 }
 
 // ユーザー毎のレビュー情報
-type UserReviewV1Response struct {
-	Id         int64                      `json:"id,omitempty"`         // レビューID
-	Impression string                     `json:"impression,omitempty"` // 感想
-	Book       *UserReviewV1Response_Book `json:"book,omitempty"`       // 書籍情報
-	CreatedAt  string                     `json:"createdAt,omitempty"`  // 登録日時
-	UpdatedAt  string                     `json:"updatedAt,omitempty"`  // 更新日時
+type UserReviewResponse struct {
+	Id         int64                    `json:"id"`         // レビューID
+	Impression string                   `json:"impression"` // 感想
+	Book       *UserReviewResponse_Book `json:"book"`       // 書籍情報
+	CreatedAt  string                   `json:"createdAt"`  // 登録日時
+	UpdatedAt  string                   `json:"updatedAt"`  // 更新日時
 }
 
-type UserReviewV1Response_Book struct {
-	Id           int64  `json:"id,omitempty"`           // 書籍ID
-	Title        string `json:"title,omitempty"`        // タイトル
-	ThumbnailUrl string `json:"thumbnailUrl,omitempty"` // サムネイルURL
+type UserReviewResponse_Book struct {
+	Id           int64  `json:"id"`           // 書籍ID
+	Title        string `json:"title"`        // タイトル
+	ThumbnailUrl string `json:"thumbnailUrl"` // サムネイルURL
 }
 
 // 書籍毎のレビュー一覧
-type BookReviewListV1Response struct {
-	Reviews []*BookReviewListV1Response_Review `json:"reviewsList,omitempty"` // レビュー一覧
-	Limit   int64                              `json:"limit,omitempty"`       // 取得上限数
-	Offset  int64                              `json:"offset,omitempty"`      // 取得開始位置
-	Total   int64                              `json:"total,omitempty"`       // 検索一致数
+type BookReviewListResponse struct {
+	Reviews []*BookReviewListResponse_Review `json:"reviewsList"` // レビュー一覧
+	Limit   int64                            `json:"limit"`       // 取得上限数
+	Offset  int64                            `json:"offset"`      // 取得開始位置
+	Total   int64                            `json:"total"`       // 検索一致数
 }
 
-type BookReviewListV1Response_Review struct {
-	Id         int64                          `json:"id,omitempty"`         // レビューID
-	Impression string                         `json:"impression,omitempty"` // 感想
-	User       *BookReviewListV1Response_User `json:"user,omitempty"`       // 投稿者
-	CreatedAt  string                         `json:"createdAt,omitempty"`  // 登録日時
-	UpdatedAt  string                         `json:"updatedAt,omitempty"`  // 更新日時
+type BookReviewListResponse_Review struct {
+	Id         int64                        `json:"id"`         // レビューID
+	Impression string                       `json:"impression"` // 感想
+	User       *BookReviewListResponse_User `json:"user"`       // 投稿者
+	CreatedAt  string                       `json:"createdAt"`  // 登録日時
+	UpdatedAt  string                       `json:"updatedAt"`  // 更新日時
 }
 
-type BookReviewListV1Response_User struct {
-	Id           string `json:"id,omitempty"`           // ユーザーID
-	Username     string `json:"username,omitempty"`     // 表示名
-	ThumbnailUrl string `json:"thumbnailUrl,omitempty"` // サムネイルURL
+type BookReviewListResponse_User struct {
+	Id           string `json:"id"`           // ユーザーID
+	Username     string `json:"username"`     // 表示名
+	ThumbnailUrl string `json:"thumbnailUrl"` // サムネイルURL
 }
 
 // ユーザー毎のレビュー一覧
-type UserReviewListV1Response struct {
-	Reviews []*UserReviewListV1Response_Review `json:"reviewsList,omitempty"` // レビュー一覧
-	Limit   int64                              `json:"limit,omitempty"`       // 取得上限数
-	Offset  int64                              `json:"offset,omitempty"`      // 取得開始位置
-	Total   int64                              `json:"total,omitempty"`       // 検索一致数
+type UserReviewListResponse struct {
+	Reviews []*UserReviewListResponse_Review `json:"reviewsList"` // レビュー一覧
+	Limit   int64                            `json:"limit"`       // 取得上限数
+	Offset  int64                            `json:"offset"`      // 取得開始位置
+	Total   int64                            `json:"total"`       // 検索一致数
 }
 
-type UserReviewListV1Response_Review struct {
-	Id         int64                          `json:"id,omitempty"`         // レビューID
-	Impression string                         `json:"impression,omitempty"` // 感想
-	Book       *UserReviewListV1Response_Book `json:"book,omitempty"`       // 書籍情報
-	CreatedAt  string                         `json:"createdAt,omitempty"`  // 登録日時
-	UpdatedAt  string                         `json:"updatedAt,omitempty"`  // 更新日時
+type UserReviewListResponse_Review struct {
+	Id         int64                        `json:"id"`         // レビューID
+	Impression string                       `json:"impression"` // 感想
+	Book       *UserReviewListResponse_Book `json:"book"`       // 書籍情報
+	CreatedAt  string                       `json:"createdAt"`  // 登録日時
+	UpdatedAt  string                       `json:"updatedAt"`  // 更新日時
 }
 
-type UserReviewListV1Response_Book struct {
-	Id           int64  `json:"id,omitempty"`           // 書籍ID
-	Title        string `json:"title,omitempty"`        // タイトル
-	ThumbnailUrl string `json:"thumbnailUrl,omitempty"` // サムネイルURL
+type UserReviewListResponse_Book struct {
+	Id           int64  `json:"id"`           // 書籍ID
+	Title        string `json:"title"`        // タイトル
+	ThumbnailUrl string `json:"thumbnailUrl"` // サムネイルURL
 }

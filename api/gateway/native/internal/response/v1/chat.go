@@ -1,63 +1,63 @@
 package v1
 
 // チャットルーム情報
-type ChatRoomV1Response struct {
-	Id            string                      `json:"id,omitempty"`            // チャットルームID
-	Users         []*ChatRoomV1Response_User  `json:"usersList,omitempty"`     // 参加者一覧
-	LatestMessage *ChatRoomV1Response_Message `json:"latestMessage,omitempty"` // 最新のメッセージ
-	CreatedAt     string                      `json:"createdAt,omitempty"`     // 作成日時
-	UpdatedAt     string                      `json:"updatedAt,omitempty"`     // 更新日時
+type ChatRoomResponse struct {
+	Id            string                    `json:"id"`            // チャットルームID
+	Users         []*ChatRoomResponse_User  `json:"usersList"`     // 参加者一覧
+	LatestMessage *ChatRoomResponse_Message `json:"latestMessage"` // 最新のメッセージ
+	CreatedAt     string                    `json:"createdAt"`     // 作成日時
+	UpdatedAt     string                    `json:"updatedAt"`     // 更新日時
 }
 
-type ChatRoomV1Response_Message struct {
-	UserId    string `json:"userId,omitempty"`    // ユーザーID
-	Text      string `json:"text,omitempty"`      // テキストメッセージ
-	Image     string `json:"image,omitempty"`     // 添付画像URL
-	CreatedAt string `json:"createdAt,omitempty"` // 送信日時
+type ChatRoomResponse_Message struct {
+	UserId    string `json:"userId"`    // ユーザーID
+	Text      string `json:"text"`      // テキストメッセージ
+	Image     string `json:"image"`     // 添付画像URL
+	CreatedAt string `json:"createdAt"` // 送信日時
 }
 
-type ChatRoomV1Response_User struct {
-	Id           string `json:"id,omitempty"`           // ユーザーID
-	Username     string `json:"username,omitempty"`     // 表示名
-	ThumbnailUrl string `json:"thumbnailUrl,omitempty"` // サムネイルURL
+type ChatRoomResponse_User struct {
+	Id           string `json:"id"`           // ユーザーID
+	Username     string `json:"username"`     // 表示名
+	ThumbnailUrl string `json:"thumbnailUrl"` // サムネイルURL
 }
 
 // チャットルーム一覧
-type ChatRoomListV1Response struct {
-	Rooms []*ChatRoomListV1Response_Room `json:"rooms,omitempty"` // チャットルーム一覧
+type ChatRoomListResponse struct {
+	Rooms []*ChatRoomListResponse_Room `json:"rooms"` // チャットルーム一覧
 }
 
-type ChatRoomListV1Response_Room struct {
-	Id            string                          `json:"id,omitempty"`            // チャットルームID
-	Users         []*ChatRoomListV1Response_User  `json:"usersList,omitempty"`     // 参加者一覧
-	LatestMessage *ChatRoomListV1Response_Message `json:"latestMessage,omitempty"` // 最新のメッセージ
-	CreatedAt     string                          `json:"createdAt,omitempty"`     // 作成日時
-	UpdatedAt     string                          `json:"updatedAt,omitempty"`     // 更新日時
+type ChatRoomListResponse_Room struct {
+	Id            string                        `json:"id"`            // チャットルームID
+	Users         []*ChatRoomListResponse_User  `json:"usersList"`     // 参加者一覧
+	LatestMessage *ChatRoomListResponse_Message `json:"latestMessage"` // 最新のメッセージ
+	CreatedAt     string                        `json:"createdAt"`     // 作成日時
+	UpdatedAt     string                        `json:"updatedAt"`     // 更新日時
 }
 
-type ChatRoomListV1Response_Message struct {
-	UserId    string `json:"userId,omitempty"`    // ユーザーID
-	Text      string `json:"text,omitempty"`      // テキストメッセージ
-	Image     string `json:"image,omitempty"`     // 添付画像URL
-	CreatedAt string `json:"createdAt,omitempty"` // 送信日時
+type ChatRoomListResponse_Message struct {
+	UserId    string `json:"userId"`    // ユーザーID
+	Text      string `json:"text"`      // テキストメッセージ
+	Image     string `json:"image"`     // 添付画像URL
+	CreatedAt string `json:"createdAt"` // 送信日時
 }
 
-type ChatRoomListV1Response_User struct {
-	Id           string `json:"id,omitempty"`           // ユーザーID
-	Username     string `json:"username,omitempty"`     // 表示名
-	ThumbnailUrl string `json:"thumbnailUrl,omitempty"` // サムネイルURL
+type ChatRoomListResponse_User struct {
+	Id           string `json:"id"`           // ユーザーID
+	Username     string `json:"username"`     // 表示名
+	ThumbnailUrl string `json:"thumbnailUrl"` // サムネイルURL
 }
 
 // チャットメッセージ情報
-type ChatMessageV1Response struct {
-	Text      string                      `json:"text,omitempty"`      // テキストメッセージ
-	Image     string                      `json:"image,omitempty"`     // 添付画像URL
-	User      *ChatMessageV1Response_User `json:"user,omitempty"`      // 送信者
-	CreatedAt string                      `json:"createdAt,omitempty"` // 送信日時
+type ChatMessageResponse struct {
+	Text      string                    `json:"text"`      // テキストメッセージ
+	Image     string                    `json:"image"`     // 添付画像URL
+	User      *ChatMessageResponse_User `json:"user"`      // 送信者
+	CreatedAt string                    `json:"createdAt"` // 送信日時
 }
 
-type ChatMessageV1Response_User struct {
-	Id           string `json:"id,omitempty"`           // ユーザーID
-	Username     string `json:"username,omitempty"`     // 表示名
-	ThumbnailUrl string `json:"thumbnailUrl,omitempty"` // サムネイルURL
+type ChatMessageResponse_User struct {
+	Id           string `json:"id"`           // ユーザーID
+	Username     string `json:"username"`     // 表示名
+	ThumbnailUrl string `json:"thumbnailUrl"` // サムネイルURL
 }

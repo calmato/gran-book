@@ -2,7 +2,7 @@ package util
 
 import (
 	"github.com/calmato/gran-book/api/gateway/native/internal/entity"
-	pb "github.com/calmato/gran-book/api/gateway/native/proto"
+	response "github.com/calmato/gran-book/api/gateway/native/internal/response"
 	"github.com/gin-gonic/gin"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -32,8 +32,8 @@ func IsNotFound(err error) bool {
 	return ec == entity.ErrNotFound
 }
 
-func getHTTPError(err error) (int, *pb.ErrorResponse) {
-	res := &pb.ErrorResponse{
+func getHTTPError(err error) (int, *response.ErrorResponse) {
+	res := &response.ErrorResponse{
 		Code:   int64(getErrorCode(err)),
 		Detail: getError(err),
 	}

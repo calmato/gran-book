@@ -1,37 +1,37 @@
 package v1
 
 // 書籍登録
-type CreateBookV1Request struct {
-	Title          string `json:"title,omitempty"`          // タイトル
-	TitleKana      string `json:"titleKana,omitempty"`      // タイトル(かな)
-	ItemCaption    string `json:"itemCaption,omitempty"`    // 説明
-	Isbn           string `json:"isbn,omitempty"`           // ISBN
-	PublisherName  string `json:"publisherName,omitempty"`  // 出版社名
-	SalesDate      string `json:"salesDate,omitempty"`      // 出版日
-	SmallImageUrl  string `json:"smallImageUrl,omitempty"`  // サムネイルURL(Sサイズ)
-	MediumImageUrl string `json:"mediumImageUrl,omitempty"` // サムネイルURL(Mサイズ)
-	LargeImageUrl  string `json:"largeImageUrl,omitempty"`  // サムネイルURL(Lサイズ)
-	ItemUrl        string `json:"itemUrl,omitempty"`        // 楽天ショップURL
-	Size           string `json:"size,omitempty"`           // 楽天書籍サイズ
-	BooksGenreId   string `json:"booksGenreId,omitempty"`   // 楽天書籍ジャンルID
-	Author         string `json:"author,omitempty"`         // 著者名一覧
-	AuthorKana     string `json:"authorKana,omitempty"`     // 著者名一覧(かな)
+type CreateBookRequest struct {
+	Title          string `json:"title"`          // タイトル
+	TitleKana      string `json:"titleKana"`      // タイトル(かな)
+	ItemCaption    string `json:"itemCaption"`    // 説明
+	Isbn           string `json:"isbn"`           // ISBN
+	PublisherName  string `json:"publisherName"`  // 出版社名
+	SalesDate      string `json:"salesDate"`      // 出版日
+	SmallImageUrl  string `json:"smallImageUrl"`  // サムネイルURL(Sサイズ)
+	MediumImageUrl string `json:"mediumImageUrl"` // サムネイルURL(Mサイズ)
+	LargeImageUrl  string `json:"largeImageUrl"`  // サムネイルURL(Lサイズ)
+	ItemUrl        string `json:"itemUrl"`        // 楽天ショップURL
+	Size           string `json:"size"`           // 楽天書籍サイズ
+	BooksGenreId   string `json:"booksGenreId"`   // 楽天書籍ジャンルID
+	Author         string `json:"author"`         // 著者名一覧
+	AuthorKana     string `json:"authorKana"`     // 著者名一覧(かな)
 }
 
 // 書籍更新
-type UpdateBookV1Request struct {
-	Title          string `json:"title,omitempty"`          // タイトル
-	TitleKana      string `json:"titleKana,omitempty"`      // タイトル(かな)
-	ItemCaption    string `json:"itemCaption,omitempty"`    // 説明
-	Isbn           string `json:"isbn,omitempty"`           // ISBN
-	PublisherName  string `json:"publisherName,omitempty"`  // 出版社名
-	SalesDate      string `json:"salesDate,omitempty"`      // 出版日
-	SmallImageUrl  string `json:"smallImageUrl,omitempty"`  // サムネイルURL(Sサイズ)
-	MediumImageUrl string `json:"mediumImageUrl,omitempty"` // サムネイルURL(Mサイズ)
-	LargeImageUrl  string `json:"largeImageUrl,omitempty"`  // サムネイルURL(Lサイズ)
-	ItemUrl        string `json:"itemUrl,omitempty"`        // 楽天ショップURL
-	Size           string `json:"size,omitempty"`           // 楽天書籍サイズ
-	BooksGenreId   string `json:"booksGenreId,omitempty"`   // 楽天書籍ジャンルID
-	Author         string `json:"author,omitempty"`         // 著者名一覧
-	AuthorKana     string `json:"authorKana,omitempty"`     // 著者名一覧(かな)
+type UpdateBookRequest struct {
+	Title          string `json:"title"`          // タイトル
+	TitleKana      string `json:"titleKana"`      // タイトル(かな)
+	ItemCaption    string `json:"itemCaption"`    // 説明
+	Isbn           string `json:"isbn"`           // ISBN
+	PublisherName  string `json:"publisherName"`  // 出版社名
+	SalesDate      string `json:"salesDate"`      // 出版日
+	SmallImageUrl  string `json:"smallImageUrl"`  // サムネイルURL(Sサイズ)
+	MediumImageUrl string `json:"mediumImageUrl"` // サムネイルURL(Mサイズ)
+	LargeImageUrl  string `json:"largeImageUrl"`  // サムネイルURL(Lサイズ)
+	ItemUrl        string `json:"itemUrl"`        // 楽天ショップURL
+	Size           string `json:"size"`           // 楽天書籍サイズ
+	BooksGenreId   string `json:"booksGenreId"`   // 楽天書籍ジャンルID
+	Author         string `json:"author"`         // 著者名一覧
+	AuthorKana     string `json:"authorKana"`     // 著者名一覧(かな)
 }
