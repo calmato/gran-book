@@ -142,9 +142,9 @@ func (h *userHandler) getFollowListResponse(out *pb.FollowListResponse) *respons
 	users := make([]*response.FollowListResponse_User, len(out.GetFollows()))
 	for i, f := range out.GetFollows() {
 		user := &response.FollowListResponse_User{
-			Id:               f.GetId(),
+			ID:               f.GetId(),
 			Username:         f.GetUsername(),
-			ThumbnailUrl:     f.GetThumbnailUrl(),
+			ThumbnailURL:     f.GetThumbnailUrl(),
 			SelfIntroduction: f.GetSelfIntroduction(),
 			IsFollow:         f.GetIsFollow(),
 		}
@@ -164,9 +164,9 @@ func (h *userHandler) getFollowerListResponse(out *pb.FollowerListResponse) *res
 	users := make([]*response.FollowerListResponse_User, len(out.GetFollowers()))
 	for i, f := range out.GetFollowers() {
 		user := &response.FollowerListResponse_User{
-			Id:               f.GetId(),
+			ID:               f.GetId(),
 			Username:         f.GetUsername(),
-			ThumbnailUrl:     f.GetThumbnailUrl(),
+			ThumbnailURL:     f.GetThumbnailUrl(),
 			SelfIntroduction: f.GetSelfIntroduction(),
 			IsFollow:         f.GetIsFollow(),
 		}

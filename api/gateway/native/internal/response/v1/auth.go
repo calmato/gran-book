@@ -4,12 +4,12 @@ import "github.com/calmato/gran-book/api/gateway/native/internal/entity"
 
 // 認証情報
 type AuthResponse struct {
-	Id               string        `json:"id"`               // ユーザーID
+	ID               string        `json:"id"`               // ユーザーID
 	Username         string        `json:"username"`         // ユーザー名
 	Gender           entity.Gender `json:"gender"`           // 性別
 	Email            string        `json:"email"`            // メールアドレス
 	PhoneNumber      string        `json:"phoneNumber"`      // 電話番号
-	ThumbnailUrl     string        `json:"thumbnailUrl"`     // サムネイルURL
+	ThumbnailURL     string        `json:"thumbnailUrl"`     // サムネイルURL
 	SelfIntroduction string        `json:"selfIntroduction"` // 自己紹介
 	LastName         string        `json:"lastName"`         // 姓
 	FirstName        string        `json:"firstName"`        // 名
@@ -26,5 +26,5 @@ type AuthResponse struct {
 
 // サムネイルURL
 type AuthThumbnailResponse struct {
-	ThumbnailUrl string `json:"thumbnailUrl"` // サムネイルURL
+	ThumbnailURL string `json:"thumbnailUrl"` // サムネイルURL
 }

@@ -9,9 +9,9 @@ type FollowListResponse struct {
 }
 
 type FollowListResponse_User struct {
-	Id               string `json:"id"`               // ユーザーID
+	ID               string `json:"id"`               // ユーザーID
 	Username         string `json:"username"`         // 表示名
-	ThumbnailUrl     string `json:"thumbnailUrl"`     // サムネイルURL
+	ThumbnailURL     string `json:"thumbnailUrl"`     // サムネイルURL
 	SelfIntroduction string `json:"selfIntroduction"` // 自己紹介
 	IsFollow         bool   `json:"isFollow"`         // 自分がフォローしているか
 }
@@ -25,18 +25,18 @@ type FollowerListResponse struct {
 }
 
 type FollowerListResponse_User struct {
-	Id               string `json:"id"`               // ユーザーID
+	ID               string `json:"id"`               // ユーザーID
 	Username         string `json:"username"`         // 表示名
-	ThumbnailUrl     string `json:"thumbnailUrl"`     // サムネイルURL
+	ThumbnailURL     string `json:"thumbnailUrl"`     // サムネイルURL
 	SelfIntroduction string `json:"selfIntroduction"` // 自己紹介
 	IsFollow         bool   `json:"isFollow"`         // 自分がフォローしているか
 }
 
 // プロフィール情報
 type UserProfileResponse struct {
-	Id               string                         `json:"id"`               // ユーザーID
+	ID               string                         `json:"id"`               // ユーザーID
 	Username         string                         `json:"username"`         // 表示名
-	ThumbnailUrl     string                         `json:"thumbnailUrl"`     // サムネイルURL
+	ThumbnailURL     string                         `json:"thumbnailUrl"`     // サムネイルURL
 	SelfIntroduction string                         `json:"selfIntroduction"` // 自己紹介
 	IsFollow         bool                           `json:"isFollow"`         // 自分がフォローしているか
 	IsFollower       bool                           `json:"isFollower"`       // 自分がフォローされているか
@@ -48,8 +48,8 @@ type UserProfileResponse struct {
 }
 
 type UserProfileResponse_Product struct {
-	Id           int64    `json:"id"`           // 商品ID
+	ID           int64    `json:"id"`           // 商品ID
 	Name         string   `json:"name"`         // 商品名
-	ThumbnailUrl string   `json:"thumbnailUrl"` // サムネイルURL
+	ThumbnailURL string   `json:"thumbnailUrl"` // サムネイルURL
 	Authors      []string `json:"authorsList"`  // 著者名一覧
 }

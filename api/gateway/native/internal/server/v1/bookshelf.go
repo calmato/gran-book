@@ -253,7 +253,7 @@ func (h *bookshelfHandler) Delete(ctx *gin.Context) {
 
 func (h *bookshelfHandler) getBookshelfResponse(out *pb.BookshelfResponse) *response.BookshelfResponse {
 	bookshelf := &response.BookshelfResponse_Bookshelf{
-		Id:        out.GetId(),
+		ID:        out.GetId(),
 		Status:    entity.BookshelfStatus(out.GetStatus()).Name(),
 		ReadOn:    out.GetReadOn(),
 		CreatedAt: out.GetCreatedAt(),
@@ -272,15 +272,15 @@ func (h *bookshelfHandler) getBookshelfResponse(out *pb.BookshelfResponse) *resp
 	}
 
 	return &response.BookshelfResponse{
-		Id:           out.GetBook().GetId(),
+		ID:           out.GetBook().GetId(),
 		Title:        out.GetBook().GetTitle(),
 		TitleKana:    out.GetBook().GetTitleKana(),
 		Description:  out.GetBook().GetDescription(),
 		Isbn:         out.GetBook().GetIsbn(),
 		Publisher:    out.GetBook().GetPublisher(),
 		PublishedOn:  out.GetBook().GetPublishedOn(),
-		ThumbnailUrl: out.GetBook().GetThumbnailUrl(),
-		RakutenUrl:   out.GetBook().GetRakutenUrl(),
+		ThumbnailURL: out.GetBook().GetThumbnailUrl(),
+		RakutenURL:   out.GetBook().GetRakutenUrl(),
 		Size:         out.GetBook().GetRakutenSize(),
 		Author:       strings.Join(authorNames, "/"),
 		AuthorKana:   strings.Join(authorNameKanas, "/"),
@@ -294,7 +294,7 @@ func (h *bookshelfHandler) getBookshelfListResponse(out *pb.BookshelfListRespons
 	books := make([]*response.BookshelfListResponse_Book, len(out.GetBookshelves()))
 	for i, b := range out.GetBookshelves() {
 		bookshelf := &response.BookshelfListResponse_Bookshelf{
-			Id:        b.GetId(),
+			ID:        b.GetId(),
 			Status:    entity.BookshelfStatus(b.GetStatus()).Name(),
 			ReadOn:    b.GetReadOn(),
 			CreatedAt: b.GetCreatedAt(),
@@ -309,15 +309,15 @@ func (h *bookshelfHandler) getBookshelfListResponse(out *pb.BookshelfListRespons
 		}
 
 		book := &response.BookshelfListResponse_Book{
-			Id:           b.GetBook().GetId(),
+			ID:           b.GetBook().GetId(),
 			Title:        b.GetBook().GetTitle(),
 			TitleKana:    b.GetBook().GetTitleKana(),
 			Description:  b.GetBook().GetDescription(),
 			Isbn:         b.GetBook().GetIsbn(),
 			Publisher:    b.GetBook().GetPublisher(),
 			PublishedOn:  b.GetBook().GetPublishedOn(),
-			ThumbnailUrl: b.GetBook().GetThumbnailUrl(),
-			RakutenUrl:   b.GetBook().GetRakutenUrl(),
+			ThumbnailURL: b.GetBook().GetThumbnailUrl(),
+			RakutenURL:   b.GetBook().GetRakutenUrl(),
 			Size:         b.GetBook().GetRakutenSize(),
 			Author:       strings.Join(authorNames, "/"),
 			AuthorKana:   strings.Join(authorNameKanas, "/"),

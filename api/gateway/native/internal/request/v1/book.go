@@ -8,12 +8,12 @@ type CreateBookRequest struct {
 	Isbn           string `json:"isbn"`           // ISBN
 	PublisherName  string `json:"publisherName"`  // 出版社名
 	SalesDate      string `json:"salesDate"`      // 出版日
-	SmallImageUrl  string `json:"smallImageUrl"`  // サムネイルURL(Sサイズ)
-	MediumImageUrl string `json:"mediumImageUrl"` // サムネイルURL(Mサイズ)
-	LargeImageUrl  string `json:"largeImageUrl"`  // サムネイルURL(Lサイズ)
-	ItemUrl        string `json:"itemUrl"`        // 楽天ショップURL
+	SmallImageURL  string `json:"smallImageUrl"`  // サムネイルURL(Sサイズ)
+	MediumImageURL string `json:"mediumImageUrl"` // サムネイルURL(Mサイズ)
+	LargeImageURL  string `json:"largeImageUrl"`  // サムネイルURL(Lサイズ)
+	ItemURL        string `json:"itemUrl"`        // 楽天ショップURL
 	Size           string `json:"size"`           // 楽天書籍サイズ
-	BooksGenreId   string `json:"booksGenreId"`   // 楽天書籍ジャンルID
+	BooksGenreID   string `json:"booksGenreId"`   // 楽天書籍ジャンルID
 	Author         string `json:"author"`         // 著者名一覧
 	AuthorKana     string `json:"authorKana"`     // 著者名一覧(かな)
 }
@@ -26,12 +26,12 @@ type UpdateBookRequest struct {
 	Isbn           string `json:"isbn"`           // ISBN
 	PublisherName  string `json:"publisherName"`  // 出版社名
 	SalesDate      string `json:"salesDate"`      // 出版日
-	SmallImageUrl  string `json:"smallImageUrl"`  // サムネイルURL(Sサイズ)
-	MediumImageUrl string `json:"mediumImageUrl"` // サムネイルURL(Mサイズ)
-	LargeImageUrl  string `json:"largeImageUrl"`  // サムネイルURL(Lサイズ)
-	ItemUrl        string `json:"itemUrl"`        // 楽天ショップURL
+	SmallImageURL  string `json:"smallImageUrl"`  // サムネイルURL(Sサイズ)
+	MediumImageURL string `json:"mediumImageUrl"` // サムネイルURL(Mサイズ)
+	LargeImageURL  string `json:"largeImageUrl"`  // サムネイルURL(Lサイズ)
+	ItemURL        string `json:"itemUrl"`        // 楽天ショップURL
 	Size           string `json:"size"`           // 楽天書籍サイズ
-	BooksGenreId   string `json:"booksGenreId"`   // 楽天書籍ジャンルID
+	BooksGenreID   string `json:"booksGenreId"`   // 楽天書籍ジャンルID
 	Author         string `json:"author"`         // 著者名一覧
 	AuthorKana     string `json:"authorKana"`     // 著者名一覧(かな)
 }

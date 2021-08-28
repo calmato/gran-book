@@ -114,7 +114,7 @@ func (h *bookshelfHandler) getBookshelfResponse(
 	bookshelf := &response.BookshelfResponse_Bookshelf{
 		Status:    entity.BookshelfStatus(bookshelfOutput.GetStatus()).Name(),
 		ReadOn:    bookshelfOutput.GetReadOn(),
-		ReviewId:  bookshelfOutput.GetReviewId(),
+		ReviewID:  bookshelfOutput.GetReviewId(),
 		CreatedAt: bookshelfOutput.GetCreatedAt(),
 		UpdatedAt: bookshelfOutput.GetUpdatedAt(),
 	}
@@ -122,13 +122,13 @@ func (h *bookshelfHandler) getBookshelfResponse(
 	reviews := make([]*response.BookshelfResponse_Review, len(reviewsOutput.GetReviews()))
 	for i, r := range reviewsOutput.GetReviews() {
 		user := &response.BookshelfResponse_User{
-			Id:       r.GetUserId(),
+			ID:       r.GetUserId(),
 			Username: "unknown",
 		}
 
 		if usersOutput.GetUsers()[r.GetUserId()] != nil {
 			user.Username = usersOutput.GetUsers()[r.GetUserId()].GetUsername()
-			user.ThumbnailUrl = usersOutput.GetUsers()[r.GetUserId()].GetThumbnailUrl()
+			user.ThumbnailURL = usersOutput.GetUsers()[r.GetUserId()].GetThumbnailUrl()
 		}
 
 		review := &response.BookshelfResponse_Review{
@@ -150,15 +150,15 @@ func (h *bookshelfHandler) getBookshelfResponse(
 	}
 
 	return &response.BookshelfResponse{
-		Id:           bookshelfOutput.GetBook().GetId(),
+		ID:           bookshelfOutput.GetBook().GetId(),
 		Title:        bookshelfOutput.GetBook().GetTitle(),
 		TitleKana:    bookshelfOutput.GetBook().GetTitleKana(),
 		Description:  bookshelfOutput.GetBook().GetDescription(),
 		Isbn:         bookshelfOutput.GetBook().GetIsbn(),
 		Publisher:    bookshelfOutput.GetBook().GetPublisher(),
 		PublishedOn:  bookshelfOutput.GetBook().GetPublishedOn(),
-		ThumbnailUrl: bookshelfOutput.GetBook().GetThumbnailUrl(),
-		RakutenUrl:   bookshelfOutput.GetBook().GetRakutenUrl(),
+		ThumbnailURL: bookshelfOutput.GetBook().GetThumbnailUrl(),
+		RakutenURL:   bookshelfOutput.GetBook().GetRakutenUrl(),
 		Size:         bookshelfOutput.GetBook().GetRakutenSize(),
 		Author:       strings.Join(authorNames, "/"),
 		AuthorKana:   strings.Join(authorNameKanas, "/"),

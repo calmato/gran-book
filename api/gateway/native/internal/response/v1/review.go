@@ -2,7 +2,7 @@ package v1
 
 // 書籍毎のレビュー情報
 type BookReviewResponse struct {
-	Id         int64                    `json:"id"`         // レビューID
+	ID         int64                    `json:"id"`         // レビューID
 	Impression string                   `json:"impression"` // 感想
 	User       *BookReviewResponse_User `json:"user"`       // 投稿者
 	CreatedAt  string                   `json:"createdAt"`  // 登録日時
@@ -10,14 +10,14 @@ type BookReviewResponse struct {
 }
 
 type BookReviewResponse_User struct {
-	Id           string `json:"id"`           // ユーザーID
+	ID           string `json:"id"`           // ユーザーID
 	Username     string `json:"username"`     // 表示名
 	ThumbnailUrl string `json:"thumbnailUrl"` // サムネイルURL
 }
 
 // ユーザー毎のレビュー情報
 type UserReviewResponse struct {
-	Id         int64                    `json:"id"`         // レビューID
+	ID         int64                    `json:"id"`         // レビューID
 	Impression string                   `json:"impression"` // 感想
 	Book       *UserReviewResponse_Book `json:"book"`       // 書籍情報
 	CreatedAt  string                   `json:"createdAt"`  // 登録日時
@@ -25,9 +25,9 @@ type UserReviewResponse struct {
 }
 
 type UserReviewResponse_Book struct {
-	Id           int64  `json:"id"`           // 書籍ID
+	ID           int64  `json:"id"`           // 書籍ID
 	Title        string `json:"title"`        // タイトル
-	ThumbnailUrl string `json:"thumbnailUrl"` // サムネイルURL
+	ThumbnailURL string `json:"thumbnailUrl"` // サムネイルURL
 }
 
 // 書籍毎のレビュー一覧
@@ -39,7 +39,7 @@ type BookReviewListResponse struct {
 }
 
 type BookReviewListResponse_Review struct {
-	Id         int64                        `json:"id"`         // レビューID
+	ID         int64                        `json:"id"`         // レビューID
 	Impression string                       `json:"impression"` // 感想
 	User       *BookReviewListResponse_User `json:"user"`       // 投稿者
 	CreatedAt  string                       `json:"createdAt"`  // 登録日時
@@ -47,9 +47,9 @@ type BookReviewListResponse_Review struct {
 }
 
 type BookReviewListResponse_User struct {
-	Id           string `json:"id"`           // ユーザーID
+	ID           string `json:"id"`           // ユーザーID
 	Username     string `json:"username"`     // 表示名
-	ThumbnailUrl string `json:"thumbnailUrl"` // サムネイルURL
+	ThumbnailURL string `json:"thumbnailUrl"` // サムネイルURL
 }
 
 // ユーザー毎のレビュー一覧
@@ -61,7 +61,7 @@ type UserReviewListResponse struct {
 }
 
 type UserReviewListResponse_Review struct {
-	Id         int64                        `json:"id"`         // レビューID
+	ID         int64                        `json:"id"`         // レビューID
 	Impression string                       `json:"impression"` // 感想
 	Book       *UserReviewListResponse_Book `json:"book"`       // 書籍情報
 	CreatedAt  string                       `json:"createdAt"`  // 登録日時
@@ -69,7 +69,7 @@ type UserReviewListResponse_Review struct {
 }
 
 type UserReviewListResponse_Book struct {
-	Id           int64  `json:"id"`           // 書籍ID
+	ID           int64  `json:"id"`           // 書籍ID
 	Title        string `json:"title"`        // タイトル
-	ThumbnailUrl string `json:"thumbnailUrl"` // サムネイルURL
+	ThumbnailURL string `json:"thumbnailUrl"` // サムネイルURL
 }

@@ -25,7 +25,7 @@ type UpdateAuthPasswordRequest struct {
 type UpdateAuthProfileRequest struct {
 	Username         string        `json:"username"`         // 表示名
 	Gender           entity.Gender `json:"gender"`           // 性別
-	ThumbnailUrl     string        `json:"thumbnailUrl"`     // サムネイルURL
+	ThumbnailURL     string        `json:"thumbnailUrl"`     // サムネイルURL
 	SelfIntroduction string        `json:"selfIntroduction"` // 自己紹介
 }
 
@@ -45,5 +45,5 @@ type UpdateAuthAddressRequest struct {
 
 // 端末ID登録
 type RegisterAuthDeviceRequest struct {
-	InstanceId string `json:"instanceId"` // 端末ID
+	InstanceID string `json:"instanceId"` // 端末ID
 }

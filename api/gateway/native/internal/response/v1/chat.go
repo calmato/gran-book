@@ -2,7 +2,7 @@ package v1
 
 // チャットルーム情報
 type ChatRoomResponse struct {
-	Id            string                    `json:"id"`            // チャットルームID
+	ID            string                    `json:"id"`            // チャットルームID
 	Users         []*ChatRoomResponse_User  `json:"usersList"`     // 参加者一覧
 	LatestMessage *ChatRoomResponse_Message `json:"latestMessage"` // 最新のメッセージ
 	CreatedAt     string                    `json:"createdAt"`     // 作成日時
@@ -10,16 +10,16 @@ type ChatRoomResponse struct {
 }
 
 type ChatRoomResponse_Message struct {
-	UserId    string `json:"userId"`    // ユーザーID
+	UserID    string `json:"userId"`    // ユーザーID
 	Text      string `json:"text"`      // テキストメッセージ
 	Image     string `json:"image"`     // 添付画像URL
 	CreatedAt string `json:"createdAt"` // 送信日時
 }
 
 type ChatRoomResponse_User struct {
-	Id           string `json:"id"`           // ユーザーID
+	ID           string `json:"id"`           // ユーザーID
 	Username     string `json:"username"`     // 表示名
-	ThumbnailUrl string `json:"thumbnailUrl"` // サムネイルURL
+	ThumbnailURL string `json:"thumbnailUrl"` // サムネイルURL
 }
 
 // チャットルーム一覧
@@ -28,7 +28,7 @@ type ChatRoomListResponse struct {
 }
 
 type ChatRoomListResponse_Room struct {
-	Id            string                        `json:"id"`            // チャットルームID
+	ID            string                        `json:"id"`            // チャットルームID
 	Users         []*ChatRoomListResponse_User  `json:"usersList"`     // 参加者一覧
 	LatestMessage *ChatRoomListResponse_Message `json:"latestMessage"` // 最新のメッセージ
 	CreatedAt     string                        `json:"createdAt"`     // 作成日時
@@ -36,14 +36,14 @@ type ChatRoomListResponse_Room struct {
 }
 
 type ChatRoomListResponse_Message struct {
-	UserId    string `json:"userId"`    // ユーザーID
+	UserID    string `json:"userId"`    // ユーザーID
 	Text      string `json:"text"`      // テキストメッセージ
 	Image     string `json:"image"`     // 添付画像URL
 	CreatedAt string `json:"createdAt"` // 送信日時
 }
 
 type ChatRoomListResponse_User struct {
-	Id           string `json:"id"`           // ユーザーID
+	ID           string `json:"id"`           // ユーザーID
 	Username     string `json:"username"`     // 表示名
 	ThumbnailUrl string `json:"thumbnailUrl"` // サムネイルURL
 }

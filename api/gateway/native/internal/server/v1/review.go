@@ -211,17 +211,17 @@ func (h *reviewHandler) getBookReviewResponse(
 	reviewOutput *pb.ReviewResponse, userOutput *pb.UserResponse,
 ) *response.BookReviewResponse {
 	user := &response.BookReviewResponse_User{
-		Id:       reviewOutput.GetUserId(),
+		ID:       reviewOutput.GetUserId(),
 		Username: "unknown",
 	}
 
 	if userOutput != nil {
 		user.Username = userOutput.GetUsername()
-		user.ThumbnailUrl = userOutput.GetThumbnailUrl()
+		user.ThumbnailURL = userOutput.GetThumbnailUrl()
 	}
 
 	return &response.BookReviewResponse{
-		Id:         reviewOutput.GetId(),
+		ID:         reviewOutput.GetId(),
 		Impression: reviewOutput.GetImpression(),
 		CreatedAt:  reviewOutput.GetCreatedAt(),
 		UpdatedAt:  reviewOutput.GetUpdatedAt(),
@@ -233,13 +233,13 @@ func (h *reviewHandler) getUserReviewResponse(
 	reviewOutput *pb.ReviewResponse, bookOutput *pb.BookResponse,
 ) *response.UserReviewResponse {
 	book := &response.UserReviewResponse_Book{
-		Id:           bookOutput.GetId(),
+		ID:           bookOutput.GetId(),
 		Title:        bookOutput.GetTitle(),
 		ThumbnailUrl: bookOutput.GetThumbnailUrl(),
 	}
 
 	return &response.UserReviewResponse{
-		Id:         reviewOutput.GetId(),
+		ID:         reviewOutput.GetId(),
 		Impression: reviewOutput.GetImpression(),
 		CreatedAt:  reviewOutput.GetCreatedAt(),
 		UpdatedAt:  reviewOutput.GetUpdatedAt(),
@@ -253,17 +253,17 @@ func (h *reviewHandler) getBookReviewListResponse(
 	reviews := make([]*response.BookReviewListResponse_Review, len(reviewsOutput.GetReviews()))
 	for i, r := range reviewsOutput.GetReviews() {
 		user := &response.BookReviewListResponse_User{
-			Id:       r.GetUserId(),
+			ID:       r.GetUserId(),
 			Username: "unknown",
 		}
 
 		if usersOutput.GetUsers()[r.GetUserId()] != nil {
 			user.Username = usersOutput.GetUsers()[r.GetUserId()].GetUsername()
-			user.ThumbnailUrl = usersOutput.GetUsers()[r.GetUserId()].GetThumbnailUrl()
+			user.ThumbnailURL = usersOutput.GetUsers()[r.GetUserId()].GetThumbnailUrl()
 		}
 
 		review := &response.BookReviewListResponse_Review{
-			Id:         r.GetId(),
+			ID:         r.GetId(),
 			Impression: r.GetImpression(),
 			CreatedAt:  r.GetCreatedAt(),
 			UpdatedAt:  r.GetUpdatedAt(),

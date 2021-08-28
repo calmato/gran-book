@@ -189,15 +189,15 @@ func (h *bookHandler) getBookResponse(
 	}
 
 	res := &response.BookResponse{
-		Id:           bookOutput.GetId(),
+		ID:           bookOutput.GetId(),
 		Title:        bookOutput.GetTitle(),
 		TitleKana:    bookOutput.GetTitleKana(),
 		Description:  bookOutput.GetDescription(),
 		Isbn:         bookOutput.GetIsbn(),
 		Publisher:    bookOutput.GetPublisher(),
 		PublishedOn:  bookOutput.GetPublishedOn(),
-		ThumbnailUrl: bookOutput.GetThumbnailUrl(),
-		RakutenUrl:   bookOutput.GetRakutenUrl(),
+		ThumbnailURL: bookOutput.GetThumbnailUrl(),
+		RakutenURL:   bookOutput.GetRakutenUrl(),
 		Size:         bookOutput.GetRakutenSize(),
 		Author:       strings.Join(authorNames, "/"),
 		AuthorKana:   strings.Join(authorNameKanas, "/"),
@@ -207,7 +207,7 @@ func (h *bookHandler) getBookResponse(
 
 	if bookshelfOutput != nil {
 		bookshelf := &response.BookResponse_Bookshelf{
-			Id:        bookshelfOutput.GetId(),
+			ID:        bookshelfOutput.GetId(),
 			Status:    entity.BookshelfStatus(bookshelfOutput.GetStatus()).Name(),
 			ReadOn:    bookshelfOutput.GetReadOn(),
 			CreatedAt: bookshelfOutput.GetCreatedAt(),

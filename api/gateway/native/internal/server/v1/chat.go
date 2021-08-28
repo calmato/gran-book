@@ -278,20 +278,20 @@ func (h *chatHandler) getChatRoomResponse(
 	users := make([]*response.ChatRoomResponse_User, len(roomOutput.GetUserIds()))
 	for i, userID := range roomOutput.GetUserIds() {
 		user := &response.ChatRoomResponse_User{
-			Id:       userID,
+			ID:       userID,
 			Username: "unknown",
 		}
 
 		if usersOutput.GetUsers()[userID] != nil {
 			user.Username = usersOutput.GetUsers()[userID].GetUsername()
-			user.ThumbnailUrl = usersOutput.GetUsers()[userID].GetThumbnailUrl()
+			user.ThumbnailURL = usersOutput.GetUsers()[userID].GetThumbnailUrl()
 		}
 
 		users[i] = user
 	}
 
 	return &response.ChatRoomResponse{
-		Id:        roomOutput.GetId(),
+		ID:        roomOutput.GetId(),
 		Users:     users,
 		CreatedAt: roomOutput.GetCreatedAt(),
 		UpdatedAt: roomOutput.GetUpdatedAt(),
@@ -306,13 +306,13 @@ func (h *chatHandler) getChatRoomListResponse(
 		users := make([]*response.ChatRoomListResponse_User, len(r.GetUserIds()))
 		for j, userID := range r.GetUserIds() {
 			user := &response.ChatRoomListResponse_User{
-				Id:       userID,
+				ID:       userID,
 				Username: "unknown",
 			}
 
 			if usersOutput.GetUsers()[userID] != nil {
 				user.Username = usersOutput.GetUsers()[userID].GetUsername()
-				user.ThumbnailUrl = usersOutput.GetUsers()[userID].GetThumbnailUrl()
+				user.ThumbnailURL = usersOutput.GetUsers()[userID].GetThumbnailUrl()
 			}
 
 			users[j] = user
@@ -320,14 +320,14 @@ func (h *chatHandler) getChatRoomListResponse(
 
 		message := &response.ChatRoomListResponse_Message{}
 		if r.GetLatestMessage() != nil {
-			message.UserId = r.GetLatestMessage().GetUserId()
+			message.UserID = r.GetLatestMessage().GetUserId()
 			message.Text = r.GetLatestMessage().GetText()
 			message.Image = r.GetLatestMessage().GetImage()
 			message.CreatedAt = r.GetLatestMessage().GetCreatedAt()
 		}
 
 		room := &response.ChatRoomListResponse_Room{
-			Id:            r.GetId(),
+			ID:            r.GetId(),
 			CreatedAt:     r.GetCreatedAt(),
 			UpdatedAt:     r.GetUpdatedAt(),
 			Users:         users,
@@ -346,9 +346,9 @@ func (h *chatHandler) getChatMessageResponse(
 	messageOutput *pb.ChatMessageResponse, userOutput *pb.AuthResponse,
 ) *response.ChatMessageResponse {
 	user := &response.ChatMessageResponse_User{
-		Id:           userOutput.GetId(),
+		ID:           userOutput.GetId(),
 		Username:     userOutput.GetUsername(),
-		ThumbnailUrl: userOutput.GetThumbnailUrl(),
+		ThumbnailURL: userOutput.GetThumbnailUrl(),
 	}
 
 	return &response.ChatMessageResponse{

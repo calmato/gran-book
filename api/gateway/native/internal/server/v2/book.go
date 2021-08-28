@@ -120,17 +120,17 @@ func (h *bookHandler) getBookResponse(
 	reviews := make([]*response.BookResponse_Review, len(reviewsOutput.GetReviews()))
 	for i, r := range reviewsOutput.GetReviews() {
 		user := &response.BookResponse_User{
-			Id:       r.GetUserId(),
+			ID:       r.GetUserId(),
 			Username: "unknown",
 		}
 
 		if usersOutput.GetUsers()[r.GetUserId()] != nil {
 			user.Username = usersOutput.GetUsers()[r.GetUserId()].GetUsername()
-			user.ThumbnailUrl = usersOutput.GetUsers()[r.GetUserId()].GetThumbnailUrl()
+			user.ThumbnailURL = usersOutput.GetUsers()[r.GetUserId()].GetThumbnailUrl()
 		}
 
 		review := &response.BookResponse_Review{
-			Id:         r.GetId(),
+			ID:         r.GetId(),
 			Impression: r.GetImpression(),
 			CreatedAt:  r.GetCreatedAt(),
 			UpdatedAt:  r.GetUpdatedAt(),
@@ -141,15 +141,15 @@ func (h *bookHandler) getBookResponse(
 	}
 
 	return &response.BookResponse{
-		Id:           bookOutput.GetId(),
+		ID:           bookOutput.GetId(),
 		Title:        bookOutput.GetTitle(),
 		TitleKana:    bookOutput.GetTitleKana(),
 		Description:  bookOutput.GetDescription(),
 		Isbn:         bookOutput.GetIsbn(),
 		Publisher:    bookOutput.GetPublisher(),
 		PublishedOn:  bookOutput.GetPublishedOn(),
-		ThumbnailUrl: bookOutput.GetThumbnailUrl(),
-		RakutenUrl:   bookOutput.GetRakutenUrl(),
+		ThumbnailURL: bookOutput.GetThumbnailUrl(),
+		RakutenURL:   bookOutput.GetRakutenUrl(),
 		Size:         bookOutput.GetRakutenSize(),
 		Author:       strings.Join(authorNames, "/"),
 		AuthorKana:   strings.Join(authorNameKanas, "/"),

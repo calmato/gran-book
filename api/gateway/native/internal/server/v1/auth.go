@@ -274,12 +274,12 @@ func (h *authHandler) RegisterDevice(ctx *gin.Context) {
 
 func (h *authHandler) getAuthResponse(out *pb.AuthResponse) *response.AuthResponse {
 	return &response.AuthResponse{
-		Id:               out.GetId(),
+		ID:               out.GetId(),
 		Username:         out.GetUsername(),
 		Gender:           entity.Gender(out.GetGender()),
 		Email:            out.GetEmail(),
 		PhoneNumber:      out.GetPhoneNumber(),
-		ThumbnailUrl:     out.GetThumbnailUrl(),
+		ThumbnailURL:     out.GetThumbnailUrl(),
 		SelfIntroduction: out.GetSelfIntroduction(),
 		LastName:         out.GetLastName(),
 		FirstName:        out.GetFirstName(),
@@ -297,6 +297,6 @@ func (h *authHandler) getAuthResponse(out *pb.AuthResponse) *response.AuthRespon
 
 func (h *authHandler) getAuthThumbnailResponse(out *pb.AuthThumbnailResponse) *response.AuthThumbnailResponse {
 	return &response.AuthThumbnailResponse{
-		ThumbnailUrl: out.GetThumbnailUrl(),
+		ThumbnailURL: out.GetThumbnailUrl(),
 	}
 }
