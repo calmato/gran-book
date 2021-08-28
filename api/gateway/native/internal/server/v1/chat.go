@@ -296,7 +296,7 @@ func (h *chatHandler) getChatRoomResponse(
 ) *ChatRoomV1Response {
 	users := make([]*ChatRoomV1Response_User, len(roomOutput.GetUserIds()))
 	for i, userID := range roomOutput.GetUserIds() {
-		user := &pb.ChatRoomV1Response_User{
+		user := &ChatRoomV1Response_User{
 			Id:       userID,
 			Username: "unknown",
 		}
