@@ -55,7 +55,7 @@ type BookshelfListResponse_Book struct {
 }
 
 type BookshelfListResponse_Bookshelf struct {
-	Id        int64  `json:"id"`        // 本棚ID
+	ID        int64  `json:"id"`        // 本棚ID
 	Status    string `json:"status"`    // 読書ステータス
 	ReadOn    string `json:"readOn"`    // 読み終えた日
 	CreatedAt string `json:"createdAt"` // 登録日時

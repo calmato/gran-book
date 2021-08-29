@@ -110,7 +110,7 @@ func (h *chatHandler) CreateRoom(ctx *gin.Context) {
 		return
 	}
 
-	userIDs := req.UserIds
+	userIDs := req.UserIDs
 	if isExists, _ := array.Contains(userIDs, userID); !isExists {
 		userIDs = append(userIDs, userID)
 	}
