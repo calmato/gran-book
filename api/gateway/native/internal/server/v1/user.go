@@ -186,9 +186,9 @@ func (h *userHandler) getUserProfileResponse(out *pb.UserProfileResponse) *respo
 	products := make([]*response.UserProfileResponse_Product, 0)
 
 	return &response.UserProfileResponse{
-		Id:               out.GetId(),
+		ID:               out.GetId(),
 		Username:         out.GetUsername(),
-		ThumbnailUrl:     out.GetThumbnailUrl(),
+		ThumbnailURL:     out.GetThumbnailUrl(),
 		SelfIntroduction: out.GetSelfIntroduction(),
 		IsFollow:         out.GetIsFollow(),
 		IsFollower:       out.GetIsFollower(),

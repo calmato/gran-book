@@ -12,7 +12,7 @@ type BookReviewResponse struct {
 type BookReviewResponse_User struct {
 	ID           string `json:"id"`           // ユーザーID
 	Username     string `json:"username"`     // 表示名
-	ThumbnailUrl string `json:"thumbnailUrl"` // サムネイルURL
+	ThumbnailURL string `json:"thumbnailUrl"` // サムネイルURL
 }
 
 // ユーザー毎のレビュー情報

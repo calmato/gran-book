@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package native;
+
+option go_package = "github.com/calmato/gran-book/proto";
+
+// トップページ表示用の情報
+message UserTopV1Response {
+  message MonthlyResult {
+    int32 year = 1; // 年
+    int32 month = 2; // 月
+    int64 read_total = 3; // 読んだ本の合計
+  }
+  repeated MonthlyResult monthly_results = 1; // 月毎の読書実績一覧
+}

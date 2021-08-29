@@ -86,6 +86,7 @@ func apiV1Router(reg *Registry, rg *gin.RouterGroup) {
 			apiV1Bookshelf.DELETE("/:bookID", reg.V1Bookshelf.Delete)
 		}
 		// Other
+		apiV1.GET("/top", reg.V1Top.UserTop)
 		apiV1.GET("/books/:bookID/reviews", reg.V1Review.ListByBook)
 		apiV1.GET("/books/:bookID/reviews/:reviewID", reg.V1Review.GetByBook)
 		apiV1.GET("/users/:userID/reviews", reg.V1Review.ListByUser)

@@ -235,7 +235,7 @@ func (h *reviewHandler) getUserReviewResponse(
 	book := &response.UserReviewResponse_Book{
 		ID:           bookOutput.GetId(),
 		Title:        bookOutput.GetTitle(),
-		ThumbnailUrl: bookOutput.GetThumbnailUrl(),
+		ThumbnailURL: bookOutput.GetThumbnailUrl(),
 	}
 
 	return &response.UserReviewResponse{
@@ -287,13 +287,13 @@ func (h *reviewHandler) getUserReviewListResponse(
 	reviews := make([]*response.UserReviewListResponse_Review, len(reviewsOutput.GetReviews()))
 	for i, r := range reviewsOutput.GetReviews() {
 		book := &response.UserReviewListResponse_Book{
-			Id:           booksOutput.GetBooks()[r.GetBookId()].GetId(),
+			ID:           booksOutput.GetBooks()[r.GetBookId()].GetId(),
 			Title:        booksOutput.GetBooks()[r.GetBookId()].GetTitle(),
-			ThumbnailUrl: booksOutput.GetBooks()[r.GetBookId()].GetThumbnailUrl(),
+			ThumbnailURL: booksOutput.GetBooks()[r.GetBookId()].GetThumbnailUrl(),
 		}
 
 		review := &response.UserReviewListResponse_Review{
-			Id:         r.GetId(),
+			ID:         r.GetId(),
 			Impression: r.GetImpression(),
 			CreatedAt:  r.GetCreatedAt(),
 			UpdatedAt:  r.GetUpdatedAt(),

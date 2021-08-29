@@ -45,7 +45,7 @@ type ChatRoomListResponse_Message struct {
 type ChatRoomListResponse_User struct {
 	ID           string `json:"id"`           // ユーザーID
 	Username     string `json:"username"`     // 表示名
-	ThumbnailUrl string `json:"thumbnailUrl"` // サムネイルURL
+	ThumbnailURL string `json:"thumbnailUrl"` // サムネイルURL
 }
 
 // チャットメッセージ情報
@@ -57,7 +57,7 @@ type ChatMessageResponse struct {
 }
 
 type ChatMessageResponse_User struct {
-	Id           string `json:"id"`           // ユーザーID
+	ID           string `json:"id"`           // ユーザーID
 	Username     string `json:"username"`     // 表示名
-	ThumbnailUrl string `json:"thumbnailUrl"` // サムネイルURL
+	ThumbnailURL string `json:"thumbnailUrl"` // サムネイルURL
 }
