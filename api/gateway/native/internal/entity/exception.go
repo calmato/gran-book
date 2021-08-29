@@ -7,7 +7,7 @@ type CustomError struct {
 }
 
 // ErrorCode - システムエラーの種類
-type ErrorCode int
+type ErrorCode int64
 
 const (
 	ErrBadRequest          ErrorCode = iota // バリデーションエラー

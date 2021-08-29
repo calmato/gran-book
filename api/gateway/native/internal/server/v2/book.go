@@ -117,9 +117,9 @@ func (h *bookHandler) getBookResponse(
 		authorNameKanas[i] = a.GetNameKana()
 	}
 
-	reviews := make([]*response.BookReview, len(reviewsOutput.GetReviews()))
+	reviews := make([]*response.BookResponse_Review, len(reviewsOutput.GetReviews()))
 	for i, r := range reviewsOutput.GetReviews() {
-		user := &response.BookUser{
+		user := &response.BookResponse_User{
 			ID:       r.GetUserId(),
 			Username: "unknown",
 		}
@@ -129,7 +129,7 @@ func (h *bookHandler) getBookResponse(
 			user.ThumbnailURL = usersOutput.GetUsers()[r.GetUserId()].GetThumbnailUrl()
 		}
 
-		review := &response.BookReview{
+		review := &response.BookResponse_Review{
 			ID:         r.GetId(),
 			Impression: r.GetImpression(),
 			CreatedAt:  r.GetCreatedAt(),

@@ -111,17 +111,17 @@ func (h *bookshelfHandler) Get(ctx *gin.Context) {
 func (h *bookshelfHandler) getBookshelfResponse(
 	bookshelfOutput *pb.BookshelfResponse, reviewsOutput *pb.ReviewListResponse, usersOutput *pb.UserMapResponse,
 ) *response.BookshelfResponse {
-	bookshelf := &response.BookshelfBookshelf{
-		ReviewID:  bookshelfOutput.GetReviewId(),
+	bookshelf := &response.BookshelfResponse_Bookshelf{
 		Status:    entity.BookshelfStatus(bookshelfOutput.GetStatus()).Name(),
 		ReadOn:    bookshelfOutput.GetReadOn(),
+		ReviewID:  bookshelfOutput.GetReviewId(),
 		CreatedAt: bookshelfOutput.GetCreatedAt(),
 		UpdatedAt: bookshelfOutput.GetUpdatedAt(),
 	}
 
-	reviews := make([]*response.BookshelfReview, len(reviewsOutput.GetReviews()))
+	reviews := make([]*response.BookshelfResponse_Review, len(reviewsOutput.GetReviews()))
 	for i, r := range reviewsOutput.GetReviews() {
-		user := &response.BookshelfUser{
+		user := &response.BookshelfResponse_User{
 			ID:       r.GetUserId(),
 			Username: "unknown",
 		}
@@ -131,7 +131,7 @@ func (h *bookshelfHandler) getBookshelfResponse(
 			user.ThumbnailURL = usersOutput.GetUsers()[r.GetUserId()].GetThumbnailUrl()
 		}
 
-		review := &response.BookshelfReview{
+		review := &response.BookshelfResponse_Review{
 			ID:         r.GetId(),
 			Impression: r.GetImpression(),
 			CreatedAt:  r.GetCreatedAt(),
@@ -173,9 +173,9 @@ func (h *bookshelfHandler) getBookshelfResponse(
 }
 
 func (h *bookshelfHandler) getBookshelfListResponse(out *pb.BookshelfListResponse) *response.BookshelfListResponse {
-	books := make([]*response.BookshelfListBook, len(out.GetBookshelves()))
+	books := make([]*response.BookshelfListResponse_Book, len(out.GetBookshelves()))
 	for i, b := range out.GetBookshelves() {
-		bookshelf := &response.BookshelfListBookshelf{
+		bookshelf := &response.BookshelfListResponse_Bookshelf{
 			Status:    entity.BookshelfStatus(b.GetStatus()).Name(),
 			ReadOn:    b.GetReadOn(),
 			ReviewID:  b.GetReviewId(),
@@ -190,7 +190,7 @@ func (h *bookshelfHandler) getBookshelfListResponse(out *pb.BookshelfListRespons
 			authorNameKanas[i] = a.GetNameKana()
 		}
 
-		book := &response.BookshelfListBook{
+		book := &response.BookshelfListResponse_Book{
 			ID:           b.GetBook().GetId(),
 			Title:        b.GetBook().GetTitle(),
 			TitleKana:    b.GetBook().GetTitleKana(),

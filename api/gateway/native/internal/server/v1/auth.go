@@ -251,14 +251,14 @@ func (h *authHandler) Delete(ctx *gin.Context) {
 
 // RegisterDevice - デバイス情報登録
 func (h *authHandler) RegisterDevice(ctx *gin.Context) {
-	req := &request.RegisterAuthDeviceRequest{}
+	req := &pb.RegisterAuthDeviceV1Request{}
 	err := ctx.BindJSON(req)
 	if err != nil {
 		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
 	}
 
 	in := &pb.RegisterAuthDeviceRequest{
-		InstanceId: req.InstanceID,
+		InstanceId: req.InstanceId,
 	}
 
 	c := util.SetMetadata(ctx)
@@ -279,7 +279,6 @@ func (h *authHandler) getAuthResponse(out *pb.AuthResponse) *response.AuthRespon
 		Gender:           entity.Gender(out.GetGender()),
 		Email:            out.GetEmail(),
 		PhoneNumber:      out.GetPhoneNumber(),
-		Role:             entity.Role(out.GetRole()),
 		ThumbnailURL:     out.GetThumbnailUrl(),
 		SelfIntroduction: out.GetSelfIntroduction(),
 		LastName:         out.GetLastName(),

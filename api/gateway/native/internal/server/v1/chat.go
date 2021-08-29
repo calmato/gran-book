@@ -110,7 +110,7 @@ func (h *chatHandler) CreateRoom(ctx *gin.Context) {
 		return
 	}
 
-	userIDs := req.UserIDs
+	userIDs := req.UserIds
 	if isExists, _ := array.Contains(userIDs, userID); !isExists {
 		userIDs = append(userIDs, userID)
 	}
@@ -275,9 +275,9 @@ func (h *chatHandler) currentUser(ctx context.Context, userID string) (*pb.AuthR
 func (h *chatHandler) getChatRoomResponse(
 	roomOutput *pb.ChatRoomResponse, usersOutput *pb.UserMapResponse,
 ) *response.ChatRoomResponse {
-	users := make([]*response.ChatRoomUser, len(roomOutput.GetUserIds()))
+	users := make([]*response.ChatRoomResponse_User, len(roomOutput.GetUserIds()))
 	for i, userID := range roomOutput.GetUserIds() {
-		user := &response.ChatRoomUser{
+		user := &response.ChatRoomResponse_User{
 			ID:       userID,
 			Username: "unknown",
 		}
@@ -301,11 +301,11 @@ func (h *chatHandler) getChatRoomResponse(
 func (h *chatHandler) getChatRoomListResponse(
 	roomsOutput *pb.ChatRoomListResponse, usersOutput *pb.UserMapResponse,
 ) *response.ChatRoomListResponse {
-	rooms := make([]*response.ChatRoomListRoom, len(roomsOutput.GetRooms()))
+	rooms := make([]*response.ChatRoomListResponse_Room, len(roomsOutput.GetRooms()))
 	for i, r := range roomsOutput.GetRooms() {
-		users := make([]*response.ChatRoomListUser, len(r.GetUserIds()))
+		users := make([]*response.ChatRoomListResponse_User, len(r.GetUserIds()))
 		for j, userID := range r.GetUserIds() {
-			user := &response.ChatRoomListUser{
+			user := &response.ChatRoomListResponse_User{
 				ID:       userID,
 				Username: "unknown",
 			}
@@ -318,7 +318,7 @@ func (h *chatHandler) getChatRoomListResponse(
 			users[j] = user
 		}
 
-		message := &response.ChatRoomListMessage{}
+		message := &response.ChatRoomListResponse_Message{}
 		if r.GetLatestMessage() != nil {
 			message.UserID = r.GetLatestMessage().GetUserId()
 			message.Text = r.GetLatestMessage().GetText()
@@ -326,7 +326,7 @@ func (h *chatHandler) getChatRoomListResponse(
 			message.CreatedAt = r.GetLatestMessage().GetCreatedAt()
 		}
 
-		room := &response.ChatRoomListRoom{
+		room := &response.ChatRoomListResponse_Room{
 			ID:            r.GetId(),
 			CreatedAt:     r.GetCreatedAt(),
 			UpdatedAt:     r.GetUpdatedAt(),
@@ -345,7 +345,7 @@ func (h *chatHandler) getChatRoomListResponse(
 func (h *chatHandler) getChatMessageResponse(
 	messageOutput *pb.ChatMessageResponse, userOutput *pb.AuthResponse,
 ) *response.ChatMessageResponse {
-	user := &response.ChatMessageUser{
+	user := &response.ChatMessageResponse_User{
 		ID:           userOutput.GetId(),
 		Username:     userOutput.GetUsername(),
 		ThumbnailURL: userOutput.GetThumbnailUrl(),

@@ -55,6 +55,9 @@ jobs:
       - name: Install
         run: yarn --check-files --frozen-lockfile --non-interactive
 
+      - name: Protoc
+        run: yarn protoc
+
       - name: Build
         run: yarn generate
 

@@ -19,10 +19,10 @@ type AdminResponse struct {
 }
 
 type AdminListResponse struct {
-	Users  []*AdminListUser `json:"users"`  // 管理者一覧
-	Limit  int64            `json:"limit"`  // 取得上限
-	Offset int64            `json:"offset"` // 取得開始位置
-	Total  int64            `json:"total"`  // 検索一致数
+	Users  []*AdminListUser `json:"usersList"` // 管理者一覧
+	Limit  int64            `json:"limit"`     // 取得上限
+	Offset int64            `json:"offset"`    // 取得開始位置
+	Total  int64            `json:"total"`     // 検索一致数
 }
 
 type AdminListUser struct {

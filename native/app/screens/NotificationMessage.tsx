@@ -130,11 +130,8 @@ const NotificationMessage = (props: Props) => {
                 </View>
                 <View style={styles.bottomInfo}>
                   <Text style={styles.latestMessageStyle}>
-                    {dataInfo.latestMessage.text !== ''
-                      ? dataInfo.latestMessage.text
-                      : dataInfo.latestMessage.image !== ''
-                        ? '画像が送信されました'
-                        : ''}
+                    {dataInfo.latestMessage.text !== '' && dataInfo.latestMessage.text}
+                    {dataInfo.latestMessage.image !== '' && '画像が送信されました'}
                   </Text>
                   <MaterialIcons
                     style={styles.forwardButton}

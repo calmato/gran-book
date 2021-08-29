@@ -16,10 +16,10 @@ type UserResponse struct {
 }
 
 type UserListResponse struct {
-	Users  []*UserListUser `json:"users"`  // ユーザー一覧
-	Limit  int64           `json:"limit"`  // 取得上限
-	Offset int64           `json:"offset"` // 取得開始位置
-	Total  int64           `json:"total"`  // 検索一致数
+	Users  []*UserListUser `json:"usersList"` // ユーザー一覧
+	Limit  int64           `json:"limit"`     // 取得上限
+	Offset int64           `json:"offset"`    // 取得開始位置
+	Total  int64           `json:"total"`     // 検索一致数
 }
 
 type UserListUser struct {

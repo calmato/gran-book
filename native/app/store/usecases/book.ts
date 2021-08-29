@@ -3,9 +3,17 @@ import { Dispatch } from 'redux';
 import { setBooks } from '../modules/book';
 import { internal } from '~/lib/axios';
 import { AppState } from '~/store/modules';
+import {
+  BookshelfListV1Response,
+  BookshelfV1Response,
+} from '~/types/api/bookshelf_apiv1_response_pb';
+import { BookReviewListV1Response } from '~/types/api/review_apiv1_response_pb';
 import { ImpressionForm } from '~/types/forms';
-import { IBook, IBookResponse, IImpressionResponse, IReviewListResponse } from '~/types/response';
-import { IErrorResponse, ISearchResultItem } from '~/types/response/external/rakuten-books';
+import {
+  IErrorResponse,
+  IReviewListResponse,
+  ISearchResultItem,
+} from '~/types/response/external/rakuten-books';
 
 /**
  * バックエンドAPIにアクセスし書籍登録を行う関数
@@ -32,14 +40,14 @@ export async function addBookAsync(
  * @returns
  */
 export async function getBookByISBNAsync(isbn: string) {
-  return internal
-    .get(`/v1/books/${isbn}`)
-    .then((res: AxiosResponse<IBook>) => {
-      return res;
-    })
-    .catch((err: AxiosResponse<IErrorResponse>) => {
-      return Promise.reject(err);
-    });
+  try {
+    const res: AxiosResponse<BookshelfV1Response.AsObject> = await internal.get(
+      `/v1/books/${isbn}?key=isbn`,
+    );
+    return res.data;
+  } catch (err) {
+    return Promise.reject(err);
+  }
 }
 
 // TODO: 例外処理
@@ -51,7 +59,7 @@ export function getAllBookAsync() {
   return async (dispatch: Dispatch, getState: () => AppState) => {
     const user = getState().auth;
     const res = await getAllBookByUserId(user.id);
-    const books = res.data.books;
+    const books = res.booksList;
     dispatch(setBooks({ books }));
   };
 }
@@ -110,7 +118,7 @@ export function registerReadBookImpressionAsync(bookId: number, impressionForm: 
 export async function getAllImpressionByBookIdAsync(bookId: number) {
   return internal
     .get(`/v1/books/${bookId}/reviews`)
-    .then((res: AxiosResponse<IImpressionResponse>) => {
+    .then((res: AxiosResponse<BookReviewListV1Response.AsObject>) => {
       return res.data;
     })
     .catch((err: AxiosResponse<IErrorResponse>) => {
@@ -124,13 +132,11 @@ export async function getAllImpressionByBookIdAsync(bookId: number) {
  * @param  {Partial<ISearchResultItem>} 登録する書籍情報(楽天BooksAPIのレスポンス形式)
  * @return {Promise<AxiosResponse<any>|AxiosResponse<IErrorResponse> } 成功時:登録した書籍情報, 失敗時:HTTPエラーオブジェクト
  */
-async function getAllBookByUserId(
-  userId: string,
-): Promise<AxiosResponse<any> | AxiosResponse<IErrorResponse>> {
+async function getAllBookByUserId(userId: string): Promise<BookshelfListV1Response.AsObject> {
   return internal
     .get(`/v1/users/${userId}/books`)
-    .then((res: AxiosResponse<IBookResponse>) => {
-      return res;
+    .then((res: AxiosResponse<BookshelfListV1Response.AsObject>) => {
+      return res.data;
     })
     .catch((err: AxiosResponse<IErrorResponse>) => {
       return Promise.reject(err);
@@ -144,7 +150,7 @@ async function registerReadBookAsync(
 ) {
   return internal
     .post(`v1/users/${userId}/books/${bookId}/read`, impressionForm)
-    .then((res) => {
+    .then((res: AxiosResponse<BookshelfV1Response.AsObject>) => {
       console.log('[success]', res.data);
     })
     .catch((err) => {
@@ -155,7 +161,7 @@ async function registerReadBookAsync(
 async function registerReadingBookAsync(userId: string, bookId: number) {
   return internal
     .post(`v1/users/${userId}/books/${bookId}/reading`)
-    .then((res) => {
+    .then((res: AxiosResponse<BookshelfV1Response.AsObject>) => {
       console.log('[success]', res.data);
     })
     .catch((err) => {
@@ -166,7 +172,7 @@ async function registerReadingBookAsync(userId: string, bookId: number) {
 async function registerStackBookAsync(userId: string, bookId: number) {
   return internal
     .post(`v1/users/${userId}/books/${bookId}/stack`)
-    .then((res) => {
+    .then((res: AxiosResponse<BookshelfV1Response.AsObject>) => {
       console.log('[success]', res.data);
     })
     .catch((err) => {
@@ -177,7 +183,7 @@ async function registerStackBookAsync(userId: string, bookId: number) {
 async function registerWantBookAsync(userId: string, bookId: number) {
   return internal
     .post(`v1/users/${userId}/books/${bookId}/want`)
-    .then((res) => {
+    .then((res: AxiosResponse<BookshelfV1Response.AsObject>) => {
       console.log('[success]', res.data);
     })
     .catch((err) => {
@@ -188,7 +194,7 @@ async function registerWantBookAsync(userId: string, bookId: number) {
 async function registerReleaseBookAsync(userId: string, bookId: number) {
   return internal
     .post(`v1/users/${userId}/books/${bookId}/release`)
-    .then((res) => {
+    .then((res: AxiosResponse<BookshelfV1Response.AsObject>) => {
       console.log('[success]', res.data);
     })
     .catch((err) => {

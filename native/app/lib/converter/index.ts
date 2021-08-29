@@ -1,4 +1,4 @@
-import { IBook } from '~/types/response';
+import { BookshelfV1Response } from '~/types/api/bookshelf_apiv1_response_pb';
 import { ISearchResultItem } from '~/types/response/external/rakuten-books';
 
 /**
@@ -6,8 +6,8 @@ import { ISearchResultItem } from '~/types/response/external/rakuten-books';
  * @param i 楽天Books APIの書籍のレスポンス
  * @returns IBook バックエンドAPIから取得するレスポンス形式
  */
-export function convertToIBook(i: ISearchResultItem): IBook {
-  const book: IBook = {
+export function convertToIBook(i: ISearchResultItem): BookshelfV1Response.AsObject {
+  return {
     id: 0,
     isbn: i.isbn,
     author: i.author,
@@ -23,5 +23,4 @@ export function convertToIBook(i: ISearchResultItem): IBook {
     createdAt: '',
     updatedAt: '',
   };
-  return book;
 }

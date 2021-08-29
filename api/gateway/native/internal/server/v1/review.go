@@ -210,7 +210,7 @@ func (h *reviewHandler) GetByUser(ctx *gin.Context) {
 func (h *reviewHandler) getBookReviewResponse(
 	reviewOutput *pb.ReviewResponse, userOutput *pb.UserResponse,
 ) *response.BookReviewResponse {
-	user := &response.BookReviewUser{
+	user := &response.BookReviewResponse_User{
 		ID:       reviewOutput.GetUserId(),
 		Username: "unknown",
 	}
@@ -232,10 +232,10 @@ func (h *reviewHandler) getBookReviewResponse(
 func (h *reviewHandler) getUserReviewResponse(
 	reviewOutput *pb.ReviewResponse, bookOutput *pb.BookResponse,
 ) *response.UserReviewResponse {
-	book := &response.UserReviewBook{
+	book := &response.UserReviewResponse_Book{
 		ID:           bookOutput.GetId(),
 		Title:        bookOutput.GetTitle(),
-		ThumbnailURL: bookOutput.GetThumbnailUrl(),
+		ThumbnailUrl: bookOutput.GetThumbnailUrl(),
 	}
 
 	return &response.UserReviewResponse{
@@ -250,9 +250,9 @@ func (h *reviewHandler) getUserReviewResponse(
 func (h *reviewHandler) getBookReviewListResponse(
 	reviewsOutput *pb.ReviewListResponse, usersOutput *pb.UserMapResponse,
 ) *response.BookReviewListResponse {
-	reviews := make([]*response.BookReviewListReview, len(reviewsOutput.GetReviews()))
+	reviews := make([]*response.BookReviewListResponse_Review, len(reviewsOutput.GetReviews()))
 	for i, r := range reviewsOutput.GetReviews() {
-		user := &response.BookReviewListUser{
+		user := &response.BookReviewListResponse_User{
 			ID:       r.GetUserId(),
 			Username: "unknown",
 		}
@@ -262,7 +262,7 @@ func (h *reviewHandler) getBookReviewListResponse(
 			user.ThumbnailURL = usersOutput.GetUsers()[r.GetUserId()].GetThumbnailUrl()
 		}
 
-		review := &response.BookReviewListReview{
+		review := &response.BookReviewListResponse_Review{
 			ID:         r.GetId(),
 			Impression: r.GetImpression(),
 			CreatedAt:  r.GetCreatedAt(),
@@ -284,16 +284,16 @@ func (h *reviewHandler) getBookReviewListResponse(
 func (h *reviewHandler) getUserReviewListResponse(
 	reviewsOutput *pb.ReviewListResponse, booksOutput *pb.BookMapResponse,
 ) *response.UserReviewListResponse {
-	reviews := make([]*response.UserReviewListReview, len(reviewsOutput.GetReviews()))
+	reviews := make([]*response.UserReviewListResponse_Review, len(reviewsOutput.GetReviews()))
 	for i, r := range reviewsOutput.GetReviews() {
-		book := &response.UserReviewListBook{
-			ID:           booksOutput.GetBooks()[r.GetBookId()].GetId(),
+		book := &response.UserReviewListResponse_Book{
+			Id:           booksOutput.GetBooks()[r.GetBookId()].GetId(),
 			Title:        booksOutput.GetBooks()[r.GetBookId()].GetTitle(),
-			ThumbnailURL: booksOutput.GetBooks()[r.GetBookId()].GetThumbnailUrl(),
+			ThumbnailUrl: booksOutput.GetBooks()[r.GetBookId()].GetThumbnailUrl(),
 		}
 
-		review := &response.UserReviewListReview{
-			ID:         r.GetId(),
+		review := &response.UserReviewListResponse_Review{
+			Id:         r.GetId(),
 			Impression: r.GetImpression(),
 			CreatedAt:  r.GetCreatedAt(),
 			UpdatedAt:  r.GetUpdatedAt(),

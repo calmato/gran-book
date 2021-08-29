@@ -6,8 +6,8 @@ import (
 
 // ErrorResponse - エラーのレスポンス
 type ErrorResponse struct {
-	StatusCode int              `json:"status"`
-	ErrorCode  entity.ErrorCode `json:"code"`
-	Message    string           `json:"message"`
-	Detail     string           `json:"detail"`
+	StatusCode int              `json:"status"`  // ステータスコード
+	ErrorCode  entity.ErrorCode `json:"code"`    // エラーコード
+	Message    string           `json:"message"` // エラー概要
+	Detail     string           `json:"detail"`  // エラー詳細
 }

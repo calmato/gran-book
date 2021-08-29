@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package native;
+
+option go_package = "github.com/calmato/gran-book/proto";
+
+// 読んだ本の登録
+message ReadBookshelfV1Request {
+  string read_on = 1; // 読み終えた日
+  string impression = 2; // 感想
+}

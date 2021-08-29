@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+package native;
+
+option go_package = "github.com/calmato/gran-book/proto";
+
+// 書籍毎のレビュー情報
+message BookReviewV1Response {
+  message User {
+    string id = 1; // ユーザーID
+    string username = 2; // 表示名
+    string thumbnail_url = 3; // サムネイルURL
+  }
+  int64 id = 1; // レビューID
+  string impression = 2; // 感想
+  User user = 3; // 投稿者
+  string created_at = 4; // 登録日時
+  string updated_at = 5; // 更新日時
+}
+
+// 書籍毎のレビュー一覧
+message BookReviewListV1Response {
+  message User {
+    string id = 1; // ユーザーID
+    string username = 2; // 表示名
+    string thumbnail_url = 3; // サムネイルURL
+  }
+  message Review {
+    int64 id = 1; // レビューID
+    string impression = 2; // 感想
+    User user = 3; // 投稿者
+    string created_at = 4; // 登録日時
+    string updated_at = 5; // 更新日時
+  }
+  repeated Review reviews = 1; // レビュー一覧
+  int64 limit = 2; // 取得上限数
+  int64 offset = 3; // 取得開始位置
+  int64 total = 4; // 検索一致数
+}
+
+// ユーザー毎のレビュー情報
+message UserReviewV1Response {
+  message Book {
+    int64 id = 1; // 書籍ID
+    string title = 2; // タイトル
+    string thumbnail_url = 3; // サムネイルURL
+  }
+  int64 id = 1; // レビューID
+  string impression = 2; // 感想
+  Book book = 3; // 書籍情報
+  string created_at = 4; // 登録日時
+  string updated_at = 5; // 更新日時
+}
+
+// ユーザー毎のレビュー一覧
+message UserReviewListV1Response {
+  message Book {
+    int64 id = 1; // 書籍ID
+    string title = 2; // タイトル
+    string thumbnail_url = 3; // サムネイルURL
+  }
+  message Review {
+    int64 id = 1; // レビューID
+    string impression = 2; // 感想
+    Book book = 3; // 書籍情報
+    string created_at = 4; // 登録日時
+    string updated_at = 5; // 更新日時
+  }
+  repeated Review reviews = 1; // レビュー一覧
+  int64 limit = 2; // 取得上限数
+  int64 offset = 3; // 取得開始位置
+  int64 total = 4; // 検索一致数
+}

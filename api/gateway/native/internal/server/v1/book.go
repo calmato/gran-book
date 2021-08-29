@@ -98,7 +98,7 @@ func (h *bookHandler) Create(ctx *gin.Context) {
 		Isbn:           req.Isbn,
 		Publisher:      req.PublisherName,
 		PublishedOn:    req.SalesDate,
-		ThumbnailUrl:   h.getThumbnailURLByRequest(req.SmaillImageURL, req.MediumImageURL, req.LargeImageURL),
+		ThumbnailUrl:   h.getThumbnailURLByRequest(req.SmallImageURL, req.MediumImageURL, req.LargeImageURL),
 		RakutenUrl:     req.ItemURL,
 		RakutenSize:    req.Size,
 		RakutenGenreId: req.BooksGenreID,
@@ -144,7 +144,7 @@ func (h *bookHandler) Update(ctx *gin.Context) {
 		Isbn:           req.Isbn,
 		Publisher:      req.PublisherName,
 		PublishedOn:    req.SalesDate,
-		ThumbnailUrl:   h.getThumbnailURLByRequest(req.SmaillImageURL, req.MediumImageURL, req.LargeImageURL),
+		ThumbnailUrl:   h.getThumbnailURLByRequest(req.SmallImageURL, req.MediumImageURL, req.LargeImageURL),
 		RakutenUrl:     req.ItemURL,
 		RakutenSize:    req.Size,
 		RakutenGenreId: req.BooksGenreID,
@@ -206,7 +206,7 @@ func (h *bookHandler) getBookResponse(
 	}
 
 	if bookshelfOutput != nil {
-		bookshelf := &response.BookBookshelf{
+		bookshelf := &response.BookResponse_Bookshelf{
 			ID:        bookshelfOutput.GetId(),
 			Status:    entity.BookshelfStatus(bookshelfOutput.GetStatus()).Name(),
 			ReadOn:    bookshelfOutput.GetReadOn(),

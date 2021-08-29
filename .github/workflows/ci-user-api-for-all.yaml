@@ -58,8 +58,7 @@ jobs:
       - name: Generate proto
         run: |
           export PATH="$PATH:$(go env GOPATH)/bin"
-          make protoc
-          make generate SERVICE_PATH='./../api/server/user'
+          make generate
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
@@ -147,5 +146,5 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
-          flags: unittests,backend,user-api
+          flags: user-api
           verbose: true

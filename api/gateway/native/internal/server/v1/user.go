@@ -139,9 +139,9 @@ func (h *userHandler) Unfollow(ctx *gin.Context) {
 }
 
 func (h *userHandler) getFollowListResponse(out *pb.FollowListResponse) *response.FollowListResponse {
-	users := make([]*response.FollowListUser, len(out.GetFollows()))
+	users := make([]*response.FollowListResponse_User, len(out.GetFollows()))
 	for i, f := range out.GetFollows() {
-		user := &response.FollowListUser{
+		user := &response.FollowListResponse_User{
 			ID:               f.GetId(),
 			Username:         f.GetUsername(),
 			ThumbnailURL:     f.GetThumbnailUrl(),
@@ -161,9 +161,9 @@ func (h *userHandler) getFollowListResponse(out *pb.FollowListResponse) *respons
 }
 
 func (h *userHandler) getFollowerListResponse(out *pb.FollowerListResponse) *response.FollowerListResponse {
-	users := make([]*response.FollowerListUser, len(out.GetFollowers()))
+	users := make([]*response.FollowerListResponse_User, len(out.GetFollowers()))
 	for i, f := range out.GetFollowers() {
-		user := &response.FollowerListUser{
+		user := &response.FollowerListResponse_User{
 			ID:               f.GetId(),
 			Username:         f.GetUsername(),
 			ThumbnailURL:     f.GetThumbnailUrl(),
@@ -183,12 +183,12 @@ func (h *userHandler) getFollowerListResponse(out *pb.FollowerListResponse) *res
 }
 
 func (h *userHandler) getUserProfileResponse(out *pb.UserProfileResponse) *response.UserProfileResponse {
-	products := make([]*response.UserProfileProduct, 0)
+	products := make([]*response.UserProfileResponse_Product, 0)
 
 	return &response.UserProfileResponse{
-		ID:               out.GetId(),
+		Id:               out.GetId(),
 		Username:         out.GetUsername(),
-		ThumbnailURL:     out.GetThumbnailUrl(),
+		ThumbnailUrl:     out.GetThumbnailUrl(),
 		SelfIntroduction: out.GetSelfIntroduction(),
 		IsFollow:         out.GetIsFollow(),
 		IsFollower:       out.GetIsFollower(),

@@ -91,3 +91,7 @@ sw.*
 
 # Jest snapshot files
 __snapshots__
+
+# proto file
+*_pb.js
+*_pb.d.ts

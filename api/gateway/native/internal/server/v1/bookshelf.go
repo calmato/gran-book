@@ -252,7 +252,7 @@ func (h *bookshelfHandler) Delete(ctx *gin.Context) {
 }
 
 func (h *bookshelfHandler) getBookshelfResponse(out *pb.BookshelfResponse) *response.BookshelfResponse {
-	bookshelf := &response.BookshelfBookshelf{
+	bookshelf := &response.BookshelfResponse_Bookshelf{
 		ID:        out.GetId(),
 		Status:    entity.BookshelfStatus(out.GetStatus()).Name(),
 		ReadOn:    out.GetReadOn(),
@@ -291,9 +291,9 @@ func (h *bookshelfHandler) getBookshelfResponse(out *pb.BookshelfResponse) *resp
 }
 
 func (h *bookshelfHandler) getBookshelfListResponse(out *pb.BookshelfListResponse) *response.BookshelfListResponse {
-	books := make([]*response.BookshelfListBook, len(out.GetBookshelves()))
+	books := make([]*response.BookshelfListResponse_Book, len(out.GetBookshelves()))
 	for i, b := range out.GetBookshelves() {
-		bookshelf := &response.BookshelfListBookshelf{
+		bookshelf := &response.BookshelfListResponse_Bookshelf{
 			ID:        b.GetId(),
 			Status:    entity.BookshelfStatus(b.GetStatus()).Name(),
 			ReadOn:    b.GetReadOn(),
@@ -308,7 +308,7 @@ func (h *bookshelfHandler) getBookshelfListResponse(out *pb.BookshelfListRespons
 			authorNameKanas[i] = a.GetNameKana()
 		}
 
-		book := &response.BookshelfListBook{
+		book := &response.BookshelfListResponse_Book{
 			ID:           b.GetBook().GetId(),
 			Title:        b.GetBook().GetTitle(),
 			TitleKana:    b.GetBook().GetTitleKana(),
