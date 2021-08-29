@@ -87,7 +87,6 @@ message ListUserReviewRequest {
 message MultiGetBooksRequest {
   repeated int64 book_ids = 1 [
     (validate.rules).repeated = {
-      min_items: 1
       max_items: 200
       unique: true
     }

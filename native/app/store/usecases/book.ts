@@ -3,9 +3,11 @@ import { Dispatch } from 'redux';
 import { setBooks } from '../modules/book';
 import { internal } from '~/lib/axios';
 import { AppState } from '~/store/modules';
-import { BookV1Response } from '~/types/api/book_apiv1_response_pb';
-import { BookshelfListV1Response, BookshelfV1Response } from '~/types/api/bookshelf_apiv1_response_pb';
-import { BookReviewV1Response } from '~/types/api/review_apiv1_response_pb';
+import {
+  BookshelfListV1Response,
+  BookshelfV1Response,
+} from '~/types/api/bookshelf_apiv1_response_pb';
+import { BookReviewListV1Response } from '~/types/api/review_apiv1_response_pb';
 import { ImpressionForm } from '~/types/forms';
 import { IErrorResponse, ISearchResultItem } from '~/types/response/external/rakuten-books';
 
@@ -34,14 +36,14 @@ export async function addBookAsync(
  * @returns
  */
 export async function getBookByISBNAsync(isbn: string) {
-  return internal
-    .get(`/v1/books/${isbn}?key=isbn`)
-    .then((res: AxiosResponse<BookV1Response.AsObject>) => {
-      return res;
-    })
-    .catch((err: AxiosResponse<IErrorResponse>) => {
-      return Promise.reject(err);
-    });
+  try {
+    const res: AxiosResponse<BookshelfV1Response.AsObject> = await internal.get(
+      `/v1/books/${isbn}?key=isbn`,
+    );
+    return res.data;
+  } catch (err) {
+    return Promise.reject(err);
+  }
 }
 
 // TODO: 例外処理
@@ -112,7 +114,7 @@ export function registerReadBookImpressionAsync(bookId: number, impressionForm: 
 export async function getAllImpressionByBookIdAsync(bookId: number) {
   return internal
     .get(`/v1/books/${bookId}/reviews`)
-    .then((res: AxiosResponse<BookReviewV1Response.AsObject>) => {
+    .then((res: AxiosResponse<BookReviewListV1Response.AsObject>) => {
       return res.data;
     })
     .catch((err: AxiosResponse<IErrorResponse>) => {
@@ -126,9 +128,7 @@ export async function getAllImpressionByBookIdAsync(bookId: number) {
  * @param  {Partial<ISearchResultItem>} 登録する書籍情報(楽天BooksAPIのレスポンス形式)
  * @return {Promise<AxiosResponse<any>|AxiosResponse<IErrorResponse> } 成功時:登録した書籍情報, 失敗時:HTTPエラーオブジェクト
  */
-async function getAllBookByUserId(
-  userId: string,
-): Promise<BookshelfListV1Response.AsObject> {
+async function getAllBookByUserId(userId: string): Promise<BookshelfListV1Response.AsObject> {
   return internal
     .get(`/v1/users/${userId}/books`)
     .then((res: AxiosResponse<BookshelfListV1Response.AsObject>) => {

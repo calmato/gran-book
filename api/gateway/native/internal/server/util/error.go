@@ -2,7 +2,7 @@ package util
 
 import (
 	"github.com/calmato/gran-book/api/gateway/native/internal/entity"
-	pb "github.com/calmato/gran-book/api/gateway/native/proto"
+	response "github.com/calmato/gran-book/api/gateway/native/internal/response"
 	"github.com/gin-gonic/gin"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -32,43 +32,43 @@ func IsNotFound(err error) bool {
 	return ec == entity.ErrNotFound
 }
 
-func getHTTPError(err error) (int, *pb.ErrorResponse) {
-	res := &pb.ErrorResponse{
-		Code:   int64(getErrorCode(err)),
-		Detail: getError(err),
+func getHTTPError(err error) (int, *response.ErrorResponse) {
+	res := &response.ErrorResponse{
+		ErrorCode: getErrorCode(err),
+		Detail:    getError(err),
 	}
 
 	switch getErrorCode(err) {
 	case entity.ErrBadRequest:
-		res.Status = 400
+		res.StatusCode = 400
 		res.Message = "bad request"
 	case entity.ErrUnauthenticated:
-		res.Status = 401
+		res.StatusCode = 401
 		res.Message = "unauthenticated"
 	case entity.ErrForbidden:
-		res.Status = 403
+		res.StatusCode = 403
 		res.Message = "forbidden"
 	case entity.ErrNotFound:
-		res.Status = 404
+		res.StatusCode = 404
 		res.Message = "not found"
 	case entity.ErrConflict:
-		res.Status = 409
+		res.StatusCode = 409
 		res.Message = "conflict"
 	case entity.ErrInternalServerError:
-		res.Status = 500
+		res.StatusCode = 500
 		res.Message = "internal server error"
 	case entity.ErrNotImplemented:
-		res.Status = 501
+		res.StatusCode = 501
 		res.Message = "not implemented"
 	case entity.ErrServiceUnavailable:
-		res.Status = 503
+		res.StatusCode = 503
 		res.Message = "service unavailable"
 	default:
-		res.Status = 500
+		res.StatusCode = 500
 		res.Message = "unknown"
 	}
 
-	return int(res.Status), res
+	return res.StatusCode, res
 }
 
 func convertStatusGrpcToHTTP(st *status.Status) entity.ErrorCode {

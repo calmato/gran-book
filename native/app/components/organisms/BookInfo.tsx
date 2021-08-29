@@ -4,7 +4,7 @@ import { Image, Button } from 'react-native-elements';
 import ButtonGroupBookFooter from './ButtonGroupBookFooter';
 import FlexBoxBookCategory from './FlexBoxBookCategory';
 import { fullWidth2halfWidth } from '~/lib/util';
-import { IBook } from '~/types/response';
+import { BookV1Response } from '~/types/api/book_apiv1_response_pb';
 import { COLOR, FONT_SIZE } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  book: IBook;
+  book: BookV1Response.AsObject;
   isRegister: boolean;
   handleBookStatusButton: (status: string) => void;
   handleOpenRakutenPageButton: (url: string) => Promise<void>;

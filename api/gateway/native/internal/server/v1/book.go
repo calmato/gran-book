@@ -5,6 +5,8 @@ import (
 	"strings"
 
 	"github.com/calmato/gran-book/api/gateway/native/internal/entity"
+	request "github.com/calmato/gran-book/api/gateway/native/internal/request/v1"
+	response "github.com/calmato/gran-book/api/gateway/native/internal/response/v1"
 	"github.com/calmato/gran-book/api/gateway/native/internal/server/util"
 	pb "github.com/calmato/gran-book/api/gateway/native/proto"
 	"github.com/gin-gonic/gin"
@@ -70,7 +72,7 @@ func (h *bookHandler) Get(ctx *gin.Context) {
 
 // Create - 書籍登録
 func (h *bookHandler) Create(ctx *gin.Context) {
-	req := &pb.CreateBookV1Request{}
+	req := &request.CreateBookRequest{}
 	err := ctx.BindJSON(req)
 	if err != nil {
 		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
@@ -96,10 +98,10 @@ func (h *bookHandler) Create(ctx *gin.Context) {
 		Isbn:           req.Isbn,
 		Publisher:      req.PublisherName,
 		PublishedOn:    req.SalesDate,
-		ThumbnailUrl:   h.getThumbnailURLByRequest(req.SmallImageUrl, req.MediumImageUrl, req.LargeImageUrl),
-		RakutenUrl:     req.ItemUrl,
+		ThumbnailUrl:   h.getThumbnailURLByRequest(req.SmallImageURL, req.MediumImageURL, req.LargeImageURL),
+		RakutenUrl:     req.ItemURL,
 		RakutenSize:    req.Size,
-		RakutenGenreId: req.BooksGenreId,
+		RakutenGenreId: req.BooksGenreID,
 		Authors:        authors,
 	}
 
@@ -116,7 +118,7 @@ func (h *bookHandler) Create(ctx *gin.Context) {
 
 // Update - 書籍更新
 func (h *bookHandler) Update(ctx *gin.Context) {
-	req := &pb.UpdateBookV1Request{}
+	req := &request.UpdateBookRequest{}
 	err := ctx.BindJSON(req)
 	if err != nil {
 		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
@@ -142,10 +144,10 @@ func (h *bookHandler) Update(ctx *gin.Context) {
 		Isbn:           req.Isbn,
 		Publisher:      req.PublisherName,
 		PublishedOn:    req.SalesDate,
-		ThumbnailUrl:   h.getThumbnailURLByRequest(req.SmallImageUrl, req.MediumImageUrl, req.LargeImageUrl),
-		RakutenUrl:     req.ItemUrl,
+		ThumbnailUrl:   h.getThumbnailURLByRequest(req.SmallImageURL, req.MediumImageURL, req.LargeImageURL),
+		RakutenUrl:     req.ItemURL,
 		RakutenSize:    req.Size,
-		RakutenGenreId: req.BooksGenreId,
+		RakutenGenreId: req.BooksGenreID,
 		Authors:        authors,
 	}
 
@@ -178,7 +180,7 @@ func (h *bookHandler) getThumbnailURLByRequest(smallImageURL, mediumImageURL, la
 
 func (h *bookHandler) getBookResponse(
 	bookOutput *pb.BookResponse, bookshelfOutput *pb.BookshelfResponse,
-) *pb.BookV1Response {
+) *response.BookResponse {
 	authorNames := make([]string, len(bookOutput.GetAuthors()))
 	authorNameKanas := make([]string, len(bookOutput.GetAuthors()))
 	for i, a := range bookOutput.GetAuthors() {
@@ -186,16 +188,16 @@ func (h *bookHandler) getBookResponse(
 		authorNameKanas[i] = a.GetNameKana()
 	}
 
-	res := &pb.BookV1Response{
-		Id:           bookOutput.GetId(),
+	res := &response.BookResponse{
+		ID:           bookOutput.GetId(),
 		Title:        bookOutput.GetTitle(),
 		TitleKana:    bookOutput.GetTitleKana(),
 		Description:  bookOutput.GetDescription(),
 		Isbn:         bookOutput.GetIsbn(),
 		Publisher:    bookOutput.GetPublisher(),
 		PublishedOn:  bookOutput.GetPublishedOn(),
-		ThumbnailUrl: bookOutput.GetThumbnailUrl(),
-		RakutenUrl:   bookOutput.GetRakutenUrl(),
+		ThumbnailURL: bookOutput.GetThumbnailUrl(),
+		RakutenURL:   bookOutput.GetRakutenUrl(),
 		Size:         bookOutput.GetRakutenSize(),
 		Author:       strings.Join(authorNames, "/"),
 		AuthorKana:   strings.Join(authorNameKanas, "/"),
@@ -204,8 +206,8 @@ func (h *bookHandler) getBookResponse(
 	}
 
 	if bookshelfOutput != nil {
-		bookshelf := &pb.BookV1Response_Bookshelf{
-			Id:        bookshelfOutput.GetId(),
+		bookshelf := &response.BookResponse_Bookshelf{
+			ID:        bookshelfOutput.GetId(),
 			Status:    entity.BookshelfStatus(bookshelfOutput.GetStatus()).Name(),
 			ReadOn:    bookshelfOutput.GetReadOn(),
 			CreatedAt: bookshelfOutput.GetCreatedAt(),
