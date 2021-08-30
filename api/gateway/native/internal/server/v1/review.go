@@ -76,7 +76,9 @@ func (h *reviewHandler) ListByBook(ctx *gin.Context) {
 		return
 	}
 
-	res := h.getBookReviewListResponse(reviewsOutput, usersOutput)
+	us := entity.NewUsers(usersOutput.Users)
+
+	res := h.getBookReviewListResponse(reviewsOutput, us.Map())
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -163,7 +165,9 @@ func (h *reviewHandler) GetByBook(ctx *gin.Context) {
 		return
 	}
 
-	res := h.getBookReviewResponse(reviewOutput, userOutput)
+	u := entity.NewUser(userOutput.User)
+
+	res := h.getBookReviewResponse(reviewOutput, u)
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -208,16 +212,16 @@ func (h *reviewHandler) GetByUser(ctx *gin.Context) {
 }
 
 func (h *reviewHandler) getBookReviewResponse(
-	reviewOutput *pb.ReviewResponse, userOutput *pb.UserResponse,
+	reviewOutput *pb.ReviewResponse, u *entity.User,
 ) *response.BookReviewResponse {
 	user := &response.BookReviewResponse_User{
 		ID:       reviewOutput.GetUserId(),
 		Username: "unknown",
 	}
 
-	if userOutput != nil {
-		user.Username = userOutput.GetUsername()
-		user.ThumbnailURL = userOutput.GetThumbnailUrl()
+	if u != nil {
+		user.Username = u.Username
+		user.ThumbnailURL = u.ThumbnailUrl
 	}
 
 	return &response.BookReviewResponse{
@@ -248,7 +252,7 @@ func (h *reviewHandler) getUserReviewResponse(
 }
 
 func (h *reviewHandler) getBookReviewListResponse(
-	reviewsOutput *pb.ReviewListResponse, usersOutput *pb.UserMapResponse,
+	reviewsOutput *pb.ReviewListResponse, us map[string]*entity.User,
 ) *response.BookReviewListResponse {
 	reviews := make([]*response.BookReviewListResponse_Review, len(reviewsOutput.GetReviews()))
 	for i, r := range reviewsOutput.GetReviews() {
@@ -257,9 +261,9 @@ func (h *reviewHandler) getBookReviewListResponse(
 			Username: "unknown",
 		}
 
-		if usersOutput.GetUsers()[r.GetUserId()] != nil {
-			user.Username = usersOutput.GetUsers()[r.GetUserId()].GetUsername()
-			user.ThumbnailURL = usersOutput.GetUsers()[r.GetUserId()].GetThumbnailUrl()
+		if us[r.GetUserId()] != nil {
+			user.Username = us[r.GetUserId()].Username
+			user.ThumbnailURL = us[r.GetUserId()].ThumbnailUrl
 		}
 
 		review := &response.BookReviewListResponse_Review{

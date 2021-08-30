@@ -28,20 +28,15 @@ type BookshelfHandler interface {
 type bookshelfHandler struct {
 	bookClient pb.BookServiceClient
 	authClient pb.AuthServiceClient
-	userClient pb.UserServiceClient
 }
 
-func NewBookshelfHandler(
-	bookConn *grpc.ClientConn, authConn *grpc.ClientConn, userConn *grpc.ClientConn,
-) BookshelfHandler {
+func NewBookshelfHandler(bookConn *grpc.ClientConn, authConn *grpc.ClientConn) BookshelfHandler {
 	bc := pb.NewBookServiceClient(bookConn)
 	ac := pb.NewAuthServiceClient(authConn)
-	uc := pb.NewUserServiceClient(userConn)
 
 	return &bookshelfHandler{
 		bookClient: bc,
 		authClient: ac,
-		userClient: uc,
 	}
 }
 

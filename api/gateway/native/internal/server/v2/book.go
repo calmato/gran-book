@@ -76,7 +76,9 @@ func (h *bookHandler) Get(ctx *gin.Context) {
 		return
 	}
 
-	res := h.getBookResponse(bookOutput, reviewsOutput, usersOutput)
+	us := entity.NewUsers(usersOutput.Users)
+
+	res := h.getBookResponse(bookOutput, reviewsOutput, us.Map())
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -108,7 +110,7 @@ func (h *bookHandler) getBook(ctx context.Context, bookID, key string) (*pb.Book
 func (h *bookHandler) getBookResponse(
 	bookOutput *pb.BookResponse,
 	reviewsOutput *pb.ReviewListResponse,
-	usersOutput *pb.UserMapResponse,
+	us map[string]*entity.User,
 ) *response.BookResponse {
 	authorNames := make([]string, len(bookOutput.GetAuthors()))
 	authorNameKanas := make([]string, len(bookOutput.GetAuthors()))
@@ -124,9 +126,9 @@ func (h *bookHandler) getBookResponse(
 			Username: "unknown",
 		}
 
-		if usersOutput.GetUsers()[r.GetUserId()] != nil {
-			user.Username = usersOutput.GetUsers()[r.GetUserId()].GetUsername()
-			user.ThumbnailURL = usersOutput.GetUsers()[r.GetUserId()].GetThumbnailUrl()
+		if us[r.GetUserId()] != nil {
+			user.Username = us[r.GetUserId()].Username
+			user.ThumbnailURL = us[r.GetUserId()].ThumbnailUrl
 		}
 
 		review := &response.BookResponse_Review{

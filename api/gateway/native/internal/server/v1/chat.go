@@ -89,7 +89,9 @@ func (h *chatHandler) ListRoom(ctx *gin.Context) {
 		return
 	}
 
-	res := h.getChatRoomListResponse(roomsOutput, usersOutput)
+	us := entity.NewUsers(usersOutput.Users)
+
+	res := h.getChatRoomListResponse(roomsOutput, us.Map())
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -125,8 +127,10 @@ func (h *chatHandler) CreateRoom(ctx *gin.Context) {
 		return
 	}
 
+	us := entity.NewUsers(usersOutput.Users)
+	userMap := us.Map()
 	for _, userID := range userIDs {
-		if usersOutput.GetUsers()[userID] != nil {
+		if userMap[userID] != nil {
 			continue
 		}
 
@@ -144,7 +148,7 @@ func (h *chatHandler) CreateRoom(ctx *gin.Context) {
 		return
 	}
 
-	res := h.getChatRoomResponse(roomOutput, usersOutput)
+	res := h.getChatRoomResponse(roomOutput, us.Map())
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -273,7 +277,7 @@ func (h *chatHandler) currentUser(ctx context.Context, userID string) (*pb.AuthR
 }
 
 func (h *chatHandler) getChatRoomResponse(
-	roomOutput *pb.ChatRoomResponse, usersOutput *pb.UserMapResponse,
+	roomOutput *pb.ChatRoomResponse, us map[string]*entity.User,
 ) *response.ChatRoomResponse {
 	users := make([]*response.ChatRoomResponse_User, len(roomOutput.GetUserIds()))
 	for i, userID := range roomOutput.GetUserIds() {
@@ -282,9 +286,9 @@ func (h *chatHandler) getChatRoomResponse(
 			Username: "unknown",
 		}
 
-		if usersOutput.GetUsers()[userID] != nil {
-			user.Username = usersOutput.GetUsers()[userID].GetUsername()
-			user.ThumbnailURL = usersOutput.GetUsers()[userID].GetThumbnailUrl()
+		if us[userID] != nil {
+			user.Username = us[userID].Username
+			user.ThumbnailURL = us[userID].ThumbnailUrl
 		}
 
 		users[i] = user
@@ -299,7 +303,7 @@ func (h *chatHandler) getChatRoomResponse(
 }
 
 func (h *chatHandler) getChatRoomListResponse(
-	roomsOutput *pb.ChatRoomListResponse, usersOutput *pb.UserMapResponse,
+	roomsOutput *pb.ChatRoomListResponse, us map[string]*entity.User,
 ) *response.ChatRoomListResponse {
 	rooms := make([]*response.ChatRoomListResponse_Room, len(roomsOutput.GetRooms()))
 	for i, r := range roomsOutput.GetRooms() {
@@ -310,9 +314,9 @@ func (h *chatHandler) getChatRoomListResponse(
 				Username: "unknown",
 			}
 
-			if usersOutput.GetUsers()[userID] != nil {
-				user.Username = usersOutput.GetUsers()[userID].GetUsername()
-				user.ThumbnailURL = usersOutput.GetUsers()[userID].GetThumbnailUrl()
+			if us[userID] != nil {
+				user.Username = us[userID].Username
+				user.ThumbnailURL = us[userID].ThumbnailUrl
 			}
 
 			users[j] = user
