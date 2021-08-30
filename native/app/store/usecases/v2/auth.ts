@@ -3,7 +3,7 @@ import firebase from '~/lib/firebase';
 /**
  * firebase authenticationを使って email と password でログインを実行します。
  * @param payload
- * @returns { firebase.auth.UserCredential.user | null }
+ * @returns { Promise<firebase.auth.UserCredential.user | null | undefined> }
  */
 export async function signInWithEmailAndPassword(payload: { email: string; password: string }) {
   const { email, password } = payload;
@@ -13,6 +13,6 @@ export async function signInWithEmailAndPassword(payload: { email: string; passw
 
     return user;
   } catch (e) {
-    Promise.reject(e);
+    return Promise.reject(e);
   }
 }
