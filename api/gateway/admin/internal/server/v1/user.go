@@ -67,7 +67,9 @@ func (h *userHandler) List(ctx *gin.Context) {
 		return
 	}
 
-	res := h.getUserListResponse(out)
+	us := entity.NewUsers(out.Users)
+
+	res := h.getUserListResponse(us, out.Limit, out.Offset, out.Total)
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -85,43 +87,45 @@ func (h *userHandler) Get(ctx *gin.Context) {
 		return
 	}
 
-	res := h.getUserResponse(out)
+	u := entity.NewUser(out.User)
+
+	res := h.getUserResponse(u)
 	ctx.JSON(http.StatusOK, res)
 }
 
-func (h *userHandler) getUserResponse(out *pb.UserResponse) *response.UserResponse {
+func (h *userHandler) getUserResponse(u *entity.User) *response.UserResponse {
 	return &response.UserResponse{
-		ID:               out.GetId(),
-		Username:         out.GetUsername(),
-		Email:            out.GetEmail(),
-		PhoneNumber:      out.GetPhoneNumber(),
-		ThumbnailURL:     out.GetThumbnailUrl(),
-		SelfIntroduction: out.GetSelfIntroduction(),
-		LastName:         out.GetLastName(),
-		FirstName:        out.GetFirstName(),
-		LastNameKana:     out.GetLastNameKana(),
-		FirstNameKana:    out.GetFirstNameKana(),
-		CreatedAt:        out.GetCreatedAt(),
-		UpdatedAt:        out.GetUpdatedAt(),
+		ID:               u.Id,
+		Username:         u.Username,
+		Email:            u.Email,
+		PhoneNumber:      u.PhoneNumber,
+		ThumbnailURL:     u.ThumbnailUrl,
+		SelfIntroduction: u.SelfIntroduction,
+		LastName:         u.LastName,
+		FirstName:        u.FirstName,
+		LastNameKana:     u.LastNameKana,
+		FirstNameKana:    u.FirstNameKana,
+		CreatedAt:        u.CreatedAt,
+		UpdatedAt:        u.UpdatedAt,
 	}
 }
 
-func (h *userHandler) getUserListResponse(out *pb.UserListResponse) *response.UserListResponse {
-	users := make([]*response.UserListUser, len(out.GetUsers()))
-	for i, u := range out.GetUsers() {
+func (h *userHandler) getUserListResponse(us entity.Users, limit, offset, total int64) *response.UserListResponse {
+	users := make([]*response.UserListUser, len(us))
+	for i, u := range us {
 		user := &response.UserListUser{
-			ID:               u.GetId(),
-			Username:         u.GetUsername(),
-			Email:            u.GetEmail(),
-			PhoneNumber:      u.GetPhoneNumber(),
-			ThumbnailURL:     u.GetThumbnailUrl(),
-			SelfIntroduction: u.GetSelfIntroduction(),
-			LastName:         u.GetLastName(),
-			FirstName:        u.GetFirstName(),
-			LastNameKana:     u.GetLastNameKana(),
-			FirstNameKana:    u.GetFirstNameKana(),
-			CreatedAt:        u.GetCreatedAt(),
-			UpdatedAt:        u.GetUpdatedAt(),
+			ID:               u.Id,
+			Username:         u.Username,
+			Email:            u.Email,
+			PhoneNumber:      u.PhoneNumber,
+			ThumbnailURL:     u.ThumbnailUrl,
+			SelfIntroduction: u.SelfIntroduction,
+			LastName:         u.LastName,
+			FirstName:        u.FirstName,
+			LastNameKana:     u.LastNameKana,
+			FirstNameKana:    u.FirstNameKana,
+			CreatedAt:        u.CreatedAt,
+			UpdatedAt:        u.UpdatedAt,
 		}
 
 		users[i] = user
@@ -129,8 +133,8 @@ func (h *userHandler) getUserListResponse(out *pb.UserListResponse) *response.Us
 
 	return &response.UserListResponse{
 		Users:  users,
-		Limit:  out.GetLimit(),
-		Offset: out.GetOffset(),
-		Total:  out.GetTotal(),
+		Limit:  limit,
+		Offset: offset,
+		Total:  total,
 	}
 }

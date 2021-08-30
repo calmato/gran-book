@@ -170,6 +170,8 @@ func (h *chatHandler) CreateTextMessage(ctx *gin.Context) {
 		return
 	}
 
+	a := entity.NewAuth(userOutput.Auth)
+
 	in := &pb.CreateChatMessageRequest{
 		RoomId: roomID,
 		UserId: userID,
@@ -182,7 +184,7 @@ func (h *chatHandler) CreateTextMessage(ctx *gin.Context) {
 		return
 	}
 
-	res := h.getChatMessageResponse(messageOutput, userOutput)
+	res := h.getChatMessageResponse(messageOutput, a)
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -197,6 +199,8 @@ func (h *chatHandler) CreateImageMessage(ctx *gin.Context) {
 		util.ErrorHandling(ctx, err)
 		return
 	}
+
+	a := entity.NewAuth(userOutput.Auth)
 
 	file, _, err := ctx.Request.FormFile("image")
 	if err != nil {
@@ -259,7 +263,7 @@ func (h *chatHandler) CreateImageMessage(ctx *gin.Context) {
 		return
 	}
 
-	res := h.getChatMessageResponse(messageOutput, userOutput)
+	res := h.getChatMessageResponse(messageOutput, a)
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -269,7 +273,9 @@ func (h *chatHandler) currentUser(ctx context.Context, userID string) (*pb.AuthR
 		return nil, err
 	}
 
-	if out.GetId() != userID {
+	a := entity.NewAuth(out.Auth)
+
+	if a.Id != userID {
 		return nil, entity.ErrForbidden.New(err)
 	}
 
@@ -347,12 +353,12 @@ func (h *chatHandler) getChatRoomListResponse(
 }
 
 func (h *chatHandler) getChatMessageResponse(
-	messageOutput *pb.ChatMessageResponse, userOutput *pb.AuthResponse,
+	messageOutput *pb.ChatMessageResponse, a *entity.Auth,
 ) *response.ChatMessageResponse {
 	user := &response.ChatMessageResponse_User{
-		ID:           userOutput.GetId(),
-		Username:     userOutput.GetUsername(),
-		ThumbnailURL: userOutput.GetThumbnailUrl(),
+		ID:           a.Id,
+		Username:     a.Username,
+		ThumbnailURL: a.ThumbnailUrl,
 	}
 
 	return &response.ChatMessageResponse{

@@ -104,12 +104,14 @@ func (h *bookshelfHandler) Get(ctx *gin.Context) {
 		return
 	}
 
-	res := h.getBookshelfResponse(bookshelfOutput, reviewsOutput, usersOutput)
+	us := entity.NewUsers(usersOutput.Users)
+
+	res := h.getBookshelfResponse(bookshelfOutput, reviewsOutput, us.Map())
 	ctx.JSON(http.StatusOK, res)
 }
 
 func (h *bookshelfHandler) getBookshelfResponse(
-	bookshelfOutput *pb.BookshelfResponse, reviewsOutput *pb.ReviewListResponse, usersOutput *pb.UserMapResponse,
+	bookshelfOutput *pb.BookshelfResponse, reviewsOutput *pb.ReviewListResponse, us map[string]*entity.User,
 ) *response.BookshelfResponse {
 	bookshelf := &response.BookshelfResponse_Bookshelf{
 		Status:    entity.BookshelfStatus(bookshelfOutput.GetStatus()).Name(),
@@ -126,9 +128,9 @@ func (h *bookshelfHandler) getBookshelfResponse(
 			Username: "unknown",
 		}
 
-		if usersOutput.GetUsers()[r.GetUserId()] != nil {
-			user.Username = usersOutput.GetUsers()[r.GetUserId()].GetUsername()
-			user.ThumbnailURL = usersOutput.GetUsers()[r.GetUserId()].GetThumbnailUrl()
+		if us[r.GetUserId()] != nil {
+			user.Username = us[r.GetUserId()].GetUsername()
+			user.ThumbnailURL = us[r.GetUserId()].GetThumbnailUrl()
 		}
 
 		review := &response.BookshelfResponse_Review{

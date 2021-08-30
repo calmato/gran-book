@@ -45,6 +45,8 @@ func (h *bookHandler) Get(ctx *gin.Context) {
 		return
 	}
 
+	a := entity.NewAuth(authOutput.Auth)
+
 	bookInput := &pb.GetBookByIsbnRequest{
 		Isbn: isbn,
 	}
@@ -57,7 +59,7 @@ func (h *bookHandler) Get(ctx *gin.Context) {
 
 	bookshelfInput := &pb.GetBookshelfRequest{
 		BookId: bookOutput.GetId(),
-		UserId: authOutput.GetId(),
+		UserId: a.Id,
 	}
 
 	bookshelfOutput, err := h.bookClient.GetBookshelf(c, bookshelfInput)

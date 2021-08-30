@@ -9,7 +9,6 @@ import (
 	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/user"
 	"github.com/calmato/gran-book/api/server/user/internal/interface/validation"
-	"github.com/calmato/gran-book/api/server/user/pkg/datetime"
 	pb "github.com/calmato/gran-book/api/server/user/proto"
 	"golang.org/x/xerrors"
 )
@@ -259,25 +258,7 @@ func (s *authServer) RegisterAuthDevice(
 
 func getAuthResponse(u *user.User) *pb.AuthResponse {
 	return &pb.AuthResponse{
-		Id:               u.ID,
-		Username:         u.Username,
-		Gender:           pb.Gender(u.Gender),
-		Email:            u.Email,
-		PhoneNumber:      u.PhoneNumber,
-		Role:             pb.Role(u.Role),
-		ThumbnailUrl:     u.ThumbnailURL,
-		SelfIntroduction: u.SelfIntroduction,
-		LastName:         u.LastName,
-		FirstName:        u.FirstName,
-		LastNameKana:     u.LastNameKana,
-		FirstNameKana:    u.FirstNameKana,
-		PostalCode:       u.PostalCode,
-		Prefecture:       u.Prefecture,
-		City:             u.City,
-		AddressLine1:     u.AddressLine1,
-		AddressLine2:     u.AddressLine2,
-		CreatedAt:        datetime.TimeToString(u.CreatedAt),
-		UpdatedAt:        datetime.TimeToString(u.UpdatedAt),
+		Auth: u.Auth(),
 	}
 }
 

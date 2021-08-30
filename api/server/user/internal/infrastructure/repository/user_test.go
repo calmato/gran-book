@@ -38,7 +38,7 @@ func TestUserRepository_List(t *testing.T) {
 		query *database.ListQuery
 	}
 	type want struct {
-		users []*user.User
+		users user.Users
 		isErr bool
 	}
 	testCases := []struct {
@@ -112,7 +112,7 @@ func TestUserRepository_ListFollow(t *testing.T) {
 		query *database.ListQuery
 	}
 	type want struct {
-		follows []*user.Follow
+		follows user.Follows
 		isErr   bool
 	}
 	testCases := []struct {
@@ -205,7 +205,7 @@ func TestUserRepository_ListFollower(t *testing.T) {
 		query *database.ListQuery
 	}
 	type want struct {
-		followers []*user.Follower
+		followers user.Followers
 		isErr     bool
 	}
 	testCases := []struct {
@@ -679,7 +679,7 @@ func TestUserRepository_MultiGet(t *testing.T) {
 		userIDs []string
 	}
 	type want struct {
-		users []*user.User
+		users user.Users
 		isErr bool
 	}
 	testCases := []struct {

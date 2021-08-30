@@ -54,8 +54,8 @@ func (r *userRepository) Authentication(ctx context.Context) (string, error) {
 	return fbToken.Subject, nil
 }
 
-func (r *userRepository) List(ctx context.Context, q *database.ListQuery) ([]*user.User, error) {
-	us := []*user.User{}
+func (r *userRepository) List(ctx context.Context, q *database.ListQuery) (user.Users, error) {
+	us := user.Users{}
 
 	err := r.client.GetListQuery("users", r.client.DB, q).Find(&us).Error
 	if err != nil {
@@ -65,8 +65,8 @@ func (r *userRepository) List(ctx context.Context, q *database.ListQuery) ([]*us
 	return us, nil
 }
 
-func (r *userRepository) ListFollow(ctx context.Context, q *database.ListQuery) ([]*user.Follow, error) {
-	fs := []*user.Follow{}
+func (r *userRepository) ListFollow(ctx context.Context, q *database.ListQuery) (user.Follows, error) {
+	fs := user.Follows{}
 
 	fields := []string{
 		"relationships.follow_id",
@@ -87,8 +87,8 @@ func (r *userRepository) ListFollow(ctx context.Context, q *database.ListQuery) 
 	return fs, nil
 }
 
-func (r *userRepository) ListFollower(ctx context.Context, q *database.ListQuery) ([]*user.Follower, error) {
-	fs := []*user.Follower{}
+func (r *userRepository) ListFollower(ctx context.Context, q *database.ListQuery) (user.Followers, error) {
+	fs := user.Followers{}
 
 	fields := []string{
 		"relationships.follow_id",
@@ -182,8 +182,8 @@ func (r *userRepository) CountRelationship(ctx context.Context, q *database.List
 	return total, nil
 }
 
-func (r *userRepository) MultiGet(ctx context.Context, userIDs []string) ([]*user.User, error) {
-	us := []*user.User{}
+func (r *userRepository) MultiGet(ctx context.Context, userIDs []string) (user.Users, error) {
+	us := user.Users{}
 
 	err := r.client.DB.Table("users").Where("id IN (?)", userIDs).Find(&us).Error
 	if err != nil {

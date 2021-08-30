@@ -4,24 +4,17 @@ import (
 	pb "github.com/calmato/gran-book/api/gateway/native/proto"
 )
 
-// Gender - 性別
-type Gender int32
+type Auth struct {
+	*pb.Auth
+}
 
-const (
-	GenderUnknown Gender = 0 // 未選択
-	GenderMan     Gender = 1 // 男性
-	GenderWoman   Gender = 2 // 女性
-)
+func NewAuth(a *pb.Auth) *Auth {
+	return &Auth{a}
+}
 
-// Role - ユーザー権限
-type Role int32
-
-const (
-	RoleUser      Role = 0 // ユーザー (default)
-	RoleAdmin     Role = 1 // 管理者
-	RoleDeveloper Role = 2 // 開発者
-	RoleOperator  Role = 3 // 運用者
-)
+func (a *Auth) Gender() Gender {
+	return NewGender(a.GetGender())
+}
 
 type User struct {
 	*pb.User
