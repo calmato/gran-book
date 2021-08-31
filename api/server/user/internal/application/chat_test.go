@@ -30,7 +30,7 @@ func TestChatApplication_ListRoom(t *testing.T) {
 		params *firestore.Params
 	}
 	type want struct {
-		rooms []*chat.Room
+		rooms chat.Rooms
 		err   error
 	}
 	testCases := []struct {
@@ -51,7 +51,7 @@ func TestChatApplication_ListRoom(t *testing.T) {
 				params: &firestore.Params{},
 			},
 			want: want{
-				rooms: []*chat.Room{room1, room2},
+				rooms: chat.Rooms{room1, room2},
 				err:   nil,
 			},
 		},

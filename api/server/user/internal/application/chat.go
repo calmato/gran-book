@@ -14,7 +14,7 @@ import (
 
 // ChatApplication - Chatアプリケーションのインターフェース
 type ChatApplication interface {
-	ListRoom(ctx context.Context, userID string, p *firestore.Params) ([]*chat.Room, error)
+	ListRoom(ctx context.Context, userID string, p *firestore.Params) (chat.Rooms, error)
 	GetRoom(ctx context.Context, roomID string, userID string) (*chat.Room, error)
 	CreateRoom(ctx context.Context, cr *chat.Room) error
 	CreateMessage(ctx context.Context, cr *chat.Room, cm *chat.Message) error
@@ -36,7 +36,7 @@ func NewChatApplication(cdv chat.Validation, cr chat.Repository, cu chat.Uploade
 	}
 }
 
-func (a *chatApplication) ListRoom(ctx context.Context, userID string, p *firestore.Params) ([]*chat.Room, error) {
+func (a *chatApplication) ListRoom(ctx context.Context, userID string, p *firestore.Params) (chat.Rooms, error) {
 	qs := []*firestore.Query{
 		{
 			Field:    "users",

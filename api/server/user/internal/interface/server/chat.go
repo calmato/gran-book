@@ -8,7 +8,6 @@ import (
 	"github.com/calmato/gran-book/api/server/user/internal/domain/chat"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
 	"github.com/calmato/gran-book/api/server/user/internal/interface/validation"
-	"github.com/calmato/gran-book/api/server/user/pkg/datetime"
 	"github.com/calmato/gran-book/api/server/user/pkg/firebase/firestore"
 	pb "github.com/calmato/gran-book/api/server/user/proto"
 	"golang.org/x/xerrors"
@@ -165,50 +164,20 @@ func (s *chatServer) UploadImage(stream pb.ChatService_UploadImageServer) error 
 	}
 }
 
-func getChatRoomListResponse(crs []*chat.Room) *pb.ChatRoomListResponse {
-	rooms := make([]*pb.ChatRoomListResponse_Room, len(crs))
-	for i, cr := range crs {
-		room := &pb.ChatRoomListResponse_Room{
-			Id:        cr.ID,
-			UserIds:   cr.UserIDs,
-			CreatedAt: datetime.TimeToString(cr.CreatedAt),
-			UpdatedAt: datetime.TimeToString(cr.UpdatedAt),
-		}
-
-		if cr.LatestMessage != nil {
-			message := &pb.ChatRoomListResponse_Message{
-				UserId:    cr.LatestMessage.UserID,
-				Text:      cr.LatestMessage.Text,
-				Image:     cr.LatestMessage.Image,
-				CreatedAt: datetime.TimeToString(cr.LatestMessage.CreatedAt),
-			}
-
-			room.LatestMessage = message
-		}
-
-		rooms[i] = room
-	}
-
+func getChatRoomListResponse(crs chat.Rooms) *pb.ChatRoomListResponse {
 	return &pb.ChatRoomListResponse{
-		Rooms: rooms,
+		Rooms: crs.Proto(),
 	}
 }
 
 func getChatRoomResponse(cr *chat.Room) *pb.ChatRoomResponse {
 	return &pb.ChatRoomResponse{
-		Id:        cr.ID,
-		UserIds:   cr.UserIDs,
-		CreatedAt: datetime.TimeToString(cr.CreatedAt),
-		UpdatedAt: datetime.TimeToString(cr.UpdatedAt),
+		Room: cr.Proto(),
 	}
 }
 
 func getChatMessageResponse(cm *chat.Message) *pb.ChatMessageResponse {
 	return &pb.ChatMessageResponse{
-		Id:        cm.ID,
-		UserId:    cm.UserID,
-		Text:      cm.Text,
-		Image:     cm.Image,
-		CreatedAt: datetime.TimeToString(cm.CreatedAt),
+		Message: cm.Proto(),
 	}
 }

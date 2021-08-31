@@ -6,6 +6,7 @@ option go_package = "github.com/calmato/gran-book/proto";
 
 import "common/common.proto";
 
+// Auth - ログインユーザ情報
 message Auth {
   string id = 1; // ユーザーID
   string username = 2; // ユーザー名

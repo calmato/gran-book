@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 
 	"github.com/calmato/gran-book/api/gateway/native/internal/entity"
@@ -66,21 +65,11 @@ func (h *chatHandler) ListRoom(ctx *gin.Context) {
 		util.ErrorHandling(ctx, err)
 		return
 	}
-	log.Printf("debug: %v\n", roomsOutput)
 
-	userIDs := []string{}
-	users := map[string]bool{}
-	for _, r := range roomsOutput.GetRooms() {
-		for _, userID := range r.GetUserIds() {
-			if !users[userID] {
-				users[userID] = true
-				userIDs = append(userIDs, userID)
-			}
-		}
-	}
+	crs := entity.NewChatRooms(roomsOutput.Rooms)
 
 	usersInput := &pb.MultiGetUserRequest{
-		UserIds: userIDs,
+		UserIds: crs.UserIDs(),
 	}
 
 	usersOutput, err := h.userClient.MultiGetUser(c, usersInput)
@@ -91,7 +80,7 @@ func (h *chatHandler) ListRoom(ctx *gin.Context) {
 
 	us := entity.NewUsers(usersOutput.Users)
 
-	res := h.getChatRoomListResponse(roomsOutput, us.Map())
+	res := h.getChatRoomListResponse(crs, us.Map())
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -148,7 +137,9 @@ func (h *chatHandler) CreateRoom(ctx *gin.Context) {
 		return
 	}
 
-	res := h.getChatRoomResponse(roomOutput, us.Map())
+	cr := entity.NewChatRoom(roomOutput.Room)
+
+	res := h.getChatRoomResponse(cr, us.Map())
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -184,7 +175,9 @@ func (h *chatHandler) CreateTextMessage(ctx *gin.Context) {
 		return
 	}
 
-	res := h.getChatMessageResponse(messageOutput, a)
+	cm := entity.NewChatMessage(messageOutput.Message)
+
+	res := h.getChatMessageResponse(cm, a)
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -263,7 +256,9 @@ func (h *chatHandler) CreateImageMessage(ctx *gin.Context) {
 		return
 	}
 
-	res := h.getChatMessageResponse(messageOutput, a)
+	cm := entity.NewChatMessage(messageOutput.Message)
+
+	res := h.getChatMessageResponse(cm, a)
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -282,11 +277,9 @@ func (h *chatHandler) currentUser(ctx context.Context, userID string) (*pb.AuthR
 	return out, nil
 }
 
-func (h *chatHandler) getChatRoomResponse(
-	roomOutput *pb.ChatRoomResponse, us map[string]*entity.User,
-) *response.ChatRoomResponse {
-	users := make([]*response.ChatRoomResponse_User, len(roomOutput.GetUserIds()))
-	for i, userID := range roomOutput.GetUserIds() {
+func (h *chatHandler) getChatRoomResponse(cr *entity.ChatRoom, us map[string]*entity.User) *response.ChatRoomResponse {
+	users := make([]*response.ChatRoomResponse_User, len(cr.UserIds))
+	for i, userID := range cr.UserIds {
 		user := &response.ChatRoomResponse_User{
 			ID:       userID,
 			Username: "unknown",
@@ -301,20 +294,20 @@ func (h *chatHandler) getChatRoomResponse(
 	}
 
 	return &response.ChatRoomResponse{
-		ID:        roomOutput.GetId(),
+		ID:        cr.Id,
 		Users:     users,
-		CreatedAt: roomOutput.GetCreatedAt(),
-		UpdatedAt: roomOutput.GetUpdatedAt(),
+		CreatedAt: cr.CreatedAt,
+		UpdatedAt: cr.UpdatedAt,
 	}
 }
 
 func (h *chatHandler) getChatRoomListResponse(
-	roomsOutput *pb.ChatRoomListResponse, us map[string]*entity.User,
+	crs entity.ChatRooms, us map[string]*entity.User,
 ) *response.ChatRoomListResponse {
-	rooms := make([]*response.ChatRoomListResponse_Room, len(roomsOutput.GetRooms()))
-	for i, r := range roomsOutput.GetRooms() {
-		users := make([]*response.ChatRoomListResponse_User, len(r.GetUserIds()))
-		for j, userID := range r.GetUserIds() {
+	rooms := make([]*response.ChatRoomListResponse_Room, len(crs))
+	for i, r := range crs {
+		users := make([]*response.ChatRoomListResponse_User, len(r.UserIds))
+		for j, userID := range r.UserIds {
 			user := &response.ChatRoomListResponse_User{
 				ID:       userID,
 				Username: "unknown",
@@ -329,17 +322,17 @@ func (h *chatHandler) getChatRoomListResponse(
 		}
 
 		message := &response.ChatRoomListResponse_Message{}
-		if r.GetLatestMessage() != nil {
-			message.UserID = r.GetLatestMessage().GetUserId()
-			message.Text = r.GetLatestMessage().GetText()
-			message.Image = r.GetLatestMessage().GetImage()
-			message.CreatedAt = r.GetLatestMessage().GetCreatedAt()
+		if r.LatestMessage != nil {
+			message.UserID = r.LatestMessage.UserId
+			message.Text = r.LatestMessage.Text
+			message.Image = r.LatestMessage.Image
+			message.CreatedAt = r.LatestMessage.CreatedAt
 		}
 
 		room := &response.ChatRoomListResponse_Room{
-			ID:            r.GetId(),
-			CreatedAt:     r.GetCreatedAt(),
-			UpdatedAt:     r.GetUpdatedAt(),
+			ID:            r.Id,
+			CreatedAt:     r.CreatedAt,
+			UpdatedAt:     r.UpdatedAt,
 			Users:         users,
 			LatestMessage: message,
 		}
@@ -352,9 +345,7 @@ func (h *chatHandler) getChatRoomListResponse(
 	}
 }
 
-func (h *chatHandler) getChatMessageResponse(
-	messageOutput *pb.ChatMessageResponse, a *entity.Auth,
-) *response.ChatMessageResponse {
+func (h *chatHandler) getChatMessageResponse(cm *entity.ChatMessage, a *entity.Auth) *response.ChatMessageResponse {
 	user := &response.ChatMessageResponse_User{
 		ID:           a.Id,
 		Username:     a.Username,
@@ -362,9 +353,9 @@ func (h *chatHandler) getChatMessageResponse(
 	}
 
 	return &response.ChatMessageResponse{
-		Text:      messageOutput.GetText(),
-		Image:     messageOutput.GetImage(),
-		CreatedAt: messageOutput.GetCreatedAt(),
+		Text:      cm.Text,
+		Image:     cm.Image,
+		CreatedAt: cm.CreatedAt,
 		User:      user,
 	}
 }
