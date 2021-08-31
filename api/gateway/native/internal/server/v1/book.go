@@ -57,8 +57,10 @@ func (h *bookHandler) Get(ctx *gin.Context) {
 		return
 	}
 
+	b := entity.NewBook(bookOutput.Book)
+
 	bookshelfInput := &pb.GetBookshelfRequest{
-		BookId: bookOutput.GetId(),
+		BookId: b.Id,
 		UserId: a.Id,
 	}
 
@@ -68,7 +70,9 @@ func (h *bookHandler) Get(ctx *gin.Context) {
 		return
 	}
 
-	res := h.getBookResponse(bookOutput, bookshelfOutput)
+	bs := entity.NewBookshelf(bookshelfOutput.Bookshelf)
+
+	res := h.getBookResponse(b, bs)
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -114,7 +118,9 @@ func (h *bookHandler) Create(ctx *gin.Context) {
 		return
 	}
 
-	res := h.getBookResponse(out, nil)
+	b := entity.NewBook(out.Book)
+
+	res := h.getBookResponse(b, nil)
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -160,7 +166,9 @@ func (h *bookHandler) Update(ctx *gin.Context) {
 		return
 	}
 
-	res := h.getBookResponse(out, nil)
+	b := entity.NewBook(out.Book)
+
+	res := h.getBookResponse(b, nil)
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -180,44 +188,32 @@ func (h *bookHandler) getThumbnailURLByRequest(smallImageURL, mediumImageURL, la
 	return ""
 }
 
-func (h *bookHandler) getBookResponse(
-	bookOutput *pb.BookResponse, bookshelfOutput *pb.BookshelfResponse,
-) *response.BookResponse {
-	authorNames := make([]string, len(bookOutput.GetAuthors()))
-	authorNameKanas := make([]string, len(bookOutput.GetAuthors()))
-	for i, a := range bookOutput.GetAuthors() {
-		authorNames[i] = a.GetName()
-		authorNameKanas[i] = a.GetNameKana()
-	}
-
+func (h *bookHandler) getBookResponse(b *entity.Book, bs *entity.Bookshelf) *response.BookResponse {
 	res := &response.BookResponse{
-		ID:           bookOutput.GetId(),
-		Title:        bookOutput.GetTitle(),
-		TitleKana:    bookOutput.GetTitleKana(),
-		Description:  bookOutput.GetDescription(),
-		Isbn:         bookOutput.GetIsbn(),
-		Publisher:    bookOutput.GetPublisher(),
-		PublishedOn:  bookOutput.GetPublishedOn(),
-		ThumbnailURL: bookOutput.GetThumbnailUrl(),
-		RakutenURL:   bookOutput.GetRakutenUrl(),
-		Size:         bookOutput.GetRakutenSize(),
-		Author:       strings.Join(authorNames, "/"),
-		AuthorKana:   strings.Join(authorNameKanas, "/"),
-		CreatedAt:    bookOutput.GetCreatedAt(),
-		UpdatedAt:    bookOutput.GetUpdatedAt(),
+		ID:           b.Id,
+		Title:        b.Title,
+		TitleKana:    b.TitleKana,
+		Description:  b.Description,
+		Isbn:         b.Isbn,
+		Publisher:    b.Publisher,
+		PublishedOn:  b.PublishedOn,
+		ThumbnailURL: b.ThumbnailUrl,
+		RakutenURL:   b.RakutenUrl,
+		Size:         b.RakutenSize,
+		Author:       strings.Join(b.AuthorNames(), "/"),
+		AuthorKana:   strings.Join(b.AuthorNameKanas(), "/"),
+		CreatedAt:    b.CreatedAt,
+		UpdatedAt:    b.UpdatedAt,
 	}
 
-	if bookshelfOutput != nil {
+	if bs != nil {
 		bookshelf := &response.BookResponse_Bookshelf{
-			ID:        bookshelfOutput.GetId(),
-			Status:    entity.BookshelfStatus(bookshelfOutput.GetStatus()).Name(),
-			ReadOn:    bookshelfOutput.GetReadOn(),
-			CreatedAt: bookshelfOutput.GetCreatedAt(),
-			UpdatedAt: bookshelfOutput.GetUpdatedAt(),
-		}
-
-		if bookshelfOutput.GetReview() != nil {
-			bookshelf.Impression = bookshelfOutput.GetReview().GetImpression()
+			ID:         bs.Id,
+			Status:     bs.Status().Name(),
+			Impression: "",
+			ReadOn:     bs.ReadOn,
+			CreatedAt:  bs.CreatedAt,
+			UpdatedAt:  bs.UpdatedAt,
 		}
 
 		res.Bookshelf = bookshelf

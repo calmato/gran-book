@@ -197,10 +197,10 @@ func (mr *MockBookApplicationMockRecorder) GetReviewByUserIDAndBookID(ctx, userI
 }
 
 // List mocks base method.
-func (m *MockBookApplication) List(ctx context.Context, q *database.ListQuery) ([]*book.Book, int, error) {
+func (m *MockBookApplication) List(ctx context.Context, q *database.ListQuery) (book.Books, int, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "List", ctx, q)
-	ret0, _ := ret[0].([]*book.Book)
+	ret0, _ := ret[0].(book.Books)
 	ret1, _ := ret[1].(int)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
@@ -213,10 +213,10 @@ func (mr *MockBookApplicationMockRecorder) List(ctx, q interface{}) *gomock.Call
 }
 
 // ListBookReview mocks base method.
-func (m *MockBookApplication) ListBookReview(ctx context.Context, bookID, limit, offset int) ([]*book.Review, int, error) {
+func (m *MockBookApplication) ListBookReview(ctx context.Context, bookID, limit, offset int) (book.Reviews, int, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListBookReview", ctx, bookID, limit, offset)
-	ret0, _ := ret[0].([]*book.Review)
+	ret0, _ := ret[0].(book.Reviews)
 	ret1, _ := ret[1].(int)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
@@ -229,10 +229,10 @@ func (mr *MockBookApplicationMockRecorder) ListBookReview(ctx, bookID, limit, of
 }
 
 // ListBookshelf mocks base method.
-func (m *MockBookApplication) ListBookshelf(ctx context.Context, q *database.ListQuery) ([]*book.Bookshelf, int, error) {
+func (m *MockBookApplication) ListBookshelf(ctx context.Context, q *database.ListQuery) (book.Bookshelves, int, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListBookshelf", ctx, q)
-	ret0, _ := ret[0].([]*book.Bookshelf)
+	ret0, _ := ret[0].(book.Bookshelves)
 	ret1, _ := ret[1].(int)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
@@ -245,10 +245,10 @@ func (mr *MockBookApplicationMockRecorder) ListBookshelf(ctx, q interface{}) *go
 }
 
 // ListUserReview mocks base method.
-func (m *MockBookApplication) ListUserReview(ctx context.Context, userID string, limit, offset int) ([]*book.Review, int, error) {
+func (m *MockBookApplication) ListUserReview(ctx context.Context, userID string, limit, offset int) (book.Reviews, int, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListUserReview", ctx, userID, limit, offset)
-	ret0, _ := ret[0].([]*book.Review)
+	ret0, _ := ret[0].(book.Reviews)
 	ret1, _ := ret[1].(int)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
@@ -261,10 +261,10 @@ func (mr *MockBookApplicationMockRecorder) ListUserReview(ctx, userID, limit, of
 }
 
 // MultiGet mocks base method.
-func (m *MockBookApplication) MultiGet(ctx context.Context, bookIDs []int) ([]*book.Book, error) {
+func (m *MockBookApplication) MultiGet(ctx context.Context, bookIDs []int) (book.Books, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "MultiGet", ctx, bookIDs)
-	ret0, _ := ret[0].([]*book.Book)
+	ret0, _ := ret[0].(book.Books)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -276,7 +276,7 @@ func (mr *MockBookApplicationMockRecorder) MultiGet(ctx, bookIDs interface{}) *g
 }
 
 // MultipleCreate mocks base method.
-func (m *MockBookApplication) MultipleCreate(ctx context.Context, bs []*book.Book) error {
+func (m *MockBookApplication) MultipleCreate(ctx context.Context, bs book.Books) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "MultipleCreate", ctx, bs)
 	ret0, _ := ret[0].(error)
@@ -290,7 +290,7 @@ func (mr *MockBookApplicationMockRecorder) MultipleCreate(ctx, bs interface{}) *
 }
 
 // MultipleUpdate mocks base method.
-func (m *MockBookApplication) MultipleUpdate(ctx context.Context, bs []*book.Book) error {
+func (m *MockBookApplication) MultipleUpdate(ctx context.Context, bs book.Books) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "MultipleUpdate", ctx, bs)
 	ret0, _ := ret[0].(error)

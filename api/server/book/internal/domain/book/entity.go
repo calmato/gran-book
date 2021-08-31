@@ -1,6 +1,11 @@
 package book
 
-import "time"
+import (
+	"time"
+
+	"github.com/calmato/gran-book/api/server/book/lib/datetime"
+	pb "github.com/calmato/gran-book/api/server/book/proto"
+)
 
 // Book - 書籍エンティティ
 type Book struct {
@@ -17,8 +22,37 @@ type Book struct {
 	RakutenGenreID string    `gorm:"default:null"`
 	CreatedAt      time.Time `gorm:"default:null;<-:create"`
 	UpdatedAt      time.Time `gorm:"default:null"`
-	Authors        []*Author `gorm:"many2many:authors_books"`
-	Reviews        []*Review `gorm:"foreignKey:BookID"`
+	Authors        Authors   `gorm:"many2many:authors_books"`
+	Reviews        Reviews   `gorm:"foreignKey:BookID"`
+}
+
+type Books []*Book
+
+func (b *Book) Proto() *pb.Book {
+	return &pb.Book{
+		Id:             int64(b.ID),
+		Title:          b.Title,
+		TitleKana:      b.TitleKana,
+		Description:    b.Description,
+		Isbn:           b.Isbn,
+		Publisher:      b.Publisher,
+		PublishedOn:    b.PublishedOn,
+		ThumbnailUrl:   b.ThumbnailURL,
+		RakutenUrl:     b.RakutenURL,
+		RakutenSize:    b.RakutenSize,
+		RakutenGenreId: b.RakutenGenreID,
+		CreatedAt:      datetime.TimeToString(b.CreatedAt),
+		UpdatedAt:      datetime.TimeToString(b.UpdatedAt),
+		Authors:        b.Authors.Proto(),
+	}
+}
+
+func (bs Books) Proto() []*pb.Book {
+	res := make([]*pb.Book, len(bs))
+	for i := range bs {
+		res[i] = bs[i].Proto()
+	}
+	return res
 }
 
 // Author - 著者エンティティ
@@ -28,6 +62,23 @@ type Author struct {
 	NameKana  string    `gorm:"default:null"`
 	CreatedAt time.Time `gorm:"default:null;<-:create"`
 	UpdatedAt time.Time `gorm:"default:null"`
+}
+
+type Authors []*Author
+
+func (a *Author) Proto() *pb.Author {
+	return &pb.Author{
+		Name:     a.Name,
+		NameKana: a.NameKana,
+	}
+}
+
+func (as Authors) Proto() []*pb.Author {
+	res := make([]*pb.Author, len(as))
+	for i := range as {
+		res[i] = as[i].Proto()
+	}
+	return res
 }
 
 // Bookshelf - 本棚エンティティ
@@ -44,6 +95,29 @@ type Bookshelf struct {
 	Review    *Review   `gorm:"-"`
 }
 
+type Bookshelves []*Bookshelf
+
+func (b *Bookshelf) Proto() *pb.Bookshelf {
+	return &pb.Bookshelf{
+		Id:        int64(b.ID),
+		BookId:    int64(b.BookID),
+		UserId:    b.UserID,
+		ReviewId:  int64(b.ReviewID),
+		Status:    pb.BookshelfStatus(b.Status),
+		ReadOn:    datetime.DateToString(b.ReadOn),
+		CreatedAt: datetime.TimeToString(b.CreatedAt),
+		UpdatedAt: datetime.TimeToString(b.UpdatedAt),
+	}
+}
+
+func (bs Bookshelves) Proto() []*pb.Bookshelf {
+	res := make([]*pb.Bookshelf, len(bs))
+	for i := range bs {
+		res[i] = bs[i].Proto()
+	}
+	return res
+}
+
 // Review - レビューエンティティ
 type Review struct {
 	ID         int       `gorm:"default:null;primaryKey;autoIncrement;<-:create"`
@@ -53,6 +127,28 @@ type Review struct {
 	Impression string    `gorm:"default:null"`
 	CreatedAt  time.Time `gorm:"default:null;<-:create"`
 	UpdatedAt  time.Time `gorm:"default:null"`
+}
+
+type Reviews []*Review
+
+func (r *Review) Proto() *pb.Review {
+	return &pb.Review{
+		Id:         int64(r.ID),
+		BookId:     int64(r.BookID),
+		UserId:     r.UserID,
+		Score:      int32(r.Score),
+		Impression: r.Impression,
+		CreatedAt:  datetime.TimeToString(r.CreatedAt),
+		UpdatedAt:  datetime.TimeToString(r.UpdatedAt),
+	}
+}
+
+func (rs Reviews) Proto() []*pb.Review {
+	res := make([]*pb.Review, len(rs))
+	for i := range rs {
+		res[i] = rs[i].Proto()
+	}
+	return res
 }
 
 // BookAuthor - 中間テーブル用

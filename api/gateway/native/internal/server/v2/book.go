@@ -49,8 +49,10 @@ func (h *bookHandler) Get(ctx *gin.Context) {
 		return
 	}
 
+	b := entity.NewBook(bookOutput.Book)
+
 	reviewsInput := &pb.ListBookReviewRequest{
-		BookId: bookOutput.GetId(),
+		BookId: b.Id,
 		Limit:  20,
 		Offset: 0,
 	}
@@ -61,13 +63,10 @@ func (h *bookHandler) Get(ctx *gin.Context) {
 		return
 	}
 
-	userIDs := make([]string, len(reviewsOutput.GetReviews()))
-	for i, r := range reviewsOutput.GetReviews() {
-		userIDs[i] = r.GetUserId()
-	}
+	rs := entity.NewReviews(reviewsOutput.Reviews)
 
 	usersInput := &pb.MultiGetUserRequest{
-		UserIds: userIDs,
+		UserIds: rs.UserIDs(),
 	}
 
 	usersOutput, err := h.userClient.MultiGetUser(c, usersInput)
@@ -78,7 +77,7 @@ func (h *bookHandler) Get(ctx *gin.Context) {
 
 	us := entity.NewUsers(usersOutput.Users)
 
-	res := h.getBookResponse(bookOutput, reviewsOutput, us.Map())
+	res := h.getBookResponse(b, rs, us.Map(), reviewsInput.Limit, reviewsInput.Offset, reviewsOutput.Total)
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -108,34 +107,29 @@ func (h *bookHandler) getBook(ctx context.Context, bookID, key string) (*pb.Book
 }
 
 func (h *bookHandler) getBookResponse(
-	bookOutput *pb.BookResponse,
-	reviewsOutput *pb.ReviewListResponse,
+	b *entity.Book,
+	rs entity.Reviews,
 	us map[string]*entity.User,
+	limit, offset, total int64,
 ) *response.BookResponse {
-	authorNames := make([]string, len(bookOutput.GetAuthors()))
-	authorNameKanas := make([]string, len(bookOutput.GetAuthors()))
-	for i, a := range bookOutput.GetAuthors() {
-		authorNames[i] = a.GetName()
-		authorNameKanas[i] = a.GetNameKana()
-	}
-
-	reviews := make([]*response.BookResponse_Review, len(reviewsOutput.GetReviews()))
-	for i, r := range reviewsOutput.GetReviews() {
+	reviews := make([]*response.BookResponse_Review, len(rs))
+	for i, r := range rs {
 		user := &response.BookResponse_User{
-			ID:       r.GetUserId(),
-			Username: "unknown",
+			ID:           r.UserId,
+			Username:     "unknown",
+			ThumbnailURL: "",
 		}
 
-		if us[r.GetUserId()] != nil {
-			user.Username = us[r.GetUserId()].Username
-			user.ThumbnailURL = us[r.GetUserId()].ThumbnailUrl
+		if us[r.UserId] != nil {
+			user.Username = us[r.UserId].Username
+			user.ThumbnailURL = us[r.UserId].ThumbnailUrl
 		}
 
 		review := &response.BookResponse_Review{
-			ID:         r.GetId(),
-			Impression: r.GetImpression(),
-			CreatedAt:  r.GetCreatedAt(),
-			UpdatedAt:  r.GetUpdatedAt(),
+			ID:         r.Id,
+			Impression: r.Impression,
+			CreatedAt:  r.CreatedAt,
+			UpdatedAt:  r.UpdatedAt,
 			User:       user,
 		}
 
@@ -143,23 +137,23 @@ func (h *bookHandler) getBookResponse(
 	}
 
 	return &response.BookResponse{
-		ID:           bookOutput.GetId(),
-		Title:        bookOutput.GetTitle(),
-		TitleKana:    bookOutput.GetTitleKana(),
-		Description:  bookOutput.GetDescription(),
-		Isbn:         bookOutput.GetIsbn(),
-		Publisher:    bookOutput.GetPublisher(),
-		PublishedOn:  bookOutput.GetPublishedOn(),
-		ThumbnailURL: bookOutput.GetThumbnailUrl(),
-		RakutenURL:   bookOutput.GetRakutenUrl(),
-		Size:         bookOutput.GetRakutenSize(),
-		Author:       strings.Join(authorNames, "/"),
-		AuthorKana:   strings.Join(authorNameKanas, "/"),
-		CreatedAt:    bookOutput.GetCreatedAt(),
-		UpdatedAt:    bookOutput.GetUpdatedAt(),
+		ID:           b.Id,
+		Title:        b.Title,
+		TitleKana:    b.TitleKana,
+		Description:  b.Description,
+		Isbn:         b.Isbn,
+		Publisher:    b.Publisher,
+		PublishedOn:  b.PublishedOn,
+		ThumbnailURL: b.ThumbnailUrl,
+		RakutenURL:   b.RakutenUrl,
+		Size:         b.RakutenSize,
+		Author:       strings.Join(b.AuthorNames(), "/"),
+		AuthorKana:   strings.Join(b.AuthorNameKanas(), "/"),
+		CreatedAt:    b.CreatedAt,
+		UpdatedAt:    b.UpdatedAt,
 		Reviews:      reviews,
-		ReviewLimit:  reviewsOutput.GetLimit(),
-		ReviewOffset: reviewsOutput.GetOffset(),
-		ReviewTotal:  reviewsOutput.GetTotal(),
+		ReviewLimit:  limit,
+		ReviewOffset: offset,
+		ReviewTotal:  total,
 	}
 }

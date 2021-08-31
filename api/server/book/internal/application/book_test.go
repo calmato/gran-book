@@ -28,7 +28,7 @@ func TestBookApplication_List(t *testing.T) {
 		query *database.ListQuery
 	}
 	type want struct {
-		books []*book.Book
+		books book.Books
 		total int
 		err   error
 	}
@@ -136,7 +136,7 @@ func TestBookApplication_ListBookshelf(t *testing.T) {
 		query *database.ListQuery
 	}
 	type want struct {
-		bookshelves []*book.Bookshelf
+		bookshelves book.Bookshelves
 		total       int
 		err         error
 	}
@@ -246,7 +246,7 @@ func TestBookApplication_ListBookReview(t *testing.T) {
 		offset int
 	}
 	type want struct {
-		reviews []*book.Review
+		reviews book.Reviews
 		total   int
 		err     error
 	}
@@ -363,7 +363,7 @@ func TestBookApplication_ListUserReview(t *testing.T) {
 		offset int
 	}
 	type want struct {
-		reviews []*book.Review
+		reviews book.Reviews
 		total   int
 		err     error
 	}
@@ -476,7 +476,7 @@ func TestBookApplication_MultiGet(t *testing.T) {
 		bookIDs []int
 	}
 	type want struct {
-		books []*book.Book
+		books book.Books
 		err   error
 	}
 	testCases := []struct {
@@ -1765,7 +1765,7 @@ func TestBookApplication_MultipleCreate(t *testing.T) {
 	defer ctrl.Finish()
 
 	type args struct {
-		books []*book.Book
+		books book.Books
 	}
 	type want struct {
 		err error
@@ -1990,7 +1990,7 @@ func TestBookApplication_MultipleUpdate(t *testing.T) {
 	defer ctrl.Finish()
 
 	type args struct {
-		books []*book.Book
+		books book.Books
 	}
 	type want struct {
 		err error
