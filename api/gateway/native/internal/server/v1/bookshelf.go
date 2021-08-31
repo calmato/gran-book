@@ -11,6 +11,7 @@ import (
 	"github.com/calmato/gran-book/api/gateway/native/internal/server/util"
 	pb "github.com/calmato/gran-book/api/gateway/native/proto"
 	"github.com/gin-gonic/gin"
+	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
 )
 
@@ -61,18 +62,17 @@ func (h *bookshelfHandler) List(ctx *gin.Context) {
 
 	bss := entity.NewBookshelves(bookshelfOutput.Bookshelves)
 
-	bookInput := &pb.MultiGetBooksRequest{
+	booksInput := &pb.MultiGetBooksRequest{
 		BookIds: bss.BookIDs(),
 	}
 
-	bookOutput, err := h.bookClient.MultiGetBooks(c, bookInput)
+	booksOutput, err := h.bookClient.MultiGetBooks(c, booksInput)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
 	}
 
-	bs := entity.NewBooks(bookOutput.Books)
-
+	bs := entity.NewBooks(booksOutput.Books)
 	res := h.getBookshelfListResponse(
 		bss, bs.Map(), bookshelfOutput.Limit, bookshelfOutput.Offset, bookshelfOutput.Total,
 	)
@@ -88,31 +88,40 @@ func (h *bookshelfHandler) Get(ctx *gin.Context) {
 		return
 	}
 
-	bookshelfInput := &pb.GetBookshelfRequest{
-		UserId: userID,
-		BookId: bookID,
-	}
-
 	c := util.SetMetadata(ctx)
-	bookshelfOutput, err := h.bookClient.GetBookshelf(c, bookshelfInput)
-	if err != nil {
+	eg, ectx := errgroup.WithContext(c)
+
+	var b *entity.Book
+	eg.Go(func() error {
+		bookInput := &pb.GetBookRequest{
+			BookId: bookID,
+		}
+		bookOutput, err := h.bookClient.GetBook(ectx, bookInput)
+		if err != nil {
+			return err
+		}
+		b = entity.NewBook(bookOutput.Book)
+		return nil
+	})
+
+	var bs *entity.Bookshelf
+	eg.Go(func() error {
+		bookshelfInput := &pb.GetBookshelfRequest{
+			UserId: userID,
+			BookId: bookID,
+		}
+		bookshelfOutput, err := h.bookClient.GetBookshelf(ectx, bookshelfInput)
+		if err != nil {
+			return err
+		}
+		bs = entity.NewBookshelf(bookshelfOutput.Bookshelf)
+		return nil
+	})
+
+	if err := eg.Wait(); err != nil {
 		util.ErrorHandling(ctx, err)
 		return
 	}
-
-	bs := entity.NewBookshelf(bookshelfOutput.Bookshelf)
-
-	bookInput := &pb.GetBookRequest{
-		BookId: bs.BookId,
-	}
-
-	bookOutput, err := h.bookClient.GetBook(c, bookInput)
-	if err != nil {
-		util.ErrorHandling(ctx, err)
-		return
-	}
-
-	b := entity.NewBook(bookOutput.Book)
 
 	res := h.getBookshelfResponse(bs, b)
 	ctx.JSON(http.StatusOK, res)
@@ -134,33 +143,42 @@ func (h *bookshelfHandler) Read(ctx *gin.Context) {
 		return
 	}
 
-	bookshelfInput := &pb.ReadBookshelfRequest{
-		UserId:     userID,
-		BookId:     bookID,
-		Impression: req.Impression,
-		ReadOn:     req.ReadOn,
-	}
-
 	c := util.SetMetadata(ctx)
-	bookshelfOutput, err := h.bookClient.ReadBookshelf(c, bookshelfInput)
-	if err != nil {
+	eg, ectx := errgroup.WithContext(c)
+
+	var b *entity.Book
+	eg.Go(func() error {
+		bookInput := &pb.GetBookRequest{
+			BookId: bookID,
+		}
+		bookOutput, err := h.bookClient.GetBook(ectx, bookInput)
+		if err != nil {
+			return err
+		}
+		b = entity.NewBook(bookOutput.Book)
+		return nil
+	})
+
+	var bs *entity.Bookshelf
+	eg.Go(func() error {
+		bookshelfInput := &pb.ReadBookshelfRequest{
+			UserId:     userID,
+			BookId:     bookID,
+			Impression: req.Impression,
+			ReadOn:     req.ReadOn,
+		}
+		bookshelfOutput, err := h.bookClient.ReadBookshelf(ectx, bookshelfInput)
+		if err != nil {
+			return err
+		}
+		bs = entity.NewBookshelf(bookshelfOutput.Bookshelf)
+		return nil
+	})
+
+	if err := eg.Wait(); err != nil {
 		util.ErrorHandling(ctx, err)
 		return
 	}
-
-	bs := entity.NewBookshelf(bookshelfOutput.Bookshelf)
-
-	bookInput := &pb.GetBookRequest{
-		BookId: bs.BookId,
-	}
-
-	bookOutput, err := h.bookClient.GetBook(c, bookInput)
-	if err != nil {
-		util.ErrorHandling(ctx, err)
-		return
-	}
-
-	b := entity.NewBook(bookOutput.Book)
 
 	res := h.getBookshelfResponse(bs, b)
 	ctx.JSON(http.StatusOK, res)
@@ -175,31 +193,40 @@ func (h *bookshelfHandler) Reading(ctx *gin.Context) {
 		return
 	}
 
-	bookshelfInput := &pb.ReadingBookshelfRequest{
-		UserId: userID,
-		BookId: bookID,
-	}
-
 	c := util.SetMetadata(ctx)
-	bookshelfOutput, err := h.bookClient.ReadingBookshelf(c, bookshelfInput)
-	if err != nil {
+	eg, ectx := errgroup.WithContext(c)
+
+	var b *entity.Book
+	eg.Go(func() error {
+		bookInput := &pb.GetBookRequest{
+			BookId: bookID,
+		}
+		bookOutput, err := h.bookClient.GetBook(ectx, bookInput)
+		if err != nil {
+			return err
+		}
+		b = entity.NewBook(bookOutput.Book)
+		return nil
+	})
+
+	var bs *entity.Bookshelf
+	eg.Go(func() error {
+		bookshelfInput := &pb.ReadingBookshelfRequest{
+			UserId: userID,
+			BookId: bookID,
+		}
+		bookshelfOutput, err := h.bookClient.ReadingBookshelf(ectx, bookshelfInput)
+		if err != nil {
+			return err
+		}
+		bs = entity.NewBookshelf(bookshelfOutput.Bookshelf)
+		return nil
+	})
+
+	if err := eg.Wait(); err != nil {
 		util.ErrorHandling(ctx, err)
 		return
 	}
-
-	bs := entity.NewBookshelf(bookshelfOutput.Bookshelf)
-
-	bookInput := &pb.GetBookRequest{
-		BookId: bs.BookId,
-	}
-
-	bookOutput, err := h.bookClient.GetBook(c, bookInput)
-	if err != nil {
-		util.ErrorHandling(ctx, err)
-		return
-	}
-
-	b := entity.NewBook(bookOutput.Book)
 
 	res := h.getBookshelfResponse(bs, b)
 	ctx.JSON(http.StatusOK, res)
@@ -214,31 +241,40 @@ func (h *bookshelfHandler) Stacked(ctx *gin.Context) {
 		return
 	}
 
-	bookshelfInput := &pb.StackedBookshelfRequest{
-		UserId: userID,
-		BookId: bookID,
-	}
-
 	c := util.SetMetadata(ctx)
-	bookshelfOutput, err := h.bookClient.StackedBookshelf(c, bookshelfInput)
-	if err != nil {
+	eg, ectx := errgroup.WithContext(c)
+
+	var b *entity.Book
+	eg.Go(func() error {
+		bookInput := &pb.GetBookRequest{
+			BookId: bookID,
+		}
+		bookOutput, err := h.bookClient.GetBook(ectx, bookInput)
+		if err != nil {
+			return err
+		}
+		b = entity.NewBook(bookOutput.Book)
+		return nil
+	})
+
+	var bs *entity.Bookshelf
+	eg.Go(func() error {
+		bookshelfInput := &pb.StackedBookshelfRequest{
+			UserId: userID,
+			BookId: bookID,
+		}
+		bookshelfOutput, err := h.bookClient.StackedBookshelf(ectx, bookshelfInput)
+		if err != nil {
+			return err
+		}
+		bs = entity.NewBookshelf(bookshelfOutput.Bookshelf)
+		return nil
+	})
+
+	if err := eg.Wait(); err != nil {
 		util.ErrorHandling(ctx, err)
 		return
 	}
-
-	bs := entity.NewBookshelf(bookshelfOutput.Bookshelf)
-
-	bookInput := &pb.GetBookRequest{
-		BookId: bs.BookId,
-	}
-
-	bookOutput, err := h.bookClient.GetBook(c, bookInput)
-	if err != nil {
-		util.ErrorHandling(ctx, err)
-		return
-	}
-
-	b := entity.NewBook(bookOutput.Book)
 
 	res := h.getBookshelfResponse(bs, b)
 	ctx.JSON(http.StatusOK, res)
@@ -253,31 +289,40 @@ func (h *bookshelfHandler) Want(ctx *gin.Context) {
 		return
 	}
 
-	bookshelfInput := &pb.WantBookshelfRequest{
-		UserId: userID,
-		BookId: bookID,
-	}
-
 	c := util.SetMetadata(ctx)
-	bookshelfOutput, err := h.bookClient.WantBookshelf(c, bookshelfInput)
-	if err != nil {
+	eg, ectx := errgroup.WithContext(c)
+
+	var b *entity.Book
+	eg.Go(func() error {
+		bookInput := &pb.GetBookRequest{
+			BookId: bookID,
+		}
+		bookOutput, err := h.bookClient.GetBook(ectx, bookInput)
+		if err != nil {
+			return err
+		}
+		b = entity.NewBook(bookOutput.Book)
+		return nil
+	})
+
+	var bs *entity.Bookshelf
+	eg.Go(func() error {
+		bookshelfInput := &pb.WantBookshelfRequest{
+			UserId: userID,
+			BookId: bookID,
+		}
+		bookshelfOutput, err := h.bookClient.WantBookshelf(ectx, bookshelfInput)
+		if err != nil {
+			return err
+		}
+		bs = entity.NewBookshelf(bookshelfOutput.Bookshelf)
+		return nil
+	})
+
+	if err := eg.Wait(); err != nil {
 		util.ErrorHandling(ctx, err)
 		return
 	}
-
-	bs := entity.NewBookshelf(bookshelfOutput.Bookshelf)
-
-	bookInput := &pb.GetBookRequest{
-		BookId: bs.BookId,
-	}
-
-	bookOutput, err := h.bookClient.GetBook(c, bookInput)
-	if err != nil {
-		util.ErrorHandling(ctx, err)
-		return
-	}
-
-	b := entity.NewBook(bookOutput.Book)
 
 	res := h.getBookshelfResponse(bs, b)
 	ctx.JSON(http.StatusOK, res)
@@ -292,31 +337,40 @@ func (h *bookshelfHandler) Release(ctx *gin.Context) {
 		return
 	}
 
-	bookshelfInput := &pb.ReleaseBookshelfRequest{
-		UserId: userID,
-		BookId: bookID,
-	}
-
 	c := util.SetMetadata(ctx)
-	bookshelfOutput, err := h.bookClient.ReleaseBookshelf(c, bookshelfInput)
-	if err != nil {
+	eg, ectx := errgroup.WithContext(c)
+
+	var b *entity.Book
+	eg.Go(func() error {
+		bookInput := &pb.GetBookRequest{
+			BookId: bookID,
+		}
+		bookOutput, err := h.bookClient.GetBook(ectx, bookInput)
+		if err != nil {
+			return err
+		}
+		b = entity.NewBook(bookOutput.Book)
+		return nil
+	})
+
+	var bs *entity.Bookshelf
+	eg.Go(func() error {
+		bookshelfInput := &pb.ReleaseBookshelfRequest{
+			UserId: userID,
+			BookId: bookID,
+		}
+		bookshelfOutput, err := h.bookClient.ReleaseBookshelf(ectx, bookshelfInput)
+		if err != nil {
+			return err
+		}
+		bs = entity.NewBookshelf(bookshelfOutput.Bookshelf)
+		return nil
+	})
+
+	if err := eg.Wait(); err != nil {
 		util.ErrorHandling(ctx, err)
 		return
 	}
-
-	bs := entity.NewBookshelf(bookshelfOutput.Bookshelf)
-
-	bookInput := &pb.GetBookRequest{
-		BookId: bs.BookId,
-	}
-
-	bookOutput, err := h.bookClient.GetBook(c, bookInput)
-	if err != nil {
-		util.ErrorHandling(ctx, err)
-		return
-	}
-
-	b := entity.NewBook(bookOutput.Book)
 
 	res := h.getBookshelfResponse(bs, b)
 	ctx.JSON(http.StatusOK, res)

@@ -10,6 +10,7 @@ import (
 	"github.com/calmato/gran-book/api/gateway/native/internal/server/util"
 	pb "github.com/calmato/gran-book/api/gateway/native/proto"
 	"github.com/gin-gonic/gin"
+	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
 )
 
@@ -39,25 +40,35 @@ func (h *bookHandler) Get(ctx *gin.Context) {
 	isbn := ctx.Param("bookID")
 
 	c := util.SetMetadata(ctx)
-	authOutput, err := h.authClient.GetAuth(c, &pb.Empty{})
-	if err != nil {
+	eg, ectx := errgroup.WithContext(c)
+
+	var a *entity.Auth
+	eg.Go(func() error {
+		authOutput, err := h.authClient.GetAuth(ectx, &pb.Empty{})
+		if err != nil {
+			return err
+		}
+		a = entity.NewAuth(authOutput.Auth)
+		return nil
+	})
+
+	var b *entity.Book
+	eg.Go(func() error {
+		bookInput := &pb.GetBookByIsbnRequest{
+			Isbn: isbn,
+		}
+		bookOutput, err := h.bookClient.GetBookByIsbn(ectx, bookInput)
+		if err != nil {
+			return err
+		}
+		b = entity.NewBook(bookOutput.Book)
+		return nil
+	})
+
+	if err := eg.Wait(); err != nil {
 		util.ErrorHandling(ctx, err)
 		return
 	}
-
-	a := entity.NewAuth(authOutput.Auth)
-
-	bookInput := &pb.GetBookByIsbnRequest{
-		Isbn: isbn,
-	}
-
-	bookOutput, err := h.bookClient.GetBookByIsbn(c, bookInput)
-	if err != nil {
-		util.ErrorHandling(ctx, err)
-		return
-	}
-
-	b := entity.NewBook(bookOutput.Book)
 
 	bookshelfInput := &pb.GetBookshelfRequest{
 		BookId: b.Id,
@@ -71,7 +82,6 @@ func (h *bookHandler) Get(ctx *gin.Context) {
 	}
 
 	bs := entity.NewBookshelf(bookshelfOutput.Bookshelf)
-
 	res := h.getBookResponse(b, bs)
 	ctx.JSON(http.StatusOK, res)
 }
@@ -119,7 +129,6 @@ func (h *bookHandler) Create(ctx *gin.Context) {
 	}
 
 	b := entity.NewBook(out.Book)
-
 	res := h.getBookResponse(b, nil)
 	ctx.JSON(http.StatusOK, res)
 }
@@ -167,7 +176,6 @@ func (h *bookHandler) Update(ctx *gin.Context) {
 	}
 
 	b := entity.NewBook(out.Book)
-
 	res := h.getBookResponse(b, nil)
 	ctx.JSON(http.StatusOK, res)
 }

@@ -49,7 +49,6 @@ func (h *authHandler) Get(ctx *gin.Context) {
 	}
 
 	a := entity.NewAuth(out.Auth)
-
 	res := h.getAuthResponse(a)
 	ctx.JSON(http.StatusOK, res)
 }
@@ -78,7 +77,6 @@ func (h *authHandler) Create(ctx *gin.Context) {
 	}
 
 	a := entity.NewAuth(out.Auth)
-
 	res := h.getAuthResponse(a)
 	ctx.JSON(http.StatusOK, res)
 }
@@ -106,7 +104,6 @@ func (h *authHandler) UpdateProfile(ctx *gin.Context) {
 	}
 
 	a := entity.NewAuth(out.Auth)
-
 	res := h.getAuthResponse(a)
 	ctx.JSON(http.StatusOK, res)
 }
@@ -140,7 +137,6 @@ func (h *authHandler) UpdateAddress(ctx *gin.Context) {
 	}
 
 	a := entity.NewAuth(out.Auth)
-
 	res := h.getAuthResponse(a)
 	ctx.JSON(http.StatusOK, res)
 }
@@ -165,7 +161,6 @@ func (h *authHandler) UpdateEmail(ctx *gin.Context) {
 	}
 
 	a := entity.NewAuth(out.Auth)
-
 	res := h.getAuthResponse(a)
 	ctx.JSON(http.StatusOK, res)
 }
@@ -191,7 +186,6 @@ func (h *authHandler) UpdatePassword(ctx *gin.Context) {
 	}
 
 	a := entity.NewAuth(out.Auth)
-
 	res := h.getAuthResponse(a)
 	ctx.JSON(http.StatusOK, res)
 }
@@ -215,12 +209,11 @@ func (h *authHandler) UploadThumbnail(ctx *gin.Context) {
 	var count int64           // 読み込み回数
 	buf := make([]byte, 1024) // 1リクエストの上限設定
 	for {
-		_, err := file.Read(buf)
-		if err == io.EOF {
-			break
-		}
+		if _, err = file.Read(buf); err != nil {
+			if err == io.EOF {
+				break
+			}
 
-		if err != nil {
 			util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
 			return
 		}
@@ -230,8 +223,7 @@ func (h *authHandler) UploadThumbnail(ctx *gin.Context) {
 			Position:  count,
 		}
 
-		err = stream.Send(in)
-		if err != nil {
+		if err = stream.Send(in); err != nil {
 			util.ErrorHandling(ctx, entity.ErrInternalServerError.New(err))
 			return
 		}
@@ -281,7 +273,6 @@ func (h *authHandler) RegisterDevice(ctx *gin.Context) {
 	}
 
 	a := entity.NewAuth(out.Auth)
-
 	res := h.getAuthResponse(a)
 	ctx.JSON(http.StatusOK, res)
 }

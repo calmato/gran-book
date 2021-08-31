@@ -42,6 +42,18 @@ func (us Users) Map() map[string]*User {
 	return res
 }
 
+func (us Users) IsExists(userIDs ...string) bool {
+	m := us.Map()
+	for _, userID := range userIDs {
+		if _, ok := m[userID]; ok {
+			continue
+		}
+
+		return false
+	}
+	return true
+}
+
 type UserProfile struct {
 	*pb.UserProfile
 }

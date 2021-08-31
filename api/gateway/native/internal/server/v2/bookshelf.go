@@ -10,6 +10,7 @@ import (
 	"github.com/calmato/gran-book/api/gateway/native/internal/server/util"
 	pb "github.com/calmato/gran-book/api/gateway/native/proto"
 	"github.com/gin-gonic/gin"
+	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
 )
 
@@ -65,7 +66,6 @@ func (h *bookshelfHandler) List(ctx *gin.Context) {
 	}
 
 	bs := entity.NewBooks(booksOutput.Books)
-
 	res := h.getBookshelfListResponse(
 		bss, bs.Map(), bookshelvesOutput.Limit, bookshelvesOutput.Offset, bookshelvesOutput.Total,
 	)
@@ -81,45 +81,59 @@ func (h *bookshelfHandler) Get(ctx *gin.Context) {
 		return
 	}
 
-	bookInput := &pb.GetBookRequest{
-		BookId: bookID,
-	}
-
 	c := util.SetMetadata(ctx)
-	bookOutput, err := h.bookClient.GetBook(c, bookInput)
-	if err != nil {
+	eg, ectx := errgroup.WithContext(c)
+
+	var b *entity.Book
+	eg.Go(func() error {
+		in := &pb.GetBookRequest{
+			BookId: bookID,
+		}
+		out, err := h.bookClient.GetBook(ectx, in)
+		if err != nil {
+			return err
+		}
+		b = entity.NewBook(out.Book)
+		return nil
+	})
+
+	var bs *entity.Bookshelf
+	eg.Go(func() error {
+		in := &pb.GetBookshelfRequest{
+			UserId: userID,
+			BookId: bookID,
+		}
+		out, err := h.bookClient.GetBookshelf(ectx, in)
+		if err != nil {
+			return err
+		}
+		bs = entity.NewBookshelf(out.Bookshelf)
+		return nil
+	})
+
+	var rs entity.Reviews
+	var limit, offset, total int64
+	eg.Go(func() error {
+		in := &pb.ListBookReviewRequest{
+			BookId: bookID,
+			Limit:  20,
+			Offset: 0,
+		}
+		out, err := h.bookClient.ListBookReview(ectx, in)
+		if err != nil {
+			return err
+		}
+		limit = out.Limit
+		offset = out.Offset
+		total = out.Total
+		rs = entity.NewReviews(out.Reviews)
+		return nil
+	})
+
+	if err := eg.Wait(); err != nil {
 		util.ErrorHandling(ctx, err)
 		return
 	}
-
-	b := entity.NewBook(bookOutput.Book)
-
-	bookshelfInput := &pb.GetBookshelfRequest{
-		UserId: userID,
-		BookId: bookID,
-	}
-
-	bookshelfOutput, err := h.bookClient.GetBookshelf(c, bookshelfInput)
-	if err != nil {
-		util.ErrorHandling(ctx, err)
-		return
-	}
-
-	bs := entity.NewBookshelf(bookshelfOutput.Bookshelf)
-
-	reviewsInput := &pb.ListBookReviewRequest{
-		BookId: bs.BookId,
-		Limit:  20,
-		Offset: 0,
-	}
-
-	reviewsOutput, err := h.bookClient.ListBookReview(c, reviewsInput)
-	if err != nil {
-		util.ErrorHandling(ctx, err)
-		return
-	}
-
-	rs := entity.NewReviews(reviewsOutput.Reviews)
 
 	usersInput := &pb.MultiGetUserRequest{
 		UserIds: rs.UserIDs(),
@@ -132,22 +146,23 @@ func (h *bookshelfHandler) Get(ctx *gin.Context) {
 	}
 
 	us := entity.NewUsers(usersOutput.Users)
-
-	res := h.getBookshelfResponse(bs, b, rs, us.Map(), reviewsOutput.Limit, reviewsOutput.Offset, reviewsOutput.Total)
+	res := h.getBookshelfResponse(bs, b, rs, us.Map(), limit, offset, total)
 	ctx.JSON(http.StatusOK, res)
 }
 
 func (h *bookshelfHandler) getBookshelfResponse(
 	bs *entity.Bookshelf, b *entity.Book,
 	rs entity.Reviews, us map[string]*entity.User,
-	limit, offset, total int64,
+	reviewLimit int64,
+	reviewOffset int64,
+	reviewTotal int64,
 ) *response.BookshelfResponse {
 	bookshelf := &response.BookshelfResponse_Bookshelf{
 		Status:    bs.Status().Name(),
-		ReadOn:    bs.GetReadOn(),
-		ReviewID:  bs.GetReviewId(),
-		CreatedAt: bs.GetCreatedAt(),
-		UpdatedAt: bs.GetUpdatedAt(),
+		ReadOn:    bs.ReadOn,
+		ReviewID:  bs.ReviewId,
+		CreatedAt: bs.CreatedAt,
+		UpdatedAt: bs.UpdatedAt,
 	}
 
 	reviews := make([]*response.BookshelfResponse_Review, len(rs))
@@ -191,9 +206,9 @@ func (h *bookshelfHandler) getBookshelfResponse(
 		UpdatedAt:    b.UpdatedAt,
 		Bookshelf:    bookshelf,
 		Reviews:      reviews,
-		ReviewLimit:  limit,
-		ReviewOffset: offset,
-		ReviewTotal:  total,
+		ReviewLimit:  reviewLimit,
+		ReviewOffset: reviewOffset,
+		ReviewTotal:  reviewTotal,
 	}
 }
 

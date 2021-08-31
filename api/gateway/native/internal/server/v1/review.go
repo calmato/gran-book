@@ -10,6 +10,7 @@ import (
 	"github.com/calmato/gran-book/api/gateway/native/internal/server/util"
 	pb "github.com/calmato/gran-book/api/gateway/native/proto"
 	"github.com/gin-gonic/gin"
+	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
 )
 
@@ -74,8 +75,7 @@ func (h *reviewHandler) ListByBook(ctx *gin.Context) {
 	}
 
 	us := entity.NewUsers(usersOutput.Users)
-
-	res := h.getBookReviewListResponse(rs, us.Map(), reviewsInput.Limit, reviewsInput.Offset, reviewsOutput.Total)
+	res := h.getBookReviewListResponse(rs, us.Map(), reviewsOutput.Limit, reviewsOutput.Offset, reviewsOutput.Total)
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -111,8 +111,7 @@ func (h *reviewHandler) ListByUser(ctx *gin.Context) {
 	}
 
 	bs := entity.NewBooks(booksOutput.Books)
-
-	res := h.getUserReviewListResponse(rs, bs.Map(), reviewsInput.Limit, reviewsInput.Offset, reviewsOutput.Total)
+	res := h.getUserReviewListResponse(rs, bs.Map(), reviewsOutput.Limit, reviewsOutput.Offset, reviewsOutput.Total)
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -130,28 +129,34 @@ func (h *reviewHandler) GetByBook(ctx *gin.Context) {
 		return
 	}
 
-	bookInput := &pb.GetBookRequest{
-		BookId: bookID,
-	}
-
 	c := util.SetMetadata(ctx)
-	_, err = h.bookClient.GetBook(c, bookInput)
-	if err != nil {
+	eg, ectx := errgroup.WithContext(c)
+
+	eg.Go(func() error {
+		bookInput := &pb.GetBookRequest{
+			BookId: bookID,
+		}
+		_, err = h.bookClient.GetBook(ectx, bookInput)
+		return err
+	})
+
+	var r *entity.Review
+	eg.Go(func() error {
+		reviewInput := &pb.GetReviewRequest{
+			ReviewId: reviewID,
+		}
+		reviewOutput, err := h.bookClient.GetReview(ectx, reviewInput)
+		if err != nil {
+			return err
+		}
+		r = entity.NewReview(reviewOutput.Review)
+		return nil
+	})
+
+	if err := eg.Wait(); err != nil {
 		util.ErrorHandling(ctx, err)
 		return
 	}
-
-	reviewInput := &pb.GetReviewRequest{
-		ReviewId: reviewID,
-	}
-
-	reviewOutput, err := h.bookClient.GetReview(c, reviewInput)
-	if err != nil {
-		util.ErrorHandling(ctx, err)
-		return
-	}
-
-	r := entity.NewReview(reviewOutput.Review)
 
 	userInput := &pb.GetUserRequest{
 		UserId: r.UserId,
@@ -164,7 +169,6 @@ func (h *reviewHandler) GetByBook(ctx *gin.Context) {
 	}
 
 	u := entity.NewUser(userOutput.User)
-
 	res := h.getBookReviewResponse(r, u)
 	ctx.JSON(http.StatusOK, res)
 }
@@ -207,7 +211,6 @@ func (h *reviewHandler) GetByUser(ctx *gin.Context) {
 	}
 
 	b := entity.NewBook(bookOutput.Book)
-
 	res := h.getUserReviewResponse(r, b)
 	ctx.JSON(http.StatusOK, res)
 }

@@ -79,7 +79,6 @@ func (h *chatHandler) ListRoom(ctx *gin.Context) {
 	}
 
 	us := entity.NewUsers(usersOutput.Users)
-
 	res := h.getChatRoomListResponse(crs, us.Map())
 	ctx.JSON(http.StatusOK, res)
 }
@@ -117,14 +116,10 @@ func (h *chatHandler) CreateRoom(ctx *gin.Context) {
 	}
 
 	us := entity.NewUsers(usersOutput.Users)
-	userMap := us.Map()
-	for _, userID := range userIDs {
-		if userMap[userID] != nil {
-			continue
-		}
-
+	if ok := us.IsExists(userIDs...); !ok {
 		err := fmt.Errorf("one of the user ids does not exist")
 		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
+		return
 	}
 
 	roomInput := &pb.CreateChatRoomRequest{
@@ -138,7 +133,6 @@ func (h *chatHandler) CreateRoom(ctx *gin.Context) {
 	}
 
 	cr := entity.NewChatRoom(roomOutput.Room)
-
 	res := h.getChatRoomResponse(cr, us.Map())
 	ctx.JSON(http.StatusOK, res)
 }
@@ -176,7 +170,6 @@ func (h *chatHandler) CreateTextMessage(ctx *gin.Context) {
 	}
 
 	cm := entity.NewChatMessage(messageOutput.Message)
-
 	res := h.getChatMessageResponse(cm, a)
 	ctx.JSON(http.StatusOK, res)
 }
@@ -192,8 +185,6 @@ func (h *chatHandler) CreateImageMessage(ctx *gin.Context) {
 		util.ErrorHandling(ctx, err)
 		return
 	}
-
-	a := entity.NewAuth(userOutput.Auth)
 
 	file, _, err := ctx.Request.FormFile("image")
 	if err != nil {
@@ -226,12 +217,11 @@ func (h *chatHandler) CreateImageMessage(ctx *gin.Context) {
 	count++
 
 	for {
-		_, err := file.Read(buf)
-		if err == io.EOF {
-			break
-		}
+		if _, err = file.Read(buf); err != nil {
+			if err == io.EOF {
+				break
+			}
 
-		if err != nil {
 			util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
 			return
 		}
@@ -241,8 +231,7 @@ func (h *chatHandler) CreateImageMessage(ctx *gin.Context) {
 			Position: count,
 		}
 
-		err = stream.Send(in)
-		if err != nil {
+		if err = stream.Send(in); err != nil {
 			util.ErrorHandling(ctx, entity.ErrInternalServerError.New(err))
 			return
 		}
@@ -256,8 +245,8 @@ func (h *chatHandler) CreateImageMessage(ctx *gin.Context) {
 		return
 	}
 
+	a := entity.NewAuth(userOutput.Auth)
 	cm := entity.NewChatMessage(messageOutput.Message)
-
 	res := h.getChatMessageResponse(cm, a)
 	ctx.JSON(http.StatusOK, res)
 }

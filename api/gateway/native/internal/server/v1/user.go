@@ -51,7 +51,6 @@ func (h *userHandler) ListFollow(ctx *gin.Context) {
 	}
 
 	fs := entity.NewFollows(out.Follows)
-
 	res := h.getFollowListResponse(fs, out.Limit, out.Offset, out.Total)
 	ctx.JSON(http.StatusOK, res)
 }
@@ -76,7 +75,6 @@ func (h *userHandler) ListFollower(ctx *gin.Context) {
 	}
 
 	fs := entity.NewFollowers(out.Followers)
-
 	res := h.getFollowerListResponse(fs, out.Limit, out.Offset, out.Total)
 	ctx.JSON(http.StatusOK, res)
 }
@@ -97,7 +95,6 @@ func (h *userHandler) GetProfile(ctx *gin.Context) {
 	}
 
 	p := entity.NewUserProfile(out.Profile)
-
 	res := h.getUserProfileResponse(p)
 	ctx.JSON(http.StatusOK, res)
 }
@@ -120,7 +117,6 @@ func (h *userHandler) Follow(ctx *gin.Context) {
 	}
 
 	p := entity.NewUserProfile(out.Profile)
-
 	res := h.getUserProfileResponse(p)
 	ctx.JSON(http.StatusOK, res)
 }
@@ -143,7 +139,6 @@ func (h *userHandler) Unfollow(ctx *gin.Context) {
 	}
 
 	p := entity.NewUserProfile(out.Profile)
-
 	res := h.getUserProfileResponse(p)
 	ctx.JSON(http.StatusOK, res)
 }

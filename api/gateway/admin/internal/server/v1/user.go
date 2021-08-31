@@ -6,6 +6,7 @@ import (
 	"github.com/calmato/gran-book/api/gateway/admin/internal/entity"
 	response "github.com/calmato/gran-book/api/gateway/admin/internal/response/v1"
 	"github.com/calmato/gran-book/api/gateway/admin/internal/server/util"
+	"github.com/calmato/gran-book/api/gateway/admin/pkg/conv"
 	pb "github.com/calmato/gran-book/api/gateway/admin/proto"
 	"github.com/gin-gonic/gin"
 	"google.golang.org/grpc"
@@ -50,10 +51,16 @@ func (h *userHandler) List(ctx *gin.Context) {
 		in.Search = search
 	}
 
-	// TODO: CamelCase -> snake_case に変換する関数作成したい..
 	if by != "" {
+		// TODO: キャメルケース->スネークケースの変換はマイクロサービスでやる
+		field, err := conv.CamelToSnake(field)
+		if err != nil {
+			util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
+			return
+		}
+
 		order := &pb.Order{
-			Field:   by,
+			Field:   field,
 			OrderBy: entity.OrderBy(0).Value(direction).Proto(),
 		}
 

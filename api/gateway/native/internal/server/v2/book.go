@@ -76,8 +76,7 @@ func (h *bookHandler) Get(ctx *gin.Context) {
 	}
 
 	us := entity.NewUsers(usersOutput.Users)
-
-	res := h.getBookResponse(b, rs, us.Map(), reviewsInput.Limit, reviewsInput.Offset, reviewsOutput.Total)
+	res := h.getBookResponse(b, rs, us.Map(), reviewsOutput.Limit, reviewsOutput.Offset, reviewsOutput.Total)
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -88,18 +87,9 @@ func (h *bookHandler) getBook(ctx context.Context, bookID, key string) (*pb.Book
 		if err != nil {
 			return nil, entity.ErrBadRequest.New(err)
 		}
-
-		in := &pb.GetBookRequest{
-			BookId: bookID,
-		}
-
-		return h.bookClient.GetBook(ctx, in)
+		return h.bookClient.GetBook(ctx, &pb.GetBookRequest{BookId: bookID})
 	case "isbn":
-		in := &pb.GetBookByIsbnRequest{
-			Isbn: bookID,
-		}
-
-		return h.bookClient.GetBookByIsbn(ctx, in)
+		return h.bookClient.GetBookByIsbn(ctx, &pb.GetBookByIsbnRequest{Isbn: bookID})
 	default:
 		err := fmt.Errorf("this key is invalid argument")
 		return nil, entity.ErrBadRequest.New(err)
@@ -110,7 +100,9 @@ func (h *bookHandler) getBookResponse(
 	b *entity.Book,
 	rs entity.Reviews,
 	us map[string]*entity.User,
-	limit, offset, total int64,
+	reviewLimit int64,
+	reviewOffset int64,
+	reviewTotal int64,
 ) *response.BookResponse {
 	reviews := make([]*response.BookResponse_Review, len(rs))
 	for i, r := range rs {
@@ -152,8 +144,8 @@ func (h *bookHandler) getBookResponse(
 		CreatedAt:    b.CreatedAt,
 		UpdatedAt:    b.UpdatedAt,
 		Reviews:      reviews,
-		ReviewLimit:  limit,
-		ReviewOffset: offset,
-		ReviewTotal:  total,
+		ReviewLimit:  reviewLimit,
+		ReviewOffset: reviewOffset,
+		ReviewTotal:  reviewTotal,
 	}
 }
