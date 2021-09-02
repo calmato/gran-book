@@ -1,6 +1,6 @@
 import MockAdapter from 'axios-mock-adapter';
 import internalInstance from '~/lib/axios/internal';
-import { signInWithEmailAndPassword, signUpWithEmail } from '~/store/usecases/v2/auth';
+import { signInWithEmailAndPassword, signOut, signUpWithEmail } from '~/store/usecases/v2/auth';
 import { SingUpForm } from '~/types/forms';
 
 window.addEventListener = jest.fn();
@@ -22,6 +22,7 @@ jest.mock('~/lib/firebase', () => {
       });
     }),
     sendEmailVerification: jest.fn().mockResolvedValue,
+    signOut: jest.fn(),
   };
 });
 
@@ -65,5 +66,9 @@ describe('auth', () => {
     };
 
     await expect(signUpWithEmail(payload)).resolves.not.toThrow();
+  });
+
+  test('cant sign out service', async () => {
+    await expect(signOut()).resolves.not.toThrow();
   });
 });

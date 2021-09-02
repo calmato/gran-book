@@ -33,3 +33,11 @@ export async function signUpWithEmail(payload: SingUpForm) {
     Promise.reject(e);
   }
 }
+
+/**
+ * firebase authenticationを使ってユーザーをログアウトします。
+ * @returns
+ */
+export async function signOut() {
+  await firebase.auth().signOut();
+}
