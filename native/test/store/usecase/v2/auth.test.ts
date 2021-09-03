@@ -19,15 +19,20 @@ jest.mock('~/lib/firebase', () => {
   return {
     auth: jest.fn().mockReturnThis(),
     currentUser: jest.fn().mockReturnThis(),
-    signInWithEmailAndPassword: jest.fn(() => {
-      return Promise.resolve({
-        user: {
-          uid: '1234567890',
-          email: 'test@calmato.dev',
-          emailVerified: true,
-        },
-      });
-    }),
+    signInWithEmailAndPassword: jest
+      .fn()
+      .mockImplementationOnce(() => {
+        return Promise.resolve({
+          user: {
+            uid: '1234567890',
+            email: 'test@calmato.dev',
+            emailVerified: true,
+          },
+        });
+      })
+      .mockImplementationOnce(() => {
+        return Promise.reject({});
+      }),
     sendEmailVerification: jest.fn().mockResolvedValue,
     signOut: jest.fn(),
   };
@@ -61,6 +66,15 @@ describe('auth', () => {
     expect(user?.email).toBe(payload.email);
   });
 
+  test('return promise reject when sign in failed', async () => {
+    const payload = {
+      email: 'test@calmato.dev',
+      password: '12345678',
+    };
+
+    await expect(signInWithEmailAndPassword(payload)).rejects.not.toThrow();
+  });
+
   test('can sing up with email', async () => {
     mockAxios.onPost(`/${API_VERSION}/auth`).reply(201, {});
 
@@ -72,10 +86,24 @@ describe('auth', () => {
       agreement: true,
     };
 
-    await expect(signUpWithEmail(payload)).resolves.not.toThrow();
+    expect(signUpWithEmail(payload)).resolves.not.toThrow();
   });
 
-  test('cant sign out service', async () => {
+  test('can sing up with email', async () => {
+    mockAxios.onPost(`/${API_VERSION}/auth`).reply(400, {});
+
+    const inValidPayload: SingUpForm = {
+      username: 'test calmato',
+      email: '',
+      password: '12345678',
+      passwordConfirmation: '12345678',
+      agreement: true,
+    };
+
+    expect(signUpWithEmail(inValidPayload)).rejects.toBe({});
+  });
+
+  test('can sign out service', async () => {
     await expect(signOut()).resolves.not.toThrow();
   });
 
@@ -121,5 +149,10 @@ describe('auth', () => {
     expect(profile?.addressLine2).toBe(mockReturnValue.addressLine2);
     expect(profile?.createdAt).toBe(mockReturnValue.createdAt);
     expect(profile?.updatedAt).toBe(mockReturnValue.updatedAt);
+  });
+
+  test('return promise reject when api response status is 500', async () => {
+    mockAxios.onGet(`/${API_VERSION}/auth`).reply(500);
+    expect(getProfile()).rejects.not.toThrow();
   });
 });

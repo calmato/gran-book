@@ -32,8 +32,9 @@ export async function signUpWithEmail(payload: SingUpForm) {
   try {
     await internal.post(`/${API_VERSION}/auth`, payload);
     await firebase.auth().currentUser?.sendEmailVerification();
+    return Promise.resolve();
   } catch (e) {
-    Promise.reject(e);
+    return Promise.reject(e);
   }
 }
 
@@ -95,6 +96,6 @@ export async function getProfile() {
       updatedAt,
     } as Auth.ProfileValues;
   } catch (e) {
-    Promise.reject(e);
+    return Promise.reject(e);
   }
 }
