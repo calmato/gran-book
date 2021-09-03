@@ -1,5 +1,8 @@
+import { AxiosResponse } from 'axios';
 import { internal } from '~/lib/axios';
 import firebase from '~/lib/firebase';
+import { Auth } from '~/store/models';
+import { AuthV1Response } from '~/types/api/auth_apiv1_response_pb';
 import { SignInForm, SingUpForm } from '~/types/forms';
 
 const API_VERSION = 'v1';
@@ -40,4 +43,58 @@ export async function signUpWithEmail(payload: SingUpForm) {
  */
 export async function signOut() {
   await firebase.auth().signOut();
+}
+
+/**
+ * バックエンドAPIにリクエストを送り、現在ログインしているユーザーのプロフィール情報を取得します。
+ * @returns Promise<Auth.ProfileValues>
+ */
+export async function getProfile() {
+  try {
+    const { data }: AxiosResponse<AuthV1Response.AsObject> = await internal.get(
+      `${API_VERSION}/auth`,
+    );
+
+    const {
+      username,
+      gender,
+      phoneNumber,
+      thumbnailUrl,
+      selfIntroduction,
+      lastName,
+      firstName,
+      lastNameKana,
+      firstNameKana,
+      postalCode,
+      prefecture,
+      city,
+      addressLine1,
+      addressLine2,
+      createdAt,
+      updatedAt,
+    } = data;
+
+    // const values: Auth.ProfileValues
+    return {
+      username,
+      gender,
+      phoneNumber,
+      role: 0, // TODO: remove
+      thumbnailUrl,
+      selfIntroduction,
+      lastName,
+      firstName,
+      lastNameKana,
+      firstNameKana,
+      postalCode,
+      prefecture,
+      city,
+      addressLine1,
+      addressLine2,
+      createdAt,
+      updatedAt,
+    } as Auth.ProfileValues;
+  } catch (e) {
+    Promise.reject(e);
+  }
 }
