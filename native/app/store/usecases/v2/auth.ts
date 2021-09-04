@@ -32,7 +32,6 @@ export async function signUpWithEmail(payload: SingUpForm) {
   try {
     await internal.post(`/${API_VERSION}/auth`, payload);
     await firebase.auth().currentUser?.sendEmailVerification();
-    return Promise.resolve();
   } catch (e) {
     return Promise.reject(e);
   }

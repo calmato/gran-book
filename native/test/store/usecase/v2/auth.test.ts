@@ -6,8 +6,8 @@ import {
   signOut,
   signUpWithEmail,
 } from '~/store/usecases/v2/auth';
-import { AuthV1Response } from '~/types/api/auth_apiv1_response_pb';
 
+import { AuthV1Response } from '~/types/api/auth_apiv1_response_pb';
 import { SingUpForm } from '~/types/forms';
 
 window.addEventListener = jest.fn();
@@ -33,7 +33,7 @@ jest.mock('~/lib/firebase', () => {
       .mockImplementationOnce(() => {
         return Promise.reject({});
       }),
-    sendEmailVerification: jest.fn().mockResolvedValue,
+    sendEmailVerification: jest.fn().mockResolvedValue(undefined),
     signOut: jest.fn(),
   };
 });
@@ -86,10 +86,10 @@ describe('auth', () => {
       agreement: true,
     };
 
-    expect(signUpWithEmail(payload)).resolves.not.toThrow();
+    expect(signUpWithEmail(payload)).resolves.toBe(undefined);
   });
 
-  test('can sing up with email', async () => {
+  test('return promise reject when sign up failed', async () => {
     mockAxios.onPost(`/${API_VERSION}/auth`).reply(400, {});
 
     const inValidPayload: SingUpForm = {
