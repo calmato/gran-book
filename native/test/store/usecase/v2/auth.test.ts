@@ -66,13 +66,13 @@ describe('auth', () => {
     expect(user?.email).toBe(payload.email);
   });
 
-  test('return promise reject when sign in failed', async () => {
+  test('return promise reject when sign in failed', () => {
     const payload = {
       email: 'test@calmato.dev',
       password: '12345678',
     };
 
-    await expect(signInWithEmailAndPassword(payload)).rejects.not.toThrow();
+    expect(signInWithEmailAndPassword(payload)).rejects.not.toThrow();
   });
 
   test('can sing up with email', async () => {
