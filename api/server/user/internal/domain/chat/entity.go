@@ -20,7 +20,7 @@ type Room struct {
 type Rooms []*Room
 
 func (r *Room) Proto() *pb.ChatRoom {
-	m := &pb.ChatMessage{}
+	var m *pb.ChatMessage
 	if r.LatestMessage != nil {
 		m = r.LatestMessage.Proto()
 	}

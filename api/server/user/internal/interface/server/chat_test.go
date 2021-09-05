@@ -144,7 +144,7 @@ func TestAuthServer_CreateRoom(t *testing.T) {
 						UserIds:       []string{"user01", "user02"},
 						CreatedAt:     "",
 						UpdatedAt:     "",
-						LatestMessage: &pb.ChatMessage{},
+						LatestMessage: nil,
 					},
 				},
 			},
