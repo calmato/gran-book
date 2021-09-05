@@ -40,9 +40,9 @@ func TestCamelToSnake(t *testing.T) {
 		t.Run(tt.title, func(t *testing.T) {
 			t.Parallel()
 			got, err := CamelToSnake(tt.input)
-			if err != nil {
+			if tt.expectErr != nil {
 				require.Error(t, err)
-				assert.ErrorIs(t, tt.expectErr, err)
+				assert.Errorf(t, err, tt.expectErr.Error())
 				return
 			}
 
