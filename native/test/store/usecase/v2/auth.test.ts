@@ -2,6 +2,7 @@ import MockAdapter from 'axios-mock-adapter';
 import internalInstance from '~/lib/axios/internal';
 import {
   getProfile,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signOut,
   signUpWithEmail,
@@ -34,6 +35,14 @@ jest.mock('~/lib/firebase', () => {
         return Promise.reject({});
       }),
     sendEmailVerification: jest.fn().mockResolvedValue(undefined),
+    sendPasswordResetEmail: jest
+      .fn()
+      .mockImplementationOnce(() => {
+        return Promise.resolve(undefined);
+      })
+      .mockImplementationOnce(() => {
+        return Promise.reject({});
+      }),
     signOut: jest.fn(),
   };
 });
@@ -66,7 +75,7 @@ describe('auth', () => {
     expect(user?.email).toBe(payload.email);
   });
 
-  test('return promise reject when sign in failed', () => {
+  test('signInWithEmailAndPassword return promise reject when sign in failed', () => {
     const payload = {
       email: 'test@calmato.dev',
       password: '12345678',
@@ -89,7 +98,7 @@ describe('auth', () => {
     expect(signUpWithEmail(payload)).resolves.toBe(undefined);
   });
 
-  test('return promise reject when sign up failed', async () => {
+  test('signUpWithEmail return promise reject when sign up failed', async () => {
     mockAxios.onPost(`/${API_VERSION}/auth`).reply(400, {});
 
     const inValidPayload: SingUpForm = {
@@ -151,8 +160,18 @@ describe('auth', () => {
     expect(profile?.updatedAt).toBe(mockReturnValue.updatedAt);
   });
 
-  test('return promise reject when api response status is 500', async () => {
+  test('getProfile return promise reject when api response status is 500', async () => {
     mockAxios.onGet(`/${API_VERSION}/auth`).reply(500);
     expect(getProfile()).rejects.not.toThrow();
+  });
+
+  test('can send password reset email ', () => {
+    const payload = { email: 'test@calmato.dev' };
+    expect(sendPasswordResetEmail(payload)).resolves.toBe(undefined);
+  });
+
+  test('sendPasswordResetEmail return promise reject when invalidPayload', async () => {
+    const invalidPayload = { email: 'test2@calmato.dev' };
+    await expect(sendPasswordResetEmail(invalidPayload)).rejects.toEqual({});
   });
 });

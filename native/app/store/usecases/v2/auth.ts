@@ -98,3 +98,17 @@ export async function getProfile() {
     return Promise.reject(e);
   }
 }
+
+/**
+ * firebase authenticationを使って入力されたメールアドレスにパスワードリセットのリンクを送信します。
+ * @param payload
+ * @returns
+ */
+export async function sendPasswordResetEmail(payload: { email: string }) {
+  try {
+    const { email } = payload;
+    await firebase.auth().sendPasswordResetEmail(email);
+  } catch (e) {
+    return Promise.reject(e);
+  }
+}
