@@ -41,7 +41,7 @@ func TestAuthServer_ListRoom(t *testing.T) {
 					Return(nil)
 				mocks.ChatApplication.EXPECT().
 					ListRoom(ctx, "user01", gomock.Any()).
-					Return([]*chat.Room{room1, room2}, nil)
+					Return(chat.Rooms{room1, room2}, nil)
 			},
 			args: args{
 				req: &pb.ListChatRoomRequest{
@@ -140,9 +140,12 @@ func TestAuthServer_CreateRoom(t *testing.T) {
 			want: &test.TestResponse{
 				Code: codes.OK,
 				Message: &pb.ChatRoomResponse{
-					UserIds:   []string{"user01", "user02"},
-					CreatedAt: "",
-					UpdatedAt: "",
+					Room: &pb.ChatRoom{
+						UserIds:       []string{"user01", "user02"},
+						CreatedAt:     "",
+						UpdatedAt:     "",
+						LatestMessage: &pb.ChatMessage{},
+					},
 				},
 			},
 		},
@@ -240,9 +243,11 @@ func TestAuthServer_CreateMessage(t *testing.T) {
 			want: &test.TestResponse{
 				Code: codes.OK,
 				Message: &pb.ChatMessageResponse{
-					UserId:    "user01",
-					Text:      "テストメッセージ",
-					CreatedAt: "",
+					Message: &pb.ChatMessage{
+						UserId:    "user01",
+						Text:      "テストメッセージ",
+						CreatedAt: "",
+					},
 				},
 			},
 		},

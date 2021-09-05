@@ -2,13 +2,15 @@ package validation
 
 import (
 	"context"
+	"errors"
 
 	"github.com/calmato/gran-book/api/server/user/internal/domain/chat"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
-	"golang.org/x/xerrors"
 )
 
 type chatDomainValidation struct{}
+
+var errInvalidChatMessageField = errors.New("validation: this message requires either text or image")
 
 // NewChatDomainValidation - Chat関連のドメインバリデータ
 func NewChatDomainValidation() chat.Validation {
@@ -28,8 +30,7 @@ func (v *chatDomainValidation) Message(ctx context.Context, cm *chat.Message) er
 			},
 		}
 
-		err := xerrors.New("This message requires either text or image.")
-		return exception.InvalidDomainValidation.New(err, ves...)
+		return exception.InvalidDomainValidation.New(errInvalidChatMessageField, ves...)
 	}
 
 	return nil

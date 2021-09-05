@@ -23,8 +23,8 @@ func NewBookRepository(c *database.Client) book.Repository {
 	}
 }
 
-func (r *bookRepository) List(ctx context.Context, q *database.ListQuery) ([]*book.Book, error) {
-	bs := []*book.Book{}
+func (r *bookRepository) List(ctx context.Context, q *database.ListQuery) (book.Books, error) {
+	bs := book.Books{}
 
 	sql := r.client.DB.Preload("Authors")
 	err := r.client.GetListQuery("books", sql, q).Find(&bs).Error
@@ -35,8 +35,8 @@ func (r *bookRepository) List(ctx context.Context, q *database.ListQuery) ([]*bo
 	return bs, nil
 }
 
-func (r *bookRepository) ListBookshelf(ctx context.Context, q *database.ListQuery) ([]*book.Bookshelf, error) {
-	bss := []*book.Bookshelf{}
+func (r *bookRepository) ListBookshelf(ctx context.Context, q *database.ListQuery) (book.Bookshelves, error) {
+	bss := book.Bookshelves{}
 
 	sql := r.client.DB.Preload("Book").Preload("Book.Authors")
 	err := r.client.GetListQuery("bookshelves", sql, q).Find(&bss).Error
@@ -47,8 +47,8 @@ func (r *bookRepository) ListBookshelf(ctx context.Context, q *database.ListQuer
 	return bss, nil
 }
 
-func (r *bookRepository) ListReview(ctx context.Context, q *database.ListQuery) ([]*book.Review, error) {
-	rvs := []*book.Review{}
+func (r *bookRepository) ListReview(ctx context.Context, q *database.ListQuery) (book.Reviews, error) {
+	rvs := book.Reviews{}
 
 	err := r.client.GetListQuery("reviews", r.client.DB, q).Find(&rvs).Error
 	if err != nil {
@@ -85,8 +85,8 @@ func (r *bookRepository) CountReview(ctx context.Context, q *database.ListQuery)
 	return total, nil
 }
 
-func (r *bookRepository) MultiGet(ctx context.Context, bookIDs []int) ([]*book.Book, error) {
-	bs := []*book.Book{}
+func (r *bookRepository) MultiGet(ctx context.Context, bookIDs []int) (book.Books, error) {
+	bs := book.Books{}
 
 	err := r.client.DB.Table("books").Preload("Authors").Where("id IN (?)", bookIDs).Find(&bs).Error
 	if err != nil {
@@ -474,7 +474,7 @@ func (r *bookRepository) updateReview(tx *gorm.DB, rv *book.Review) error {
 	return nil
 }
 
-func (r *bookRepository) MultipleCreate(ctx context.Context, bs []*book.Book) error {
+func (r *bookRepository) MultipleCreate(ctx context.Context, bs book.Books) error {
 	tx := r.client.DB.Begin()
 	defer func() {
 		if r := recover(); r != nil {
@@ -503,7 +503,7 @@ func (r *bookRepository) MultipleCreate(ctx context.Context, bs []*book.Book) er
 	return tx.Commit().Error
 }
 
-func (r *bookRepository) MultipleUpdate(ctx context.Context, bs []*book.Book) error {
+func (r *bookRepository) MultipleUpdate(ctx context.Context, bs book.Books) error {
 	tx := r.client.DB.Begin()
 	defer func() {
 		if r := recover(); r != nil {

@@ -53,7 +53,7 @@ func NewRegistry(
 		HTTP:          util.NewHTTPHandler(),
 		V1Auth:        v1.NewAuthHandler(authConn),
 		V1Book:        v1.NewBookHandler(bookConn, authConn),
-		V1Bookshelf:   v1.NewBookshelfHandler(bookConn, authConn, userConn),
+		V1Bookshelf:   v1.NewBookshelfHandler(bookConn, authConn),
 		V1Chat:        v1.NewChatHandler(chatConn, authConn, userConn),
 		V1Review:      v1.NewReviewHandler(bookConn, authConn, userConn),
 		V1Top:         v1.NewTopHandler(),

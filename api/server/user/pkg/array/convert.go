@@ -1,10 +1,9 @@
 package array
 
 import (
+	"fmt"
 	"reflect"
 	"strconv"
-
-	"golang.org/x/xerrors"
 )
 
 // ConvertStrings - 文字列型の配列に変換
@@ -30,8 +29,7 @@ func ConvertStrings(items interface{}) ([]string, error) {
 	case []string:
 		strs = v
 	default:
-		err := xerrors.Errorf("%v is an unsupported type.", reflect.TypeOf(items))
-		return []string{}, err
+		return []string{}, fmt.Errorf("array: %v is an unsupported type", reflect.TypeOf(items))
 	}
 
 	return strs, nil

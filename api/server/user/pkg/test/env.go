@@ -18,7 +18,7 @@ type testEnv struct {
 func newTestEnv() (*testEnv, error) {
 	env := &testEnv{}
 	if err := envconfig.Process("", env); err != nil {
-		return nil, fmt.Errorf("failed to load test environment: %w", err)
+		return nil, fmt.Errorf("test: failed to load test environment: %w", err)
 	}
 
 	return env, nil
