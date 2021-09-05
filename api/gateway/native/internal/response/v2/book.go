@@ -13,7 +13,7 @@ type BookResponse struct {
 	RakutenURL   string                 `json:"rakutenUrl"`   // 楽天ショップURL
 	Size         string                 `json:"size"`         // 楽天書籍サイズ
 	Author       string                 `json:"author"`       // 著者名一覧
-	AuthorKana   string                 `json:"authorKana"`   /// 著者名一覧(かな)
+	AuthorKana   string                 `json:"authorKana"`   // 著者名一覧(かな)
 	Reviews      []*BookResponse_Review `json:"reviewsList"`  // レビュー一覧
 	ReviewLimit  int64                  `json:"reviewLimit"`  // レビュー取得上限
 	ReviewOffset int64                  `json:"reviewOffset"` // レビュー取得開始位置

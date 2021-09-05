@@ -13,7 +13,7 @@ type BookshelfResponse struct {
 	RakutenURL   string                       `json:"rakutenUrl"`   // 楽天ショップURL
 	Size         string                       `json:"size"`         // 楽天書籍サイズ
 	Author       string                       `json:"author"`       // 著者名一覧
-	AuthorKana   string                       `json:"author_kana"`  /// 著者名一覧(かな)
+	AuthorKana   string                       `json:"author_kana"`  // 著者名一覧(かな)
 	Bookshelf    *BookshelfResponse_Bookshelf `json:"bookshelf"`    // ユーザーの本棚情報
 	CreatedAt    string                       `json:"createdAt"`    // 登録日時
 	UpdatedAt    string                       `json:"updatedAt"`    // 更新日時
@@ -48,7 +48,7 @@ type BookshelfListResponse_Book struct {
 	RakutenURL   string                           `json:"rakutenUrl"`   // 楽天ショップURL
 	Size         string                           `json:"size"`         // 楽天書籍サイズ
 	Author       string                           `json:"author"`       // 著者名一覧
-	AuthorKana   string                           `json:"authorKana"`   /// 著者名一覧(かな)
+	AuthorKana   string                           `json:"authorKana"`   // 著者名一覧(かな)
 	Bookshelf    *BookshelfListResponse_Bookshelf `json:"bookshelf"`    // ユーザーの本棚情報
 	CreatedAt    string                           `json:"createdAt"`    // 登録日時
 	UpdatedAt    string                           `json:"updatedAt"`    // 更新日時
