@@ -1141,7 +1141,7 @@ func TestBookServer_ReadBookshelf(t *testing.T) {
 					Bookshelf: &pb.Bookshelf{
 						BookId:    1,
 						UserId:    "user01",
-						Status:    int32(book.ReadStatus),
+						Status:    pb.BookshelfStatus_BOOKSHELF_STATUS_READ,
 						ReadOn:    "2021-08-01",
 						CreatedAt: "",
 						UpdatedAt: "",
@@ -1280,7 +1280,7 @@ func TestBookServer_ReadingBookshelf(t *testing.T) {
 					Bookshelf: &pb.Bookshelf{
 						BookId:    1,
 						UserId:    "user01",
-						Status:    int32(book.ReadingStatus),
+						Status:    pb.BookshelfStatus_BOOKSHELF_STATUS_READING,
 						ReadOn:    "",
 						CreatedAt: "",
 						UpdatedAt: "",
@@ -1417,7 +1417,7 @@ func TestBookServer_StackedBookshelf(t *testing.T) {
 					Bookshelf: &pb.Bookshelf{
 						BookId:    1,
 						UserId:    "user01",
-						Status:    int32(book.StackedStatus),
+						Status:    pb.BookshelfStatus_BOOKSHELF_STATUS_STACKED,
 						ReadOn:    "",
 						CreatedAt: "",
 						UpdatedAt: "",
@@ -1554,7 +1554,7 @@ func TestBookServer_ReleaseBookshelf(t *testing.T) {
 					Bookshelf: &pb.Bookshelf{
 						BookId:    1,
 						UserId:    "user01",
-						Status:    int32(book.ReleaseStatus),
+						Status:    pb.BookshelfStatus_BOOKSHELF_STATUS_RELEASE,
 						ReadOn:    "",
 						CreatedAt: "",
 						UpdatedAt: "",
@@ -1691,7 +1691,7 @@ func TestBookServer_WantBookshelf(t *testing.T) {
 					Bookshelf: &pb.Bookshelf{
 						BookId:    1,
 						UserId:    "user01",
-						Status:    int32(book.WantStatus),
+						Status:    pb.BookshelfStatus_BOOKSHELF_STATUS_WANT,
 						ReadOn:    "",
 						CreatedAt: "",
 						UpdatedAt: "",
