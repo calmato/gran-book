@@ -104,9 +104,9 @@ func (h *bookHandler) getBookResponse(
 	reviewOffset int64,
 	reviewTotal int64,
 ) *response.BookResponse {
-	reviews := make([]*response.BookResponse_Review, len(rs))
+	reviews := make([]*response.BookReview, len(rs))
 	for i, r := range rs {
-		user := &response.BookResponse_User{
+		user := &response.BookUser{
 			ID:           r.UserId,
 			Username:     "unknown",
 			ThumbnailURL: "",
@@ -117,7 +117,7 @@ func (h *bookHandler) getBookResponse(
 			user.ThumbnailURL = us[r.UserId].ThumbnailUrl
 		}
 
-		review := &response.BookResponse_Review{
+		review := &response.BookReview{
 			ID:         r.Id,
 			Impression: r.Impression,
 			CreatedAt:  r.CreatedAt,

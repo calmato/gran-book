@@ -146,9 +146,9 @@ func (h *userHandler) Unfollow(ctx *gin.Context) {
 func (h *userHandler) getFollowListResponse(
 	fs entity.Follows, limit, offset, total int64,
 ) *response.FollowListResponse {
-	users := make([]*response.FollowListResponse_User, len(fs))
+	users := make([]*response.FollowListUser, len(fs))
 	for i, f := range fs {
-		user := &response.FollowListResponse_User{
+		user := &response.FollowListUser{
 			ID:               f.Id,
 			Username:         f.Username,
 			ThumbnailURL:     f.ThumbnailUrl,
@@ -170,9 +170,9 @@ func (h *userHandler) getFollowListResponse(
 func (h *userHandler) getFollowerListResponse(
 	fs entity.Followers, limit, offset, total int64,
 ) *response.FollowerListResponse {
-	users := make([]*response.FollowerListResponse_User, len(fs))
+	users := make([]*response.FollowerListUser, len(fs))
 	for i, f := range fs {
-		user := &response.FollowerListResponse_User{
+		user := &response.FollowerListUser{
 			ID:               f.Id,
 			Username:         f.Username,
 			ThumbnailURL:     f.ThumbnailUrl,
@@ -192,7 +192,7 @@ func (h *userHandler) getFollowerListResponse(
 }
 
 func (h *userHandler) getUserProfileResponse(p *entity.UserProfile) *response.UserProfileResponse {
-	products := make([]*response.UserProfileResponse_Product, 0)
+	products := make([]*response.UserProfileProduct, 0)
 
 	return &response.UserProfileResponse{
 		ID:               p.Id,

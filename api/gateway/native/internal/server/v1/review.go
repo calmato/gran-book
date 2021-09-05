@@ -216,7 +216,7 @@ func (h *reviewHandler) GetByUser(ctx *gin.Context) {
 }
 
 func (h *reviewHandler) getBookReviewResponse(r *entity.Review, u *entity.User) *response.BookReviewResponse {
-	user := &response.BookReviewResponse_User{
+	user := &response.BookReviewUser{
 		ID:           r.UserId,
 		Username:     "unknown",
 		ThumbnailURL: "",
@@ -237,7 +237,7 @@ func (h *reviewHandler) getBookReviewResponse(r *entity.Review, u *entity.User) 
 }
 
 func (h *reviewHandler) getUserReviewResponse(r *entity.Review, b *entity.Book) *response.UserReviewResponse {
-	book := &response.UserReviewResponse_Book{
+	book := &response.UserReviewBook{
 		ID:           b.Id,
 		Title:        b.Title,
 		ThumbnailURL: b.ThumbnailUrl,
@@ -255,9 +255,9 @@ func (h *reviewHandler) getUserReviewResponse(r *entity.Review, b *entity.Book) 
 func (h *reviewHandler) getBookReviewListResponse(
 	rs entity.Reviews, us map[string]*entity.User, limit, offset, total int64,
 ) *response.BookReviewListResponse {
-	reviews := make([]*response.BookReviewListResponse_Review, len(rs))
+	reviews := make([]*response.BookReviewListReview, len(rs))
 	for i, r := range rs {
-		user := &response.BookReviewListResponse_User{
+		user := &response.BookReviewListUser{
 			ID:           r.UserId,
 			Username:     "unknown",
 			ThumbnailURL: "",
@@ -268,7 +268,7 @@ func (h *reviewHandler) getBookReviewListResponse(
 			user.ThumbnailURL = us[r.UserId].ThumbnailUrl
 		}
 
-		review := &response.BookReviewListResponse_Review{
+		review := &response.BookReviewListReview{
 			ID:         r.Id,
 			Impression: r.Impression,
 			CreatedAt:  r.CreatedAt,
@@ -290,20 +290,20 @@ func (h *reviewHandler) getBookReviewListResponse(
 func (h *reviewHandler) getUserReviewListResponse(
 	rs entity.Reviews, bs map[int64]*entity.Book, limit, offset, total int64,
 ) *response.UserReviewListResponse {
-	reviews := make([]*response.UserReviewListResponse_Review, 0, len(rs))
+	reviews := make([]*response.UserReviewListReview, 0, len(rs))
 	for i, r := range rs {
 		b, ok := bs[r.BookId]
 		if !ok {
 			continue
 		}
 
-		book := &response.UserReviewListResponse_Book{
+		book := &response.UserReviewListBook{
 			ID:           b.Id,
 			Title:        b.Title,
 			ThumbnailURL: b.ThumbnailUrl,
 		}
 
-		review := &response.UserReviewListResponse_Review{
+		review := &response.UserReviewListReview{
 			ID:         r.Id,
 			Impression: r.Impression,
 			CreatedAt:  r.CreatedAt,

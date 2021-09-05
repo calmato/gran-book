@@ -28,7 +28,7 @@ func (h *topHandler) UserTop(ctx *gin.Context) {
 func (h *topHandler) getUserTopResponse() *response.UserTopResponse {
 	now := time.Now().Local()
 
-	results := []*response.UserTopResponse_MonthlyResult{
+	results := []*response.UserTopMonthlyResult{
 		{
 			Year:      int32(now.Year()),
 			Month:     int32(now.Month()),

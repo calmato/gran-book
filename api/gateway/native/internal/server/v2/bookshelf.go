@@ -157,7 +157,7 @@ func (h *bookshelfHandler) getBookshelfResponse(
 	reviewOffset int64,
 	reviewTotal int64,
 ) *response.BookshelfResponse {
-	bookshelf := &response.BookshelfResponse_Bookshelf{
+	bookshelf := &response.BookshelfBookshelf{
 		Status:    bs.Status().Name(),
 		ReadOn:    bs.ReadOn,
 		ReviewID:  bs.ReviewId,
@@ -165,9 +165,9 @@ func (h *bookshelfHandler) getBookshelfResponse(
 		UpdatedAt: bs.UpdatedAt,
 	}
 
-	reviews := make([]*response.BookshelfResponse_Review, len(rs))
+	reviews := make([]*response.BookshelfReview, len(rs))
 	for i, r := range rs {
-		user := &response.BookshelfResponse_User{
+		user := &response.BookshelfUser{
 			ID:           r.UserId,
 			Username:     "unknown",
 			ThumbnailURL: "",
@@ -178,7 +178,7 @@ func (h *bookshelfHandler) getBookshelfResponse(
 			user.ThumbnailURL = us[r.UserId].ThumbnailUrl
 		}
 
-		review := &response.BookshelfResponse_Review{
+		review := &response.BookshelfReview{
 			ID:         r.Id,
 			Impression: r.Impression,
 			CreatedAt:  r.CreatedAt,
@@ -215,14 +215,14 @@ func (h *bookshelfHandler) getBookshelfResponse(
 func (h *bookshelfHandler) getBookshelfListResponse(
 	bss entity.Bookshelves, bm map[int64]*entity.Book, limit, offset, total int64,
 ) *response.BookshelfListResponse {
-	books := make([]*response.BookshelfListResponse_Book, 0, len(bss))
+	books := make([]*response.BookshelfListBook, 0, len(bss))
 	for _, bs := range bss {
 		b, ok := bm[bs.BookId]
 		if !ok {
 			continue
 		}
 
-		bookshelf := &response.BookshelfListResponse_Bookshelf{
+		bookshelf := &response.BookshelfListBookshelf{
 			Status:    bs.Status().Name(),
 			ReadOn:    bs.ReadOn,
 			ReviewID:  bs.ReviewId,
@@ -230,7 +230,7 @@ func (h *bookshelfHandler) getBookshelfListResponse(
 			UpdatedAt: bs.UpdatedAt,
 		}
 
-		book := &response.BookshelfListResponse_Book{
+		book := &response.BookshelfListBook{
 			ID:           b.Id,
 			Title:        b.Title,
 			TitleKana:    b.TitleKana,

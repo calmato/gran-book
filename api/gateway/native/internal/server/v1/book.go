@@ -215,7 +215,7 @@ func (h *bookHandler) getBookResponse(b *entity.Book, bs *entity.Bookshelf) *res
 	}
 
 	if bs != nil {
-		bookshelf := &response.BookResponse_Bookshelf{
+		bookshelf := &response.BookBookshelf{
 			ID:         bs.Id,
 			Status:     bs.Status().Name(),
 			Impression: "",

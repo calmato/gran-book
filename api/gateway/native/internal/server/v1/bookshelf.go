@@ -401,7 +401,7 @@ func (h *bookshelfHandler) Delete(ctx *gin.Context) {
 }
 
 func (h *bookshelfHandler) getBookshelfResponse(bs *entity.Bookshelf, b *entity.Book) *response.BookshelfResponse {
-	bookshelf := &response.BookshelfResponse_Bookshelf{
+	bookshelf := &response.BookshelfBookshelf{
 		ID:         bs.Id,
 		Status:     bs.Status().Name(),
 		ReadOn:     bs.ReadOn,
@@ -432,14 +432,14 @@ func (h *bookshelfHandler) getBookshelfResponse(bs *entity.Bookshelf, b *entity.
 func (h *bookshelfHandler) getBookshelfListResponse(
 	bss entity.Bookshelves, bm map[int64]*entity.Book, limit, offset, total int64,
 ) *response.BookshelfListResponse {
-	books := make([]*response.BookshelfListResponse_Book, 0, len(bss))
+	books := make([]*response.BookshelfListBook, 0, len(bss))
 	for _, bs := range bss {
 		b, ok := bm[bs.BookId]
 		if !ok {
 			continue
 		}
 
-		bookshelf := &response.BookshelfListResponse_Bookshelf{
+		bookshelf := &response.BookshelfListBookshelf{
 			ID:        bs.Id,
 			Status:    bs.Status().Name(),
 			ReadOn:    bs.ReadOn,
@@ -447,7 +447,7 @@ func (h *bookshelfHandler) getBookshelfListResponse(
 			UpdatedAt: bs.UpdatedAt,
 		}
 
-		book := &response.BookshelfListResponse_Book{
+		book := &response.BookshelfListBook{
 			ID:           b.Id,
 			Title:        b.Title,
 			TitleKana:    b.TitleKana,

@@ -267,9 +267,9 @@ func (h *chatHandler) currentUser(ctx context.Context, userID string) (*pb.AuthR
 }
 
 func (h *chatHandler) getChatRoomResponse(cr *entity.ChatRoom, us map[string]*entity.User) *response.ChatRoomResponse {
-	users := make([]*response.ChatRoomResponse_User, len(cr.UserIds))
+	users := make([]*response.ChatRoomUser, len(cr.UserIds))
 	for i, userID := range cr.UserIds {
-		user := &response.ChatRoomResponse_User{
+		user := &response.ChatRoomUser{
 			ID:       userID,
 			Username: "unknown",
 		}
@@ -293,11 +293,11 @@ func (h *chatHandler) getChatRoomResponse(cr *entity.ChatRoom, us map[string]*en
 func (h *chatHandler) getChatRoomListResponse(
 	crs entity.ChatRooms, us map[string]*entity.User,
 ) *response.ChatRoomListResponse {
-	rooms := make([]*response.ChatRoomListResponse_Room, len(crs))
+	rooms := make([]*response.ChatRoomListRoom, len(crs))
 	for i, r := range crs {
-		users := make([]*response.ChatRoomListResponse_User, len(r.UserIds))
+		users := make([]*response.ChatRoomListUser, len(r.UserIds))
 		for j, userID := range r.UserIds {
-			user := &response.ChatRoomListResponse_User{
+			user := &response.ChatRoomListUser{
 				ID:       userID,
 				Username: "unknown",
 			}
@@ -310,7 +310,7 @@ func (h *chatHandler) getChatRoomListResponse(
 			users[j] = user
 		}
 
-		message := &response.ChatRoomListResponse_Message{}
+		message := &response.ChatRoomListMessage{}
 		if r.LatestMessage != nil {
 			message.UserID = r.LatestMessage.UserId
 			message.Text = r.LatestMessage.Text
@@ -318,7 +318,7 @@ func (h *chatHandler) getChatRoomListResponse(
 			message.CreatedAt = r.LatestMessage.CreatedAt
 		}
 
-		room := &response.ChatRoomListResponse_Room{
+		room := &response.ChatRoomListRoom{
 			ID:            r.Id,
 			CreatedAt:     r.CreatedAt,
 			UpdatedAt:     r.UpdatedAt,
@@ -335,7 +335,7 @@ func (h *chatHandler) getChatRoomListResponse(
 }
 
 func (h *chatHandler) getChatMessageResponse(cm *entity.ChatMessage, a *entity.Auth) *response.ChatMessageResponse {
-	user := &response.ChatMessageResponse_User{
+	user := &response.ChatMessageUser{
 		ID:           a.Id,
 		Username:     a.Username,
 		ThumbnailURL: a.ThumbnailUrl,
