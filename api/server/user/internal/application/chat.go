@@ -2,6 +2,7 @@ package application
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/calmato/gran-book/api/server/user/internal/domain/chat"
@@ -9,7 +10,6 @@ import (
 	"github.com/calmato/gran-book/api/server/user/pkg/array"
 	"github.com/calmato/gran-book/api/server/user/pkg/firebase/firestore"
 	"github.com/google/uuid"
-	"golang.org/x/xerrors"
 )
 
 // ChatApplication - Chatアプリケーションのインターフェース
@@ -26,6 +26,8 @@ type chatApplication struct {
 	chatRepository       chat.Repository
 	chatUploader         chat.Uploader
 }
+
+var errNotJoinUserInRoom = errors.New("application: this user is not join the room")
 
 // NewChatApplication - ChatApplicationの生成
 func NewChatApplication(cdv chat.Validation, cr chat.Repository, cu chat.Uploader) ChatApplication {
@@ -56,8 +58,7 @@ func (a *chatApplication) GetRoom(ctx context.Context, roomID string, userID str
 
 	isJoin, _ := array.Contains(cr.UserIDs, userID)
 	if !isJoin {
-		err := xerrors.New("This user is not join the room")
-		return nil, exception.Forbidden.New(err)
+		return nil, exception.Forbidden.New(errNotJoinUserInRoom)
 	}
 
 	return cr, nil

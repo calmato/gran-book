@@ -10,7 +10,6 @@ import (
 	"github.com/calmato/gran-book/api/server/user/internal/interface/validation"
 	"github.com/calmato/gran-book/api/server/user/pkg/firebase/firestore"
 	pb "github.com/calmato/gran-book/api/server/user/proto"
-	"golang.org/x/xerrors"
 )
 
 type chatServer struct {
@@ -156,8 +155,7 @@ func (s *chatServer) UploadImage(stream pb.ChatService_UploadImageServer) error 
 
 		num := int(req.GetPosition())
 		if imageBytes[num] != nil {
-			err = xerrors.New("Position is duplicated")
-			return errorHandling(exception.InvalidRequestValidation.New(err))
+			return errorHandling(exception.InvalidRequestValidation.New(errInvalidUploadRequest))
 		}
 
 		imageBytes[num] = req.GetImage()

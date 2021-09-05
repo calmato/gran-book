@@ -11,7 +11,6 @@ import (
 	"github.com/calmato/gran-book/api/server/user/internal/interface/validation"
 	"github.com/calmato/gran-book/api/server/user/pkg/database"
 	pb "github.com/calmato/gran-book/api/server/user/proto"
-	"golang.org/x/xerrors"
 )
 
 type adminServer struct {
@@ -240,8 +239,7 @@ func (s *adminServer) UploadAdminThumbnail(stream pb.AdminService_UploadAdminThu
 
 		num := int(req.GetPosition())
 		if thumbnailBytes[num] != nil {
-			err = xerrors.New("Position is duplicated")
-			return errorHandling(exception.InvalidRequestValidation.New(err))
+			return errorHandling(exception.InvalidRequestValidation.New(errInvalidUploadRequest))
 		}
 
 		thumbnailBytes[num] = req.GetThumbnail()

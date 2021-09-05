@@ -10,7 +10,6 @@ import (
 	"github.com/calmato/gran-book/api/server/user/internal/domain/user"
 	"github.com/calmato/gran-book/api/server/user/internal/interface/validation"
 	pb "github.com/calmato/gran-book/api/server/user/proto"
-	"golang.org/x/xerrors"
 )
 
 type authServer struct {
@@ -208,8 +207,7 @@ func (s *authServer) UploadAuthThumbnail(stream pb.AuthService_UploadAuthThumbna
 
 		num := int(req.GetPosition())
 		if thumbnailBytes[num] != nil {
-			err = xerrors.New("Position is duplicated")
-			return errorHandling(exception.InvalidRequestValidation.New(err))
+			return errorHandling(exception.InvalidRequestValidation.New(errInvalidUploadRequest))
 		}
 
 		thumbnailBytes[num] = req.GetThumbnail()
