@@ -3,7 +3,7 @@ package book
 import (
 	"time"
 
-	"github.com/calmato/gran-book/api/server/book/lib/datetime"
+	"github.com/calmato/gran-book/api/server/book/pkg/datetime"
 	pb "github.com/calmato/gran-book/api/server/book/proto"
 )
 
