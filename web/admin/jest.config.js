@@ -7,7 +7,7 @@ module.exports = {
     '<rootDir>/app/pages/**/*.vue',
     '<rootDir>/app/store/**/(?!index)*.ts',
   ],
-  coveragePathIgnorePatters: [
+  coveragePathIgnorePatterns: [
     '<rootDir>/node_modules/',
     '<rootDir>/tmp/',
     '<rootDir>/app/assets/',

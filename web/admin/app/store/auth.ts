@@ -297,16 +297,8 @@ export default class AuthModule extends VuexModule {
 
   @Action({ rawError: true })
   public updateProfile(payload: IAuthEditProfileForm): Promise<void> {
-    const {
-      username,
-      thumbnailUrl,
-      selfIntroduction,
-      lastName,
-      firstName,
-      lastNameKana,
-      firstNameKana,
-      phoneNumber,
-    } = payload.params
+    const { username, thumbnailUrl, selfIntroduction, lastName, firstName, lastNameKana, firstNameKana, phoneNumber } =
+      payload.params
 
     const req: UpdateAuthProfileV1Request.AsObject = {
       username,
