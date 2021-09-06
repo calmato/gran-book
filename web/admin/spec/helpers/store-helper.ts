@@ -1,4 +1,4 @@
-import Vue, { VueConstructor } from 'vue'
+import Vue from 'vue'
 import Vuex, { Store } from 'vuex'
 import { createLocalVue } from '@vue/test-utils'
 import { AdminStore, AuthStore, BookStore, CommonStore, initialiseStores } from '~/store'
@@ -8,7 +8,7 @@ import CommonModule from '~/store/common'
 import response from '~~/spec/helpers/response'
 import BookModule from '~/store/book'
 
-const localVue: VueConstructor<Vue> = createLocalVue()
+const localVue: Vue.VueConstructor<Vue> = createLocalVue()
 localVue.use(Vuex)
 
 const store = new Store({
