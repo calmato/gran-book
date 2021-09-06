@@ -17,6 +17,7 @@ type Registry struct {
 	V1Bookshelf   v1.BookshelfHandler
 	V1Chat        v1.ChatHandler
 	V1Review      v1.ReviewHandler
+	V1Top         v1.TopHandler
 	V1User        v1.UserHandler
 	V2Book        v2.BookHandler
 	V2Bookshelf   v2.BookshelfHandler
@@ -52,9 +53,10 @@ func NewRegistry(
 		HTTP:          util.NewHTTPHandler(),
 		V1Auth:        v1.NewAuthHandler(authConn),
 		V1Book:        v1.NewBookHandler(bookConn, authConn),
-		V1Bookshelf:   v1.NewBookshelfHandler(bookConn, authConn, userConn),
+		V1Bookshelf:   v1.NewBookshelfHandler(bookConn, authConn),
 		V1Chat:        v1.NewChatHandler(chatConn, authConn, userConn),
 		V1Review:      v1.NewReviewHandler(bookConn, authConn, userConn),
+		V1Top:         v1.NewTopHandler(),
 		V1User:        v1.NewUserHandler(userConn),
 		V2Book:        v2.NewBookHandler(bookConn, authConn, userConn),
 		V2Bookshelf:   v2.NewBookshelfHandler(bookConn, userConn),

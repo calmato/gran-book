@@ -383,7 +383,7 @@ func TestUserServer_MultiGetUser(t *testing.T) {
 			},
 			want: &test.TestResponse{
 				Code:    codes.OK,
-				Message: getUserMapResponse([]*user.User{user1}),
+				Message: getUserListResponse([]*user.User{user1}, 1, 0, 1),
 			},
 		},
 		{
@@ -559,7 +559,7 @@ func TestUserServer_GetUserProfile(t *testing.T) {
 					Return(&user.User{ID: "current-user"}, nil)
 				mocks.UserApplication.EXPECT().
 					GetUserProfile(ctx, "current-user", "user01").
-					Return(user1, true, false, 100, 64, nil)
+					Return(user1, nil)
 			},
 			args: args{
 				req: &pb.GetUserProfileRequest{
@@ -568,7 +568,7 @@ func TestUserServer_GetUserProfile(t *testing.T) {
 			},
 			want: &test.TestResponse{
 				Code:    codes.OK,
-				Message: getUserProfileResponse(user1, true, false, 100, 64),
+				Message: getUserProfileResponse(user1),
 			},
 		},
 		{
@@ -615,7 +615,7 @@ func TestUserServer_GetUserProfile(t *testing.T) {
 					Return(&user.User{ID: "current-user"}, nil)
 				mocks.UserApplication.EXPECT().
 					GetUserProfile(ctx, "current-user", "user01").
-					Return(nil, false, false, 0, 0, exception.ErrorInDatastore.New(test.ErrMock))
+					Return(nil, exception.ErrorInDatastore.New(test.ErrMock))
 			},
 			args: args{
 				req: &pb.GetUserProfileRequest{
@@ -671,7 +671,7 @@ func TestUserServer_Follow(t *testing.T) {
 					Return(nil)
 				mocks.UserApplication.EXPECT().
 					Follow(ctx, "12345678-1234-1234-123456789012", "user01").
-					Return(user1, true, false, 100, 64, nil)
+					Return(user1, nil)
 			},
 			args: args{
 				req: &pb.FollowRequest{
@@ -681,7 +681,7 @@ func TestUserServer_Follow(t *testing.T) {
 			},
 			want: &test.TestResponse{
 				Code:    codes.OK,
-				Message: getUserProfileResponse(user1, true, false, 100, 64),
+				Message: getUserProfileResponse(user1),
 			},
 		},
 		{
@@ -707,7 +707,7 @@ func TestUserServer_Follow(t *testing.T) {
 					Return(nil)
 				mocks.UserApplication.EXPECT().
 					Follow(ctx, "12345678-1234-1234-123456789012", "user01").
-					Return(nil, false, false, 0, 0, exception.ErrorInDatastore.New(test.ErrMock))
+					Return(nil, exception.ErrorInDatastore.New(test.ErrMock))
 			},
 			args: args{
 				req: &pb.FollowRequest{
@@ -764,7 +764,7 @@ func TestUserServer_Unfollow(t *testing.T) {
 					Return(nil)
 				mocks.UserApplication.EXPECT().
 					Unfollow(ctx, "12345678-1234-1234-123456789012", "user01").
-					Return(user1, false, false, 100, 64, nil)
+					Return(user1, nil)
 			},
 			args: args{
 				req: &pb.UnfollowRequest{
@@ -774,7 +774,7 @@ func TestUserServer_Unfollow(t *testing.T) {
 			},
 			want: &test.TestResponse{
 				Code:    codes.OK,
-				Message: getUserProfileResponse(user1, false, false, 100, 64),
+				Message: getUserProfileResponse(user1),
 			},
 		},
 		{
@@ -800,7 +800,7 @@ func TestUserServer_Unfollow(t *testing.T) {
 					Return(nil)
 				mocks.UserApplication.EXPECT().
 					Unfollow(ctx, "12345678-1234-1234-123456789012", "user01").
-					Return(nil, false, false, 0, 0, exception.ErrorInDatastore.New(test.ErrMock))
+					Return(nil, exception.ErrorInDatastore.New(test.ErrMock))
 			},
 			args: args{
 				req: &pb.UnfollowRequest{

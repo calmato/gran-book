@@ -39,10 +39,7 @@ generate-client:
 
 generate-gateway:
 	cp -r ${ARCHIVE_PATH}/common/*.pb.go ${OUTPUT_PATH}/proto
-	cp -r ${ARCHIVE_PATH}/common/*.pb.validate.go ${OUTPUT_PATH}/proto
-	cp -r ${ARCHIVE_PATH}/gateway/${CLIENT}/*.pb.go ${OUTPUT_PATH}/proto
 	cp -r ${ARCHIVE_PATH}/service/*.pb.go ${OUTPUT_PATH}/proto
-	cp -r ${ARCHIVE_PATH}/service/*.pb.validate.go ${OUTPUT_PATH}/proto
 
 generate-service:
 	cp -r ${ARCHIVE_PATH}/common/*.pb.go ${OUTPUT_PATH}/proto
@@ -72,7 +69,6 @@ clean-client:
 
 clean-gateway:
 	rm -rf ${OUTPUT_PATH}/proto/*.pb.go
-	rm -rf ${OUTPUT_PATH}/proto/*.pb.validate.go
 
 clean-service:
 	rm -rf ${OUTPUT_PATH}/proto/*.pb.go
@@ -118,14 +114,6 @@ protoc-gateway:
 	protoc \
 		-I ./pkg \
 		-I ./proto \
-		--go_out ${ARCHIVE_PATH} \
-		--go_opt paths=source_relative \
-		--go-grpc_out ${ARCHIVE_PATH} \
-		--go-grpc_opt paths=source_relative \
-		--plugin=protoc-gen-ts=${PROTOC_GEN_TS_PATH} \
-		--plugin=protoc-gen-grpc=${PROTOC_GEN_GRPC_PATH} \
-		--js_out=import_style=commonjs,binary:${ARCHIVE_PATH} \
-		--grpc_out=grpc_js:${ARCHIVE_PATH} \
 		--ts_out=grpc_js:${ARCHIVE_PATH} \
 		./proto/common/*.proto \
 		./proto/gateway/**/*.proto

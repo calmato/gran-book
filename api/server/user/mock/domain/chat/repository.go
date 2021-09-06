@@ -80,10 +80,10 @@ func (mr *MockRepositoryMockRecorder) GetRoom(ctx, roomID interface{}) *gomock.C
 }
 
 // ListRoom mocks base method.
-func (m *MockRepository) ListRoom(ctx context.Context, p *firestore.Params, qs []*firestore.Query) ([]*chat.Room, error) {
+func (m *MockRepository) ListRoom(ctx context.Context, p *firestore.Params, qs []*firestore.Query) (chat.Rooms, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListRoom", ctx, p, qs)
-	ret0, _ := ret[0].([]*chat.Room)
+	ret0, _ := ret[0].(chat.Rooms)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

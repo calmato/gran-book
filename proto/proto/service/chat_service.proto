@@ -5,6 +5,7 @@ package service;
 option go_package = "github.com/calmato/gran-book/proto";
 
 import "github.com/envoyproxy/protoc-gen-validate/validate/validate.proto";
+import "service/chat_entity.proto";
 
 service ChatService {
   rpc ListRoom(ListChatRoomRequest) returns (ChatRoomListResponse);
@@ -68,33 +69,13 @@ message UploadChatImageRequest {
 }
 
 message ChatRoomResponse {
-  string id = 1; // チャットルームID
-  repeated string user_ids = 2; // 参加者ID一覧
-  string created_at = 3; // 作成日時
-  string updated_at = 4; // 更新日時
+  ChatRoom room = 1;
 }
 
 message ChatRoomListResponse {
-  message Message {
-    string user_id = 1; // ユーザーID
-    string text = 2; // テキストメッセージ
-    string image = 3; // 添付画像
-    string created_at = 4; // 送信日時
-  }
-  message Room {
-    string id = 1; // チャットルームID
-    repeated string user_ids = 2; // 参加者ID一覧
-    string created_at = 3; // 作成日時
-    string updated_at = 4; // 更新日時
-    Message latest_message = 5; // 最新のメッセージ
-  }
-  repeated Room rooms = 1; // チャットルーム一覧
+  repeated ChatRoom rooms = 1;
 }
 
 message ChatMessageResponse {
-  string id = 1; // チャットメッセージID
-  string user_id = 2; // ユーザーID
-  string text = 3; // テキストメッセージ
-  string image = 4; // 添付画像
-  string created_at = 5; // 送信日時
+  ChatMessage message = 1;
 }

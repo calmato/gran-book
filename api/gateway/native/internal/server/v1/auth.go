@@ -48,7 +48,8 @@ func (h *authHandler) Get(ctx *gin.Context) {
 		return
 	}
 
-	res := h.getAuthResponse(out)
+	a := entity.NewAuth(out.Auth)
+	res := h.getAuthResponse(a)
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -75,7 +76,8 @@ func (h *authHandler) Create(ctx *gin.Context) {
 		return
 	}
 
-	res := h.getAuthResponse(out)
+	a := entity.NewAuth(out.Auth)
+	res := h.getAuthResponse(a)
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -101,7 +103,8 @@ func (h *authHandler) UpdateProfile(ctx *gin.Context) {
 		return
 	}
 
-	res := h.getAuthResponse(out)
+	a := entity.NewAuth(out.Auth)
+	res := h.getAuthResponse(a)
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -133,7 +136,8 @@ func (h *authHandler) UpdateAddress(ctx *gin.Context) {
 		return
 	}
 
-	res := h.getAuthResponse(out)
+	a := entity.NewAuth(out.Auth)
+	res := h.getAuthResponse(a)
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -156,7 +160,8 @@ func (h *authHandler) UpdateEmail(ctx *gin.Context) {
 		return
 	}
 
-	res := h.getAuthResponse(out)
+	a := entity.NewAuth(out.Auth)
+	res := h.getAuthResponse(a)
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -180,7 +185,8 @@ func (h *authHandler) UpdatePassword(ctx *gin.Context) {
 		return
 	}
 
-	res := h.getAuthResponse(out)
+	a := entity.NewAuth(out.Auth)
+	res := h.getAuthResponse(a)
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -203,12 +209,11 @@ func (h *authHandler) UploadThumbnail(ctx *gin.Context) {
 	var count int64           // 読み込み回数
 	buf := make([]byte, 1024) // 1リクエストの上限設定
 	for {
-		_, err := file.Read(buf)
-		if err == io.EOF {
-			break
-		}
+		if _, err = file.Read(buf); err != nil {
+			if err == io.EOF {
+				break
+			}
 
-		if err != nil {
 			util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
 			return
 		}
@@ -218,8 +223,7 @@ func (h *authHandler) UploadThumbnail(ctx *gin.Context) {
 			Position:  count,
 		}
 
-		err = stream.Send(in)
-		if err != nil {
+		if err = stream.Send(in); err != nil {
 			util.ErrorHandling(ctx, entity.ErrInternalServerError.New(err))
 			return
 		}
@@ -233,7 +237,7 @@ func (h *authHandler) UploadThumbnail(ctx *gin.Context) {
 		return
 	}
 
-	res := h.getAuthThumbnailResponse(out)
+	res := h.getAuthThumbnailResponse(out.ThumbnailUrl)
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -251,14 +255,14 @@ func (h *authHandler) Delete(ctx *gin.Context) {
 
 // RegisterDevice - デバイス情報登録
 func (h *authHandler) RegisterDevice(ctx *gin.Context) {
-	req := &pb.RegisterAuthDeviceV1Request{}
+	req := &request.RegisterAuthDeviceRequest{}
 	err := ctx.BindJSON(req)
 	if err != nil {
 		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
 	}
 
 	in := &pb.RegisterAuthDeviceRequest{
-		InstanceId: req.InstanceId,
+		InstanceId: req.InstanceID,
 	}
 
 	c := util.SetMetadata(ctx)
@@ -268,35 +272,36 @@ func (h *authHandler) RegisterDevice(ctx *gin.Context) {
 		return
 	}
 
-	res := h.getAuthResponse(out)
+	a := entity.NewAuth(out.Auth)
+	res := h.getAuthResponse(a)
 	ctx.JSON(http.StatusOK, res)
 }
 
-func (h *authHandler) getAuthResponse(out *pb.AuthResponse) *response.AuthResponse {
+func (h *authHandler) getAuthResponse(a *entity.Auth) *response.AuthResponse {
 	return &response.AuthResponse{
-		ID:               out.GetId(),
-		Username:         out.GetUsername(),
-		Gender:           entity.Gender(out.GetGender()),
-		Email:            out.GetEmail(),
-		PhoneNumber:      out.GetPhoneNumber(),
-		ThumbnailURL:     out.GetThumbnailUrl(),
-		SelfIntroduction: out.GetSelfIntroduction(),
-		LastName:         out.GetLastName(),
-		FirstName:        out.GetFirstName(),
-		LastNameKana:     out.GetLastNameKana(),
-		FirstNameKana:    out.GetFirstNameKana(),
-		PostalCode:       out.GetPostalCode(),
-		Prefecture:       out.GetPrefecture(),
-		City:             out.GetCity(),
-		AddressLine1:     out.GetAddressLine1(),
-		AddressLine2:     out.GetAddressLine2(),
-		CreatedAt:        out.GetCreatedAt(),
-		UpdatedAt:        out.GetUpdatedAt(),
+		ID:               a.Id,
+		Username:         a.Username,
+		Gender:           a.Gender(),
+		Email:            a.Email,
+		PhoneNumber:      a.PhoneNumber,
+		ThumbnailURL:     a.ThumbnailUrl,
+		SelfIntroduction: a.SelfIntroduction,
+		LastName:         a.LastName,
+		FirstName:        a.FirstName,
+		LastNameKana:     a.LastNameKana,
+		FirstNameKana:    a.FirstNameKana,
+		PostalCode:       a.PostalCode,
+		Prefecture:       a.Prefecture,
+		City:             a.City,
+		AddressLine1:     a.AddressLine1,
+		AddressLine2:     a.AddressLine2,
+		CreatedAt:        a.CreatedAt,
+		UpdatedAt:        a.UpdatedAt,
 	}
 }
 
-func (h *authHandler) getAuthThumbnailResponse(out *pb.AuthThumbnailResponse) *response.AuthThumbnailResponse {
+func (h *authHandler) getAuthThumbnailResponse(thumbnailURL string) *response.AuthThumbnailResponse {
 	return &response.AuthThumbnailResponse{
-		ThumbnailURL: out.GetThumbnailUrl(),
+		ThumbnailURL: thumbnailURL,
 	}
 }

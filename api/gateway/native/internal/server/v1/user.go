@@ -50,7 +50,8 @@ func (h *userHandler) ListFollow(ctx *gin.Context) {
 		return
 	}
 
-	res := h.getFollowListResponse(out)
+	fs := entity.NewFollows(out.Follows)
+	res := h.getFollowListResponse(fs, out.Limit, out.Offset, out.Total)
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -73,7 +74,8 @@ func (h *userHandler) ListFollower(ctx *gin.Context) {
 		return
 	}
 
-	res := h.getFollowerListResponse(out)
+	fs := entity.NewFollowers(out.Followers)
+	res := h.getFollowerListResponse(fs, out.Limit, out.Offset, out.Total)
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -92,7 +94,8 @@ func (h *userHandler) GetProfile(ctx *gin.Context) {
 		return
 	}
 
-	res := h.getUserProfileResponse(out)
+	p := entity.NewUserProfile(out.Profile)
+	res := h.getUserProfileResponse(p)
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -113,7 +116,8 @@ func (h *userHandler) Follow(ctx *gin.Context) {
 		return
 	}
 
-	res := h.getUserProfileResponse(out)
+	p := entity.NewUserProfile(out.Profile)
+	res := h.getUserProfileResponse(p)
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -134,19 +138,22 @@ func (h *userHandler) Unfollow(ctx *gin.Context) {
 		return
 	}
 
-	res := h.getUserProfileResponse(out)
+	p := entity.NewUserProfile(out.Profile)
+	res := h.getUserProfileResponse(p)
 	ctx.JSON(http.StatusOK, res)
 }
 
-func (h *userHandler) getFollowListResponse(out *pb.FollowListResponse) *response.FollowListResponse {
-	users := make([]*response.FollowListResponse_User, len(out.GetFollows()))
-	for i, f := range out.GetFollows() {
-		user := &response.FollowListResponse_User{
-			ID:               f.GetId(),
-			Username:         f.GetUsername(),
-			ThumbnailURL:     f.GetThumbnailUrl(),
-			SelfIntroduction: f.GetSelfIntroduction(),
-			IsFollow:         f.GetIsFollow(),
+func (h *userHandler) getFollowListResponse(
+	fs entity.Follows, limit, offset, total int64,
+) *response.FollowListResponse {
+	users := make([]*response.FollowListUser, len(fs))
+	for i, f := range fs {
+		user := &response.FollowListUser{
+			ID:               f.Id,
+			Username:         f.Username,
+			ThumbnailURL:     f.ThumbnailUrl,
+			SelfIntroduction: f.SelfIntroduction,
+			IsFollow:         f.IsFollow,
 		}
 
 		users[i] = user
@@ -154,21 +161,23 @@ func (h *userHandler) getFollowListResponse(out *pb.FollowListResponse) *respons
 
 	return &response.FollowListResponse{
 		Users:  users,
-		Limit:  out.GetLimit(),
-		Offset: out.GetOffset(),
-		Total:  out.GetTotal(),
+		Limit:  limit,
+		Offset: offset,
+		Total:  total,
 	}
 }
 
-func (h *userHandler) getFollowerListResponse(out *pb.FollowerListResponse) *response.FollowerListResponse {
-	users := make([]*response.FollowerListResponse_User, len(out.GetFollowers()))
-	for i, f := range out.GetFollowers() {
-		user := &response.FollowerListResponse_User{
-			ID:               f.GetId(),
-			Username:         f.GetUsername(),
-			ThumbnailURL:     f.GetThumbnailUrl(),
-			SelfIntroduction: f.GetSelfIntroduction(),
-			IsFollow:         f.GetIsFollow(),
+func (h *userHandler) getFollowerListResponse(
+	fs entity.Followers, limit, offset, total int64,
+) *response.FollowerListResponse {
+	users := make([]*response.FollowerListUser, len(fs))
+	for i, f := range fs {
+		user := &response.FollowerListUser{
+			ID:               f.Id,
+			Username:         f.Username,
+			ThumbnailURL:     f.ThumbnailUrl,
+			SelfIntroduction: f.SelfIntroduction,
+			IsFollow:         f.IsFollow,
 		}
 
 		users[i] = user
@@ -176,24 +185,24 @@ func (h *userHandler) getFollowerListResponse(out *pb.FollowerListResponse) *res
 
 	return &response.FollowerListResponse{
 		Users:  users,
-		Limit:  out.GetLimit(),
-		Offset: out.GetOffset(),
-		Total:  out.GetTotal(),
+		Limit:  limit,
+		Offset: offset,
+		Total:  total,
 	}
 }
 
-func (h *userHandler) getUserProfileResponse(out *pb.UserProfileResponse) *response.UserProfileResponse {
-	products := make([]*response.UserProfileResponse_Product, 0)
+func (h *userHandler) getUserProfileResponse(p *entity.UserProfile) *response.UserProfileResponse {
+	products := make([]*response.UserProfileProduct, 0)
 
 	return &response.UserProfileResponse{
-		Id:               out.GetId(),
-		Username:         out.GetUsername(),
-		ThumbnailUrl:     out.GetThumbnailUrl(),
-		SelfIntroduction: out.GetSelfIntroduction(),
-		IsFollow:         out.GetIsFollow(),
-		IsFollower:       out.GetIsFollower(),
-		FollowCount:      out.GetFollowCount(),
-		FollowerCount:    out.GetFollowerCount(),
+		ID:               p.Id,
+		Username:         p.Username,
+		ThumbnailURL:     p.ThumbnailUrl,
+		SelfIntroduction: p.SelfIntroduction,
+		IsFollow:         p.IsFollow,
+		IsFollower:       p.IsFollower,
+		FollowCount:      p.FollowCount,
+		FollowerCount:    p.FollowerCount,
 		Rating:           0,
 		ReviewCount:      0,
 		Products:         products,

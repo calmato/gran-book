@@ -144,7 +144,7 @@ func TestUserApplication_List(t *testing.T) {
 		query *database.ListQuery
 	}
 	type want struct {
-		users []*user.User
+		users user.Users
 		total int
 		err   error
 	}
@@ -252,7 +252,7 @@ func TestUserApplication_ListAdmin(t *testing.T) {
 		query *database.ListQuery
 	}
 	type want struct {
-		users []*user.User
+		users user.Users
 		total int
 		err   error
 	}
@@ -363,7 +363,7 @@ func TestUserApplication_ListFollow(t *testing.T) {
 		offset        int
 	}
 	type want struct {
-		follows []*user.Follow
+		follows user.Follows
 		total   int
 		err     error
 	}
@@ -547,7 +547,7 @@ func TestUserApplication_ListFollower(t *testing.T) {
 		offset        int
 	}
 	type want struct {
-		followers []*user.Follower
+		followers user.Followers
 		total     int
 		err       error
 	}
@@ -728,7 +728,7 @@ func TestUserApplication_MultiGet(t *testing.T) {
 		userIDs []string
 	}
 	type want struct {
-		users []*user.User
+		users user.Users
 		err   error
 	}
 	testCases := []struct {
@@ -924,12 +924,8 @@ func TestUserApplication_GetUserProfile(t *testing.T) {
 		targetID string
 	}
 	type want struct {
-		user          *user.User
-		isFollowing   bool
-		isFollowed    bool
-		followCount   int
-		followerCount int
-		err           error
+		user *user.User
+		err  error
 	}
 	testCases := []struct {
 		name  string
@@ -955,12 +951,8 @@ func TestUserApplication_GetUserProfile(t *testing.T) {
 				targetID: "user01",
 			},
 			want: want{
-				user:          user1,
-				isFollowing:   true,
-				isFollowed:    false,
-				followCount:   2,
-				followerCount: 1,
-				err:           nil,
+				user: user1,
+				err:  nil,
 			},
 		},
 		{
@@ -975,12 +967,8 @@ func TestUserApplication_GetUserProfile(t *testing.T) {
 				targetID: "user01",
 			},
 			want: want{
-				user:          nil,
-				isFollowing:   false,
-				isFollowed:    false,
-				followCount:   0,
-				followerCount: 0,
-				err:           exception.NotFound.New(test.ErrMock),
+				user: nil,
+				err:  exception.NotFound.New(test.ErrMock),
 			},
 		},
 		{
@@ -998,12 +986,8 @@ func TestUserApplication_GetUserProfile(t *testing.T) {
 				targetID: "user01",
 			},
 			want: want{
-				user:          nil,
-				isFollowing:   false,
-				isFollowed:    false,
-				followCount:   0,
-				followerCount: 0,
-				err:           exception.ErrorInDatastore.New(test.ErrMock),
+				user: nil,
+				err:  exception.ErrorInDatastore.New(test.ErrMock),
 			},
 		},
 		{
@@ -1024,12 +1008,8 @@ func TestUserApplication_GetUserProfile(t *testing.T) {
 				targetID: "user01",
 			},
 			want: want{
-				user:          nil,
-				isFollowing:   false,
-				isFollowed:    false,
-				followCount:   0,
-				followerCount: 0,
-				err:           exception.ErrorInDatastore.New(test.ErrMock),
+				user: nil,
+				err:  exception.ErrorInDatastore.New(test.ErrMock),
 			},
 		},
 	}
@@ -1046,27 +1026,14 @@ func TestUserApplication_GetUserProfile(t *testing.T) {
 				mocks.UserUploader,
 			)
 
-			u,
-				isFollowing,
-				isFollowed,
-				followCount,
-				followerCount,
-				err := target.GetUserProfile(ctx, tt.args.userID, tt.args.targetID)
+			u, err := target.GetUserProfile(ctx, tt.args.userID, tt.args.targetID)
 			if tt.want.err != nil {
 				require.Equal(t, tt.want.err.Error(), err.Error())
 				require.Equal(t, tt.want.user, u)
-				require.Equal(t, tt.want.isFollowing, isFollowing)
-				require.Equal(t, tt.want.isFollowed, isFollowed)
-				require.Equal(t, tt.want.followCount, followCount)
-				require.Equal(t, tt.want.followerCount, followerCount)
 				return
 			}
 			require.NoError(t, err)
 			require.Equal(t, tt.want.user, u)
-			require.Equal(t, tt.want.isFollowing, isFollowing)
-			require.Equal(t, tt.want.isFollowed, isFollowed)
-			require.Equal(t, tt.want.followCount, followCount)
-			require.Equal(t, tt.want.followerCount, followerCount)
 		})
 	}
 }
@@ -1489,12 +1456,8 @@ func TestUserApplication_Follow(t *testing.T) {
 		followerID string
 	}
 	type want struct {
-		user          *user.User
-		isFollowing   bool
-		isFollowed    bool
-		followCount   int
-		followerCount int
-		err           error
+		user *user.User
+		err  error
 	}
 	testCases := []struct {
 		name  string
@@ -1528,13 +1491,13 @@ func TestUserApplication_Follow(t *testing.T) {
 			},
 			want: want{
 				user: &user.User{
-					ID: "user01",
+					ID:            "user01",
+					IsFollowing:   true,
+					IsFollowed:    false,
+					FollowCount:   1,
+					FollowerCount: 0,
 				},
-				isFollowing:   true,
-				isFollowed:    false,
-				followCount:   1,
-				followerCount: 0,
-				err:           nil,
+				err: nil,
 			},
 		},
 		{
@@ -1549,12 +1512,8 @@ func TestUserApplication_Follow(t *testing.T) {
 				followerID: "user01",
 			},
 			want: want{
-				user:          nil,
-				isFollowing:   false,
-				isFollowed:    false,
-				followCount:   0,
-				followerCount: 0,
-				err:           exception.NotFound.New(test.ErrMock),
+				user: nil,
+				err:  exception.NotFound.New(test.ErrMock),
 			},
 		},
 		{
@@ -1573,12 +1532,8 @@ func TestUserApplication_Follow(t *testing.T) {
 				followerID: "user01",
 			},
 			want: want{
-				user:          nil,
-				isFollowing:   false,
-				isFollowed:    false,
-				followCount:   0,
-				followerCount: 0,
-				err:           exception.InvalidDomainValidation.New(test.ErrMock),
+				user: nil,
+				err:  exception.InvalidDomainValidation.New(test.ErrMock),
 			},
 		},
 		{
@@ -1600,12 +1555,8 @@ func TestUserApplication_Follow(t *testing.T) {
 				followerID: "user01",
 			},
 			want: want{
-				user:          nil,
-				isFollowing:   false,
-				isFollowed:    false,
-				followCount:   0,
-				followerCount: 0,
-				err:           exception.ErrorInDatastore.New(test.ErrMock),
+				user: nil,
+				err:  exception.ErrorInDatastore.New(test.ErrMock),
 			},
 		},
 	}
@@ -1623,10 +1574,6 @@ func TestUserApplication_Follow(t *testing.T) {
 			)
 
 			u,
-				isFollowing,
-				isFollowed,
-				followCount,
-				followerCount,
 				err := target.Follow(ctx, tt.args.userID, tt.args.followerID)
 			if tt.want.err != nil {
 				require.Equal(t, tt.want.err.Error(), err.Error())
@@ -1634,10 +1581,6 @@ func TestUserApplication_Follow(t *testing.T) {
 			}
 			require.NoError(t, err)
 			require.Equal(t, tt.want.user, u)
-			require.Equal(t, tt.want.isFollowing, isFollowing)
-			require.Equal(t, tt.want.isFollowed, isFollowed)
-			require.Equal(t, tt.want.followCount, followCount)
-			require.Equal(t, tt.want.followerCount, followerCount)
 		})
 	}
 }
@@ -1656,12 +1599,8 @@ func TestUserApplication_Unfollow(t *testing.T) {
 		followerID string
 	}
 	type want struct {
-		user          *user.User
-		isFollowing   bool
-		isFollowed    bool
-		followCount   int
-		followerCount int
-		err           error
+		user *user.User
+		err  error
 	}
 	testCases := []struct {
 		name  string
@@ -1698,13 +1637,13 @@ func TestUserApplication_Unfollow(t *testing.T) {
 			},
 			want: want{
 				user: &user.User{
-					ID: "user01",
+					ID:            "user01",
+					IsFollowing:   false,
+					IsFollowed:    false,
+					FollowCount:   0,
+					FollowerCount: 0,
 				},
-				isFollowing:   false,
-				isFollowed:    false,
-				followCount:   0,
-				followerCount: 0,
-				err:           nil,
+				err: nil,
 			},
 		},
 		{
@@ -1719,12 +1658,8 @@ func TestUserApplication_Unfollow(t *testing.T) {
 				followerID: "user01",
 			},
 			want: want{
-				user:          nil,
-				isFollowing:   false,
-				isFollowed:    false,
-				followCount:   0,
-				followerCount: 0,
-				err:           exception.NotFound.New(test.ErrMock),
+				user: nil,
+				err:  exception.NotFound.New(test.ErrMock),
 			},
 		},
 		{
@@ -1743,12 +1678,8 @@ func TestUserApplication_Unfollow(t *testing.T) {
 				followerID: "user01",
 			},
 			want: want{
-				user:          nil,
-				isFollowing:   false,
-				isFollowed:    false,
-				followCount:   0,
-				followerCount: 0,
-				err:           exception.NotFound.New(test.ErrMock),
+				user: nil,
+				err:  exception.NotFound.New(test.ErrMock),
 			},
 		},
 		{
@@ -1770,12 +1701,8 @@ func TestUserApplication_Unfollow(t *testing.T) {
 				followerID: "user01",
 			},
 			want: want{
-				user:          nil,
-				isFollowing:   false,
-				isFollowed:    false,
-				followCount:   0,
-				followerCount: 0,
-				err:           exception.ErrorInDatastore.New(test.ErrMock),
+				user: nil,
+				err:  exception.ErrorInDatastore.New(test.ErrMock),
 			},
 		},
 	}
@@ -1792,22 +1719,13 @@ func TestUserApplication_Unfollow(t *testing.T) {
 				mocks.UserUploader,
 			)
 
-			u,
-				isFollowing,
-				isFollowed,
-				followCount,
-				followerCount,
-				err := target.Unfollow(ctx, tt.args.userID, tt.args.followerID)
+			u, err := target.Unfollow(ctx, tt.args.userID, tt.args.followerID)
 			if tt.want.err != nil {
 				require.Equal(t, tt.want.err.Error(), err.Error())
 				return
 			}
 			require.NoError(t, err)
 			require.Equal(t, tt.want.user, u)
-			require.Equal(t, tt.want.isFollowing, isFollowing)
-			require.Equal(t, tt.want.isFollowed, isFollowed)
-			require.Equal(t, tt.want.followCount, followCount)
-			require.Equal(t, tt.want.followerCount, followerCount)
 		})
 	}
 }
