@@ -101,17 +101,29 @@ func NewReviews(rs []*pb.Review) Reviews {
 }
 
 func (rs Reviews) UserIDs() []string {
-	res := make([]string, len(rs))
-	for i := range rs {
-		res[i] = rs[i].UserId
+	userIDs := []string{}
+	reviews := map[string]bool{}
+	for _, r := range rs {
+		if _, ok := reviews[r.UserId]; ok {
+			continue
+		}
+
+		reviews[r.UserId] = true
+		userIDs = append(userIDs, r.UserId)
 	}
-	return res
+	return userIDs
 }
 
 func (rs Reviews) BookIDs() []int64 {
-	res := make([]int64, len(rs))
-	for i := range rs {
-		res[i] = rs[i].BookId
+	bookIDs := []int64{}
+	reviews := map[int64]bool{}
+	for _, r := range rs {
+		if _, ok := reviews[r.BookId]; ok {
+			continue
+		}
+
+		reviews[r.BookId] = true
+		bookIDs = append(bookIDs, r.BookId)
 	}
-	return res
+	return bookIDs
 }
