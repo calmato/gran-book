@@ -4,8 +4,6 @@ package admin;
 
 option go_package = "github.com/calmato/gran-book/proto";
 
-import "common/common.proto";
-
 // ユーザー情報
 message UserV1Response {
   string id = 1; // ユーザーID
