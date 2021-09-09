@@ -8,7 +8,6 @@ import (
 	"github.com/calmato/gran-book/api/gateway/native/internal/server/util"
 	pb "github.com/calmato/gran-book/api/gateway/native/proto"
 	"github.com/gin-gonic/gin"
-	"google.golang.org/grpc"
 )
 
 type UserHandler interface {
@@ -23,9 +22,7 @@ type userHandler struct {
 	userClient pb.UserServiceClient
 }
 
-func NewUserHandler(userConn *grpc.ClientConn) UserHandler {
-	uc := pb.NewUserServiceClient(userConn)
-
+func NewUserHandler(uc pb.UserServiceClient) UserHandler {
 	return &userHandler{
 		userClient: uc,
 	}
