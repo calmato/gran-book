@@ -10,7 +10,7 @@
     "lint": "eslint --ext .js,.ts,.tsx .",
     "lint:fix": "yarn lint --fix && prettier --write ./app ./test",
     "test": "jest --config jest.config.js",
-    "protoc": "yarn protoc:setup; yarn protoc:generate && yarn protoc:update",
+    "protoc": "yarn protoc:setup; yarn protoc:generate && yarn protoc:update; rm -rf ./tmp/proto",
     "protoc:setup": "mkdir -p ./tmp/proto; rm -rf ./tmp/proto/**/*.ts",
     "protoc:generate": "grpc_tools_node_protoc -I ./../proto/pkg -I ./../proto/proto --plugin=protoc-gen-ts=$(yarn bin)/protoc-gen-ts --ts_out=service=grpc-node,mode=grpc-js:./tmp/proto ./../proto/proto/common/*.proto ./../proto/proto/gateway/native/*.proto",
     "protoc:update": "mkdir -p ./app/types/api; rm -rf ./app/types/api/*.ts; cp -r ./tmp/proto/common/*.ts ./tmp/proto/gateway/native/*.ts ./app/types/api",

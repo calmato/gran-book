@@ -1,8 +1,9 @@
 package config
 
 import (
+	"fmt"
+
 	"github.com/kelseyhightower/envconfig"
-	"golang.org/x/xerrors"
 )
 
 // Environment - システム内で利用する環境変数の構造体
@@ -25,7 +26,7 @@ type Environment struct {
 func loadEnvironment() (*Environment, error) {
 	env := &Environment{}
 	if err := envconfig.Process("", env); err != nil {
-		return env, xerrors.Errorf("Failed to LoadEnvironment: %w", err)
+		return env, fmt.Errorf("config: failed to LoadEnvironment: %w", err)
 	}
 
 	return env, nil

@@ -227,10 +227,10 @@ func (mr *MockRepositoryMockRecorder) GetUserIDByEmail(ctx, email interface{}) *
 }
 
 // List mocks base method.
-func (m *MockRepository) List(ctx context.Context, q *database.ListQuery) ([]*user.User, error) {
+func (m *MockRepository) List(ctx context.Context, q *database.ListQuery) (user.Users, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "List", ctx, q)
-	ret0, _ := ret[0].([]*user.User)
+	ret0, _ := ret[0].(user.Users)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -242,10 +242,10 @@ func (mr *MockRepositoryMockRecorder) List(ctx, q interface{}) *gomock.Call {
 }
 
 // ListFollow mocks base method.
-func (m *MockRepository) ListFollow(ctx context.Context, q *database.ListQuery) ([]*user.Follow, error) {
+func (m *MockRepository) ListFollow(ctx context.Context, q *database.ListQuery) (user.Follows, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListFollow", ctx, q)
-	ret0, _ := ret[0].([]*user.Follow)
+	ret0, _ := ret[0].(user.Follows)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -277,10 +277,10 @@ func (mr *MockRepositoryMockRecorder) ListFollowID(ctx, userID interface{}, user
 }
 
 // ListFollower mocks base method.
-func (m *MockRepository) ListFollower(ctx context.Context, q *database.ListQuery) ([]*user.Follower, error) {
+func (m *MockRepository) ListFollower(ctx context.Context, q *database.ListQuery) (user.Followers, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListFollower", ctx, q)
-	ret0, _ := ret[0].([]*user.Follower)
+	ret0, _ := ret[0].(user.Followers)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -327,10 +327,10 @@ func (mr *MockRepositoryMockRecorder) ListInstanceID(ctx, q interface{}) *gomock
 }
 
 // MultiGet mocks base method.
-func (m *MockRepository) MultiGet(ctx context.Context, userIDs []string) ([]*user.User, error) {
+func (m *MockRepository) MultiGet(ctx context.Context, userIDs []string) (user.Users, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "MultiGet", ctx, userIDs)
-	ret0, _ := ret[0].([]*user.User)
+	ret0, _ := ret[0].(user.Users)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

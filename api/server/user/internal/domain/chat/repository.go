@@ -8,7 +8,7 @@ import (
 
 // Repository - Chatレポジトリ
 type Repository interface {
-	ListRoom(ctx context.Context, p *firestore.Params, qs []*firestore.Query) ([]*Room, error)
+	ListRoom(ctx context.Context, p *firestore.Params, qs []*firestore.Query) (Rooms, error)
 	GetRoom(ctx context.Context, roomID string) (*Room, error)
 	CreateRoom(ctx context.Context, cr *Room) error
 	UpdateRoom(ctx context.Context, cr *Room) error

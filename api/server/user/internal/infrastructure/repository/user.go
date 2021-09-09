@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"strings"
 	"time"
@@ -14,7 +15,6 @@ import (
 	"github.com/calmato/gran-book/api/server/user/pkg/database"
 	"github.com/calmato/gran-book/api/server/user/pkg/firebase/authentication"
 	"github.com/calmato/gran-book/api/server/user/pkg/metadata"
-	"golang.org/x/xerrors"
 )
 
 type userRepository struct {
@@ -31,6 +31,13 @@ type firebaseToken struct {
 	UID      string                 `json:"uid,omitempty"`
 	Claims   map[string]interface{} `json:"-"`
 }
+
+var (
+	errNotExistsUserInfo            = errors.New("repository: user info is not exists in firebase authentication")
+	errNotExistsAuthorizationHeader = errors.New("repository: authorization header is not contain")
+	errInvalidAuthorizationHeader   = errors.New("repository: authorization header is invalid")
+	errNotVerifyToken               = errors.New("repository: id token is not verify")
+)
 
 // NewUserRepository - UserRepositoryの生成
 func NewUserRepository(c *database.Client, auth *authentication.Auth) user.Repository {
@@ -54,8 +61,8 @@ func (r *userRepository) Authentication(ctx context.Context) (string, error) {
 	return fbToken.Subject, nil
 }
 
-func (r *userRepository) List(ctx context.Context, q *database.ListQuery) ([]*user.User, error) {
-	us := []*user.User{}
+func (r *userRepository) List(ctx context.Context, q *database.ListQuery) (user.Users, error) {
+	us := user.Users{}
 
 	err := r.client.GetListQuery("users", r.client.DB, q).Find(&us).Error
 	if err != nil {
@@ -65,8 +72,8 @@ func (r *userRepository) List(ctx context.Context, q *database.ListQuery) ([]*us
 	return us, nil
 }
 
-func (r *userRepository) ListFollow(ctx context.Context, q *database.ListQuery) ([]*user.Follow, error) {
-	fs := []*user.Follow{}
+func (r *userRepository) ListFollow(ctx context.Context, q *database.ListQuery) (user.Follows, error) {
+	fs := user.Follows{}
 
 	fields := []string{
 		"relationships.follow_id",
@@ -87,8 +94,8 @@ func (r *userRepository) ListFollow(ctx context.Context, q *database.ListQuery) 
 	return fs, nil
 }
 
-func (r *userRepository) ListFollower(ctx context.Context, q *database.ListQuery) ([]*user.Follower, error) {
-	fs := []*user.Follower{}
+func (r *userRepository) ListFollower(ctx context.Context, q *database.ListQuery) (user.Followers, error) {
+	fs := user.Followers{}
 
 	fields := []string{
 		"relationships.follow_id",
@@ -182,8 +189,8 @@ func (r *userRepository) CountRelationship(ctx context.Context, q *database.List
 	return total, nil
 }
 
-func (r *userRepository) MultiGet(ctx context.Context, userIDs []string) ([]*user.User, error) {
-	us := []*user.User{}
+func (r *userRepository) MultiGet(ctx context.Context, userIDs []string) (user.Users, error) {
+	us := user.Users{}
 
 	err := r.client.DB.Table("users").Where("id IN (?)", userIDs).Find(&us).Error
 	if err != nil {
@@ -359,7 +366,7 @@ func (r *userRepository) getAuth(ctx context.Context, userID string) (*auth.User
 	}
 
 	if au.UserInfo == nil {
-		return nil, xerrors.New("UserInfo is not exists in Firebase Authentication")
+		return nil, errNotExistsUserInfo
 	}
 
 	return au, nil
@@ -372,7 +379,7 @@ func (r *userRepository) getToken(ctx context.Context) (string, error) {
 	}
 
 	if authorization == "" {
-		return "", xerrors.New("Authorization header is not contain.")
+		return "", errNotExistsAuthorizationHeader
 	}
 
 	t := strings.Replace(authorization, "Bearer ", "", 1)
@@ -382,7 +389,7 @@ func (r *userRepository) getToken(ctx context.Context) (string, error) {
 func (r *userRepository) decodeToken(token string) (*firebaseToken, error) {
 	s := strings.Split(token, ".")
 	if len(s) != 3 {
-		return nil, xerrors.New("Authorization header is invalid.")
+		return nil, errInvalidAuthorizationHeader
 	}
 
 	data, err := base64.RawURLEncoding.DecodeString(s[1])
@@ -408,23 +415,20 @@ func (r *userRepository) decodeToken(token string) (*firebaseToken, error) {
 func (r *userRepository) verifyToken(t *firebaseToken) error {
 	now := time.Now().Unix()
 
-	verifyTokenMsg := "See https://firebase.google.com/docs/auth/admin/verify-id-tokens for details on how to " +
-		"retrieve a valid ID token."
-
 	if t.IssuedAt > now {
-		return xerrors.Errorf("ID token issued at future timestamp: %d", t.IssuedAt)
+		return fmt.Errorf("%w, issued at future timestamp: %d", errNotVerifyToken, t.IssuedAt)
 	}
 
 	if t.Expires < now {
-		return xerrors.Errorf("ID token has expired. Expired at: %d", t.Expires)
+		return fmt.Errorf("%w, has expired. expired at: %d", errNotVerifyToken, t.Expires)
 	}
 
 	if t.Subject == "" {
-		return xerrors.Errorf("ID token has empty 'sub' (subject) claim. %s", verifyTokenMsg)
+		return fmt.Errorf("%w, has empty subject claim", errNotVerifyToken)
 	}
 
 	if len(t.Subject) > 128 {
-		return xerrors.Errorf("ID token has a 'sub' (subject) claim longer than 128 characters. %s", verifyTokenMsg)
+		return fmt.Errorf("%w, has a subject claim longer than 128 characters", errNotVerifyToken)
 	}
 
 	return nil

@@ -1,0 +1,60 @@
+# Setting coverage targets per flag
+coverage:
+  status:
+    project:
+      native:
+        flags:
+        - native
+      admin:
+        flags:
+        - admin
+      native-gateway:
+        flags:
+        - native-gateway
+      admin-gateway:
+        flags:
+        - admin-gateway
+      user-api:
+        flags:
+        - user-api
+      book-api:
+        flags:
+        - book-api
+
+# adding Flags to your `layout` configuration to show up in the PR comment
+comment:
+  layout: 'reach, diff, flags, files'
+  behavior: default
+  require_changes: false
+  require_base: yes
+  require_head: yes
+  branches: null
+
+# New root YAML section = `flags:`
+# This is where you would define every flag from your
+# uploader, and update when new Flags added
+flags:
+  native:
+    paths:
+    - native/
+    carryforward: true
+  admin:
+    paths:
+    - web/admin/
+    carryforward: true
+  native-gateway:
+    paths:
+    - api/gateway/native/
+    carryforward: true
+  admin-gateway:
+    paths:
+    - api/gateway/admin/
+    carryforward: true
+  user-api:
+    paths:
+    - api/server/user/
+    carryforward: true
+  book-api:
+    paths:
+    - api/server/book/
+    carryforward: true

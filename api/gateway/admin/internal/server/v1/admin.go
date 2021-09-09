@@ -76,7 +76,9 @@ func (h *adminHandler) List(ctx *gin.Context) {
 		return
 	}
 
-	res := h.getAdminListResponse(out)
+	as := entity.NewAdmins(out.Admins)
+
+	res := h.getAdminListResponse(as, out.Limit, out.Offset, out.Total)
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -95,7 +97,9 @@ func (h *adminHandler) Get(ctx *gin.Context) {
 		return
 	}
 
-	res := h.getAdminResponse(out)
+	a := entity.NewAdmin(out.Admin)
+
+	res := h.getAdminResponse(a)
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -127,7 +131,9 @@ func (h *adminHandler) Create(ctx *gin.Context) {
 		return
 	}
 
-	res := h.getAdminResponse(out)
+	a := entity.NewAdmin(out.Admin)
+
+	res := h.getAdminResponse(a)
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -152,7 +158,9 @@ func (h *adminHandler) UpdateContact(ctx *gin.Context) {
 		return
 	}
 
-	res := h.getAdminResponse(out)
+	a := entity.NewAdmin(out.Admin)
+
+	res := h.getAdminResponse(a)
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -182,7 +190,9 @@ func (h *adminHandler) UpdateProfile(ctx *gin.Context) {
 		return
 	}
 
-	res := h.getAdminResponse(out)
+	a := entity.NewAdmin(out.Admin)
+
+	res := h.getAdminResponse(a)
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -207,7 +217,9 @@ func (h *adminHandler) UpdatePassword(ctx *gin.Context) {
 		return
 	}
 
-	res := h.getAdminResponse(out)
+	a := entity.NewAdmin(out.Admin)
+
+	res := h.getAdminResponse(a)
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -276,7 +288,7 @@ func (h *adminHandler) UploadThumbnail(ctx *gin.Context) {
 		return
 	}
 
-	res := h.getAdminThumbnailResponse(out)
+	res := h.getAdminThumbnailResponse(out.ThumbnailUrl)
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -298,40 +310,41 @@ func (h *adminHandler) Delete(ctx *gin.Context) {
 	ctx.JSON(http.StatusNoContent, nil)
 }
 
-func (h *adminHandler) getAdminResponse(out *pb.AdminResponse) *response.AdminResponse {
+func (h *adminHandler) getAdminResponse(a *entity.Admin) *response.AdminResponse {
 	return &response.AdminResponse{
-		ID:               out.GetId(),
-		Username:         out.GetUsername(),
-		Email:            out.GetEmail(),
-		PhoneNumber:      out.GetPhoneNumber(),
-		Role:             entity.Role(out.GetRole()),
-		ThumbnailURL:     out.GetThumbnailUrl(),
-		SelfIntroduction: out.GetSelfIntroduction(),
-		LastName:         out.GetLastName(),
-		FirstName:        out.GetFirstName(),
-		LastNameKana:     out.GetLastNameKana(),
-		FirstNameKana:    out.GetFirstNameKana(),
-		CreatedAt:        out.GetCreatedAt(),
-		UpdatedAt:        out.GetUpdatedAt(),
+		ID:               a.Id,
+		Username:         a.Username,
+		Email:            a.Email,
+		PhoneNumber:      a.PhoneNumber,
+		Role:             a.Role(),
+		ThumbnailURL:     a.ThumbnailUrl,
+		SelfIntroduction: a.SelfIntroduction,
+		LastName:         a.LastName,
+		FirstName:        a.FirstName,
+		LastNameKana:     a.LastNameKana,
+		FirstNameKana:    a.FirstNameKana,
+		CreatedAt:        a.CreatedAt,
+		UpdatedAt:        a.UpdatedAt,
 	}
 }
 
-func (h *adminHandler) getAdminListResponse(out *pb.AdminListResponse) *response.AdminListResponse {
-	users := make([]*response.AdminListUser, len(out.GetUsers()))
-	for i, u := range out.GetUsers() {
+func (h *adminHandler) getAdminListResponse(as entity.Admins, limit, offset, total int64) *response.AdminListResponse {
+	users := make([]*response.AdminListUser, len(as))
+	for i, a := range as {
 		user := &response.AdminListUser{
-			ID:               u.GetId(),
-			Username:         u.GetUsername(),
-			Email:            u.GetEmail(),
-			PhoneNumber:      u.GetPhoneNumber(),
-			ThumbnailURL:     u.GetThumbnailUrl(),
-			SelfIntroduction: u.GetSelfIntroduction(),
-			LastName:         u.GetLastName(),
-			FirstName:        u.GetFirstName(),
-			LastNameKana:     u.GetLastNameKana(),
-			FirstNameKana:    u.GetFirstNameKana(),
-			CreatedAt:        u.GetCreatedAt(),
-			UpdatedAt:        u.GetUpdatedAt(),
+			ID:               a.Id,
+			Username:         a.Username,
+			Email:            a.Email,
+			Role:             a.Role(),
+			PhoneNumber:      a.PhoneNumber,
+			ThumbnailURL:     a.ThumbnailUrl,
+			SelfIntroduction: a.SelfIntroduction,
+			LastName:         a.LastName,
+			FirstName:        a.FirstName,
+			LastNameKana:     a.LastNameKana,
+			FirstNameKana:    a.FirstNameKana,
+			CreatedAt:        a.CreatedAt,
+			UpdatedAt:        a.UpdatedAt,
 		}
 
 		users[i] = user
@@ -339,14 +352,14 @@ func (h *adminHandler) getAdminListResponse(out *pb.AdminListResponse) *response
 
 	return &response.AdminListResponse{
 		Users:  users,
-		Limit:  out.GetLimit(),
-		Offset: out.GetOffset(),
-		Total:  out.GetTotal(),
+		Limit:  limit,
+		Offset: offset,
+		Total:  total,
 	}
 }
 
-func (h *adminHandler) getAdminThumbnailResponse(out *pb.AdminThumbnailResponse) *response.AdminThumbnailResponse {
+func (h *adminHandler) getAdminThumbnailResponse(thumbnailURL string) *response.AdminThumbnailResponse {
 	return &response.AdminThumbnailResponse{
-		ThumbnailURL: out.GetThumbnailUrl(),
+		ThumbnailURL: thumbnailURL,
 	}
 }

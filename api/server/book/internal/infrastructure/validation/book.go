@@ -2,15 +2,21 @@ package validation
 
 import (
 	"context"
+	"errors"
 
 	"github.com/calmato/gran-book/api/server/book/internal/domain/book"
 	"github.com/calmato/gran-book/api/server/book/internal/domain/exception"
-	"golang.org/x/xerrors"
 )
 
 type bookDomainValidation struct {
 	bookRepository book.Repository
 }
+
+var (
+	errAlreadyExistsIsbn      = errors.New("validation: this isbn is already exists")
+	errAlreadyExistsBookshelf = errors.New("validation: this bookshelf is already exists")
+	errAlreadyExistsReview    = errors.New("validation: this review is already exists")
+)
 
 // NewBookDomainValidation - Book関連のドメインバリデータ
 func NewBookDomainValidation(br book.Repository) book.Validation {
@@ -81,7 +87,7 @@ func (v *bookDomainValidation) uniqueCheckIsbn(ctx context.Context, id int, isbn
 		return nil
 	}
 
-	return xerrors.New("This isbn is already exists.")
+	return errAlreadyExistsIsbn
 }
 
 func (v *bookDomainValidation) uniqueCheckBookshelf(ctx context.Context, id int, userID string, bookID int) error {
@@ -94,7 +100,7 @@ func (v *bookDomainValidation) uniqueCheckBookshelf(ctx context.Context, id int,
 		return nil
 	}
 
-	return xerrors.New("This bookshelf is already exists.")
+	return errAlreadyExistsBookshelf
 }
 
 func (v *bookDomainValidation) uniqueCheckReview(ctx context.Context, id int, userID string, bookID int) error {
@@ -107,5 +113,5 @@ func (v *bookDomainValidation) uniqueCheckReview(ctx context.Context, id int, us
 		return nil
 	}
 
-	return xerrors.New("This review is already exists.")
+	return errAlreadyExistsReview
 }

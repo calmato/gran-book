@@ -19,6 +19,8 @@ tags:
   description: 書籍関連
 - name: BookshelfService
   description: 本棚の書籍関連
+- name: Other
+  description: その他
 paths:
   # Auth Service
   /v1/auth:
@@ -85,6 +87,9 @@ paths:
     $ref: './paths/v1/bookshelf.review.yaml'
   /v1/users/{userId}/reviews/{reviewId}:
     $ref: './paths/v1/bookshelf.review-by-id.yaml'
+  # Other
+  /v1/top:
+    $ref: './paths/v1/top.yaml'
 components:
   securitySchemes:
     BearerAuth:
@@ -126,6 +131,8 @@ components:
       $ref: './components/schemas/common.yaml#/emptyResponse'
     errorResponse:
       $ref: './components/schemas/common.yaml#/errorResponse'
+    userTopV1Response:
+      $ref: './components/schemas/v1/top.response.yaml#/userTopResponse'
     # Response - Auth Service
     authV1Response:
       $ref: './components/schemas/v1/auth.response.yaml#/authResponse'

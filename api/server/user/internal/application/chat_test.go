@@ -10,7 +10,6 @@ import (
 	"github.com/calmato/gran-book/api/server/user/pkg/test"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
-	"golang.org/x/xerrors"
 )
 
 func TestChatApplication_ListRoom(t *testing.T) {
@@ -30,7 +29,7 @@ func TestChatApplication_ListRoom(t *testing.T) {
 		params *firestore.Params
 	}
 	type want struct {
-		rooms []*chat.Room
+		rooms chat.Rooms
 		err   error
 	}
 	testCases := []struct {
@@ -51,7 +50,7 @@ func TestChatApplication_ListRoom(t *testing.T) {
 				params: &firestore.Params{},
 			},
 			want: want{
-				rooms: []*chat.Room{room1, room2},
+				rooms: chat.Rooms{room1, room2},
 				err:   nil,
 			},
 		},
@@ -136,7 +135,7 @@ func TestChatApplication_GetRoom(t *testing.T) {
 			},
 			want: want{
 				room: nil,
-				err:  exception.Forbidden.New(xerrors.New("This user is not join the room")),
+				err:  exception.Forbidden.New(errNotJoinUserInRoom),
 			},
 		},
 	}
