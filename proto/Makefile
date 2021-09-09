@@ -25,8 +25,6 @@ build: install clean generate
 # For Protocol Buffer - generate
 # ------------------------------------------------
 generate: protoc
-	$(MAKE) generate-client OUTPUT_PATH=${NATIVE_CLIENT_PATH} CLIENT=native
-	$(MAKE) generate-client OUTPUT_PATH=${ADMIN_CLIENT_PATH} CLIENT=admin
 	$(MAKE) generate-gateway OUTPUT_PATH=${NATIVE_GATEWAY_PATH} CLIENT=native
 	$(MAKE) generate-gateway OUTPUT_PATH=${ADMIN_GATEWAY_PATH} CLIENT=admin
 	$(MAKE) generate-service OUTPUT_PATH=${USER_SERVER_PATH}
@@ -51,8 +49,6 @@ generate-service:
 # For Protocol Buffer - clean
 # ------------------------------------------------
 clean: clean-archive
-	$(MAKE) clean-client OUTPUT=${NATIVE_CLIENT_PATH}
-	$(MAKE) clean-client OUTPUT=${ADMIN_CLIENT_PATH}
 	$(MAKE) clean-gateway OUTPUT_PATH=${NATIVE_GATEWAY_PATH}
 	$(MAKE) clean-gateway OUTPUT_PATH=${ADMIN_GATEWAY_PATH}
 	$(MAKE) clean-service OUTPUT_PATH=${USER_SERVER_PATH}
