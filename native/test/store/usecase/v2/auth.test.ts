@@ -1,6 +1,8 @@
+import { AxiosError } from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import internalInstance from '~/lib/axios/internal';
 import {
+  editPassword,
   getProfile,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
@@ -9,7 +11,7 @@ import {
 } from '~/store/usecases/v2/auth';
 
 import { AuthV1Response } from '~/types/api/auth_apiv1_response_pb';
-import { SingUpForm } from '~/types/forms';
+import { PasswordEditForm, SingUpForm } from '~/types/forms';
 
 window.addEventListener = jest.fn();
 
@@ -109,7 +111,9 @@ describe('auth', () => {
       agreement: true,
     };
 
-    expect(signUpWithEmail(inValidPayload)).rejects.toBe({});
+    return signUpWithEmail(inValidPayload).catch((e) => {
+      expect(e.response.status).toBe(400);
+    });
   });
 
   test('can sign out service', async () => {
@@ -173,5 +177,25 @@ describe('auth', () => {
   test('sendPasswordResetEmail return promise reject when invalidPayload', async () => {
     const invalidPayload = { email: 'test2@calmato.dev' };
     await expect(sendPasswordResetEmail(invalidPayload)).rejects.toEqual({});
+  });
+
+  test('can edit password', async () => {
+    mockAxios.onPatch(`/${API_VERSION}/auth/password`).reply(200);
+    const payload: PasswordEditForm = {
+      password: '1234567890',
+      passwordConfirmation: '1234567890',
+    };
+    await expect(editPassword(payload)).resolves.toBe(undefined);
+  });
+
+  test('editPassword return promise reject when invalidPayload', async () => {
+    mockAxios.onPatch(`/${API_VERSION}/auth/password`).reply(400, {});
+    const invalidPayload: PasswordEditForm = {
+      password: '1234567890',
+      passwordConfirmation: '12345678',
+    };
+    return editPassword(invalidPayload).catch((e: AxiosError) => {
+      expect(e.response?.status).toBe(400);
+    });
   });
 });

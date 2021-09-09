@@ -3,7 +3,7 @@ import { internal } from '~/lib/axios';
 import firebase from '~/lib/firebase';
 import { Auth } from '~/store/models';
 import { AuthV1Response } from '~/types/api/auth_apiv1_response_pb';
-import { SignInForm, SingUpForm, PasswordResetForm } from '~/types/forms';
+import { SignInForm, SingUpForm, PasswordResetForm, PasswordEditForm } from '~/types/forms';
 
 const API_VERSION = 'v1';
 
@@ -108,6 +108,19 @@ export async function sendPasswordResetEmail(payload: PasswordResetForm) {
   try {
     const { email } = payload;
     await firebase.auth().sendPasswordResetEmail(email);
+  } catch (e) {
+    return Promise.reject(e);
+  }
+}
+
+/**
+ * バックエンドAPIにリクエストを送りユーザーのパスワードを変更します。
+ * @param payload
+ * @returns
+ */
+export async function editPassword(payload: PasswordEditForm) {
+  try {
+    await internal.patch('/v1/auth/password', payload);
   } catch (e) {
     return Promise.reject(e);
   }
