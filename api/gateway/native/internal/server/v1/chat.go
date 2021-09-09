@@ -13,7 +13,6 @@ import (
 	"github.com/calmato/gran-book/api/gateway/native/pkg/array"
 	pb "github.com/calmato/gran-book/api/gateway/native/proto"
 	"github.com/gin-gonic/gin"
-	"google.golang.org/grpc"
 )
 
 type ChatHandler interface {
@@ -24,19 +23,15 @@ type ChatHandler interface {
 }
 
 type chatHandler struct {
-	chatClient pb.ChatServiceClient
 	authClient pb.AuthServiceClient
+	chatClient pb.ChatServiceClient
 	userClient pb.UserServiceClient
 }
 
-func NewChatHandler(chatConn *grpc.ClientConn, authConn *grpc.ClientConn, userConn *grpc.ClientConn) ChatHandler {
-	cc := pb.NewChatServiceClient(chatConn)
-	ac := pb.NewAuthServiceClient(authConn)
-	uc := pb.NewUserServiceClient(userConn)
-
+func NewChatHandler(ac pb.AuthServiceClient, cc pb.ChatServiceClient, uc pb.UserServiceClient) ChatHandler {
 	return &chatHandler{
-		chatClient: cc,
 		authClient: ac,
+		chatClient: cc,
 		userClient: uc,
 	}
 }

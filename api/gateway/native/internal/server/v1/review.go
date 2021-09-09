@@ -11,7 +11,6 @@ import (
 	pb "github.com/calmato/gran-book/api/gateway/native/proto"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/sync/errgroup"
-	"google.golang.org/grpc"
 )
 
 type ReviewHandler interface {
@@ -22,19 +21,15 @@ type ReviewHandler interface {
 }
 
 type reviewHandler struct {
-	bookClient pb.BookServiceClient
 	authClient pb.AuthServiceClient
+	bookClient pb.BookServiceClient
 	userClient pb.UserServiceClient
 }
 
-func NewReviewHandler(bookConn *grpc.ClientConn, authConn *grpc.ClientConn, userConn *grpc.ClientConn) ReviewHandler {
-	bc := pb.NewBookServiceClient(bookConn)
-	ac := pb.NewAuthServiceClient(authConn)
-	uc := pb.NewUserServiceClient(authConn)
-
+func NewReviewHandler(ac pb.AuthServiceClient, bc pb.BookServiceClient, uc pb.UserServiceClient) ReviewHandler {
 	return &reviewHandler{
-		bookClient: bc,
 		authClient: ac,
+		bookClient: bc,
 		userClient: uc,
 	}
 }
