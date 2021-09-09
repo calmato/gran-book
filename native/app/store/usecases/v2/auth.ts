@@ -9,6 +9,7 @@ import {
   PasswordResetForm,
   PasswordEditForm,
   AccountEditForm,
+  ProfileEditForm,
 } from '~/types/forms';
 
 const API_VERSION = 'v1';
@@ -61,45 +62,12 @@ export async function getProfile() {
       `${API_VERSION}/auth`,
     );
 
-    const {
-      username,
-      gender,
-      phoneNumber,
-      thumbnailUrl,
-      selfIntroduction,
-      lastName,
-      firstName,
-      lastNameKana,
-      firstNameKana,
-      postalCode,
-      prefecture,
-      city,
-      addressLine1,
-      addressLine2,
-      createdAt,
-      updatedAt,
-    } = data;
-
-    // const values: Auth.ProfileValues
-    return {
-      username,
-      gender,
-      phoneNumber,
+    const values: Auth.ProfileValues = {
       role: 0, // TODO: remove
-      thumbnailUrl,
-      selfIntroduction,
-      lastName,
-      firstName,
-      lastNameKana,
-      firstNameKana,
-      postalCode,
-      prefecture,
-      city,
-      addressLine1,
-      addressLine2,
-      createdAt,
-      updatedAt,
-    } as Auth.ProfileValues;
+      ...data,
+    };
+
+    return values;
   } catch (e) {
     return Promise.reject(e);
   }
@@ -140,6 +108,29 @@ export async function editPassword(payload: PasswordEditForm) {
 export async function editAccount(payload: AccountEditForm) {
   try {
     await internal.patch('/v1/auth/address', payload);
+  } catch (e) {
+    return Promise.reject(e);
+  }
+}
+
+/**
+ * バックエンドAPIにリクエストを送りユーザーのプロフィールをを変更します。
+ * @param payload
+ * @returns
+ */
+export async function editProfile(payload: ProfileEditForm) {
+  try {
+    const { data }: AxiosResponse<AuthV1Response.AsObject> = await internal.patch(
+      '/v1/auth/profile',
+      payload,
+    );
+
+    const values: Auth.ProfileValues = {
+      role: 0,
+      ...data,
+    };
+
+    return values;
   } catch (e) {
     return Promise.reject(e);
   }

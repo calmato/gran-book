@@ -1,9 +1,11 @@
 import { AxiosError } from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import internalInstance from '~/lib/axios/internal';
+import { Auth } from '~/store/models';
 import {
   editAccount,
   editPassword,
+  editProfile,
   getProfile,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
@@ -12,7 +14,7 @@ import {
 } from '~/store/usecases/v2/auth';
 
 import { AuthV1Response } from '~/types/api/auth_apiv1_response_pb';
-import { AccountEditForm, PasswordEditForm, SingUpForm } from '~/types/forms';
+import { AccountEditForm, PasswordEditForm, ProfileEditForm, SingUpForm } from '~/types/forms';
 
 window.addEventListener = jest.fn();
 
@@ -236,6 +238,57 @@ describe('auth', () => {
     };
 
     editAccount(invalidPayload).catch((e: AxiosError) => {
+      expect(e.response?.status).toBe(400);
+    });
+  });
+
+  test('can edit profile', async () => {
+    const mockReturnValue: Auth.ProfileValues = {
+      username: 'testuser',
+      phoneNumber: '09011112222',
+      thumbnailUrl: '',
+      selfIntroduction: '',
+      lastName: 'test',
+      firstName: 'user',
+      lastNameKana: 'てすと',
+      firstNameKana: 'ゆーざー',
+      postalCode: '1111111',
+      prefecture: '東京都',
+      city: '米花町',
+      addressLine1: '1-1-1',
+      addressLine2: '2F',
+      createdAt: '2021/08/31',
+      updatedAt: '2021/09/03',
+      gender: 0,
+      role: 0,
+    };
+    mockAxios.onPatch(`/${API_VERSION}/auth/profile`).reply(201, mockReturnValue);
+
+    const payload: ProfileEditForm = {
+      name: 'testuser',
+      avatar: '',
+      selfIntroduction: '',
+      gender: 0,
+    };
+
+    const res = await editProfile(payload);
+    expect(res.username).toBe(payload.name);
+    expect(res.thumbnailUrl).toBe(payload.avatar);
+    expect(res.selfIntroduction).toBe(payload.selfIntroduction);
+    expect(res.gender).toBe(payload.gender);
+  });
+
+  test('editProfile return promise reject when invalidPayload', () => {
+    mockAxios.onPatch(`/${API_VERSION}/auth/profile`).reply(400);
+
+    const invalidPyload: ProfileEditForm = {
+      name: '',
+      avatar: '',
+      selfIntroduction: '',
+      gender: -1,
+    };
+
+    editProfile(invalidPyload).catch((e: AxiosError) => {
       expect(e.response?.status).toBe(400);
     });
   });
