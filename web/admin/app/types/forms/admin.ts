@@ -3,6 +3,11 @@ import { IFileInput, ISelect, ITextField } from './utils'
 // ---------------------------
 // interface - form
 // ---------------------------
+export interface IAdminSearchForm {
+  params: IAdminSearchParams
+  options: IAdminSearchOptions
+}
+
 export interface IAdminListForm {
   limit: number
   offset: number
@@ -37,6 +42,10 @@ export interface IAdminEditSecurityForm {
 // ---------------------------
 // interface - params
 // ---------------------------
+export interface IAdminSearchParams {
+  value: string
+}
+
 export interface IAdminNewParams {
   email: string
   password: string
@@ -71,6 +80,10 @@ export interface IAdminEditSecurityParams {
 // ---------------------------
 // interface - options
 // ---------------------------
+export interface IAdminSearchOptions {
+  value: ITextField
+}
+
 export interface IAdminNewOptions {
   email: ITextField
   password: ITextField
@@ -104,6 +117,13 @@ export interface IAdminEditSecurityOptions {
 // ---------------------------
 // const - Options
 // ---------------------------
+export const AdminSearchOptions: IAdminSearchOptions = {
+  value: {
+    label: '検索値',
+    rules: {},
+  } as ITextField,
+}
+
 export const AdminNewOptions: IAdminNewOptions = {
   email: {
     label: 'メールアドレス',

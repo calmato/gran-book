@@ -1,6 +1,6 @@
 <template>
   <admin-list
-    :search.sync="search"
+    :search-form="searchForm"
     :page.sync="page"
     :items-per-page.sync="itemsPerPage"
     :sort-by.sync="sortBy"
@@ -15,13 +15,22 @@
     @new:close="handleClickCloseNewItem"
     @create="handleClickCreateItem"
     @show="handleClickShowItem"
+    @submit="handleSubmitSearch"
   />
 </template>
 
 <script lang="ts">
 import { defineComponent, SetupContext, ref, reactive, useAsync, computed, watch } from '@nuxtjs/composition-api'
 import { AdminStore, CommonStore } from '~/store'
-import { AdminNewOptions, IAdminListForm, IAdminNewForm, IAdminNewParams } from '~/types/forms'
+import {
+  AdminNewOptions,
+  AdminSearchOptions,
+  IAdminListForm,
+  IAdminNewForm,
+  IAdminNewParams,
+  IAdminSearchForm,
+  IAdminSearchParams,
+} from '~/types/forms'
 import { PromiseState } from '~/types/store'
 import AdminList from '~/components/templates/AdminList.vue'
 
@@ -44,6 +53,9 @@ export default defineComponent({
       lastNameKana: '',
       firstNameKana: '',
     }
+    const initializeSearchForm: IAdminSearchParams = {
+      value: '',
+    }
 
     const search = ref<string>()
     const page = ref<number>(1)
@@ -57,6 +69,14 @@ export default defineComponent({
       },
       options: {
         ...AdminNewOptions,
+      },
+    })
+    const searchForm = reactive<IAdminSearchForm>({
+      params: {
+        ...initializeSearchForm,
+      },
+      options: {
+        ...AdminSearchOptions,
       },
     })
 
@@ -120,6 +140,10 @@ export default defineComponent({
       router.push(`/admin/${userId}`)
     }
 
+    const handleSubmitSearch = () => {
+      console.log('debug', 'search', 'submit', searchForm)
+    }
+
     async function indexAdmin(): Promise<void> {
       CommonStore.startConnection()
 
@@ -149,10 +173,12 @@ export default defineComponent({
       total,
       newForm,
       newDialog,
+      searchForm,
       handleClickNewItem,
       handleClickCloseNewItem,
       handleClickCreateItem,
       handleClickShowItem,
+      handleSubmitSearch,
     }
   },
 })

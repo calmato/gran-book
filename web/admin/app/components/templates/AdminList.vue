@@ -21,7 +21,15 @@
           <v-card class="pa-4">
             <v-subheader>管理者一覧</v-subheader>
             <v-card-title>
-              <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details />
+              <v-form dense @submit.prevent="onSubmitSearchForm">
+                <v-text-field
+                  v-model="searchForm.params.value"
+                  append-icon="mdi-magnify"
+                  label="Search"
+                  single-line
+                  hide-details
+                />
+              </v-form>
               <v-spacer />
               <v-btn v-if="role === 1" color="primary" dark class="mb-2" @click="onClickNewButton">New Item</v-btn>
             </v-card-title>
@@ -31,7 +39,7 @@
               :items-per-page="itemsPerPage"
               :sort-by="sortBy"
               :sort-desc="sortDesc"
-              :search="search"
+              :search="searchForm.params.value"
               :role="role"
               :users="users"
               :total="total"
@@ -55,7 +63,7 @@ import TheSelect from '~/components/atoms/TheSelect.vue'
 import TheTextField from '~/components/atoms/TheTextField.vue'
 import AdminListTable from '~/components/organisms/AdminListTable.vue'
 import AdminNewForm from '~/components/organisms/AdminNewForm.vue'
-import { IAdminNewForm } from '~/types/forms'
+import { IAdminNewForm, IAdminSearchForm } from '~/types/forms'
 import { IAdminUser } from '~/types/store'
 
 export default defineComponent({
@@ -93,11 +101,6 @@ export default defineComponent({
       required: false,
       default: undefined,
     },
-    search: {
-      type: String,
-      required: false,
-      default: '',
-    },
     role: {
       type: Number,
       required: false,
@@ -115,6 +118,11 @@ export default defineComponent({
     },
     newForm: {
       type: Object as PropType<IAdminNewForm>,
+      required: false,
+      default: () => ({}),
+    },
+    searchForm: {
+      type: Object as PropType<IAdminSearchForm>,
       required: false,
       default: () => ({}),
     },
@@ -142,11 +150,16 @@ export default defineComponent({
       emit('show', userId)
     }
 
+    const onSubmitSearchForm = () => {
+      emit('submit')
+    }
+
     return {
       onClickNewButton,
       onClickNewClose,
       onClickCreateButton,
       onClickShowButton,
+      onSubmitSearchForm,
     }
   },
 })
