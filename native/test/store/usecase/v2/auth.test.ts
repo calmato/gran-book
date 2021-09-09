@@ -2,6 +2,7 @@ import { AxiosError } from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import internalInstance from '~/lib/axios/internal';
 import {
+  editAccount,
   editPassword,
   getProfile,
   sendPasswordResetEmail,
@@ -11,7 +12,7 @@ import {
 } from '~/store/usecases/v2/auth';
 
 import { AuthV1Response } from '~/types/api/auth_apiv1_response_pb';
-import { PasswordEditForm, SingUpForm } from '~/types/forms';
+import { AccountEditForm, PasswordEditForm, SingUpForm } from '~/types/forms';
 
 window.addEventListener = jest.fn();
 
@@ -190,11 +191,51 @@ describe('auth', () => {
 
   test('editPassword return promise reject when invalidPayload', async () => {
     mockAxios.onPatch(`/${API_VERSION}/auth/password`).reply(400, {});
+
     const invalidPayload: PasswordEditForm = {
       password: '1234567890',
       passwordConfirmation: '12345678',
     };
     return editPassword(invalidPayload).catch((e: AxiosError) => {
+      expect(e.response?.status).toBe(400);
+    });
+  });
+
+  test('can edit account', async () => {
+    mockAxios.onPatch(`/${API_VERSION}/auth/address`).reply(201);
+
+    const payload: AccountEditForm = {
+      firstName: 'test',
+      lastName: 'user',
+      firstNameKana: 'てすと',
+      lastNameKana: 'ゆーざー',
+      phoneNumber: '00011112222',
+      postalCode: '1110000',
+      prefecture: '東京都',
+      city: '小金井市',
+      addressLine1: '貫井北町4-1-1',
+      addressLine2: '',
+    };
+    await expect(editAccount(payload)).resolves.toBe(undefined);
+  });
+
+  test('editAccount return promise reject when invalidPayload', async () => {
+    mockAxios.onPatch(`/${API_VERSION}/auth/address`).reply(400);
+
+    const invalidPayload: AccountEditForm = {
+      firstName: 'test',
+      lastName: 'user',
+      firstNameKana: 'てすと',
+      lastNameKana: 'ゆーざー',
+      phoneNumber: '',
+      postalCode: '',
+      prefecture: '',
+      city: '',
+      addressLine1: '',
+      addressLine2: '',
+    };
+
+    editAccount(invalidPayload).catch((e: AxiosError) => {
       expect(e.response?.status).toBe(400);
     });
   });
