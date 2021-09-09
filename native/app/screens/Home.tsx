@@ -1,13 +1,19 @@
 import React, { ReactElement } from 'react';
-import { View, Text } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Header } from 'react-native-elements';
 import HeaderText from '~/components/atoms/HeaderText';
+import RecommendBooks from '~/components/organisms/RecommendBooks';
+import { useRecommendBooks } from '~/hooks/useRecommendBooks';
+
+const styles = StyleSheet.create({});
 
 const Home = function Home(): ReactElement {
+  const { recommendBooks } = useRecommendBooks();
+
   return (
     <View>
       <Header centerComponent={<HeaderText title="Gran Book" />} />
-      <Text>ホーム画面</Text>
+      <RecommendBooks books={recommendBooks} />
     </View>
   );
 };

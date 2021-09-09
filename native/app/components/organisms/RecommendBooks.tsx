@@ -11,7 +11,7 @@ import {
 
 import { FlatList } from 'react-native-gesture-handler';
 import { fullWidth2halfWidth } from '~/lib/util';
-import { BookshelfV1Response } from '~/types/api/bookshelf_apiv1_response_pb';
+import { ISearchResultItem } from '~/types/response/external/rakuten-books';
 import { COLOR } from '~~/constants/theme';
 
 const { width } = Dimensions.get('screen');
@@ -71,13 +71,13 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  books: BookshelfV1Response.AsObject[];
+  books: ISearchResultItem[];
 }
 
 const RecommendBooks = function RecommendBooks(props: Props): ReactElement {
   const recommendBooks = props.books;
 
-  const carouselRef = useRef<FlatList<BookshelfV1Response.AsObject>>(null);
+  const carouselRef = useRef<FlatList<ISearchResultItem>>(null);
 
   const onResponderReleaseHandler = useCallback(
     (event: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -118,9 +118,11 @@ const RecommendBooks = function RecommendBooks(props: Props): ReactElement {
               <View style={styles.recommendBookCard}>
                 <Text style={styles.bookTitle}>{item.title}</Text>
                 <View style={styles.recommendBookCardContent}>
-                  <Image source={{ uri: item.thumbnailUrl }} style={[styles.imageContainer]} />
+                  <Image source={{ uri: item.largeImageUrl }} style={[styles.imageContainer]} />
                   <Text style={styles.bookDescription} numberOfLines={8}>
-                    {fullWidth2halfWidth(item.description)}
+                    {item.itemCaption === ''
+                      ? 'この本の概要情報がありません。'
+                      : fullWidth2halfWidth(item.itemCaption)}
                   </Text>
                 </View>
               </View>
