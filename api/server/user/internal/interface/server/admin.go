@@ -10,9 +10,7 @@ import (
 	"github.com/calmato/gran-book/api/server/user/internal/domain/user"
 	"github.com/calmato/gran-book/api/server/user/internal/interface/validation"
 	"github.com/calmato/gran-book/api/server/user/pkg/database"
-	"github.com/calmato/gran-book/api/server/user/pkg/datetime"
 	pb "github.com/calmato/gran-book/api/server/user/proto"
-	"golang.org/x/xerrors"
 )
 
 type adminServer struct {
@@ -241,8 +239,7 @@ func (s *adminServer) UploadAdminThumbnail(stream pb.AdminService_UploadAdminThu
 
 		num := int(req.GetPosition())
 		if thumbnailBytes[num] != nil {
-			err = xerrors.New("Position is duplicated")
-			return errorHandling(exception.InvalidRequestValidation.New(err))
+			return errorHandling(exception.InvalidRequestValidation.New(errInvalidUploadRequest))
 		}
 
 		thumbnailBytes[num] = req.GetThumbnail()
@@ -269,30 +266,9 @@ func (s *adminServer) DeleteAdmin(ctx context.Context, req *pb.DeleteAdminReques
 	return &pb.Empty{}, nil
 }
 
-func getAdminListResponse(us []*user.User, limit, offset, total int) *pb.AdminListResponse {
-	users := make([]*pb.AdminListResponse_User, len(us))
-	for i, u := range us {
-		user := &pb.AdminListResponse_User{
-			Id:               u.ID,
-			Username:         u.Username,
-			Email:            u.Email,
-			PhoneNumber:      u.PhoneNumber,
-			Role:             pb.Role(u.Role),
-			ThumbnailUrl:     u.ThumbnailURL,
-			SelfIntroduction: u.SelfIntroduction,
-			LastName:         u.LastName,
-			FirstName:        u.FirstName,
-			LastNameKana:     u.LastNameKana,
-			FirstNameKana:    u.FirstNameKana,
-			CreatedAt:        datetime.TimeToString(u.CreatedAt),
-			UpdatedAt:        datetime.TimeToString(u.UpdatedAt),
-		}
-
-		users[i] = user
-	}
-
+func getAdminListResponse(us user.Users, limit, offset, total int) *pb.AdminListResponse {
 	return &pb.AdminListResponse{
-		Users:  users,
+		Admins: us.Admin(),
 		Limit:  int64(limit),
 		Offset: int64(offset),
 		Total:  int64(total),
@@ -301,19 +277,7 @@ func getAdminListResponse(us []*user.User, limit, offset, total int) *pb.AdminLi
 
 func getAdminResponse(u *user.User) *pb.AdminResponse {
 	return &pb.AdminResponse{
-		Id:               u.ID,
-		Username:         u.Username,
-		Email:            u.Email,
-		PhoneNumber:      u.PhoneNumber,
-		Role:             pb.Role(u.Role),
-		ThumbnailUrl:     u.ThumbnailURL,
-		SelfIntroduction: u.SelfIntroduction,
-		LastName:         u.LastName,
-		FirstName:        u.FirstName,
-		LastNameKana:     u.LastNameKana,
-		FirstNameKana:    u.FirstNameKana,
-		CreatedAt:        datetime.TimeToString(u.CreatedAt),
-		UpdatedAt:        datetime.TimeToString(u.UpdatedAt),
+		Admin: u.Admin(),
 	}
 }
 

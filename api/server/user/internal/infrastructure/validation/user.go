@@ -2,15 +2,20 @@ package validation
 
 import (
 	"context"
+	"errors"
 
 	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/user"
-	"golang.org/x/xerrors"
 )
 
 type userDomainValidation struct {
 	userRepository user.Repository
 }
+
+var (
+	errAlreadyExistsEmail        = errors.New("validation: this email is already exists")
+	errAlreadyExistsRelationship = errors.New("validation: this user is already following")
+)
 
 // NewUserDomainValidation - User関連のドメインバリデータ
 func NewUserDomainValidation(ur user.Repository) user.Validation {
@@ -61,7 +66,7 @@ func (v *userDomainValidation) uniqueCheckEmail(ctx context.Context, id string, 
 		return nil
 	}
 
-	return xerrors.New("This email is already exists.")
+	return errAlreadyExistsEmail
 }
 
 func (v *userDomainValidation) uniqueCheckRelationship(
@@ -76,5 +81,5 @@ func (v *userDomainValidation) uniqueCheckRelationship(
 		return nil
 	}
 
-	return xerrors.New("This user is already following.")
+	return errAlreadyExistsRelationship
 }

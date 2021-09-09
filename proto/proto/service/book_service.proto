@@ -6,12 +6,13 @@ option go_package = "github.com/calmato/gran-book/proto";
 
 import "github.com/envoyproxy/protoc-gen-validate/validate/validate.proto";
 import "common/common.proto";
+import "service/book_entity.proto";
 
 service BookService {
   rpc ListBookshelf(ListBookshelfRequest) returns (BookshelfListResponse);
   rpc ListBookReview(ListBookReviewRequest) returns (ReviewListResponse);
   rpc ListUserReview(ListUserReviewRequest) returns (ReviewListResponse);
-  rpc MultiGetBooks(MultiGetBooksRequest) returns (BookMapResponse);
+  rpc MultiGetBooks(MultiGetBooksRequest) returns (BookListResponse);
   rpc GetBook(GetBookRequest) returns (BookResponse);
   rpc GetBookByIsbn(GetBookByIsbnRequest) returns (BookResponse);
   rpc GetBookshelf(GetBookshelfRequest) returns (BookshelfResponse);
@@ -338,173 +339,33 @@ message ReleaseBookshelfRequest {
 }
 
 message BookResponse {
-  message Author {
-    string name = 1; // 著者名
-    string name_kana = 2; // 著者名(かな)
-  }
-  int64 id = 1; // 書籍ID
-  string title = 2; // 本のタイトル
-  string title_kana = 3; // 本のタイトル(かな)
-  string description = 4; // 本の説明
-  string isbn = 5; // ISBN
-  string publisher = 6; // 出版社名
-  string published_on = 7; // 出版日
-  string thumbnail_url = 8; // サムネイルURL
-  string rakuten_url = 9; // 楽天ショップ URL
-  string rakuten_size = 10; // 楽天ショップ 本のサイズ
-  string rakuten_genre_id = 11; // 楽天ショップ 本のカテゴリ
-  string created_at = 12; // 作成日時
-  string updated_at = 13; // 更新日時
-  repeated Author authors = 14; // 著者一覧
+  Book book = 1;
 }
 
 message BookListResponse {
-  message Author {
-    string name = 1; // 著者名
-    string name_kana = 2; // 著者名(かな)
-  }
-  message Book {
-    int64 id = 1; // 書籍ID
-    string title = 2; // 本のタイトル
-    string title_kana = 3; // 本のタイトル(かな)
-    string description = 4; // 本の説明
-    string isbn = 5; // ISBN
-    string publisher = 6; // 出版社名
-    string published_on = 7; // 出版日
-    string thumbnail_url = 8; // サムネイルURL
-    string rakuten_url = 9; // 楽天ショップ URL
-    string rakuten_size = 10; // 楽天ショップ 本のサイズ
-    string rakuten_genre_id = 11; // 楽天ショップ 本のカテゴリ
-    string created_at = 12; // 作成日時
-    string updated_at = 13; // 更新日時
-    repeated Author authors = 14; // 著者一覧
-  }
-  repeated Book books = 1; // 書籍一覧
-  int64 limit = 2; // 取得上限
-  int64 offset = 3; // 取得開始位置
-  int64 total = 4; // 条件一致数
-}
-
-message BookMapResponse {
-  message Author {
-    string name = 1; // 著者名
-    string name_kana = 2; // 著者名(かな)
-  }
-  message Book {
-    int64 id = 1; // 書籍ID
-    string title = 2; // 本のタイトル
-    string title_kana = 3; // 本のタイトル(かな)
-    string description = 4; // 本の説明
-    string isbn = 5; // ISBN
-    string publisher = 6; // 出版社名
-    string published_on = 7; // 出版日
-    string thumbnail_url = 8; // サムネイルURL
-    string rakuten_url = 9; // 楽天ショップ URL
-    string rakuten_size = 10; // 楽天ショップ 本のサイズ
-    string rakuten_genre_id = 11; // 楽天ショップ 本のカテゴリ
-    string created_at = 12; // 作成日時
-    string updated_at = 13; // 更新日時
-    repeated Author authors = 14; // 著者一覧
-  }
-  map<int64, Book> books = 1; // 書籍一覧
+  repeated Book books = 1;
+  int64 limit = 2;
+  int64 offset = 3;
+  int64 total = 4;
 }
 
 message BookshelfResponse {
-  message Author {
-    string name = 1; // 著者名
-    string name_kana = 2; // 著者名(かな)
-  }
-  message Book {
-    int64 id = 1; // 書籍ID
-    string title = 2; // 本のタイトル
-    string title_kana = 3; // 本のタイトル(かな)
-    string description = 4; // 本の説明
-    string isbn = 5; // ISBN
-    string publisher = 6; // 出版社名
-    string published_on = 7; // 出版日
-    string thumbnail_url = 8; // サムネイルURL
-    string rakuten_url = 9; // 楽天ショップ URL
-    string rakuten_size = 10; // 楽天ショップ 本のサイズ
-    string rakuten_genre_id = 11; // 楽天ショップ 本のカテゴリ
-    string created_at = 12; // 作成日時
-    string updated_at = 13; // 更新日時
-    repeated Author authors = 14; // 著者一覧
-  }
-  message Review {
-    int32 score = 1; // 評価
-    string impression = 2; // 感想
-  }
-  int64 id = 1; // 本棚ID
-  int64 book_id = 2; // 書籍ID
-  string user_id = 3; // ユーザーID
-  int32 status = 4; // 読書ステータス
-  string read_on = 5; // 読み終えた日
-  int64 review_id = 6; // レビューID
-  string created_at = 7; // 登録日時
-  string updated_at = 8; // 更新日時
-  Book book = 9; // 書籍情報
-  Review review = 10; // レビュー情報
+  Bookshelf bookshelf = 1;
 }
 
 message BookshelfListResponse {
-  message Author {
-    string name = 1; // 著者名
-    string name_kana = 2; // 著者名(かな)
-  }
-  message Book {
-    int64 id = 1; // 書籍ID
-    string title = 2; // 本のタイトル
-    string title_kana = 3; // 本のタイトル(かな)
-    string description = 4; // 本の説明
-    string isbn = 5; // ISBN
-    string publisher = 6; // 出版社名
-    string published_on = 7; // 出版日
-    string thumbnail_url = 8; // サムネイルURL
-    string rakuten_url = 9; // 楽天ショップ URL
-    string rakuten_size = 10; // 楽天ショップ 本のサイズ
-    string rakuten_genre_id = 11; // 楽天ショップ 本のカテゴリ
-    string created_at = 12; // 作成日時
-    string updated_at = 13; // 更新日時
-    repeated Author authors = 14; // 著者一覧
-  }
-  message Bookshelf {
-    int64 id = 1; // 本棚ID
-    int64 book_id = 2; // 書籍ID
-    string user_id = 3; // ユーザーID
-    int32 status = 4; // 読書ステータス
-    string read_on = 5; // 読み終えた日
-    int64 review_id = 6; // レビューID
-    string created_at = 7; // 登録日時
-    string updated_at = 8; // 更新日時
-    Book book = 9; // 書籍情報
-  }
-  repeated Bookshelf bookshelves = 1; // 本棚の書籍一覧
-  int64 limit = 2; // 取得上限
-  int64 offset = 3; // 取得開始位置
-  int64 total = 4; // 条件一致数
+  repeated Bookshelf bookshelves = 1;
+  int64 limit = 2;
+  int64 offset = 3;
+  int64 total = 4;
 }
 
 message ReviewResponse {
-  int64 id = 1; // レビューID
-  int64 book_id = 2; // 書籍ID
-  string user_id = 3; // ユーザーID
-  int32 score = 4; // 評価
-  string impression = 5; // 感想
-  string created_at = 6; // 作成日時
-  string updated_at = 7; // 更新日時
+  Review review = 1;
 }
 
 message ReviewListResponse {
-  message Review {
-    int64 id = 1; // レビューID
-    int64 book_id = 2; // 書籍ID
-    string user_id = 3; // ユーザーID
-    int32 score = 4; // 評価
-    string impression = 5; // 感想
-    string created_at = 6; // 作成日時
-    string updated_at = 7; // 更新日時
-  }
-  repeated Review reviews = 1; // レビュー一覧
+  repeated Review reviews = 1;
   int64 limit = 2; // 取得上限
   int64 offset = 3; // 取得開始位置
   int64 total = 4; // 条件一致数

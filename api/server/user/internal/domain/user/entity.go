@@ -3,6 +3,8 @@ package user
 import (
 	"time"
 
+	"github.com/calmato/gran-book/api/server/user/pkg/datetime"
+	pb "github.com/calmato/gran-book/api/server/user/proto"
 	"gorm.io/gorm"
 )
 
@@ -32,6 +34,101 @@ type User struct {
 	DeletedAt        gorm.DeletedAt `gorm:"default:null"`
 	Follows          []*Follow      `gorm:"foreignKey:FollowID"`
 	Followers        []*Follower    `gorm:"foreignKey:FollowerID"`
+	IsFollowing      bool           `gorm:"-"`
+	IsFollowed       bool           `gorm:"-"`
+	FollowCount      int            `gorm:"-"`
+	FollowerCount    int            `gorm:"-"`
+}
+
+type Users []*User
+
+func (u *User) Proto() *pb.User {
+	return &pb.User{
+		Id:               u.ID,
+		Username:         u.Username,
+		Gender:           pb.Gender(u.Gender),
+		Email:            u.Email,
+		PhoneNumber:      u.PhoneNumber,
+		ThumbnailUrl:     u.ThumbnailURL,
+		SelfIntroduction: u.SelfIntroduction,
+		LastName:         u.LastName,
+		FirstName:        u.FirstName,
+		LastNameKana:     u.LastNameKana,
+		FirstNameKana:    u.FirstNameKana,
+		CreatedAt:        datetime.TimeToString(u.CreatedAt),
+		UpdatedAt:        datetime.TimeToString(u.UpdatedAt),
+	}
+}
+
+func (u *User) Auth() *pb.Auth {
+	return &pb.Auth{
+		Id:               u.ID,
+		Username:         u.Username,
+		Gender:           pb.Gender(u.Gender),
+		Email:            u.Email,
+		PhoneNumber:      u.PhoneNumber,
+		Role:             pb.Role(u.Role),
+		ThumbnailUrl:     u.ThumbnailURL,
+		SelfIntroduction: u.SelfIntroduction,
+		LastName:         u.LastName,
+		FirstName:        u.FirstName,
+		LastNameKana:     u.LastNameKana,
+		FirstNameKana:    u.FirstNameKana,
+		PostalCode:       u.PostalCode,
+		Prefecture:       u.Prefecture,
+		City:             u.City,
+		AddressLine1:     u.AddressLine1,
+		AddressLine2:     u.AddressLine2,
+		CreatedAt:        datetime.TimeToString(u.CreatedAt),
+		UpdatedAt:        datetime.TimeToString(u.UpdatedAt),
+	}
+}
+
+func (u *User) Admin() *pb.Admin {
+	return &pb.Admin{
+		Id:               u.ID,
+		Username:         u.Username,
+		Email:            u.Email,
+		PhoneNumber:      u.PhoneNumber,
+		Role:             pb.Role(u.Role),
+		ThumbnailUrl:     u.ThumbnailURL,
+		SelfIntroduction: u.SelfIntroduction,
+		LastName:         u.LastName,
+		FirstName:        u.FirstName,
+		LastNameKana:     u.LastNameKana,
+		FirstNameKana:    u.FirstNameKana,
+		CreatedAt:        datetime.TimeToString(u.CreatedAt),
+		UpdatedAt:        datetime.TimeToString(u.UpdatedAt),
+	}
+}
+
+func (u *User) Profile() *pb.UserProfile {
+	return &pb.UserProfile{
+		Id:               u.ID,
+		Username:         u.Username,
+		ThumbnailUrl:     u.ThumbnailURL,
+		SelfIntroduction: u.SelfIntroduction,
+		IsFollow:         u.IsFollowing,
+		IsFollower:       u.IsFollowed,
+		FollowCount:      int64(u.FollowCount),
+		FollowerCount:    int64(u.FollowerCount),
+	}
+}
+
+func (us Users) Proto() []*pb.User {
+	res := make([]*pb.User, len(us))
+	for i := range us {
+		res[i] = us[i].Proto()
+	}
+	return res
+}
+
+func (us Users) Admin() []*pb.Admin {
+	res := make([]*pb.Admin, len(us))
+	for i := range us {
+		res[i] = us[i].Admin()
+	}
+	return res
 }
 
 // Relationship - Relationshipエンティティ (中間テーブル)
@@ -55,6 +152,26 @@ type Follow struct {
 	FollowerCount    int    `gorm:"-"`
 }
 
+type Follows []*Follow
+
+func (f *Follow) Proto() *pb.Follow {
+	return &pb.Follow{
+		Id:               f.FollowID,
+		Username:         f.Username,
+		ThumbnailUrl:     f.ThumbnailURL,
+		SelfIntroduction: f.SelfIntroduction,
+		IsFollow:         f.IsFollowing,
+	}
+}
+
+func (fs Follows) Proto() []*pb.Follow {
+	res := make([]*pb.Follow, len(fs))
+	for i := range fs {
+		res[i] = fs[i].Proto()
+	}
+	return res
+}
+
 // Follower - フォローされているUserのエンティティ
 type Follower struct {
 	FollowerID       string `gorm:"<-:false"`
@@ -65,6 +182,26 @@ type Follower struct {
 	IsFollowed       bool   `gorm:"-"`
 	FollowCount      int    `gorm:"-"`
 	FollowerCount    int    `gorm:"-"`
+}
+
+type Followers []*Follower
+
+func (f *Follower) Proto() *pb.Follower {
+	return &pb.Follower{
+		Id:               f.FollowerID,
+		Username:         f.Username,
+		ThumbnailUrl:     f.ThumbnailURL,
+		SelfIntroduction: f.SelfIntroduction,
+		IsFollow:         f.IsFollowing,
+	}
+}
+
+func (fs Followers) Proto() []*pb.Follower {
+	res := make([]*pb.Follower, len(fs))
+	for i := range fs {
+		res[i] = fs[i].Proto()
+	}
+	return res
 }
 
 // ユーザ権限

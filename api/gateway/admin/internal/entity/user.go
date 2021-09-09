@@ -4,47 +4,62 @@ import (
 	pb "github.com/calmato/gran-book/api/gateway/admin/proto"
 )
 
-// Role - ユーザー権限
-type Role int32
-
-const (
-	RoleUser      Role = 0 // ユーザー (default)
-	RoleAdmin     Role = 1 // 管理者
-	RoleDeveloper Role = 2 // 開発者
-	RoleOperator  Role = 3 // 運用者
-)
-
-var (
-	roleByName = map[Role]string{
-		0: "user",
-		1: "admin",
-		2: "developer",
-		3: "operator",
-	}
-	roleByValue = map[string]int32{
-		"user":      0,
-		"admin":     1,
-		"developer": 2,
-		"operator":  3,
-	}
-)
-
-func (r Role) Name() string {
-	if name, ok := roleByName[r]; ok {
-		return name
-	}
-
-	return ""
+type Auth struct {
+	*pb.Auth
 }
 
-func (r Role) Value(key string) Role {
-	if value, ok := roleByValue[key]; ok {
-		return Role(value)
-	}
-
-	return RoleUser
+func NewAuth(a *pb.Auth) *Auth {
+	return &Auth{a}
 }
 
-func (r Role) Proto() pb.Role {
-	return *pb.Role(r).Enum()
+func (a *Auth) Role() Role {
+	return NewRole(a.GetRole())
+}
+
+type User struct {
+	*pb.User
+}
+
+type Users []*User
+
+func NewUser(u *pb.User) *User {
+	return &User{u}
+}
+
+func NewUsers(us []*pb.User) Users {
+	res := make(Users, len(us))
+	for i := range us {
+		res[i] = NewUser(us[i])
+	}
+	return res
+}
+
+func (us Users) Map() map[string]*User {
+	res := make(map[string]*User, len(us))
+	for _, u := range us {
+		res[u.Id] = u
+	}
+	return res
+}
+
+type Admin struct {
+	*pb.Admin
+}
+
+type Admins []*Admin
+
+func NewAdmin(a *pb.Admin) *Admin {
+	return &Admin{a}
+}
+
+func (a *Admin) Role() Role {
+	return NewRole(a.GetRole())
+}
+
+func NewAdmins(as []*pb.Admin) Admins {
+	res := make(Admins, len(as))
+	for i := range as {
+		res[i] = NewAdmin(as[i])
+	}
+	return res
 }

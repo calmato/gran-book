@@ -96,21 +96,19 @@ export default defineComponent({
       itemsPerPageOptions: [10, 20, 30, 50, 100],
     }
     const items = computed((): IAdminTableContent[] => {
-      return props.users.map(
-        (user: IAdminUser): IAdminTableContent => {
-          const space: string = user.lastName && user.firstName ? ' ' : ''
-          const name: string = user.lastName + space + user.firstName
+      return props.users.map((user: IAdminUser): IAdminTableContent => {
+        const space: string = user.lastName && user.firstName ? ' ' : ''
+        const name: string = user.lastName + space + user.firstName
 
-          return {
-            id: user.id,
-            name,
-            email: user.email,
-            phoneNumber: user.phoneNumber,
-            thumbnailUrl: user.thumbnailUrl || '/thumbnail.png',
-            role: user.role,
-          }
+        return {
+          id: user.id,
+          name,
+          email: user.email,
+          phoneNumber: user.phoneNumber,
+          thumbnailUrl: user.thumbnailUrl || '/thumbnail.png',
+          role: user.role,
         }
-      )
+      })
     })
 
     const sortByArray = computed({

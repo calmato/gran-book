@@ -39,7 +39,7 @@ func TestBookRepository_List(t *testing.T) {
 		query *database.ListQuery
 	}
 	type want struct {
-		books []*book.Book
+		books book.Books
 		isErr bool
 	}
 	testCases := []struct {
@@ -117,7 +117,7 @@ func TestBookRepository_ListBookshelf(t *testing.T) {
 		query *database.ListQuery
 	}
 	type want struct {
-		bookshelves []*book.Bookshelf
+		bookshelves book.Bookshelves
 		isErr       bool
 	}
 	testCases := []struct {
@@ -192,7 +192,7 @@ func TestBookRepository_ListReview(t *testing.T) {
 		query *database.ListQuery
 	}
 	type want struct {
-		reviews []*book.Review
+		reviews book.Reviews
 		isErr   bool
 	}
 	testCases := []struct {
@@ -467,7 +467,7 @@ func TestBookRepository_MultiGet(t *testing.T) {
 		bookIDs []int
 	}
 	type want struct {
-		books []*book.Book
+		books book.Books
 		isErr bool
 	}
 	testCases := []struct {
@@ -1744,7 +1744,7 @@ func TestBookRepository_MultipleCreate(t *testing.T) {
 	require.NoError(t, err)
 
 	type args struct {
-		books []*book.Book
+		books book.Books
 	}
 	type want struct {
 		isErr bool
@@ -1841,7 +1841,7 @@ func TestBookRepository_MultipleUpdate(t *testing.T) {
 	books[1] = testBook(2, "2345678901234")
 
 	type args struct {
-		books []*book.Book
+		books book.Books
 	}
 	type want struct {
 		isErr bool

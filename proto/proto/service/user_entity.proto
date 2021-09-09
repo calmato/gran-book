@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+package service;
+
+option go_package = "github.com/calmato/gran-book/proto";
+
+import "common/common.proto";
+
+// User - ユーザー
+message User {
+  string id = 1; // ユーザーID
+  string username = 2; // ユーザー名
+  common.Gender gender = 3; // 性別
+  string email = 4; // メールアドレス
+  string phone_number = 5; // 電話番号
+  string thumbnail_url = 6; // サムネイルURL
+  string self_introduction = 7; // 自己紹介
+  string last_name = 8; // 姓
+  string first_name = 9; // 名
+  string last_name_kana = 10; // 姓(かな)
+  string first_name_kana = 11; // 名(かな)
+  string created_at = 12; // 作成日時
+  string updated_at = 13; // 更新日
+}
+
+// UserProfile - プロフィール
+message UserProfile {
+  string id = 1; // ユーザーID
+  string username = 2; // ユーザー名
+  string thumbnail_url = 3; // サムネイルURL
+  string self_introduction = 4; // 自己紹介
+  bool is_follow = 5; // (自分が)フォローしているか
+  bool is_follower = 6; // (自分が)フォローされているか
+  int64 follow_count = 7; // (このユーザーの)フォロー数
+  int64 follower_count = 8; // (このユーザーの)フォロワー数
+}
+
+// Follow - フォローしているユーザー
+message Follow {
+  string id = 1; // ユーザーID
+  string username = 2; // ユーザー名
+  string thumbnail_url = 3; // サムネイルURL
+  string self_introduction = 4; // 自己紹介
+  bool is_follow = 5; // (自分が)フォローしているか
+}
+
+// Follower - フォローされているユーザー
+message Follower {
+  string id = 1; // ユーザーID
+  string username = 2; // ユーザー名
+  string thumbnail_url = 3; // サムネイルURL
+  string self_introduction = 4; // 自己紹介
+  bool is_follow = 5; // (自分が)フォローしているか
+}

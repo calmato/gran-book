@@ -44,7 +44,9 @@ func (h *authHandler) Get(ctx *gin.Context) {
 		return
 	}
 
-	res := h.getAuthResponse(out)
+	a := entity.NewAuth(out.Auth)
+
+	res := h.getAuthResponse(a)
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -82,7 +84,9 @@ func (h *authHandler) UpdateEmail(ctx *gin.Context) {
 		return
 	}
 
-	res := h.getAuthResponse(out)
+	a := entity.NewAuth(out.Auth)
+
+	res := h.getAuthResponse(a)
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -107,7 +111,9 @@ func (h *authHandler) UpdatePassword(ctx *gin.Context) {
 		return
 	}
 
-	res := h.getAuthResponse(out)
+	a := entity.NewAuth(out.Auth)
+
+	res := h.getAuthResponse(a)
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -160,30 +166,30 @@ func (h *authHandler) UploadThumbnail(ctx *gin.Context) {
 		return
 	}
 
-	res := h.getAuthThumbnailResponse(out)
+	res := h.getAuthThumbnailResponse(out.ThumbnailUrl)
 	ctx.JSON(http.StatusOK, res)
 }
 
-func (h *authHandler) getAuthResponse(out *pb.AuthResponse) *response.AuthResponse {
+func (h *authHandler) getAuthResponse(a *entity.Auth) *response.AuthResponse {
 	return &response.AuthResponse{
-		ID:               out.GetId(),
-		Username:         out.GetUsername(),
-		Email:            out.GetEmail(),
-		PhoneNumber:      out.GetPhoneNumber(),
-		Role:             entity.Role(out.GetRole()),
-		ThumbnailURL:     out.GetThumbnailUrl(),
-		SelfIntroduction: out.GetSelfIntroduction(),
-		LastName:         out.GetLastName(),
-		FirstName:        out.GetFirstName(),
-		LastNameKana:     out.GetLastNameKana(),
-		FirstNameKana:    out.GetFirstNameKana(),
-		CreatedAt:        out.GetCreatedAt(),
-		UpdatedAt:        out.GetUpdatedAt(),
+		ID:               a.Id,
+		Username:         a.Username,
+		Email:            a.Email,
+		PhoneNumber:      a.PhoneNumber,
+		Role:             a.Role(),
+		ThumbnailURL:     a.ThumbnailUrl,
+		SelfIntroduction: a.SelfIntroduction,
+		LastName:         a.LastName,
+		FirstName:        a.FirstName,
+		LastNameKana:     a.LastNameKana,
+		FirstNameKana:    a.FirstNameKana,
+		CreatedAt:        a.CreatedAt,
+		UpdatedAt:        a.UpdatedAt,
 	}
 }
 
-func (h *authHandler) getAuthThumbnailResponse(out *pb.AuthThumbnailResponse) *response.AuthThumbnailResponse {
+func (h *authHandler) getAuthThumbnailResponse(thumbnailURL string) *response.AuthThumbnailResponse {
 	return &response.AuthThumbnailResponse{
-		ThumbnailURL: out.GetThumbnailUrl(),
+		ThumbnailURL: thumbnailURL,
 	}
 }
