@@ -237,7 +237,7 @@ describe('auth', () => {
       addressLine2: '',
     };
 
-    editAccount(invalidPayload).catch((e: AxiosError) => {
+    return editAccount(invalidPayload).catch((e: AxiosError) => {
       expect(e.response?.status).toBe(400);
     });
   });
@@ -278,17 +278,17 @@ describe('auth', () => {
     expect(res.gender).toBe(payload.gender);
   });
 
-  test('editProfile return promise reject when invalidPayload', () => {
+  test('editProfile return promise reject when invalidPayload', async () => {
     mockAxios.onPatch(`/${API_VERSION}/auth/profile`).reply(400);
 
-    const invalidPyload: ProfileEditForm = {
+    const invalidPayload: ProfileEditForm = {
       name: '',
       avatar: '',
       selfIntroduction: '',
       gender: -1,
     };
 
-    editProfile(invalidPyload).catch((e: AxiosError) => {
+    return editProfile(invalidPayload).catch((e: AxiosError) => {
       expect(e.response?.status).toBe(400);
     });
   });
