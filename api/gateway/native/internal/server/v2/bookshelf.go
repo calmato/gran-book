@@ -11,7 +11,6 @@ import (
 	pb "github.com/calmato/gran-book/api/gateway/native/proto"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/sync/errgroup"
-	"google.golang.org/grpc"
 )
 
 type BookshelfHandler interface {
@@ -24,10 +23,7 @@ type bookshelfHandler struct {
 	userClient pb.UserServiceClient
 }
 
-func NewBookshelfHandler(bookConn *grpc.ClientConn, userConn *grpc.ClientConn) BookshelfHandler {
-	bc := pb.NewBookServiceClient(bookConn)
-	uc := pb.NewUserServiceClient(userConn)
-
+func NewBookshelfHandler(bc pb.BookServiceClient, uc pb.UserServiceClient) BookshelfHandler {
 	return &bookshelfHandler{
 		bookClient: bc,
 		userClient: uc,

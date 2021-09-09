@@ -176,6 +176,7 @@ func (h *authHandler) getAuthResponse(a *entity.Auth) *response.AuthResponse {
 		Username:         a.Username,
 		Email:            a.Email,
 		PhoneNumber:      a.PhoneNumber,
+		Role:             a.Role(),
 		ThumbnailURL:     a.ThumbnailUrl,
 		SelfIntroduction: a.SelfIntroduction,
 		LastName:         a.LastName,

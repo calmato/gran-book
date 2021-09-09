@@ -10,7 +10,6 @@ import (
 	"github.com/calmato/gran-book/api/gateway/native/internal/server/util"
 	pb "github.com/calmato/gran-book/api/gateway/native/proto"
 	"github.com/gin-gonic/gin"
-	"google.golang.org/grpc"
 )
 
 type AuthHandler interface {
@@ -29,9 +28,7 @@ type authHandler struct {
 	authClient pb.AuthServiceClient
 }
 
-func NewAuthHandler(authConn *grpc.ClientConn) AuthHandler {
-	ac := pb.NewAuthServiceClient(authConn)
-
+func NewAuthHandler(ac pb.AuthServiceClient) AuthHandler {
 	return &authHandler{
 		authClient: ac,
 	}
