@@ -9,13 +9,18 @@ interface AuthContextProps {
 
 const AuthContext = createContext<AuthContextProps>({
   authState: initialState,
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  dispatch: () => {},
+  dispatch: () => {
+    return;
+  },
 });
 
-export type AuthStateAction =
-  | { type: 'SET_AUTH_VALUES'; payload: AuthValues }
-  | { type: 'SET_PROFILE_VALUES'; payload: ProfileValues };
+type ActionType = 'SET_AUTH_VALUES' | 'SET_PROFILE_VALUES';
+type Payload = AuthValues | ProfileValues;
+
+interface AuthStateAction {
+  type: ActionType;
+  payload: Payload;
+}
 
 const reducer: React.Reducer<Model, AuthStateAction> = function reducer(
   state: Model,
