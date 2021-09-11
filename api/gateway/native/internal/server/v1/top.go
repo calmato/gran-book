@@ -29,8 +29,6 @@ func NewTopHandler(ac pb.AuthServiceClient, bc pb.BookServiceClient) TopHandler 
 
 // UserTop - ユーザーのトップページ表示用の情報取得
 func (h *topHandler) UserTop(ctx *gin.Context) {
-	now := datetime.Now()
-
 	c := util.SetMetadata(ctx)
 	authOutput, err := h.authClient.GetAuth(c, &pb.Empty{})
 	if err != nil {
@@ -40,14 +38,14 @@ func (h *topHandler) UserTop(ctx *gin.Context) {
 
 	u := entity.NewAuth(authOutput.Auth)
 
-	t := datetime.New(now)
-	since := t.BeginningOfMonth().AddDate(-1, 1, 0) // 11ヶ月前の初日
-	until := t.EndOfMonth()                         // 今月末
+	t := datetime.Now()
+	since := datetime.BeginningOfMonth(t).AddDate(-1, 1, 0) // 11ヶ月前の初日
+	until := datetime.EndOfMonth(t)                         // 今月末
 
 	resultsInput := &pb.ListUserMonthlyResultRequest{
 		UserId:    u.Id,
-		SinceDate: since.String(),
-		UntilDate: until.String(),
+		SinceDate: datetime.FormatDate(since),
+		UntilDate: datetime.FormatDate(until),
 	}
 
 	resultsOutput, err := h.bookClient.ListUserMonthlyResult(c, resultsInput)
