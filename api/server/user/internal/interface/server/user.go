@@ -7,7 +7,7 @@ import (
 	"github.com/calmato/gran-book/api/server/user/internal/domain/user"
 	"github.com/calmato/gran-book/api/server/user/internal/interface/validation"
 	"github.com/calmato/gran-book/api/server/user/pkg/database"
-	pb "github.com/calmato/gran-book/api/server/user/proto"
+	pb "github.com/calmato/gran-book/api/server/user/proto/user"
 )
 
 type userServer struct {

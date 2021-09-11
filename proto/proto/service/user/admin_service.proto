@@ -1,0 +1,234 @@
+syntax = "proto3";
+
+package user;
+
+option go_package = "github.com/calmato/gran-book/proto/service/user";
+
+import "github.com/envoyproxy/protoc-gen-validate/validate/validate.proto";
+import "service/user/admin_entity.proto";
+import "service/user/common.proto";
+
+service AdminService {
+  rpc ListAdmin(ListAdminRequest) returns (AdminListResponse);
+  rpc GetAdmin(GetAdminRequest) returns (AdminResponse);
+  rpc CreateAdmin(CreateAdminRequest) returns (AdminResponse);
+  rpc UpdateAdminContact(UpdateAdminContactRequest) returns (AdminResponse);
+  rpc UpdateAdminPassword(UpdateAdminPasswordRequest) returns (AdminResponse);
+  rpc UpdateAdminProfile(UpdateAdminProfileRequest) returns (AdminResponse);
+  rpc UploadAdminThumbnail(stream UploadAdminThumbnailRequest) returns (AdminThumbnailResponse);
+  rpc DeleteAdmin(DeleteAdminRequest) returns (Empty);
+}
+
+message ListAdminRequest {
+  Search search = 1;
+  Order order = 2;
+  int64 limit = 3 [
+    (validate.rules).int64 = {
+      lte: 200
+    }
+  ];
+  int64 offset = 4 [
+    (validate.rules).int64 = {
+      gte: 0
+    }
+  ];
+}
+
+message GetAdminRequest {
+  string user_id = 1 [
+    (validate.rules).string = {
+      min_len: 1
+    }
+  ];
+}
+
+message CreateAdminRequest {
+  string username = 1 [
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 32
+    }
+  ];
+  string email = 2 [
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 256
+      email: true
+    }
+  ];
+  string phone_number = 3 [
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 16
+    }
+  ];
+  string password = 4 [
+    (validate.rules).string = {
+      min_len: 6
+      max_len: 32
+      pattern: "^[a-zA-Z0-9_!@#$_%^&*.?()-=+]*$"
+    }
+  ];
+  string password_confirmation = 5 [
+    (validate.rules).string = {
+      min_len: 1
+    }
+  ];
+  Role role = 6 [
+    (validate.rules).enum = {
+      defined_only: true
+      not_in: [
+        0
+      ]
+    }
+  ];
+  string last_name = 7 [
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 16
+    }
+  ];
+  string first_name = 8 [
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 16
+    }
+  ];
+  string last_name_kana = 9 [
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 32
+      pattern: "^[ぁ-ゔー]*$"
+    }
+  ];
+  string first_name_kana = 10 [
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 32
+      pattern: "^[ぁ-ゔー]*$"
+    }
+  ];
+}
+
+message UpdateAdminContactRequest {
+  string user_id = 1 [
+    (validate.rules).string = {
+      min_len: 1
+    }
+  ];
+  string email = 2 [
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 256
+      email: true
+    }
+  ];
+  string phone_number = 3 [
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 16
+    }
+  ];
+}
+
+message UpdateAdminPasswordRequest {
+  string user_id = 1 [
+    (validate.rules).string = {
+      min_len: 1
+    }
+  ];
+  string password = 2 [
+    (validate.rules).string = {
+      min_len: 6
+      max_len: 32
+      pattern: "^[a-zA-Z0-9_!@#$_%^&*.?()-=+]*$"
+    }
+  ];
+  string password_confirmation = 3 [
+    (validate.rules).string = {
+      min_len: 6
+    }
+  ];
+}
+
+message UpdateAdminProfileRequest {
+  string user_id = 1 [
+    (validate.rules).string = {
+      min_len: 1
+    }
+  ];
+  string username = 2 [
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 32
+    }
+  ];
+  Role role = 3 [
+    (validate.rules).enum = {
+      defined_only: true
+      not_in: [
+        0
+      ]
+    }
+  ];
+  string last_name = 4 [
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 16
+    }
+  ];
+  string first_name = 5 [
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 16
+    }
+  ];
+  string last_name_kana = 6 [
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 32
+      pattern: "^[ぁ-ゔー]*$"
+    }
+  ];
+  string first_name_kana = 7 [
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 32
+      pattern: "^[ぁ-ゔー]*$"
+    }
+  ];
+  string thumbnail_url = 8;
+}
+
+message UploadAdminThumbnailRequest {
+  string user_id = 1;
+  bytes thumbnail = 2;
+  int64 position = 3 [
+    (validate.rules).int64 = {
+      gte: 0
+    }
+  ];
+}
+
+message DeleteAdminRequest {
+  string user_id = 1 [
+    (validate.rules).string = {
+      min_len: 1
+    }
+  ];
+}
+
+message AdminResponse {
+  Admin admin = 1;
+}
+
+message AdminListResponse {
+  repeated Admin admins = 1;
+  int64 limit = 2;
+  int64 offset = 3;
+  int64 total = 4;
+}
+
+message AdminThumbnailResponse {
+  string thumbnail_url = 1;
+}

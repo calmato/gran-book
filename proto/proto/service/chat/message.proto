@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package chat;
+
+option go_package = "github.com/calmato/gran-book/proto/service/chat";
+
+// Message - チャットメッセージ
+message Message {
+  string id = 1; // チャットメッセージID
+  string user_id = 2; // ユーザーID
+  string text = 3; // テキストメッセージ
+  string image = 4; // 添付画像
+  string created_at = 5; // 送信日
+}

@@ -9,7 +9,7 @@ import (
 	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
 	"github.com/calmato/gran-book/api/server/user/internal/interface/validation"
 	"github.com/calmato/gran-book/api/server/user/pkg/firebase/firestore"
-	pb "github.com/calmato/gran-book/api/server/user/proto"
+	pb "github.com/calmato/gran-book/api/server/user/proto/chat"
 )
 
 type chatServer struct {
@@ -26,8 +26,8 @@ func NewChatServer(crv validation.ChatRequestValidation, ca application.ChatAppl
 }
 
 // ListRoom - チャットルーム一覧取得
-func (s *chatServer) ListRoom(ctx context.Context, req *pb.ListChatRoomRequest) (*pb.ChatRoomListResponse, error) {
-	err := s.chatRequestValidation.ListChatRoom(req)
+func (s *chatServer) ListRoom(ctx context.Context, req *pb.ListRoomRequest) (*pb.RoomListResponse, error) {
+	err := s.chatRequestValidation.ListRoom(req)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -49,8 +49,8 @@ func (s *chatServer) ListRoom(ctx context.Context, req *pb.ListChatRoomRequest) 
 }
 
 // CreateRoom - チャットルーム作成
-func (s *chatServer) CreateRoom(ctx context.Context, req *pb.CreateChatRoomRequest) (*pb.ChatRoomResponse, error) {
-	err := s.chatRequestValidation.CreateChatRoom(req)
+func (s *chatServer) CreateRoom(ctx context.Context, req *pb.CreateRoomRequest) (*pb.RoomResponse, error) {
+	err := s.chatRequestValidation.CreateRoom(req)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -70,9 +70,9 @@ func (s *chatServer) CreateRoom(ctx context.Context, req *pb.CreateChatRoomReque
 
 // CreateMessage - チャットメッセージ(テキスト)作成
 func (s *chatServer) CreateMessage(
-	ctx context.Context, req *pb.CreateChatMessageRequest,
-) (*pb.ChatMessageResponse, error) {
-	err := s.chatRequestValidation.CreateChatMessage(req)
+	ctx context.Context, req *pb.CreateMessageRequest,
+) (*pb.MessageResponse, error) {
+	err := s.chatRequestValidation.CreateMessage(req)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -162,20 +162,20 @@ func (s *chatServer) UploadImage(stream pb.ChatService_UploadImageServer) error 
 	}
 }
 
-func getChatRoomListResponse(crs chat.Rooms) *pb.ChatRoomListResponse {
-	return &pb.ChatRoomListResponse{
+func getChatRoomListResponse(crs chat.Rooms) *pb.RoomListResponse {
+	return &pb.RoomListResponse{
 		Rooms: crs.Proto(),
 	}
 }
 
-func getChatRoomResponse(cr *chat.Room) *pb.ChatRoomResponse {
-	return &pb.ChatRoomResponse{
+func getChatRoomResponse(cr *chat.Room) *pb.RoomResponse {
+	return &pb.RoomResponse{
 		Room: cr.Proto(),
 	}
 }
 
-func getChatMessageResponse(cm *chat.Message) *pb.ChatMessageResponse {
-	return &pb.ChatMessageResponse{
+func getChatMessageResponse(cm *chat.Message) *pb.MessageResponse {
+	return &pb.MessageResponse{
 		Message: cm.Proto(),
 	}
 }

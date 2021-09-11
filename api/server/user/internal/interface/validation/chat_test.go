@@ -4,14 +4,14 @@ import (
 	"strings"
 	"testing"
 
-	pb "github.com/calmato/gran-book/api/server/user/proto"
+	pb "github.com/calmato/gran-book/api/server/user/proto/chat"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestChatRequestValidation_ListRoom(t *testing.T) {
 	t.Parallel()
 	type args struct {
-		req *pb.ListChatRoomRequest
+		req *pb.ListRoomRequest
 	}
 
 	testCases := []struct {
@@ -22,7 +22,7 @@ func TestChatRequestValidation_ListRoom(t *testing.T) {
 		{
 			name: "success",
 			args: args{
-				req: &pb.ListChatRoomRequest{
+				req: &pb.ListRoomRequest{
 					UserId: "12345678-1234-1234-123456789012",
 					Limit:  200,
 				},
@@ -32,7 +32,7 @@ func TestChatRequestValidation_ListRoom(t *testing.T) {
 		{
 			name: "validation error: UserId.min_len",
 			args: args{
-				req: &pb.ListChatRoomRequest{
+				req: &pb.ListRoomRequest{
 					UserId: "",
 					Limit:  200,
 					Offset: "12345678-1234-1234-123456789012",
@@ -43,7 +43,7 @@ func TestChatRequestValidation_ListRoom(t *testing.T) {
 		{
 			name: "validation error: Limit.lte",
 			args: args{
-				req: &pb.ListChatRoomRequest{
+				req: &pb.ListRoomRequest{
 					UserId: "12345678-1234-1234-123456789012",
 					Limit:  201,
 					Offset: "12345678-1234-1234-123456789012",
@@ -58,7 +58,7 @@ func TestChatRequestValidation_ListRoom(t *testing.T) {
 			t.Parallel()
 			target := NewChatRequestValidation()
 
-			got := target.ListChatRoom(tt.args.req)
+			got := target.ListRoom(tt.args.req)
 			switch tt.want {
 			case true:
 				assert.NoError(t, got)
@@ -72,7 +72,7 @@ func TestChatRequestValidation_ListRoom(t *testing.T) {
 func TestChatRequestValidation_CreateRoom(t *testing.T) {
 	t.Parallel()
 	type args struct {
-		req *pb.CreateChatRoomRequest
+		req *pb.CreateRoomRequest
 	}
 
 	testCases := []struct {
@@ -83,7 +83,7 @@ func TestChatRequestValidation_CreateRoom(t *testing.T) {
 		{
 			name: "success",
 			args: args{
-				req: &pb.CreateChatRoomRequest{
+				req: &pb.CreateRoomRequest{
 					UserIds: []string{
 						"12345678-1234-1234-123456789012",
 						"23456789-2345-2345-234567890123",
@@ -95,7 +95,7 @@ func TestChatRequestValidation_CreateRoom(t *testing.T) {
 		{
 			name: "validation error: UserIds.min_items",
 			args: args{
-				req: &pb.CreateChatRoomRequest{
+				req: &pb.CreateRoomRequest{
 					UserIds: []string{
 						"12345678-1234-1234-123456789012",
 					},
@@ -106,7 +106,7 @@ func TestChatRequestValidation_CreateRoom(t *testing.T) {
 		{
 			name: "validation error: UserIds.max_items",
 			args: args{
-				req: &pb.CreateChatRoomRequest{
+				req: &pb.CreateRoomRequest{
 					UserIds: []string{
 						"12345678-1234-1234-123456789012",
 						"23456789-2345-2345-234567890123",
@@ -119,7 +119,7 @@ func TestChatRequestValidation_CreateRoom(t *testing.T) {
 		{
 			name: "validation error: UserIds.unique",
 			args: args{
-				req: &pb.CreateChatRoomRequest{
+				req: &pb.CreateRoomRequest{
 					UserIds: []string{
 						"12345678-1234-1234-123456789012",
 						"12345678-1234-1234-123456789012",
@@ -135,7 +135,7 @@ func TestChatRequestValidation_CreateRoom(t *testing.T) {
 			t.Parallel()
 			target := NewChatRequestValidation()
 
-			got := target.CreateChatRoom(tt.args.req)
+			got := target.CreateRoom(tt.args.req)
 			switch tt.want {
 			case true:
 				assert.NoError(t, got)
@@ -146,10 +146,10 @@ func TestChatRequestValidation_CreateRoom(t *testing.T) {
 	}
 }
 
-func TestChatRequestValidation_CreateChatMessage(t *testing.T) {
+func TestChatRequestValidation_CreateMessage(t *testing.T) {
 	t.Parallel()
 	type args struct {
-		req *pb.CreateChatMessageRequest
+		req *pb.CreateMessageRequest
 	}
 
 	testCases := []struct {
@@ -160,7 +160,7 @@ func TestChatRequestValidation_CreateChatMessage(t *testing.T) {
 		{
 			name: "success",
 			args: args{
-				req: &pb.CreateChatMessageRequest{
+				req: &pb.CreateMessageRequest{
 					RoomId: "12345678-1234-1234-123456789012",
 					UserId: "12345678-1234-1234-123456789012",
 					Text:   "テストメッセージ",
@@ -171,7 +171,7 @@ func TestChatRequestValidation_CreateChatMessage(t *testing.T) {
 		{
 			name: "validation error: RoomId.min_len",
 			args: args{
-				req: &pb.CreateChatMessageRequest{
+				req: &pb.CreateMessageRequest{
 					RoomId: "",
 					UserId: "12345678-1234-1234-123456789012",
 					Text:   "テストメッセージ",
@@ -182,7 +182,7 @@ func TestChatRequestValidation_CreateChatMessage(t *testing.T) {
 		{
 			name: "validation error: UserId.min_len",
 			args: args{
-				req: &pb.CreateChatMessageRequest{
+				req: &pb.CreateMessageRequest{
 					RoomId: "12345678-1234-1234-123456789012",
 					UserId: "",
 					Text:   "テストメッセージ",
@@ -193,7 +193,7 @@ func TestChatRequestValidation_CreateChatMessage(t *testing.T) {
 		{
 			name: "validation error: Text.min_len",
 			args: args{
-				req: &pb.CreateChatMessageRequest{
+				req: &pb.CreateMessageRequest{
 					RoomId: "12345678-1234-1234-123456789012",
 					UserId: "12345678-1234-1234-123456789012",
 					Text:   "",
@@ -204,7 +204,7 @@ func TestChatRequestValidation_CreateChatMessage(t *testing.T) {
 		{
 			name: "validation error: Text.max_len",
 			args: args{
-				req: &pb.CreateChatMessageRequest{
+				req: &pb.CreateMessageRequest{
 					RoomId: "12345678-1234-1234-123456789012",
 					UserId: "12345678-1234-1234-123456789012",
 					Text:   strings.Repeat("x", 1001),
@@ -219,7 +219,7 @@ func TestChatRequestValidation_CreateChatMessage(t *testing.T) {
 			t.Parallel()
 			target := NewChatRequestValidation()
 
-			got := target.CreateChatMessage(tt.args.req)
+			got := target.CreateMessage(tt.args.req)
 			switch tt.want {
 			case true:
 				assert.NoError(t, got)

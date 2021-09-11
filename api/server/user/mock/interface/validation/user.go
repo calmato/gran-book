@@ -7,7 +7,7 @@ package mock_validation
 import (
 	reflect "reflect"
 
-	proto "github.com/calmato/gran-book/api/server/user/proto"
+	user "github.com/calmato/gran-book/api/server/user/proto/user"
 	gomock "github.com/golang/mock/gomock"
 )
 
@@ -35,7 +35,7 @@ func (m *MockUserRequestValidation) EXPECT() *MockUserRequestValidationMockRecor
 }
 
 // Follow mocks base method.
-func (m *MockUserRequestValidation) Follow(req *proto.FollowRequest) error {
+func (m *MockUserRequestValidation) Follow(req *user.FollowRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Follow", req)
 	ret0, _ := ret[0].(error)
@@ -49,7 +49,7 @@ func (mr *MockUserRequestValidationMockRecorder) Follow(req interface{}) *gomock
 }
 
 // GetUser mocks base method.
-func (m *MockUserRequestValidation) GetUser(req *proto.GetUserRequest) error {
+func (m *MockUserRequestValidation) GetUser(req *user.GetUserRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetUser", req)
 	ret0, _ := ret[0].(error)
@@ -63,7 +63,7 @@ func (mr *MockUserRequestValidationMockRecorder) GetUser(req interface{}) *gomoc
 }
 
 // GetUserProfile mocks base method.
-func (m *MockUserRequestValidation) GetUserProfile(req *proto.GetUserProfileRequest) error {
+func (m *MockUserRequestValidation) GetUserProfile(req *user.GetUserProfileRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetUserProfile", req)
 	ret0, _ := ret[0].(error)
@@ -77,7 +77,7 @@ func (mr *MockUserRequestValidationMockRecorder) GetUserProfile(req interface{})
 }
 
 // ListFollow mocks base method.
-func (m *MockUserRequestValidation) ListFollow(req *proto.ListFollowRequest) error {
+func (m *MockUserRequestValidation) ListFollow(req *user.ListFollowRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListFollow", req)
 	ret0, _ := ret[0].(error)
@@ -91,7 +91,7 @@ func (mr *MockUserRequestValidationMockRecorder) ListFollow(req interface{}) *go
 }
 
 // ListFollower mocks base method.
-func (m *MockUserRequestValidation) ListFollower(req *proto.ListFollowerRequest) error {
+func (m *MockUserRequestValidation) ListFollower(req *user.ListFollowerRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListFollower", req)
 	ret0, _ := ret[0].(error)
@@ -105,7 +105,7 @@ func (mr *MockUserRequestValidationMockRecorder) ListFollower(req interface{}) *
 }
 
 // ListUser mocks base method.
-func (m *MockUserRequestValidation) ListUser(req *proto.ListUserRequest) error {
+func (m *MockUserRequestValidation) ListUser(req *user.ListUserRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListUser", req)
 	ret0, _ := ret[0].(error)
@@ -119,7 +119,7 @@ func (mr *MockUserRequestValidationMockRecorder) ListUser(req interface{}) *gomo
 }
 
 // MultiGetUser mocks base method.
-func (m *MockUserRequestValidation) MultiGetUser(req *proto.MultiGetUserRequest) error {
+func (m *MockUserRequestValidation) MultiGetUser(req *user.MultiGetUserRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "MultiGetUser", req)
 	ret0, _ := ret[0].(error)
@@ -133,7 +133,7 @@ func (mr *MockUserRequestValidationMockRecorder) MultiGetUser(req interface{}) *
 }
 
 // Unfollow mocks base method.
-func (m *MockUserRequestValidation) Unfollow(req *proto.UnfollowRequest) error {
+func (m *MockUserRequestValidation) Unfollow(req *user.UnfollowRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Unfollow", req)
 	ret0, _ := ret[0].(error)

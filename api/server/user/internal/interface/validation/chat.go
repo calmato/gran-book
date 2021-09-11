@@ -1,13 +1,13 @@
 package validation
 
 import (
-	pb "github.com/calmato/gran-book/api/server/user/proto"
+	pb "github.com/calmato/gran-book/api/server/user/proto/chat"
 )
 
 type ChatRequestValidation interface {
-	ListChatRoom(req *pb.ListChatRoomRequest) error
-	CreateChatRoom(req *pb.CreateChatRoomRequest) error
-	CreateChatMessage(req *pb.CreateChatMessageRequest) error
+	ListRoom(req *pb.ListRoomRequest) error
+	CreateRoom(req *pb.CreateRoomRequest) error
+	CreateMessage(req *pb.CreateMessageRequest) error
 	UploadChatImage(req *pb.UploadChatImageRequest) error
 }
 
@@ -17,10 +17,10 @@ func NewChatRequestValidation() ChatRequestValidation {
 	return &chatRequestValidation{}
 }
 
-func (v *chatRequestValidation) ListChatRoom(req *pb.ListChatRoomRequest) error {
+func (v *chatRequestValidation) ListRoom(req *pb.ListRoomRequest) error {
 	err := req.Validate()
 	if err != nil {
-		if err, ok := err.(pb.ListChatRoomRequestValidationError); ok {
+		if err, ok := err.(pb.ListRoomRequestValidationError); ok {
 			return toValidationError(err.Field(), err.Reason())
 		}
 
@@ -30,10 +30,10 @@ func (v *chatRequestValidation) ListChatRoom(req *pb.ListChatRoomRequest) error 
 	return nil
 }
 
-func (v *chatRequestValidation) CreateChatRoom(req *pb.CreateChatRoomRequest) error {
+func (v *chatRequestValidation) CreateRoom(req *pb.CreateRoomRequest) error {
 	err := req.Validate()
 	if err != nil {
-		if err, ok := err.(pb.CreateChatRoomRequestValidationError); ok {
+		if err, ok := err.(pb.CreateRoomRequestValidationError); ok {
 			return toValidationError(err.Field(), err.Reason())
 		}
 
@@ -43,10 +43,10 @@ func (v *chatRequestValidation) CreateChatRoom(req *pb.CreateChatRoomRequest) er
 	return nil
 }
 
-func (v *chatRequestValidation) CreateChatMessage(req *pb.CreateChatMessageRequest) error {
+func (v *chatRequestValidation) CreateMessage(req *pb.CreateMessageRequest) error {
 	err := req.Validate()
 	if err != nil {
-		if err, ok := err.(pb.CreateChatMessageRequestValidationError); ok {
+		if err, ok := err.(pb.CreateMessageRequestValidationError); ok {
 			return toValidationError(err.Field(), err.Reason())
 		}
 

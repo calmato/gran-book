@@ -7,7 +7,7 @@ package mock_validation
 import (
 	reflect "reflect"
 
-	proto "github.com/calmato/gran-book/api/server/user/proto"
+	user "github.com/calmato/gran-book/api/server/user/proto/user"
 	gomock "github.com/golang/mock/gomock"
 )
 
@@ -35,7 +35,7 @@ func (m *MockAuthRequestValidation) EXPECT() *MockAuthRequestValidationMockRecor
 }
 
 // CreateAuth mocks base method.
-func (m *MockAuthRequestValidation) CreateAuth(req *proto.CreateAuthRequest) error {
+func (m *MockAuthRequestValidation) CreateAuth(req *user.CreateAuthRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateAuth", req)
 	ret0, _ := ret[0].(error)
@@ -49,7 +49,7 @@ func (mr *MockAuthRequestValidationMockRecorder) CreateAuth(req interface{}) *go
 }
 
 // RegisterAuthDevice mocks base method.
-func (m *MockAuthRequestValidation) RegisterAuthDevice(req *proto.RegisterAuthDeviceRequest) error {
+func (m *MockAuthRequestValidation) RegisterAuthDevice(req *user.RegisterAuthDeviceRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RegisterAuthDevice", req)
 	ret0, _ := ret[0].(error)
@@ -63,7 +63,7 @@ func (mr *MockAuthRequestValidationMockRecorder) RegisterAuthDevice(req interfac
 }
 
 // UpdateAuthAddress mocks base method.
-func (m *MockAuthRequestValidation) UpdateAuthAddress(req *proto.UpdateAuthAddressRequest) error {
+func (m *MockAuthRequestValidation) UpdateAuthAddress(req *user.UpdateAuthAddressRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateAuthAddress", req)
 	ret0, _ := ret[0].(error)
@@ -77,7 +77,7 @@ func (mr *MockAuthRequestValidationMockRecorder) UpdateAuthAddress(req interface
 }
 
 // UpdateAuthEmail mocks base method.
-func (m *MockAuthRequestValidation) UpdateAuthEmail(req *proto.UpdateAuthEmailRequest) error {
+func (m *MockAuthRequestValidation) UpdateAuthEmail(req *user.UpdateAuthEmailRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateAuthEmail", req)
 	ret0, _ := ret[0].(error)
@@ -91,7 +91,7 @@ func (mr *MockAuthRequestValidationMockRecorder) UpdateAuthEmail(req interface{}
 }
 
 // UpdateAuthPassword mocks base method.
-func (m *MockAuthRequestValidation) UpdateAuthPassword(req *proto.UpdateAuthPasswordRequest) error {
+func (m *MockAuthRequestValidation) UpdateAuthPassword(req *user.UpdateAuthPasswordRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateAuthPassword", req)
 	ret0, _ := ret[0].(error)
@@ -105,7 +105,7 @@ func (mr *MockAuthRequestValidationMockRecorder) UpdateAuthPassword(req interfac
 }
 
 // UpdateAuthProfile mocks base method.
-func (m *MockAuthRequestValidation) UpdateAuthProfile(req *proto.UpdateAuthProfileRequest) error {
+func (m *MockAuthRequestValidation) UpdateAuthProfile(req *user.UpdateAuthProfileRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateAuthProfile", req)
 	ret0, _ := ret[0].(error)
@@ -119,7 +119,7 @@ func (mr *MockAuthRequestValidationMockRecorder) UpdateAuthProfile(req interface
 }
 
 // UploadAuthThumbnail mocks base method.
-func (m *MockAuthRequestValidation) UploadAuthThumbnail(req *proto.UploadAuthThumbnailRequest) error {
+func (m *MockAuthRequestValidation) UploadAuthThumbnail(req *user.UploadAuthThumbnailRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UploadAuthThumbnail", req)
 	ret0, _ := ret[0].(error)

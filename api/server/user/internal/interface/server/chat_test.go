@@ -7,7 +7,7 @@ import (
 	"github.com/calmato/gran-book/api/server/user/internal/domain/chat"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
 	"github.com/calmato/gran-book/api/server/user/pkg/test"
-	pb "github.com/calmato/gran-book/api/server/user/proto"
+	pb "github.com/calmato/gran-book/api/server/user/proto/chat"
 	"github.com/golang/mock/gomock"
 	"google.golang.org/grpc/codes"
 )
@@ -25,7 +25,7 @@ func TestAuthServer_ListRoom(t *testing.T) {
 	room2 := testChatRoom("room02")
 
 	type args struct {
-		req *pb.ListChatRoomRequest
+		req *pb.ListRoomRequest
 	}
 	testCases := []struct {
 		name  string
@@ -37,14 +37,14 @@ func TestAuthServer_ListRoom(t *testing.T) {
 			name: "success",
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
 				mocks.ChatRequestValidation.EXPECT().
-					ListChatRoom(gomock.Any()).
+					ListRoom(gomock.Any()).
 					Return(nil)
 				mocks.ChatApplication.EXPECT().
 					ListRoom(ctx, "user01", gomock.Any()).
 					Return(chat.Rooms{room1, room2}, nil)
 			},
 			args: args{
-				req: &pb.ListChatRoomRequest{
+				req: &pb.ListRoomRequest{
 					UserId: "user01",
 				},
 			},
@@ -57,11 +57,11 @@ func TestAuthServer_ListRoom(t *testing.T) {
 			name: "failed: invalid argument",
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
 				mocks.ChatRequestValidation.EXPECT().
-					ListChatRoom(gomock.Any()).
+					ListRoom(gomock.Any()).
 					Return(exception.InvalidRequestValidation.New(test.ErrMock))
 			},
 			args: args{
-				req: &pb.ListChatRoomRequest{},
+				req: &pb.ListRoomRequest{},
 			},
 			want: &test.TestResponse{
 				Code:    codes.InvalidArgument,
@@ -72,14 +72,14 @@ func TestAuthServer_ListRoom(t *testing.T) {
 			name: "failed: internal error",
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
 				mocks.ChatRequestValidation.EXPECT().
-					ListChatRoom(gomock.Any()).
+					ListRoom(gomock.Any()).
 					Return(nil)
 				mocks.ChatApplication.EXPECT().
 					ListRoom(ctx, "user01", gomock.Any()).
 					Return(nil, exception.ErrorInDatastore.New(test.ErrMock))
 			},
 			args: args{
-				req: &pb.ListChatRoomRequest{
+				req: &pb.ListRoomRequest{
 					UserId: "user01",
 				},
 			},
@@ -114,7 +114,7 @@ func TestAuthServer_CreateRoom(t *testing.T) {
 	defer ctrl.Finish()
 
 	type args struct {
-		req *pb.CreateChatRoomRequest
+		req *pb.CreateRoomRequest
 	}
 	testCases := []struct {
 		name  string
@@ -126,21 +126,21 @@ func TestAuthServer_CreateRoom(t *testing.T) {
 			name: "success",
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
 				mocks.ChatRequestValidation.EXPECT().
-					CreateChatRoom(gomock.Any()).
+					CreateRoom(gomock.Any()).
 					Return(nil)
 				mocks.ChatApplication.EXPECT().
 					CreateRoom(ctx, gomock.Any()).
 					Return(nil)
 			},
 			args: args{
-				req: &pb.CreateChatRoomRequest{
+				req: &pb.CreateRoomRequest{
 					UserIds: []string{"user01", "user02"},
 				},
 			},
 			want: &test.TestResponse{
 				Code: codes.OK,
-				Message: &pb.ChatRoomResponse{
-					Room: &pb.ChatRoom{
+				Message: &pb.RoomResponse{
+					Room: &pb.Room{
 						UserIds:       []string{"user01", "user02"},
 						CreatedAt:     "",
 						UpdatedAt:     "",
@@ -153,11 +153,11 @@ func TestAuthServer_CreateRoom(t *testing.T) {
 			name: "failed: invalid argument",
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
 				mocks.ChatRequestValidation.EXPECT().
-					CreateChatRoom(gomock.Any()).
+					CreateRoom(gomock.Any()).
 					Return(exception.InvalidRequestValidation.New(test.ErrMock))
 			},
 			args: args{
-				req: &pb.CreateChatRoomRequest{},
+				req: &pb.CreateRoomRequest{},
 			},
 			want: &test.TestResponse{
 				Code:    codes.InvalidArgument,
@@ -168,14 +168,14 @@ func TestAuthServer_CreateRoom(t *testing.T) {
 			name: "failed: internal error",
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
 				mocks.ChatRequestValidation.EXPECT().
-					CreateChatRoom(gomock.Any()).
+					CreateRoom(gomock.Any()).
 					Return(nil)
 				mocks.ChatApplication.EXPECT().
 					CreateRoom(ctx, gomock.Any()).
 					Return(exception.ErrorInDatastore.New(test.ErrMock))
 			},
 			args: args{
-				req: &pb.CreateChatRoomRequest{
+				req: &pb.CreateRoomRequest{
 					UserIds: []string{"user01", "user02"},
 				},
 			},
@@ -212,7 +212,7 @@ func TestAuthServer_CreateMessage(t *testing.T) {
 	room1 := testChatRoom("room01")
 
 	type args struct {
-		req *pb.CreateChatMessageRequest
+		req *pb.CreateMessageRequest
 	}
 	testCases := []struct {
 		name  string
@@ -224,7 +224,7 @@ func TestAuthServer_CreateMessage(t *testing.T) {
 			name: "success",
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
 				mocks.ChatRequestValidation.EXPECT().
-					CreateChatMessage(gomock.Any()).
+					CreateMessage(gomock.Any()).
 					Return(nil)
 				mocks.ChatApplication.EXPECT().
 					GetRoom(ctx, "room01", "user01").
@@ -234,7 +234,7 @@ func TestAuthServer_CreateMessage(t *testing.T) {
 					Return(nil)
 			},
 			args: args{
-				req: &pb.CreateChatMessageRequest{
+				req: &pb.CreateMessageRequest{
 					UserId: "user01",
 					RoomId: "room01",
 					Text:   "テストメッセージ",
@@ -242,8 +242,8 @@ func TestAuthServer_CreateMessage(t *testing.T) {
 			},
 			want: &test.TestResponse{
 				Code: codes.OK,
-				Message: &pb.ChatMessageResponse{
-					Message: &pb.ChatMessage{
+				Message: &pb.MessageResponse{
+					Message: &pb.Message{
 						UserId:    "user01",
 						Text:      "テストメッセージ",
 						CreatedAt: "",
@@ -255,11 +255,11 @@ func TestAuthServer_CreateMessage(t *testing.T) {
 			name: "failed: invalid argument",
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
 				mocks.ChatRequestValidation.EXPECT().
-					CreateChatMessage(gomock.Any()).
+					CreateMessage(gomock.Any()).
 					Return(exception.InvalidRequestValidation.New(test.ErrMock))
 			},
 			args: args{
-				req: &pb.CreateChatMessageRequest{},
+				req: &pb.CreateMessageRequest{},
 			},
 			want: &test.TestResponse{
 				Code:    codes.InvalidArgument,
@@ -270,14 +270,14 @@ func TestAuthServer_CreateMessage(t *testing.T) {
 			name: "failed: not found",
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
 				mocks.ChatRequestValidation.EXPECT().
-					CreateChatMessage(gomock.Any()).
+					CreateMessage(gomock.Any()).
 					Return(nil)
 				mocks.ChatApplication.EXPECT().
 					GetRoom(ctx, "room01", "user01").
 					Return(nil, exception.NotFound.New(test.ErrMock))
 			},
 			args: args{
-				req: &pb.CreateChatMessageRequest{
+				req: &pb.CreateMessageRequest{
 					UserId: "user01",
 					RoomId: "room01",
 				},
@@ -291,7 +291,7 @@ func TestAuthServer_CreateMessage(t *testing.T) {
 			name: "failed: internal error",
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
 				mocks.ChatRequestValidation.EXPECT().
-					CreateChatMessage(gomock.Any()).
+					CreateMessage(gomock.Any()).
 					Return(nil)
 				mocks.ChatApplication.EXPECT().
 					GetRoom(ctx, "room01", "user01").
@@ -301,7 +301,7 @@ func TestAuthServer_CreateMessage(t *testing.T) {
 					Return(exception.ErrorInDatastore.New(test.ErrMock))
 			},
 			args: args{
-				req: &pb.CreateChatMessageRequest{
+				req: &pb.CreateMessageRequest{
 					UserId: "user01",
 					RoomId: "room01",
 					Text:   "テストメッセージ",

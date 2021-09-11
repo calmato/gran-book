@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/calmato/gran-book/api/server/user/pkg/datetime"
-	pb "github.com/calmato/gran-book/api/server/user/proto"
+	pb "github.com/calmato/gran-book/api/server/user/proto/chat"
 )
 
 // Room - チャットルーム エンティティ
@@ -19,13 +19,13 @@ type Room struct {
 
 type Rooms []*Room
 
-func (r *Room) Proto() *pb.ChatRoom {
-	var m *pb.ChatMessage
+func (r *Room) Proto() *pb.Room {
+	var m *pb.Message
 	if r.LatestMessage != nil {
 		m = r.LatestMessage.Proto()
 	}
 
-	return &pb.ChatRoom{
+	return &pb.Room{
 		Id:            r.ID,
 		UserIds:       r.UserIDs,
 		CreatedAt:     datetime.TimeToString(r.CreatedAt),
@@ -34,8 +34,8 @@ func (r *Room) Proto() *pb.ChatRoom {
 	}
 }
 
-func (rs Rooms) Proto() []*pb.ChatRoom {
-	res := make([]*pb.ChatRoom, len(rs))
+func (rs Rooms) Proto() []*pb.Room {
+	res := make([]*pb.Room, len(rs))
 	for i := range rs {
 		res[i] = rs[i].Proto()
 	}
@@ -52,8 +52,8 @@ type Message struct {
 	CreatedAt time.Time `firestore:"createdAt"`
 }
 
-func (m *Message) Proto() *pb.ChatMessage {
-	return &pb.ChatMessage{
+func (m *Message) Proto() *pb.Message {
+	return &pb.Message{
 		Id:        m.ID,
 		UserId:    m.UserID,
 		Text:      m.Text,
