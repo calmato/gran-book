@@ -65,6 +65,6 @@ func EndOfMonth(str string) time.Time {
 		return time.Time{}
 	}
 
-	t = time.Date(t.Year(), time.Month(t.Month()+1), 1, 23, 59, 59, 0, time.Local).AddDate(0, 0, -1)
+	t = time.Date(t.Year(), t.Month()+1, 1, 23, 59, 59, 0, time.Local).AddDate(0, 0, -1)
 	return t.Local()
 }
