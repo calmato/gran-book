@@ -135,7 +135,9 @@ func (a *bookApplication) ListUserReview(
 	return rs, total, nil
 }
 
-func (a *bookApplication) ListUserMonthlyResult(ctx context.Context, userID, sinceDate, untilDate string) (book.MonthlyResults, error) {
+func (a *bookApplication) ListUserMonthlyResult(
+	ctx context.Context, userID, sinceDate, untilDate string,
+) (book.MonthlyResults, error) {
 	since := datetime.BeginningOfMonth(sinceDate)
 	until := datetime.EndOfMonth(untilDate)
 	if since.IsZero() || until.IsZero() {
