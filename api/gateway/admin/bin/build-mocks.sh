@@ -11,9 +11,12 @@ fi
 # Function
 #############################
 build_mock() {
-  filename=$(echo ${1} | awk -F '_' '{ print $1 }')
+  path=${1##.\/proto\/}
 
-  mockgen -package mock -source ${1} -destination mock/${filename}.go
+  dirname=${path%%/*}
+  filename=${path##*/}
+
+  mockgen -package mock -source ./proto/${path} -destination mock/${dirname}/${filename}.go
 }
 
 #############################
@@ -22,6 +25,6 @@ build_mock() {
 rm -rf mock/*.go
 
 paths=$(find ./proto/**/*_service.pb.go)
-for file in ${paths}; do
-  build_mock ${file}
+for path in ${paths}; do
+  build_mock ${path}
 done

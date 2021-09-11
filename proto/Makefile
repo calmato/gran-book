@@ -125,5 +125,4 @@ protoc-service:
 		--validate_out lang=go:${ARCHIVE_PATH} \
 		--validate_opt paths=source_relative \
 		./proto/common/*.proto \
-		./proto/service/*.proto \
 		./proto/service/**/*.proto
