@@ -6,10 +6,8 @@ type Time struct {
 	time time.Time
 }
 
-const location = "Asia/Tokyo"
-
 var (
-	jst, _ = time.LoadLocation(location)
+	jst = time.FixedZone("JST", 9*60*60)
 )
 
 func New(t time.Time) *Time {
