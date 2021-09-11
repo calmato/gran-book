@@ -39,7 +39,7 @@ jobs:
         run: docker-compose -f docker-compose.ci.yaml build proto
 
       - name: Generate proto
-        run: docker-compose -f docker-compose.ci.yaml run --rm make build
+        run: docker-compose -f docker-compose.ci.yaml run --rm proto make build
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
