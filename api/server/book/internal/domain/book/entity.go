@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/calmato/gran-book/api/server/book/pkg/datetime"
-	pb "github.com/calmato/gran-book/api/server/book/proto"
+	pb "github.com/calmato/gran-book/api/server/book/proto/book"
 )
 
 // Book - 書籍エンティティ

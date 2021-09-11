@@ -1,7 +1,7 @@
 package validation
 
 import (
-	pb "github.com/calmato/gran-book/api/server/book/proto"
+	pb "github.com/calmato/gran-book/api/server/book/proto/book"
 )
 
 type BookRequestValidation interface {

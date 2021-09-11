@@ -5,8 +5,7 @@ package chat;
 option go_package = "github.com/calmato/gran-book/proto/service/chat";
 
 import "github.com/envoyproxy/protoc-gen-validate/validate/validate.proto";
-import "service/chat/room.proto";
-import "service/chat/message.proto";
+import "service/chat/chat_entity.proto";
 
 service ChatService {
   rpc ListRoom(ListRoomRequest) returns (RoomListResponse);

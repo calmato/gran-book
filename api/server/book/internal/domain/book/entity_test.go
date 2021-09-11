@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/calmato/gran-book/api/server/book/pkg/datetime"
-	pb "github.com/calmato/gran-book/api/server/book/proto"
+	pb "github.com/calmato/gran-book/api/server/book/proto/book"
 	"github.com/stretchr/testify/assert"
 )
 

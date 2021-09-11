@@ -8,7 +8,7 @@ import (
 	"github.com/calmato/gran-book/api/server/book/internal/interface/validation"
 	"github.com/calmato/gran-book/api/server/book/pkg/database"
 	"github.com/calmato/gran-book/api/server/book/pkg/datetime"
-	pb "github.com/calmato/gran-book/api/server/book/proto"
+	pb "github.com/calmato/gran-book/api/server/book/proto/book"
 )
 
 type bookServer struct {
