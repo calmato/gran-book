@@ -25,6 +25,8 @@ services:
     working_dir: /go/src/github.com/calmato/gran-book/proto
     volumes:
       - ./api:/go/src/github.com/calmato/gran-book/api:cached
+      - ./native:/go/src/github.com/calmato/gran-book/native:cached
+      - ./web:/go/src/github.com/calmato/gran-book/web:cached
       - ./proto:/go/src/github.com/calmato/gran-book/proto:cached
 
   wait:
