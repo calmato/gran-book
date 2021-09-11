@@ -9,7 +9,8 @@ import (
 	request "github.com/calmato/gran-book/api/gateway/native/internal/request/v1"
 	response "github.com/calmato/gran-book/api/gateway/native/internal/response/v1"
 	"github.com/calmato/gran-book/api/gateway/native/internal/server/util"
-	pb "github.com/calmato/gran-book/api/gateway/native/proto"
+	"github.com/calmato/gran-book/api/gateway/native/proto/book"
+	"github.com/calmato/gran-book/api/gateway/native/proto/user"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/sync/errgroup"
 )
@@ -26,11 +27,11 @@ type BookshelfHandler interface {
 }
 
 type bookshelfHandler struct {
-	authClient pb.AuthServiceClient
-	bookClient pb.BookServiceClient
+	authClient user.AuthServiceClient
+	bookClient book.BookServiceClient
 }
 
-func NewBookshelfHandler(ac pb.AuthServiceClient, bc pb.BookServiceClient) BookshelfHandler {
+func NewBookshelfHandler(ac user.AuthServiceClient, bc book.BookServiceClient) BookshelfHandler {
 	return &bookshelfHandler{
 		authClient: ac,
 		bookClient: bc,
@@ -43,7 +44,7 @@ func (h *bookshelfHandler) List(ctx *gin.Context) {
 	offset := ctx.GetInt64(ctx.DefaultQuery("offset", entity.ListOffsetDefault))
 	userID := ctx.Param("userID")
 
-	bookshelfInput := &pb.ListBookshelfRequest{
+	bookshelfInput := &book.ListBookshelfRequest{
 		UserId: userID,
 		Limit:  limit,
 		Offset: offset,
@@ -58,7 +59,7 @@ func (h *bookshelfHandler) List(ctx *gin.Context) {
 
 	bss := entity.NewBookshelves(bookshelfOutput.Bookshelves)
 
-	booksInput := &pb.MultiGetBooksRequest{
+	booksInput := &book.MultiGetBooksRequest{
 		BookIds: bss.BookIDs(),
 	}
 
@@ -89,7 +90,7 @@ func (h *bookshelfHandler) Get(ctx *gin.Context) {
 
 	var b *entity.Book
 	eg.Go(func() error {
-		bookInput := &pb.GetBookRequest{
+		bookInput := &book.GetBookRequest{
 			BookId: bookID,
 		}
 		bookOutput, err := h.bookClient.GetBook(ectx, bookInput)
@@ -102,7 +103,7 @@ func (h *bookshelfHandler) Get(ctx *gin.Context) {
 
 	var bs *entity.Bookshelf
 	eg.Go(func() error {
-		bookshelfInput := &pb.GetBookshelfRequest{
+		bookshelfInput := &book.GetBookshelfRequest{
 			UserId: userID,
 			BookId: bookID,
 		}
@@ -144,7 +145,7 @@ func (h *bookshelfHandler) Read(ctx *gin.Context) {
 
 	var b *entity.Book
 	eg.Go(func() error {
-		bookInput := &pb.GetBookRequest{
+		bookInput := &book.GetBookRequest{
 			BookId: bookID,
 		}
 		bookOutput, err := h.bookClient.GetBook(ectx, bookInput)
@@ -157,7 +158,7 @@ func (h *bookshelfHandler) Read(ctx *gin.Context) {
 
 	var bs *entity.Bookshelf
 	eg.Go(func() error {
-		bookshelfInput := &pb.ReadBookshelfRequest{
+		bookshelfInput := &book.ReadBookshelfRequest{
 			UserId:     userID,
 			BookId:     bookID,
 			Impression: req.Impression,
@@ -194,7 +195,7 @@ func (h *bookshelfHandler) Reading(ctx *gin.Context) {
 
 	var b *entity.Book
 	eg.Go(func() error {
-		bookInput := &pb.GetBookRequest{
+		bookInput := &book.GetBookRequest{
 			BookId: bookID,
 		}
 		bookOutput, err := h.bookClient.GetBook(ectx, bookInput)
@@ -207,7 +208,7 @@ func (h *bookshelfHandler) Reading(ctx *gin.Context) {
 
 	var bs *entity.Bookshelf
 	eg.Go(func() error {
-		bookshelfInput := &pb.ReadingBookshelfRequest{
+		bookshelfInput := &book.ReadingBookshelfRequest{
 			UserId: userID,
 			BookId: bookID,
 		}
@@ -242,7 +243,7 @@ func (h *bookshelfHandler) Stacked(ctx *gin.Context) {
 
 	var b *entity.Book
 	eg.Go(func() error {
-		bookInput := &pb.GetBookRequest{
+		bookInput := &book.GetBookRequest{
 			BookId: bookID,
 		}
 		bookOutput, err := h.bookClient.GetBook(ectx, bookInput)
@@ -255,7 +256,7 @@ func (h *bookshelfHandler) Stacked(ctx *gin.Context) {
 
 	var bs *entity.Bookshelf
 	eg.Go(func() error {
-		bookshelfInput := &pb.StackedBookshelfRequest{
+		bookshelfInput := &book.StackedBookshelfRequest{
 			UserId: userID,
 			BookId: bookID,
 		}
@@ -290,7 +291,7 @@ func (h *bookshelfHandler) Want(ctx *gin.Context) {
 
 	var b *entity.Book
 	eg.Go(func() error {
-		bookInput := &pb.GetBookRequest{
+		bookInput := &book.GetBookRequest{
 			BookId: bookID,
 		}
 		bookOutput, err := h.bookClient.GetBook(ectx, bookInput)
@@ -303,7 +304,7 @@ func (h *bookshelfHandler) Want(ctx *gin.Context) {
 
 	var bs *entity.Bookshelf
 	eg.Go(func() error {
-		bookshelfInput := &pb.WantBookshelfRequest{
+		bookshelfInput := &book.WantBookshelfRequest{
 			UserId: userID,
 			BookId: bookID,
 		}
@@ -338,7 +339,7 @@ func (h *bookshelfHandler) Release(ctx *gin.Context) {
 
 	var b *entity.Book
 	eg.Go(func() error {
-		bookInput := &pb.GetBookRequest{
+		bookInput := &book.GetBookRequest{
 			BookId: bookID,
 		}
 		bookOutput, err := h.bookClient.GetBook(ectx, bookInput)
@@ -351,7 +352,7 @@ func (h *bookshelfHandler) Release(ctx *gin.Context) {
 
 	var bs *entity.Bookshelf
 	eg.Go(func() error {
-		bookshelfInput := &pb.ReleaseBookshelfRequest{
+		bookshelfInput := &book.ReleaseBookshelfRequest{
 			UserId: userID,
 			BookId: bookID,
 		}
@@ -381,7 +382,7 @@ func (h *bookshelfHandler) Delete(ctx *gin.Context) {
 		return
 	}
 
-	in := &pb.DeleteBookshelfRequest{
+	in := &book.DeleteBookshelfRequest{
 		UserId: userID,
 		BookId: bookID,
 	}

@@ -5,7 +5,9 @@ import (
 	v1 "github.com/calmato/gran-book/api/gateway/native/internal/server/v1"
 	v2 "github.com/calmato/gran-book/api/gateway/native/internal/server/v2"
 	"github.com/calmato/gran-book/api/gateway/native/pkg/firebase/authentication"
-	pb "github.com/calmato/gran-book/api/gateway/native/proto"
+	"github.com/calmato/gran-book/api/gateway/native/proto/book"
+	"github.com/calmato/gran-book/api/gateway/native/proto/chat"
+	"github.com/calmato/gran-book/api/gateway/native/proto/user"
 	"google.golang.org/grpc"
 )
 
@@ -34,10 +36,10 @@ type Params struct {
 }
 
 type gRPCClient struct {
-	auth pb.AuthServiceClient
-	book pb.BookServiceClient
-	chat pb.ChatServiceClient
-	user pb.UserServiceClient
+	auth user.AuthServiceClient
+	book book.BookServiceClient
+	chat chat.ChatServiceClient
+	user user.UserServiceClient
 }
 
 // NewRegistry - internalディレクトリ配下の依存関係の解決
@@ -84,9 +86,9 @@ func newgRPCClient(params *Params) (*gRPCClient, error) {
 	}
 
 	return &gRPCClient{
-		auth: pb.NewAuthServiceClient(authConn),
-		user: pb.NewUserServiceClient(userConn),
-		chat: pb.NewChatServiceClient(chatConn),
-		book: pb.NewBookServiceClient(bookConn),
+		auth: user.NewAuthServiceClient(authConn),
+		user: user.NewUserServiceClient(userConn),
+		chat: chat.NewChatServiceClient(chatConn),
+		book: book.NewBookServiceClient(bookConn),
 	}, nil
 }

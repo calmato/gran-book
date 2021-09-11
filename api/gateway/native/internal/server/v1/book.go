@@ -8,7 +8,8 @@ import (
 	request "github.com/calmato/gran-book/api/gateway/native/internal/request/v1"
 	response "github.com/calmato/gran-book/api/gateway/native/internal/response/v1"
 	"github.com/calmato/gran-book/api/gateway/native/internal/server/util"
-	pb "github.com/calmato/gran-book/api/gateway/native/proto"
+	"github.com/calmato/gran-book/api/gateway/native/proto/book"
+	"github.com/calmato/gran-book/api/gateway/native/proto/user"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/sync/errgroup"
 )
@@ -20,11 +21,11 @@ type BookHandler interface {
 }
 
 type bookHandler struct {
-	authClient pb.AuthServiceClient
-	bookClient pb.BookServiceClient
+	authClient user.AuthServiceClient
+	bookClient book.BookServiceClient
 }
 
-func NewBookHandler(ac pb.AuthServiceClient, bc pb.BookServiceClient) BookHandler {
+func NewBookHandler(ac user.AuthServiceClient, bc book.BookServiceClient) BookHandler {
 	return &bookHandler{
 		authClient: ac,
 		bookClient: bc,
@@ -40,7 +41,7 @@ func (h *bookHandler) Get(ctx *gin.Context) {
 
 	var a *entity.Auth
 	eg.Go(func() error {
-		authOutput, err := h.authClient.GetAuth(ectx, &pb.Empty{})
+		authOutput, err := h.authClient.GetAuth(ectx, &user.Empty{})
 		if err != nil {
 			return err
 		}
@@ -50,7 +51,7 @@ func (h *bookHandler) Get(ctx *gin.Context) {
 
 	var b *entity.Book
 	eg.Go(func() error {
-		bookInput := &pb.GetBookByIsbnRequest{
+		bookInput := &book.GetBookByIsbnRequest{
 			Isbn: isbn,
 		}
 		bookOutput, err := h.bookClient.GetBookByIsbn(ectx, bookInput)
@@ -66,7 +67,7 @@ func (h *bookHandler) Get(ctx *gin.Context) {
 		return
 	}
 
-	bookshelfInput := &pb.GetBookshelfRequest{
+	bookshelfInput := &book.GetBookshelfRequest{
 		BookId: b.Id,
 		UserId: a.Id,
 	}
@@ -93,9 +94,9 @@ func (h *bookHandler) Create(ctx *gin.Context) {
 
 	authorNames := strings.Split(req.Author, "/")
 	authorNameKanas := strings.Split(req.AuthorKana, "/")
-	authors := make([]*pb.CreateBookRequest_Author, len(authorNames))
+	authors := make([]*book.CreateBookRequest_Author, len(authorNames))
 	for i := range authorNames {
-		author := &pb.CreateBookRequest_Author{
+		author := &book.CreateBookRequest_Author{
 			Name:     authorNames[i],
 			NameKana: authorNameKanas[i],
 		}
@@ -103,7 +104,7 @@ func (h *bookHandler) Create(ctx *gin.Context) {
 		authors[i] = author
 	}
 
-	in := &pb.CreateBookRequest{
+	in := &book.CreateBookRequest{
 		Title:          req.Title,
 		TitleKana:      req.TitleKana,
 		Description:    req.ItemCaption,
@@ -140,9 +141,9 @@ func (h *bookHandler) Update(ctx *gin.Context) {
 
 	authorNames := strings.Split(req.Author, "/")
 	authorNameKanas := strings.Split(req.AuthorKana, "/")
-	authors := make([]*pb.UpdateBookRequest_Author, len(authorNames))
+	authors := make([]*book.UpdateBookRequest_Author, len(authorNames))
 	for i := range authorNames {
-		author := &pb.UpdateBookRequest_Author{
+		author := &book.UpdateBookRequest_Author{
 			Name:     authorNames[i],
 			NameKana: authorNameKanas[i],
 		}
@@ -150,7 +151,7 @@ func (h *bookHandler) Update(ctx *gin.Context) {
 		authors[i] = author
 	}
 
-	in := &pb.UpdateBookRequest{
+	in := &book.UpdateBookRequest{
 		Title:          req.Title,
 		TitleKana:      req.TitleKana,
 		Description:    req.ItemCaption,

@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/calmato/gran-book/api/gateway/native/pkg/test"
-	pb "github.com/calmato/gran-book/api/gateway/native/proto"
+	pb "github.com/calmato/gran-book/api/gateway/native/proto/chat"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -19,7 +19,7 @@ func TestChatRooms(t *testing.T) {
 			name: "success",
 			rooms: ChatRooms{
 				{
-					ChatRoom: &pb.ChatRoom{
+					Room: &pb.Room{
 						Id: "00000000-0000-0000-0000-000000000000",
 						UserIds: []string{
 							"12345678-1234-1234-1234-123456789012",
@@ -30,7 +30,7 @@ func TestChatRooms(t *testing.T) {
 					},
 				},
 				{
-					ChatRoom: &pb.ChatRoom{
+					Room: &pb.Room{
 						Id: "11111111-1111-1111-1111-111111111111",
 						UserIds: []string{
 							"12345678-1234-1234-1234-123456789012",

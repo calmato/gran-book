@@ -3,7 +3,8 @@ package entity
 import (
 	"testing"
 
-	pb "github.com/calmato/gran-book/api/gateway/native/proto"
+	"github.com/calmato/gran-book/api/gateway/native/proto/book"
+	"github.com/calmato/gran-book/api/gateway/native/proto/user"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -11,25 +12,25 @@ func TestGender(t *testing.T) {
 	t.Parallel()
 	tests := []struct {
 		name       string
-		gender     pb.Gender
+		gender     user.Gender
 		expect     Gender
 		expectName string
 	}{
 		{
 			name:       "success: unnown",
-			gender:     pb.Gender_GENDER_UNKNOWN,
+			gender:     user.Gender_GENDER_UNKNOWN,
 			expect:     GenderUnknown,
 			expectName: "unknown",
 		},
 		{
 			name:       "success: man",
-			gender:     pb.Gender_GENDER_MAN,
+			gender:     user.Gender_GENDER_MAN,
 			expect:     GenderMan,
 			expectName: "man",
 		},
 		{
 			name:       "success: woman",
-			gender:     pb.Gender_GENDER_WOMAN,
+			gender:     user.Gender_GENDER_WOMAN,
 			expect:     GenderWoman,
 			expectName: "woman",
 		},
@@ -51,43 +52,43 @@ func TestBookshelfStatus(t *testing.T) {
 	t.Parallel()
 	tests := []struct {
 		name       string
-		status     pb.BookshelfStatus
+		status     book.BookshelfStatus
 		expect     BookshelfStatus
 		expectName string
 	}{
 		{
 			name:       "success: none",
-			status:     pb.BookshelfStatus_BOOKSHELF_STATUS_NONE,
+			status:     book.BookshelfStatus_BOOKSHELF_STATUS_NONE,
 			expect:     BookshelfStatusNone,
 			expectName: "none",
 		},
 		{
 			name:       "success: read",
-			status:     pb.BookshelfStatus_BOOKSHELF_STATUS_READ,
+			status:     book.BookshelfStatus_BOOKSHELF_STATUS_READ,
 			expect:     BookshelfStatusRead,
 			expectName: "read",
 		},
 		{
 			name:       "success: reading",
-			status:     pb.BookshelfStatus_BOOKSHELF_STATUS_READING,
+			status:     book.BookshelfStatus_BOOKSHELF_STATUS_READING,
 			expect:     BookshelfStatusReading,
 			expectName: "reading",
 		},
 		{
 			name:       "success: stacked",
-			status:     pb.BookshelfStatus_BOOKSHELF_STATUS_STACKED,
+			status:     book.BookshelfStatus_BOOKSHELF_STATUS_STACKED,
 			expect:     BookshelfStatusStacked,
 			expectName: "stack",
 		},
 		{
 			name:       "success: want",
-			status:     pb.BookshelfStatus_BOOKSHELF_STATUS_WANT,
+			status:     book.BookshelfStatus_BOOKSHELF_STATUS_WANT,
 			expect:     BookshelfStatusWant,
 			expectName: "want",
 		},
 		{
 			name:       "success: release",
-			status:     pb.BookshelfStatus_BOOKSHELF_STATUS_RELEASE,
+			status:     book.BookshelfStatus_BOOKSHELF_STATUS_RELEASE,
 			expect:     BookshelfStatusRelease,
 			expectName: "release",
 		},

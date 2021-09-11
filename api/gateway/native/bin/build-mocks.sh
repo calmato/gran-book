@@ -13,7 +13,7 @@ fi
 build_mock() {
   filename=$(echo ${1} | awk -F '_' '{ print $1 }')
 
-  mockgen -package mock -source proto/${1} -destination mock/${filename}.go
+  mockgen -package mock -source ${1} -destination mock/${filename}.go
 }
 
 #############################
@@ -21,7 +21,7 @@ build_mock() {
 #############################
 rm -rf mock/*.go
 
-paths=$(ls -1 ./proto/*service_grpc.pb.go | xargs -n 1 basename)
+paths=$(find ./proto/**/*_service.pb.go)
 for file in ${paths}; do
   build_mock ${file}
 done

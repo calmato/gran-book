@@ -1,16 +1,18 @@
 package test
 
 import (
-	"github.com/calmato/gran-book/api/gateway/native/mock"
+	"github.com/calmato/gran-book/api/gateway/native/mock/book"
+	"github.com/calmato/gran-book/api/gateway/native/mock/chat"
+	"github.com/calmato/gran-book/api/gateway/native/mock/user"
 	"github.com/golang/mock/gomock"
 )
 
 func NewMocks(ctrl *gomock.Controller) *Mocks {
 	return &Mocks{
-		AdminService: mock.NewMockAdminServiceClient(ctrl),
-		AuthService:  mock.NewMockAuthServiceClient(ctrl),
-		BookService:  mock.NewMockBookServiceClient(ctrl),
-		ChatService:  mock.NewMockChatServiceClient(ctrl),
-		UserService:  mock.NewMockUserServiceClient(ctrl),
+		AdminService: user.NewMockAdminServiceClient(ctrl),
+		AuthService:  user.NewMockAuthServiceClient(ctrl),
+		BookService:  book.NewMockBookServiceClient(ctrl),
+		ChatService:  chat.NewMockChatServiceClient(ctrl),
+		UserService:  user.NewMockUserServiceClient(ctrl),
 	}
 }

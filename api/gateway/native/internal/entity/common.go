@@ -1,7 +1,8 @@
 package entity
 
 import (
-	pb "github.com/calmato/gran-book/api/gateway/native/proto"
+	"github.com/calmato/gran-book/api/gateway/native/proto/book"
+	"github.com/calmato/gran-book/api/gateway/native/proto/user"
 )
 
 const (
@@ -39,13 +40,13 @@ var (
 	}
 )
 
-func NewGender(g pb.Gender) Gender {
+func NewGender(g user.Gender) Gender {
 	switch g {
-	case pb.Gender_GENDER_UNKNOWN:
+	case user.Gender_GENDER_UNKNOWN:
 		return GenderUnknown
-	case pb.Gender_GENDER_MAN:
+	case user.Gender_GENDER_MAN:
 		return GenderMan
-	case pb.Gender_GENDER_WOMAN:
+	case user.Gender_GENDER_WOMAN:
 		return GenderWoman
 	default:
 		return GenderUnknown
@@ -68,8 +69,8 @@ func (g Gender) Value(key string) Gender {
 	return GenderUnknown
 }
 
-func (g Gender) Proto() pb.Gender {
-	return *pb.Gender(g).Enum()
+func (g Gender) Proto() user.Gender {
+	return *user.Gender(g).Enum()
 }
 
 // BookshelfStatus - 読書ステータス
@@ -103,19 +104,19 @@ var (
 	}
 )
 
-func NewBookshelfStatus(s pb.BookshelfStatus) BookshelfStatus {
+func NewBookshelfStatus(s book.BookshelfStatus) BookshelfStatus {
 	switch s {
-	case pb.BookshelfStatus_BOOKSHELF_STATUS_READ:
+	case book.BookshelfStatus_BOOKSHELF_STATUS_READ:
 		return BookshelfStatusRead
-	case pb.BookshelfStatus_BOOKSHELF_STATUS_READING:
+	case book.BookshelfStatus_BOOKSHELF_STATUS_READING:
 		return BookshelfStatusReading
-	case pb.BookshelfStatus_BOOKSHELF_STATUS_STACKED:
+	case book.BookshelfStatus_BOOKSHELF_STATUS_STACKED:
 		return BookshelfStatusStacked
-	case pb.BookshelfStatus_BOOKSHELF_STATUS_WANT:
+	case book.BookshelfStatus_BOOKSHELF_STATUS_WANT:
 		return BookshelfStatusWant
-	case pb.BookshelfStatus_BOOKSHELF_STATUS_RELEASE:
+	case book.BookshelfStatus_BOOKSHELF_STATUS_RELEASE:
 		return BookshelfStatusRelease
-	case pb.BookshelfStatus_BOOKSHELF_STATUS_NONE:
+	case book.BookshelfStatus_BOOKSHELF_STATUS_NONE:
 		return BookshelfStatusNone
 	default:
 		return BookshelfStatusNone

@@ -8,7 +8,8 @@ import (
 	"github.com/calmato/gran-book/api/gateway/native/internal/entity"
 	response "github.com/calmato/gran-book/api/gateway/native/internal/response/v2"
 	"github.com/calmato/gran-book/api/gateway/native/internal/server/util"
-	pb "github.com/calmato/gran-book/api/gateway/native/proto"
+	"github.com/calmato/gran-book/api/gateway/native/proto/book"
+	"github.com/calmato/gran-book/api/gateway/native/proto/user"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/sync/errgroup"
 )
@@ -19,11 +20,11 @@ type BookshelfHandler interface {
 }
 
 type bookshelfHandler struct {
-	bookClient pb.BookServiceClient
-	userClient pb.UserServiceClient
+	bookClient book.BookServiceClient
+	userClient user.UserServiceClient
 }
 
-func NewBookshelfHandler(bc pb.BookServiceClient, uc pb.UserServiceClient) BookshelfHandler {
+func NewBookshelfHandler(bc book.BookServiceClient, uc user.UserServiceClient) BookshelfHandler {
 	return &bookshelfHandler{
 		bookClient: bc,
 		userClient: uc,
@@ -36,7 +37,7 @@ func (h *bookshelfHandler) List(ctx *gin.Context) {
 	offset := ctx.GetInt64(ctx.DefaultQuery("offset", entity.ListOffsetDefault))
 	userID := ctx.Param("userID")
 
-	bookshelvesInput := &pb.ListBookshelfRequest{
+	bookshelvesInput := &book.ListBookshelfRequest{
 		UserId: userID,
 		Limit:  limit,
 		Offset: offset,
@@ -51,7 +52,7 @@ func (h *bookshelfHandler) List(ctx *gin.Context) {
 
 	bss := entity.NewBookshelves(bookshelvesOutput.Bookshelves)
 
-	booksInput := &pb.MultiGetBooksRequest{
+	booksInput := &book.MultiGetBooksRequest{
 		BookIds: bss.BookIDs(),
 	}
 
@@ -82,7 +83,7 @@ func (h *bookshelfHandler) Get(ctx *gin.Context) {
 
 	var b *entity.Book
 	eg.Go(func() error {
-		in := &pb.GetBookRequest{
+		in := &book.GetBookRequest{
 			BookId: bookID,
 		}
 		out, err := h.bookClient.GetBook(ectx, in)
@@ -95,7 +96,7 @@ func (h *bookshelfHandler) Get(ctx *gin.Context) {
 
 	var bs *entity.Bookshelf
 	eg.Go(func() error {
-		in := &pb.GetBookshelfRequest{
+		in := &book.GetBookshelfRequest{
 			UserId: userID,
 			BookId: bookID,
 		}
@@ -110,7 +111,7 @@ func (h *bookshelfHandler) Get(ctx *gin.Context) {
 	var rs entity.Reviews
 	var limit, offset, total int64
 	eg.Go(func() error {
-		in := &pb.ListBookReviewRequest{
+		in := &book.ListBookReviewRequest{
 			BookId: bookID,
 			Limit:  20,
 			Offset: 0,
@@ -131,7 +132,7 @@ func (h *bookshelfHandler) Get(ctx *gin.Context) {
 		return
 	}
 
-	usersInput := &pb.MultiGetUserRequest{
+	usersInput := &user.MultiGetUserRequest{
 		UserIds: rs.UserIDs(),
 	}
 

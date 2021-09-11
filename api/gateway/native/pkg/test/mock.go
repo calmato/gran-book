@@ -4,7 +4,9 @@ import (
 	"errors"
 	"time"
 
-	"github.com/calmato/gran-book/api/gateway/native/mock"
+	"github.com/calmato/gran-book/api/gateway/native/mock/book"
+	"github.com/calmato/gran-book/api/gateway/native/mock/chat"
+	"github.com/calmato/gran-book/api/gateway/native/mock/user"
 )
 
 var (
@@ -21,9 +23,9 @@ type TestResponse struct {
 }
 
 type Mocks struct {
-	AdminService *mock.MockAdminServiceClient
-	AuthService  *mock.MockAuthServiceClient
-	BookService  *mock.MockBookServiceClient
-	ChatService  *mock.MockChatServiceClient
-	UserService  *mock.MockUserServiceClient
+	AdminService *user.MockAdminServiceClient
+	AuthService  *user.MockAuthServiceClient
+	BookService  *book.MockBookServiceClient
+	ChatService  *chat.MockChatServiceClient
+	UserService  *user.MockUserServiceClient
 }

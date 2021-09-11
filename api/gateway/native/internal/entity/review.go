@@ -1,6 +1,6 @@
 package entity
 
-import pb "github.com/calmato/gran-book/api/gateway/native/proto"
+import pb "github.com/calmato/gran-book/api/gateway/native/proto/book"
 
 type Review struct {
 	*pb.Review

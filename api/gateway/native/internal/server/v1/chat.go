@@ -11,7 +11,8 @@ import (
 	response "github.com/calmato/gran-book/api/gateway/native/internal/response/v1"
 	"github.com/calmato/gran-book/api/gateway/native/internal/server/util"
 	"github.com/calmato/gran-book/api/gateway/native/pkg/array"
-	pb "github.com/calmato/gran-book/api/gateway/native/proto"
+	"github.com/calmato/gran-book/api/gateway/native/proto/chat"
+	"github.com/calmato/gran-book/api/gateway/native/proto/user"
 	"github.com/gin-gonic/gin"
 )
 
@@ -23,12 +24,12 @@ type ChatHandler interface {
 }
 
 type chatHandler struct {
-	authClient pb.AuthServiceClient
-	chatClient pb.ChatServiceClient
-	userClient pb.UserServiceClient
+	authClient user.AuthServiceClient
+	chatClient chat.ChatServiceClient
+	userClient user.UserServiceClient
 }
 
-func NewChatHandler(ac pb.AuthServiceClient, cc pb.ChatServiceClient, uc pb.UserServiceClient) ChatHandler {
+func NewChatHandler(ac user.AuthServiceClient, cc chat.ChatServiceClient, uc user.UserServiceClient) ChatHandler {
 	return &chatHandler{
 		authClient: ac,
 		chatClient: cc,
@@ -49,7 +50,7 @@ func (h *chatHandler) ListRoom(ctx *gin.Context) {
 		return
 	}
 
-	roomsInput := &pb.ListChatRoomRequest{
+	roomsInput := &chat.ListRoomRequest{
 		UserId: userID,
 		Limit:  limit,
 		Offset: offset,
@@ -63,7 +64,7 @@ func (h *chatHandler) ListRoom(ctx *gin.Context) {
 
 	crs := entity.NewChatRooms(roomsOutput.Rooms)
 
-	usersInput := &pb.MultiGetUserRequest{
+	usersInput := &user.MultiGetUserRequest{
 		UserIds: crs.UserIDs(),
 	}
 
@@ -100,7 +101,7 @@ func (h *chatHandler) CreateRoom(ctx *gin.Context) {
 		userIDs = append(userIDs, userID)
 	}
 
-	usersInput := &pb.MultiGetUserRequest{
+	usersInput := &user.MultiGetUserRequest{
 		UserIds: userIDs,
 	}
 
@@ -117,7 +118,7 @@ func (h *chatHandler) CreateRoom(ctx *gin.Context) {
 		return
 	}
 
-	roomInput := &pb.CreateChatRoomRequest{
+	roomInput := &chat.CreateRoomRequest{
 		UserIds: userIDs,
 	}
 
@@ -152,7 +153,7 @@ func (h *chatHandler) CreateTextMessage(ctx *gin.Context) {
 
 	a := entity.NewAuth(userOutput.Auth)
 
-	in := &pb.CreateChatMessageRequest{
+	in := &chat.CreateMessageRequest{
 		RoomId: roomID,
 		UserId: userID,
 		Text:   req.Text,
@@ -197,7 +198,7 @@ func (h *chatHandler) CreateImageMessage(ctx *gin.Context) {
 	var count int64           // 読み込み回数
 	buf := make([]byte, 1024) // 1リクエストの上限設定
 
-	in := &pb.UploadChatImageRequest{
+	in := &chat.UploadChatImageRequest{
 		RoomId:   roomID,
 		UserId:   userID,
 		Position: count,
@@ -221,7 +222,7 @@ func (h *chatHandler) CreateImageMessage(ctx *gin.Context) {
 			return
 		}
 
-		in = &pb.UploadChatImageRequest{
+		in = &chat.UploadChatImageRequest{
 			Image:    buf,
 			Position: count,
 		}
@@ -246,8 +247,8 @@ func (h *chatHandler) CreateImageMessage(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, res)
 }
 
-func (h *chatHandler) currentUser(ctx context.Context, userID string) (*pb.AuthResponse, error) {
-	out, err := h.authClient.GetAuth(ctx, &pb.Empty{})
+func (h *chatHandler) currentUser(ctx context.Context, userID string) (*user.AuthResponse, error) {
+	out, err := h.authClient.GetAuth(ctx, &user.Empty{})
 	if err != nil {
 		return nil, err
 	}
