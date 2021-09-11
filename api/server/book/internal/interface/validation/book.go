@@ -8,6 +8,7 @@ type BookRequestValidation interface {
 	ListBookshelf(req *pb.ListBookshelfRequest) error
 	ListBookReview(req *pb.ListBookReviewRequest) error
 	ListUserReview(req *pb.ListUserReviewRequest) error
+	ListUserMonthlyResult(req *pb.ListUserMonthlyResultRequest) error
 	MultiGetBooks(req *pb.MultiGetBooksRequest) error
 	GetBook(req *pb.GetBookRequest) error
 	GetBookByIsbn(req *pb.GetBookByIsbnRequest) error
@@ -60,6 +61,19 @@ func (v *bookRequestValidation) ListUserReview(req *pb.ListUserReviewRequest) er
 	err := req.Validate()
 	if err != nil {
 		if err, ok := err.(pb.ListUserReviewRequestValidationError); ok {
+			return toValidationError(err.Field(), err.Reason())
+		}
+
+		return toInternalError()
+	}
+
+	return nil
+}
+
+func (v *bookRequestValidation) ListUserMonthlyResult(req *pb.ListUserMonthlyResultRequest) error {
+	err := req.Validate()
+	if err != nil {
+		if err, ok := err.(pb.ListUserMonthlyResultRequestValidationError); ok {
 			return toValidationError(err.Field(), err.Reason())
 		}
 

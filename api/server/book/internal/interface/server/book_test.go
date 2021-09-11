@@ -303,6 +303,102 @@ func TestBookServer_ListUserReview(t *testing.T) {
 		})
 	}
 }
+func TestBookServer_ListUserMonthlyResult(t *testing.T) {
+	t.Parallel()
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	results := make(book.MonthlyResults, 2)
+	results[0] = &book.MonthlyResult{Year: 2021, Month: 9, ReadTotal: 3}
+	results[1] = &book.MonthlyResult{Year: 2021, Month: 8, ReadTotal: 8}
+
+	type args struct {
+		req *pb.ListUserMonthlyResultRequest
+	}
+	testCases := []struct {
+		name  string
+		setup func(context.Context, *testing.T, *test.Mocks)
+		args  args
+		want  *test.TestResponse
+	}{
+		{
+			name: "success",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.BookRequestValidation.EXPECT().
+					ListUserMonthlyResult(gomock.Any()).
+					Return(nil)
+				mocks.BookApplication.EXPECT().
+					ListUserMonthlyResult(ctx, "user01", "2021-08-01", "2021-09-30").
+					Return(results, nil)
+			},
+			args: args{
+				req: &pb.ListUserMonthlyResultRequest{
+					UserId:    "user01",
+					SinceDate: "2021-08-01",
+					UntilDate: "2021-09-30",
+				},
+			},
+			want: &test.TestResponse{
+				Code:    codes.OK,
+				Message: getUserMonthlyResultListResponse(results),
+			},
+		},
+		{
+			name: "failed: invalid argument",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.BookRequestValidation.EXPECT().
+					ListUserMonthlyResult(gomock.Any()).
+					Return(exception.InvalidRequestValidation.New(test.ErrMock))
+			},
+			args: args{
+				req: &pb.ListUserMonthlyResultRequest{},
+			},
+			want: &test.TestResponse{
+				Code:    codes.InvalidArgument,
+				Message: nil,
+			},
+		},
+		{
+			name: "failed: internel error",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.BookRequestValidation.EXPECT().
+					ListUserMonthlyResult(gomock.Any()).
+					Return(nil)
+				mocks.BookApplication.EXPECT().
+					ListUserMonthlyResult(ctx, "user01", "2021-08-01", "2021-09-30").
+					Return(nil, exception.ErrorInDatastore.New(test.ErrMock))
+			},
+			args: args{
+				req: &pb.ListUserMonthlyResultRequest{
+					UserId:    "user01",
+					SinceDate: "2021-08-01",
+					UntilDate: "2021-09-30",
+				},
+			},
+			want: &test.TestResponse{
+				Code:    codes.Internal,
+				Message: nil,
+			},
+		},
+	}
+
+	for _, tt := range testCases {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			mocks := test.NewMocks(ctrl)
+			tt.setup(ctx, t, mocks)
+			target := NewBookServer(mocks.BookRequestValidation, mocks.BookApplication)
+
+			res, err := target.ListUserMonthlyResult(ctx, tt.args.req)
+			test.TestGRPC(t, tt.want, res, err)
+		})
+	}
+}
 
 func TestBookServer_MultiGetBooks(t *testing.T) {
 	t.Parallel()

@@ -2,11 +2,13 @@ package application
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/calmato/gran-book/api/server/book/internal/domain/book"
 	"github.com/calmato/gran-book/api/server/book/internal/domain/exception"
 	"github.com/calmato/gran-book/api/server/book/pkg/database"
+	"github.com/calmato/gran-book/api/server/book/pkg/datetime"
 )
 
 // BookApplication - Bookアプリケーションのインターフェース
@@ -15,6 +17,7 @@ type BookApplication interface {
 	ListBookshelf(ctx context.Context, q *database.ListQuery) (book.Bookshelves, int, error)
 	ListBookReview(ctx context.Context, bookID, limit, offset int) (book.Reviews, int, error)
 	ListUserReview(ctx context.Context, userID string, limit, offset int) (book.Reviews, int, error)
+	ListUserMonthlyResult(ctx context.Context, userID, since, until string) (book.MonthlyResults, error)
 	MultiGet(ctx context.Context, bookIDs []int) (book.Books, error)
 	Get(ctx context.Context, bookID int) (*book.Book, error)
 	GetByIsbn(ctx context.Context, isbn string) (*book.Book, error)
@@ -37,6 +40,8 @@ type bookApplication struct {
 	bookDomainValidation book.Validation
 	bookRepository       book.Repository
 }
+
+var errInvalidDateFormat = errors.New("application: invalid date format")
 
 // NewBookApplication - BookApplicationの生成
 func NewBookApplication(bdv book.Validation, br book.Repository) BookApplication {
@@ -128,6 +133,16 @@ func (a *bookApplication) ListUserReview(
 	}
 
 	return rs, total, nil
+}
+
+func (a *bookApplication) ListUserMonthlyResult(ctx context.Context, userID, sinceDate, untilDate string) (book.MonthlyResults, error) {
+	since := datetime.BeginningOfMonth(sinceDate)
+	until := datetime.EndOfMonth(untilDate)
+	if since.IsZero() || until.IsZero() {
+		return nil, exception.InvalidRequestValidation.New(errInvalidDateFormat)
+	}
+
+	return a.bookRepository.AggregateReadTotal(ctx, userID, since, until)
 }
 
 func (a *bookApplication) MultiGet(ctx context.Context, bookIDs []int) (book.Books, error) {

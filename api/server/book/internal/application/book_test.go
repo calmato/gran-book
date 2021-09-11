@@ -2,13 +2,16 @@ package application
 
 import (
 	"context"
+	"fmt"
 	"testing"
 
 	"github.com/calmato/gran-book/api/server/book/internal/domain/book"
 	"github.com/calmato/gran-book/api/server/book/internal/domain/exception"
 	"github.com/calmato/gran-book/api/server/book/pkg/database"
+	"github.com/calmato/gran-book/api/server/book/pkg/datetime"
 	"github.com/calmato/gran-book/api/server/book/pkg/test"
 	"github.com/golang/mock/gomock"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -456,6 +459,92 @@ func TestBookApplication_ListUserReview(t *testing.T) {
 			require.NoError(t, err)
 			require.Equal(t, tt.want.reviews, rs)
 			require.Equal(t, tt.want.total, total)
+		})
+	}
+}
+
+func TestBookApplication_ListUserMonthlyResult(t *testing.T) {
+	t.Parallel()
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	results := make(book.MonthlyResults, 2)
+	results[0] = &book.MonthlyResult{Year: 2021, Month: 8, ReadTotal: 3}
+	results[1] = &book.MonthlyResult{Year: 2021, Month: 9, ReadTotal: 8}
+
+	type args struct {
+		userID string
+		since  string
+		until  string
+	}
+	type want struct {
+		results book.MonthlyResults
+		err     error
+	}
+	tests := []struct {
+		name  string
+		setup func(context.Context, *testing.T, *test.Mocks)
+		args  args
+		want  want
+	}{
+		{
+			name: "success",
+			setup: func(c context.Context, t *testing.T, m *test.Mocks) {
+				since := datetime.BeginningOfMonth("2021-08-01")
+				until := datetime.EndOfMonth("2021-09-01")
+				m.BookRepository.EXPECT().
+					AggregateReadTotal(ctx, "00000000-0000-0000-0000-000000000000", since, until).
+					Return(results, nil)
+			},
+			args: args{
+				userID: "00000000-0000-0000-0000-000000000000",
+				since:  "2021-08-01",
+				until:  "2021-09-01",
+			},
+			want: want{
+				results: results,
+				err:     nil,
+			},
+		},
+		{
+			name:  "failed: invalid date format",
+			setup: func(c context.Context, t *testing.T, m *test.Mocks) {},
+			args: args{
+				userID: "00000000-0000-0000-0000-000000000000",
+				since:  "2021-08-00",
+				until:  "2021-09-01",
+			},
+			want: want{
+				results: nil,
+				err:     exception.InvalidRequestValidation.New(errInvalidDateFormat),
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			mocks := test.NewMocks(ctrl)
+			tt.setup(ctx, t, mocks)
+			target := NewBookApplication(
+				mocks.BookDomainValidation,
+				mocks.BookRepository,
+			)
+
+			rs, err := target.ListUserMonthlyResult(ctx, tt.args.userID, tt.args.since, tt.args.until)
+			if tt.want.err != nil {
+				fmt.Printf("debug: %+v", tt.want.err)
+				require.Equal(t, tt.want.err.Error(), err.Error())
+				assert.Equal(t, tt.want.results, rs)
+				return
+			}
+			require.NoError(t, err)
+			assert.Equal(t, tt.want.results, rs)
 		})
 	}
 }
