@@ -105,6 +105,24 @@ func (s *bookServer) ListUserReview(
 	return res, nil
 }
 
+// ListUserMontyResylt - ユーザーの月毎の読書実績一覧取得
+func (s *bookServer) ListUserMonthlyResult(
+	ctx context.Context, req *pb.ListUserMonthlyResultRequest,
+) (*pb.UserMonthlyResultListResponse, error) {
+	err := s.bookRequestValidation.ListUserMonthlyResult(req)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	rs, err := s.bookApplication.ListUserMonthlyResult(ctx, req.GetUserId(), req.GetSinceDate(), req.UntilDate)
+	if err != nil {
+		return nil, errorHandling(err)
+	}
+
+	res := getUserMonthlyResultListResponse(rs)
+	return res, nil
+}
+
 // MultiGetBooks - 書籍一覧取得 (ID指定)
 func (s *bookServer) MultiGetBooks(ctx context.Context, req *pb.MultiGetBooksRequest) (*pb.BookListResponse, error) {
 	err := s.bookRequestValidation.MultiGetBooks(req)
@@ -487,5 +505,11 @@ func getReviewListResponse(rvs book.Reviews, limit, offset, total int) *pb.Revie
 		Limit:   int64(limit),
 		Offset:  int64(offset),
 		Total:   int64(total),
+	}
+}
+
+func getUserMonthlyResultListResponse(rs book.MonthlyResults) *pb.UserMonthlyResultListResponse {
+	return &pb.UserMonthlyResultListResponse{
+		MonthlyResults: rs.Proto(),
 	}
 }

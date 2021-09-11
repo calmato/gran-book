@@ -7,6 +7,7 @@ package mock_book
 import (
 	context "context"
 	reflect "reflect"
+	time "time"
 
 	book "github.com/calmato/gran-book/api/server/book/internal/domain/book"
 	database "github.com/calmato/gran-book/api/server/book/pkg/database"
@@ -34,6 +35,21 @@ func NewMockRepository(ctrl *gomock.Controller) *MockRepository {
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockRepository) EXPECT() *MockRepositoryMockRecorder {
 	return m.recorder
+}
+
+// AggregateReadTotal mocks base method.
+func (m *MockRepository) AggregateReadTotal(ctx context.Context, userID string, since, until time.Time) (book.MonthlyResults, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AggregateReadTotal", ctx, userID, since, until)
+	ret0, _ := ret[0].(book.MonthlyResults)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// AggregateReadTotal indicates an expected call of AggregateReadTotal.
+func (mr *MockRepositoryMockRecorder) AggregateReadTotal(ctx, userID, since, until interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AggregateReadTotal", reflect.TypeOf((*MockRepository)(nil).AggregateReadTotal), ctx, userID, since, until)
 }
 
 // Count mocks base method.

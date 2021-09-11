@@ -55,7 +55,7 @@ func NewRegistry(params *Params) (*Registry, error) {
 		V1Bookshelf:   v1.NewBookshelfHandler(client.auth, client.book),
 		V1Chat:        v1.NewChatHandler(client.auth, client.chat, client.user),
 		V1Review:      v1.NewReviewHandler(client.auth, client.book, client.user),
-		V1Top:         v1.NewTopHandler(),
+		V1Top:         v1.NewTopHandler(client.auth, client.book),
 		V1User:        v1.NewUserHandler(client.user),
 		V2Book:        v2.NewBookHandler(client.auth, client.book, client.user),
 		V2Bookshelf:   v2.NewBookshelfHandler(client.book, client.user),

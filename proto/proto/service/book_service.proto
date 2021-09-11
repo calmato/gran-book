@@ -12,6 +12,7 @@ service BookService {
   rpc ListBookshelf(ListBookshelfRequest) returns (BookshelfListResponse);
   rpc ListBookReview(ListBookReviewRequest) returns (ReviewListResponse);
   rpc ListUserReview(ListUserReviewRequest) returns (ReviewListResponse);
+  rpc ListUserMonthlyResult(ListUserMonthlyResultRequest) returns (UserMonthlyResultListResponse);
   rpc MultiGetBooks(MultiGetBooksRequest) returns (BookListResponse);
   rpc GetBook(GetBookRequest) returns (BookResponse);
   rpc GetBookByIsbn(GetBookByIsbnRequest) returns (BookResponse);
@@ -81,6 +82,24 @@ message ListUserReviewRequest {
   int64 offset = 4 [
     (validate.rules).int64 = {
       gte: 0
+    }
+  ];
+}
+
+message ListUserMonthlyResultRequest {
+  string user_id = 1 [
+    (validate.rules).string = {
+      min_len: 1
+    }
+  ];
+  string since_date = 2 [
+    (validate.rules).string = {
+      len: 10
+    }
+  ];
+  string until_date = 3 [
+    (validate.rules).string = {
+      len: 10
     }
   ];
 }
@@ -366,7 +385,17 @@ message ReviewResponse {
 
 message ReviewListResponse {
   repeated Review reviews = 1;
-  int64 limit = 2; // 取得上限
-  int64 offset = 3; // 取得開始位置
-  int64 total = 4; // 条件一致数
+  int64 limit = 2;
+  int64 offset = 3;
+  int64 total = 4;
+}
+
+message UserMonthlyResultListResponse {
+  repeated MonthlyResult monthly_results = 1;
+}
+
+message MonthlyResult {
+  int32 year = 1;
+  int32 month = 2;
+  int64 read_total = 3;
 }

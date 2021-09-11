@@ -2,6 +2,7 @@ package book
 
 import (
 	"context"
+	"time"
 
 	"github.com/calmato/gran-book/api/server/book/pkg/database"
 )
@@ -36,4 +37,5 @@ type Repository interface {
 	MultipleUpdate(ctx context.Context, bs Books) error
 	Delete(ctx context.Context, bookID int) error
 	DeleteBookshelf(ctx context.Context, bookshelfID int) error
+	AggregateReadTotal(ctx context.Context, userID string, since, until time.Time) (MonthlyResults, error)
 }

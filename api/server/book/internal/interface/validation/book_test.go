@@ -308,6 +308,79 @@ func TestBookRequestValidation_ListUserReview(t *testing.T) {
 	}
 }
 
+func TestBookRequestValidation_ListUserMonthlyResult(t *testing.T) {
+	t.Parallel()
+	type args struct {
+		req *pb.ListUserMonthlyResultRequest
+	}
+
+	testCases := []struct {
+		name string
+		args args
+		want bool
+	}{
+		{
+			name: "success",
+			args: args{
+				req: &pb.ListUserMonthlyResultRequest{
+					UserId:    "12345678-1234-1234-1234-123456789012",
+					SinceDate: "2021-08-01",
+					UntilDate: "2021-08-31",
+				},
+			},
+			want: true,
+		},
+		{
+			name: "validation error: UserId.min_len",
+			args: args{
+				req: &pb.ListUserMonthlyResultRequest{
+					UserId:    "",
+					SinceDate: "2021-08-01",
+					UntilDate: "2021-08-31",
+				},
+			},
+			want: false,
+		},
+		{
+			name: "validation error: SinceDate.len",
+			args: args{
+				req: &pb.ListUserMonthlyResultRequest{
+					UserId:    "12345678-1234-1234-1234-123456789012",
+					SinceDate: "2021-08-0",
+					UntilDate: "2021-08-31",
+				},
+			},
+			want: false,
+		},
+		{
+			name: "validation error: UntilDate.len",
+			args: args{
+				req: &pb.ListUserMonthlyResultRequest{
+					UserId:    "12345678-1234-1234-1234-123456789012",
+					SinceDate: "2021-08-01",
+					UntilDate: "2021-08-0",
+				},
+			},
+			want: false,
+		},
+	}
+
+	for _, tt := range testCases {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			target := NewBookRequestValidation()
+
+			got := target.ListUserMonthlyResult(tt.args.req)
+			switch tt.want {
+			case true:
+				assert.NoError(t, got)
+			case false:
+				assert.Error(t, got)
+			}
+		})
+	}
+}
+
 func TestBookRequestValidation_MultiGetBooks(t *testing.T) {
 	t.Parallel()
 	type args struct {

@@ -55,6 +55,30 @@ func (bs Books) Proto() []*pb.Book {
 	return res
 }
 
+type MonthlyResult struct {
+	Year      int
+	Month     int
+	ReadTotal int
+}
+
+type MonthlyResults []*MonthlyResult
+
+func (r *MonthlyResult) Proto() *pb.MonthlyResult {
+	return &pb.MonthlyResult{
+		Year:      int32(r.Year),
+		Month:     int32(r.Month),
+		ReadTotal: int64(r.ReadTotal),
+	}
+}
+
+func (rs MonthlyResults) Proto() []*pb.MonthlyResult {
+	res := make([]*pb.MonthlyResult, len(rs))
+	for i := range rs {
+		res[i] = rs[i].Proto()
+	}
+	return res
+}
+
 // Author - 著者エンティティ
 type Author struct {
 	ID        int       `gorm:"default:null;primaryKey;autoIncrement;<-:create"`

@@ -160,6 +160,20 @@ func (mr *MockBookRequestValidationMockRecorder) ListBookshelf(req interface{}) 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListBookshelf", reflect.TypeOf((*MockBookRequestValidation)(nil).ListBookshelf), req)
 }
 
+// ListUserMonthlyResult mocks base method.
+func (m *MockBookRequestValidation) ListUserMonthlyResult(req *proto.ListUserMonthlyResultRequest) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListUserMonthlyResult", req)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// ListUserMonthlyResult indicates an expected call of ListUserMonthlyResult.
+func (mr *MockBookRequestValidationMockRecorder) ListUserMonthlyResult(req interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListUserMonthlyResult", reflect.TypeOf((*MockBookRequestValidation)(nil).ListUserMonthlyResult), req)
+}
+
 // ListUserReview mocks base method.
 func (m *MockBookRequestValidation) ListUserReview(req *proto.ListUserReviewRequest) error {
 	m.ctrl.T.Helper()

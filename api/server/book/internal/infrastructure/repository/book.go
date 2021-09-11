@@ -550,6 +550,28 @@ func (r *bookRepository) DeleteBookshelf(ctx context.Context, bookshelfID int) e
 	return nil
 }
 
+func (r *bookRepository) AggregateReadTotal(
+	ctx context.Context, userID string, since, until time.Time,
+) (book.MonthlyResults, error) {
+	rs := book.MonthlyResults{}
+
+	err := r.client.DB.Table("bookshelves").
+		Select("DATE_FORMAT(read_on, '%Y') AS year, DATE_FORMAT(read_on, '%m') AS month, COUNT(id) AS read_total").
+		Where("user_id = ?", userID).
+		Where("status = ?", book.ReadStatus).
+		Where("read_on IS NOT NULL").
+		Where("read_on >= ?", since).
+		Where("read_on <= ?", until).
+		Group("year, month").
+		Order("year DESC, month DESC").
+		Find(&rs).Error
+	if err != nil {
+		return nil, exception.ErrorInDatastore.New(err)
+	}
+
+	return rs, nil
+}
+
 func (r *bookRepository) associateBook(tx *gorm.DB, b *book.Book) error {
 	err := r.associateAuthor(tx, b)
 	if err != nil {
