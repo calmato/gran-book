@@ -8,9 +8,8 @@ import (
 	request "github.com/calmato/gran-book/api/gateway/admin/internal/request/v1"
 	response "github.com/calmato/gran-book/api/gateway/admin/internal/response/v1"
 	"github.com/calmato/gran-book/api/gateway/admin/internal/server/util"
-	pb "github.com/calmato/gran-book/api/gateway/admin/proto"
+	"github.com/calmato/gran-book/api/gateway/admin/proto/user"
 	"github.com/gin-gonic/gin"
-	"google.golang.org/grpc"
 )
 
 type AdminHandler interface {
@@ -25,12 +24,10 @@ type AdminHandler interface {
 }
 
 type adminHandler struct {
-	adminClient pb.AdminServiceClient
+	adminClient user.AdminServiceClient
 }
 
-func NewAdminHandler(adminConn *grpc.ClientConn) AdminHandler {
-	ac := pb.NewAdminServiceClient(adminConn)
-
+func NewAdminHandler(ac user.AdminServiceClient) AdminHandler {
 	return &adminHandler{
 		adminClient: ac,
 	}
@@ -45,13 +42,13 @@ func (h *adminHandler) List(ctx *gin.Context) {
 	by := ctx.DefaultQuery("by", "")
 	direction := ctx.DefaultQuery("direction", "")
 
-	in := &pb.ListAdminRequest{
+	in := &user.ListAdminRequest{
 		Limit:  limit,
 		Offset: offset,
 	}
 
 	if field != "" {
-		search := &pb.Search{
+		search := &user.Search{
 			Field: field,
 			Value: value,
 		}
@@ -61,7 +58,7 @@ func (h *adminHandler) List(ctx *gin.Context) {
 
 	// TODO: CamelCase -> snake_case に変換する関数作成したい..
 	if by != "" {
-		order := &pb.Order{
+		order := &user.Order{
 			Field:   by,
 			OrderBy: entity.OrderBy(0).Value(direction).Proto(),
 		}
@@ -86,7 +83,7 @@ func (h *adminHandler) List(ctx *gin.Context) {
 func (h *adminHandler) Get(ctx *gin.Context) {
 	userID := ctx.Param("userID")
 
-	in := &pb.GetAdminRequest{
+	in := &user.GetAdminRequest{
 		UserId: userID,
 	}
 
@@ -112,7 +109,7 @@ func (h *adminHandler) Create(ctx *gin.Context) {
 		return
 	}
 
-	in := &pb.CreateAdminRequest{
+	in := &user.CreateAdminRequest{
 		LastName:             req.LastName,
 		LastNameKana:         req.LastNameKana,
 		FirstName:            req.FirstName,
@@ -146,7 +143,7 @@ func (h *adminHandler) UpdateContact(ctx *gin.Context) {
 		return
 	}
 
-	in := &pb.UpdateAdminContactRequest{
+	in := &user.UpdateAdminContactRequest{
 		Email:       req.Email,
 		PhoneNumber: req.PhoneNumber,
 	}
@@ -173,7 +170,7 @@ func (h *adminHandler) UpdateProfile(ctx *gin.Context) {
 		return
 	}
 
-	in := &pb.UpdateAdminProfileRequest{
+	in := &user.UpdateAdminProfileRequest{
 		LastName:      req.LastName,
 		LastNameKana:  req.LastNameKana,
 		FirstName:     req.FirstName,
@@ -205,7 +202,7 @@ func (h *adminHandler) UpdatePassword(ctx *gin.Context) {
 		return
 	}
 
-	in := &pb.UpdateAdminPasswordRequest{
+	in := &user.UpdateAdminPasswordRequest{
 		Password:             req.Password,
 		PasswordConfirmation: req.PasswordConfirmation,
 	}
@@ -244,7 +241,7 @@ func (h *adminHandler) UploadThumbnail(ctx *gin.Context) {
 	var count int64           // 読み込み回数
 	buf := make([]byte, 1024) // 1リクエストの上限設定
 
-	in := &pb.UploadAdminThumbnailRequest{
+	in := &user.UploadAdminThumbnailRequest{
 		UserId:   userID,
 		Position: count,
 	}
@@ -268,7 +265,7 @@ func (h *adminHandler) UploadThumbnail(ctx *gin.Context) {
 			return
 		}
 
-		in := &pb.UploadAdminThumbnailRequest{
+		in := &user.UploadAdminThumbnailRequest{
 			Thumbnail: buf,
 			Position:  count,
 		}
@@ -296,7 +293,7 @@ func (h *adminHandler) UploadThumbnail(ctx *gin.Context) {
 func (h *adminHandler) Delete(ctx *gin.Context) {
 	userID := ctx.Param("userID")
 
-	in := &pb.DeleteAdminRequest{
+	in := &user.DeleteAdminRequest{
 		UserId: userID,
 	}
 

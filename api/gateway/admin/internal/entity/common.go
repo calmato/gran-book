@@ -1,7 +1,7 @@
 package entity
 
 import (
-	pb "github.com/calmato/gran-book/api/gateway/admin/proto"
+	"github.com/calmato/gran-book/api/gateway/admin/proto/user"
 )
 
 const (
@@ -44,8 +44,8 @@ func (o OrderBy) Value(key string) OrderBy {
 	return OrderByAsc
 }
 
-func (o OrderBy) Proto() pb.OrderBy {
-	return *pb.OrderBy(o).Enum()
+func (o OrderBy) Proto() user.OrderBy {
+	return *user.OrderBy(o).Enum()
 }
 
 // Role - ユーザー権限
@@ -73,15 +73,15 @@ var (
 	}
 )
 
-func NewRole(r pb.Role) Role {
+func NewRole(r user.Role) Role {
 	switch r {
-	case pb.Role_ROLE_USER:
+	case user.Role_ROLE_USER:
 		return RoleUser
-	case pb.Role_ROLE_ADMIN:
+	case user.Role_ROLE_ADMIN:
 		return RoleAdmin
-	case pb.Role_ROLE_DEVELOPER:
+	case user.Role_ROLE_DEVELOPER:
 		return RoleDeveloper
-	case pb.Role_ROLE_OPERATOR:
+	case user.Role_ROLE_OPERATOR:
 		return RoleOperator
 	default:
 		return RoleUser
@@ -104,6 +104,6 @@ func (r Role) Value(key string) Role {
 	return RoleUser
 }
 
-func (r Role) Proto() pb.Role {
-	return *pb.Role(r).Enum()
+func (r Role) Proto() user.Role {
+	return *user.Role(r).Enum()
 }

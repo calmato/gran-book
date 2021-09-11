@@ -8,9 +8,8 @@ import (
 	request "github.com/calmato/gran-book/api/gateway/admin/internal/request/v1"
 	response "github.com/calmato/gran-book/api/gateway/admin/internal/response/v1"
 	"github.com/calmato/gran-book/api/gateway/admin/internal/server/util"
-	pb "github.com/calmato/gran-book/api/gateway/admin/proto"
+	"github.com/calmato/gran-book/api/gateway/admin/proto/user"
 	"github.com/gin-gonic/gin"
-	"google.golang.org/grpc"
 )
 
 type AuthHandler interface {
@@ -22,12 +21,10 @@ type AuthHandler interface {
 }
 
 type authHandler struct {
-	authClient pb.AuthServiceClient
+	authClient user.AuthServiceClient
 }
 
-func NewAuthHandler(authConn *grpc.ClientConn) AuthHandler {
-	ac := pb.NewAuthServiceClient(authConn)
-
+func NewAuthHandler(ac user.AuthServiceClient) AuthHandler {
 	return &authHandler{
 		authClient: ac,
 	}
@@ -35,7 +32,7 @@ func NewAuthHandler(authConn *grpc.ClientConn) AuthHandler {
 
 // Get - 認証情報取得
 func (h *authHandler) Get(ctx *gin.Context) {
-	in := &pb.Empty{}
+	in := &user.Empty{}
 
 	c := util.SetMetadata(ctx)
 	out, err := h.authClient.GetAuth(c, in)
@@ -73,7 +70,7 @@ func (h *authHandler) UpdateEmail(ctx *gin.Context) {
 		return
 	}
 
-	in := &pb.UpdateAuthEmailRequest{
+	in := &user.UpdateAuthEmailRequest{
 		Email: req.Email,
 	}
 
@@ -99,7 +96,7 @@ func (h *authHandler) UpdatePassword(ctx *gin.Context) {
 		return
 	}
 
-	in := &pb.UpdateAuthPasswordRequest{
+	in := &user.UpdateAuthPasswordRequest{
 		Password:             req.Password,
 		PasswordConfirmation: req.PasswordConfirmation,
 	}
@@ -146,7 +143,7 @@ func (h *authHandler) UploadThumbnail(ctx *gin.Context) {
 			return
 		}
 
-		in := &pb.UploadAuthThumbnailRequest{
+		in := &user.UploadAuthThumbnailRequest{
 			Thumbnail: buf,
 			Position:  count,
 		}

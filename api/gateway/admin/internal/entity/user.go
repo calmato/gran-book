@@ -1,14 +1,14 @@
 package entity
 
 import (
-	pb "github.com/calmato/gran-book/api/gateway/admin/proto"
+	"github.com/calmato/gran-book/api/gateway/admin/proto/user"
 )
 
 type Auth struct {
-	*pb.Auth
+	*user.Auth
 }
 
-func NewAuth(a *pb.Auth) *Auth {
+func NewAuth(a *user.Auth) *Auth {
 	return &Auth{a}
 }
 
@@ -17,16 +17,16 @@ func (a *Auth) Role() Role {
 }
 
 type User struct {
-	*pb.User
+	*user.User
 }
 
 type Users []*User
 
-func NewUser(u *pb.User) *User {
+func NewUser(u *user.User) *User {
 	return &User{u}
 }
 
-func NewUsers(us []*pb.User) Users {
+func NewUsers(us []*user.User) Users {
 	res := make(Users, len(us))
 	for i := range us {
 		res[i] = NewUser(us[i])
@@ -43,12 +43,12 @@ func (us Users) Map() map[string]*User {
 }
 
 type Admin struct {
-	*pb.Admin
+	*user.Admin
 }
 
 type Admins []*Admin
 
-func NewAdmin(a *pb.Admin) *Admin {
+func NewAdmin(a *user.Admin) *Admin {
 	return &Admin{a}
 }
 
@@ -56,7 +56,7 @@ func (a *Admin) Role() Role {
 	return NewRole(a.GetRole())
 }
 
-func NewAdmins(as []*pb.Admin) Admins {
+func NewAdmins(as []*user.Admin) Admins {
 	res := make(Admins, len(as))
 	for i := range as {
 		res[i] = NewAdmin(as[i])

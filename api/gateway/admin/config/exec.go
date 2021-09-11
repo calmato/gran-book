@@ -57,10 +57,14 @@ func Execute() error {
 	opts = append(opts, cm)
 
 	// 依存関係の解決
-	reg, err := server.NewRegistry(
-		fa,
-		env.AuthServiceURL, env.AdminServiceURL, env.UserServiceURL, env.BookServiceURL,
-	)
+	params := &server.Params{
+		FirebaseAuth:    fa,
+		AdminServiceURL: env.AdminServiceURL,
+		AuthServiceURL:  env.AuthServiceURL,
+		BookServiceURL:  env.BookServiceURL,
+		UserServiceURL:  env.UserServiceURL,
+	}
+	reg, err := server.NewRegistry(params)
 	if err != nil {
 		return err
 	}
