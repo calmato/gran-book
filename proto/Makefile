@@ -34,14 +34,17 @@ generate: protoc
 	$(MAKE) generate-service OUTPUT_PATH=${INFORMATION_SERVER_PATH}
 
 generate-client:
+	mkdir -p ${OUTPUT_PATH}/app/types/api
 	cp -r ${ARCHIVE_PATH}/common/*_pb.d.ts ${OUTPUT_PATH}/app/types/api
 	cp -r ${ARCHIVE_PATH}/gateway/${CLIENT}/*_pb.d.ts ${OUTPUT_PATH}/app/types/api
 
 generate-gateway:
+	mkdir -p ${OUTPUT_PATH}/proto
 	cp -r ${ARCHIVE_PATH}/common/*.pb.go ${OUTPUT_PATH}/proto
 	cp -r ${ARCHIVE_PATH}/service/ ${OUTPUT_PATH}/proto
 
 generate-service:
+	mkdir -p ${OUTPUT_PATH}/proto
 	cp -r ${ARCHIVE_PATH}/common/*.pb.go ${OUTPUT_PATH}/proto
 	cp -r ${ARCHIVE_PATH}/common/*.pb.validate.go ${OUTPUT_PATH}/proto
 	cp -r ${ARCHIVE_PATH}/service/ ${OUTPUT_PATH}/proto
