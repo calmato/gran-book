@@ -2060,21 +2060,23 @@ func TestBookRepository_AggregateReadTotal(t *testing.T) {
 	userID, err := mocks.CreateUser()
 	require.NoError(t, err)
 
-	books := make(book.Books, 5)
+	books := make(book.Books, 6)
 	books[0] = testBook(1, "1234567890123")
 	books[1] = testBook(2, "2345678901234")
 	books[2] = testBook(3, "3456789012345")
 	books[3] = testBook(4, "4567890123456")
 	books[4] = testBook(5, "5678901234567")
+	books[5] = testBook(6, "6789012345678")
 	err = mocks.BookDB.DB.Table("books").Create(&books).Error
 	require.NoError(t, err)
 
-	bookshelves := make(book.Bookshelves, 5)
+	bookshelves := make(book.Bookshelves, 6)
 	bookshelves[0] = testBookshelfWithReadOn(1, books[0].ID, userID, book.ReadStatus, "2021-08-01")
 	bookshelves[1] = testBookshelfWithReadOn(2, books[1].ID, userID, book.ReadingStatus, "2021-08-01")
 	bookshelves[2] = testBookshelfWithReadOn(3, books[2].ID, userID, book.ReadStatus, "2021-08-02")
 	bookshelves[3] = testBookshelfWithReadOn(4, books[3].ID, userID, book.ReadStatus, "2021-09-01")
 	bookshelves[4] = testBookshelfWithReadOn(5, books[4].ID, userID, book.ReadStatus, "2021-09-01")
+	bookshelves[5] = testBookshelfWithReadOn(6, books[5].ID, userID, book.ReadStatus, "2020-08-01")
 	err = mocks.BookDB.DB.Table("bookshelves").Create(&bookshelves).Error
 	require.NoError(t, err)
 
@@ -2096,7 +2098,7 @@ func TestBookRepository_AggregateReadTotal(t *testing.T) {
 			name: "success",
 			args: args{
 				userID: userID,
-				since:  datetime.BeginningOfMonth("2021-08-01"),
+				since:  datetime.BeginningOfMonth("2020-08-01"),
 				until:  datetime.EndOfMonth("2021-09-01"),
 			},
 			want: want{
@@ -2110,6 +2112,11 @@ func TestBookRepository_AggregateReadTotal(t *testing.T) {
 						Year:      2021,
 						Month:     8,
 						ReadTotal: 2,
+					},
+					{
+						Year:      2020,
+						Month:     8,
+						ReadTotal: 1,
 					},
 				},
 				isErr: false,
