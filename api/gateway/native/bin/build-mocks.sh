@@ -16,15 +16,15 @@ build_mock() {
   dirname=${path%%/*}
   filename=${path##*/}
 
-  mockgen -package mock -source ./proto/${path} -destination mock/${dirname}/${filename}.go
+  mockgen -source ./proto/${path} -destination mock/${dirname}/${filename}.go
 }
 
 #############################
 # Main
 #############################
-rm -rf mock/*.go
+rm -rf ./mock
 
-paths=$(find ./proto/**/*_service.pb.go)
+paths=$(find ./proto/**/*_service_grpc.pb.go)
 for path in ${paths}; do
   build_mock ${path}
 done

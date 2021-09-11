@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/calmato/gran-book/api/server/user/pkg/datetime"
-	pb "github.com/calmato/gran-book/api/server/user/proto"
+	pb "github.com/calmato/gran-book/api/server/user/proto/chat"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -15,7 +15,7 @@ func TestRoom(t *testing.T) {
 	tests := []struct {
 		name        string
 		room        *Room
-		expectProto *pb.ChatRoom
+		expectProto *pb.Room
 	}{
 		{
 			name: "success",
@@ -28,7 +28,7 @@ func TestRoom(t *testing.T) {
 				CreatedAt: now,
 				UpdatedAt: now,
 			},
-			expectProto: &pb.ChatRoom{
+			expectProto: &pb.Room{
 				Id: "00000000-0000-0000-0000-000000000000",
 				UserIds: []string{
 					"12345678-1234-1234-123456789012",
@@ -54,7 +54,7 @@ func TestRooms(t *testing.T) {
 	tests := []struct {
 		name        string
 		rooms       Rooms
-		expectProto []*pb.ChatRoom
+		expectProto []*pb.Room
 	}{
 		{
 			name: "success",
@@ -78,7 +78,7 @@ func TestRooms(t *testing.T) {
 					UpdatedAt: now,
 				},
 			},
-			expectProto: []*pb.ChatRoom{
+			expectProto: []*pb.Room{
 				{
 					Id: "00000000-0000-0000-0000-000000000000",
 					UserIds: []string{
@@ -115,7 +115,7 @@ func TestMessage(t *testing.T) {
 	tests := []struct {
 		name        string
 		message     *Message
-		expectProto *pb.ChatMessage
+		expectProto *pb.Message
 	}{
 		{
 			name: "success",
@@ -126,7 +126,7 @@ func TestMessage(t *testing.T) {
 				UserID:    "12345678-1234-1234-123456789012",
 				CreatedAt: now,
 			},
-			expectProto: &pb.ChatMessage{
+			expectProto: &pb.Message{
 				Id:        "00000000-0000-0000-0000-000000000000",
 				Text:      "テストメッセージです",
 				Image:     "",

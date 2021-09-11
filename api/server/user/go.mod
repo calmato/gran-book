@@ -8,7 +8,6 @@ require (
 	firebase.google.com/go/v4 v4.5.0
 	github.com/envoyproxy/protoc-gen-validate v0.1.0
 	github.com/golang/mock v1.6.0
-	github.com/golang/protobuf v1.5.2
 	github.com/google/uuid v1.2.0
 	github.com/grpc-ecosystem/go-grpc-middleware v1.2.2
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0
