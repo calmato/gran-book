@@ -31,7 +31,8 @@ func NewTopHandler(ac pb.AuthServiceClient, bc pb.BookServiceClient) TopHandler 
 func (h *topHandler) UserTop(ctx *gin.Context) {
 	now := datetime.Now()
 
-	authOutput, err := h.authClient.GetAuth(ctx, &pb.Empty{})
+	c := util.SetMetadata(ctx)
+	authOutput, err := h.authClient.GetAuth(c, &pb.Empty{})
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -49,7 +50,7 @@ func (h *topHandler) UserTop(ctx *gin.Context) {
 		UntilDate: until.String(),
 	}
 
-	resultsOutput, err := h.bookClient.ListUserMonthlyResult(ctx, resultsInput)
+	resultsOutput, err := h.bookClient.ListUserMonthlyResult(c, resultsInput)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
