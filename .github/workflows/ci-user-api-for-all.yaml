@@ -26,7 +26,6 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        golang: ['^1.16.7']
 
     steps:
       - name: Check out code

@@ -21,18 +21,15 @@ jobs:
     defaults:
       run:
         shell: bash
+        working-directory: .
 
     strategy:
       matrix:
         os: [ubuntu-latest]
-        golang: ['^1.16.7']
 
     steps:
       - name: Check out code
         uses: actions/checkout@v2
-
-      - name: Use Golang ${{ matrix.golang }}
-        uses: actions/setup-go@v2
 
       - name: Container build
         run: docker-compose -f docker-compose.ci.yaml build proto
