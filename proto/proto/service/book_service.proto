@@ -12,6 +12,7 @@ service BookService {
   rpc ListBookshelf(ListBookshelfRequest) returns (BookshelfListResponse);
   rpc ListBookReview(ListBookReviewRequest) returns (ReviewListResponse);
   rpc ListUserReview(ListUserReviewRequest) returns (ReviewListResponse);
+  rpc ListUserMonthlyResult(ListUserMonthlyResultRequest) returns (UserMonthlyResultListResponse);
   rpc MultiGetBooks(MultiGetBooksRequest) returns (BookListResponse);
   rpc GetBook(GetBookRequest) returns (BookResponse);
   rpc GetBookByIsbn(GetBookByIsbnRequest) returns (BookResponse);
@@ -26,7 +27,6 @@ service BookService {
   rpc ReleaseBookshelf(ReleaseBookshelfRequest) returns (BookshelfResponse);
   rpc DeleteBook(DeleteBookRequest) returns (common.Empty);
   rpc DeleteBookshelf(DeleteBookshelfRequest) returns (common.Empty);
-  rpc AggregateReadTotal(AggregateReadTotalRequest) returns (AggregateReadTotalResponse);
 }
 
 message ListBookshelfRequest {
@@ -82,6 +82,24 @@ message ListUserReviewRequest {
   int64 offset = 4 [
     (validate.rules).int64 = {
       gte: 0
+    }
+  ];
+}
+
+message ListUserMonthlyResultRequest {
+  string user_id = 1 [
+    (validate.rules).string = {
+      min_len: 1
+    }
+  ];
+  string since_date = 2 [
+    (validate.rules).string = {
+      len: 10
+    }
+  ];
+  string until_date = 3 [
+    (validate.rules).string = {
+      len: 10
     }
   ];
 }
@@ -339,24 +357,6 @@ message ReleaseBookshelfRequest {
   ];
 }
 
-message AggregateReadTotalRequest {
-  string user_id = 1 [
-    (validate.rules).string = {
-      min_len: 1
-    }
-  ];
-  string since_date = 2 [
-    (validate.rules).string = {
-      len: 10
-    }
-  ];
-  string until_date = 3 [
-    (validate.rules).string = {
-      len: 10
-    }
-  ];
-}
-
 message BookResponse {
   Book book = 1;
 }
@@ -390,7 +390,7 @@ message ReviewListResponse {
   int64 total = 4;
 }
 
-message AggregateReadTotalResponse {
+message UserMonthlyResultListResponse {
   repeated MonthlyResult monthly_results = 1;
 }
 
