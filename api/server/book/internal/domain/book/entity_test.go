@@ -223,6 +223,80 @@ func TestBooks(t *testing.T) {
 	}
 }
 
+func TestMonthlyResult(t *testing.T) {
+	t.Parallel()
+	tests := []struct {
+		name        string
+		result      *MonthlyResult
+		expectProto *pb.MonthlyResult
+	}{
+		{
+			name: "success",
+			result: &MonthlyResult{
+				Year:      2021,
+				Month:     8,
+				ReadTotal: 10,
+			},
+			expectProto: &pb.MonthlyResult{
+				Year:      2021,
+				Month:     8,
+				ReadTotal: 10,
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			assert.Equal(t, tt.expectProto, tt.result.Proto())
+		})
+	}
+}
+
+func TestMonthlyResults(t *testing.T) {
+	t.Parallel()
+	tests := []struct {
+		name        string
+		results     MonthlyResults
+		expectProto []*pb.MonthlyResult
+	}{
+		{
+			name: "success",
+			results: MonthlyResults{
+				{
+					Year:      2021,
+					Month:     8,
+					ReadTotal: 10,
+				},
+				{
+					Year:      2021,
+					Month:     9,
+					ReadTotal: 5,
+				},
+			},
+			expectProto: []*pb.MonthlyResult{
+				{
+					Year:      2021,
+					Month:     8,
+					ReadTotal: 10,
+				},
+				{
+					Year:      2021,
+					Month:     9,
+					ReadTotal: 5,
+				},
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			assert.Equal(t, tt.expectProto, tt.results.Proto())
+		})
+	}
+}
+
 func TestAuthor(t *testing.T) {
 	t.Parallel()
 	now := time.Now().Local()

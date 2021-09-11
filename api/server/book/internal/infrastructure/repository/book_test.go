@@ -2044,6 +2044,91 @@ func TestBookRepository_DeleteBookshelf(t *testing.T) {
 	}
 }
 
+func TestBookRepository_AggregateReadTotal(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mocks, err := test.NewDBMock(ctrl)
+	require.NoError(t, err)
+
+	err = mocks.DeleteAll(mocks.BookDB, "books", "bookshelves")
+	require.NoError(t, err)
+
+	userID, err := mocks.CreateUser()
+	require.NoError(t, err)
+
+	books := make(book.Books, 5)
+	books[0] = testBook(1, "1234567890123")
+	books[1] = testBook(2, "2345678901234")
+	books[2] = testBook(3, "3456789012345")
+	books[3] = testBook(4, "4567890123456")
+	books[4] = testBook(5, "5678901234567")
+	err = mocks.BookDB.DB.Table("books").Create(&books).Error
+	require.NoError(t, err)
+
+	bookshelves := make(book.Bookshelves, 5)
+	bookshelves[0] = testBookshelfWithReadOn(1, books[0].ID, userID, book.ReadStatus, "2021-08-01")
+	bookshelves[1] = testBookshelfWithReadOn(2, books[1].ID, userID, book.ReadingStatus, "2021-08-01")
+	bookshelves[2] = testBookshelfWithReadOn(3, books[2].ID, userID, book.ReadStatus, "2021-08-02")
+	bookshelves[3] = testBookshelfWithReadOn(4, books[3].ID, userID, book.ReadStatus, "2021-09-01")
+	bookshelves[4] = testBookshelfWithReadOn(5, books[4].ID, userID, book.ReadStatus, "2021-09-01")
+	err = mocks.BookDB.DB.Table("bookshelves").Create(&bookshelves).Error
+	require.NoError(t, err)
+
+	type args struct {
+		userID string
+		since  time.Time
+		until  time.Time
+	}
+	type want struct {
+		results book.MonthlyResults
+		isErr   bool
+	}
+	tests := []struct {
+		name string
+		args args
+		want want
+	}{
+		{
+			name: "success",
+			args: args{
+				userID: userID,
+				since:  datetime.BeginningOfMonth("2021-08-01"),
+				until:  datetime.EndOfMonth("2021-09-01"),
+			},
+			want: want{
+				results: book.MonthlyResults{
+					{
+						Year:      2021,
+						Month:     9,
+						ReadTotal: 2,
+					},
+					{
+						Year:      2021,
+						Month:     8,
+						ReadTotal: 2,
+					},
+				},
+				isErr: false,
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			target := NewBookRepository(mocks.BookDB)
+
+			results, err := target.AggregateReadTotal(ctx, tt.args.userID, tt.args.since, tt.args.until)
+			assert.Equal(t, tt.want.isErr, err != nil, err)
+			assert.Equal(t, tt.want.results, results)
+		})
+	}
+}
+
 func testBook(id int, isbn string) *book.Book {
 	return &book.Book{
 		ID:             id,
@@ -2074,6 +2159,14 @@ func testBookshelf(id int, bookID int, userID string) *book.Bookshelf {
 		CreatedAt: test.TimeMock,
 		UpdatedAt: test.TimeMock,
 	}
+}
+
+func testBookshelfWithReadOn(id int, bookID int, userID string, status int, readOn string) *book.Bookshelf {
+	b := testBookshelf(id, bookID, userID)
+	b.Status = status
+	b.ReadOn = datetime.StringToDate(readOn)
+
+	return b
 }
 
 func testReview(id int, bookID int, userID string) *book.Review {
