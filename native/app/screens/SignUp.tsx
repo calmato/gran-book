@@ -24,12 +24,7 @@ const styles = StyleSheet.create({
 
 interface Props {
   actions: {
-    signUpWithEmail: (
-      email: string,
-      password: string,
-      passwordConfirmation: string,
-      username: string,
-    ) => Promise<void>;
+    signUpWithEmail: (payload: SingUpForm) => Promise<undefined>;
   };
 }
 
@@ -69,12 +64,7 @@ const SignUp = function SignUp(props: Props): ReactElement {
     ]);
 
   const handleSubmit = React.useCallback(async () => {
-    await signUpWithEmail(
-      formData.email,
-      formData.password,
-      formData.passwordConfirmation,
-      formData.username,
-    )
+    await signUpWithEmail(formData)
       .then(() => {
         navigation.navigate('SignUpCheckEmail', { email: formData.email });
       })
@@ -82,14 +72,7 @@ const SignUp = function SignUp(props: Props): ReactElement {
         console.log('debug', err);
         createAlertNotifySignupError(err.code);
       });
-  }, [
-    formData.email,
-    formData.password,
-    formData.passwordConfirmation,
-    formData.username,
-    signUpWithEmail,
-    navigation,
-  ]);
+  }, [formData, signUpWithEmail, navigation]);
 
   return (
     <View style={styles.container}>
