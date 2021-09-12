@@ -7,10 +7,9 @@ import { Text } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
 import ProfileViewGroup from '~/components/organisms/ProfileViewGroup';
-import { getOtherProfileAsync } from '~/store/usecases/user';
+import { UserProfileV1Response } from '~/types/api/user_apiv1_response_pb';
 import { BookshelfTabStackParamList } from '~/types/navigation';
 import { COLOR, FONT_SIZE } from '~~/constants/theme';
-import { UserProfileV1Response } from '~/types/api/user_apiv1_response_pb';
 
 const styles = StyleSheet.create({
   container: {
