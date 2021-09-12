@@ -8,6 +8,48 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestReview(t *testing.T) {
+	t.Parallel()
+	tests := []struct {
+		name   string
+		review *pb.Review
+		expect *Review
+	}{
+		{
+			name: "success",
+			review: &pb.Review{
+				Id:         1,
+				BookId:     1,
+				UserId:     "00000000-0000-0000-0000-000000000000",
+				Score:      3,
+				Impression: "テストレビューです",
+				CreatedAt:  test.TimeMock,
+				UpdatedAt:  test.TimeMock,
+			},
+			expect: &Review{
+				Review: &pb.Review{
+					Id:         1,
+					BookId:     1,
+					UserId:     "00000000-0000-0000-0000-000000000000",
+					Score:      3,
+					Impression: "テストレビューです",
+					CreatedAt:  test.TimeMock,
+					UpdatedAt:  test.TimeMock,
+				},
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			actual := NewReview(tt.review)
+			assert.Equal(t, tt.expect, actual)
+		})
+	}
+}
+
 func TestReviews(t *testing.T) {
 	t.Parallel()
 	tests := []struct {
