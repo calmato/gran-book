@@ -1,7 +1,7 @@
 import { RouteProp, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { AxiosResponse } from 'axios';
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement, useState, useEffect } from 'react';
 import { RefreshControl, StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -10,6 +10,7 @@ import ProfileViewGroup from '~/components/organisms/ProfileViewGroup';
 import { getOtherProfileAsync } from '~/store/usecases/user';
 import { BookshelfTabStackParamList } from '~/types/navigation';
 import { COLOR, FONT_SIZE } from '~~/constants/theme';
+import { UserProfileV1Response } from '~/types/api/user_apiv1_response_pb';
 
 const styles = StyleSheet.create({
   container: {
@@ -34,11 +35,15 @@ const styles = StyleSheet.create({
 interface Props {
   route: RouteProp<BookshelfTabStackParamList, 'OtherProfile'>;
   navigation: StackNavigationProp<BookshelfTabStackParamList, 'OtherProfile'>;
-  actions: any;
+  actions: {
+    getOtherProfile: (id: string) => Promise<AxiosResponse<UserProfileV1Response.AsObject>>;
+  };
 }
 
 const OtherProfile = function OtherProfile(props: Props): ReactElement {
   const id = props.route.params.id;
+  const getOtherProfile = props.actions.getOtherProfile;
+
   const [userInfo, setUserInfo] = useState({
     username: '',
     thumbnailUrl: '',
@@ -52,36 +57,32 @@ const OtherProfile = function OtherProfile(props: Props): ReactElement {
 
   const navigation = useNavigation();
 
-  const [hasGottonProfile, setHasGottonProfile] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // const handleGetOtherProfile = () => {
-  //   setIsLoading(true);
-  //   getOtherProfileAsync(id)
-  //     .then((res: AxiosResponse<UserProfileV1Response.AsObject>) => {
-  //       setUserInfo({
-  //         username: res.username,
-  //         thumbnailUrl: res.thumbnailUrl,
-  //         selfIntroduction: res.selfIntroduction,
-  //         rating: res.rating,
-  //         reviewCount: res.reviewCount,
-  //         saleCount: res.salesCount,
-  //         followerCount: res.followerCount,
-  //         followCount: res.followCount,
-  //       });
-  //     })
-  //     .then(() => {
-  //       setIsLoading(false);
-  //     })
-  //     .catch((err) => {
-  //       console.log('debug', err);
-  //     });
-  // };
+  const handleGetOtherProfile = () => {
+    setIsLoading(true);
+    getOtherProfile(id)
+      .then((res) =>
+        setUserInfo({
+          username: res.data.username,
+          thumbnailUrl: res.data.thumbnailUrl,
+          selfIntroduction: res.data.selfIntroduction,
+          rating: res.data.rating,
+          reviewCount: res.data.reviewCount,
+          // TODO SalesCountの実装
+          saleCount: 0,
+          followerCount: res.data.followerCount,
+          followCount: res.data.followCount,
+        }),
+      )
+      .catch((err) => {
+        console.log('debug', err);
+      });
+  };
 
-  // if (!hasGottonProfile) {
-  //   setHasGottonProfile(true);
-  //   handleGetOtherProfile();
-  // }
+  useEffect(() => {
+    handleGetOtherProfile();
+  }, []);
 
   return (
     <View style={styles.container}>
