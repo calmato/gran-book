@@ -2,6 +2,7 @@ package v1
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/calmato/gran-book/api/gateway/native/internal/entity"
 	response "github.com/calmato/gran-book/api/gateway/native/internal/response/v1"
@@ -57,17 +58,29 @@ func (h *topHandler) UserTop(ctx *gin.Context) {
 
 	rs := entity.NewMonthlyResults(resultsOutput.MonthlyResults)
 
-	res := h.getUserTopResponse(rs)
+	res := h.getUserTopResponse(rs.Map(), t)
 	ctx.JSON(http.StatusOK, res)
 }
 
-func (h *topHandler) getUserTopResponse(rs entity.MonthlyResults) *response.UserTopResponse {
-	results := make([]*response.UserTopMonthlyResult, len(rs))
-	for i, r := range rs {
+func (h *topHandler) getUserTopResponse(
+	rsMap map[string]*entity.MonthlyResult, now time.Time,
+) *response.UserTopResponse {
+	results := make([]*response.UserTopMonthlyResult, 12) // 12ヶ月分
+	for i := 0; i < 12; i++ {
+		date := now.AddDate(0, -i, 0)
+		year := int32(date.Year())
+		month := int32(date.Month())
+
+		var total int64
+		key := entity.MonthlyResultKey(int(year), int(month))
+		if r, ok := rsMap[key]; ok {
+			total = r.ReadTotal
+		}
+
 		result := &response.UserTopMonthlyResult{
-			Year:      r.Year,
-			Month:     r.Month,
-			ReadTotal: r.ReadTotal,
+			Year:      year,
+			Month:     month,
+			ReadTotal: total,
 		}
 
 		results[i] = result
