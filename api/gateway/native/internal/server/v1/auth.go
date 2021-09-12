@@ -36,9 +36,9 @@ func NewAuthHandler(ac user.AuthServiceClient) AuthHandler {
 
 // Get - 認証情報取得
 func (h *authHandler) Get(ctx *gin.Context) {
-	in := &user.Empty{}
-
 	c := util.SetMetadata(ctx)
+
+	in := &user.Empty{}
 	out, err := h.authClient.GetAuth(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
@@ -46,15 +46,16 @@ func (h *authHandler) Get(ctx *gin.Context) {
 	}
 
 	a := entity.NewAuth(out.Auth)
-	res := h.getAuthResponse(a)
+	res := response.NewAuthResponse(a)
 	ctx.JSON(http.StatusOK, res)
 }
 
 // Create - ユーザー登録
 func (h *authHandler) Create(ctx *gin.Context) {
+	c := util.SetMetadata(ctx)
+
 	req := &request.CreateAuthRequest{}
-	err := ctx.BindJSON(req)
-	if err != nil {
+	if err := ctx.BindJSON(req); err != nil {
 		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
 		return
 	}
@@ -65,8 +66,6 @@ func (h *authHandler) Create(ctx *gin.Context) {
 		Password:             req.Password,
 		PasswordConfirmation: req.PasswordConfirmation,
 	}
-
-	c := util.SetMetadata(ctx)
 	out, err := h.authClient.CreateAuth(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
@@ -74,16 +73,18 @@ func (h *authHandler) Create(ctx *gin.Context) {
 	}
 
 	a := entity.NewAuth(out.Auth)
-	res := h.getAuthResponse(a)
+	res := response.NewAuthResponse(a)
 	ctx.JSON(http.StatusOK, res)
 }
 
 // UpdateProfile - プロフィール情報更新
 func (h *authHandler) UpdateProfile(ctx *gin.Context) {
+	c := util.SetMetadata(ctx)
+
 	req := &request.UpdateAuthProfileRequest{}
-	err := ctx.BindJSON(req)
-	if err != nil {
+	if err := ctx.BindJSON(req); err != nil {
 		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
+		return
 	}
 
 	in := &user.UpdateAuthProfileRequest{
@@ -92,8 +93,6 @@ func (h *authHandler) UpdateProfile(ctx *gin.Context) {
 		ThumbnailUrl:     req.ThumbnailURL,
 		SelfIntroduction: req.SelfIntroduction,
 	}
-
-	c := util.SetMetadata(ctx)
 	out, err := h.authClient.UpdateAuthProfile(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
@@ -101,16 +100,18 @@ func (h *authHandler) UpdateProfile(ctx *gin.Context) {
 	}
 
 	a := entity.NewAuth(out.Auth)
-	res := h.getAuthResponse(a)
+	res := response.NewAuthResponse(a)
 	ctx.JSON(http.StatusOK, res)
 }
 
 // UpdateAddress - 住所情報更新
 func (h *authHandler) UpdateAddress(ctx *gin.Context) {
+	c := util.SetMetadata(ctx)
+
 	req := &request.UpdateAuthAddressRequest{}
-	err := ctx.BindJSON(req)
-	if err != nil {
+	if err := ctx.BindJSON(req); err != nil {
 		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
+		return
 	}
 
 	in := &user.UpdateAuthAddressRequest{
@@ -125,8 +126,6 @@ func (h *authHandler) UpdateAddress(ctx *gin.Context) {
 		AddressLine1:  req.AddressLine1,
 		AddressLine2:  req.AddressLine2,
 	}
-
-	c := util.SetMetadata(ctx)
 	out, err := h.authClient.UpdateAuthAddress(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
@@ -134,23 +133,23 @@ func (h *authHandler) UpdateAddress(ctx *gin.Context) {
 	}
 
 	a := entity.NewAuth(out.Auth)
-	res := h.getAuthResponse(a)
+	res := response.NewAuthResponse(a)
 	ctx.JSON(http.StatusOK, res)
 }
 
 // UpdateEmail - メールアドレス更新
 func (h *authHandler) UpdateEmail(ctx *gin.Context) {
+	c := util.SetMetadata(ctx)
+
 	req := &request.UpdateAuthEmailRequest{}
-	err := ctx.BindJSON(req)
-	if err != nil {
+	if err := ctx.BindJSON(req); err != nil {
 		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
+		return
 	}
 
 	in := &user.UpdateAuthEmailRequest{
 		Email: req.Email,
 	}
-
-	c := util.SetMetadata(ctx)
 	out, err := h.authClient.UpdateAuthEmail(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
@@ -158,24 +157,24 @@ func (h *authHandler) UpdateEmail(ctx *gin.Context) {
 	}
 
 	a := entity.NewAuth(out.Auth)
-	res := h.getAuthResponse(a)
+	res := response.NewAuthResponse(a)
 	ctx.JSON(http.StatusOK, res)
 }
 
 // UpdatePassword - パスワード更新
 func (h *authHandler) UpdatePassword(ctx *gin.Context) {
+	c := util.SetMetadata(ctx)
+
 	req := &request.UpdateAuthPasswordRequest{}
-	err := ctx.BindJSON(req)
-	if err != nil {
+	if err := ctx.BindJSON(req); err != nil {
 		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
+		return
 	}
 
 	in := &user.UpdateAuthPasswordRequest{
 		Password:             req.Password,
 		PasswordConfirmation: req.PasswordConfirmation,
 	}
-
-	c := util.SetMetadata(ctx)
 	out, err := h.authClient.UpdateAuthPassword(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
@@ -183,12 +182,14 @@ func (h *authHandler) UpdatePassword(ctx *gin.Context) {
 	}
 
 	a := entity.NewAuth(out.Auth)
-	res := h.getAuthResponse(a)
+	res := response.NewAuthResponse(a)
 	ctx.JSON(http.StatusOK, res)
 }
 
 // UploadThumbnail サムネイルアップロード
 func (h *authHandler) UploadThumbnail(ctx *gin.Context) {
+	c := util.SetMetadata(ctx)
+
 	file, _, err := ctx.Request.FormFile("thumbnail")
 	if err != nil {
 		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
@@ -196,7 +197,6 @@ func (h *authHandler) UploadThumbnail(ctx *gin.Context) {
 	}
 	defer file.Close()
 
-	c := util.SetMetadata(ctx)
 	stream, err := h.authClient.UploadAuthThumbnail(c)
 	if err != nil {
 		util.ErrorHandling(ctx, entity.ErrInternalServerError.New(err))
@@ -219,7 +219,6 @@ func (h *authHandler) UploadThumbnail(ctx *gin.Context) {
 			Thumbnail: buf,
 			Position:  count,
 		}
-
 		if err = stream.Send(in); err != nil {
 			util.ErrorHandling(ctx, entity.ErrInternalServerError.New(err))
 			return
@@ -234,13 +233,14 @@ func (h *authHandler) UploadThumbnail(ctx *gin.Context) {
 		return
 	}
 
-	res := h.getAuthThumbnailResponse(out.ThumbnailUrl)
+	res := response.NewAuthThumbnailResponse(out.ThumbnailUrl)
 	ctx.JSON(http.StatusOK, res)
 }
 
 // Delete - ユーザー退会
 func (h *authHandler) Delete(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
+
 	_, err := h.authClient.DeleteAuth(c, &user.Empty{})
 	if err != nil {
 		util.ErrorHandling(ctx, err)
@@ -252,17 +252,17 @@ func (h *authHandler) Delete(ctx *gin.Context) {
 
 // RegisterDevice - デバイス情報登録
 func (h *authHandler) RegisterDevice(ctx *gin.Context) {
+	c := util.SetMetadata(ctx)
+
 	req := &request.RegisterAuthDeviceRequest{}
-	err := ctx.BindJSON(req)
-	if err != nil {
+	if err := ctx.BindJSON(req); err != nil {
 		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
+		return
 	}
 
 	in := &user.RegisterAuthDeviceRequest{
 		InstanceId: req.InstanceID,
 	}
-
-	c := util.SetMetadata(ctx)
 	out, err := h.authClient.RegisterAuthDevice(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, nil)
@@ -270,35 +270,6 @@ func (h *authHandler) RegisterDevice(ctx *gin.Context) {
 	}
 
 	a := entity.NewAuth(out.Auth)
-	res := h.getAuthResponse(a)
+	res := response.NewAuthResponse(a)
 	ctx.JSON(http.StatusOK, res)
-}
-
-func (h *authHandler) getAuthResponse(a *entity.Auth) *response.AuthResponse {
-	return &response.AuthResponse{
-		ID:               a.Id,
-		Username:         a.Username,
-		Gender:           a.Gender(),
-		Email:            a.Email,
-		PhoneNumber:      a.PhoneNumber,
-		ThumbnailURL:     a.ThumbnailUrl,
-		SelfIntroduction: a.SelfIntroduction,
-		LastName:         a.LastName,
-		FirstName:        a.FirstName,
-		LastNameKana:     a.LastNameKana,
-		FirstNameKana:    a.FirstNameKana,
-		PostalCode:       a.PostalCode,
-		Prefecture:       a.Prefecture,
-		City:             a.City,
-		AddressLine1:     a.AddressLine1,
-		AddressLine2:     a.AddressLine2,
-		CreatedAt:        a.CreatedAt,
-		UpdatedAt:        a.UpdatedAt,
-	}
-}
-
-func (h *authHandler) getAuthThumbnailResponse(thumbnailURL string) *response.AuthThumbnailResponse {
-	return &response.AuthThumbnailResponse{
-		ThumbnailURL: thumbnailURL,
-	}
 }

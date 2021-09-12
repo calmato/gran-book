@@ -24,7 +24,36 @@ type AuthResponse struct {
 	UpdatedAt        string        `json:"updatedAt"`        // 更新日時
 }
 
+func NewAuthResponse(a *entity.Auth) *AuthResponse {
+	return &AuthResponse{
+		ID:               a.Id,
+		Username:         a.Username,
+		Gender:           a.Gender(),
+		Email:            a.Email,
+		PhoneNumber:      a.PhoneNumber,
+		ThumbnailURL:     a.ThumbnailUrl,
+		SelfIntroduction: a.SelfIntroduction,
+		LastName:         a.LastName,
+		FirstName:        a.FirstName,
+		LastNameKana:     a.LastNameKana,
+		FirstNameKana:    a.FirstNameKana,
+		PostalCode:       a.PostalCode,
+		Prefecture:       a.Prefecture,
+		City:             a.City,
+		AddressLine1:     a.AddressLine1,
+		AddressLine2:     a.AddressLine2,
+		CreatedAt:        a.CreatedAt,
+		UpdatedAt:        a.UpdatedAt,
+	}
+}
+
 // サムネイルURL
 type AuthThumbnailResponse struct {
 	ThumbnailURL string `json:"thumbnailUrl"` // サムネイルURL
+}
+
+func NewAuthThumbnailResponse(thumbnailURL string) *AuthThumbnailResponse {
+	return &AuthThumbnailResponse{
+		ThumbnailURL: thumbnailURL,
+	}
 }

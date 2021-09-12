@@ -30,6 +30,7 @@ func NewUserHandler(uc user.UserServiceClient) UserHandler {
 
 // ListFollow - フォロー一覧取得
 func (h *userHandler) ListFollow(ctx *gin.Context) {
+	c := util.SetMetadata(ctx)
 	userID := ctx.Param("userID")
 	limit := ctx.GetInt64(ctx.DefaultQuery("limit", entity.ListLimitDefault))
 	offset := ctx.GetInt64(ctx.DefaultQuery("offset", entity.ListOffsetDefault))
@@ -39,8 +40,6 @@ func (h *userHandler) ListFollow(ctx *gin.Context) {
 		Limit:  limit,
 		Offset: offset,
 	}
-
-	c := util.SetMetadata(ctx)
 	out, err := h.userClient.ListFollow(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
@@ -48,12 +47,13 @@ func (h *userHandler) ListFollow(ctx *gin.Context) {
 	}
 
 	fs := entity.NewFollows(out.Follows)
-	res := h.getFollowListResponse(fs, out.Limit, out.Offset, out.Total)
+	res := response.NewFollowListResponse(fs, out.Limit, out.Offset, out.Total)
 	ctx.JSON(http.StatusOK, res)
 }
 
 // ListFollower - フォロワー一覧取得
 func (h *userHandler) ListFollower(ctx *gin.Context) {
+	c := util.SetMetadata(ctx)
 	userID := ctx.Param("userID")
 	limit := ctx.GetInt64(ctx.DefaultQuery("limit", entity.ListLimitDefault))
 	offset := ctx.GetInt64(ctx.DefaultQuery("offset", entity.ListOffsetDefault))
@@ -63,8 +63,6 @@ func (h *userHandler) ListFollower(ctx *gin.Context) {
 		Limit:  limit,
 		Offset: offset,
 	}
-
-	c := util.SetMetadata(ctx)
 	out, err := h.userClient.ListFollower(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
@@ -72,19 +70,18 @@ func (h *userHandler) ListFollower(ctx *gin.Context) {
 	}
 
 	fs := entity.NewFollowers(out.Followers)
-	res := h.getFollowerListResponse(fs, out.Limit, out.Offset, out.Total)
+	res := response.NewFollowerListResponse(fs, out.Limit, out.Offset, out.Total)
 	ctx.JSON(http.StatusOK, res)
 }
 
 // GetProfile - プロフィール情報取得
 func (h *userHandler) GetProfile(ctx *gin.Context) {
+	c := util.SetMetadata(ctx)
 	userID := ctx.Param("userID")
 
 	in := &user.GetUserProfileRequest{
 		UserId: userID,
 	}
-
-	c := util.SetMetadata(ctx)
 	out, err := h.userClient.GetUserProfile(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
@@ -92,12 +89,13 @@ func (h *userHandler) GetProfile(ctx *gin.Context) {
 	}
 
 	p := entity.NewUserProfile(out.Profile)
-	res := h.getUserProfileResponse(p)
+	res := response.NewUserProfileResponse(p)
 	ctx.JSON(http.StatusOK, res)
 }
 
 // Follow - フォロー登録
 func (h *userHandler) Follow(ctx *gin.Context) {
+	c := util.SetMetadata(ctx)
 	userID := ctx.Param("userID")
 	followerID := ctx.Param("followerID")
 
@@ -105,8 +103,6 @@ func (h *userHandler) Follow(ctx *gin.Context) {
 		UserId:     userID,
 		FollowerId: followerID,
 	}
-
-	c := util.SetMetadata(ctx)
 	out, err := h.userClient.Follow(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
@@ -114,12 +110,13 @@ func (h *userHandler) Follow(ctx *gin.Context) {
 	}
 
 	p := entity.NewUserProfile(out.Profile)
-	res := h.getUserProfileResponse(p)
+	res := response.NewUserProfileResponse(p)
 	ctx.JSON(http.StatusOK, res)
 }
 
 // Unfollow - フォロー解除
 func (h *userHandler) Unfollow(ctx *gin.Context) {
+	c := util.SetMetadata(ctx)
 	userID := ctx.Param("userID")
 	followerID := ctx.Param("followerID")
 
@@ -127,8 +124,6 @@ func (h *userHandler) Unfollow(ctx *gin.Context) {
 		UserId:     userID,
 		FollowerId: followerID,
 	}
-
-	c := util.SetMetadata(ctx)
 	out, err := h.userClient.Unfollow(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
@@ -136,72 +131,6 @@ func (h *userHandler) Unfollow(ctx *gin.Context) {
 	}
 
 	p := entity.NewUserProfile(out.Profile)
-	res := h.getUserProfileResponse(p)
+	res := response.NewUserProfileResponse(p)
 	ctx.JSON(http.StatusOK, res)
-}
-
-func (h *userHandler) getFollowListResponse(
-	fs entity.Follows, limit, offset, total int64,
-) *response.FollowListResponse {
-	users := make([]*response.FollowListUser, len(fs))
-	for i, f := range fs {
-		user := &response.FollowListUser{
-			ID:               f.Id,
-			Username:         f.Username,
-			ThumbnailURL:     f.ThumbnailUrl,
-			SelfIntroduction: f.SelfIntroduction,
-			IsFollow:         f.IsFollow,
-		}
-
-		users[i] = user
-	}
-
-	return &response.FollowListResponse{
-		Users:  users,
-		Limit:  limit,
-		Offset: offset,
-		Total:  total,
-	}
-}
-
-func (h *userHandler) getFollowerListResponse(
-	fs entity.Followers, limit, offset, total int64,
-) *response.FollowerListResponse {
-	users := make([]*response.FollowerListUser, len(fs))
-	for i, f := range fs {
-		user := &response.FollowerListUser{
-			ID:               f.Id,
-			Username:         f.Username,
-			ThumbnailURL:     f.ThumbnailUrl,
-			SelfIntroduction: f.SelfIntroduction,
-			IsFollow:         f.IsFollow,
-		}
-
-		users[i] = user
-	}
-
-	return &response.FollowerListResponse{
-		Users:  users,
-		Limit:  limit,
-		Offset: offset,
-		Total:  total,
-	}
-}
-
-func (h *userHandler) getUserProfileResponse(p *entity.UserProfile) *response.UserProfileResponse {
-	products := make([]*response.UserProfileProduct, 0)
-
-	return &response.UserProfileResponse{
-		ID:               p.Id,
-		Username:         p.Username,
-		ThumbnailURL:     p.ThumbnailUrl,
-		SelfIntroduction: p.SelfIntroduction,
-		IsFollow:         p.IsFollow,
-		IsFollower:       p.IsFollower,
-		FollowCount:      p.FollowCount,
-		FollowerCount:    p.FollowerCount,
-		Rating:           0,
-		ReviewCount:      0,
-		Products:         products,
-	}
 }

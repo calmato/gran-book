@@ -1,5 +1,11 @@
 package v1
 
+import (
+	"strings"
+
+	"github.com/calmato/gran-book/api/gateway/native/internal/entity"
+)
+
 // 本棚の書籍情報
 type BookshelfResponse struct {
 	ID           int64               `json:"id"`           // 書籍ID
@@ -19,6 +25,26 @@ type BookshelfResponse struct {
 	UpdatedAt    string              `json:"updatedAt"`    // 更新日時
 }
 
+func NewBookshelfResponse(bs *entity.Bookshelf, b *entity.Book) *BookshelfResponse {
+	return &BookshelfResponse{
+		ID:           b.Id,
+		Title:        b.Title,
+		TitleKana:    b.TitleKana,
+		Description:  b.Description,
+		Isbn:         b.Isbn,
+		Publisher:    b.Publisher,
+		PublishedOn:  b.PublishedOn,
+		ThumbnailURL: b.ThumbnailUrl,
+		RakutenURL:   b.RakutenUrl,
+		Size:         b.RakutenSize,
+		Author:       strings.Join(b.AuthorNames(), "/"),
+		AuthorKana:   strings.Join(b.AuthorNameKanas(), "/"),
+		CreatedAt:    b.CreatedAt,
+		UpdatedAt:    b.UpdatedAt,
+		Bookshelf:    newBookshelfBookshelf(bs),
+	}
+}
+
 type BookshelfBookshelf struct {
 	ID         int64  `json:"id"`         // 本棚ID
 	Status     string `json:"status"`     // 読書ステータス
@@ -28,12 +54,34 @@ type BookshelfBookshelf struct {
 	UpdatedAt  string `json:"updatedAt"`  // 更新日時
 }
 
+func newBookshelfBookshelf(bs *entity.Bookshelf) *BookshelfBookshelf {
+	return &BookshelfBookshelf{
+		ID:         bs.Id,
+		Status:     bs.Status().Name(),
+		ReadOn:     bs.ReadOn,
+		Impression: "",
+		CreatedAt:  bs.CreatedAt,
+		UpdatedAt:  bs.UpdatedAt,
+	}
+}
+
 // 本棚の書籍一覧
 type BookshelfListResponse struct {
 	Books  []*BookshelfListBook `json:"booksList"` // 書籍一覧
 	Limit  int64                `json:"limit"`     // 取得上限数
 	Offset int64                `json:"offset"`    // 取得開始位置
 	Total  int64                `json:"total"`     // 検索一致数
+}
+
+func NewBookshelfListResponse(
+	bss entity.Bookshelves, bm map[int64]*entity.Book, limit, offset, total int64,
+) *BookshelfListResponse {
+	return &BookshelfListResponse{
+		Books:  newBookshelfListBooks(bss, bm),
+		Limit:  limit,
+		Offset: offset,
+		Total:  total,
+	}
 }
 
 type BookshelfListBook struct {
@@ -54,10 +102,53 @@ type BookshelfListBook struct {
 	UpdatedAt    string                  `json:"updatedAt"`    // 更新日時
 }
 
+func newBookshelfListBook(bs *entity.Bookshelf, b *entity.Book) *BookshelfListBook {
+	return &BookshelfListBook{
+		ID:           b.Id,
+		Title:        b.Title,
+		TitleKana:    b.TitleKana,
+		Description:  b.Description,
+		Isbn:         b.Isbn,
+		Publisher:    b.Publisher,
+		PublishedOn:  b.PublishedOn,
+		ThumbnailURL: b.ThumbnailUrl,
+		RakutenURL:   b.RakutenUrl,
+		Size:         b.RakutenSize,
+		Author:       strings.Join(b.AuthorNames(), "/"),
+		AuthorKana:   strings.Join(b.AuthorNameKanas(), "/"),
+		CreatedAt:    b.CreatedAt,
+		UpdatedAt:    b.UpdatedAt,
+		Bookshelf:    newBookshelfListBookshelf(bs),
+	}
+}
+
+func newBookshelfListBooks(bss entity.Bookshelves, bm map[int64]*entity.Book) []*BookshelfListBook {
+	res := make([]*BookshelfListBook, 0, len(bss))
+	for i, bs := range bss {
+		b, ok := bm[bs.BookId]
+		if !ok {
+			continue
+		}
+
+		res[i] = newBookshelfListBook(bs, b)
+	}
+	return res
+}
+
 type BookshelfListBookshelf struct {
 	ID        int64  `json:"id"`        // 本棚ID
 	Status    string `json:"status"`    // 読書ステータス
 	ReadOn    string `json:"readOn"`    // 読み終えた日
 	CreatedAt string `json:"createdAt"` // 登録日時
 	UpdatedAt string `json:"updatedAt"` // 更新日時
+}
+
+func newBookshelfListBookshelf(bs *entity.Bookshelf) *BookshelfListBookshelf {
+	return &BookshelfListBookshelf{
+		ID:        bs.Id,
+		Status:    bs.Status().Name(),
+		ReadOn:    bs.ReadOn,
+		CreatedAt: bs.CreatedAt,
+		UpdatedAt: bs.UpdatedAt,
+	}
 }

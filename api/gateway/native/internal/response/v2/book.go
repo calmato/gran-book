@@ -1,5 +1,11 @@
 package v2
 
+import (
+	"strings"
+
+	"github.com/calmato/gran-book/api/gateway/native/internal/entity"
+)
+
 // 書籍情報
 type BookResponse struct {
 	ID           int64         `json:"id"`           // 書籍ID
@@ -22,6 +28,34 @@ type BookResponse struct {
 	UpdatedAt    string        `json:"updatedAt"`    // 更新日時
 }
 
+func NewBookResponse(
+	b *entity.Book,
+	rs entity.Reviews,
+	um map[string]*entity.User,
+	reviewLimit, reviewOffset, reviewTotal int64,
+) *BookResponse {
+	return &BookResponse{
+		ID:           b.Id,
+		Title:        b.Title,
+		TitleKana:    b.TitleKana,
+		Description:  b.Description,
+		Isbn:         b.Isbn,
+		Publisher:    b.Publisher,
+		PublishedOn:  b.PublishedOn,
+		ThumbnailURL: b.ThumbnailUrl,
+		RakutenURL:   b.RakutenUrl,
+		Size:         b.RakutenSize,
+		Author:       strings.Join(b.AuthorNames(), "/"),
+		AuthorKana:   strings.Join(b.AuthorNameKanas(), "/"),
+		CreatedAt:    b.CreatedAt,
+		UpdatedAt:    b.UpdatedAt,
+		Reviews:      newBookReviews(rs, um),
+		ReviewLimit:  reviewLimit,
+		ReviewOffset: reviewOffset,
+		ReviewTotal:  reviewTotal,
+	}
+}
+
 type BookReview struct {
 	ID         int64     `json:"id"`         // レビューID
 	Impression string    `json:"impression"` // 感想
@@ -30,8 +64,41 @@ type BookReview struct {
 	UpdatedAt  string    `json:"updatedAt"`  // 更新日時
 }
 
+func newBookReview(r *entity.Review, u *entity.User) *BookReview {
+	return &BookReview{
+		ID:         r.Id,
+		Impression: r.Impression,
+		User:       newBookUser(u),
+		CreatedAt:  r.CreatedAt,
+		UpdatedAt:  r.UpdatedAt,
+	}
+}
+
+func newBookReviews(rs entity.Reviews, um map[string]*entity.User) []*BookReview {
+	res := make([]*BookReview, len(rs))
+	for i, r := range rs {
+		u := um[r.UserId]
+		res[i] = newBookReview(r, u)
+	}
+	return res
+}
+
 type BookUser struct {
 	ID           string `json:"id"`           // ユーザーID
 	Username     string `json:"username"`     // 表示名
 	ThumbnailURL string `json:"thumbnailUrl"` // サムネイルURL
+}
+
+func newBookUser(u *entity.User) *BookUser {
+	if u == nil {
+		return &BookUser{
+			Username: "unknown",
+		}
+	}
+
+	return &BookUser{
+		ID:           u.Id,
+		Username:     u.Username,
+		ThumbnailURL: u.ThumbnailUrl,
+	}
 }

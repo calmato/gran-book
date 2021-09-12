@@ -3,7 +3,6 @@ package v2
 import (
 	"net/http"
 	"strconv"
-	"strings"
 
 	"github.com/calmato/gran-book/api/gateway/native/internal/entity"
 	response "github.com/calmato/gran-book/api/gateway/native/internal/response/v2"
@@ -33,6 +32,7 @@ func NewBookshelfHandler(bc book.BookServiceClient, uc user.UserServiceClient) B
 
 // List - 本棚の書籍一覧取得
 func (h *bookshelfHandler) List(ctx *gin.Context) {
+	c := util.SetMetadata(ctx)
 	limit := ctx.GetInt64(ctx.DefaultQuery("limit", entity.ListLimitDefault))
 	offset := ctx.GetInt64(ctx.DefaultQuery("offset", entity.ListOffsetDefault))
 	userID := ctx.Param("userID")
@@ -42,8 +42,6 @@ func (h *bookshelfHandler) List(ctx *gin.Context) {
 		Limit:  limit,
 		Offset: offset,
 	}
-
-	c := util.SetMetadata(ctx)
 	bookshelvesOutput, err := h.bookClient.ListBookshelf(c, bookshelvesInput)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
@@ -55,7 +53,6 @@ func (h *bookshelfHandler) List(ctx *gin.Context) {
 	booksInput := &book.MultiGetBooksRequest{
 		BookIds: bss.BookIDs(),
 	}
-
 	booksOutput, err := h.bookClient.MultiGetBooks(c, booksInput)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
@@ -63,7 +60,7 @@ func (h *bookshelfHandler) List(ctx *gin.Context) {
 	}
 
 	bs := entity.NewBooks(booksOutput.Books)
-	res := h.getBookshelfListResponse(
+	res := response.NewBookshelfListResponse(
 		bss, bs.Map(), bookshelvesOutput.Limit, bookshelvesOutput.Offset, bookshelvesOutput.Total,
 	)
 	ctx.JSON(http.StatusOK, res)
@@ -71,6 +68,7 @@ func (h *bookshelfHandler) List(ctx *gin.Context) {
 
 // Get - 本棚の書籍情報取得
 func (h *bookshelfHandler) Get(ctx *gin.Context) {
+	c := util.SetMetadata(ctx)
 	userID := ctx.Param("userID")
 	bookID, err := strconv.ParseInt(ctx.Param("bookID"), 10, 64)
 	if err != nil {
@@ -78,7 +76,6 @@ func (h *bookshelfHandler) Get(ctx *gin.Context) {
 		return
 	}
 
-	c := util.SetMetadata(ctx)
 	eg, ectx := errgroup.WithContext(c)
 
 	var b *entity.Book
@@ -143,115 +140,6 @@ func (h *bookshelfHandler) Get(ctx *gin.Context) {
 	}
 
 	us := entity.NewUsers(usersOutput.Users)
-	res := h.getBookshelfResponse(bs, b, rs, us.Map(), limit, offset, total)
+	res := response.NewBookshelfResponse(bs, b, rs, us.Map(), limit, offset, total)
 	ctx.JSON(http.StatusOK, res)
-}
-
-func (h *bookshelfHandler) getBookshelfResponse(
-	bs *entity.Bookshelf, b *entity.Book,
-	rs entity.Reviews, us map[string]*entity.User,
-	reviewLimit int64,
-	reviewOffset int64,
-	reviewTotal int64,
-) *response.BookshelfResponse {
-	bookshelf := &response.BookshelfBookshelf{
-		Status:    bs.Status().Name(),
-		ReadOn:    bs.ReadOn,
-		ReviewID:  bs.ReviewId,
-		CreatedAt: bs.CreatedAt,
-		UpdatedAt: bs.UpdatedAt,
-	}
-
-	reviews := make([]*response.BookshelfReview, len(rs))
-	for i, r := range rs {
-		user := &response.BookshelfUser{
-			ID:           r.UserId,
-			Username:     "unknown",
-			ThumbnailURL: "",
-		}
-
-		if us[r.UserId] != nil {
-			user.Username = us[r.UserId].Username
-			user.ThumbnailURL = us[r.UserId].ThumbnailUrl
-		}
-
-		review := &response.BookshelfReview{
-			ID:         r.Id,
-			Impression: r.Impression,
-			CreatedAt:  r.CreatedAt,
-			UpdatedAt:  r.UpdatedAt,
-			User:       user,
-		}
-
-		reviews[i] = review
-	}
-
-	return &response.BookshelfResponse{
-		ID:           b.Id,
-		Title:        b.Title,
-		TitleKana:    b.TitleKana,
-		Description:  b.Description,
-		Isbn:         b.Isbn,
-		Publisher:    b.Publisher,
-		PublishedOn:  b.PublishedOn,
-		ThumbnailURL: b.ThumbnailUrl,
-		RakutenURL:   b.RakutenUrl,
-		Size:         b.RakutenSize,
-		Author:       strings.Join(b.AuthorNames(), "/"),
-		AuthorKana:   strings.Join(b.AuthorNameKanas(), "/"),
-		CreatedAt:    b.CreatedAt,
-		UpdatedAt:    b.UpdatedAt,
-		Bookshelf:    bookshelf,
-		Reviews:      reviews,
-		ReviewLimit:  reviewLimit,
-		ReviewOffset: reviewOffset,
-		ReviewTotal:  reviewTotal,
-	}
-}
-
-func (h *bookshelfHandler) getBookshelfListResponse(
-	bss entity.Bookshelves, bm map[int64]*entity.Book, limit, offset, total int64,
-) *response.BookshelfListResponse {
-	books := make([]*response.BookshelfListBook, 0, len(bss))
-	for _, bs := range bss {
-		b, ok := bm[bs.BookId]
-		if !ok {
-			continue
-		}
-
-		bookshelf := &response.BookshelfListBookshelf{
-			Status:    bs.Status().Name(),
-			ReadOn:    bs.ReadOn,
-			ReviewID:  bs.ReviewId,
-			CreatedAt: bs.CreatedAt,
-			UpdatedAt: bs.UpdatedAt,
-		}
-
-		book := &response.BookshelfListBook{
-			ID:           b.Id,
-			Title:        b.Title,
-			TitleKana:    b.TitleKana,
-			Description:  b.Description,
-			Isbn:         b.Isbn,
-			Publisher:    b.Publisher,
-			PublishedOn:  b.PublishedOn,
-			ThumbnailURL: b.ThumbnailUrl,
-			RakutenURL:   b.RakutenUrl,
-			Size:         b.RakutenSize,
-			Author:       strings.Join(b.AuthorNames(), "/"),
-			AuthorKana:   strings.Join(b.AuthorNameKanas(), "/"),
-			CreatedAt:    b.CreatedAt,
-			UpdatedAt:    b.UpdatedAt,
-			Bookshelf:    bookshelf,
-		}
-
-		books = append(books, book)
-	}
-
-	return &response.BookshelfListResponse{
-		Books:  books,
-		Limit:  limit,
-		Offset: offset,
-		Total:  total,
-	}
 }
