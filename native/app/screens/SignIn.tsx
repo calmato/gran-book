@@ -1,14 +1,12 @@
 import { useNavigation } from '@react-navigation/native';
-import React, { ReactElement, useMemo, useState } from 'react';
+import firebase from 'firebase';
+import React, { ReactElement, useCallback, useMemo, useState } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-elements';
 import ForgotPasswordButton from '~/components/molecules/ForgotPasswordButton';
 import MailInput from '~/components/molecules/MailInput';
 import PasswordInput from '~/components/molecules/PasswordInput';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
-import { UiContext } from '~/lib/context';
-import { Status } from '~/lib/context/ui';
-import { generateErrorMessage } from '~/lib/util/ErrorUtil';
 import { emailValidation, passwordValidation } from '~/lib/validation';
 import { SignInForm } from '~/types/forms';
 
@@ -21,16 +19,13 @@ const styles = StyleSheet.create({
 
 interface Props {
   actions: {
-    signInWithEmail: (email: string, password: string) => Promise<void>;
-    getAuth: () => Promise<void>;
-    registerForPushNotifications: () => Promise<void>;
+    signInWithEmailAndPassword: (payload: SignInForm) => Promise<firebase.User | null>;
   };
 }
 
 const SignIn = function SignIn(props: Props): ReactElement {
   const navigation = useNavigation();
-  const { setApplicationState } = React.useContext(UiContext);
-  const { signInWithEmail, getAuth, registerForPushNotifications } = props.actions;
+  const { signInWithEmailAndPassword } = props.actions;
 
   const [formData, setValue] = useState<SignInForm>({
     email: '',
@@ -54,6 +49,13 @@ const SignIn = function SignIn(props: Props): ReactElement {
       Alert.alert(title, message, [
         {
           text: 'OK',
+          onPress: async () => {
+            console.log(firebase.auth().currentUser);
+            firebase
+              .auth()
+              .currentUser?.sendEmailVerification()
+              .then(() => console.log('メールを送信しました'));
+          },
         },
       ]),
     [],
@@ -72,7 +74,7 @@ const SignIn = function SignIn(props: Props): ReactElement {
         'メールアドレスまたはパスワードが間違っています。',
       );
     }
-  }, [formData, createAlertNotifySignInError]);
+  }, [formData, createAlertNotifySignInError, signInWithEmailAndPassword]);
 
   return (
     <View style={styles.container}>
