@@ -11,8 +11,8 @@ func TestMonthlyResultKey(t *testing.T) {
 	t.Parallel()
 	tests := []struct {
 		name   string
-		year   int
-		month  int
+		year   int32
+		month  int32
 		expect string
 	}{
 		{

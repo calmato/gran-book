@@ -72,7 +72,7 @@ func (h *topHandler) getUserTopResponse(
 		month := int32(date.Month())
 
 		var total int64
-		key := entity.MonthlyResultKey(int(year), int(month))
+		key := entity.MonthlyResultKey(year, month)
 		if r, ok := rsMap[key]; ok {
 			total = r.ReadTotal
 		}
