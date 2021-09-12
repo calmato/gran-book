@@ -11,11 +11,11 @@ import (
 
 // BookApplication - Bookアプリケーションのインターフェース
 type BookApplication interface {
-	List(ctx context.Context, q *database.ListQuery) ([]*book.Book, int, error)
-	ListBookshelf(ctx context.Context, q *database.ListQuery) ([]*book.Bookshelf, int, error)
-	ListBookReview(ctx context.Context, bookID, limit, offset int) ([]*book.Review, int, error)
-	ListUserReview(ctx context.Context, userID string, limit, offset int) ([]*book.Review, int, error)
-	MultiGet(ctx context.Context, bookIDs []int) ([]*book.Book, error)
+	List(ctx context.Context, q *database.ListQuery) (book.Books, int, error)
+	ListBookshelf(ctx context.Context, q *database.ListQuery) (book.Bookshelves, int, error)
+	ListBookReview(ctx context.Context, bookID, limit, offset int) (book.Reviews, int, error)
+	ListUserReview(ctx context.Context, userID string, limit, offset int) (book.Reviews, int, error)
+	MultiGet(ctx context.Context, bookIDs []int) (book.Books, error)
 	Get(ctx context.Context, bookID int) (*book.Book, error)
 	GetByIsbn(ctx context.Context, isbn string) (*book.Book, error)
 	GetBookshelfByUserIDAndBookID(ctx context.Context, userID string, bookID int) (*book.Bookshelf, error)
@@ -27,8 +27,8 @@ type BookApplication interface {
 	Update(ctx context.Context, b *book.Book) error
 	UpdateBookshelf(ctx context.Context, bs *book.Bookshelf) error
 	CreateOrUpdateBookshelf(ctx context.Context, bs *book.Bookshelf) error
-	MultipleCreate(ctx context.Context, bs []*book.Book) error
-	MultipleUpdate(ctx context.Context, bs []*book.Book) error
+	MultipleCreate(ctx context.Context, bs book.Books) error
+	MultipleUpdate(ctx context.Context, bs book.Books) error
 	Delete(ctx context.Context, b *book.Book) error
 	DeleteBookshelf(ctx context.Context, bs *book.Bookshelf) error
 }
@@ -46,7 +46,7 @@ func NewBookApplication(bdv book.Validation, br book.Repository) BookApplication
 	}
 }
 
-func (a *bookApplication) List(ctx context.Context, q *database.ListQuery) ([]*book.Book, int, error) {
+func (a *bookApplication) List(ctx context.Context, q *database.ListQuery) (book.Books, int, error) {
 	bs, err := a.bookRepository.List(ctx, q)
 	if err != nil {
 		return nil, 0, err
@@ -60,7 +60,7 @@ func (a *bookApplication) List(ctx context.Context, q *database.ListQuery) ([]*b
 	return bs, total, nil
 }
 
-func (a *bookApplication) ListBookshelf(ctx context.Context, q *database.ListQuery) ([]*book.Bookshelf, int, error) {
+func (a *bookApplication) ListBookshelf(ctx context.Context, q *database.ListQuery) (book.Bookshelves, int, error) {
 	bss, err := a.bookRepository.ListBookshelf(ctx, q)
 	if err != nil {
 		return nil, 0, err
@@ -76,7 +76,7 @@ func (a *bookApplication) ListBookshelf(ctx context.Context, q *database.ListQue
 
 func (a *bookApplication) ListBookReview(
 	ctx context.Context, bookID int, limit int, offset int,
-) ([]*book.Review, int, error) {
+) (book.Reviews, int, error) {
 	q := &database.ListQuery{
 		Limit:  limit,
 		Offset: offset,
@@ -104,7 +104,7 @@ func (a *bookApplication) ListBookReview(
 
 func (a *bookApplication) ListUserReview(
 	ctx context.Context, userID string, limit int, offset int,
-) ([]*book.Review, int, error) {
+) (book.Reviews, int, error) {
 	q := &database.ListQuery{
 		Limit:  limit,
 		Offset: offset,
@@ -130,7 +130,7 @@ func (a *bookApplication) ListUserReview(
 	return rs, total, nil
 }
 
-func (a *bookApplication) MultiGet(ctx context.Context, bookIDs []int) ([]*book.Book, error) {
+func (a *bookApplication) MultiGet(ctx context.Context, bookIDs []int) (book.Books, error) {
 	return a.bookRepository.MultiGet(ctx, bookIDs)
 }
 
@@ -304,7 +304,7 @@ func (a *bookApplication) CreateOrUpdateBookshelf(ctx context.Context, bs *book.
 	return a.UpdateBookshelf(ctx, bs)
 }
 
-func (a *bookApplication) MultipleCreate(ctx context.Context, bs []*book.Book) error {
+func (a *bookApplication) MultipleCreate(ctx context.Context, bs book.Books) error {
 	current := time.Now().Local()
 
 	for _, b := range bs {
@@ -333,7 +333,7 @@ func (a *bookApplication) MultipleCreate(ctx context.Context, bs []*book.Book) e
 	return a.bookRepository.MultipleCreate(ctx, bs)
 }
 
-func (a *bookApplication) MultipleUpdate(ctx context.Context, bs []*book.Book) error {
+func (a *bookApplication) MultipleUpdate(ctx context.Context, bs book.Books) error {
 	current := time.Now().Local()
 
 	for _, b := range bs {

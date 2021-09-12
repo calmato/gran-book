@@ -94,16 +94,12 @@ func (mr *MockUserApplicationMockRecorder) DeleteAdmin(ctx, u interface{}) *gomo
 }
 
 // Follow mocks base method.
-func (m *MockUserApplication) Follow(ctx context.Context, userID, followerID string) (*user.User, bool, bool, int, int, error) {
+func (m *MockUserApplication) Follow(ctx context.Context, userID, followerID string) (*user.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Follow", ctx, userID, followerID)
 	ret0, _ := ret[0].(*user.User)
-	ret1, _ := ret[1].(bool)
-	ret2, _ := ret[2].(bool)
-	ret3, _ := ret[3].(int)
-	ret4, _ := ret[4].(int)
-	ret5, _ := ret[5].(error)
-	return ret0, ret1, ret2, ret3, ret4, ret5
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // Follow indicates an expected call of Follow.
@@ -143,16 +139,12 @@ func (mr *MockUserApplicationMockRecorder) GetAdmin(ctx, userID interface{}) *go
 }
 
 // GetUserProfile mocks base method.
-func (m *MockUserApplication) GetUserProfile(ctx context.Context, userID, targetID string) (*user.User, bool, bool, int, int, error) {
+func (m *MockUserApplication) GetUserProfile(ctx context.Context, userID, targetID string) (*user.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetUserProfile", ctx, userID, targetID)
 	ret0, _ := ret[0].(*user.User)
-	ret1, _ := ret[1].(bool)
-	ret2, _ := ret[2].(bool)
-	ret3, _ := ret[3].(int)
-	ret4, _ := ret[4].(int)
-	ret5, _ := ret[5].(error)
-	return ret0, ret1, ret2, ret3, ret4, ret5
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // GetUserProfile indicates an expected call of GetUserProfile.
@@ -162,10 +154,10 @@ func (mr *MockUserApplicationMockRecorder) GetUserProfile(ctx, userID, targetID 
 }
 
 // List mocks base method.
-func (m *MockUserApplication) List(ctx context.Context, q *database.ListQuery) ([]*user.User, int, error) {
+func (m *MockUserApplication) List(ctx context.Context, q *database.ListQuery) (user.Users, int, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "List", ctx, q)
-	ret0, _ := ret[0].([]*user.User)
+	ret0, _ := ret[0].(user.Users)
 	ret1, _ := ret[1].(int)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
@@ -178,10 +170,10 @@ func (mr *MockUserApplicationMockRecorder) List(ctx, q interface{}) *gomock.Call
 }
 
 // ListAdmin mocks base method.
-func (m *MockUserApplication) ListAdmin(ctx context.Context, q *database.ListQuery) ([]*user.User, int, error) {
+func (m *MockUserApplication) ListAdmin(ctx context.Context, q *database.ListQuery) (user.Users, int, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListAdmin", ctx, q)
-	ret0, _ := ret[0].([]*user.User)
+	ret0, _ := ret[0].(user.Users)
 	ret1, _ := ret[1].(int)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
@@ -194,10 +186,10 @@ func (mr *MockUserApplicationMockRecorder) ListAdmin(ctx, q interface{}) *gomock
 }
 
 // ListFollow mocks base method.
-func (m *MockUserApplication) ListFollow(ctx context.Context, userID, targetID string, limit, offset int) ([]*user.Follow, int, error) {
+func (m *MockUserApplication) ListFollow(ctx context.Context, userID, targetID string, limit, offset int) (user.Follows, int, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListFollow", ctx, userID, targetID, limit, offset)
-	ret0, _ := ret[0].([]*user.Follow)
+	ret0, _ := ret[0].(user.Follows)
 	ret1, _ := ret[1].(int)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
@@ -210,10 +202,10 @@ func (mr *MockUserApplicationMockRecorder) ListFollow(ctx, userID, targetID, lim
 }
 
 // ListFollower mocks base method.
-func (m *MockUserApplication) ListFollower(ctx context.Context, userID, targetID string, limit, offset int) ([]*user.Follower, int, error) {
+func (m *MockUserApplication) ListFollower(ctx context.Context, userID, targetID string, limit, offset int) (user.Followers, int, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListFollower", ctx, userID, targetID, limit, offset)
-	ret0, _ := ret[0].([]*user.Follower)
+	ret0, _ := ret[0].(user.Followers)
 	ret1, _ := ret[1].(int)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
@@ -226,10 +218,10 @@ func (mr *MockUserApplicationMockRecorder) ListFollower(ctx, userID, targetID, l
 }
 
 // MultiGet mocks base method.
-func (m *MockUserApplication) MultiGet(ctx context.Context, userIDs []string) ([]*user.User, error) {
+func (m *MockUserApplication) MultiGet(ctx context.Context, userIDs []string) (user.Users, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "MultiGet", ctx, userIDs)
-	ret0, _ := ret[0].([]*user.User)
+	ret0, _ := ret[0].(user.Users)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -241,16 +233,12 @@ func (mr *MockUserApplicationMockRecorder) MultiGet(ctx, userIDs interface{}) *g
 }
 
 // Unfollow mocks base method.
-func (m *MockUserApplication) Unfollow(ctx context.Context, userID, followerID string) (*user.User, bool, bool, int, int, error) {
+func (m *MockUserApplication) Unfollow(ctx context.Context, userID, followerID string) (*user.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Unfollow", ctx, userID, followerID)
 	ret0, _ := ret[0].(*user.User)
-	ret1, _ := ret[1].(bool)
-	ret2, _ := ret[2].(bool)
-	ret3, _ := ret[3].(int)
-	ret4, _ := ret[4].(int)
-	ret5, _ := ret[5].(error)
-	return ret0, ret1, ret2, ret3, ret4, ret5
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // Unfollow indicates an expected call of Unfollow.

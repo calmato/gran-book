@@ -1,4 +1,21 @@
 module.exports = {
+  collectCoverage: true,
+  collectCoverageFrom: [
+    '<rootDir>/app/components/**/*.vue',
+    '<rootDir>/app/constants/**/*.vue',
+    '<rootDir>/app/layouts/**/*.vue',
+    '<rootDir>/app/pages/**/*.vue',
+    '<rootDir>/app/store/**/(?!index)*.ts',
+  ],
+  coveragePathIgnorePatterns: [
+    '<rootDir>/node_modules/',
+    '<rootDir>/tmp/',
+    '<rootDir>/app/assets/',
+    '<rootDir>/app/middleware/',
+    '<rootDir>/app/plugins/',
+    '<rootDir>/app/store/',
+    '<rootDir>/app/types/',
+  ],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/app/$1',
     '^@@/(.*)$': '<rootDir>/$1',
@@ -6,15 +23,13 @@ module.exports = {
     '^~~/(.*)$': '<rootDir>/$1',
     '^vue$': 'vue/dist/vue.common.js',
   },
-  moduleFileExtensions: ['ts', 'js', 'vue'],
+  moduleFileExtensions: ['js', 'json', 'ts', 'vue'],
+  setupFiles: ['<rootDir>/spec/helpers/setup.ts'],
+  testURL: 'http://localhost/',
+  testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.(js?|ts?)$',
   transform: {
     '^.+\\.ts$': 'ts-jest',
     '^.+\\.js$': 'babel-jest',
     '.*\\.(vue)$': 'vue-jest',
   },
-  testURL: 'http://localhost/',
-  testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.(js?|ts?)$',
-  setupFiles: ['<rootDir>/spec/helpers/setup.ts'],
-  collectCoverage: true,
-  collectCoverageFrom: ['<rootDir>/app/components/**/*.vue', '<rootDir>/app/store/**/(?!index)*.ts'],
 }

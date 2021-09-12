@@ -102,11 +102,9 @@ export default class AdminModule extends VuexModule {
         .$get(`/v1/admin?${query}`)
         .then((res: AdminListV1Response.AsObject) => {
           const { usersList, total } = res
-          const data: IAdminUser[] = usersList.map(
-            (user: AdminListV1Response.User.AsObject): IAdminUser => {
-              return { ...user } as IAdminUser
-            }
-          )
+          const data: IAdminUser[] = usersList.map((user: AdminListV1Response.User.AsObject): IAdminUser => {
+            return { ...user } as IAdminUser
+          })
           this.setUsers(data)
           this.setTotal(total)
           resolve()
@@ -137,16 +135,8 @@ export default class AdminModule extends VuexModule {
 
   @Action({ rawError: true })
   public createAdmin(payload: IAdminNewForm): Promise<void> {
-    const {
-      email,
-      password,
-      passwordConfirmation,
-      role,
-      lastName,
-      firstName,
-      lastNameKana,
-      firstNameKana,
-    } = payload.params
+    const { email, password, passwordConfirmation, role, lastName, firstName, lastNameKana, firstNameKana } =
+      payload.params
 
     const req: CreateAdminV1Request.AsObject = {
       username: `${lastName} ${firstName}`,

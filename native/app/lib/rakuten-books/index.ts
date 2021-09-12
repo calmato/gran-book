@@ -30,3 +30,18 @@ export async function searchBookByTitle(title: string, page = 1) {
       return Promise.reject(err.response);
     });
 }
+
+/**
+ * 楽天 Book APIを利用しておすすめの書籍を取得する関数
+ * @returns
+ */
+export async function getRecommendBooks() {
+  const url = `${baseUrl}/${version}?format=${format}&formatVersion=${formatVersion}&applicationId=${applicationId}&sort=sales&hits=${hits}`;
+
+  try {
+    const res: AxiosResponse<ISearchResponse> = await externalInstance.get(url);
+    return res.data;
+  } catch (err) {
+    return Promise.reject(err);
+  }
+}

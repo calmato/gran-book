@@ -10,7 +10,7 @@ import (
 	"github.com/calmato/gran-book/api/gateway/native/internal/server/util"
 	pb "github.com/calmato/gran-book/api/gateway/native/proto"
 	"github.com/gin-gonic/gin"
-	"google.golang.org/grpc"
+	"golang.org/x/sync/errgroup"
 )
 
 type ReviewHandler interface {
@@ -21,19 +21,15 @@ type ReviewHandler interface {
 }
 
 type reviewHandler struct {
-	bookClient pb.BookServiceClient
 	authClient pb.AuthServiceClient
+	bookClient pb.BookServiceClient
 	userClient pb.UserServiceClient
 }
 
-func NewReviewHandler(bookConn *grpc.ClientConn, authConn *grpc.ClientConn, userConn *grpc.ClientConn) ReviewHandler {
-	bc := pb.NewBookServiceClient(bookConn)
-	ac := pb.NewAuthServiceClient(authConn)
-	uc := pb.NewUserServiceClient(authConn)
-
+func NewReviewHandler(ac pb.AuthServiceClient, bc pb.BookServiceClient, uc pb.UserServiceClient) ReviewHandler {
 	return &reviewHandler{
-		bookClient: bc,
 		authClient: ac,
+		bookClient: bc,
 		userClient: uc,
 	}
 }
@@ -61,13 +57,10 @@ func (h *reviewHandler) ListByBook(ctx *gin.Context) {
 		return
 	}
 
-	userIDs := make([]string, len(reviewsOutput.GetReviews()))
-	for i, r := range reviewsOutput.GetReviews() {
-		userIDs[i] = r.GetUserId()
-	}
+	rs := entity.NewReviews(reviewsOutput.Reviews)
 
 	usersInput := &pb.MultiGetUserRequest{
-		UserIds: userIDs,
+		UserIds: rs.UserIDs(),
 	}
 
 	usersOutput, err := h.userClient.MultiGetUser(c, usersInput)
@@ -76,7 +69,8 @@ func (h *reviewHandler) ListByBook(ctx *gin.Context) {
 		return
 	}
 
-	res := h.getBookReviewListResponse(reviewsOutput, usersOutput)
+	us := entity.NewUsers(usersOutput.Users)
+	res := h.getBookReviewListResponse(rs, us.Map(), reviewsOutput.Limit, reviewsOutput.Offset, reviewsOutput.Total)
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -99,13 +93,10 @@ func (h *reviewHandler) ListByUser(ctx *gin.Context) {
 		return
 	}
 
-	bookIDs := make([]int64, len(reviewsOutput.GetReviews()))
-	for i, r := range reviewsOutput.GetReviews() {
-		bookIDs[i] = r.GetBookId()
-	}
+	rs := entity.NewReviews(reviewsOutput.Reviews)
 
 	booksInput := &pb.MultiGetBooksRequest{
-		BookIds: bookIDs,
+		BookIds: rs.BookIDs(),
 	}
 
 	booksOutput, err := h.bookClient.MultiGetBooks(c, booksInput)
@@ -114,7 +105,8 @@ func (h *reviewHandler) ListByUser(ctx *gin.Context) {
 		return
 	}
 
-	res := h.getUserReviewListResponse(reviewsOutput, booksOutput)
+	bs := entity.NewBooks(booksOutput.Books)
+	res := h.getUserReviewListResponse(rs, bs.Map(), reviewsOutput.Limit, reviewsOutput.Offset, reviewsOutput.Total)
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -132,29 +124,37 @@ func (h *reviewHandler) GetByBook(ctx *gin.Context) {
 		return
 	}
 
-	bookInput := &pb.GetBookRequest{
-		BookId: bookID,
-	}
-
 	c := util.SetMetadata(ctx)
-	_, err = h.bookClient.GetBook(c, bookInput)
-	if err != nil {
-		util.ErrorHandling(ctx, err)
-		return
-	}
+	eg, ectx := errgroup.WithContext(c)
 
-	reviewInput := &pb.GetReviewRequest{
-		ReviewId: reviewID,
-	}
+	eg.Go(func() error {
+		bookInput := &pb.GetBookRequest{
+			BookId: bookID,
+		}
+		_, err = h.bookClient.GetBook(ectx, bookInput)
+		return err
+	})
 
-	reviewOutput, err := h.bookClient.GetReview(c, reviewInput)
-	if err != nil {
+	var r *entity.Review
+	eg.Go(func() error {
+		reviewInput := &pb.GetReviewRequest{
+			ReviewId: reviewID,
+		}
+		reviewOutput, err := h.bookClient.GetReview(ectx, reviewInput)
+		if err != nil {
+			return err
+		}
+		r = entity.NewReview(reviewOutput.Review)
+		return nil
+	})
+
+	if err := eg.Wait(); err != nil {
 		util.ErrorHandling(ctx, err)
 		return
 	}
 
 	userInput := &pb.GetUserRequest{
-		UserId: reviewOutput.GetUserId(),
+		UserId: r.UserId,
 	}
 
 	userOutput, err := h.userClient.GetUser(c, userInput)
@@ -163,7 +163,8 @@ func (h *reviewHandler) GetByBook(ctx *gin.Context) {
 		return
 	}
 
-	res := h.getBookReviewResponse(reviewOutput, userOutput)
+	u := entity.NewUser(userOutput.User)
+	res := h.getBookReviewResponse(r, u)
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -187,14 +188,15 @@ func (h *reviewHandler) GetByUser(ctx *gin.Context) {
 		return
 	}
 
-	if reviewOutput.GetUserId() != userID {
+	r := entity.NewReview(reviewOutput.Review)
+	if r.UserId != userID {
 		err := fmt.Errorf("user id is invalid")
 		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
 		return
 	}
 
 	bookInput := &pb.GetBookRequest{
-		BookId: reviewOutput.GetBookId(),
+		BookId: r.BookId,
 	}
 
 	bookOutput, err := h.bookClient.GetBook(c, bookInput)
@@ -203,70 +205,69 @@ func (h *reviewHandler) GetByUser(ctx *gin.Context) {
 		return
 	}
 
-	res := h.getUserReviewResponse(reviewOutput, bookOutput)
+	b := entity.NewBook(bookOutput.Book)
+	res := h.getUserReviewResponse(r, b)
 	ctx.JSON(http.StatusOK, res)
 }
 
-func (h *reviewHandler) getBookReviewResponse(
-	reviewOutput *pb.ReviewResponse, userOutput *pb.UserResponse,
-) *response.BookReviewResponse {
-	user := &response.BookReviewResponse_User{
-		ID:       reviewOutput.GetUserId(),
-		Username: "unknown",
+func (h *reviewHandler) getBookReviewResponse(r *entity.Review, u *entity.User) *response.BookReviewResponse {
+	user := &response.BookReviewUser{
+		ID:           r.UserId,
+		Username:     "unknown",
+		ThumbnailURL: "",
 	}
 
-	if userOutput != nil {
-		user.Username = userOutput.GetUsername()
-		user.ThumbnailURL = userOutput.GetThumbnailUrl()
+	if u != nil {
+		user.Username = u.Username
+		user.ThumbnailURL = u.ThumbnailUrl
 	}
 
 	return &response.BookReviewResponse{
-		ID:         reviewOutput.GetId(),
-		Impression: reviewOutput.GetImpression(),
-		CreatedAt:  reviewOutput.GetCreatedAt(),
-		UpdatedAt:  reviewOutput.GetUpdatedAt(),
+		ID:         r.Id,
+		Impression: r.Impression,
+		CreatedAt:  r.CreatedAt,
+		UpdatedAt:  r.UpdatedAt,
 		User:       user,
 	}
 }
 
-func (h *reviewHandler) getUserReviewResponse(
-	reviewOutput *pb.ReviewResponse, bookOutput *pb.BookResponse,
-) *response.UserReviewResponse {
-	book := &response.UserReviewResponse_Book{
-		ID:           bookOutput.GetId(),
-		Title:        bookOutput.GetTitle(),
-		ThumbnailUrl: bookOutput.GetThumbnailUrl(),
+func (h *reviewHandler) getUserReviewResponse(r *entity.Review, b *entity.Book) *response.UserReviewResponse {
+	book := &response.UserReviewBook{
+		ID:           b.Id,
+		Title:        b.Title,
+		ThumbnailURL: b.ThumbnailUrl,
 	}
 
 	return &response.UserReviewResponse{
-		ID:         reviewOutput.GetId(),
-		Impression: reviewOutput.GetImpression(),
-		CreatedAt:  reviewOutput.GetCreatedAt(),
-		UpdatedAt:  reviewOutput.GetUpdatedAt(),
+		ID:         r.Id,
+		Impression: r.Impression,
+		CreatedAt:  r.CreatedAt,
+		UpdatedAt:  r.UpdatedAt,
 		Book:       book,
 	}
 }
 
 func (h *reviewHandler) getBookReviewListResponse(
-	reviewsOutput *pb.ReviewListResponse, usersOutput *pb.UserMapResponse,
+	rs entity.Reviews, us map[string]*entity.User, limit, offset, total int64,
 ) *response.BookReviewListResponse {
-	reviews := make([]*response.BookReviewListResponse_Review, len(reviewsOutput.GetReviews()))
-	for i, r := range reviewsOutput.GetReviews() {
-		user := &response.BookReviewListResponse_User{
-			ID:       r.GetUserId(),
-			Username: "unknown",
+	reviews := make([]*response.BookReviewListReview, len(rs))
+	for i, r := range rs {
+		user := &response.BookReviewListUser{
+			ID:           r.UserId,
+			Username:     "unknown",
+			ThumbnailURL: "",
 		}
 
-		if usersOutput.GetUsers()[r.GetUserId()] != nil {
-			user.Username = usersOutput.GetUsers()[r.GetUserId()].GetUsername()
-			user.ThumbnailURL = usersOutput.GetUsers()[r.GetUserId()].GetThumbnailUrl()
+		if us[r.UserId] != nil {
+			user.Username = us[r.UserId].Username
+			user.ThumbnailURL = us[r.UserId].ThumbnailUrl
 		}
 
-		review := &response.BookReviewListResponse_Review{
-			ID:         r.GetId(),
-			Impression: r.GetImpression(),
-			CreatedAt:  r.GetCreatedAt(),
-			UpdatedAt:  r.GetUpdatedAt(),
+		review := &response.BookReviewListReview{
+			ID:         r.Id,
+			Impression: r.Impression,
+			CreatedAt:  r.CreatedAt,
+			UpdatedAt:  r.UpdatedAt,
 			User:       user,
 		}
 
@@ -275,28 +276,33 @@ func (h *reviewHandler) getBookReviewListResponse(
 
 	return &response.BookReviewListResponse{
 		Reviews: reviews,
-		Limit:   reviewsOutput.GetLimit(),
-		Offset:  reviewsOutput.GetOffset(),
-		Total:   reviewsOutput.GetTotal(),
+		Limit:   limit,
+		Offset:  offset,
+		Total:   total,
 	}
 }
 
 func (h *reviewHandler) getUserReviewListResponse(
-	reviewsOutput *pb.ReviewListResponse, booksOutput *pb.BookMapResponse,
+	rs entity.Reviews, bs map[int64]*entity.Book, limit, offset, total int64,
 ) *response.UserReviewListResponse {
-	reviews := make([]*response.UserReviewListResponse_Review, len(reviewsOutput.GetReviews()))
-	for i, r := range reviewsOutput.GetReviews() {
-		book := &response.UserReviewListResponse_Book{
-			Id:           booksOutput.GetBooks()[r.GetBookId()].GetId(),
-			Title:        booksOutput.GetBooks()[r.GetBookId()].GetTitle(),
-			ThumbnailUrl: booksOutput.GetBooks()[r.GetBookId()].GetThumbnailUrl(),
+	reviews := make([]*response.UserReviewListReview, 0, len(rs))
+	for i, r := range rs {
+		b, ok := bs[r.BookId]
+		if !ok {
+			continue
 		}
 
-		review := &response.UserReviewListResponse_Review{
-			Id:         r.GetId(),
-			Impression: r.GetImpression(),
-			CreatedAt:  r.GetCreatedAt(),
-			UpdatedAt:  r.GetUpdatedAt(),
+		book := &response.UserReviewListBook{
+			ID:           b.Id,
+			Title:        b.Title,
+			ThumbnailURL: b.ThumbnailUrl,
+		}
+
+		review := &response.UserReviewListReview{
+			ID:         r.Id,
+			Impression: r.Impression,
+			CreatedAt:  r.CreatedAt,
+			UpdatedAt:  r.UpdatedAt,
 			Book:       book,
 		}
 
@@ -305,8 +311,8 @@ func (h *reviewHandler) getUserReviewListResponse(
 
 	return &response.UserReviewListResponse{
 		Reviews: reviews,
-		Limit:   reviewsOutput.GetLimit(),
-		Offset:  reviewsOutput.GetOffset(),
-		Total:   reviewsOutput.GetTotal(),
+		Limit:   limit,
+		Offset:  offset,
+		Total:   total,
 	}
 }

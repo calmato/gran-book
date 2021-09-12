@@ -17,7 +17,6 @@ import (
 	grpc_ctxtags "github.com/grpc-ecosystem/go-grpc-middleware/tags"
 	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
 	"go.uber.org/zap"
-	"golang.org/x/xerrors"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
@@ -48,8 +47,7 @@ func newGRPCServer(port, logPath, logLevel string, reg *registry.Registry) (*grp
 
 	lis, err := net.Listen("tcp", ":"+port)
 	if err != nil {
-		err = xerrors.Errorf("Faled to listen: %w", err)
-		return nil, err
+		return nil, fmt.Errorf("config: failed to listen: %w", err)
 	}
 
 	gs := &grpcServer{
@@ -176,7 +174,7 @@ func accessLogUnaryServerInterceptor() grpc.UnaryServerInterceptor {
 func filterParams(pb proto.Message) (map[string]interface{}, error) {
 	bs, err := protojson.Marshal(pb)
 	if err != nil {
-		return nil, fmt.Errorf("jsonpb serializer failed: %v", err)
+		return nil, fmt.Errorf("config: failed to jsonpb serializer: %v", err)
 	}
 
 	bj := make(map[string]interface{})

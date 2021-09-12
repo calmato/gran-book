@@ -60,13 +60,14 @@ func (a *authenticator) Authorization() gin.HandlerFunc {
 			return
 		}
 
-		role := entity.Role(out.GetRole())
-		if role == entity.RoleUser {
+		current := entity.NewAuth(out.Auth)
+
+		if current.Role() == entity.RoleUser {
 			ErrorHandling(ctx, entity.ErrForbidden.New(err))
 			return
 		}
 
-		a.setAuth(ctx, out.GetId(), role)
+		a.setAuth(ctx, current.Id, current.Role())
 
 		ctx.Next()
 	}
@@ -80,13 +81,14 @@ func (a *authenticator) HasAdminRole() gin.HandlerFunc {
 			return
 		}
 
-		role := entity.Role(out.GetRole())
-		if role != entity.RoleAdmin {
+		current := entity.NewAuth(out.Auth)
+
+		if current.Role() != entity.RoleAdmin {
 			ErrorHandling(ctx, entity.ErrForbidden.New(err))
 			return
 		}
 
-		a.setAuth(ctx, out.GetId(), role)
+		a.setAuth(ctx, current.Id, current.Role())
 
 		ctx.Next()
 	}

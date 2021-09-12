@@ -9,7 +9,6 @@ import (
 	"github.com/calmato/gran-book/api/server/user/pkg/test"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
-	"golang.org/x/xerrors"
 )
 
 func TestChatDomainValidation_Room(t *testing.T) {
@@ -111,7 +110,7 @@ func TestChatDomainValidation_Message(t *testing.T) {
 				},
 			},
 			want: exception.InvalidDomainValidation.New(
-				xerrors.New("This message requires either text or image."),
+				errInvalidChatMessageField,
 				&exception.ValidationError{
 					Field:   "text",
 					Message: exception.RequiredMessage,
