@@ -23,7 +23,7 @@ func TestUserRepository_List(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.UserDB, "users")
+	err = mocks.DeleteAll(mocks.UserDB, userTable)
 	require.NoError(t, err)
 
 	users := make([]*user.User, 3)
@@ -31,7 +31,7 @@ func TestUserRepository_List(t *testing.T) {
 	users[1] = testUser("11111111-1111-1111-1111-111111111111")
 	users[2] = testUser("22222222-2222-2222-2222-222222222222")
 
-	err = mocks.UserDB.DB.Table("users").Create(&users).Error
+	err = mocks.UserDB.DB.Table(userTable).Create(&users).Error
 	require.NoError(t, err)
 
 	type args struct {
@@ -87,7 +87,7 @@ func TestUserRepository_ListFollow(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.UserDB, "users")
+	err = mocks.DeleteAll(mocks.UserDB, userTable)
 	require.NoError(t, err)
 
 	users := make([]*user.User, 3)
@@ -98,14 +98,14 @@ func TestUserRepository_ListFollow(t *testing.T) {
 	users[2] = testUser("22222222-2222-2222-2222-222222222222")
 	users[2].Username = "テストユーザー3"
 
-	err = mocks.UserDB.DB.Table("users").Create(&users).Error
+	err = mocks.UserDB.DB.Table(userTable).Create(&users).Error
 	require.NoError(t, err)
 
 	relationships := make([]*user.Relationship, 2)
 	relationships[0] = testRelationship(1, users[1].ID, users[0].ID)
 	relationships[1] = testRelationship(2, users[2].ID, users[0].ID)
 
-	err = mocks.UserDB.DB.Table("relationships").Create(&relationships).Error
+	err = mocks.UserDB.DB.Table(relationshipTable).Create(&relationships).Error
 	require.NoError(t, err)
 
 	type args struct {
@@ -180,7 +180,7 @@ func TestUserRepository_ListFollower(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.UserDB, "users")
+	err = mocks.DeleteAll(mocks.UserDB, userTable)
 	require.NoError(t, err)
 
 	users := make([]*user.User, 3)
@@ -191,14 +191,14 @@ func TestUserRepository_ListFollower(t *testing.T) {
 	users[2] = testUser("22222222-2222-2222-2222-222222222222")
 	users[2].Username = "テストユーザー3"
 
-	err = mocks.UserDB.DB.Table("users").Create(&users).Error
+	err = mocks.UserDB.DB.Table(userTable).Create(&users).Error
 	require.NoError(t, err)
 
 	relationships := make([]*user.Relationship, 2)
 	relationships[0] = testRelationship(1, users[0].ID, users[1].ID)
 	relationships[1] = testRelationship(2, users[0].ID, users[2].ID)
 
-	err = mocks.UserDB.DB.Table("relationships").Create(&relationships).Error
+	err = mocks.UserDB.DB.Table(relationshipTable).Create(&relationships).Error
 	require.NoError(t, err)
 
 	type args struct {
@@ -273,7 +273,7 @@ func TestUserRepository_ListInstanceID(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.UserDB, "users")
+	err = mocks.DeleteAll(mocks.UserDB, userTable)
 	require.NoError(t, err)
 
 	users := make([]*user.User, 3)
@@ -284,7 +284,7 @@ func TestUserRepository_ListInstanceID(t *testing.T) {
 	users[2] = testUser("22222222-2222-2222-2222-222222222222")
 	users[2].InstanceID = "ExponentPushToken[zxcvbnm]"
 
-	err = mocks.UserDB.DB.Table("users").Create(&users).Error
+	err = mocks.UserDB.DB.Table(userTable).Create(&users).Error
 	require.NoError(t, err)
 
 	type args struct {
@@ -344,7 +344,7 @@ func TestUserRepository_ListFollowID(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.UserDB, "users")
+	err = mocks.DeleteAll(mocks.UserDB, userTable)
 	require.NoError(t, err)
 
 	users := make([]*user.User, 3)
@@ -355,14 +355,14 @@ func TestUserRepository_ListFollowID(t *testing.T) {
 	users[2] = testUser("22222222-2222-2222-2222-222222222222")
 	users[2].Username = "テストユーザー3"
 
-	err = mocks.UserDB.DB.Table("users").Create(&users).Error
+	err = mocks.UserDB.DB.Table(userTable).Create(&users).Error
 	require.NoError(t, err)
 
 	relationships := make([]*user.Relationship, 2)
 	relationships[0] = testRelationship(1, users[1].ID, users[0].ID)
 	relationships[1] = testRelationship(2, users[2].ID, users[0].ID)
 
-	err = mocks.UserDB.DB.Table("relationships").Create(&relationships).Error
+	err = mocks.UserDB.DB.Table(relationshipTable).Create(&relationships).Error
 	require.NoError(t, err)
 
 	type args struct {
@@ -434,7 +434,7 @@ func TestUserRepository_ListFollowerID(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.UserDB, "users")
+	err = mocks.DeleteAll(mocks.UserDB, userTable)
 	require.NoError(t, err)
 
 	users := make([]*user.User, 3)
@@ -445,14 +445,14 @@ func TestUserRepository_ListFollowerID(t *testing.T) {
 	users[2] = testUser("22222222-2222-2222-2222-222222222222")
 	users[2].Username = "テストユーザー3"
 
-	err = mocks.UserDB.DB.Table("users").Create(&users).Error
+	err = mocks.UserDB.DB.Table(userTable).Create(&users).Error
 	require.NoError(t, err)
 
 	relationships := make([]*user.Relationship, 2)
 	relationships[0] = testRelationship(1, users[0].ID, users[1].ID)
 	relationships[1] = testRelationship(2, users[0].ID, users[2].ID)
 
-	err = mocks.UserDB.DB.Table("relationships").Create(&relationships).Error
+	err = mocks.UserDB.DB.Table(relationshipTable).Create(&relationships).Error
 	require.NoError(t, err)
 
 	type args struct {
@@ -524,7 +524,7 @@ func TestUserRepository_Count(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.UserDB, "users")
+	err = mocks.DeleteAll(mocks.UserDB, userTable)
 	require.NoError(t, err)
 
 	users := make([]*user.User, 3)
@@ -532,7 +532,7 @@ func TestUserRepository_Count(t *testing.T) {
 	users[1] = testUser("11111111-1111-1111-1111-111111111111")
 	users[2] = testUser("22222222-2222-2222-2222-222222222222")
 
-	err = mocks.UserDB.DB.Table("users").Create(&users).Error
+	err = mocks.UserDB.DB.Table(userTable).Create(&users).Error
 	require.NoError(t, err)
 
 	type args struct {
@@ -586,7 +586,7 @@ func TestUserRepository_CountRelationship(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.UserDB, "users")
+	err = mocks.DeleteAll(mocks.UserDB, userTable)
 	require.NoError(t, err)
 
 	users := make([]*user.User, 3)
@@ -597,14 +597,14 @@ func TestUserRepository_CountRelationship(t *testing.T) {
 	users[2] = testUser("22222222-2222-2222-2222-222222222222")
 	users[2].Username = "テストユーザー3"
 
-	err = mocks.UserDB.DB.Table("users").Create(&users).Error
+	err = mocks.UserDB.DB.Table(userTable).Create(&users).Error
 	require.NoError(t, err)
 
 	relationships := make([]*user.Relationship, 2)
 	relationships[0] = testRelationship(1, users[1].ID, users[0].ID)
 	relationships[1] = testRelationship(2, users[2].ID, users[0].ID)
 
-	err = mocks.UserDB.DB.Table("relationships").Create(&relationships).Error
+	err = mocks.UserDB.DB.Table(relationshipTable).Create(&relationships).Error
 	require.NoError(t, err)
 
 	type args struct {
@@ -664,7 +664,7 @@ func TestUserRepository_MultiGet(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.UserDB, "users")
+	err = mocks.DeleteAll(mocks.UserDB, userTable)
 	require.NoError(t, err)
 
 	users := make([]*user.User, 3)
@@ -672,7 +672,7 @@ func TestUserRepository_MultiGet(t *testing.T) {
 	users[1] = testUser("11111111-1111-1111-1111-111111111111")
 	users[2] = testUser("22222222-2222-2222-2222-222222222222")
 
-	err = mocks.UserDB.DB.Table("users").Create(&users).Error
+	err = mocks.UserDB.DB.Table(userTable).Create(&users).Error
 	require.NoError(t, err)
 
 	type args struct {
@@ -728,12 +728,12 @@ func TestUserRepository_Get(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.UserDB, "users")
+	err = mocks.DeleteAll(mocks.UserDB, userTable)
 	require.NoError(t, err)
 
 	u := testUser("00000000-0000-0000-0000-000000000000")
 
-	err = mocks.UserDB.DB.Table("users").Create(u).Error
+	err = mocks.UserDB.DB.Table(userTable).Create(u).Error
 	require.NoError(t, err)
 
 	type args struct {
@@ -793,14 +793,14 @@ func TestUserRepository_GetAdmin(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.UserDB, "users")
+	err = mocks.DeleteAll(mocks.UserDB, userTable)
 	require.NoError(t, err)
 
 	users := make([]*user.User, 2)
 	users[0] = testUser("00000000-0000-0000-0000-000000000000")
 	users[1] = testAdmin("11111111-1111-1111-1111-111111111111")
 
-	err = mocks.UserDB.DB.Table("users").Create(&users).Error
+	err = mocks.UserDB.DB.Table(userTable).Create(&users).Error
 	require.NoError(t, err)
 
 	type args struct {
@@ -870,7 +870,7 @@ func TestUserRepository_GetRelationship(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.UserDB, "users")
+	err = mocks.DeleteAll(mocks.UserDB, userTable)
 	require.NoError(t, err)
 
 	users := make([]*user.User, 2)
@@ -879,12 +879,12 @@ func TestUserRepository_GetRelationship(t *testing.T) {
 	users[1] = testUser("11111111-1111-1111-1111-111111111111")
 	users[1].Username = "テストユーザー2"
 
-	err = mocks.UserDB.DB.Table("users").Create(&users).Error
+	err = mocks.UserDB.DB.Table(userTable).Create(&users).Error
 	require.NoError(t, err)
 
 	relationship := testRelationship(1, users[1].ID, users[0].ID)
 
-	err = mocks.UserDB.DB.Table("relationships").Create(relationship).Error
+	err = mocks.UserDB.DB.Table(relationshipTable).Create(relationship).Error
 	require.NoError(t, err)
 
 	type args struct {
@@ -936,7 +936,7 @@ func TestUserRepository_CreateRelationship(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.UserDB, "users")
+	err = mocks.DeleteAll(mocks.UserDB, userTable)
 	require.NoError(t, err)
 
 	users := make([]*user.User, 2)
@@ -945,7 +945,7 @@ func TestUserRepository_CreateRelationship(t *testing.T) {
 	users[1] = testUser("11111111-1111-1111-1111-111111111111")
 	users[1].Username = "テストユーザー2"
 
-	err = mocks.UserDB.DB.Table("users").Create(&users).Error
+	err = mocks.UserDB.DB.Table(userTable).Create(&users).Error
 	require.NoError(t, err)
 
 	type args struct {
@@ -989,7 +989,7 @@ func TestUserRepository_CreateRelationship(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			target := NewUserRepository(mocks.UserDB, nil)
 
-			err := mocks.DeleteAll(mocks.UserDB, "relationships")
+			err := mocks.DeleteAll(mocks.UserDB, relationshipTable)
 			require.NoError(t, err)
 
 			err = target.CreateRelationship(ctx, tt.args.relationship)
@@ -1008,7 +1008,7 @@ func TestUserRepository_DeleteRelationship(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.UserDB, "users")
+	err = mocks.DeleteAll(mocks.UserDB, userTable)
 	require.NoError(t, err)
 
 	users := make([]*user.User, 2)
@@ -1017,7 +1017,7 @@ func TestUserRepository_DeleteRelationship(t *testing.T) {
 	users[1] = testUser("11111111-1111-1111-1111-111111111111")
 	users[1].Username = "テストユーザー2"
 
-	err = mocks.UserDB.DB.Table("users").Create(&users).Error
+	err = mocks.UserDB.DB.Table(userTable).Create(&users).Error
 	require.NoError(t, err)
 
 	relationship := testRelationship(1, users[1].ID, users[0].ID)
@@ -1049,10 +1049,10 @@ func TestUserRepository_DeleteRelationship(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			target := NewUserRepository(mocks.UserDB, nil)
 
-			err := mocks.DeleteAll(mocks.UserDB, "relationships")
+			err := mocks.DeleteAll(mocks.UserDB, relationshipTable)
 			require.NoError(t, err)
 
-			err = mocks.UserDB.DB.Table("relationships").Create(relationship).Error
+			err = mocks.UserDB.DB.Table(relationshipTable).Create(relationship).Error
 			require.NoError(t, err)
 
 			err = target.DeleteRelationship(ctx, tt.args.relationshipID)
