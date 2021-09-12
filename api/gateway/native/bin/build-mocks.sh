@@ -25,6 +25,6 @@ build_mock() {
 rm -rf ./mock
 
 paths=$(find $(PWD)/proto/service/**/*_service_grpc.pb.go -type f)
-for path in "${paths}"; do
+for path in ${paths}; do
   build_mock ${path}
 done
