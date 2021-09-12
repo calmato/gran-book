@@ -77,6 +77,10 @@ const OtherProfile = function OtherProfile(props: Props): ReactElement {
       )
       .catch((err) => {
         console.log('debug', err);
+      })
+      .finally(() => {
+        setIsLoading(false);
+        console.log('refreshed');
       });
   };
 
@@ -88,10 +92,9 @@ const OtherProfile = function OtherProfile(props: Props): ReactElement {
     <View style={styles.container}>
       <HeaderWithBackButton title={userInfo.username} onPress={() => navigation.goBack()} />
       <ScrollView
-      // refreshControl={
-      //   <RefreshControl refreshing={isLoading} onRefresh={handleGetOtherProfile} />
-      // }
-      >
+        refreshControl={
+          <RefreshControl refreshing={isLoading} onRefresh={handleGetOtherProfile} />
+        }>
         <ProfileViewGroup
           name={userInfo.username}
           avatarUrl={userInfo.thumbnailUrl}

@@ -18,7 +18,6 @@ interface Props {
 
 export default function ConnectedOwnProfile(props: Props): JSX.Element {
   const dispatch = useReduxDispatch();
-  // MEMO OtherProfile画面で下にスワイプしたら更新できるようにするので、Actionsとして関数渡さなきゃいけない
   const actions = React.useMemo(
     () => ({
       getOtherProfile(id: string): Promise<AxiosResponse<UserProfileV1Response.AsObject>> {
