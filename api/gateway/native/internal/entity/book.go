@@ -1,8 +1,6 @@
 package entity
 
-import (
-	pb "github.com/calmato/gran-book/api/gateway/native/proto"
-)
+import pb "github.com/calmato/gran-book/api/gateway/native/proto/service/book"
 
 type Book struct {
 	*pb.Book

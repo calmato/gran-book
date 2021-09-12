@@ -19,44 +19,21 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: ./proto
+        working-directory: .
 
     strategy:
       matrix:
         os: [ubuntu-latest]
-        golang: ['^1.16.7']
 
     steps:
       - name: Check out code
         uses: actions/checkout@v2
 
-      - name: Use Golang ${{ matrix.golang }}
-        uses: actions/setup-go@v2
-
-      - name: Install protobuf
-        run: |
-          curl -fSLO https://github.com/google/protobuf/releases/download/v${PROTOBUF_VERSION}/protoc-${PROTOBUF_VERSION}-linux-x86_64.zip
-          unzip protoc-${PROTOBUF_VERSION}-linux-x86_64.zip -d protoc
-          sudo mv protoc/bin/* /usr/local/bin/
-          sudo mv protoc/include/* /usr/local/include/
-          sudo chmod +x /usr/local/bin/protoc
-          sudo chmod +x /usr/local/include/google
-
-      - name: Install prototool
-        run: |
-          curl -fSLO "https://github.com/uber/prototool/releases/download/v${PROTOTOOL_VERSION}/prototool-$(uname -s)-$(uname -m)"
-          sudo mv ./prototool-$(uname -s)-$(uname -m) /usr/local/bin/prototool
-          sudo chmod +x /usr/local/bin/prototool
-
-      - name: Install gRPC tools
-        run: |
-          export GOPATH=$(go env GOPATH)
-          make install
+      - name: Container build
+        run: docker-compose -f docker-compose.ci.yaml build proto
 
       - name: Generate proto
-        run: |
-          export PATH="$PATH:$(go env GOPATH)/bin"
-          make generate
+        run: docker-compose -f docker-compose.ci.yaml run --rm proto make build
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
@@ -108,6 +85,9 @@ jobs:
 
       - name: Install
         run: yarn --check-files --frozen-lockfile --non-interactive
+
+      # - name: Protoc
+      #   run: yarn protoc
 
       - name: Lint
         run: yarn lint

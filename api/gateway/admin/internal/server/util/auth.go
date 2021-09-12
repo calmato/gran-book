@@ -6,9 +6,8 @@ import (
 
 	"github.com/calmato/gran-book/api/gateway/admin/internal/entity"
 	"github.com/calmato/gran-book/api/gateway/admin/pkg/firebase/authentication"
-	pb "github.com/calmato/gran-book/api/gateway/admin/proto"
+	"github.com/calmato/gran-book/api/gateway/admin/proto/service/user"
 	"github.com/gin-gonic/gin"
-	"google.golang.org/grpc"
 )
 
 type Authenticator interface {
@@ -19,12 +18,10 @@ type Authenticator interface {
 
 type authenticator struct {
 	auth *authentication.Auth
-	api  pb.AuthServiceClient
+	api  user.AuthServiceClient
 }
 
-func NewAuthenticator(fa *authentication.Auth, authConn *grpc.ClientConn) Authenticator {
-	ac := pb.NewAuthServiceClient(authConn)
-
+func NewAuthenticator(fa *authentication.Auth, ac user.AuthServiceClient) Authenticator {
 	return &authenticator{
 		auth: fa,
 		api:  ac,
@@ -54,7 +51,7 @@ func (a *authenticator) Authentication() gin.HandlerFunc {
 
 func (a *authenticator) Authorization() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		out, err := a.api.GetAuth(ctx, &pb.Empty{})
+		out, err := a.api.GetAuth(ctx, &user.Empty{})
 		if err != nil {
 			ErrorHandling(ctx, entity.ErrUnauthenticated.New(err))
 			return
@@ -75,7 +72,7 @@ func (a *authenticator) Authorization() gin.HandlerFunc {
 
 func (a *authenticator) HasAdminRole() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		out, err := a.api.GetAuth(ctx, &pb.Empty{})
+		out, err := a.api.GetAuth(ctx, &user.Empty{})
 		if err != nil {
 			ErrorHandling(ctx, entity.ErrUnauthenticated.New(err))
 			return

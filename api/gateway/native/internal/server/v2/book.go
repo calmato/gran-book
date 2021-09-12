@@ -10,7 +10,8 @@ import (
 	"github.com/calmato/gran-book/api/gateway/native/internal/entity"
 	response "github.com/calmato/gran-book/api/gateway/native/internal/response/v2"
 	"github.com/calmato/gran-book/api/gateway/native/internal/server/util"
-	pb "github.com/calmato/gran-book/api/gateway/native/proto"
+	"github.com/calmato/gran-book/api/gateway/native/proto/service/book"
+	"github.com/calmato/gran-book/api/gateway/native/proto/service/user"
 	"github.com/gin-gonic/gin"
 )
 
@@ -19,12 +20,12 @@ type BookHandler interface {
 }
 
 type bookHandler struct {
-	authClient pb.AuthServiceClient
-	bookClient pb.BookServiceClient
-	userClient pb.UserServiceClient
+	authClient user.AuthServiceClient
+	bookClient book.BookServiceClient
+	userClient user.UserServiceClient
 }
 
-func NewBookHandler(ac pb.AuthServiceClient, bc pb.BookServiceClient, uc pb.UserServiceClient) BookHandler {
+func NewBookHandler(ac user.AuthServiceClient, bc book.BookServiceClient, uc user.UserServiceClient) BookHandler {
 	return &bookHandler{
 		authClient: ac,
 		bookClient: bc,
@@ -46,7 +47,7 @@ func (h *bookHandler) Get(ctx *gin.Context) {
 
 	b := entity.NewBook(bookOutput.Book)
 
-	reviewsInput := &pb.ListBookReviewRequest{
+	reviewsInput := &book.ListBookReviewRequest{
 		BookId: b.Id,
 		Limit:  20,
 		Offset: 0,
@@ -60,7 +61,7 @@ func (h *bookHandler) Get(ctx *gin.Context) {
 
 	rs := entity.NewReviews(reviewsOutput.Reviews)
 
-	usersInput := &pb.MultiGetUserRequest{
+	usersInput := &user.MultiGetUserRequest{
 		UserIds: rs.UserIDs(),
 	}
 
@@ -75,16 +76,16 @@ func (h *bookHandler) Get(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, res)
 }
 
-func (h *bookHandler) getBook(ctx context.Context, bookID, key string) (*pb.BookResponse, error) {
+func (h *bookHandler) getBook(ctx context.Context, bookID, key string) (*book.BookResponse, error) {
 	switch key {
 	case "id":
 		bookID, err := strconv.ParseInt(bookID, 10, 64)
 		if err != nil {
 			return nil, entity.ErrBadRequest.New(err)
 		}
-		return h.bookClient.GetBook(ctx, &pb.GetBookRequest{BookId: bookID})
+		return h.bookClient.GetBook(ctx, &book.GetBookRequest{BookId: bookID})
 	case "isbn":
-		return h.bookClient.GetBookByIsbn(ctx, &pb.GetBookByIsbnRequest{Isbn: bookID})
+		return h.bookClient.GetBookByIsbn(ctx, &book.GetBookByIsbnRequest{Isbn: bookID})
 	default:
 		err := fmt.Errorf("this key is invalid argument")
 		return nil, entity.ErrBadRequest.New(err)

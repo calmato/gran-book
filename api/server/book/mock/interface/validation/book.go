@@ -7,7 +7,7 @@ package mock_validation
 import (
 	reflect "reflect"
 
-	proto "github.com/calmato/gran-book/api/server/book/proto"
+	book "github.com/calmato/gran-book/api/server/book/proto/service/book"
 	gomock "github.com/golang/mock/gomock"
 )
 
@@ -35,7 +35,7 @@ func (m *MockBookRequestValidation) EXPECT() *MockBookRequestValidationMockRecor
 }
 
 // CreateBook mocks base method.
-func (m *MockBookRequestValidation) CreateBook(req *proto.CreateBookRequest) error {
+func (m *MockBookRequestValidation) CreateBook(req *book.CreateBookRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateBook", req)
 	ret0, _ := ret[0].(error)
@@ -49,7 +49,7 @@ func (mr *MockBookRequestValidationMockRecorder) CreateBook(req interface{}) *go
 }
 
 // DeleteBook mocks base method.
-func (m *MockBookRequestValidation) DeleteBook(req *proto.DeleteBookRequest) error {
+func (m *MockBookRequestValidation) DeleteBook(req *book.DeleteBookRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteBook", req)
 	ret0, _ := ret[0].(error)
@@ -63,7 +63,7 @@ func (mr *MockBookRequestValidationMockRecorder) DeleteBook(req interface{}) *go
 }
 
 // DeleteBookshelf mocks base method.
-func (m *MockBookRequestValidation) DeleteBookshelf(req *proto.DeleteBookshelfRequest) error {
+func (m *MockBookRequestValidation) DeleteBookshelf(req *book.DeleteBookshelfRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteBookshelf", req)
 	ret0, _ := ret[0].(error)
@@ -77,7 +77,7 @@ func (mr *MockBookRequestValidationMockRecorder) DeleteBookshelf(req interface{}
 }
 
 // GetBook mocks base method.
-func (m *MockBookRequestValidation) GetBook(req *proto.GetBookRequest) error {
+func (m *MockBookRequestValidation) GetBook(req *book.GetBookRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetBook", req)
 	ret0, _ := ret[0].(error)
@@ -91,7 +91,7 @@ func (mr *MockBookRequestValidationMockRecorder) GetBook(req interface{}) *gomoc
 }
 
 // GetBookByIsbn mocks base method.
-func (m *MockBookRequestValidation) GetBookByIsbn(req *proto.GetBookByIsbnRequest) error {
+func (m *MockBookRequestValidation) GetBookByIsbn(req *book.GetBookByIsbnRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetBookByIsbn", req)
 	ret0, _ := ret[0].(error)
@@ -105,7 +105,7 @@ func (mr *MockBookRequestValidationMockRecorder) GetBookByIsbn(req interface{}) 
 }
 
 // GetBookshelf mocks base method.
-func (m *MockBookRequestValidation) GetBookshelf(req *proto.GetBookshelfRequest) error {
+func (m *MockBookRequestValidation) GetBookshelf(req *book.GetBookshelfRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetBookshelf", req)
 	ret0, _ := ret[0].(error)
@@ -119,7 +119,7 @@ func (mr *MockBookRequestValidationMockRecorder) GetBookshelf(req interface{}) *
 }
 
 // GetReview mocks base method.
-func (m *MockBookRequestValidation) GetReview(req *proto.GetReviewRequest) error {
+func (m *MockBookRequestValidation) GetReview(req *book.GetReviewRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetReview", req)
 	ret0, _ := ret[0].(error)
@@ -133,7 +133,7 @@ func (mr *MockBookRequestValidationMockRecorder) GetReview(req interface{}) *gom
 }
 
 // ListBookReview mocks base method.
-func (m *MockBookRequestValidation) ListBookReview(req *proto.ListBookReviewRequest) error {
+func (m *MockBookRequestValidation) ListBookReview(req *book.ListBookReviewRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListBookReview", req)
 	ret0, _ := ret[0].(error)
@@ -147,7 +147,7 @@ func (mr *MockBookRequestValidationMockRecorder) ListBookReview(req interface{})
 }
 
 // ListBookshelf mocks base method.
-func (m *MockBookRequestValidation) ListBookshelf(req *proto.ListBookshelfRequest) error {
+func (m *MockBookRequestValidation) ListBookshelf(req *book.ListBookshelfRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListBookshelf", req)
 	ret0, _ := ret[0].(error)
@@ -161,7 +161,7 @@ func (mr *MockBookRequestValidationMockRecorder) ListBookshelf(req interface{}) 
 }
 
 // ListUserMonthlyResult mocks base method.
-func (m *MockBookRequestValidation) ListUserMonthlyResult(req *proto.ListUserMonthlyResultRequest) error {
+func (m *MockBookRequestValidation) ListUserMonthlyResult(req *book.ListUserMonthlyResultRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListUserMonthlyResult", req)
 	ret0, _ := ret[0].(error)
@@ -175,7 +175,7 @@ func (mr *MockBookRequestValidationMockRecorder) ListUserMonthlyResult(req inter
 }
 
 // ListUserReview mocks base method.
-func (m *MockBookRequestValidation) ListUserReview(req *proto.ListUserReviewRequest) error {
+func (m *MockBookRequestValidation) ListUserReview(req *book.ListUserReviewRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListUserReview", req)
 	ret0, _ := ret[0].(error)
@@ -189,7 +189,7 @@ func (mr *MockBookRequestValidationMockRecorder) ListUserReview(req interface{})
 }
 
 // MultiGetBooks mocks base method.
-func (m *MockBookRequestValidation) MultiGetBooks(req *proto.MultiGetBooksRequest) error {
+func (m *MockBookRequestValidation) MultiGetBooks(req *book.MultiGetBooksRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "MultiGetBooks", req)
 	ret0, _ := ret[0].(error)
@@ -203,7 +203,7 @@ func (mr *MockBookRequestValidationMockRecorder) MultiGetBooks(req interface{}) 
 }
 
 // ReadBookshelf mocks base method.
-func (m *MockBookRequestValidation) ReadBookshelf(req *proto.ReadBookshelfRequest) error {
+func (m *MockBookRequestValidation) ReadBookshelf(req *book.ReadBookshelfRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ReadBookshelf", req)
 	ret0, _ := ret[0].(error)
@@ -217,7 +217,7 @@ func (mr *MockBookRequestValidationMockRecorder) ReadBookshelf(req interface{}) 
 }
 
 // ReadingBookshelf mocks base method.
-func (m *MockBookRequestValidation) ReadingBookshelf(req *proto.ReadingBookshelfRequest) error {
+func (m *MockBookRequestValidation) ReadingBookshelf(req *book.ReadingBookshelfRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ReadingBookshelf", req)
 	ret0, _ := ret[0].(error)
@@ -231,7 +231,7 @@ func (mr *MockBookRequestValidationMockRecorder) ReadingBookshelf(req interface{
 }
 
 // ReleaseBookshelf mocks base method.
-func (m *MockBookRequestValidation) ReleaseBookshelf(req *proto.ReleaseBookshelfRequest) error {
+func (m *MockBookRequestValidation) ReleaseBookshelf(req *book.ReleaseBookshelfRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ReleaseBookshelf", req)
 	ret0, _ := ret[0].(error)
@@ -245,7 +245,7 @@ func (mr *MockBookRequestValidationMockRecorder) ReleaseBookshelf(req interface{
 }
 
 // StackedBookshelf mocks base method.
-func (m *MockBookRequestValidation) StackedBookshelf(req *proto.StackedBookshelfRequest) error {
+func (m *MockBookRequestValidation) StackedBookshelf(req *book.StackedBookshelfRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "StackedBookshelf", req)
 	ret0, _ := ret[0].(error)
@@ -259,7 +259,7 @@ func (mr *MockBookRequestValidationMockRecorder) StackedBookshelf(req interface{
 }
 
 // UpdateBook mocks base method.
-func (m *MockBookRequestValidation) UpdateBook(req *proto.UpdateBookRequest) error {
+func (m *MockBookRequestValidation) UpdateBook(req *book.UpdateBookRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateBook", req)
 	ret0, _ := ret[0].(error)
@@ -273,7 +273,7 @@ func (mr *MockBookRequestValidationMockRecorder) UpdateBook(req interface{}) *go
 }
 
 // WantBookshelf mocks base method.
-func (m *MockBookRequestValidation) WantBookshelf(req *proto.WantBookshelfRequest) error {
+func (m *MockBookRequestValidation) WantBookshelf(req *book.WantBookshelfRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "WantBookshelf", req)
 	ret0, _ := ret[0].(error)

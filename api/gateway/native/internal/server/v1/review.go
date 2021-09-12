@@ -8,7 +8,8 @@ import (
 	"github.com/calmato/gran-book/api/gateway/native/internal/entity"
 	response "github.com/calmato/gran-book/api/gateway/native/internal/response/v1"
 	"github.com/calmato/gran-book/api/gateway/native/internal/server/util"
-	pb "github.com/calmato/gran-book/api/gateway/native/proto"
+	"github.com/calmato/gran-book/api/gateway/native/proto/service/book"
+	"github.com/calmato/gran-book/api/gateway/native/proto/service/user"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/sync/errgroup"
 )
@@ -21,12 +22,12 @@ type ReviewHandler interface {
 }
 
 type reviewHandler struct {
-	authClient pb.AuthServiceClient
-	bookClient pb.BookServiceClient
-	userClient pb.UserServiceClient
+	authClient user.AuthServiceClient
+	bookClient book.BookServiceClient
+	userClient user.UserServiceClient
 }
 
-func NewReviewHandler(ac pb.AuthServiceClient, bc pb.BookServiceClient, uc pb.UserServiceClient) ReviewHandler {
+func NewReviewHandler(ac user.AuthServiceClient, bc book.BookServiceClient, uc user.UserServiceClient) ReviewHandler {
 	return &reviewHandler{
 		authClient: ac,
 		bookClient: bc,
@@ -44,7 +45,7 @@ func (h *reviewHandler) ListByBook(ctx *gin.Context) {
 		return
 	}
 
-	reviewsInput := &pb.ListBookReviewRequest{
+	reviewsInput := &book.ListBookReviewRequest{
 		BookId: bookID,
 		Limit:  limit,
 		Offset: offset,
@@ -59,7 +60,7 @@ func (h *reviewHandler) ListByBook(ctx *gin.Context) {
 
 	rs := entity.NewReviews(reviewsOutput.Reviews)
 
-	usersInput := &pb.MultiGetUserRequest{
+	usersInput := &user.MultiGetUserRequest{
 		UserIds: rs.UserIDs(),
 	}
 
@@ -80,7 +81,7 @@ func (h *reviewHandler) ListByUser(ctx *gin.Context) {
 	limit := ctx.GetInt64(ctx.DefaultQuery("limit", entity.ListLimitDefault))
 	offset := ctx.GetInt64(ctx.DefaultQuery("offset", entity.ListOffsetDefault))
 
-	reviewsInput := &pb.ListUserReviewRequest{
+	reviewsInput := &book.ListUserReviewRequest{
 		UserId: userID,
 		Limit:  limit,
 		Offset: offset,
@@ -95,7 +96,7 @@ func (h *reviewHandler) ListByUser(ctx *gin.Context) {
 
 	rs := entity.NewReviews(reviewsOutput.Reviews)
 
-	booksInput := &pb.MultiGetBooksRequest{
+	booksInput := &book.MultiGetBooksRequest{
 		BookIds: rs.BookIDs(),
 	}
 
@@ -128,7 +129,7 @@ func (h *reviewHandler) GetByBook(ctx *gin.Context) {
 	eg, ectx := errgroup.WithContext(c)
 
 	eg.Go(func() error {
-		bookInput := &pb.GetBookRequest{
+		bookInput := &book.GetBookRequest{
 			BookId: bookID,
 		}
 		_, err = h.bookClient.GetBook(ectx, bookInput)
@@ -137,7 +138,7 @@ func (h *reviewHandler) GetByBook(ctx *gin.Context) {
 
 	var r *entity.Review
 	eg.Go(func() error {
-		reviewInput := &pb.GetReviewRequest{
+		reviewInput := &book.GetReviewRequest{
 			ReviewId: reviewID,
 		}
 		reviewOutput, err := h.bookClient.GetReview(ectx, reviewInput)
@@ -153,7 +154,7 @@ func (h *reviewHandler) GetByBook(ctx *gin.Context) {
 		return
 	}
 
-	userInput := &pb.GetUserRequest{
+	userInput := &user.GetUserRequest{
 		UserId: r.UserId,
 	}
 
@@ -177,7 +178,7 @@ func (h *reviewHandler) GetByUser(ctx *gin.Context) {
 		return
 	}
 
-	reviewInput := &pb.GetReviewRequest{
+	reviewInput := &book.GetReviewRequest{
 		ReviewId: reviewID,
 	}
 
@@ -195,7 +196,7 @@ func (h *reviewHandler) GetByUser(ctx *gin.Context) {
 		return
 	}
 
-	bookInput := &pb.GetBookRequest{
+	bookInput := &book.GetBookRequest{
 		BookId: r.BookId,
 	}
 

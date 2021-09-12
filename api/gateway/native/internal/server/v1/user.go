@@ -6,7 +6,7 @@ import (
 	"github.com/calmato/gran-book/api/gateway/native/internal/entity"
 	response "github.com/calmato/gran-book/api/gateway/native/internal/response/v1"
 	"github.com/calmato/gran-book/api/gateway/native/internal/server/util"
-	pb "github.com/calmato/gran-book/api/gateway/native/proto"
+	"github.com/calmato/gran-book/api/gateway/native/proto/service/user"
 	"github.com/gin-gonic/gin"
 )
 
@@ -19,10 +19,10 @@ type UserHandler interface {
 }
 
 type userHandler struct {
-	userClient pb.UserServiceClient
+	userClient user.UserServiceClient
 }
 
-func NewUserHandler(uc pb.UserServiceClient) UserHandler {
+func NewUserHandler(uc user.UserServiceClient) UserHandler {
 	return &userHandler{
 		userClient: uc,
 	}
@@ -34,7 +34,7 @@ func (h *userHandler) ListFollow(ctx *gin.Context) {
 	limit := ctx.GetInt64(ctx.DefaultQuery("limit", entity.ListLimitDefault))
 	offset := ctx.GetInt64(ctx.DefaultQuery("offset", entity.ListOffsetDefault))
 
-	in := &pb.ListFollowRequest{
+	in := &user.ListFollowRequest{
 		UserId: userID,
 		Limit:  limit,
 		Offset: offset,
@@ -58,7 +58,7 @@ func (h *userHandler) ListFollower(ctx *gin.Context) {
 	limit := ctx.GetInt64(ctx.DefaultQuery("limit", entity.ListLimitDefault))
 	offset := ctx.GetInt64(ctx.DefaultQuery("offset", entity.ListOffsetDefault))
 
-	in := &pb.ListFollowerRequest{
+	in := &user.ListFollowerRequest{
 		UserId: userID,
 		Limit:  limit,
 		Offset: offset,
@@ -80,7 +80,7 @@ func (h *userHandler) ListFollower(ctx *gin.Context) {
 func (h *userHandler) GetProfile(ctx *gin.Context) {
 	userID := ctx.Param("userID")
 
-	in := &pb.GetUserProfileRequest{
+	in := &user.GetUserProfileRequest{
 		UserId: userID,
 	}
 
@@ -101,7 +101,7 @@ func (h *userHandler) Follow(ctx *gin.Context) {
 	userID := ctx.Param("userID")
 	followerID := ctx.Param("followerID")
 
-	in := &pb.FollowRequest{
+	in := &user.FollowRequest{
 		UserId:     userID,
 		FollowerId: followerID,
 	}
@@ -123,7 +123,7 @@ func (h *userHandler) Unfollow(ctx *gin.Context) {
 	userID := ctx.Param("userID")
 	followerID := ctx.Param("followerID")
 
-	in := &pb.UnfollowRequest{
+	in := &user.UnfollowRequest{
 		UserId:     userID,
 		FollowerId: followerID,
 	}

@@ -7,9 +7,8 @@ import (
 	response "github.com/calmato/gran-book/api/gateway/admin/internal/response/v1"
 	"github.com/calmato/gran-book/api/gateway/admin/internal/server/util"
 	"github.com/calmato/gran-book/api/gateway/admin/pkg/conv"
-	pb "github.com/calmato/gran-book/api/gateway/admin/proto"
+	"github.com/calmato/gran-book/api/gateway/admin/proto/service/user"
 	"github.com/gin-gonic/gin"
-	"google.golang.org/grpc"
 )
 
 type UserHandler interface {
@@ -18,12 +17,10 @@ type UserHandler interface {
 }
 
 type userHandler struct {
-	userClient pb.UserServiceClient
+	userClient user.UserServiceClient
 }
 
-func NewUserHandler(userConn *grpc.ClientConn) UserHandler {
-	uc := pb.NewUserServiceClient(userConn)
-
+func NewUserHandler(uc user.UserServiceClient) UserHandler {
 	return &userHandler{
 		userClient: uc,
 	}
@@ -37,13 +34,13 @@ func (h *userHandler) List(ctx *gin.Context) {
 	by := ctx.DefaultQuery("by", "")
 	direction := ctx.DefaultQuery("direction", "")
 
-	in := &pb.ListUserRequest{
+	in := &user.ListUserRequest{
 		Limit:  limit,
 		Offset: offset,
 	}
 
 	if field != "" {
-		search := &pb.Search{
+		search := &user.Search{
 			Field: field,
 			Value: value,
 		}
@@ -59,7 +56,7 @@ func (h *userHandler) List(ctx *gin.Context) {
 			return
 		}
 
-		order := &pb.Order{
+		order := &user.Order{
 			Field:   field,
 			OrderBy: entity.OrderBy(0).Value(direction).Proto(),
 		}
@@ -83,7 +80,7 @@ func (h *userHandler) List(ctx *gin.Context) {
 func (h *userHandler) Get(ctx *gin.Context) {
 	userID := ctx.Param("userID")
 
-	in := &pb.GetUserRequest{
+	in := &user.GetUserRequest{
 		UserId: userID,
 	}
 

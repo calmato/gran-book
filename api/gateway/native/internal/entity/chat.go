@@ -1,20 +1,20 @@
 package entity
 
 import (
-	pb "github.com/calmato/gran-book/api/gateway/native/proto"
+	pb "github.com/calmato/gran-book/api/gateway/native/proto/service/chat"
 )
 
 type ChatRoom struct {
-	*pb.ChatRoom
+	*pb.Room
 }
 
 type ChatRooms []*ChatRoom
 
-func NewChatRoom(cr *pb.ChatRoom) *ChatRoom {
+func NewChatRoom(cr *pb.Room) *ChatRoom {
 	return &ChatRoom{cr}
 }
 
-func NewChatRooms(crs []*pb.ChatRoom) ChatRooms {
+func NewChatRooms(crs []*pb.Room) ChatRooms {
 	res := make(ChatRooms, len(crs))
 	for i := range crs {
 		res[i] = NewChatRoom(crs[i])
@@ -39,9 +39,9 @@ func (crs ChatRooms) UserIDs() []string {
 }
 
 type ChatMessage struct {
-	*pb.ChatMessage
+	*pb.Message
 }
 
-func NewChatMessage(cm *pb.ChatMessage) *ChatMessage {
+func NewChatMessage(cm *pb.Message) *ChatMessage {
 	return &ChatMessage{cm}
 }

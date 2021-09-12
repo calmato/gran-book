@@ -1,10 +1,10 @@
 syntax = "proto3";
 
-package service;
+package book;
 
-option go_package = "github.com/calmato/gran-book/proto";
+option go_package = "github.com/calmato/gran-book/proto/service/book";
 
-import "common/common.proto";
+import "service/book/common.proto";
 
 // Book - 書籍
 message Book {
@@ -29,7 +29,7 @@ message Bookshelf {
   int64 id = 1; // 本棚ID
   int64 book_id = 2; // 書籍ID
   string user_id = 3; // ユーザーID
-  common.BookshelfStatus status = 4; // 読書ステータス
+  BookshelfStatus status = 4; // 読書ステータス
   string read_on = 5; // 読み終えた日
   int64 review_id = 6; // レビューID
   string created_at = 7; // 登録日時

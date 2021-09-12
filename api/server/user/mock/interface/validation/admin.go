@@ -7,7 +7,7 @@ package mock_validation
 import (
 	reflect "reflect"
 
-	proto "github.com/calmato/gran-book/api/server/user/proto"
+	user "github.com/calmato/gran-book/api/server/user/proto/service/user"
 	gomock "github.com/golang/mock/gomock"
 )
 
@@ -35,7 +35,7 @@ func (m *MockAdminRequestValidation) EXPECT() *MockAdminRequestValidationMockRec
 }
 
 // CreateAdmin mocks base method.
-func (m *MockAdminRequestValidation) CreateAdmin(req *proto.CreateAdminRequest) error {
+func (m *MockAdminRequestValidation) CreateAdmin(req *user.CreateAdminRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateAdmin", req)
 	ret0, _ := ret[0].(error)
@@ -49,7 +49,7 @@ func (mr *MockAdminRequestValidationMockRecorder) CreateAdmin(req interface{}) *
 }
 
 // DeleteAdmin mocks base method.
-func (m *MockAdminRequestValidation) DeleteAdmin(req *proto.DeleteAdminRequest) error {
+func (m *MockAdminRequestValidation) DeleteAdmin(req *user.DeleteAdminRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteAdmin", req)
 	ret0, _ := ret[0].(error)
@@ -63,7 +63,7 @@ func (mr *MockAdminRequestValidationMockRecorder) DeleteAdmin(req interface{}) *
 }
 
 // GetAdmin mocks base method.
-func (m *MockAdminRequestValidation) GetAdmin(req *proto.GetAdminRequest) error {
+func (m *MockAdminRequestValidation) GetAdmin(req *user.GetAdminRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetAdmin", req)
 	ret0, _ := ret[0].(error)
@@ -77,7 +77,7 @@ func (mr *MockAdminRequestValidationMockRecorder) GetAdmin(req interface{}) *gom
 }
 
 // ListAdmin mocks base method.
-func (m *MockAdminRequestValidation) ListAdmin(req *proto.ListAdminRequest) error {
+func (m *MockAdminRequestValidation) ListAdmin(req *user.ListAdminRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListAdmin", req)
 	ret0, _ := ret[0].(error)
@@ -91,7 +91,7 @@ func (mr *MockAdminRequestValidationMockRecorder) ListAdmin(req interface{}) *go
 }
 
 // UpdateAdminContact mocks base method.
-func (m *MockAdminRequestValidation) UpdateAdminContact(req *proto.UpdateAdminContactRequest) error {
+func (m *MockAdminRequestValidation) UpdateAdminContact(req *user.UpdateAdminContactRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateAdminContact", req)
 	ret0, _ := ret[0].(error)
@@ -105,7 +105,7 @@ func (mr *MockAdminRequestValidationMockRecorder) UpdateAdminContact(req interfa
 }
 
 // UpdateAdminPassword mocks base method.
-func (m *MockAdminRequestValidation) UpdateAdminPassword(req *proto.UpdateAdminPasswordRequest) error {
+func (m *MockAdminRequestValidation) UpdateAdminPassword(req *user.UpdateAdminPasswordRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateAdminPassword", req)
 	ret0, _ := ret[0].(error)
@@ -119,7 +119,7 @@ func (mr *MockAdminRequestValidationMockRecorder) UpdateAdminPassword(req interf
 }
 
 // UpdateAdminProfile mocks base method.
-func (m *MockAdminRequestValidation) UpdateAdminProfile(req *proto.UpdateAdminProfileRequest) error {
+func (m *MockAdminRequestValidation) UpdateAdminProfile(req *user.UpdateAdminProfileRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateAdminProfile", req)
 	ret0, _ := ret[0].(error)
@@ -133,7 +133,7 @@ func (mr *MockAdminRequestValidationMockRecorder) UpdateAdminProfile(req interfa
 }
 
 // UploadAdminThumbnail mocks base method.
-func (m *MockAdminRequestValidation) UploadAdminThumbnail(req *proto.UploadAdminThumbnailRequest) error {
+func (m *MockAdminRequestValidation) UploadAdminThumbnail(req *user.UploadAdminThumbnailRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UploadAdminThumbnail", req)
 	ret0, _ := ret[0].(error)

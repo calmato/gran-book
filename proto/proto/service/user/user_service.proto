@@ -1,12 +1,12 @@
 syntax = "proto3";
 
-package service;
+package user;
 
-option go_package = "github.com/calmato/gran-book/proto";
+option go_package = "github.com/calmato/gran-book/proto/service/user";
 
 import "github.com/envoyproxy/protoc-gen-validate/validate/validate.proto";
-import "common/common.proto";
-import "service/user_entity.proto";
+import "service/user/common.proto";
+import "service/user/user_entity.proto";
 
 service UserService {
   rpc ListUser(ListUserRequest) returns (UserListResponse);
@@ -20,8 +20,8 @@ service UserService {
 }
 
 message ListUserRequest {
-  common.Search search = 1;
-  common.Order order = 2;
+  Search search = 1;
+  Order order = 2;
   int64 limit = 3 [
     (validate.rules).int64 = {
       lte: 200
@@ -40,7 +40,7 @@ message ListFollowRequest {
       min_len: 1
     }
   ];
-  common.Order order = 2;
+  Order order = 2;
   int64 limit = 3 [
     (validate.rules).int64 = {
       lte: 200
@@ -59,7 +59,7 @@ message ListFollowerRequest {
       min_len: 1
     }
   ];
-  common.Order order = 2;
+  Order order = 2;
   int64 limit = 3 [
     (validate.rules).int64 = {
       lte: 200

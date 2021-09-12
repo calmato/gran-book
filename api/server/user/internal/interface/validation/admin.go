@@ -2,7 +2,7 @@ package validation
 
 import (
 	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
-	pb "github.com/calmato/gran-book/api/server/user/proto"
+	pb "github.com/calmato/gran-book/api/server/user/proto/service/user"
 )
 
 type AdminRequestValidation interface {

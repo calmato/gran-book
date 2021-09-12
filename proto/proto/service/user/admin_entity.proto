@@ -1,10 +1,10 @@
 syntax = "proto3";
 
-package service;
+package user;
 
-option go_package = "github.com/calmato/gran-book/proto";
+option go_package = "github.com/calmato/gran-book/proto/service/user";
 
-import "common/common.proto";
+import "service/user/common.proto";
 
 // Admin - 管理者ユーザー
 message Admin {
@@ -12,7 +12,7 @@ message Admin {
   string username = 2; // ユーザー名
   string email = 3; // メールアドレス
   string phone_number = 4; // 電話番号
-  common.Role role = 5; // ユーザー権限
+  Role role = 5; // ユーザー権限
   string thumbnail_url = 6; // サムネイルURL
   string self_introduction = 7; // 自己紹介
   string last_name = 8; // 姓

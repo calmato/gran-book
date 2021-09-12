@@ -34,18 +34,20 @@ generate: protoc
 	$(MAKE) generate-service OUTPUT_PATH=${INFORMATION_SERVER_PATH}
 
 generate-client:
+	mkdir -p ${OUTPUT_PATH}/app/types/api
 	cp -r ${ARCHIVE_PATH}/common/*_pb.d.ts ${OUTPUT_PATH}/app/types/api
 	cp -r ${ARCHIVE_PATH}/gateway/${CLIENT}/*_pb.d.ts ${OUTPUT_PATH}/app/types/api
 
 generate-gateway:
+	mkdir -p ${OUTPUT_PATH}/proto
 	cp -r ${ARCHIVE_PATH}/common/*.pb.go ${OUTPUT_PATH}/proto
-	cp -r ${ARCHIVE_PATH}/service/*.pb.go ${OUTPUT_PATH}/proto
+	cp -r ${ARCHIVE_PATH}/service ${OUTPUT_PATH}/proto
 
 generate-service:
+	mkdir -p ${OUTPUT_PATH}/proto
 	cp -r ${ARCHIVE_PATH}/common/*.pb.go ${OUTPUT_PATH}/proto
 	cp -r ${ARCHIVE_PATH}/common/*.pb.validate.go ${OUTPUT_PATH}/proto
-	cp -r ${ARCHIVE_PATH}/service/*.pb.go ${OUTPUT_PATH}/proto
-	cp -r ${ARCHIVE_PATH}/service/*.pb.validate.go ${OUTPUT_PATH}/proto
+	cp -r ${ARCHIVE_PATH}/service ${OUTPUT_PATH}/proto
 
 # ------------------------------------------------
 # For Protocol Buffer - clean
@@ -60,19 +62,16 @@ clean: clean-archive
 	$(MAKE) clean-service OUTPUT_PATH=${INFORMATION_SERVER_PATH}
 
 clean-archive:
-	rm -rf ${ARCHIVE_PATH}/**/*_pb.d.ts
-	rm -rf ${ARCHIVE_PATH}/**/*.pb.go
-	rm -rf ${ARCHIVE_PATH}/**/*.pb.validate.go
+	find ${ARCHIVE_PATH} -type f | grep -v -e '.keep' | xargs rm -rf
 
 clean-client:
-	rm -rf ${OUTPUT_PATH}/app/types/api/*_pb.d.ts
+	find ${OUTPUT_PATH}/app/types/api -type f | grep -v -e '.keep' | xargs rm -rf
 
 clean-gateway:
-	rm -rf ${OUTPUT_PATH}/proto/*.pb.go
+	find ${OUTPUT_PATH}/proto -type f | grep -v -e '.keep' | xargs rm -rf
 
 clean-service:
-	rm -rf ${OUTPUT_PATH}/proto/*.pb.go
-	rm -rf ${OUTPUT_PATH}/proto/*.pb.validate.go
+	find ${OUTPUT_PATH}/proto -type f | grep -v -e '.keep' | xargs rm -rf
 
 ##################################################
 # For Configuration
@@ -80,7 +79,7 @@ clean-service:
 .PHONY: install
 
 install:
-	npm install -g grpc grpc-tools grpc_tools_node_protoc_ts
+	npm install -g @grpc/grpc-js grpc-tools grpc_tools_node_protoc_ts
 	go get \
 		github.com/envoyproxy/protoc-gen-validate@v${PROTOC_GEN_VALIDATE_VERSION}
 	go install \
@@ -129,4 +128,4 @@ protoc-service:
 		--validate_out lang=go:${ARCHIVE_PATH} \
 		--validate_opt paths=source_relative \
 		./proto/common/*.proto \
-		./proto/service/*.proto
+		./proto/service/**/*.proto

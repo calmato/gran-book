@@ -1,12 +1,12 @@
 syntax = "proto3";
 
-package service;
+package book;
 
-option go_package = "github.com/calmato/gran-book/proto";
+option go_package = "github.com/calmato/gran-book/proto/service/book";
 
 import "github.com/envoyproxy/protoc-gen-validate/validate/validate.proto";
-import "common/common.proto";
-import "service/book_entity.proto";
+import "service/book/book_entity.proto";
+import "service/book/common.proto";
 
 service BookService {
   rpc ListBookshelf(ListBookshelfRequest) returns (BookshelfListResponse);
@@ -25,8 +25,8 @@ service BookService {
   rpc StackedBookshelf(StackedBookshelfRequest) returns (BookshelfResponse);
   rpc WantBookshelf(WantBookshelfRequest) returns (BookshelfResponse);
   rpc ReleaseBookshelf(ReleaseBookshelfRequest) returns (BookshelfResponse);
-  rpc DeleteBook(DeleteBookRequest) returns (common.Empty);
-  rpc DeleteBookshelf(DeleteBookshelfRequest) returns (common.Empty);
+  rpc DeleteBook(DeleteBookRequest) returns (Empty);
+  rpc DeleteBookshelf(DeleteBookshelfRequest) returns (Empty);
 }
 
 message ListBookshelfRequest {
@@ -35,7 +35,7 @@ message ListBookshelfRequest {
       min_len: 1
     }
   ];
-  common.Order order = 2;
+  Order order = 2;
   int64 limit = 3 [
     (validate.rules).int64 = {
       lte: 200
@@ -54,7 +54,7 @@ message ListBookReviewRequest {
       gt: 0
     }
   ];
-  common.Order order = 2;
+  Order order = 2;
   int64 limit = 3 [
     (validate.rules).int64 = {
       lte: 200
@@ -73,7 +73,7 @@ message ListUserReviewRequest {
       min_len: 1
     }
   ];
-  common.Order order = 2;
+  Order order = 2;
   int64 limit = 3 [
     (validate.rules).int64 = {
       lte: 200

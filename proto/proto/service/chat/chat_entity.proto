@@ -1,20 +1,20 @@
 syntax = "proto3";
 
-package service;
+package chat;
 
-option go_package = "github.com/calmato/gran-book/proto";
+option go_package = "github.com/calmato/gran-book/proto/service/chat";
 
-// ChatRoom - チャットルーム
-message ChatRoom {
+// Room - チャットルーム
+message Room {
   string id = 1; // チャットルームID
   repeated string user_ids = 2; // 参加者ID一覧
   string created_at = 3; // 作成日時
   string updated_at = 4; // 更新日
-  ChatMessage latest_message = 5; // 最新のメッセージ
+  Message latest_message = 5; // 最新のメッセージ
 }
 
-// ChatMessage - チャットメッセージ
-message ChatMessage {
+// Message - チャットメッセージ
+message Message {
   string id = 1; // チャットメッセージID
   string user_id = 2; // ユーザーID
   string text = 3; // テキストメッセージ

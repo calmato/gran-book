@@ -6,9 +6,8 @@ import (
 
 	"github.com/calmato/gran-book/api/gateway/admin/internal/entity"
 	"github.com/calmato/gran-book/api/gateway/admin/internal/server/util"
-	pb "github.com/calmato/gran-book/api/gateway/admin/proto"
+	"github.com/calmato/gran-book/api/gateway/admin/proto/service/book"
 	"github.com/gin-gonic/gin"
-	"google.golang.org/grpc"
 )
 
 type BookHandler interface {
@@ -16,12 +15,10 @@ type BookHandler interface {
 }
 
 type bookHandler struct {
-	bookClient pb.BookServiceClient
+	bookClient book.BookServiceClient
 }
 
-func NewBookHandler(bookConn *grpc.ClientConn) BookHandler {
-	bc := pb.NewBookServiceClient(bookConn)
-
+func NewBookHandler(bc book.BookServiceClient) BookHandler {
 	return &bookHandler{
 		bookClient: bc,
 	}
@@ -34,7 +31,7 @@ func (h *bookHandler) Delete(ctx *gin.Context) {
 		return
 	}
 
-	in := &pb.DeleteBookRequest{
+	in := &book.DeleteBookRequest{
 		BookId: bookID,
 	}
 

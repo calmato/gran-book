@@ -1,20 +1,20 @@
 syntax = "proto3";
 
-package service;
+package chat;
 
-option go_package = "github.com/calmato/gran-book/proto";
+option go_package = "github.com/calmato/gran-book/proto/service/chat";
 
 import "github.com/envoyproxy/protoc-gen-validate/validate/validate.proto";
-import "service/chat_entity.proto";
+import "service/chat/chat_entity.proto";
 
 service ChatService {
-  rpc ListRoom(ListChatRoomRequest) returns (ChatRoomListResponse);
-  rpc CreateRoom(CreateChatRoomRequest) returns (ChatRoomResponse);
-  rpc CreateMessage(CreateChatMessageRequest) returns (ChatMessageResponse);
-  rpc UploadImage(stream UploadChatImageRequest) returns (ChatMessageResponse);
+  rpc ListRoom(ListRoomRequest) returns (RoomListResponse);
+  rpc CreateRoom(CreateRoomRequest) returns (RoomResponse);
+  rpc CreateMessage(CreateMessageRequest) returns (MessageResponse);
+  rpc UploadImage(stream UploadChatImageRequest) returns (MessageResponse);
 }
 
-message ListChatRoomRequest {
+message ListRoomRequest {
   string user_id = 1 [
     (validate.rules).string = {
       min_len: 1
@@ -28,7 +28,7 @@ message ListChatRoomRequest {
   string offset = 3;
 }
 
-message CreateChatRoomRequest {
+message CreateRoomRequest {
   repeated string user_ids = 1 [
     (validate.rules).repeated = {
       min_items: 2
@@ -38,7 +38,7 @@ message CreateChatRoomRequest {
   ];
 }
 
-message CreateChatMessageRequest {
+message CreateMessageRequest {
   string room_id = 1 [
     (validate.rules).string = {
       min_len: 1
@@ -68,14 +68,14 @@ message UploadChatImageRequest {
   ];
 }
 
-message ChatRoomResponse {
-  ChatRoom room = 1;
+message RoomResponse {
+  Room room = 1;
 }
 
-message ChatRoomListResponse {
-  repeated ChatRoom rooms = 1;
+message RoomListResponse {
+  repeated Room rooms = 1;
 }
 
-message ChatMessageResponse {
-  ChatMessage message = 1;
+message MessageResponse {
+  Message message = 1;
 }

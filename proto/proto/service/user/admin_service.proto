@@ -1,12 +1,12 @@
 syntax = "proto3";
 
-package service;
+package user;
 
-option go_package = "github.com/calmato/gran-book/proto";
+option go_package = "github.com/calmato/gran-book/proto/service/user";
 
 import "github.com/envoyproxy/protoc-gen-validate/validate/validate.proto";
-import "common/common.proto";
-import "service/admin_entity.proto";
+import "service/user/admin_entity.proto";
+import "service/user/common.proto";
 
 service AdminService {
   rpc ListAdmin(ListAdminRequest) returns (AdminListResponse);
@@ -16,12 +16,12 @@ service AdminService {
   rpc UpdateAdminPassword(UpdateAdminPasswordRequest) returns (AdminResponse);
   rpc UpdateAdminProfile(UpdateAdminProfileRequest) returns (AdminResponse);
   rpc UploadAdminThumbnail(stream UploadAdminThumbnailRequest) returns (AdminThumbnailResponse);
-  rpc DeleteAdmin(DeleteAdminRequest) returns (common.Empty);
+  rpc DeleteAdmin(DeleteAdminRequest) returns (Empty);
 }
 
 message ListAdminRequest {
-  common.Search search = 1;
-  common.Order order = 2;
+  Search search = 1;
+  Order order = 2;
   int64 limit = 3 [
     (validate.rules).int64 = {
       lte: 200
@@ -74,7 +74,7 @@ message CreateAdminRequest {
       min_len: 1
     }
   ];
-  common.Role role = 6 [
+  Role role = 6 [
     (validate.rules).enum = {
       defined_only: true
       not_in: [
@@ -163,7 +163,7 @@ message UpdateAdminProfileRequest {
       max_len: 32
     }
   ];
-  common.Role role = 3 [
+  Role role = 3 [
     (validate.rules).enum = {
       defined_only: true
       not_in: [

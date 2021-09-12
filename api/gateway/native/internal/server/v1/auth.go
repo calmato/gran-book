@@ -8,7 +8,7 @@ import (
 	request "github.com/calmato/gran-book/api/gateway/native/internal/request/v1"
 	response "github.com/calmato/gran-book/api/gateway/native/internal/response/v1"
 	"github.com/calmato/gran-book/api/gateway/native/internal/server/util"
-	pb "github.com/calmato/gran-book/api/gateway/native/proto"
+	"github.com/calmato/gran-book/api/gateway/native/proto/service/user"
 	"github.com/gin-gonic/gin"
 )
 
@@ -25,10 +25,10 @@ type AuthHandler interface {
 }
 
 type authHandler struct {
-	authClient pb.AuthServiceClient
+	authClient user.AuthServiceClient
 }
 
-func NewAuthHandler(ac pb.AuthServiceClient) AuthHandler {
+func NewAuthHandler(ac user.AuthServiceClient) AuthHandler {
 	return &authHandler{
 		authClient: ac,
 	}
@@ -36,7 +36,7 @@ func NewAuthHandler(ac pb.AuthServiceClient) AuthHandler {
 
 // Get - 認証情報取得
 func (h *authHandler) Get(ctx *gin.Context) {
-	in := &pb.Empty{}
+	in := &user.Empty{}
 
 	c := util.SetMetadata(ctx)
 	out, err := h.authClient.GetAuth(c, in)
@@ -59,7 +59,7 @@ func (h *authHandler) Create(ctx *gin.Context) {
 		return
 	}
 
-	in := &pb.CreateAuthRequest{
+	in := &user.CreateAuthRequest{
 		Username:             req.Username,
 		Email:                req.Email,
 		Password:             req.Password,
@@ -86,9 +86,9 @@ func (h *authHandler) UpdateProfile(ctx *gin.Context) {
 		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
 	}
 
-	in := &pb.UpdateAuthProfileRequest{
+	in := &user.UpdateAuthProfileRequest{
 		Username:         req.Username,
-		Gender:           pb.Gender(req.Gender),
+		Gender:           user.Gender(req.Gender),
 		ThumbnailUrl:     req.ThumbnailURL,
 		SelfIntroduction: req.SelfIntroduction,
 	}
@@ -113,7 +113,7 @@ func (h *authHandler) UpdateAddress(ctx *gin.Context) {
 		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
 	}
 
-	in := &pb.UpdateAuthAddressRequest{
+	in := &user.UpdateAuthAddressRequest{
 		LastName:      req.LastName,
 		FirstName:     req.FirstName,
 		LastNameKana:  req.LastNameKana,
@@ -146,7 +146,7 @@ func (h *authHandler) UpdateEmail(ctx *gin.Context) {
 		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
 	}
 
-	in := &pb.UpdateAuthEmailRequest{
+	in := &user.UpdateAuthEmailRequest{
 		Email: req.Email,
 	}
 
@@ -170,7 +170,7 @@ func (h *authHandler) UpdatePassword(ctx *gin.Context) {
 		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
 	}
 
-	in := &pb.UpdateAuthPasswordRequest{
+	in := &user.UpdateAuthPasswordRequest{
 		Password:             req.Password,
 		PasswordConfirmation: req.PasswordConfirmation,
 	}
@@ -215,7 +215,7 @@ func (h *authHandler) UploadThumbnail(ctx *gin.Context) {
 			return
 		}
 
-		in := &pb.UploadAuthThumbnailRequest{
+		in := &user.UploadAuthThumbnailRequest{
 			Thumbnail: buf,
 			Position:  count,
 		}
@@ -241,7 +241,7 @@ func (h *authHandler) UploadThumbnail(ctx *gin.Context) {
 // Delete - ユーザー退会
 func (h *authHandler) Delete(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
-	_, err := h.authClient.DeleteAuth(c, &pb.Empty{})
+	_, err := h.authClient.DeleteAuth(c, &user.Empty{})
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -258,7 +258,7 @@ func (h *authHandler) RegisterDevice(ctx *gin.Context) {
 		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
 	}
 
-	in := &pb.RegisterAuthDeviceRequest{
+	in := &user.RegisterAuthDeviceRequest{
 		InstanceId: req.InstanceID,
 	}
 

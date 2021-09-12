@@ -8,7 +8,8 @@ import (
 	"strings"
 
 	"github.com/calmato/gran-book/api/server/user/internal/interface/server"
-	pb "github.com/calmato/gran-book/api/server/user/proto"
+	"github.com/calmato/gran-book/api/server/user/proto/service/chat"
+	"github.com/calmato/gran-book/api/server/user/proto/service/user"
 	"github.com/calmato/gran-book/api/server/user/registry"
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
@@ -38,17 +39,17 @@ func newGRPCServer(port, logPath, logLevel string, reg *registry.Registry) (*grp
 	}
 
 	s := grpc.NewServer(opts...)
-	pb.RegisterAdminServiceServer(s,
+	user.RegisterAdminServiceServer(s,
 		server.NewAdminServer(reg.AdminRequestValidation, reg.UserApplication),
 	)
-	pb.RegisterAuthServiceServer(s,
+	user.RegisterAuthServiceServer(s,
 		server.NewAuthServer(reg.AuthRequsetValidation, reg.UserApplication),
 	)
-	pb.RegisterChatServiceServer(s,
-		server.NewChatServer(reg.ChatRequestValidation, reg.ChatApplication),
-	)
-	pb.RegisterUserServiceServer(s,
+	user.RegisterUserServiceServer(s,
 		server.NewUserServer(reg.UserRequestValidation, reg.UserApplication),
+	)
+	chat.RegisterChatServiceServer(s,
+		server.NewChatServer(reg.ChatRequestValidation, reg.ChatApplication),
 	)
 
 	grpc_prometheus.Register(s)

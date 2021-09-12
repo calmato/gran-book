@@ -4,10 +4,12 @@ BIN := $(abspath ./bin)
 PACKAGES := $(shell go list ./... | grep -v -e "mocks" -v -e "proto")
 TEST_PACKAGES := $(shell go list ./internal/... ./pkg/... | grep -v -e "pkg/firebase" -v -e "pkg/metadata" -v -e "pkg/test")
 
-.PHONY: setup run build start
+.PHONY: setup install run build start fmt vet lint test mockgen
 
-setup:
+setup: install
 	wget -O - -nv https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v${GOLANGCI_VERSION}
+
+install:
 	go install github.com/golang/mock/mockgen@v1.6.0
 
 run:

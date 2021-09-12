@@ -1,19 +1,19 @@
 syntax = "proto3";
 
-package service;
+package user;
 
-option go_package = "github.com/calmato/gran-book/proto";
+option go_package = "github.com/calmato/gran-book/proto/service/user";
 
-import "common/common.proto";
+import "service/user/common.proto";
 
 // Auth - ログインユーザ情報
 message Auth {
   string id = 1; // ユーザーID
   string username = 2; // ユーザー名
-  common.Gender gender = 3; // 性別
+  Gender gender = 3; // 性別
   string email = 4; // メールアドレス
   string phone_number = 5; // 電話番号
-  common.Role role = 6; // ユーザー権限
+  Role role = 6; // ユーザー権限
   string thumbnail_url = 7; // サムネイルURL
   string self_introduction = 8; // 自己紹介
   string last_name = 9; // 姓
