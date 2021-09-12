@@ -1,3 +1,6 @@
+import { RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { AxiosResponse } from 'axios';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import OtherProfile from '~/screens/OtherProfile';
@@ -5,33 +8,15 @@ import { Auth, User } from '~/store/models';
 import { useReduxDispatch } from '~/store/modules';
 import { authSelector, userSelector } from '~/store/selectors';
 import { getOtherProfileAsync } from '~/store/usecases/user';
+import { BookshelfTabStackParamList } from '~/types/navigation';
 
-export default function ConnectedOwnProfile(): JSX.Element {
-  const auth: Auth.Model = useSelector(authSelector);
-  const user: User.Model = useSelector(userSelector);
-  const dispatch = useReduxDispatch();
+interface Props {
+  route: RouteProp<BookshelfTabStackParamList, 'OtherProfile'>;
+  navigation: StackNavigationProp<BookshelfTabStackParamList, 'OtherProfile'>;
+}
 
-  const actions = React.useMemo(
-    () => ({
-      getOtherProfile(): Promise<void> {
-        return dispatch(getOtherProfileAsync(auth.id));
-      },
-    }),
-    [dispatch, auth.id],
-  );
+export default function ConnectedOwnProfile(props: Props): JSX.Element {
+  // MEMO OtherProfile画面で下にスワイプしたら更新できるようにするので、Actionsとして関数渡さなきゃいけない
 
-  return (
-    <OtherProfile
-      username={user.username}
-      selfIntroduction={user.selfIntroduction}
-      thumbnailUrl={user.thumbnailUrl}
-      gender={auth.gender}
-      rating={user.rating}
-      reviewCount={user.reviewCount}
-      saleCount={user.products.length}
-      followCount={user.followCount}
-      followerCount={user.followerCount}
-      actions={actions}
-    />
-  );
+  return <OtherProfile route={props.route} navigation={props.navigation} actions={undefined} />;
 }
