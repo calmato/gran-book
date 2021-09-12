@@ -1,6 +1,5 @@
 import { NavigationContainer } from '@react-navigation/native';
-import React, { ReactElement } from 'react';
-import { usePrepare } from '~/hooks/usePrepare';
+import React, { ReactElement, useContext } from 'react';
 import * as UiContext from '~/lib/context/ui';
 import OnboadingRoute from '~/routes/OnboadingRoute';
 import ServiceRoute from '~/routes/ServiceRoute';
@@ -20,7 +19,7 @@ function SwitchingStatus(status: UiContext.Status): ReactElement {
 }
 
 export default function MainRoute(): ReactElement {
-  const uiContext = usePrepare();
+  const uiContext = useContext(UiContext.Context);
 
   // ローディング中はSplashScreenを表示する
   return uiContext.applicationState === UiContext.Status.LOADING ? (

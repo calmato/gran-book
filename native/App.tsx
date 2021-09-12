@@ -1,6 +1,7 @@
 import React, { ReactElement } from 'react';
 import { ThemeProvider } from 'react-native-elements';
 import { Provider } from 'react-redux';
+import { AuthProvider } from '~/context/auth';
 import { UiContext } from '~/lib/context';
 import { createApplicationInitialState } from '~/lib/context/ui';
 import MainRoute from '~/routes';
@@ -14,7 +15,9 @@ const App = function App(): ReactElement {
     <Provider store={store}>
       <ThemeProvider theme={THEME}>
         <UiContext.Provider value={{ applicationState, setApplicationState }}>
-          <MainRoute />
+          <AuthProvider>
+            <MainRoute />
+          </AuthProvider>
         </UiContext.Provider>
       </ThemeProvider>
     </Provider>
