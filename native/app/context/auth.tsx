@@ -1,4 +1,5 @@
-import React, { createContext, useEffect, useReducer } from 'react';
+import React, { createContext, useContext, useEffect, useReducer } from 'react';
+import * as UiContext from '~/lib/context/ui';
 import firebase from '~/lib/firebase';
 import { AuthValues, initialState, Model, ProfileValues } from '~/store/models/auth';
 
@@ -49,11 +50,12 @@ interface Props {
 const AuthProvider = function AuthProvider({ children }: Props) {
   const [authState, dispatch] = useReducer(reducer, initialState);
 
+  const uiContext = useContext(UiContext.Context);
+
   useEffect(() => {
-    const f = async () => {
-      firebase.auth().onAuthStateChanged(async (user) => {
-        if (user) {
-          const token = await user.getIdToken();
+    const unsubscribed = firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        user.getIdToken().then((token) => {
           dispatch({
             type: 'SET_AUTH_VALUES',
             payload: {
@@ -63,10 +65,12 @@ const AuthProvider = function AuthProvider({ children }: Props) {
               token,
             },
           });
-        }
-      });
-    };
-    f();
+          uiContext.setApplicationState(UiContext.Status.AUTHORIZED);
+        });
+      }
+      uiContext.setApplicationState(UiContext.Status.UN_AUTHORIZED);
+    });
+    return () => unsubscribed();
   }, []);
 
   return <AuthContext.Provider value={{ authState, dispatch }}>{children}</AuthContext.Provider>;
