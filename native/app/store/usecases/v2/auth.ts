@@ -24,6 +24,10 @@ export async function signInWithEmailAndPassword(payload: SignInForm) {
   try {
     const { user } = await firebase.auth().signInWithEmailAndPassword(email, password);
 
+    if (!user?.emailVerified) {
+      return null;
+    }
+
     return user;
   } catch (e) {
     return Promise.reject(e);
@@ -38,6 +42,8 @@ export async function signInWithEmailAndPassword(payload: SignInForm) {
 export async function signUpWithEmail(payload: SingUpForm) {
   try {
     await internal.post(`/${API_VERSION}/auth`, payload);
+
+    await firebase.auth().signInWithEmailAndPassword(payload.email, payload.password);
     await firebase.auth().currentUser?.sendEmailVerification();
   } catch (e) {
     return Promise.reject(e);

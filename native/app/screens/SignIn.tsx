@@ -49,35 +49,30 @@ const SignIn = function SignIn(props: Props): ReactElement {
     return !(emailError || passwordError);
   }, [emailError, passwordError]);
 
-  const createAlertNotifySignupError = (code: number) =>
-    Alert.alert('サインインに失敗', `${generateErrorMessage(code)}`, [
-      {
-        text: 'OK',
-      },
-    ]);
+  const createAlertNotifySignInError = useCallback(
+    (title: string, message: string) =>
+      Alert.alert(title, message, [
+        {
+          text: 'OK',
+        },
+      ]),
+    [],
+  );
 
   const handleSubmit = React.useCallback(async () => {
-    await signInWithEmail(formData.email, formData.password)
-      .then(() => {
-        return registerForPushNotifications();
-      })
-      .then(() => {
-        return getAuth();
-      })
-      .then(() => {
-        setApplicationState(Status.AUTHORIZED);
-      })
-      .catch((err) => {
-        createAlertNotifySignupError(err.code);
-      });
-  }, [
-    formData.email,
-    formData.password,
-    registerForPushNotifications,
-    signInWithEmail,
-    getAuth,
-    setApplicationState,
-  ]);
+    try {
+      const user = await signInWithEmailAndPassword(formData);
+      if (!user) {
+        createAlertNotifySignInError('サインインに失敗', 'メールから登録を完了してください。');
+      }
+    } catch (e) {
+      console.log(e);
+      createAlertNotifySignInError(
+        'サインインに失敗',
+        'メールアドレスまたはパスワードが間違っています。',
+      );
+    }
+  }, [formData, createAlertNotifySignInError]);
 
   return (
     <View style={styles.container}>
