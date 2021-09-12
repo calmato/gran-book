@@ -11,12 +11,12 @@ fi
 # Function
 #############################
 build_mock() {
-  path=${1##.\/proto\/}
+  path=${1##$(PWD)/proto/service/}
 
   dirname=${path%%/*}
   filename=${path##*/}
 
-  mockgen -source ./proto/${path} -destination mock/${dirname}/${filename}.go
+  mockgen -source ./proto/service/${path} -destination mock/${dirname}/${filename}.go
 }
 
 #############################
@@ -24,7 +24,7 @@ build_mock() {
 #############################
 rm -rf ./mock
 
-paths=$(find ./proto/**/*_service_grpc.pb.go)
-for path in ${paths}; do
+paths=$(find $(PWD)/proto/service/**/*_service_grpc.pb.go -type f)
+for path in "${paths}"; do
   build_mock ${path}
 done
