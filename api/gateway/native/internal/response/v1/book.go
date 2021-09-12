@@ -20,13 +20,18 @@ type BookResponse struct {
 	Size         string         `json:"size"`         // 楽天書籍サイズ
 	Author       string         `json:"author"`       // 著者名一覧
 	AuthorKana   string         `json:"authorKana"`   // 著者名一覧(かな)
-	Bookshelf    *BookBookshelf `json:"bookshelf"`    // ユーザーの本棚情報
+	Bookshelf    *bookBookshelf `json:"bookshelf"`    // ユーザーの本棚情報
 	CreatedAt    string         `json:"createdAt"`    // 登録日時
 	UpdatedAt    string         `json:"updatedAt"`    // 更新日時
 }
 
 func NewBookResponse(b *entity.Book, bs *entity.Bookshelf) *BookResponse {
-	res := &BookResponse{
+	var bookshelf *bookBookshelf
+	if bs != nil {
+		bookshelf = newBookBookshelf(bs)
+	}
+
+	return &BookResponse{
 		ID:           b.Id,
 		Title:        b.Title,
 		TitleKana:    b.TitleKana,
@@ -39,18 +44,13 @@ func NewBookResponse(b *entity.Book, bs *entity.Bookshelf) *BookResponse {
 		Size:         b.RakutenSize,
 		Author:       strings.Join(b.AuthorNames(), "/"),
 		AuthorKana:   strings.Join(b.AuthorNameKanas(), "/"),
+		Bookshelf:    bookshelf,
 		CreatedAt:    b.CreatedAt,
 		UpdatedAt:    b.UpdatedAt,
 	}
-
-	if bs != nil {
-		res.Bookshelf = newBookBookshelf(bs)
-	}
-
-	return res
 }
 
-type BookBookshelf struct {
+type bookBookshelf struct {
 	ID         int64  `json:"id"`         // 本棚ID
 	Status     string `json:"status"`     // 読書ステータス
 	ReadOn     string `json:"readOn"`     // 読み終えた日
@@ -59,8 +59,8 @@ type BookBookshelf struct {
 	UpdatedAt  string `json:"updatedAt"`  // 更新日時
 }
 
-func newBookBookshelf(bs *entity.Bookshelf) *BookBookshelf {
-	return &BookBookshelf{
+func newBookBookshelf(bs *entity.Bookshelf) *bookBookshelf {
+	return &bookBookshelf{
 		ID:         bs.Id,
 		Status:     bs.Status().Name(),
 		Impression: "",

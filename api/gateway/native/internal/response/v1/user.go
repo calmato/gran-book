@@ -4,7 +4,7 @@ import "github.com/calmato/gran-book/api/gateway/native/internal/entity"
 
 // フォロー一覧
 type FollowListResponse struct {
-	Users  []*FollowListUser `json:"usersList"` // フォロー一覧
+	Users  []*followListUser `json:"usersList"` // フォロー一覧
 	Limit  int64             `json:"limit"`     // 取得上限数
 	Offset int64             `json:"offset"`    // 取得開始位置
 	Total  int64             `json:"total"`     // 検索一致数
@@ -19,7 +19,7 @@ func NewFollowListResponse(fs entity.Follows, limit, offset, total int64) *Follo
 	}
 }
 
-type FollowListUser struct {
+type followListUser struct {
 	ID               string `json:"id"`               // ユーザーID
 	Username         string `json:"username"`         // 表示名
 	ThumbnailURL     string `json:"thumbnailUrl"`     // サムネイルURL
@@ -27,8 +27,8 @@ type FollowListUser struct {
 	IsFollow         bool   `json:"isFollow"`         // 自分がフォローしているか
 }
 
-func newFollowListUser(f *entity.Follow) *FollowListUser {
-	return &FollowListUser{
+func newFollowListUser(f *entity.Follow) *followListUser {
+	return &followListUser{
 		ID:               f.Id,
 		Username:         f.Username,
 		ThumbnailURL:     f.ThumbnailUrl,
@@ -37,8 +37,8 @@ func newFollowListUser(f *entity.Follow) *FollowListUser {
 	}
 }
 
-func newFollowListUsers(fs entity.Follows) []*FollowListUser {
-	res := make([]*FollowListUser, len(fs))
+func newFollowListUsers(fs entity.Follows) []*followListUser {
+	res := make([]*followListUser, len(fs))
 	for i := range fs {
 		res[i] = newFollowListUser(fs[i])
 	}
@@ -47,7 +47,7 @@ func newFollowListUsers(fs entity.Follows) []*FollowListUser {
 
 // フォロワー一覧
 type FollowerListResponse struct {
-	Users  []*FollowerListUser `json:"usersList"` // フォロワー一覧
+	Users  []*followerListUser `json:"usersList"` // フォロワー一覧
 	Limit  int64               `json:"limit"`     // 取得上限数
 	Offset int64               `json:"offset"`    // 取得開始位置
 	Total  int64               `json:"total"`     // 検索一致数
@@ -62,7 +62,7 @@ func NewFollowerListResponse(fs entity.Followers, limit, offset, total int64) *F
 	}
 }
 
-type FollowerListUser struct {
+type followerListUser struct {
 	ID               string `json:"id"`               // ユーザーID
 	Username         string `json:"username"`         // 表示名
 	ThumbnailURL     string `json:"thumbnailUrl"`     // サムネイルURL
@@ -70,8 +70,8 @@ type FollowerListUser struct {
 	IsFollow         bool   `json:"isFollow"`         // 自分がフォローしているか
 }
 
-func newFollowerListUser(f *entity.Follower) *FollowerListUser {
-	return &FollowerListUser{
+func newFollowerListUser(f *entity.Follower) *followerListUser {
+	return &followerListUser{
 		ID:               f.Id,
 		Username:         f.Username,
 		ThumbnailURL:     f.ThumbnailUrl,
@@ -80,8 +80,8 @@ func newFollowerListUser(f *entity.Follower) *FollowerListUser {
 	}
 }
 
-func newFollowerListUsers(fs entity.Followers) []*FollowerListUser {
-	res := make([]*FollowerListUser, len(fs))
+func newFollowerListUsers(fs entity.Followers) []*followerListUser {
+	res := make([]*followerListUser, len(fs))
 	for i := range fs {
 		res[i] = newFollowerListUser(fs[i])
 	}
@@ -100,7 +100,7 @@ type UserProfileResponse struct {
 	FollowerCount    int64                 `json:"followerCount"`    // フォロワー数
 	Rating           int32                 `json:"rating"`           // ユーザーからの平均評価
 	ReviewCount      int64                 `json:"reviewCount"`      // ユーザーからのレビュー数
-	Products         []*UserProfileProduct `json:"productsList"`     // 出品商品一覧
+	Products         []*userProfileProduct `json:"productsList"`     // 出品商品一覧
 }
 
 func NewUserProfileResponse(p *entity.UserProfile) *UserProfileResponse {
@@ -119,7 +119,7 @@ func NewUserProfileResponse(p *entity.UserProfile) *UserProfileResponse {
 	}
 }
 
-type UserProfileProduct struct {
+type userProfileProduct struct {
 	ID           int64    `json:"id"`           // 商品ID
 	Name         string   `json:"name"`         // 商品名
 	ThumbnailURL string   `json:"thumbnailUrl"` // サムネイルURL
@@ -127,12 +127,12 @@ type UserProfileProduct struct {
 }
 
 // TODO: create
-// func newUserProfileProduct() *UserProfileProduct {
+// func newUserProfileProduct() *userProfileProduct {
 // 	return nil
 // }
 
 // TODO: create
-func newUserProfileProducts() []*UserProfileProduct {
-	res := make([]*UserProfileProduct, 0)
+func newUserProfileProducts() []*userProfileProduct {
+	res := make([]*userProfileProduct, 0)
 	return res
 }

@@ -8,8 +8,8 @@ import (
 // チャットルーム情報
 type ChatRoomResponse struct {
 	ID            string           `json:"id"`            // チャットルームID
-	Users         []*ChatRoomUser  `json:"usersList"`     // 参加者一覧
-	LatestMessage *ChatRoomMessage `json:"latestMessage"` // 最新のメッセージ
+	Users         []*chatRoomUser  `json:"usersList"`     // 参加者一覧
+	LatestMessage *chatRoomMessage `json:"latestMessage"` // 最新のメッセージ
 	CreatedAt     string           `json:"createdAt"`     // 作成日時
 	UpdatedAt     string           `json:"updatedAt"`     // 更新日時
 }
@@ -24,19 +24,19 @@ func NewChatRoomResponse(cr *entity.ChatRoom, um map[string]*entity.User) *ChatR
 	}
 }
 
-type ChatRoomMessage struct {
+type chatRoomMessage struct {
 	UserID    string `json:"userId"`    // ユーザーID
 	Text      string `json:"text"`      // テキストメッセージ
 	Image     string `json:"image"`     // 添付画像URL
 	CreatedAt string `json:"createdAt"` // 送信日時
 }
 
-func newChatRoomMessage(cm *chat.Message) *ChatRoomMessage {
+func newChatRoomMessage(cm *chat.Message) *chatRoomMessage {
 	if cm == nil {
-		return &ChatRoomMessage{}
+		return &chatRoomMessage{}
 	}
 
-	return &ChatRoomMessage{
+	return &chatRoomMessage{
 		UserID:    cm.UserId,
 		Text:      cm.Text,
 		Image:     cm.Image,
@@ -44,28 +44,28 @@ func newChatRoomMessage(cm *chat.Message) *ChatRoomMessage {
 	}
 }
 
-type ChatRoomUser struct {
+type chatRoomUser struct {
 	ID           string `json:"id"`           // ユーザーID
 	Username     string `json:"username"`     // 表示名
 	ThumbnailURL string `json:"thumbnailUrl"` // サムネイルURL
 }
 
-func newChatRoomUser(u *entity.User) *ChatRoomUser {
+func newChatRoomUser(u *entity.User) *chatRoomUser {
 	if u == nil {
-		return &ChatRoomUser{
+		return &chatRoomUser{
 			Username: "unknown",
 		}
 	}
 
-	return &ChatRoomUser{
+	return &chatRoomUser{
 		ID:           u.Id,
 		Username:     u.Username,
 		ThumbnailURL: u.ThumbnailUrl,
 	}
 }
 
-func newChatRoomUsers(userIDs []string, um map[string]*entity.User) []*ChatRoomUser {
-	res := make([]*ChatRoomUser, len(userIDs))
+func newChatRoomUsers(userIDs []string, um map[string]*entity.User) []*chatRoomUser {
+	res := make([]*chatRoomUser, len(userIDs))
 	for i := range userIDs {
 		u := um[userIDs[i]]
 		res[i] = newChatRoomUser(u)
@@ -75,7 +75,7 @@ func newChatRoomUsers(userIDs []string, um map[string]*entity.User) []*ChatRoomU
 
 // チャットルーム一覧
 type ChatRoomListResponse struct {
-	Rooms []*ChatRoomListRoom `json:"rooms"` // チャットルーム一覧
+	Rooms []*chatRoomListRoom `json:"rooms"` // チャットルーム一覧
 }
 
 func NewChatRoomListResponse(crs entity.ChatRooms, um map[string]*entity.User) *ChatRoomListResponse {
@@ -84,16 +84,16 @@ func NewChatRoomListResponse(crs entity.ChatRooms, um map[string]*entity.User) *
 	}
 }
 
-type ChatRoomListRoom struct {
+type chatRoomListRoom struct {
 	ID            string               `json:"id"`            // チャットルームID
-	Users         []*ChatRoomListUser  `json:"usersList"`     // 参加者一覧
-	LatestMessage *ChatRoomListMessage `json:"latestMessage"` // 最新のメッセージ
+	Users         []*chatRoomListUser  `json:"usersList"`     // 参加者一覧
+	LatestMessage *chatRoomListMessage `json:"latestMessage"` // 最新のメッセージ
 	CreatedAt     string               `json:"createdAt"`     // 作成日時
 	UpdatedAt     string               `json:"updatedAt"`     // 更新日時
 }
 
-func newChatRoomListRoom(cr *entity.ChatRoom, um map[string]*entity.User) *ChatRoomListRoom {
-	return &ChatRoomListRoom{
+func newChatRoomListRoom(cr *entity.ChatRoom, um map[string]*entity.User) *chatRoomListRoom {
+	return &chatRoomListRoom{
 		ID:            cr.Id,
 		Users:         newChatRoomListUsers(cr.UserIds, um),
 		LatestMessage: newChatRoomListMessage(cr.LatestMessage),
@@ -102,27 +102,27 @@ func newChatRoomListRoom(cr *entity.ChatRoom, um map[string]*entity.User) *ChatR
 	}
 }
 
-func newChatRoomListRooms(crs entity.ChatRooms, um map[string]*entity.User) []*ChatRoomListRoom {
-	res := make([]*ChatRoomListRoom, len(crs))
+func newChatRoomListRooms(crs entity.ChatRooms, um map[string]*entity.User) []*chatRoomListRoom {
+	res := make([]*chatRoomListRoom, len(crs))
 	for i := range crs {
 		res[i] = newChatRoomListRoom(crs[i], um)
 	}
 	return res
 }
 
-type ChatRoomListMessage struct {
+type chatRoomListMessage struct {
 	UserID    string `json:"userId"`    // ユーザーID
 	Text      string `json:"text"`      // テキストメッセージ
 	Image     string `json:"image"`     // 添付画像URL
 	CreatedAt string `json:"createdAt"` // 送信日時
 }
 
-func newChatRoomListMessage(cm *chat.Message) *ChatRoomListMessage {
+func newChatRoomListMessage(cm *chat.Message) *chatRoomListMessage {
 	if cm == nil {
-		return &ChatRoomListMessage{}
+		return &chatRoomListMessage{}
 	}
 
-	return &ChatRoomListMessage{
+	return &chatRoomListMessage{
 		UserID:    cm.UserId,
 		Text:      cm.Text,
 		Image:     cm.Image,
@@ -130,28 +130,28 @@ func newChatRoomListMessage(cm *chat.Message) *ChatRoomListMessage {
 	}
 }
 
-type ChatRoomListUser struct {
+type chatRoomListUser struct {
 	ID           string `json:"id"`           // ユーザーID
 	Username     string `json:"username"`     // 表示名
 	ThumbnailURL string `json:"thumbnailUrl"` // サムネイルURL
 }
 
-func newChatRoomListUser(u *entity.User) *ChatRoomListUser {
+func newChatRoomListUser(u *entity.User) *chatRoomListUser {
 	if u == nil {
-		return &ChatRoomListUser{
+		return &chatRoomListUser{
 			Username: "unknown",
 		}
 	}
 
-	return &ChatRoomListUser{
+	return &chatRoomListUser{
 		ID:           u.Id,
 		Username:     u.Username,
 		ThumbnailURL: u.ThumbnailUrl,
 	}
 }
 
-func newChatRoomListUsers(userIDs []string, um map[string]*entity.User) []*ChatRoomListUser {
-	res := make([]*ChatRoomListUser, len(userIDs))
+func newChatRoomListUsers(userIDs []string, um map[string]*entity.User) []*chatRoomListUser {
+	res := make([]*chatRoomListUser, len(userIDs))
 	for i := range userIDs {
 		u := um[userIDs[i]]
 		res[i] = newChatRoomListUser(u)
@@ -163,7 +163,7 @@ func newChatRoomListUsers(userIDs []string, um map[string]*entity.User) []*ChatR
 type ChatMessageResponse struct {
 	Text      string           `json:"text"`      // テキストメッセージ
 	Image     string           `json:"image"`     // 添付画像URL
-	User      *ChatMessageUser `json:"user"`      // 送信者
+	User      *chatMessageUser `json:"user"`      // 送信者
 	CreatedAt string           `json:"createdAt"` // 送信日時
 }
 
@@ -176,14 +176,14 @@ func NewChatMessageResponse(cm *entity.ChatMessage, a *entity.Auth) *ChatMessage
 	}
 }
 
-type ChatMessageUser struct {
+type chatMessageUser struct {
 	ID           string `json:"id"`           // ユーザーID
 	Username     string `json:"username"`     // 表示名
 	ThumbnailURL string `json:"thumbnailUrl"` // サムネイルURL
 }
 
-func newChatMessageUser(a *entity.Auth) *ChatMessageUser {
-	return &ChatMessageUser{
+func newChatMessageUser(a *entity.Auth) *chatMessageUser {
+	return &chatMessageUser{
 		ID:           a.Id,
 		Username:     a.Username,
 		ThumbnailURL: a.ThumbnailUrl,

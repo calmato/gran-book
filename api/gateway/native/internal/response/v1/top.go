@@ -8,7 +8,7 @@ import (
 
 // ユーザーのトップページ表示用の情報
 type UserTopResponse struct {
-	MonthlyResults []*UserTopMonthlyResult `json:"monthlyResultsList"` // 月毎の読書実績一覧
+	MonthlyResults []*userTopMonthlyResult `json:"monthlyResultsList"` // 月毎の読書実績一覧
 }
 
 func NewUserTopResponse(rm map[string]*entity.MonthlyResult, now time.Time) *UserTopResponse {
@@ -17,27 +17,27 @@ func NewUserTopResponse(rm map[string]*entity.MonthlyResult, now time.Time) *Use
 	}
 }
 
-type UserTopMonthlyResult struct {
+type userTopMonthlyResult struct {
 	Year      int32 `json:"year"`      // 年
 	Month     int32 `json:"month"`     // 月
 	ReadTotal int64 `json:"readTotal"` // 読んだ本の合計
 }
 
-func newUserTopMonthlyResult(r *entity.MonthlyResult, date time.Time) *UserTopMonthlyResult {
+func newUserTopMonthlyResult(r *entity.MonthlyResult, date time.Time) *userTopMonthlyResult {
 	var total int64
 	if r != nil {
 		total = r.ReadTotal
 	}
 
-	return &UserTopMonthlyResult{
+	return &userTopMonthlyResult{
 		Year:      int32(date.Year()),
 		Month:     int32(date.Month()),
 		ReadTotal: total,
 	}
 }
 
-func newUserTopMonthlyResults(rm map[string]*entity.MonthlyResult, now time.Time) []*UserTopMonthlyResult {
-	res := make([]*UserTopMonthlyResult, 12) // 12ヶ月分
+func newUserTopMonthlyResults(rm map[string]*entity.MonthlyResult, now time.Time) []*userTopMonthlyResult {
+	res := make([]*userTopMonthlyResult, 12) // 12ヶ月分
 	for i := 0; i < 12; i++ {
 		date := now.AddDate(0, -i, 0)
 		key := entity.MonthlyResultKey(int32(date.Year()), int32(date.Month()))

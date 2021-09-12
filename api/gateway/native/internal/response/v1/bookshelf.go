@@ -20,7 +20,7 @@ type BookshelfResponse struct {
 	Size         string              `json:"size"`         // 楽天書籍サイズ
 	Author       string              `json:"author"`       // 著者名一覧
 	AuthorKana   string              `json:"author_kana"`  // 著者名一覧(かな)
-	Bookshelf    *BookshelfBookshelf `json:"bookshelf"`    // ユーザーの本棚情報
+	Bookshelf    *bookshelfBookshelf `json:"bookshelf"`    // ユーザーの本棚情報
 	CreatedAt    string              `json:"createdAt"`    // 登録日時
 	UpdatedAt    string              `json:"updatedAt"`    // 更新日時
 }
@@ -45,7 +45,7 @@ func NewBookshelfResponse(bs *entity.Bookshelf, b *entity.Book) *BookshelfRespon
 	}
 }
 
-type BookshelfBookshelf struct {
+type bookshelfBookshelf struct {
 	ID         int64  `json:"id"`         // 本棚ID
 	Status     string `json:"status"`     // 読書ステータス
 	ReadOn     string `json:"readOn"`     // 読み終えた日
@@ -54,8 +54,8 @@ type BookshelfBookshelf struct {
 	UpdatedAt  string `json:"updatedAt"`  // 更新日時
 }
 
-func newBookshelfBookshelf(bs *entity.Bookshelf) *BookshelfBookshelf {
-	return &BookshelfBookshelf{
+func newBookshelfBookshelf(bs *entity.Bookshelf) *bookshelfBookshelf {
+	return &bookshelfBookshelf{
 		ID:         bs.Id,
 		Status:     bs.Status().Name(),
 		ReadOn:     bs.ReadOn,
@@ -67,7 +67,7 @@ func newBookshelfBookshelf(bs *entity.Bookshelf) *BookshelfBookshelf {
 
 // 本棚の書籍一覧
 type BookshelfListResponse struct {
-	Books  []*BookshelfListBook `json:"booksList"` // 書籍一覧
+	Books  []*bookshelfListBook `json:"booksList"` // 書籍一覧
 	Limit  int64                `json:"limit"`     // 取得上限数
 	Offset int64                `json:"offset"`    // 取得開始位置
 	Total  int64                `json:"total"`     // 検索一致数
@@ -84,7 +84,7 @@ func NewBookshelfListResponse(
 	}
 }
 
-type BookshelfListBook struct {
+type bookshelfListBook struct {
 	ID           int64                   `json:"id"`           // 書籍ID
 	Title        string                  `json:"title"`        // タイトル
 	TitleKana    string                  `json:"titleKana"`    // タイトル(かな)
@@ -97,13 +97,13 @@ type BookshelfListBook struct {
 	Size         string                  `json:"size"`         // 楽天書籍サイズ
 	Author       string                  `json:"author"`       // 著者名一覧
 	AuthorKana   string                  `json:"authorKana"`   // 著者名一覧(かな)
-	Bookshelf    *BookshelfListBookshelf `json:"bookshelf"`    // ユーザーの本棚情報
+	Bookshelf    *bookshelfListBookshelf `json:"bookshelf"`    // ユーザーの本棚情報
 	CreatedAt    string                  `json:"createdAt"`    // 登録日時
 	UpdatedAt    string                  `json:"updatedAt"`    // 更新日時
 }
 
-func newBookshelfListBook(bs *entity.Bookshelf, b *entity.Book) *BookshelfListBook {
-	return &BookshelfListBook{
+func newBookshelfListBook(bs *entity.Bookshelf, b *entity.Book) *bookshelfListBook {
+	return &bookshelfListBook{
 		ID:           b.Id,
 		Title:        b.Title,
 		TitleKana:    b.TitleKana,
@@ -122,8 +122,8 @@ func newBookshelfListBook(bs *entity.Bookshelf, b *entity.Book) *BookshelfListBo
 	}
 }
 
-func newBookshelfListBooks(bss entity.Bookshelves, bm map[int64]*entity.Book) []*BookshelfListBook {
-	res := make([]*BookshelfListBook, 0, len(bss))
+func newBookshelfListBooks(bss entity.Bookshelves, bm map[int64]*entity.Book) []*bookshelfListBook {
+	res := make([]*bookshelfListBook, 0, len(bss))
 	for i, bs := range bss {
 		b, ok := bm[bs.BookId]
 		if !ok {
@@ -135,7 +135,7 @@ func newBookshelfListBooks(bss entity.Bookshelves, bm map[int64]*entity.Book) []
 	return res
 }
 
-type BookshelfListBookshelf struct {
+type bookshelfListBookshelf struct {
 	ID        int64  `json:"id"`        // 本棚ID
 	Status    string `json:"status"`    // 読書ステータス
 	ReadOn    string `json:"readOn"`    // 読み終えた日
@@ -143,8 +143,8 @@ type BookshelfListBookshelf struct {
 	UpdatedAt string `json:"updatedAt"` // 更新日時
 }
 
-func newBookshelfListBookshelf(bs *entity.Bookshelf) *BookshelfListBookshelf {
-	return &BookshelfListBookshelf{
+func newBookshelfListBookshelf(bs *entity.Bookshelf) *bookshelfListBookshelf {
+	return &bookshelfListBookshelf{
 		ID:        bs.Id,
 		Status:    bs.Status().Name(),
 		ReadOn:    bs.ReadOn,

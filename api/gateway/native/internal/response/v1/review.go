@@ -6,7 +6,7 @@ import "github.com/calmato/gran-book/api/gateway/native/internal/entity"
 type BookReviewResponse struct {
 	ID         int64           `json:"id"`         // レビューID
 	Impression string          `json:"impression"` // 感想
-	User       *BookReviewUser `json:"user"`       // 投稿者
+	User       *bookReviewUser `json:"user"`       // 投稿者
 	CreatedAt  string          `json:"createdAt"`  // 登録日時
 	UpdatedAt  string          `json:"updatedAt"`  // 更新日時
 }
@@ -21,20 +21,20 @@ func NewBookReviewResponse(r *entity.Review, u *entity.User) *BookReviewResponse
 	}
 }
 
-type BookReviewUser struct {
+type bookReviewUser struct {
 	ID           string `json:"id"`           // ユーザーID
 	Username     string `json:"username"`     // 表示名
 	ThumbnailURL string `json:"thumbnailUrl"` // サムネイルURL
 }
 
-func newBookReviewUser(u *entity.User) *BookReviewUser {
+func newBookReviewUser(u *entity.User) *bookReviewUser {
 	if u == nil {
-		return &BookReviewUser{
+		return &bookReviewUser{
 			Username: "unknown",
 		}
 	}
 
-	return &BookReviewUser{
+	return &bookReviewUser{
 		ID:           u.Id,
 		Username:     u.Username,
 		ThumbnailURL: u.ThumbnailUrl,
@@ -45,7 +45,7 @@ func newBookReviewUser(u *entity.User) *BookReviewUser {
 type UserReviewResponse struct {
 	ID         int64           `json:"id"`         // レビューID
 	Impression string          `json:"impression"` // 感想
-	Book       *UserReviewBook `json:"book"`       // 書籍情報
+	Book       *userReviewBook `json:"book"`       // 書籍情報
 	CreatedAt  string          `json:"createdAt"`  // 登録日時
 	UpdatedAt  string          `json:"updatedAt"`  // 更新日時
 }
@@ -60,14 +60,14 @@ func NewUserReviewResponse(r *entity.Review, b *entity.Book) *UserReviewResponse
 	}
 }
 
-type UserReviewBook struct {
+type userReviewBook struct {
 	ID           int64  `json:"id"`           // 書籍ID
 	Title        string `json:"title"`        // タイトル
 	ThumbnailURL string `json:"thumbnailUrl"` // サムネイルURL
 }
 
-func newUserReviewBook(b *entity.Book) *UserReviewBook {
-	return &UserReviewBook{
+func newUserReviewBook(b *entity.Book) *userReviewBook {
+	return &userReviewBook{
 		ID:           b.Id,
 		Title:        b.Title,
 		ThumbnailURL: b.ThumbnailUrl,
@@ -76,7 +76,7 @@ func newUserReviewBook(b *entity.Book) *UserReviewBook {
 
 // 書籍毎のレビュー一覧
 type BookReviewListResponse struct {
-	Reviews []*BookReviewListReview `json:"reviewsList"` // レビュー一覧
+	Reviews []*bookReviewListReview `json:"reviewsList"` // レビュー一覧
 	Limit   int64                   `json:"limit"`       // 取得上限数
 	Offset  int64                   `json:"offset"`      // 取得開始位置
 	Total   int64                   `json:"total"`       // 検索一致数
@@ -93,16 +93,16 @@ func NewBookReviewListResponse(
 	}
 }
 
-type BookReviewListReview struct {
+type bookReviewListReview struct {
 	ID         int64               `json:"id"`         // レビューID
 	Impression string              `json:"impression"` // 感想
-	User       *BookReviewListUser `json:"user"`       // 投稿者
+	User       *bookReviewListUser `json:"user"`       // 投稿者
 	CreatedAt  string              `json:"createdAt"`  // 登録日時
 	UpdatedAt  string              `json:"updatedAt"`  // 更新日時
 }
 
-func newBookReviewListReview(r *entity.Review, u *entity.User) *BookReviewListReview {
-	return &BookReviewListReview{
+func newBookReviewListReview(r *entity.Review, u *entity.User) *bookReviewListReview {
+	return &bookReviewListReview{
 		ID:         r.Id,
 		Impression: r.Impression,
 		User:       newBookReviewListUser(u),
@@ -111,8 +111,8 @@ func newBookReviewListReview(r *entity.Review, u *entity.User) *BookReviewListRe
 	}
 }
 
-func newBookReviewListReviews(rs entity.Reviews, um map[string]*entity.User) []*BookReviewListReview {
-	res := make([]*BookReviewListReview, len(rs))
+func newBookReviewListReviews(rs entity.Reviews, um map[string]*entity.User) []*bookReviewListReview {
+	res := make([]*bookReviewListReview, len(rs))
 	for i, r := range rs {
 		u := um[r.UserId]
 		res[i] = newBookReviewListReview(r, u)
@@ -120,20 +120,20 @@ func newBookReviewListReviews(rs entity.Reviews, um map[string]*entity.User) []*
 	return res
 }
 
-type BookReviewListUser struct {
+type bookReviewListUser struct {
 	ID           string `json:"id"`           // ユーザーID
 	Username     string `json:"username"`     // 表示名
 	ThumbnailURL string `json:"thumbnailUrl"` // サムネイルURL
 }
 
-func newBookReviewListUser(u *entity.User) *BookReviewListUser {
+func newBookReviewListUser(u *entity.User) *bookReviewListUser {
 	if u == nil {
-		return &BookReviewListUser{
+		return &bookReviewListUser{
 			Username: "unknown",
 		}
 	}
 
-	return &BookReviewListUser{
+	return &bookReviewListUser{
 		ID:           u.Id,
 		Username:     u.Username,
 		ThumbnailURL: u.ThumbnailUrl,
@@ -142,7 +142,7 @@ func newBookReviewListUser(u *entity.User) *BookReviewListUser {
 
 // ユーザー毎のレビュー一覧
 type UserReviewListResponse struct {
-	Reviews []*UserReviewListReview `json:"reviewsList"` // レビュー一覧
+	Reviews []*userReviewListReview `json:"reviewsList"` // レビュー一覧
 	Limit   int64                   `json:"limit"`       // 取得上限数
 	Offset  int64                   `json:"offset"`      // 取得開始位置
 	Total   int64                   `json:"total"`       // 検索一致数
@@ -159,16 +159,16 @@ func NewUserReviewListResponse(
 	}
 }
 
-type UserReviewListReview struct {
+type userReviewListReview struct {
 	ID         int64               `json:"id"`         // レビューID
 	Impression string              `json:"impression"` // 感想
-	Book       *UserReviewListBook `json:"book"`       // 書籍情報
+	Book       *userReviewListBook `json:"book"`       // 書籍情報
 	CreatedAt  string              `json:"createdAt"`  // 登録日時
 	UpdatedAt  string              `json:"updatedAt"`  // 更新日時
 }
 
-func newUserReviewListReview(r *entity.Review, b *entity.Book) *UserReviewListReview {
-	return &UserReviewListReview{
+func newUserReviewListReview(r *entity.Review, b *entity.Book) *userReviewListReview {
+	return &userReviewListReview{
 		ID:         r.Id,
 		Impression: r.Impression,
 		Book:       newUserReviewListBook(b),
@@ -177,8 +177,8 @@ func newUserReviewListReview(r *entity.Review, b *entity.Book) *UserReviewListRe
 	}
 }
 
-func newUserReviewListReviews(rs entity.Reviews, bm map[int64]*entity.Book) []*UserReviewListReview {
-	res := make([]*UserReviewListReview, len(rs))
+func newUserReviewListReviews(rs entity.Reviews, bm map[int64]*entity.Book) []*userReviewListReview {
+	res := make([]*userReviewListReview, len(rs))
 	for i, r := range rs {
 		b := bm[r.BookId]
 		res[i] = newUserReviewListReview(r, b)
@@ -186,14 +186,14 @@ func newUserReviewListReviews(rs entity.Reviews, bm map[int64]*entity.Book) []*U
 	return res
 }
 
-type UserReviewListBook struct {
+type userReviewListBook struct {
 	ID           int64  `json:"id"`           // 書籍ID
 	Title        string `json:"title"`        // タイトル
 	ThumbnailURL string `json:"thumbnailUrl"` // サムネイルURL
 }
 
-func newUserReviewListBook(b *entity.Book) *UserReviewListBook {
-	return &UserReviewListBook{
+func newUserReviewListBook(b *entity.Book) *userReviewListBook {
+	return &userReviewListBook{
 		ID:           b.Id,
 		Title:        b.Title,
 		ThumbnailURL: b.ThumbnailUrl,

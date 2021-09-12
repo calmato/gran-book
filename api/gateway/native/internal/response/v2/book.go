@@ -20,7 +20,7 @@ type BookResponse struct {
 	Size         string        `json:"size"`         // 楽天書籍サイズ
 	Author       string        `json:"author"`       // 著者名一覧
 	AuthorKana   string        `json:"authorKana"`   // 著者名一覧(かな)
-	Reviews      []*BookReview `json:"reviewsList"`  // レビュー一覧
+	Reviews      []*bookReview `json:"reviewsList"`  // レビュー一覧
 	ReviewLimit  int64         `json:"reviewLimit"`  // レビュー取得上限
 	ReviewOffset int64         `json:"reviewOffset"` // レビュー取得開始位置
 	ReviewTotal  int64         `json:"reviewTotal"`  // レビュー検索一致件数
@@ -56,16 +56,16 @@ func NewBookResponse(
 	}
 }
 
-type BookReview struct {
+type bookReview struct {
 	ID         int64     `json:"id"`         // レビューID
 	Impression string    `json:"impression"` // 感想
-	User       *BookUser `json:"user"`       // 投稿者
+	User       *bookUser `json:"user"`       // 投稿者
 	CreatedAt  string    `json:"createdAt"`  // 登録日時
 	UpdatedAt  string    `json:"updatedAt"`  // 更新日時
 }
 
-func newBookReview(r *entity.Review, u *entity.User) *BookReview {
-	return &BookReview{
+func newBookReview(r *entity.Review, u *entity.User) *bookReview {
+	return &bookReview{
 		ID:         r.Id,
 		Impression: r.Impression,
 		User:       newBookUser(u),
@@ -74,8 +74,8 @@ func newBookReview(r *entity.Review, u *entity.User) *BookReview {
 	}
 }
 
-func newBookReviews(rs entity.Reviews, um map[string]*entity.User) []*BookReview {
-	res := make([]*BookReview, len(rs))
+func newBookReviews(rs entity.Reviews, um map[string]*entity.User) []*bookReview {
+	res := make([]*bookReview, len(rs))
 	for i, r := range rs {
 		u := um[r.UserId]
 		res[i] = newBookReview(r, u)
@@ -83,20 +83,20 @@ func newBookReviews(rs entity.Reviews, um map[string]*entity.User) []*BookReview
 	return res
 }
 
-type BookUser struct {
+type bookUser struct {
 	ID           string `json:"id"`           // ユーザーID
 	Username     string `json:"username"`     // 表示名
 	ThumbnailURL string `json:"thumbnailUrl"` // サムネイルURL
 }
 
-func newBookUser(u *entity.User) *BookUser {
+func newBookUser(u *entity.User) *bookUser {
 	if u == nil {
-		return &BookUser{
+		return &bookUser{
 			Username: "unknown",
 		}
 	}
 
-	return &BookUser{
+	return &bookUser{
 		ID:           u.Id,
 		Username:     u.Username,
 		ThumbnailURL: u.ThumbnailUrl,
