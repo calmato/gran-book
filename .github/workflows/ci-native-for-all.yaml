@@ -13,8 +13,37 @@ env:
   RAKUTEN_BOOKS_APPLICATION_ID: ${{ secrets.RAKUTEN_BOOKS_APPLICATION_ID }}
 
 jobs:
+  setup_proto:
+    name: Setup Proto
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+        working-directory: .
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Container build
+        run: docker-compose -f docker-compose.ci.yaml build proto
+
+      - name: Generate proto
+        run: docker-compose -f docker-compose.ci.yaml run --rm proto make build
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: artifact-${ARTIFACT_TAG}
+          path: native/app/types/api
+
   build_and_test:
     name: Build and Test
+    needs: setup_proto
     runs-on: ${{ matrix.os }}
     defaults:
       run:
@@ -36,6 +65,12 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
+      - name: Download artifact for setup proto
+        uses: actions/download-artifact@v2
+        with:
+          name: artifact-${ARTIFACT_TAG}
+          path: native/app/types/api
+
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
@@ -51,8 +86,8 @@ jobs:
       - name: Install
         run: yarn --check-files --frozen-lockfile --non-interactive
 
-      - name: Protoc
-        run: yarn protoc
+      # - name: Protoc
+      #   run: yarn protoc
 
       - name: Lint
         run: yarn lint
