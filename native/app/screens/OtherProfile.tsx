@@ -89,7 +89,7 @@ const OtherProfile = function OtherProfile(props: Props): ReactElement {
 
   return (
     <View style={styles.container}>
-      <HeaderWithBackButton title={userInfo.username} onPress={() => navigation.goBack()} />
+      <HeaderWithBackButton title={'プロフィール'} onPress={() => navigation.goBack()} />
       <ScrollView
         refreshControl={
           <RefreshControl refreshing={isLoading} onRefresh={handleGetOtherProfile} />
@@ -102,8 +102,8 @@ const OtherProfile = function OtherProfile(props: Props): ReactElement {
           saleCount={userInfo.saleCount}
           followerCount={userInfo.followerCount}
           followCount={userInfo.followCount}
-          buttonTitle={'プロフィールを編集'}
-          handleClick={() => navigation.navigate('ProfileEdit')}
+          buttonTitle={'フォローする'}
+          handleClick={() => undefined}
         />
         <Text style={styles.selfIntroduction}>{userInfo.selfIntroduction}</Text>
         <Text style={styles.title}>出品リスト</Text>
