@@ -4,8 +4,8 @@ import (
 	"github.com/calmato/gran-book/api/gateway/admin/internal/server/util"
 	v1 "github.com/calmato/gran-book/api/gateway/admin/internal/server/v1"
 	"github.com/calmato/gran-book/api/gateway/admin/pkg/firebase/authentication"
-	"github.com/calmato/gran-book/api/gateway/admin/proto/book"
-	"github.com/calmato/gran-book/api/gateway/admin/proto/user"
+	"github.com/calmato/gran-book/api/gateway/admin/proto/service/book"
+	"github.com/calmato/gran-book/api/gateway/admin/proto/service/user"
 	"google.golang.org/grpc"
 )
 

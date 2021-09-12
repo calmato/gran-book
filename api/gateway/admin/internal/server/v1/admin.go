@@ -8,7 +8,7 @@ import (
 	request "github.com/calmato/gran-book/api/gateway/admin/internal/request/v1"
 	response "github.com/calmato/gran-book/api/gateway/admin/internal/response/v1"
 	"github.com/calmato/gran-book/api/gateway/admin/internal/server/util"
-	"github.com/calmato/gran-book/api/gateway/admin/proto/user"
+	"github.com/calmato/gran-book/api/gateway/admin/proto/service/user"
 	"github.com/gin-gonic/gin"
 )
 

@@ -1,6 +1,6 @@
 package entity
 
-import pb "github.com/calmato/gran-book/api/gateway/native/proto/book"
+import pb "github.com/calmato/gran-book/api/gateway/native/proto/service/book"
 
 type MonthlyResult struct {
 	*pb.MonthlyResult

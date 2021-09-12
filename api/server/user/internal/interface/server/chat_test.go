@@ -7,7 +7,7 @@ import (
 	"github.com/calmato/gran-book/api/server/user/internal/domain/chat"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
 	"github.com/calmato/gran-book/api/server/user/pkg/test"
-	pb "github.com/calmato/gran-book/api/server/user/proto/chat"
+	pb "github.com/calmato/gran-book/api/server/user/proto/service/chat"
 	"github.com/golang/mock/gomock"
 	"google.golang.org/grpc/codes"
 )

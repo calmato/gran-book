@@ -41,13 +41,13 @@ generate-client:
 generate-gateway:
 	mkdir -p ${OUTPUT_PATH}/proto
 	cp -r ${ARCHIVE_PATH}/common/*.pb.go ${OUTPUT_PATH}/proto
-	cp -r ${ARCHIVE_PATH}/service/ ${OUTPUT_PATH}/proto
+	cp -r ${ARCHIVE_PATH}/service ${OUTPUT_PATH}/proto
 
 generate-service:
 	mkdir -p ${OUTPUT_PATH}/proto
 	cp -r ${ARCHIVE_PATH}/common/*.pb.go ${OUTPUT_PATH}/proto
 	cp -r ${ARCHIVE_PATH}/common/*.pb.validate.go ${OUTPUT_PATH}/proto
-	cp -r ${ARCHIVE_PATH}/service/ ${OUTPUT_PATH}/proto
+	cp -r ${ARCHIVE_PATH}/service ${OUTPUT_PATH}/proto
 
 # ------------------------------------------------
 # For Protocol Buffer - clean

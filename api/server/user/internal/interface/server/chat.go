@@ -9,7 +9,7 @@ import (
 	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
 	"github.com/calmato/gran-book/api/server/user/internal/interface/validation"
 	"github.com/calmato/gran-book/api/server/user/pkg/firebase/firestore"
-	pb "github.com/calmato/gran-book/api/server/user/proto/chat"
+	pb "github.com/calmato/gran-book/api/server/user/proto/service/chat"
 )
 
 type chatServer struct {

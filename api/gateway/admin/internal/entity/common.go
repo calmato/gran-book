@@ -1,7 +1,7 @@
 package entity
 
 import (
-	"github.com/calmato/gran-book/api/gateway/admin/proto/user"
+	"github.com/calmato/gran-book/api/gateway/admin/proto/service/user"
 )
 
 const (

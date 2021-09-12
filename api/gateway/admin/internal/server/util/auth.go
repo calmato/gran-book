@@ -6,7 +6,7 @@ import (
 
 	"github.com/calmato/gran-book/api/gateway/admin/internal/entity"
 	"github.com/calmato/gran-book/api/gateway/admin/pkg/firebase/authentication"
-	"github.com/calmato/gran-book/api/gateway/admin/proto/user"
+	"github.com/calmato/gran-book/api/gateway/admin/proto/service/user"
 	"github.com/gin-gonic/gin"
 )
 

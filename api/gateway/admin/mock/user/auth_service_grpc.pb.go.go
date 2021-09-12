@@ -8,7 +8,7 @@ import (
 	context "context"
 	reflect "reflect"
 
-	user "github.com/calmato/gran-book/api/gateway/admin/proto/user"
+	user "github.com/calmato/gran-book/api/gateway/admin/proto/service/user"
 	gomock "github.com/golang/mock/gomock"
 	grpc "google.golang.org/grpc"
 	metadata "google.golang.org/grpc/metadata"

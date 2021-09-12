@@ -10,8 +10,8 @@ import (
 	"github.com/calmato/gran-book/api/gateway/native/internal/entity"
 	response "github.com/calmato/gran-book/api/gateway/native/internal/response/v2"
 	"github.com/calmato/gran-book/api/gateway/native/internal/server/util"
-	"github.com/calmato/gran-book/api/gateway/native/proto/book"
-	"github.com/calmato/gran-book/api/gateway/native/proto/user"
+	"github.com/calmato/gran-book/api/gateway/native/proto/service/book"
+	"github.com/calmato/gran-book/api/gateway/native/proto/service/user"
 	"github.com/gin-gonic/gin"
 )
 

@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/calmato/gran-book/api/gateway/native/pkg/test"
-	pb "github.com/calmato/gran-book/api/gateway/native/proto/chat"
+	pb "github.com/calmato/gran-book/api/gateway/native/proto/service/chat"
 	"github.com/stretchr/testify/assert"
 )
 

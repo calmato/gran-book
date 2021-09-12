@@ -1,6 +1,6 @@
 package entity
 
-import pb "github.com/calmato/gran-book/api/gateway/native/proto/user"
+import pb "github.com/calmato/gran-book/api/gateway/native/proto/service/user"
 
 type Auth struct {
 	*pb.Auth

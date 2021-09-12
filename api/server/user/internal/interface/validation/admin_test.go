@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	pb "github.com/calmato/gran-book/api/server/user/proto/user"
+	pb "github.com/calmato/gran-book/api/server/user/proto/service/user"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -6,7 +6,7 @@ import (
 
 	"github.com/calmato/gran-book/api/gateway/admin/internal/entity"
 	"github.com/calmato/gran-book/api/gateway/admin/internal/server/util"
-	"github.com/calmato/gran-book/api/gateway/admin/proto/book"
+	"github.com/calmato/gran-book/api/gateway/admin/proto/service/book"
 	"github.com/gin-gonic/gin"
 )
 

@@ -7,7 +7,7 @@ package mock_validation
 import (
 	reflect "reflect"
 
-	chat "github.com/calmato/gran-book/api/server/user/proto/chat"
+	chat "github.com/calmato/gran-book/api/server/user/proto/service/chat"
 	gomock "github.com/golang/mock/gomock"
 )
 

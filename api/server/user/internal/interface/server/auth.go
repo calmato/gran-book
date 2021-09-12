@@ -9,7 +9,7 @@ import (
 	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/user"
 	"github.com/calmato/gran-book/api/server/user/internal/interface/validation"
-	pb "github.com/calmato/gran-book/api/server/user/proto/user"
+	pb "github.com/calmato/gran-book/api/server/user/proto/service/user"
 )
 
 type authServer struct {

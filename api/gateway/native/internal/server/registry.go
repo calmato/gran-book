@@ -5,9 +5,9 @@ import (
 	v1 "github.com/calmato/gran-book/api/gateway/native/internal/server/v1"
 	v2 "github.com/calmato/gran-book/api/gateway/native/internal/server/v2"
 	"github.com/calmato/gran-book/api/gateway/native/pkg/firebase/authentication"
-	"github.com/calmato/gran-book/api/gateway/native/proto/book"
-	"github.com/calmato/gran-book/api/gateway/native/proto/chat"
-	"github.com/calmato/gran-book/api/gateway/native/proto/user"
+	"github.com/calmato/gran-book/api/gateway/native/proto/service/book"
+	"github.com/calmato/gran-book/api/gateway/native/proto/service/chat"
+	"github.com/calmato/gran-book/api/gateway/native/proto/service/user"
 	"google.golang.org/grpc"
 )
 

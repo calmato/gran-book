@@ -3,8 +3,8 @@ package entity
 import (
 	"testing"
 
-	"github.com/calmato/gran-book/api/gateway/native/proto/book"
-	"github.com/calmato/gran-book/api/gateway/native/proto/user"
+	"github.com/calmato/gran-book/api/gateway/native/proto/service/book"
+	"github.com/calmato/gran-book/api/gateway/native/proto/service/user"
 	"github.com/stretchr/testify/assert"
 )
 
