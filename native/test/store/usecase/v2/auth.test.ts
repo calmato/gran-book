@@ -37,6 +37,15 @@ jest.mock('~/lib/firebase', () => {
         });
       })
       .mockImplementationOnce(() => {
+        return {
+          user: {
+            uid: '1234567890',
+            email: 'test@calmato.dev',
+            emailVerified: false,
+          },
+        };
+      })
+      .mockImplementationOnce(() => {
         return Promise.reject({});
       }),
     sendEmailVerification: jest.fn().mockResolvedValue(undefined),
@@ -78,6 +87,17 @@ describe('auth', () => {
 
     const user = await signInWithEmailAndPassword(payload);
     expect(user?.email).toBe(payload.email);
+  });
+
+  test('signInWithEmailAndPassword return null when user emailVerified is false', async () => {
+    const payload = {
+      email: 'test@calmato.dev',
+      password: '12345678',
+    };
+
+    const res = await signInWithEmailAndPassword(payload);
+
+    expect(res).toBeNull();
   });
 
   test('signInWithEmailAndPassword return promise reject when sign in failed', () => {
