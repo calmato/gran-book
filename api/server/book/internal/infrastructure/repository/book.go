@@ -34,7 +34,7 @@ func NewBookRepository(c *database.Client) book.Repository {
 func (r *bookRepository) List(ctx context.Context, q *database.ListQuery) (book.Books, error) {
 	bs := book.Books{}
 
-	sql := r.client.DB.Preload(authorTable)
+	sql := r.client.DB.Preload("Authors")
 	err := r.client.GetListQuery(bookTable, sql, q).Find(&bs).Error
 	if err != nil {
 		return nil, exception.ErrorInDatastore.New(err)
@@ -96,7 +96,7 @@ func (r *bookRepository) CountReview(ctx context.Context, q *database.ListQuery)
 func (r *bookRepository) MultiGet(ctx context.Context, bookIDs []int) (book.Books, error) {
 	bs := book.Books{}
 
-	err := r.client.DB.Table(bookTable).Preload(authorTable).Where("id IN (?)", bookIDs).Find(&bs).Error
+	err := r.client.DB.Table(bookTable).Preload("Authors").Where("id IN (?)", bookIDs).Find(&bs).Error
 	if err != nil {
 		return nil, exception.ErrorInDatastore.New(err)
 	}
@@ -107,7 +107,7 @@ func (r *bookRepository) MultiGet(ctx context.Context, bookIDs []int) (book.Book
 func (r *bookRepository) Get(ctx context.Context, bookID int) (*book.Book, error) {
 	b := &book.Book{}
 
-	err := r.client.DB.Table(bookTable).Preload(authorTable).First(b, "id = ?", bookID).Error
+	err := r.client.DB.Table(bookTable).Preload("Authors").First(b, "id = ?", bookID).Error
 	if err != nil {
 		return nil, exception.NotFound.New(err)
 	}
@@ -118,7 +118,7 @@ func (r *bookRepository) Get(ctx context.Context, bookID int) (*book.Book, error
 func (r *bookRepository) GetByIsbn(ctx context.Context, isbn string) (*book.Book, error) {
 	b := &book.Book{}
 
-	err := r.client.DB.Table(bookTable).Preload(authorTable).First(b, "isbn = ?", isbn).Error
+	err := r.client.DB.Table(bookTable).Preload("Authors").First(b, "isbn = ?", isbn).Error
 	if err != nil {
 		return nil, exception.NotFound.New(err)
 	}
