@@ -41,39 +41,6 @@ func newBookReviewUser(u *entity.User) *bookReviewUser {
 	}
 }
 
-// ユーザー毎のレビュー情報
-type UserReviewResponse struct {
-	ID         int64           `json:"id"`         // レビューID
-	Impression string          `json:"impression"` // 感想
-	Book       *userReviewBook `json:"book"`       // 書籍情報
-	CreatedAt  string          `json:"createdAt"`  // 登録日時
-	UpdatedAt  string          `json:"updatedAt"`  // 更新日時
-}
-
-func NewUserReviewResponse(r *entity.Review, b *entity.Book) *UserReviewResponse {
-	return &UserReviewResponse{
-		ID:         r.Id,
-		Impression: r.Impression,
-		Book:       newUserReviewBook(b),
-		CreatedAt:  r.CreatedAt,
-		UpdatedAt:  r.UpdatedAt,
-	}
-}
-
-type userReviewBook struct {
-	ID           int64  `json:"id"`           // 書籍ID
-	Title        string `json:"title"`        // タイトル
-	ThumbnailURL string `json:"thumbnailUrl"` // サムネイルURL
-}
-
-func newUserReviewBook(b *entity.Book) *userReviewBook {
-	return &userReviewBook{
-		ID:           b.Id,
-		Title:        b.Title,
-		ThumbnailURL: b.ThumbnailUrl,
-	}
-}
-
 // 書籍毎のレビュー一覧
 type BookReviewListResponse struct {
 	Reviews []*bookReviewListReview `json:"reviewsList"` // レビュー一覧
@@ -137,6 +104,39 @@ func newBookReviewListUser(u *entity.User) *bookReviewListUser {
 		ID:           u.Id,
 		Username:     u.Username,
 		ThumbnailURL: u.ThumbnailUrl,
+	}
+}
+
+// ユーザー毎のレビュー情報
+type UserReviewResponse struct {
+	ID         int64           `json:"id"`         // レビューID
+	Impression string          `json:"impression"` // 感想
+	Book       *userReviewBook `json:"book"`       // 書籍情報
+	CreatedAt  string          `json:"createdAt"`  // 登録日時
+	UpdatedAt  string          `json:"updatedAt"`  // 更新日時
+}
+
+func NewUserReviewResponse(r *entity.Review, b *entity.Book) *UserReviewResponse {
+	return &UserReviewResponse{
+		ID:         r.Id,
+		Impression: r.Impression,
+		Book:       newUserReviewBook(b),
+		CreatedAt:  r.CreatedAt,
+		UpdatedAt:  r.UpdatedAt,
+	}
+}
+
+type userReviewBook struct {
+	ID           int64  `json:"id"`           // 書籍ID
+	Title        string `json:"title"`        // タイトル
+	ThumbnailURL string `json:"thumbnailUrl"` // サムネイルURL
+}
+
+func newUserReviewBook(b *entity.Book) *userReviewBook {
+	return &userReviewBook{
+		ID:           b.Id,
+		Title:        b.Title,
+		ThumbnailURL: b.ThumbnailUrl,
 	}
 }
 

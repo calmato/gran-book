@@ -124,13 +124,13 @@ func newBookshelfListBook(bs *entity.Bookshelf, b *entity.Book) *bookshelfListBo
 
 func newBookshelfListBooks(bss entity.Bookshelves, bm map[int64]*entity.Book) []*bookshelfListBook {
 	res := make([]*bookshelfListBook, 0, len(bss))
-	for i, bs := range bss {
+	for _, bs := range bss {
 		b, ok := bm[bs.BookId]
 		if !ok {
 			continue
 		}
 
-		res[i] = newBookshelfListBook(bs, b)
+		res = append(res, newBookshelfListBook(bs, b))
 	}
 	return res
 }
