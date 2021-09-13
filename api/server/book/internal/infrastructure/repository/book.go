@@ -18,7 +18,7 @@ type bookRepository struct {
 
 const (
 	authorTable     = "authors"
-	authorBookTable = "authorBooks"
+	authorBookTable = "authors_books"
 	bookTable       = "books"
 	bookshelfTable  = "bookshelves"
 	reviewTable     = "reviews"
