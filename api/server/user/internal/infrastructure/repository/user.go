@@ -32,6 +32,11 @@ type firebaseToken struct {
 	Claims   map[string]interface{} `json:"-"`
 }
 
+const (
+	userTable         = "users"
+	relationshipTable = "relationships"
+)
+
 var (
 	errNotExistsUserInfo            = errors.New("repository: user info is not exists in firebase authentication")
 	errNotExistsAuthorizationHeader = errors.New("repository: authorization header is not contain")
@@ -64,7 +69,7 @@ func (r *userRepository) Authentication(ctx context.Context) (string, error) {
 func (r *userRepository) List(ctx context.Context, q *database.ListQuery) (user.Users, error) {
 	us := user.Users{}
 
-	err := r.client.GetListQuery("users", r.client.DB, q).Find(&us).Error
+	err := r.client.GetListQuery(userTable, r.client.DB, q).Find(&us).Error
 	if err != nil {
 		return nil, exception.ErrorInDatastore.New(err)
 	}
@@ -83,7 +88,7 @@ func (r *userRepository) ListFollow(ctx context.Context, q *database.ListQuery) 
 		"users.self_introduction",
 	}
 	err := r.client.
-		GetListQuery("relationships", r.client.DB, q).
+		GetListQuery(relationshipTable, r.client.DB, q).
 		Select(fields).
 		Joins("LEFT JOIN users ON relationships.follow_id = users.id").
 		Find(&fs).Error
@@ -106,7 +111,7 @@ func (r *userRepository) ListFollower(ctx context.Context, q *database.ListQuery
 	}
 
 	err := r.client.
-		GetListQuery("relationships", r.client.DB, q).
+		GetListQuery(relationshipTable, r.client.DB, q).
 		Select(fields).
 		Joins("LEFT JOIN users ON relationships.follower_id = users.id").
 		Find(&fs).Error
@@ -121,7 +126,7 @@ func (r *userRepository) ListInstanceID(ctx context.Context, q *database.ListQue
 	instanceIDs := []string{}
 
 	err := r.client.
-		GetListQuery("users", r.client.DB, q).
+		GetListQuery(userTable, r.client.DB, q).
 		Select("instance_id").
 		Find(&instanceIDs).Error
 	if err != nil {
@@ -135,7 +140,7 @@ func (r *userRepository) ListFollowID(ctx context.Context, followerID string, fo
 	ids := []string{}
 
 	sql := r.client.DB.
-		Table("relationships").
+		Table(relationshipTable).
 		Select("follow_id").
 		Where("follower_id = ?", followerID)
 
@@ -155,7 +160,7 @@ func (r *userRepository) ListFollowerID(ctx context.Context, followID string, fo
 	ids := []string{}
 
 	sql := r.client.DB.
-		Table("relationships").
+		Table(relationshipTable).
 		Select("follower_id").
 		Where("follow_id = ?", followID)
 
@@ -172,7 +177,7 @@ func (r *userRepository) ListFollowerID(ctx context.Context, followID string, fo
 }
 
 func (r *userRepository) Count(ctx context.Context, q *database.ListQuery) (int, error) {
-	total, err := r.client.GetListCount("users", r.client.DB, q)
+	total, err := r.client.GetListCount(userTable, r.client.DB, q)
 	if err != nil {
 		return 0, exception.ErrorInDatastore.New(err)
 	}
@@ -181,7 +186,7 @@ func (r *userRepository) Count(ctx context.Context, q *database.ListQuery) (int,
 }
 
 func (r *userRepository) CountRelationship(ctx context.Context, q *database.ListQuery) (int, error) {
-	total, err := r.client.GetListCount("relationships", r.client.DB, q)
+	total, err := r.client.GetListCount(relationshipTable, r.client.DB, q)
 	if err != nil {
 		return 0, exception.ErrorInDatastore.New(err)
 	}
@@ -192,7 +197,7 @@ func (r *userRepository) CountRelationship(ctx context.Context, q *database.List
 func (r *userRepository) MultiGet(ctx context.Context, userIDs []string) (user.Users, error) {
 	us := user.Users{}
 
-	err := r.client.DB.Table("users").Where("id IN (?)", userIDs).Find(&us).Error
+	err := r.client.DB.Table(userTable).Where("id IN (?)", userIDs).Find(&us).Error
 	if err != nil {
 		return nil, exception.NotFound.New(err)
 	}
@@ -203,7 +208,7 @@ func (r *userRepository) MultiGet(ctx context.Context, userIDs []string) (user.U
 func (r *userRepository) Get(ctx context.Context, userID string) (*user.User, error) {
 	u := &user.User{}
 
-	err := r.client.DB.Table("users").First(u, "id = ?", userID).Error
+	err := r.client.DB.Table(userTable).First(u, "id = ?", userID).Error
 	if err != nil {
 		return nil, exception.NotFound.New(err)
 	}
@@ -215,7 +220,7 @@ func (r *userRepository) GetAdmin(ctx context.Context, userID string) (*user.Use
 	u := &user.User{}
 
 	err := r.client.DB.
-		Table("users").
+		Table(userTable).
 		Where("role IN (?)", []int{user.AdminRole, user.DeveloperRole, user.OperatorRole}).
 		First(u, "id = ?", userID).Error
 	if err != nil {
@@ -231,7 +236,7 @@ func (r *userRepository) GetRelationship(
 	rs := &user.Relationship{}
 
 	err := r.client.DB.
-		Table("relationships").
+		Table(relationshipTable).
 		First(rs, "follow_id = ? AND follower_id = ?", followID, followerID).Error
 	if err != nil {
 		return nil, exception.NotFound.New(err)
@@ -255,7 +260,7 @@ func (r *userRepository) GetRelationshipIDByUserID(
 	rs := &user.Relationship{}
 
 	err := r.client.DB.
-		Table("relationships").
+		Table(relationshipTable).
 		Select("id").
 		First(rs, "follow_id = ? AND follower_id = ?", followID, followerID).Error
 	if err != nil {
@@ -271,7 +276,7 @@ func (r *userRepository) Create(ctx context.Context, u *user.User) error {
 		return exception.ErrorInDatastore.New(err)
 	}
 
-	err = r.client.DB.Table("users").Create(&u).Error
+	err = r.client.DB.Table(userTable).Create(&u).Error
 	if err != nil {
 		return exception.ErrorInDatastore.New(err)
 	}
@@ -289,7 +294,7 @@ func (r *userRepository) CreateWithOAuth(ctx context.Context, u *user.User) erro
 	u.Email = au.UserInfo.Email
 	u.ThumbnailURL = au.UserInfo.PhotoURL
 
-	err = r.client.DB.Table("users").Create(&u).Error
+	err = r.client.DB.Table(userTable).Create(&u).Error
 	if err != nil {
 		return exception.ErrorInDatastore.New(err)
 	}
@@ -298,7 +303,7 @@ func (r *userRepository) CreateWithOAuth(ctx context.Context, u *user.User) erro
 }
 
 func (r *userRepository) CreateRelationship(ctx context.Context, rs *user.Relationship) error {
-	err := r.client.DB.Table("relationships").Create(&rs).Error
+	err := r.client.DB.Table(relationshipTable).Create(&rs).Error
 	if err != nil {
 		return exception.ErrorInDatastore.New(err)
 	}
@@ -319,7 +324,7 @@ func (r *userRepository) Update(ctx context.Context, u *user.User) error {
 		}
 	}
 
-	err = r.client.DB.Table("users").Save(u).Error
+	err = r.client.DB.Table(userTable).Save(u).Error
 	if err != nil {
 		return exception.ErrorInDatastore.New(err)
 	}
@@ -337,7 +342,7 @@ func (r *userRepository) UpdatePassword(ctx context.Context, uid string, passwor
 }
 
 func (r *userRepository) Delete(ctx context.Context, userID string) error {
-	err := r.client.DB.Table("users").Where("id = ?", userID).Delete(&user.User{}).Error
+	err := r.client.DB.Table(userTable).Where("id = ?", userID).Delete(&user.User{}).Error
 	if err != nil {
 		return exception.ErrorInDatastore.New(err)
 	}
@@ -351,7 +356,7 @@ func (r *userRepository) Delete(ctx context.Context, userID string) error {
 }
 
 func (r *userRepository) DeleteRelationship(ctx context.Context, relationshipID int) error {
-	err := r.client.DB.Table("relationships").Where("id = ?", relationshipID).Delete(&user.Relationship{}).Error
+	err := r.client.DB.Table(relationshipTable).Where("id = ?", relationshipID).Delete(&user.Relationship{}).Error
 	if err != nil {
 		return exception.ErrorInDatastore.New(err)
 	}

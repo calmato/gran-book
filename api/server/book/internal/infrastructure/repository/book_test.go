@@ -24,7 +24,7 @@ func TestBookRepository_List(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.BookDB, "books")
+	err = mocks.DeleteAll(mocks.BookDB, bookTable)
 	require.NoError(t, err)
 
 	books := make([]*book.Book, 3)
@@ -32,7 +32,7 @@ func TestBookRepository_List(t *testing.T) {
 	books[1] = testBook(2, "2345678901234")
 	books[2] = testBook(3, "3456789012345")
 
-	err = mocks.BookDB.DB.Table("books").Create(&books).Error
+	err = mocks.BookDB.DB.Table(bookTable).Create(&books).Error
 	require.NoError(t, err)
 
 	type args struct {
@@ -90,7 +90,7 @@ func TestBookRepository_ListBookshelf(t *testing.T) {
 
 	err = mocks.DeleteAll(mocks.UserDB, "users")
 	require.NoError(t, err)
-	err = mocks.DeleteAll(mocks.BookDB, "bookshelves", "books")
+	err = mocks.DeleteAll(mocks.BookDB, bookshelfTable, bookTable)
 	require.NoError(t, err)
 
 	userID, err := mocks.CreateUser()
@@ -99,7 +99,7 @@ func TestBookRepository_ListBookshelf(t *testing.T) {
 	books[0] = testBook(1, "1234567890123")
 	books[1] = testBook(2, "2345678901234")
 	books[2] = testBook(3, "3456789012345")
-	err = mocks.BookDB.DB.Table("books").Create(&books).Error
+	err = mocks.BookDB.DB.Table(bookTable).Create(&books).Error
 	require.NoError(t, err)
 
 	bookshelves := make([]*book.Bookshelf, 3)
@@ -110,7 +110,7 @@ func TestBookRepository_ListBookshelf(t *testing.T) {
 	bookshelves[2] = testBookshelf(3, books[2].ID, userID)
 	bookshelves[2].Book = books[2]
 
-	err = mocks.BookDB.DB.Table("bookshelves").Create(&bookshelves).Error
+	err = mocks.BookDB.DB.Table(bookshelfTable).Create(&bookshelves).Error
 	require.NoError(t, err)
 
 	type args struct {
@@ -168,7 +168,7 @@ func TestBookRepository_ListReview(t *testing.T) {
 
 	err = mocks.DeleteAll(mocks.UserDB, "users")
 	require.NoError(t, err)
-	err = mocks.DeleteAll(mocks.BookDB, "reviews", "books")
+	err = mocks.DeleteAll(mocks.BookDB, reviewTable, bookTable)
 	require.NoError(t, err)
 
 	userID, err := mocks.CreateUser()
@@ -177,7 +177,7 @@ func TestBookRepository_ListReview(t *testing.T) {
 	books[0] = testBook(1, "1234567890123")
 	books[1] = testBook(2, "2345678901234")
 	books[2] = testBook(3, "3456789012345")
-	err = mocks.BookDB.DB.Table("books").Create(&books).Error
+	err = mocks.BookDB.DB.Table(bookTable).Create(&books).Error
 	require.NoError(t, err)
 
 	reviews := make([]*book.Review, 3)
@@ -185,7 +185,7 @@ func TestBookRepository_ListReview(t *testing.T) {
 	reviews[1] = testReview(2, books[1].ID, userID)
 	reviews[2] = testReview(3, books[2].ID, userID)
 
-	err = mocks.BookDB.DB.Table("reviews").Create(&reviews).Error
+	err = mocks.BookDB.DB.Table(reviewTable).Create(&reviews).Error
 	require.NoError(t, err)
 
 	type args struct {
@@ -241,7 +241,7 @@ func TestBookRepository_Count(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.BookDB, "books")
+	err = mocks.DeleteAll(mocks.BookDB, bookTable)
 	require.NoError(t, err)
 
 	books := make([]*book.Book, 3)
@@ -249,7 +249,7 @@ func TestBookRepository_Count(t *testing.T) {
 	books[1] = testBook(2, "2345678901234")
 	books[2] = testBook(3, "3456789012345")
 
-	err = mocks.BookDB.DB.Table("books").Create(&books).Error
+	err = mocks.BookDB.DB.Table(bookTable).Create(&books).Error
 	require.NoError(t, err)
 
 	type args struct {
@@ -305,7 +305,7 @@ func TestBookRepository_CountBookshelf(t *testing.T) {
 
 	err = mocks.DeleteAll(mocks.UserDB, "users")
 	require.NoError(t, err)
-	err = mocks.DeleteAll(mocks.BookDB, "bookshelves", "books")
+	err = mocks.DeleteAll(mocks.BookDB, bookshelfTable, bookTable)
 	require.NoError(t, err)
 
 	userID, err := mocks.CreateUser()
@@ -314,7 +314,7 @@ func TestBookRepository_CountBookshelf(t *testing.T) {
 	books[0] = testBook(1, "1234567890123")
 	books[1] = testBook(2, "2345678901234")
 	books[2] = testBook(3, "3456789012345")
-	err = mocks.BookDB.DB.Table("books").Create(&books).Error
+	err = mocks.BookDB.DB.Table(bookTable).Create(&books).Error
 	require.NoError(t, err)
 
 	bookshelves := make([]*book.Bookshelf, 3)
@@ -325,7 +325,7 @@ func TestBookRepository_CountBookshelf(t *testing.T) {
 	bookshelves[2] = testBookshelf(3, books[2].ID, userID)
 	bookshelves[2].Book = books[2]
 
-	err = mocks.BookDB.DB.Table("bookshelves").Create(&bookshelves).Error
+	err = mocks.BookDB.DB.Table(bookshelfTable).Create(&bookshelves).Error
 	require.NoError(t, err)
 
 	type args struct {
@@ -381,7 +381,7 @@ func TestBookRepository_CountReview(t *testing.T) {
 
 	err = mocks.DeleteAll(mocks.UserDB, "users")
 	require.NoError(t, err)
-	err = mocks.DeleteAll(mocks.BookDB, "reviews", "books")
+	err = mocks.DeleteAll(mocks.BookDB, reviewTable, bookTable)
 	require.NoError(t, err)
 
 	userID, err := mocks.CreateUser()
@@ -390,7 +390,7 @@ func TestBookRepository_CountReview(t *testing.T) {
 	books[0] = testBook(1, "1234567890123")
 	books[1] = testBook(2, "2345678901234")
 	books[2] = testBook(3, "3456789012345")
-	err = mocks.BookDB.DB.Table("books").Create(&books).Error
+	err = mocks.BookDB.DB.Table(bookTable).Create(&books).Error
 	require.NoError(t, err)
 
 	reviews := make([]*book.Review, 3)
@@ -398,7 +398,7 @@ func TestBookRepository_CountReview(t *testing.T) {
 	reviews[1] = testReview(2, books[1].ID, userID)
 	reviews[2] = testReview(3, books[2].ID, userID)
 
-	err = mocks.BookDB.DB.Table("reviews").Create(&reviews).Error
+	err = mocks.BookDB.DB.Table(reviewTable).Create(&reviews).Error
 	require.NoError(t, err)
 
 	type args struct {
@@ -452,7 +452,7 @@ func TestBookRepository_MultiGet(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.BookDB, "books")
+	err = mocks.DeleteAll(mocks.BookDB, bookTable)
 	require.NoError(t, err)
 
 	books := make([]*book.Book, 3)
@@ -460,7 +460,7 @@ func TestBookRepository_MultiGet(t *testing.T) {
 	books[1] = testBook(2, "2345678901234")
 	books[2] = testBook(3, "3456789012345")
 
-	err = mocks.BookDB.DB.Table("books").Create(&books).Error
+	err = mocks.BookDB.DB.Table(bookTable).Create(&books).Error
 	require.NoError(t, err)
 
 	type args struct {
@@ -522,11 +522,11 @@ func TestBookRepository_Get(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.BookDB, "books")
+	err = mocks.DeleteAll(mocks.BookDB, bookTable)
 	require.NoError(t, err)
 
 	expectBook := testBook(1, "1234567890123")
-	err = mocks.BookDB.DB.Table("books").Create(expectBook).Error
+	err = mocks.BookDB.DB.Table(bookTable).Create(expectBook).Error
 	require.NoError(t, err)
 
 	type args struct {
@@ -586,11 +586,11 @@ func TestBookRepository_GetByIsbn(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.BookDB, "books")
+	err = mocks.DeleteAll(mocks.BookDB, bookTable)
 	require.NoError(t, err)
 
 	expectBook := testBook(1, "1234567890123")
-	err = mocks.BookDB.DB.Table("books").Create(expectBook).Error
+	err = mocks.BookDB.DB.Table(bookTable).Create(expectBook).Error
 	require.NoError(t, err)
 
 	type args struct {
@@ -650,11 +650,11 @@ func TestBookRepository_GetBookIDByIsbn(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.BookDB, "books")
+	err = mocks.DeleteAll(mocks.BookDB, bookTable)
 	require.NoError(t, err)
 
 	expectBook := testBook(1, "1234567890123")
-	err = mocks.BookDB.DB.Table("books").Create(expectBook).Error
+	err = mocks.BookDB.DB.Table(bookTable).Create(expectBook).Error
 	require.NoError(t, err)
 
 	type args struct {
@@ -716,20 +716,20 @@ func TestBookRepository_GetBookshelfByUserIDAndBookID(t *testing.T) {
 
 	err = mocks.DeleteAll(mocks.UserDB, "users")
 	require.NoError(t, err)
-	err = mocks.DeleteAll(mocks.BookDB, "bookshelves", "books")
+	err = mocks.DeleteAll(mocks.BookDB, bookshelfTable, bookTable)
 	require.NoError(t, err)
 
 	userID, err := mocks.CreateUser()
 	require.NoError(t, err)
 	books := make([]*book.Book, 1)
 	books[0] = testBook(1, "1234567890123")
-	err = mocks.BookDB.DB.Table("books").Create(&books).Error
+	err = mocks.BookDB.DB.Table(bookTable).Create(&books).Error
 	require.NoError(t, err)
 
 	expectBookshelf := testBookshelf(1, books[0].ID, userID)
 	expectBookshelf.Book = books[0]
 
-	err = mocks.BookDB.DB.Table("bookshelves").Create(expectBookshelf).Error
+	err = mocks.BookDB.DB.Table(bookshelfTable).Create(expectBookshelf).Error
 	require.NoError(t, err)
 
 	type args struct {
@@ -794,20 +794,20 @@ func TestBookRepository_GetBookshelfIDByUserIDAndBookID(t *testing.T) {
 
 	err = mocks.DeleteAll(mocks.UserDB, "users")
 	require.NoError(t, err)
-	err = mocks.DeleteAll(mocks.BookDB, "bookshelves", "books")
+	err = mocks.DeleteAll(mocks.BookDB, bookshelfTable, bookTable)
 	require.NoError(t, err)
 
 	userID, err := mocks.CreateUser()
 	require.NoError(t, err)
 	books := make([]*book.Book, 1)
 	books[0] = testBook(1, "1234567890123")
-	err = mocks.BookDB.DB.Table("books").Create(&books).Error
+	err = mocks.BookDB.DB.Table(bookTable).Create(&books).Error
 	require.NoError(t, err)
 
 	expectBookshelf := testBookshelf(1, books[0].ID, userID)
 	expectBookshelf.Book = books[0]
 
-	err = mocks.BookDB.DB.Table("bookshelves").Create(expectBookshelf).Error
+	err = mocks.BookDB.DB.Table(bookshelfTable).Create(expectBookshelf).Error
 	require.NoError(t, err)
 
 	type args struct {
@@ -872,19 +872,19 @@ func TestBookRepository_GetReview(t *testing.T) {
 
 	err = mocks.DeleteAll(mocks.UserDB, "users")
 	require.NoError(t, err)
-	err = mocks.DeleteAll(mocks.BookDB, "reviews", "books")
+	err = mocks.DeleteAll(mocks.BookDB, reviewTable, bookTable)
 	require.NoError(t, err)
 
 	userID, err := mocks.CreateUser()
 	require.NoError(t, err)
 	books := make([]*book.Book, 1)
 	books[0] = testBook(1, "1234567890123")
-	err = mocks.BookDB.DB.Table("books").Create(&books).Error
+	err = mocks.BookDB.DB.Table(bookTable).Create(&books).Error
 	require.NoError(t, err)
 
 	expectReview := testReview(1, books[0].ID, userID)
 
-	err = mocks.BookDB.DB.Table("reviews").Create(expectReview).Error
+	err = mocks.BookDB.DB.Table(reviewTable).Create(expectReview).Error
 	require.NoError(t, err)
 
 	type args struct {
@@ -946,19 +946,19 @@ func TestBookRepository_GetReviewByUserIDAndBookID(t *testing.T) {
 
 	err = mocks.DeleteAll(mocks.UserDB, "users")
 	require.NoError(t, err)
-	err = mocks.DeleteAll(mocks.BookDB, "reviews", "books")
+	err = mocks.DeleteAll(mocks.BookDB, reviewTable, bookTable)
 	require.NoError(t, err)
 
 	userID, err := mocks.CreateUser()
 	require.NoError(t, err)
 	books := make([]*book.Book, 1)
 	books[0] = testBook(1, "1234567890123")
-	err = mocks.BookDB.DB.Table("books").Create(&books).Error
+	err = mocks.BookDB.DB.Table(bookTable).Create(&books).Error
 	require.NoError(t, err)
 
 	expectReview := testReview(1, books[0].ID, userID)
 
-	err = mocks.BookDB.DB.Table("reviews").Create(expectReview).Error
+	err = mocks.BookDB.DB.Table(reviewTable).Create(expectReview).Error
 	require.NoError(t, err)
 
 	type args struct {
@@ -1023,19 +1023,19 @@ func TestBookRepository_GetReviewIDByUserIDAndBookID(t *testing.T) {
 
 	err = mocks.DeleteAll(mocks.UserDB, "users")
 	require.NoError(t, err)
-	err = mocks.DeleteAll(mocks.BookDB, "reviews", "books")
+	err = mocks.DeleteAll(mocks.BookDB, reviewTable, bookTable)
 	require.NoError(t, err)
 
 	userID, err := mocks.CreateUser()
 	require.NoError(t, err)
 	books := make([]*book.Book, 1)
 	books[0] = testBook(1, "1234567890123")
-	err = mocks.BookDB.DB.Table("books").Create(&books).Error
+	err = mocks.BookDB.DB.Table(bookTable).Create(&books).Error
 	require.NoError(t, err)
 
 	expectReview := testReview(1, books[0].ID, userID)
 
-	err = mocks.BookDB.DB.Table("reviews").Create(expectReview).Error
+	err = mocks.BookDB.DB.Table(reviewTable).Create(expectReview).Error
 	require.NoError(t, err)
 
 	type args struct {
@@ -1098,11 +1098,11 @@ func TestBookRepository_GetAuthorByName(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.BookDB, "authors")
+	err = mocks.DeleteAll(mocks.BookDB, authorTable)
 	require.NoError(t, err)
 
 	expectAuthor := testAuthor(1, "有沢 ゆう希")
-	err = mocks.BookDB.DB.Table("authors").Create(expectAuthor).Error
+	err = mocks.BookDB.DB.Table(authorTable).Create(expectAuthor).Error
 	require.NoError(t, err)
 
 	type args struct {
@@ -1162,11 +1162,11 @@ func TestBookRepository_GetAuthorIDByName(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.BookDB, "authors")
+	err = mocks.DeleteAll(mocks.BookDB, authorTable)
 	require.NoError(t, err)
 
 	expectAuthor := testAuthor(1, "有沢 ゆう希")
-	err = mocks.BookDB.DB.Table("authors").Create(expectAuthor).Error
+	err = mocks.BookDB.DB.Table(authorTable).Create(expectAuthor).Error
 	require.NoError(t, err)
 
 	type args struct {
@@ -1275,7 +1275,7 @@ func TestBookRepository_Create(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			target := NewBookRepository(mocks.BookDB)
 
-			err = mocks.DeleteAll(mocks.BookDB, "books")
+			err = mocks.DeleteAll(mocks.BookDB, bookTable)
 			require.NoError(t, err)
 
 			err := target.Create(ctx, tt.args.book)
@@ -1294,14 +1294,14 @@ func TestBookRepository_CreateBookshelf(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.BookDB, "books")
+	err = mocks.DeleteAll(mocks.BookDB, bookTable)
 	require.NoError(t, err)
 
 	userID, err := mocks.CreateUser()
 	require.NoError(t, err)
 
 	b := testBook(1, "1234567890123")
-	err = mocks.BookDB.DB.Table("books").Create(b).Error
+	err = mocks.BookDB.DB.Table(bookTable).Create(b).Error
 	require.NoError(t, err)
 
 	type args struct {
@@ -1363,7 +1363,7 @@ func TestBookRepository_CreateBookshelf(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			target := NewBookRepository(mocks.BookDB)
 
-			err := mocks.DeleteAll(mocks.BookDB, "bookshelves")
+			err := mocks.DeleteAll(mocks.BookDB, bookshelfTable)
 			require.NoError(t, err)
 
 			err = target.CreateBookshelf(ctx, tt.args.bookshelf)
@@ -1382,14 +1382,14 @@ func TestBookRepository_CreateReview(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.BookDB, "books")
+	err = mocks.DeleteAll(mocks.BookDB, bookTable)
 	require.NoError(t, err)
 
 	userID, err := mocks.CreateUser()
 	require.NoError(t, err)
 
 	b := testBook(1, "1234567890123")
-	err = mocks.BookDB.DB.Table("books").Create(b).Error
+	err = mocks.BookDB.DB.Table(bookTable).Create(b).Error
 	require.NoError(t, err)
 
 	type args struct {
@@ -1435,7 +1435,7 @@ func TestBookRepository_CreateReview(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			target := NewBookRepository(mocks.BookDB)
 
-			err := mocks.DeleteAll(mocks.BookDB, "reviews")
+			err := mocks.DeleteAll(mocks.BookDB, reviewTable)
 			require.NoError(t, err)
 
 			err = target.CreateReview(ctx, tt.args.review)
@@ -1495,7 +1495,7 @@ func TestBookRepository_CreateAuthor(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			target := NewBookRepository(mocks.BookDB)
 
-			err := mocks.DeleteAll(mocks.BookDB, "authors")
+			err := mocks.DeleteAll(mocks.BookDB, authorTable)
 			require.NoError(t, err)
 
 			err = target.CreateAuthor(ctx, tt.args.author)
@@ -1566,10 +1566,10 @@ func TestBookRepository_Update(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			target := NewBookRepository(mocks.BookDB)
 
-			err = mocks.DeleteAll(mocks.BookDB, "books")
+			err = mocks.DeleteAll(mocks.BookDB, bookTable)
 			require.NoError(t, err)
 
-			err = mocks.BookDB.DB.Table("books").Create(b).Error
+			err = mocks.BookDB.DB.Table(bookTable).Create(b).Error
 			require.NoError(t, err)
 
 			err := target.Update(ctx, tt.args.book)
@@ -1588,14 +1588,14 @@ func TestBookRepository_UpdateBookshelf(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.BookDB, "books")
+	err = mocks.DeleteAll(mocks.BookDB, bookTable)
 	require.NoError(t, err)
 
 	userID, err := mocks.CreateUser()
 	require.NoError(t, err)
 
 	b := testBook(1, "1234567890123")
-	err = mocks.BookDB.DB.Table("books").Create(b).Error
+	err = mocks.BookDB.DB.Table(bookTable).Create(b).Error
 	require.NoError(t, err)
 
 	bookshelf := testBookshelf(1, b.ID, userID)
@@ -1643,10 +1643,10 @@ func TestBookRepository_UpdateBookshelf(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			target := NewBookRepository(mocks.BookDB)
 
-			err := mocks.DeleteAll(mocks.BookDB, "bookshelves")
+			err := mocks.DeleteAll(mocks.BookDB, bookshelfTable)
 			require.NoError(t, err)
 
-			err = mocks.BookDB.DB.Table("bookshelves").Create(bookshelf).Error
+			err = mocks.BookDB.DB.Table(bookshelfTable).Create(bookshelf).Error
 			require.NoError(t, err)
 
 			err = target.UpdateBookshelf(ctx, tt.args.bookshelf)
@@ -1665,14 +1665,14 @@ func TestBookRepository_UpdateReview(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.BookDB, "books")
+	err = mocks.DeleteAll(mocks.BookDB, bookTable)
 	require.NoError(t, err)
 
 	userID, err := mocks.CreateUser()
 	require.NoError(t, err)
 
 	b := testBook(1, "1234567890123")
-	err = mocks.BookDB.DB.Table("books").Create(b).Error
+	err = mocks.BookDB.DB.Table(bookTable).Create(b).Error
 	require.NoError(t, err)
 
 	review := testReview(1, b.ID, userID)
@@ -1721,10 +1721,10 @@ func TestBookRepository_UpdateReview(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			target := NewBookRepository(mocks.BookDB)
 
-			err := mocks.DeleteAll(mocks.BookDB, "reviews")
+			err := mocks.DeleteAll(mocks.BookDB, reviewTable)
 			require.NoError(t, err)
 
-			err = mocks.BookDB.DB.Table("reviews").Create(review).Error
+			err = mocks.BookDB.DB.Table(reviewTable).Create(review).Error
 			require.NoError(t, err)
 
 			err = target.UpdateReview(ctx, tt.args.review)
@@ -1817,7 +1817,7 @@ func TestBookRepository_MultipleCreate(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			target := NewBookRepository(mocks.BookDB)
 
-			err = mocks.DeleteAll(mocks.BookDB, "books")
+			err = mocks.DeleteAll(mocks.BookDB, bookTable)
 			require.NoError(t, err)
 
 			err := target.MultipleCreate(ctx, tt.args.books)
@@ -1916,10 +1916,10 @@ func TestBookRepository_MultipleUpdate(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			target := NewBookRepository(mocks.BookDB)
 
-			err = mocks.DeleteAll(mocks.BookDB, "books")
+			err = mocks.DeleteAll(mocks.BookDB, bookTable)
 			require.NoError(t, err)
 
-			err = mocks.BookDB.DB.Table("books").Create(&books).Error
+			err = mocks.BookDB.DB.Table(bookTable).Create(&books).Error
 			require.NoError(t, err)
 
 			err := target.MultipleUpdate(ctx, tt.args.books)
@@ -1967,10 +1967,10 @@ func TestBookRepository_Delete(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			target := NewBookRepository(mocks.BookDB)
 
-			err = mocks.DeleteAll(mocks.BookDB, "books")
+			err = mocks.DeleteAll(mocks.BookDB, bookTable)
 			require.NoError(t, err)
 
-			err = mocks.BookDB.DB.Table("books").Create(b).Error
+			err = mocks.BookDB.DB.Table(bookTable).Create(b).Error
 			require.NoError(t, err)
 
 			err := target.Delete(ctx, tt.args.bookID)
@@ -1993,14 +1993,14 @@ func TestBookRepository_DeleteBookshelf(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.BookDB, "books")
+	err = mocks.DeleteAll(mocks.BookDB, bookTable)
 	require.NoError(t, err)
 
 	userID, err := mocks.CreateUser()
 	require.NoError(t, err)
 
 	b := testBook(1, "1234567890123")
-	err = mocks.BookDB.DB.Table("books").Create(b).Error
+	err = mocks.BookDB.DB.Table(bookTable).Create(b).Error
 	require.NoError(t, err)
 
 	bookshelf := testBookshelf(1, b.ID, userID)
@@ -2032,10 +2032,10 @@ func TestBookRepository_DeleteBookshelf(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			target := NewBookRepository(mocks.BookDB)
 
-			err := mocks.DeleteAll(mocks.BookDB, "bookshelves")
+			err := mocks.DeleteAll(mocks.BookDB, bookshelfTable)
 			require.NoError(t, err)
 
-			err = mocks.BookDB.DB.Table("bookshelves").Create(bookshelf).Error
+			err = mocks.BookDB.DB.Table(bookshelfTable).Create(bookshelf).Error
 			require.NoError(t, err)
 
 			err = target.DeleteBookshelf(ctx, tt.args.bookshelfID)
@@ -2054,7 +2054,7 @@ func TestBookRepository_AggregateReadTotal(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.BookDB, "books", "bookshelves")
+	err = mocks.DeleteAll(mocks.BookDB, bookTable, bookshelfTable)
 	require.NoError(t, err)
 
 	userID, err := mocks.CreateUser()
@@ -2067,7 +2067,7 @@ func TestBookRepository_AggregateReadTotal(t *testing.T) {
 	books[3] = testBook(4, "4567890123456")
 	books[4] = testBook(5, "5678901234567")
 	books[5] = testBook(6, "6789012345678")
-	err = mocks.BookDB.DB.Table("books").Create(&books).Error
+	err = mocks.BookDB.DB.Table(bookTable).Create(&books).Error
 	require.NoError(t, err)
 
 	bookshelves := make(book.Bookshelves, 6)
@@ -2077,7 +2077,7 @@ func TestBookRepository_AggregateReadTotal(t *testing.T) {
 	bookshelves[3] = testBookshelfWithReadOn(4, books[3].ID, userID, book.ReadStatus, "2021-09-01")
 	bookshelves[4] = testBookshelfWithReadOn(5, books[4].ID, userID, book.ReadStatus, "2021-09-01")
 	bookshelves[5] = testBookshelfWithReadOn(6, books[5].ID, userID, book.ReadStatus, "2020-08-01")
-	err = mocks.BookDB.DB.Table("bookshelves").Create(&bookshelves).Error
+	err = mocks.BookDB.DB.Table(bookshelfTable).Create(&bookshelves).Error
 	require.NoError(t, err)
 
 	type args struct {
