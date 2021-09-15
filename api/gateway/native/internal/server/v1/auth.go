@@ -265,7 +265,7 @@ func (h *authHandler) RegisterDevice(ctx *gin.Context) {
 	}
 	out, err := h.authClient.RegisterAuthDevice(c, in)
 	if err != nil {
-		util.ErrorHandling(ctx, nil)
+		util.ErrorHandling(ctx, err)
 		return
 	}
 
