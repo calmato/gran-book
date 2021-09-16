@@ -10,6 +10,8 @@ import (
 	"github.com/calmato/gran-book/api/gateway/native/pkg/datetime"
 )
 
+const filename = "calmato.png"
+
 var (
 	ErrMock = errors.New("some error")
 

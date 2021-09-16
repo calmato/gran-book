@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"fmt"
 	"io"
 	"net/http"
 
@@ -191,6 +192,7 @@ func (h *authHandler) UploadThumbnail(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
 
 	file, _, err := ctx.Request.FormFile("thumbnail")
+	fmt.Printf("debug=%+v, err=%+v\n", file, err)
 	if err != nil {
 		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
 		return

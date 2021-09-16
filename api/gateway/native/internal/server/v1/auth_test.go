@@ -8,6 +8,7 @@ import (
 	"github.com/calmato/gran-book/api/gateway/native/internal/entity"
 	request "github.com/calmato/gran-book/api/gateway/native/internal/request/v1"
 	response "github.com/calmato/gran-book/api/gateway/native/internal/response/v1"
+	mock_user "github.com/calmato/gran-book/api/gateway/native/mock/user"
 	"github.com/calmato/gran-book/api/gateway/native/pkg/test"
 	"github.com/calmato/gran-book/api/gateway/native/proto/service/user"
 	"github.com/golang/mock/gomock"
@@ -71,7 +72,8 @@ func TestAuth_Get(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			ctx, res, mocks := test.NewHTTPClient(t, nil)
+			path := "/v1/auth"
+			ctx, res, mocks := test.NewHTTPMock(t, http.MethodGet, path, nil)
 			tt.setup(ctx, t, mocks)
 
 			handler := NewAuthHandler(mocks.AuthService)
@@ -171,7 +173,8 @@ func TestAuth_Create(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			ctx, res, mocks := test.NewHTTPClient(t, tt.req)
+			path := "/v1/auth"
+			ctx, res, mocks := test.NewHTTPMock(t, http.MethodPost, path, tt.req)
 			tt.setup(ctx, t, mocks)
 
 			handler := NewAuthHandler(mocks.AuthService)
@@ -271,7 +274,8 @@ func TestAuth_UpdateProfile(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			ctx, res, mocks := test.NewHTTPClient(t, tt.req)
+			path := "/v1/auth/profile"
+			ctx, res, mocks := test.NewHTTPMock(t, http.MethodPatch, path, tt.req)
 			tt.setup(ctx, t, mocks)
 
 			handler := NewAuthHandler(mocks.AuthService)
@@ -395,7 +399,8 @@ func TestAuth_UpdateAddress(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			ctx, res, mocks := test.NewHTTPClient(t, tt.req)
+			path := "/v1/auth/address"
+			ctx, res, mocks := test.NewHTTPMock(t, http.MethodPatch, path, tt.req)
 			tt.setup(ctx, t, mocks)
 
 			handler := NewAuthHandler(mocks.AuthService)
@@ -483,7 +488,8 @@ func TestAuth_UpdateEmail(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			ctx, res, mocks := test.NewHTTPClient(t, tt.req)
+			path := "/v1/auth/email"
+			ctx, res, mocks := test.NewHTTPMock(t, http.MethodPatch, path, tt.req)
 			tt.setup(ctx, t, mocks)
 
 			handler := NewAuthHandler(mocks.AuthService)
@@ -575,7 +581,8 @@ func TestAuth_UpdatePassword(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			ctx, res, mocks := test.NewHTTPClient(t, tt.req)
+			path := "/v1/auth/password"
+			ctx, res, mocks := test.NewHTTPMock(t, http.MethodPatch, path, tt.req)
 			tt.setup(ctx, t, mocks)
 
 			handler := NewAuthHandler(mocks.AuthService)
@@ -623,11 +630,113 @@ func TestAuth_Delete(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			ctx, res, mocks := test.NewHTTPClient(t, tt.req)
+			path := "/v1/auth"
+			ctx, res, mocks := test.NewHTTPMock(t, http.MethodDelete, path, tt.req)
 			tt.setup(ctx, t, mocks)
 
 			handler := NewAuthHandler(mocks.AuthService)
 			handler.Delete(ctx)
+
+			test.TestHTTP(t, tt.expect, res)
+		})
+	}
+}
+
+func TestAuth_UploadThumbnail(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name   string
+		setup  func(ctx context.Context, t *testing.T, mocks *test.Mocks, ctrl *gomock.Controller)
+		field  string
+		expect *test.TestResponse
+	}{
+		{
+			name: "success",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks, ctrl *gomock.Controller) {
+				client := mock_user.NewMockAuthService_UploadAuthThumbnailClient(ctrl)
+				mocks.AuthService.EXPECT().UploadAuthThumbnail(gomock.Any()).Return(client, nil)
+				client.EXPECT().Send(gomock.Any()).AnyTimes().Return(nil)
+				client.EXPECT().CloseAndRecv().Return(&user.AuthThumbnailResponse{
+					ThumbnailUrl: "https://go.dev/images/gophers/ladder.svg",
+				}, nil)
+			},
+			field: "thumbnail",
+			expect: &test.TestResponse{
+				Code: http.StatusOK,
+				Body: &response.AuthThumbnailResponse{
+					ThumbnailURL: "https://go.dev/images/gophers/ladder.svg",
+				},
+			},
+		},
+		{
+			name:  "failed to invalid argument",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks, ctrl *gomock.Controller) {},
+			expect: &test.TestResponse{
+				Code: http.StatusBadRequest,
+			},
+		},
+		{
+			name: "failed to get thumbnail",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks, ctrl *gomock.Controller) {
+				mocks.AuthService.EXPECT().UploadAuthThumbnail(gomock.Any()).Return(nil, test.ErrMock)
+			},
+			field: "thumbnail",
+			expect: &test.TestResponse{
+				Code: http.StatusInternalServerError,
+			},
+		},
+		{
+			name: "failed to create gRPC stream client",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks, ctrl *gomock.Controller) {
+				mocks.AuthService.EXPECT().UploadAuthThumbnail(gomock.Any()).Return(nil, test.ErrMock)
+			},
+			field: "thumbnail",
+			expect: &test.TestResponse{
+				Code: http.StatusInternalServerError,
+			},
+		},
+		{
+			name: "failed to send stream request",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks, ctrl *gomock.Controller) {
+				client := mock_user.NewMockAuthService_UploadAuthThumbnailClient(ctrl)
+				mocks.AuthService.EXPECT().UploadAuthThumbnail(gomock.Any()).Return(client, nil)
+				client.EXPECT().Send(gomock.Any()).Return(test.ErrMock)
+			},
+			field: "thumbnail",
+			expect: &test.TestResponse{
+				Code: http.StatusInternalServerError,
+			},
+		},
+		{
+			name: "failed to upload thumbnail",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks, ctrl *gomock.Controller) {
+				client := mock_user.NewMockAuthService_UploadAuthThumbnailClient(ctrl)
+				mocks.AuthService.EXPECT().UploadAuthThumbnail(gomock.Any()).Return(client, nil)
+				client.EXPECT().Send(gomock.Any()).AnyTimes().Return(nil)
+				client.EXPECT().CloseAndRecv().Return(nil, test.ErrMock)
+			},
+			field: "thumbnail",
+			expect: &test.TestResponse{
+				Code: http.StatusInternalServerError,
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			path := "/v1/auth/thumbnail"
+			ctx, res, mocks := test.NewMultipartMock(t, ctrl, http.MethodPost, path, tt.field)
+			tt.setup(ctx, t, mocks, ctrl)
+
+			handler := NewAuthHandler(mocks.AuthService)
+			handler.UploadThumbnail(ctx)
 
 			test.TestHTTP(t, tt.expect, res)
 		})
@@ -711,7 +820,8 @@ func TestAuth_RegisterDevice(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			ctx, res, mocks := test.NewHTTPClient(t, tt.req)
+			path := "/v1/auth/device"
+			ctx, res, mocks := test.NewHTTPMock(t, http.MethodPost, path, tt.req)
 			tt.setup(ctx, t, mocks)
 
 			handler := NewAuthHandler(mocks.AuthService)
