@@ -8,6 +8,7 @@ import (
 	mock_chat "github.com/calmato/gran-book/api/gateway/native/mock/chat"
 	mock_user "github.com/calmato/gran-book/api/gateway/native/mock/user"
 	"github.com/calmato/gran-book/api/gateway/native/pkg/datetime"
+	"github.com/golang/mock/gomock"
 )
 
 const filename = "calmato.png"
@@ -31,4 +32,14 @@ type Mocks struct {
 	BookService  *mock_book.MockBookServiceClient
 	ChatService  *mock_chat.MockChatServiceClient
 	UserService  *mock_user.MockUserServiceClient
+}
+
+func NewMocks(ctrl *gomock.Controller) *Mocks {
+	return &Mocks{
+		AdminService: mock_user.NewMockAdminServiceClient(ctrl),
+		AuthService:  mock_user.NewMockAuthServiceClient(ctrl),
+		BookService:  mock_book.NewMockBookServiceClient(ctrl),
+		ChatService:  mock_chat.NewMockChatServiceClient(ctrl),
+		UserService:  mock_user.NewMockUserServiceClient(ctrl),
+	}
 }

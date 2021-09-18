@@ -14,20 +14,15 @@ import (
 	"strings"
 	"testing"
 
-	mock_book "github.com/calmato/gran-book/api/gateway/native/mock/book"
-	mock_chat "github.com/calmato/gran-book/api/gateway/native/mock/chat"
-	mock_user "github.com/calmato/gran-book/api/gateway/native/mock/user"
-	"github.com/gin-gonic/gin"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
-func NewHTTPMock(
-	t *testing.T,
-	method, path string,
-	body interface{},
-) (*gin.Context, *httptest.ResponseRecorder, *Mocks) {
+/**
+ * NewHTTPRequest - HTTP Request(application/json)を生成
+ */
+func NewHTTPRequest(t *testing.T, method, path string, body interface{}) *http.Request {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -35,60 +30,63 @@ func NewHTTPMock(
 	if body != nil {
 		var err error
 		buf, err = json.Marshal(body)
-		require.NoError(t, err)
+		require.NoError(t, err, err)
 	}
 
-	ctx, res := newTestHTTP(t, method, path, bytes.NewReader(buf))
-	ctx.Request.Header.Add("Content-Type", "application/json")
-	mocks := NewMocks(ctrl)
-	return ctx, res, mocks
+	req, err := http.NewRequest(method, path, bytes.NewReader(buf))
+	require.NoError(t, err, err)
+
+	req.Header.Add("Content-Type", "application/json")
+	return req
 }
 
-func NewMultipartMock(
-	t *testing.T,
-	ctrl *gomock.Controller,
-	method, path, field string,
-) (*gin.Context, *httptest.ResponseRecorder, *Mocks) {
+/**
+ * NewMultipartRequset - HTTP Request(multipart/form-data)を生成
+ */
+func NewMultipartRequest(t *testing.T, method, path, field string) *http.Request {
 	buf := &bytes.Buffer{}
 	writer := multipart.NewWriter(buf)
 	defer writer.Close()
 
 	filepath := getFilepath(t)
 	file, err := os.Open(filepath)
-	require.NoError(t, err)
+	require.NoError(t, err, err)
 	defer file.Close()
 
 	header := textproto.MIMEHeader{}
 	header.Set("Content-Disposition", fmt.Sprintf(`form-data; name="%s"; filename="%s"`, field, filename))
 	header.Set("Content-Type", "multipart/form-data")
 	part, err := writer.CreatePart(header)
-	require.NoError(t, err)
+	require.NoError(t, err, err)
 
 	_, err = io.Copy(part, file)
-	require.NoError(t, err)
+	require.NoError(t, err, err)
 
-	ctx, res := newTestHTTP(t, method, path, buf)
-	ctx.Request.Header.Add("Content-Type", writer.FormDataContentType())
-	mocks := NewMocks(ctrl)
-	fmt.Printf("api=%+v\n", ctx.Request.Header)
-	return ctx, res, mocks
+	req, err := http.NewRequest(method, path, buf)
+	require.NoError(t, err, err)
+
+	req.Header.Add("Content-Type", writer.FormDataContentType())
+	return req
 }
 
-func newTestHTTP(
-	t *testing.T,
-	method, path string,
-	body io.Reader,
-) (*gin.Context, *httptest.ResponseRecorder) {
-	req, err := http.NewRequest(method, path, body)
-	require.NoError(t, err)
+/**
+ * TestHTTP - HTTP Responseの検証
+ */
+func TestHTTP(t *testing.T, expect *TestResponse, res *httptest.ResponseRecorder) {
+	require.Equal(t, expect.Code, res.Code)
 
-	res := httptest.NewRecorder()
-	ctx, _ := gin.CreateTestContext(res)
-	ctx.Request = req
+	if isError(res) || expect.Body == nil {
+		return
+	}
 
-	return ctx, res
+	body, err := json.Marshal(expect.Body)
+	require.NoError(t, err, err)
+	require.Equal(t, string(body), res.Body.String())
 }
 
+/**
+ * Private Methods
+ */
 func getFilepath(t *testing.T) string {
 	dir, err := os.Getwd()
 	assert.NoError(t, err)
@@ -101,28 +99,6 @@ func getFilepath(t *testing.T) string {
 	return filepath.Join(strs[0], "/api/gateway/native/pkg/test", filename)
 }
 
-func TestHTTP(t *testing.T, expect *TestResponse, res *httptest.ResponseRecorder) {
-	require.Equal(t, expect.Code, res.Code)
-
-	if isError(res) || expect.Body == nil {
-		return
-	}
-
-	body, err := json.Marshal(expect.Body)
-	require.NoError(t, err)
-	require.Equal(t, string(body), res.Body.String())
-}
-
 func isError(res *httptest.ResponseRecorder) bool {
 	return res.Code < 200 || 300 <= res.Code
-}
-
-func NewMocks(ctrl *gomock.Controller) *Mocks {
-	return &Mocks{
-		AdminService: mock_user.NewMockAdminServiceClient(ctrl),
-		AuthService:  mock_user.NewMockAuthServiceClient(ctrl),
-		BookService:  mock_book.NewMockBookServiceClient(ctrl),
-		ChatService:  mock_chat.NewMockChatServiceClient(ctrl),
-		UserService:  mock_user.NewMockUserServiceClient(ctrl),
-	}
 }

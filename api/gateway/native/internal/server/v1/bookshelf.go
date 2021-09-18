@@ -9,47 +9,31 @@ import (
 	response "github.com/calmato/gran-book/api/gateway/native/internal/response/v1"
 	"github.com/calmato/gran-book/api/gateway/native/internal/server/util"
 	"github.com/calmato/gran-book/api/gateway/native/proto/service/book"
-	"github.com/calmato/gran-book/api/gateway/native/proto/service/user"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/sync/errgroup"
 )
 
-type BookshelfHandler interface {
-	List(ctx *gin.Context)
-	Get(ctx *gin.Context)
-	Read(ctx *gin.Context)
-	Reading(ctx *gin.Context)
-	Stacked(ctx *gin.Context)
-	Want(ctx *gin.Context)
-	Release(ctx *gin.Context)
-	Delete(ctx *gin.Context)
-}
-
-type bookshelfHandler struct {
-	authClient user.AuthServiceClient
-	bookClient book.BookServiceClient
-}
-
-func NewBookshelfHandler(ac user.AuthServiceClient, bc book.BookServiceClient) BookshelfHandler {
-	return &bookshelfHandler{
-		authClient: ac,
-		bookClient: bc,
-	}
-}
-
-// List - 本棚の書籍一覧取得 ※廃止予定
-func (h *bookshelfHandler) List(ctx *gin.Context) {
+// listBookshelf - 本棚の書籍一覧取得 ※廃止予定
+func (h *apiV1Handler) listBookshelf(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
-	limit := ctx.GetInt64(ctx.DefaultQuery("limit", entity.ListLimitDefault))
-	offset := ctx.GetInt64(ctx.DefaultQuery("offset", entity.ListOffsetDefault))
 	userID := ctx.Param("userID")
+	limit, err := strconv.ParseInt(ctx.DefaultQuery("limit", entity.ListLimitDefault), 10, 64)
+	if err != nil {
+		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
+		return
+	}
+	offset, err := strconv.ParseInt(ctx.DefaultQuery("offset", entity.ListOffsetDefault), 10, 64)
+	if err != nil {
+		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
+		return
+	}
 
 	bookshelfInput := &book.ListBookshelfRequest{
 		UserId: userID,
 		Limit:  limit,
 		Offset: offset,
 	}
-	bookshelfOutput, err := h.bookClient.ListBookshelf(c, bookshelfInput)
+	bookshelfOutput, err := h.Book.ListBookshelf(c, bookshelfInput)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -60,7 +44,7 @@ func (h *bookshelfHandler) List(ctx *gin.Context) {
 	booksInput := &book.MultiGetBooksRequest{
 		BookIds: bss.BookIDs(),
 	}
-	booksOutput, err := h.bookClient.MultiGetBooks(c, booksInput)
+	booksOutput, err := h.Book.MultiGetBooks(c, booksInput)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -73,8 +57,8 @@ func (h *bookshelfHandler) List(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, res)
 }
 
-// Get - 本棚の書籍情報取得 ※廃止予定
-func (h *bookshelfHandler) Get(ctx *gin.Context) {
+// getBookshelf - 本棚の書籍情報取得 ※廃止予定
+func (h *apiV1Handler) getBookshelf(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
 	userID := ctx.Param("userID")
 	bookID, err := strconv.ParseInt(ctx.Param("bookID"), 10, 64)
@@ -90,7 +74,7 @@ func (h *bookshelfHandler) Get(ctx *gin.Context) {
 		in := &book.GetBookRequest{
 			BookId: bookID,
 		}
-		out, err := h.bookClient.GetBook(ectx, in)
+		out, err := h.Book.GetBook(ectx, in)
 		if err != nil {
 			return err
 		}
@@ -104,7 +88,7 @@ func (h *bookshelfHandler) Get(ctx *gin.Context) {
 			UserId: userID,
 			BookId: bookID,
 		}
-		out, err := h.bookClient.GetBookshelf(ectx, in)
+		out, err := h.Book.GetBookshelf(ectx, in)
 		if err != nil {
 			return err
 		}
@@ -121,8 +105,8 @@ func (h *bookshelfHandler) Get(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, res)
 }
 
-// Read - 読んだ本の登録
-func (h *bookshelfHandler) Read(ctx *gin.Context) {
+// readBookshelf - 読んだ本の登録
+func (h *apiV1Handler) readBookshelf(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
 	userID := ctx.Param("userID")
 	bookID, err := strconv.ParseInt(ctx.Param("bookID"), 10, 64)
@@ -144,7 +128,7 @@ func (h *bookshelfHandler) Read(ctx *gin.Context) {
 		in := &book.GetBookRequest{
 			BookId: bookID,
 		}
-		out, err := h.bookClient.GetBook(ectx, in)
+		out, err := h.Book.GetBook(ectx, in)
 		if err != nil {
 			return err
 		}
@@ -160,7 +144,7 @@ func (h *bookshelfHandler) Read(ctx *gin.Context) {
 			Impression: req.Impression,
 			ReadOn:     req.ReadOn,
 		}
-		out, err := h.bookClient.ReadBookshelf(ectx, in)
+		out, err := h.Book.ReadBookshelf(ectx, in)
 		if err != nil {
 			return err
 		}
@@ -177,8 +161,8 @@ func (h *bookshelfHandler) Read(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, res)
 }
 
-// Reading - 読んでいる本の登録
-func (h *bookshelfHandler) Reading(ctx *gin.Context) {
+// readingBookshelf - 読んでいる本の登録
+func (h *apiV1Handler) readingBookshelf(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
 	userID := ctx.Param("userID")
 	bookID, err := strconv.ParseInt(ctx.Param("bookID"), 10, 64)
@@ -194,7 +178,7 @@ func (h *bookshelfHandler) Reading(ctx *gin.Context) {
 		in := &book.GetBookRequest{
 			BookId: bookID,
 		}
-		out, err := h.bookClient.GetBook(ectx, in)
+		out, err := h.Book.GetBook(ectx, in)
 		if err != nil {
 			return err
 		}
@@ -208,7 +192,7 @@ func (h *bookshelfHandler) Reading(ctx *gin.Context) {
 			UserId: userID,
 			BookId: bookID,
 		}
-		out, err := h.bookClient.ReadingBookshelf(ectx, in)
+		out, err := h.Book.ReadingBookshelf(ectx, in)
 		if err != nil {
 			return err
 		}
@@ -225,8 +209,8 @@ func (h *bookshelfHandler) Reading(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, res)
 }
 
-// Stacked - 積読本の登録
-func (h *bookshelfHandler) Stacked(ctx *gin.Context) {
+// stackedBookshelf - 積読本の登録
+func (h *apiV1Handler) stackedBookshelf(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
 	userID := ctx.Param("userID")
 	bookID, err := strconv.ParseInt(ctx.Param("bookID"), 10, 64)
@@ -242,7 +226,7 @@ func (h *bookshelfHandler) Stacked(ctx *gin.Context) {
 		in := &book.GetBookRequest{
 			BookId: bookID,
 		}
-		out, err := h.bookClient.GetBook(ectx, in)
+		out, err := h.Book.GetBook(ectx, in)
 		if err != nil {
 			return err
 		}
@@ -256,7 +240,7 @@ func (h *bookshelfHandler) Stacked(ctx *gin.Context) {
 			UserId: userID,
 			BookId: bookID,
 		}
-		out, err := h.bookClient.StackedBookshelf(ectx, in)
+		out, err := h.Book.StackedBookshelf(ectx, in)
 		if err != nil {
 			return err
 		}
@@ -273,8 +257,8 @@ func (h *bookshelfHandler) Stacked(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, res)
 }
 
-// Want - 欲しい本の登録
-func (h *bookshelfHandler) Want(ctx *gin.Context) {
+// wantBookshelf - 欲しい本の登録
+func (h *apiV1Handler) wantBookshelf(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
 	userID := ctx.Param("userID")
 	bookID, err := strconv.ParseInt(ctx.Param("bookID"), 10, 64)
@@ -290,7 +274,7 @@ func (h *bookshelfHandler) Want(ctx *gin.Context) {
 		in := &book.GetBookRequest{
 			BookId: bookID,
 		}
-		out, err := h.bookClient.GetBook(ectx, in)
+		out, err := h.Book.GetBook(ectx, in)
 		if err != nil {
 			return err
 		}
@@ -304,7 +288,7 @@ func (h *bookshelfHandler) Want(ctx *gin.Context) {
 			UserId: userID,
 			BookId: bookID,
 		}
-		out, err := h.bookClient.WantBookshelf(ectx, in)
+		out, err := h.Book.WantBookshelf(ectx, in)
 		if err != nil {
 			return err
 		}
@@ -321,8 +305,8 @@ func (h *bookshelfHandler) Want(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, res)
 }
 
-// Release - 手放したい本の登録
-func (h *bookshelfHandler) Release(ctx *gin.Context) {
+// releaseBookshelf - 手放したい本の登録
+func (h *apiV1Handler) releaseBookshelf(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
 	userID := ctx.Param("userID")
 	bookID, err := strconv.ParseInt(ctx.Param("bookID"), 10, 64)
@@ -338,7 +322,7 @@ func (h *bookshelfHandler) Release(ctx *gin.Context) {
 		in := &book.GetBookRequest{
 			BookId: bookID,
 		}
-		out, err := h.bookClient.GetBook(ectx, in)
+		out, err := h.Book.GetBook(ectx, in)
 		if err != nil {
 			return err
 		}
@@ -352,7 +336,7 @@ func (h *bookshelfHandler) Release(ctx *gin.Context) {
 			UserId: userID,
 			BookId: bookID,
 		}
-		out, err := h.bookClient.ReleaseBookshelf(ectx, in)
+		out, err := h.Book.ReleaseBookshelf(ectx, in)
 		if err != nil {
 			return err
 		}
@@ -369,8 +353,8 @@ func (h *bookshelfHandler) Release(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, res)
 }
 
-// Delete - 本棚から書籍の削除
-func (h *bookshelfHandler) Delete(ctx *gin.Context) {
+// deleteBookshelf - 本棚から書籍の削除
+func (h *apiV1Handler) deleteBookshelf(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
 	userID := ctx.Param("userID")
 	bookID, err := strconv.ParseInt(ctx.Param("bookID"), 10, 64)
@@ -383,7 +367,7 @@ func (h *bookshelfHandler) Delete(ctx *gin.Context) {
 		UserId: userID,
 		BookId: bookID,
 	}
-	_, err = h.bookClient.DeleteBookshelf(c, in)
+	_, err = h.Book.DeleteBookshelf(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return

@@ -1,10 +1,10 @@
 package v1
 
 import (
-	"context"
 	"fmt"
 	"io"
 	"net/http"
+	"strconv"
 
 	"github.com/calmato/gran-book/api/gateway/native/internal/entity"
 	request "github.com/calmato/gran-book/api/gateway/native/internal/request/v1"
@@ -16,35 +16,22 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type ChatHandler interface {
-	ListRoom(ctx *gin.Context)
-	CreateRoom(ctx *gin.Context)
-	CreateTextMessage(ctx *gin.Context)
-	CreateImageMessage(ctx *gin.Context)
-}
-
-type chatHandler struct {
-	authClient user.AuthServiceClient
-	chatClient chat.ChatServiceClient
-	userClient user.UserServiceClient
-}
-
-func NewChatHandler(ac user.AuthServiceClient, cc chat.ChatServiceClient, uc user.UserServiceClient) ChatHandler {
-	return &chatHandler{
-		authClient: ac,
-		chatClient: cc,
-		userClient: uc,
-	}
-}
-
-// ListRoom - チャットルーム一覧取得
-func (h *chatHandler) ListRoom(ctx *gin.Context) {
+// listChatRoom - チャットルーム一覧取得
+func (h *apiV1Handler) listChatRoom(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
 	userID := ctx.Param("userID")
-	limit := ctx.GetInt64(ctx.DefaultQuery("limit", entity.ListLimitDefault))
-	offset := ctx.DefaultQuery("offset", "")
+	limit, err := strconv.ParseInt(ctx.DefaultQuery("limit", entity.ListLimitDefault), 10, 64)
+	if err != nil {
+		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
+		return
+	}
+	offset, err := strconv.ParseInt(ctx.DefaultQuery("offset", entity.ListOffsetDefault), 10, 64)
+	if err != nil {
+		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
+		return
+	}
 
-	_, err := h.currentUser(c, userID)
+	_, err = h.currentUser(c, userID)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -53,9 +40,9 @@ func (h *chatHandler) ListRoom(ctx *gin.Context) {
 	roomsInput := &chat.ListRoomRequest{
 		UserId: userID,
 		Limit:  limit,
-		Offset: offset,
+		Offset: fmt.Sprint(offset),
 	}
-	roomsOutput, err := h.chatClient.ListRoom(c, roomsInput)
+	roomsOutput, err := h.Chat.ListRoom(c, roomsInput)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -66,7 +53,7 @@ func (h *chatHandler) ListRoom(ctx *gin.Context) {
 	usersInput := &user.MultiGetUserRequest{
 		UserIds: crs.UserIDs(),
 	}
-	usersOutput, err := h.userClient.MultiGetUser(c, usersInput)
+	usersOutput, err := h.User.MultiGetUser(c, usersInput)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -77,8 +64,8 @@ func (h *chatHandler) ListRoom(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, res)
 }
 
-// CreateRoom - チャットルーム作成
-func (h *chatHandler) CreateRoom(ctx *gin.Context) {
+// createChatRoom - チャットルーム作成
+func (h *apiV1Handler) createChatRoom(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
 	userID := ctx.Param("userID")
 
@@ -102,7 +89,7 @@ func (h *chatHandler) CreateRoom(ctx *gin.Context) {
 	usersInput := &user.MultiGetUserRequest{
 		UserIds: userIDs,
 	}
-	usersOutput, err := h.userClient.MultiGetUser(c, usersInput)
+	usersOutput, err := h.User.MultiGetUser(c, usersInput)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -118,7 +105,7 @@ func (h *chatHandler) CreateRoom(ctx *gin.Context) {
 	roomInput := &chat.CreateRoomRequest{
 		UserIds: userIDs,
 	}
-	roomOutput, err := h.chatClient.CreateRoom(c, roomInput)
+	roomOutput, err := h.Chat.CreateRoom(c, roomInput)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -129,8 +116,8 @@ func (h *chatHandler) CreateRoom(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, res)
 }
 
-// CreateTextMessage - チャットメッセージ(テキスト)作成
-func (h *chatHandler) CreateTextMessage(ctx *gin.Context) {
+// createChatTextMessage - チャットメッセージ(テキスト)作成
+func (h *apiV1Handler) createChatTextMessage(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
 	roomID := ctx.Param("roomID")
 	userID := ctx.Param("userID")
@@ -152,7 +139,7 @@ func (h *chatHandler) CreateTextMessage(ctx *gin.Context) {
 		UserId: userID,
 		Text:   req.Text,
 	}
-	out, err := h.chatClient.CreateMessage(c, in)
+	out, err := h.Chat.CreateMessage(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -163,8 +150,8 @@ func (h *chatHandler) CreateTextMessage(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, res)
 }
 
-// CreateImageMessage - チャットメッセージ(画像)作成
-func (h *chatHandler) CreateImageMessage(ctx *gin.Context) {
+// createChatImageMessage - チャットメッセージ(画像)作成
+func (h *apiV1Handler) createChatImageMessage(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
 	roomID := ctx.Param("roomID")
 	userID := ctx.Param("userID")
@@ -182,7 +169,7 @@ func (h *chatHandler) CreateImageMessage(ctx *gin.Context) {
 	}
 	defer file.Close()
 
-	stream, err := h.chatClient.UploadImage(c)
+	stream, err := h.Chat.UploadImage(c)
 	if err != nil {
 		util.ErrorHandling(ctx, entity.ErrInternalServerError.New(err))
 		return
@@ -236,19 +223,4 @@ func (h *chatHandler) CreateImageMessage(ctx *gin.Context) {
 	cm := entity.NewChatMessage(messageOutput.Message)
 	res := response.NewChatMessageResponse(cm, a)
 	ctx.JSON(http.StatusOK, res)
-}
-
-func (h *chatHandler) currentUser(ctx context.Context, userID string) (*entity.Auth, error) {
-	out, err := h.authClient.GetAuth(ctx, &user.Empty{})
-	if err != nil {
-		return nil, err
-	}
-
-	a := entity.NewAuth(out.Auth)
-
-	if a.Id != userID {
-		return nil, entity.ErrForbidden.New(err)
-	}
-
-	return a, nil
 }

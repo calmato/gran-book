@@ -12,27 +12,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type TopHandler interface {
-	UserTop(ctx *gin.Context)
-}
-
-type topHandler struct {
-	authClient user.AuthServiceClient
-	bookClient book.BookServiceClient
-}
-
-func NewTopHandler(ac user.AuthServiceClient, bc book.BookServiceClient) TopHandler {
-	return &topHandler{
-		authClient: ac,
-		bookClient: bc,
-	}
-}
-
-// UserTop - ユーザーのトップページ表示用の情報取得
-func (h *topHandler) UserTop(ctx *gin.Context) {
+// getTopUser - ユーザーのトップページ表示用の情報取得
+func (h *apiV1Handler) getTopUser(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
 
-	authOutput, err := h.authClient.GetAuth(c, &user.Empty{})
+	authOutput, err := h.Auth.GetAuth(c, &user.Empty{})
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -49,7 +33,7 @@ func (h *topHandler) UserTop(ctx *gin.Context) {
 		SinceDate: datetime.FormatDate(since),
 		UntilDate: datetime.FormatDate(until),
 	}
-	resultsOutput, err := h.bookClient.ListUserMonthlyResult(c, resultsInput)
+	resultsOutput, err := h.Book.ListUserMonthlyResult(c, resultsInput)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return

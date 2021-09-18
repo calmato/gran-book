@@ -14,29 +14,8 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
-type ReviewHandler interface {
-	ListByBook(ctx *gin.Context)
-	ListByUser(ctx *gin.Context)
-	GetByBook(ctx *gin.Context)
-	GetByUser(ctx *gin.Context)
-}
-
-type reviewHandler struct {
-	authClient user.AuthServiceClient
-	bookClient book.BookServiceClient
-	userClient user.UserServiceClient
-}
-
-func NewReviewHandler(ac user.AuthServiceClient, bc book.BookServiceClient, uc user.UserServiceClient) ReviewHandler {
-	return &reviewHandler{
-		authClient: ac,
-		bookClient: bc,
-		userClient: uc,
-	}
-}
-
-// ListByBook - 書籍のレビュー一覧取得
-func (h *reviewHandler) ListByBook(ctx *gin.Context) {
+// listReviewByBook - 書籍のレビュー一覧取得
+func (h *apiV1Handler) listReviewByBook(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
 	limit := ctx.GetInt64(ctx.DefaultQuery("limit", entity.ListLimitDefault))
 	offset := ctx.GetInt64(ctx.DefaultQuery("offset", entity.ListOffsetDefault))
@@ -51,7 +30,7 @@ func (h *reviewHandler) ListByBook(ctx *gin.Context) {
 		Limit:  limit,
 		Offset: offset,
 	}
-	reviewsOutput, err := h.bookClient.ListBookReview(c, reviewsInput)
+	reviewsOutput, err := h.Book.ListBookReview(c, reviewsInput)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -62,7 +41,7 @@ func (h *reviewHandler) ListByBook(ctx *gin.Context) {
 	usersInput := &user.MultiGetUserRequest{
 		UserIds: rs.UserIDs(),
 	}
-	usersOutput, err := h.userClient.MultiGetUser(c, usersInput)
+	usersOutput, err := h.User.MultiGetUser(c, usersInput)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -75,8 +54,8 @@ func (h *reviewHandler) ListByBook(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, res)
 }
 
-// ListByUser - ユーザーのレビュー一覧取得
-func (h *reviewHandler) ListByUser(ctx *gin.Context) {
+// listReviewByUser - ユーザーのレビュー一覧取得
+func (h *apiV1Handler) listReviewByUser(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
 	userID := ctx.Param("userID")
 	limit := ctx.GetInt64(ctx.DefaultQuery("limit", entity.ListLimitDefault))
@@ -87,7 +66,7 @@ func (h *reviewHandler) ListByUser(ctx *gin.Context) {
 		Limit:  limit,
 		Offset: offset,
 	}
-	reviewsOutput, err := h.bookClient.ListUserReview(c, reviewsInput)
+	reviewsOutput, err := h.Book.ListUserReview(c, reviewsInput)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -98,7 +77,7 @@ func (h *reviewHandler) ListByUser(ctx *gin.Context) {
 	booksInput := &book.MultiGetBooksRequest{
 		BookIds: rs.BookIDs(),
 	}
-	booksOutput, err := h.bookClient.MultiGetBooks(c, booksInput)
+	booksOutput, err := h.Book.MultiGetBooks(c, booksInput)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -111,8 +90,8 @@ func (h *reviewHandler) ListByUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, res)
 }
 
-// GetByBook - 書籍のレビュー情報取得
-func (h *reviewHandler) GetByBook(ctx *gin.Context) {
+// getBookReview - 書籍のレビュー情報取得
+func (h *apiV1Handler) getBookReview(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
 	bookID, err := strconv.ParseInt(ctx.Param("bookID"), 10, 64)
 	if err != nil {
@@ -131,7 +110,7 @@ func (h *reviewHandler) GetByBook(ctx *gin.Context) {
 		in := &book.GetBookRequest{
 			BookId: bookID,
 		}
-		_, err = h.bookClient.GetBook(ectx, in)
+		_, err = h.Book.GetBook(ectx, in)
 		return err
 	})
 
@@ -140,7 +119,7 @@ func (h *reviewHandler) GetByBook(ctx *gin.Context) {
 		in := &book.GetReviewRequest{
 			ReviewId: reviewID,
 		}
-		out, err := h.bookClient.GetReview(ectx, in)
+		out, err := h.Book.GetReview(ectx, in)
 		if err != nil {
 			return err
 		}
@@ -156,7 +135,7 @@ func (h *reviewHandler) GetByBook(ctx *gin.Context) {
 	in := &user.GetUserRequest{
 		UserId: r.UserId,
 	}
-	out, err := h.userClient.GetUser(c, in)
+	out, err := h.User.GetUser(c, in)
 	if err != nil && !util.IsNotFound(err) {
 		util.ErrorHandling(ctx, err)
 		return
@@ -167,8 +146,8 @@ func (h *reviewHandler) GetByBook(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, res)
 }
 
-// GetByUser - ユーザーのレビュー情報取得
-func (h *reviewHandler) GetByUser(ctx *gin.Context) {
+// getUserReview - ユーザーのレビュー情報取得
+func (h *apiV1Handler) getUserReview(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
 	userID := ctx.Param("userID")
 	reviewID, err := strconv.ParseInt(ctx.Param("reviewID"), 10, 64)
@@ -180,7 +159,7 @@ func (h *reviewHandler) GetByUser(ctx *gin.Context) {
 	reviewInput := &book.GetReviewRequest{
 		ReviewId: reviewID,
 	}
-	reviewOutput, err := h.bookClient.GetReview(c, reviewInput)
+	reviewOutput, err := h.Book.GetReview(c, reviewInput)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -196,7 +175,7 @@ func (h *reviewHandler) GetByUser(ctx *gin.Context) {
 	bookInput := &book.GetBookRequest{
 		BookId: r.BookId,
 	}
-	bookOutput, err := h.bookClient.GetBook(c, bookInput)
+	bookOutput, err := h.Book.GetBook(c, bookInput)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
