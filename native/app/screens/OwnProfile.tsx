@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement, useCallback, useState } from 'react';
 import { RefreshControl, StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -38,7 +38,7 @@ interface Props {
   followerCount: number;
   followCount: number;
   actions: {
-    getOwnProfile: () => Promise<void>;
+    fetchOwnProfile: () => Promise<void>;
   };
 }
 
@@ -52,25 +52,14 @@ const OwnProfile = function OwnProfile(props: Props): ReactElement {
   };
   const navigation = useNavigation();
 
-  const [hasGottonProfile, setHasGottonProfile] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { getOwnProfile } = props.actions;
+  const { fetchOwnProfile } = props.actions;
 
-  const handleGetOwnProfile = () => {
+  const handleGetOwnProfile = useCallback(async () => {
     setIsLoading(true);
-    getOwnProfile()
-      .then(() => {
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        console.log('debug', err);
-      });
-  };
-
-  if (!hasGottonProfile) {
-    setHasGottonProfile(true);
-    handleGetOwnProfile();
-  }
+    await fetchOwnProfile();
+    setIsLoading(false);
+  }, [fetchOwnProfile]);
 
   return (
     <View style={styles.container}>

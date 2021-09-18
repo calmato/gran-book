@@ -1,37 +1,40 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useCallback, useContext, useEffect } from 'react';
+import { AuthContext } from '~/context/auth';
+import { UserContext } from '~/context/user';
 import OwnProfile from '~/screens/OwnProfile';
-import { Auth, User } from '~/store/models';
-import { useReduxDispatch } from '~/store/modules';
-import { authSelector, userSelector } from '~/store/selectors';
-import { getOwnProfileAsync } from '~/store/usecases/user';
+import { getOwnProfile } from '~/store/usecases/v2/user';
 
 export default function ConnectedOwnProfile(): JSX.Element {
-  const auth: Auth.Model = useSelector(authSelector);
-  const user: User.Model = useSelector(userSelector);
-  const dispatch = useReduxDispatch();
+  const { authState } = useContext(AuthContext);
+  const { userState, dispatch } = useContext(UserContext);
 
-  const actions = React.useMemo(
-    () => ({
-      getOwnProfile(): Promise<void> {
-        return dispatch(getOwnProfileAsync(auth.id));
-      },
-    }),
-    [dispatch, auth.id],
-  );
+  const fetchOwnProfile = useCallback(async () => {
+    const userValue = await getOwnProfile(authState.id, authState.token);
+    dispatch({
+      type: 'SET_USER',
+      payload: userValue,
+    });
+  }, [authState.id, authState.token, dispatch]);
+
+  useEffect(() => {
+    const f = async () => {
+      await fetchOwnProfile();
+    };
+    f();
+  }, []);
 
   return (
     <OwnProfile
-      username={user.username}
-      selfIntroduction={user.selfIntroduction}
-      thumbnailUrl={user.thumbnailUrl}
-      gender={auth.gender}
-      rating={user.rating}
-      reviewCount={user.reviewCount}
-      saleCount={user.products.length}
-      followCount={user.followCount}
-      followerCount={user.followerCount}
-      actions={actions}
+      username={userState.username}
+      selfIntroduction={userState.selfIntroduction}
+      thumbnailUrl={userState.thumbnailUrl}
+      gender={authState.gender}
+      rating={userState.rating}
+      reviewCount={userState.reviewCount}
+      saleCount={userState.products.length}
+      followCount={userState.followCount}
+      followerCount={userState.followerCount}
+      actions={{ fetchOwnProfile }}
     />
   );
 }
