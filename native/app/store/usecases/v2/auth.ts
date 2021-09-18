@@ -1,5 +1,6 @@
-import { AxiosRequestConfig, AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
 import { internal } from '~/lib/axios';
+import { getAuthHeader } from '~/lib/axios/util';
 import firebase from '~/lib/firebase';
 import { Auth } from '~/store/models';
 import { AuthV1Response } from '~/types/api/auth_apiv1_response_pb';
@@ -76,7 +77,6 @@ export async function getProfile(token: string) {
 
     return values;
   } catch (e) {
-    console.log(e.response);
     return Promise.reject(e);
   }
 }
@@ -142,12 +142,4 @@ export async function editProfile(payload: ProfileEditForm) {
   } catch (e) {
     return Promise.reject(e);
   }
-}
-
-function getAuthHeader(token: string): AxiosRequestConfig {
-  return {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
 }
