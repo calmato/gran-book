@@ -2,7 +2,7 @@ import React, { createContext, useContext, useEffect, useReducer } from 'react';
 import * as UiContext from '~/lib/context/ui';
 import firebase from '~/lib/firebase';
 import { AuthValues, initialState, Model, ProfileValues } from '~/store/models/auth';
-import { signOut } from '~/store/usecases/v2/auth';
+import { getProfile, signOut } from '~/store/usecases/v2/auth';
 
 interface AuthContextProps {
   authState: Model;
@@ -56,7 +56,7 @@ const AuthProvider = function AuthProvider({ children }: Props) {
   useEffect(() => {
     const unsubscribed = firebase.auth().onAuthStateChanged((user) => {
       if (user && user.emailVerified) {
-        user.getIdToken().then((token) => {
+        user.getIdToken().then(async (token) => {
           dispatch({
             type: 'SET_AUTH_VALUES',
             payload: {
@@ -65,6 +65,11 @@ const AuthProvider = function AuthProvider({ children }: Props) {
               emailVerified: user.emailVerified,
               token,
             },
+          });
+          const profileValues = await getProfile(token);
+          dispatch({
+            type: 'SET_PROFILE_VALUES',
+            payload: profileValues,
           });
           uiContext.setApplicationState(UiContext.Status.AUTHORIZED);
         });

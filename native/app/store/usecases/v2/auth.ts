@@ -1,4 +1,4 @@
-import { AxiosResponse } from 'axios';
+import { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { internal } from '~/lib/axios';
 import firebase from '~/lib/firebase';
 import { Auth } from '~/store/models';
@@ -62,10 +62,11 @@ export async function signOut() {
  * バックエンドAPIにリクエストを送り、現在ログインしているユーザーのプロフィール情報を取得します。
  * @returns Promise<Auth.ProfileValues>
  */
-export async function getProfile() {
+export async function getProfile(token: string) {
   try {
     const { data }: AxiosResponse<AuthV1Response.AsObject> = await internal.get(
       `${API_VERSION}/auth`,
+      getAuthHeader(token),
     );
 
     const values: Auth.ProfileValues = {
@@ -75,6 +76,7 @@ export async function getProfile() {
 
     return values;
   } catch (e) {
+    console.log(e.response);
     return Promise.reject(e);
   }
 }
@@ -140,4 +142,12 @@ export async function editProfile(payload: ProfileEditForm) {
   } catch (e) {
     return Promise.reject(e);
   }
+}
+
+function getAuthHeader(token: string): AxiosRequestConfig {
+  return {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
 }
