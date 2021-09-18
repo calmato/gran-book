@@ -1,11 +1,9 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useContext } from 'react';
+import { AuthContext } from '~/context/auth';
 import MyPage from '~/screens/MyPage';
-import { Auth } from '~/store/models';
-import { authSelector } from '~/store/selectors';
 
 export default function ConnectedMyPage(): JSX.Element {
-  const auth: Auth.Model = useSelector(authSelector);
+  const { authState } = useContext(AuthContext);
 
-  return <MyPage auth={auth} />;
+  return <MyPage auth={authState} />;
 }
