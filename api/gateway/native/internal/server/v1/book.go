@@ -14,26 +14,8 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
-type BookHandler interface {
-	Get(ctx *gin.Context)
-	Create(ctx *gin.Context)
-	Update(ctx *gin.Context)
-}
-
-type bookHandler struct {
-	authClient user.AuthServiceClient
-	bookClient book.BookServiceClient
-}
-
-func NewBookHandler(ac user.AuthServiceClient, bc book.BookServiceClient) BookHandler {
-	return &bookHandler{
-		authClient: ac,
-		bookClient: bc,
-	}
-}
-
-// Get - 書籍情報取得 (ISBN指定) ※廃止予定
-func (h *bookHandler) Get(ctx *gin.Context) {
+// getBook - 書籍情報取得 (ISBN指定) ※廃止予定
+func (h *apiV1Handler) getBook(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
 	isbn := ctx.Param("bookID")
 
@@ -41,7 +23,7 @@ func (h *bookHandler) Get(ctx *gin.Context) {
 
 	var a *entity.Auth
 	eg.Go(func() error {
-		out, err := h.authClient.GetAuth(ectx, &user.Empty{})
+		out, err := h.Auth.GetAuth(ectx, &user.Empty{})
 		if err != nil {
 			return err
 		}
@@ -54,7 +36,7 @@ func (h *bookHandler) Get(ctx *gin.Context) {
 		in := &book.GetBookByIsbnRequest{
 			Isbn: isbn,
 		}
-		out, err := h.bookClient.GetBookByIsbn(ectx, in)
+		out, err := h.Book.GetBookByIsbn(ectx, in)
 		if err != nil {
 			return err
 		}
@@ -71,7 +53,7 @@ func (h *bookHandler) Get(ctx *gin.Context) {
 		BookId: b.Id,
 		UserId: a.Id,
 	}
-	out, err := h.bookClient.GetBookshelf(c, in)
+	out, err := h.Book.GetBookshelf(c, in)
 	if err != nil && !util.IsNotFound(err) {
 		util.ErrorHandling(ctx, err)
 		return
@@ -82,8 +64,8 @@ func (h *bookHandler) Get(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, res)
 }
 
-// Create - 書籍登録
-func (h *bookHandler) Create(ctx *gin.Context) {
+// createBook - 書籍登録
+func (h *apiV1Handler) createBook(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
 
 	req := &request.CreateBookRequest{}
@@ -117,7 +99,7 @@ func (h *bookHandler) Create(ctx *gin.Context) {
 		RakutenGenreId: req.BooksGenreID,
 		Authors:        authors,
 	}
-	out, err := h.bookClient.CreateBook(c, in)
+	out, err := h.Book.CreateBook(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -128,8 +110,8 @@ func (h *bookHandler) Create(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, res)
 }
 
-// Update - 書籍更新
-func (h *bookHandler) Update(ctx *gin.Context) {
+// updateBook - 書籍更新
+func (h *apiV1Handler) updateBook(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
 
 	req := &request.UpdateBookRequest{}
@@ -163,7 +145,7 @@ func (h *bookHandler) Update(ctx *gin.Context) {
 		RakutenGenreId: req.BooksGenreID,
 		Authors:        authors,
 	}
-	out, err := h.bookClient.UpdateBook(c, in)
+	out, err := h.Book.UpdateBook(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -174,7 +156,7 @@ func (h *bookHandler) Update(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, res)
 }
 
-func (h *bookHandler) getThumbnailURLByRequest(smallImageURL, mediumImageURL, largeImageURL string) string {
+func (h *apiV1Handler) getThumbnailURLByRequest(smallImageURL, mediumImageURL, largeImageURL string) string {
 	if largeImageURL != "" {
 		return largeImageURL
 	}

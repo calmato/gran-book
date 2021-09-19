@@ -4,6 +4,7 @@ import (
 	"github.com/calmato/gran-book/api/gateway/native/internal/server/util"
 	v1 "github.com/calmato/gran-book/api/gateway/native/internal/server/v1"
 	v2 "github.com/calmato/gran-book/api/gateway/native/internal/server/v2"
+	"github.com/calmato/gran-book/api/gateway/native/pkg/datetime"
 	"github.com/calmato/gran-book/api/gateway/native/pkg/firebase/authentication"
 	"github.com/calmato/gran-book/api/gateway/native/proto/service/book"
 	"github.com/calmato/gran-book/api/gateway/native/proto/service/chat"
@@ -15,15 +16,8 @@ import (
 type Registry struct {
 	Authenticator util.Authenticator
 	HTTP          util.HTTPHandler
-	V1Auth        v1.AuthHandler
-	V1Book        v1.BookHandler
-	V1Bookshelf   v1.BookshelfHandler
-	V1Chat        v1.ChatHandler
-	V1Review      v1.ReviewHandler
-	V1Top         v1.TopHandler
-	V1User        v1.UserHandler
-	V2Book        v2.BookHandler
-	V2Bookshelf   v2.BookshelfHandler
+	V1Api         v1.APIV1Handler
+	V2Api         v2.APIV2Handler
 }
 
 // Params - DIコンテナ生成用のパラメータ
@@ -44,27 +38,32 @@ type gRPCClient struct {
 
 // NewRegistry - internalディレクトリ配下の依存関係の解決
 func NewRegistry(params *Params) (*Registry, error) {
-	client, err := newgRPCClient(params)
+	client, err := newGRPCClient(params)
 	if err != nil {
 		return nil, err
+	}
+
+	v1Params := &v1.Params{
+		Auth: client.auth,
+		User: client.user,
+		Chat: client.chat,
+		Book: client.book,
+	}
+	v2Params := &v2.Params{
+		Auth: client.auth,
+		User: client.user,
+		Book: client.book,
 	}
 
 	return &Registry{
 		Authenticator: util.NewAuthenticator(params.FirebaseAuth),
 		HTTP:          util.NewHTTPHandler(),
-		V1Auth:        v1.NewAuthHandler(client.auth),
-		V1Book:        v1.NewBookHandler(client.auth, client.book),
-		V1Bookshelf:   v1.NewBookshelfHandler(client.auth, client.book),
-		V1Chat:        v1.NewChatHandler(client.auth, client.chat, client.user),
-		V1Review:      v1.NewReviewHandler(client.auth, client.book, client.user),
-		V1Top:         v1.NewTopHandler(client.auth, client.book),
-		V1User:        v1.NewUserHandler(client.user),
-		V2Book:        v2.NewBookHandler(client.auth, client.book, client.user),
-		V2Bookshelf:   v2.NewBookshelfHandler(client.book, client.user),
+		V1Api:         v1.NewAPIV1Handler(v1Params, datetime.Now),
+		V2Api:         v2.NewAPIV2Handler(v2Params, datetime.Now),
 	}, nil
 }
 
-func newgRPCClient(params *Params) (*gRPCClient, error) {
+func newGRPCClient(params *Params) (*gRPCClient, error) {
 	authConn, err := grpc.Dial(params.AuthServiceURL, grpc.WithInsecure())
 	if err != nil {
 		return nil, err

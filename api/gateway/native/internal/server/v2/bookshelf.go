@@ -13,36 +13,27 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
-type BookshelfHandler interface {
-	List(ctx *gin.Context)
-	Get(ctx *gin.Context)
-}
-
-type bookshelfHandler struct {
-	bookClient book.BookServiceClient
-	userClient user.UserServiceClient
-}
-
-func NewBookshelfHandler(bc book.BookServiceClient, uc user.UserServiceClient) BookshelfHandler {
-	return &bookshelfHandler{
-		bookClient: bc,
-		userClient: uc,
-	}
-}
-
-// List - 本棚の書籍一覧取得
-func (h *bookshelfHandler) List(ctx *gin.Context) {
+// listBookshelf - 本棚の書籍一覧取得
+func (h *apiV2Handler) listBookshelf(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
-	limit := ctx.GetInt64(ctx.DefaultQuery("limit", entity.ListLimitDefault))
-	offset := ctx.GetInt64(ctx.DefaultQuery("offset", entity.ListOffsetDefault))
 	userID := ctx.Param("userID")
+	limit, err := strconv.ParseInt(ctx.DefaultQuery("limit", entity.ListLimitDefault), 10, 64)
+	if err != nil {
+		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
+		return
+	}
+	offset, err := strconv.ParseInt(ctx.DefaultQuery("offset", entity.ListOffsetDefault), 10, 64)
+	if err != nil {
+		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
+		return
+	}
 
 	bookshelvesInput := &book.ListBookshelfRequest{
 		UserId: userID,
 		Limit:  limit,
 		Offset: offset,
 	}
-	bookshelvesOutput, err := h.bookClient.ListBookshelf(c, bookshelvesInput)
+	bookshelvesOutput, err := h.Book.ListBookshelf(c, bookshelvesInput)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -53,7 +44,7 @@ func (h *bookshelfHandler) List(ctx *gin.Context) {
 	booksInput := &book.MultiGetBooksRequest{
 		BookIds: bss.BookIDs(),
 	}
-	booksOutput, err := h.bookClient.MultiGetBooks(c, booksInput)
+	booksOutput, err := h.Book.MultiGetBooks(c, booksInput)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -66,8 +57,8 @@ func (h *bookshelfHandler) List(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, res)
 }
 
-// Get - 本棚の書籍情報取得
-func (h *bookshelfHandler) Get(ctx *gin.Context) {
+// getBookshelf - 本棚の書籍情報取得
+func (h *apiV2Handler) getBookshelf(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
 	userID := ctx.Param("userID")
 	bookID, err := strconv.ParseInt(ctx.Param("bookID"), 10, 64)
@@ -83,7 +74,7 @@ func (h *bookshelfHandler) Get(ctx *gin.Context) {
 		in := &book.GetBookRequest{
 			BookId: bookID,
 		}
-		out, err := h.bookClient.GetBook(ectx, in)
+		out, err := h.Book.GetBook(ectx, in)
 		if err != nil {
 			return err
 		}
@@ -97,7 +88,7 @@ func (h *bookshelfHandler) Get(ctx *gin.Context) {
 			UserId: userID,
 			BookId: bookID,
 		}
-		out, err := h.bookClient.GetBookshelf(ectx, in)
+		out, err := h.Book.GetBookshelf(ectx, in)
 		if err != nil {
 			return err
 		}
@@ -113,7 +104,7 @@ func (h *bookshelfHandler) Get(ctx *gin.Context) {
 			Limit:  20,
 			Offset: 0,
 		}
-		out, err := h.bookClient.ListBookReview(ectx, in)
+		out, err := h.Book.ListBookReview(ectx, in)
 		if err != nil {
 			return err
 		}
@@ -133,7 +124,7 @@ func (h *bookshelfHandler) Get(ctx *gin.Context) {
 		UserIds: rs.UserIDs(),
 	}
 
-	usersOutput, err := h.userClient.MultiGetUser(c, usersInput)
+	usersOutput, err := h.User.MultiGetUser(c, usersInput)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return

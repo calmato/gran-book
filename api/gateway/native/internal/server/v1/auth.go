@@ -12,34 +12,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type AuthHandler interface {
-	Get(ctx *gin.Context)
-	Create(ctx *gin.Context)
-	UpdateProfile(ctx *gin.Context)
-	UpdateAddress(ctx *gin.Context)
-	UpdateEmail(ctx *gin.Context)
-	UpdatePassword(ctx *gin.Context)
-	UploadThumbnail(ctx *gin.Context)
-	Delete(ctx *gin.Context)
-	RegisterDevice(ctx *gin.Context)
-}
-
-type authHandler struct {
-	authClient user.AuthServiceClient
-}
-
-func NewAuthHandler(ac user.AuthServiceClient) AuthHandler {
-	return &authHandler{
-		authClient: ac,
-	}
-}
-
-// Get - 認証情報取得
-func (h *authHandler) Get(ctx *gin.Context) {
+// getAuth - 認証情報取得
+func (h *apiV1Handler) getAuth(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
 
 	in := &user.Empty{}
-	out, err := h.authClient.GetAuth(c, in)
+	out, err := h.Auth.GetAuth(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -50,8 +28,8 @@ func (h *authHandler) Get(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, res)
 }
 
-// Create - ユーザー登録
-func (h *authHandler) Create(ctx *gin.Context) {
+// createAuth - ユーザー登録
+func (h *apiV1Handler) createAuth(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
 
 	req := &request.CreateAuthRequest{}
@@ -66,7 +44,7 @@ func (h *authHandler) Create(ctx *gin.Context) {
 		Password:             req.Password,
 		PasswordConfirmation: req.PasswordConfirmation,
 	}
-	out, err := h.authClient.CreateAuth(c, in)
+	out, err := h.Auth.CreateAuth(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -77,8 +55,8 @@ func (h *authHandler) Create(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, res)
 }
 
-// UpdateProfile - プロフィール情報更新
-func (h *authHandler) UpdateProfile(ctx *gin.Context) {
+// updateAuthProfile - プロフィール情報更新
+func (h *apiV1Handler) updateAuthProfile(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
 
 	req := &request.UpdateAuthProfileRequest{}
@@ -93,7 +71,7 @@ func (h *authHandler) UpdateProfile(ctx *gin.Context) {
 		ThumbnailUrl:     req.ThumbnailURL,
 		SelfIntroduction: req.SelfIntroduction,
 	}
-	out, err := h.authClient.UpdateAuthProfile(c, in)
+	out, err := h.Auth.UpdateAuthProfile(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -104,8 +82,8 @@ func (h *authHandler) UpdateProfile(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, res)
 }
 
-// UpdateAddress - 住所情報更新
-func (h *authHandler) UpdateAddress(ctx *gin.Context) {
+// updateAuthAddress - 住所情報更新
+func (h *apiV1Handler) updateAuthAddress(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
 
 	req := &request.UpdateAuthAddressRequest{}
@@ -126,7 +104,7 @@ func (h *authHandler) UpdateAddress(ctx *gin.Context) {
 		AddressLine1:  req.AddressLine1,
 		AddressLine2:  req.AddressLine2,
 	}
-	out, err := h.authClient.UpdateAuthAddress(c, in)
+	out, err := h.Auth.UpdateAuthAddress(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -137,8 +115,8 @@ func (h *authHandler) UpdateAddress(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, res)
 }
 
-// UpdateEmail - メールアドレス更新
-func (h *authHandler) UpdateEmail(ctx *gin.Context) {
+// updateAuthEmail - メールアドレス更新
+func (h *apiV1Handler) updateAuthEmail(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
 
 	req := &request.UpdateAuthEmailRequest{}
@@ -150,7 +128,7 @@ func (h *authHandler) UpdateEmail(ctx *gin.Context) {
 	in := &user.UpdateAuthEmailRequest{
 		Email: req.Email,
 	}
-	out, err := h.authClient.UpdateAuthEmail(c, in)
+	out, err := h.Auth.UpdateAuthEmail(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -161,8 +139,8 @@ func (h *authHandler) UpdateEmail(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, res)
 }
 
-// UpdatePassword - パスワード更新
-func (h *authHandler) UpdatePassword(ctx *gin.Context) {
+// updatePassword - パスワード更新
+func (h *apiV1Handler) updateAuthPassword(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
 
 	req := &request.UpdateAuthPasswordRequest{}
@@ -175,7 +153,7 @@ func (h *authHandler) UpdatePassword(ctx *gin.Context) {
 		Password:             req.Password,
 		PasswordConfirmation: req.PasswordConfirmation,
 	}
-	out, err := h.authClient.UpdateAuthPassword(c, in)
+	out, err := h.Auth.UpdateAuthPassword(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -186,8 +164,8 @@ func (h *authHandler) UpdatePassword(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, res)
 }
 
-// UploadThumbnail サムネイルアップロード
-func (h *authHandler) UploadThumbnail(ctx *gin.Context) {
+// uploadAuthThumbnail サムネイルアップロード
+func (h *apiV1Handler) uploadAuthThumbnail(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
 
 	file, _, err := ctx.Request.FormFile("thumbnail")
@@ -197,7 +175,7 @@ func (h *authHandler) UploadThumbnail(ctx *gin.Context) {
 	}
 	defer file.Close()
 
-	stream, err := h.authClient.UploadAuthThumbnail(c)
+	stream, err := h.Auth.UploadAuthThumbnail(c)
 	if err != nil {
 		util.ErrorHandling(ctx, entity.ErrInternalServerError.New(err))
 		return
@@ -237,11 +215,11 @@ func (h *authHandler) UploadThumbnail(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, res)
 }
 
-// Delete - ユーザー退会
-func (h *authHandler) Delete(ctx *gin.Context) {
+// deleteAuth - ユーザー退会
+func (h *apiV1Handler) deleteAuth(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
 
-	_, err := h.authClient.DeleteAuth(c, &user.Empty{})
+	_, err := h.Auth.DeleteAuth(c, &user.Empty{})
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -250,8 +228,8 @@ func (h *authHandler) Delete(ctx *gin.Context) {
 	ctx.JSON(http.StatusNoContent, nil)
 }
 
-// RegisterDevice - デバイス情報登録
-func (h *authHandler) RegisterDevice(ctx *gin.Context) {
+// registerAuthDevice - デバイス情報登録
+func (h *apiV1Handler) registerAuthDevice(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
 
 	req := &request.RegisterAuthDeviceRequest{}
@@ -263,7 +241,7 @@ func (h *authHandler) RegisterDevice(ctx *gin.Context) {
 	in := &user.RegisterAuthDeviceRequest{
 		InstanceId: req.InstanceID,
 	}
-	out, err := h.authClient.RegisterAuthDevice(c, in)
+	out, err := h.Auth.RegisterAuthDevice(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
