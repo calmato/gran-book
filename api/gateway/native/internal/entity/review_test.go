@@ -53,14 +53,33 @@ func TestReview(t *testing.T) {
 func TestReviews(t *testing.T) {
 	t.Parallel()
 	tests := []struct {
-		name          string
-		reviews       Reviews
-		expectUserIDs []string
-		expectBookIDs []int64
+		name    string
+		reviews []*pb.Review
+		expect  Reviews
 	}{
 		{
 			name: "success",
-			reviews: Reviews{
+			reviews: []*pb.Review{
+				{
+					Id:         1,
+					BookId:     1,
+					UserId:     "00000000-0000-0000-0000-000000000000",
+					Score:      3,
+					Impression: "テストレビューです",
+					CreatedAt:  test.TimeMock,
+					UpdatedAt:  test.TimeMock,
+				},
+				{
+					Id:         2,
+					BookId:     2,
+					UserId:     "00000000-0000-0000-0000-000000000000",
+					Score:      3,
+					Impression: "テストレビューです",
+					CreatedAt:  test.TimeMock,
+					UpdatedAt:  test.TimeMock,
+				},
+			},
+			expect: Reviews{
 				{
 					Review: &pb.Review{
 						Id:         1,
@@ -84,8 +103,6 @@ func TestReviews(t *testing.T) {
 					},
 				},
 			},
-			expectUserIDs: []string{"00000000-0000-0000-0000-000000000000"},
-			expectBookIDs: []int64{1, 2},
 		},
 	}
 
@@ -93,8 +110,118 @@ func TestReviews(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			assert.Equal(t, tt.expectUserIDs, tt.reviews.UserIDs())
-			assert.Equal(t, tt.expectBookIDs, tt.reviews.BookIDs())
+			actual := NewReviews(tt.reviews)
+			assert.Equal(t, tt.expect, actual)
+		})
+	}
+}
+
+func TestReviews_UserIDs(t *testing.T) {
+	t.Parallel()
+	tests := []struct {
+		name    string
+		reviews []*pb.Review
+		expect  []string
+	}{
+		{
+			name: "success",
+			reviews: []*pb.Review{
+				{
+					Id:         1,
+					BookId:     1,
+					UserId:     "00000000-0000-0000-0000-000000000000",
+					Score:      3,
+					Impression: "テストレビューです",
+					CreatedAt:  test.TimeMock,
+					UpdatedAt:  test.TimeMock,
+				},
+				{
+					Id:         2,
+					BookId:     2,
+					UserId:     "00000000-0000-0000-0000-000000000000",
+					Score:      3,
+					Impression: "テストレビューです",
+					CreatedAt:  test.TimeMock,
+					UpdatedAt:  test.TimeMock,
+				},
+			},
+			expect: []string{"00000000-0000-0000-0000-000000000000"},
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			actual := NewReviews(tt.reviews)
+			assert.Equal(t, tt.expect, actual.UserIDs())
+		})
+	}
+}
+
+func TestReviews_BookIDs(t *testing.T) {
+	t.Parallel()
+	tests := []struct {
+		name    string
+		reviews []*pb.Review
+		expect  []int64
+	}{
+		{
+			name: "success",
+			reviews: []*pb.Review{
+				{
+					Id:         1,
+					BookId:     1,
+					UserId:     "00000000-0000-0000-0000-000000000000",
+					Score:      3,
+					Impression: "テストレビューです",
+					CreatedAt:  test.TimeMock,
+					UpdatedAt:  test.TimeMock,
+				},
+				{
+					Id:         2,
+					BookId:     2,
+					UserId:     "00000000-0000-0000-0000-000000000000",
+					Score:      3,
+					Impression: "テストレビューです",
+					CreatedAt:  test.TimeMock,
+					UpdatedAt:  test.TimeMock,
+				},
+			},
+			expect: []int64{1, 2},
+		},
+		{
+			name: "success book id is deprecated",
+			reviews: []*pb.Review{
+				{
+					Id:         1,
+					BookId:     1,
+					UserId:     "00000000-0000-0000-0000-000000000000",
+					Score:      3,
+					Impression: "テストレビューです",
+					CreatedAt:  test.TimeMock,
+					UpdatedAt:  test.TimeMock,
+				},
+				{
+					Id:         2,
+					BookId:     1,
+					UserId:     "00000000-0000-0000-0000-000000000000",
+					Score:      3,
+					Impression: "テストレビューです",
+					CreatedAt:  test.TimeMock,
+					UpdatedAt:  test.TimeMock,
+				},
+			},
+			expect: []int64{1},
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			actual := NewReviews(tt.reviews)
+			assert.Equal(t, tt.expect, actual.BookIDs())
 		})
 	}
 }

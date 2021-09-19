@@ -53,10 +53,9 @@ func TestChatRoom(t *testing.T) {
 func TestChatRooms(t *testing.T) {
 	t.Parallel()
 	tests := []struct {
-		name          string
-		rooms         []*pb.Room
-		expect        ChatRooms
-		expectUserIDs []string
+		name   string
+		rooms  []*pb.Room
+		expect ChatRooms
 	}{
 		{
 			name: "success",
@@ -104,7 +103,49 @@ func TestChatRooms(t *testing.T) {
 					},
 				},
 			},
-			expectUserIDs: []string{
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			actual := NewChatRooms(tt.rooms)
+			assert.Equal(t, tt.expect, actual)
+		})
+	}
+}
+
+func TestChatRooms_UserIDs(t *testing.T) {
+	t.Parallel()
+	tests := []struct {
+		name   string
+		rooms  []*pb.Room
+		expect []string
+	}{
+		{
+			name: "success",
+			rooms: []*pb.Room{
+				{
+					Id: "00000000-0000-0000-0000-000000000000",
+					UserIds: []string{
+						"12345678-1234-1234-1234-123456789012",
+						"23456789-2345-2345-2345-234567890123",
+					},
+					CreatedAt: test.TimeMock,
+					UpdatedAt: test.TimeMock,
+				},
+				{
+					Id: "11111111-1111-1111-1111-111111111111",
+					UserIds: []string{
+						"12345678-1234-1234-1234-123456789012",
+						"23456789-2345-2345-2345-234567890123",
+					},
+					CreatedAt: test.TimeMock,
+					UpdatedAt: test.TimeMock,
+				},
+			},
+			expect: []string{
 				"12345678-1234-1234-1234-123456789012",
 				"23456789-2345-2345-2345-234567890123",
 			},
@@ -116,8 +157,7 @@ func TestChatRooms(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			actual := NewChatRooms(tt.rooms)
-			assert.Equal(t, tt.expect, actual)
-			assert.Equal(t, tt.expectUserIDs, actual.UserIDs())
+			assert.Equal(t, tt.expect, actual.UserIDs())
 		})
 	}
 }

@@ -11,10 +11,9 @@ import (
 func TestAuth(t *testing.T) {
 	t.Parallel()
 	tests := []struct {
-		name         string
-		auth         *pb.Auth
-		expect       *Auth
-		expectGender Gender
+		name   string
+		auth   *pb.Auth
+		expect *Auth
 	}{
 		{
 			name: "success",
@@ -62,7 +61,6 @@ func TestAuth(t *testing.T) {
 					UpdatedAt:        test.TimeMock,
 				},
 			},
-			expectGender: GenderMan,
 		},
 	}
 
@@ -72,7 +70,50 @@ func TestAuth(t *testing.T) {
 			t.Parallel()
 			actual := NewAuth(tt.auth)
 			assert.Equal(t, tt.expect, actual)
-			assert.Equal(t, tt.expectGender, actual.Gender())
+		})
+	}
+}
+
+func TestAuth_Gender(t *testing.T) {
+	t.Parallel()
+	tests := []struct {
+		name   string
+		auth   *pb.Auth
+		expect Gender
+	}{
+		{
+			name: "success",
+			auth: &pb.Auth{
+				Id:               "00000000-0000-0000-0000-000000000000",
+				Username:         "テストユーザー",
+				Gender:           pb.Gender_GENDER_MAN,
+				Email:            "test-user@calmato.jp",
+				PhoneNumber:      "000-0000-0000",
+				Role:             pb.Role_ROLE_USER,
+				ThumbnailUrl:     "https://go.dev/images/gophers/ladder.svg",
+				SelfIntroduction: "テストコードです。",
+				LastName:         "テスト",
+				FirstName:        "ユーザー",
+				LastNameKana:     "てすと",
+				FirstNameKana:    "ゆーざー",
+				PostalCode:       "000-0000",
+				Prefecture:       "東京都",
+				City:             "小金井市",
+				AddressLine1:     "貫井北町4-1-1",
+				AddressLine2:     "",
+				CreatedAt:        test.TimeMock,
+				UpdatedAt:        test.TimeMock,
+			},
+			expect: GenderMan,
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			actual := NewAuth(tt.auth)
+			assert.Equal(t, tt.expect, actual.Gender())
 		})
 	}
 }
@@ -134,10 +175,9 @@ func TestUser(t *testing.T) {
 func TestUsers(t *testing.T) {
 	t.Parallel()
 	tests := []struct {
-		name      string
-		users     []*pb.User
-		expect    Users
-		expectMap map[string]*User
+		name   string
+		users  []*pb.User
+		expect Users
 	}{
 		{
 			name: "success",
@@ -209,7 +249,61 @@ func TestUsers(t *testing.T) {
 					},
 				},
 			},
-			expectMap: map[string]*User{
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			actual := NewUsers(tt.users)
+			assert.Equal(t, tt.expect, actual)
+		})
+	}
+}
+
+func TestUsers_Map(t *testing.T) {
+	t.Parallel()
+	tests := []struct {
+		name   string
+		users  []*pb.User
+		expect map[string]*User
+	}{
+		{
+			name: "success",
+			users: []*pb.User{
+				{
+					Id:               "00000000-0000-0000-0000-000000000000",
+					Username:         "テストユーザー",
+					Gender:           pb.Gender_GENDER_MAN,
+					Email:            "test-user01@calmato.jp",
+					PhoneNumber:      "000-0000-0000",
+					ThumbnailUrl:     "https://go.dev/images/gophers/ladder.svg",
+					SelfIntroduction: "テストコードです。",
+					LastName:         "テスト",
+					FirstName:        "ユーザー",
+					LastNameKana:     "てすと",
+					FirstNameKana:    "ゆーざー",
+					CreatedAt:        test.TimeMock,
+					UpdatedAt:        test.TimeMock,
+				},
+				{
+					Id:               "11111111-1111-1111-1111-111111111111",
+					Username:         "テストユーザー",
+					Gender:           pb.Gender_GENDER_MAN,
+					Email:            "test-user02@calmato.jp",
+					PhoneNumber:      "000-0000-0000",
+					ThumbnailUrl:     "https://go.dev/images/gophers/ladder.svg",
+					SelfIntroduction: "テストコードです。",
+					LastName:         "テスト",
+					FirstName:        "ユーザー",
+					LastNameKana:     "てすと",
+					FirstNameKana:    "ゆーざー",
+					CreatedAt:        test.TimeMock,
+					UpdatedAt:        test.TimeMock,
+				},
+			},
+			expect: map[string]*User{
 				"00000000-0000-0000-0000-000000000000": {
 					User: &pb.User{
 						Id:               "00000000-0000-0000-0000-000000000000",
@@ -253,8 +347,92 @@ func TestUsers(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			actual := NewUsers(tt.users)
-			assert.Equal(t, tt.expect, actual)
-			assert.Equal(t, tt.expectMap, actual.Map())
+			assert.Equal(t, tt.expect, actual.Map())
+		})
+	}
+}
+
+func TestUsers_IsExists(t *testing.T) {
+	t.Parallel()
+	tests := []struct {
+		name    string
+		users   []*pb.User
+		userIDs []string
+		expect  bool
+	}{
+		{
+			name: "success",
+			users: []*pb.User{
+				{
+					Id:               "00000000-0000-0000-0000-000000000000",
+					Username:         "テストユーザー",
+					Gender:           pb.Gender_GENDER_MAN,
+					Email:            "test-user01@calmato.jp",
+					PhoneNumber:      "000-0000-0000",
+					ThumbnailUrl:     "https://go.dev/images/gophers/ladder.svg",
+					SelfIntroduction: "テストコードです。",
+					LastName:         "テスト",
+					FirstName:        "ユーザー",
+					LastNameKana:     "てすと",
+					FirstNameKana:    "ゆーざー",
+					CreatedAt:        test.TimeMock,
+					UpdatedAt:        test.TimeMock,
+				},
+				{
+					Id:               "11111111-1111-1111-1111-111111111111",
+					Username:         "テストユーザー",
+					Gender:           pb.Gender_GENDER_MAN,
+					Email:            "test-user02@calmato.jp",
+					PhoneNumber:      "000-0000-0000",
+					ThumbnailUrl:     "https://go.dev/images/gophers/ladder.svg",
+					SelfIntroduction: "テストコードです。",
+					LastName:         "テスト",
+					FirstName:        "ユーザー",
+					LastNameKana:     "てすと",
+					FirstNameKana:    "ゆーざー",
+					CreatedAt:        test.TimeMock,
+					UpdatedAt:        test.TimeMock,
+				},
+			},
+			userIDs: []string{
+				"00000000-0000-0000-0000-000000000000",
+				"11111111-1111-1111-1111-111111111111",
+			},
+			expect: true,
+		},
+		{
+			name: "failed",
+			users: []*pb.User{
+				{
+					Id:               "00000000-0000-0000-0000-000000000000",
+					Username:         "テストユーザー",
+					Gender:           pb.Gender_GENDER_MAN,
+					Email:            "test-user01@calmato.jp",
+					PhoneNumber:      "000-0000-0000",
+					ThumbnailUrl:     "https://go.dev/images/gophers/ladder.svg",
+					SelfIntroduction: "テストコードです。",
+					LastName:         "テスト",
+					FirstName:        "ユーザー",
+					LastNameKana:     "てすと",
+					FirstNameKana:    "ゆーざー",
+					CreatedAt:        test.TimeMock,
+					UpdatedAt:        test.TimeMock,
+				},
+			},
+			userIDs: []string{
+				"00000000-0000-0000-0000-000000000000",
+				"11111111-1111-1111-1111-111111111111",
+			},
+			expect: false,
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			actual := NewUsers(tt.users)
+			assert.Equal(t, tt.expect, actual.IsExists(tt.userIDs...))
 		})
 	}
 }

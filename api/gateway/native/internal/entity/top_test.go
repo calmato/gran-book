@@ -77,10 +77,9 @@ func TestMonthlyResult(t *testing.T) {
 func TestMonthlyResults(t *testing.T) {
 	t.Parallel()
 	tests := []struct {
-		name      string
-		results   []*pb.MonthlyResult
-		expect    MonthlyResults
-		expectMap map[string]*MonthlyResult
+		name    string
+		results []*pb.MonthlyResult
+		expect  MonthlyResults
 	}{
 		{
 			name: "success",
@@ -112,7 +111,41 @@ func TestMonthlyResults(t *testing.T) {
 					},
 				},
 			},
-			expectMap: map[string]*MonthlyResult{
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			actual := NewMonthlyResults(tt.results)
+			assert.Equal(t, tt.expect, actual)
+		})
+	}
+}
+
+func TestMonthlyResults_Map(t *testing.T) {
+	t.Parallel()
+	tests := []struct {
+		name    string
+		results []*pb.MonthlyResult
+		expect  map[string]*MonthlyResult
+	}{
+		{
+			name: "success",
+			results: []*pb.MonthlyResult{
+				{
+					Year:      2021,
+					Month:     8,
+					ReadTotal: 8,
+				},
+				{
+					Year:      2021,
+					Month:     7,
+					ReadTotal: 3,
+				},
+			},
+			expect: map[string]*MonthlyResult{
 				"2021-07": {
 					MonthlyResult: &pb.MonthlyResult{
 						Year:      2021,
@@ -136,8 +169,7 @@ func TestMonthlyResults(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			actual := NewMonthlyResults(tt.results)
-			assert.Equal(t, tt.expect, actual)
-			assert.Equal(t, tt.expectMap, actual.Map())
+			assert.Equal(t, tt.expect, actual.Map())
 		})
 	}
 }
