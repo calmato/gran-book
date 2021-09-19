@@ -103,6 +103,122 @@ func TestChatRoomResponse(t *testing.T) {
 				UpdatedAt: test.TimeMock,
 			},
 		},
+		{
+			name: "success latest message is nil",
+			args: args{
+				room: &entity.ChatRoom{
+					Room: &chat.Room{
+						Id: "00000000-0000-0000-0000-000000000000",
+						UserIds: []string{
+							"12345678-1234-1234-1234-123456789012",
+							"23456789-2345-2345-2345-234567890123",
+						},
+						LatestMessage: nil,
+						CreatedAt:     test.TimeMock,
+						UpdatedAt:     test.TimeMock,
+					},
+				},
+				users: map[string]*entity.User{
+					"12345678-1234-1234-1234-123456789012": {
+						User: &user.User{
+							Id:               "12345678-1234-1234-1234-123456789012",
+							Username:         "テストユーザー",
+							Gender:           user.Gender_GENDER_MAN,
+							Email:            "test-user01@calmato.jp",
+							PhoneNumber:      "000-0000-0000",
+							ThumbnailUrl:     "https://go.dev/images/gophers/ladder.svg",
+							SelfIntroduction: "テストコードです。",
+							LastName:         "テスト",
+							FirstName:        "ユーザー",
+							LastNameKana:     "てすと",
+							FirstNameKana:    "ゆーざー",
+							CreatedAt:        test.TimeMock,
+							UpdatedAt:        test.TimeMock,
+						},
+					},
+					"23456789-2345-2345-2345-234567890123": {
+						User: &user.User{
+							Id:               "23456789-2345-2345-2345-234567890123",
+							Username:         "テストユーザー",
+							Gender:           user.Gender_GENDER_MAN,
+							Email:            "test-user02@calmato.jp",
+							PhoneNumber:      "000-0000-0000",
+							ThumbnailUrl:     "https://go.dev/images/gophers/ladder.svg",
+							SelfIntroduction: "テストコードです。",
+							LastName:         "テスト",
+							FirstName:        "ユーザー",
+							LastNameKana:     "てすと",
+							FirstNameKana:    "ゆーざー",
+							CreatedAt:        test.TimeMock,
+							UpdatedAt:        test.TimeMock,
+						},
+					},
+				},
+			},
+			expect: &ChatRoomResponse{
+				ID: "00000000-0000-0000-0000-000000000000",
+				Users: []*chatRoomUser{
+					{
+						ID:           "12345678-1234-1234-1234-123456789012",
+						Username:     "テストユーザー",
+						ThumbnailURL: "https://go.dev/images/gophers/ladder.svg",
+					},
+					{
+						ID:           "23456789-2345-2345-2345-234567890123",
+						Username:     "テストユーザー",
+						ThumbnailURL: "https://go.dev/images/gophers/ladder.svg",
+					},
+				},
+				LatestMessage: &chatRoomMessage{},
+				CreatedAt:     test.TimeMock,
+				UpdatedAt:     test.TimeMock,
+			},
+		},
+		{
+			name: "success users is length 0",
+			args: args{
+				room: &entity.ChatRoom{
+					Room: &chat.Room{
+						Id: "00000000-0000-0000-0000-000000000000",
+						UserIds: []string{
+							"12345678-1234-1234-1234-123456789012",
+							"23456789-2345-2345-2345-234567890123",
+						},
+						LatestMessage: &chat.Message{
+							Id:        "00000000-0000-0000-0000-000000000000",
+							UserId:    "12345678-1234-1234-1234-123456789012",
+							Text:      "テストメッセージです。",
+							Image:     "",
+							CreatedAt: test.TimeMock,
+						},
+						CreatedAt: test.TimeMock,
+						UpdatedAt: test.TimeMock,
+					},
+				},
+				users: map[string]*entity.User{},
+			},
+			expect: &ChatRoomResponse{
+				ID: "00000000-0000-0000-0000-000000000000",
+				Users: []*chatRoomUser{
+					{
+						ID:       "12345678-1234-1234-1234-123456789012",
+						Username: "unknown",
+					},
+					{
+						ID:       "23456789-2345-2345-2345-234567890123",
+						Username: "unknown",
+					},
+				},
+				LatestMessage: &chatRoomMessage{
+					UserID:    "12345678-1234-1234-1234-123456789012",
+					Text:      "テストメッセージです。",
+					Image:     "",
+					CreatedAt: test.TimeMock,
+				},
+				CreatedAt: test.TimeMock,
+				UpdatedAt: test.TimeMock,
+			},
+		},
 	}
 
 	for _, tt := range tests {
@@ -234,6 +350,84 @@ func TestChatRoomListResponse(t *testing.T) {
 								ID:           "23456789-2345-2345-2345-234567890123",
 								Username:     "テストユーザー",
 								ThumbnailURL: "https://go.dev/images/gophers/ladder.svg",
+							},
+						},
+						LatestMessage: &chatRoomListMessage{},
+						CreatedAt:     test.TimeMock,
+						UpdatedAt:     test.TimeMock,
+					},
+				},
+			},
+		},
+		{
+			name: "success user is length 0",
+			args: args{
+				rooms: entity.ChatRooms{
+					{
+						Room: &chat.Room{
+							Id: "00000000-0000-0000-0000-000000000000",
+							UserIds: []string{
+								"12345678-1234-1234-1234-123456789012",
+								"23456789-2345-2345-2345-234567890123",
+							},
+							LatestMessage: &chat.Message{
+								Id:        "00000000-0000-0000-0000-000000000000",
+								UserId:    "12345678-1234-1234-1234-123456789012",
+								Text:      "テストメッセージです。",
+								Image:     "",
+								CreatedAt: test.TimeMock,
+							},
+							CreatedAt: test.TimeMock,
+							UpdatedAt: test.TimeMock,
+						},
+					},
+					{
+						Room: &chat.Room{
+							Id: "11111111-1111-1111-1111-111111111111",
+							UserIds: []string{
+								"12345678-1234-1234-1234-123456789012",
+								"23456789-2345-2345-2345-234567890123",
+							},
+							CreatedAt: test.TimeMock,
+							UpdatedAt: test.TimeMock,
+						},
+					},
+				},
+				users: map[string]*entity.User{},
+			},
+			expect: &ChatRoomListResponse{
+				Rooms: []*chatRoomListRoom{
+					{
+						ID: "00000000-0000-0000-0000-000000000000",
+						Users: []*chatRoomListUser{
+							{
+								ID:       "12345678-1234-1234-1234-123456789012",
+								Username: "unknown",
+							},
+							{
+								ID:       "23456789-2345-2345-2345-234567890123",
+								Username: "unknown",
+							},
+						},
+						LatestMessage: &chatRoomListMessage{
+							UserID:    "12345678-1234-1234-1234-123456789012",
+							Text:      "テストメッセージです。",
+							Image:     "",
+							CreatedAt: test.TimeMock,
+						},
+						CreatedAt: test.TimeMock,
+						UpdatedAt: test.TimeMock,
+					},
+					{
+						ID: "11111111-1111-1111-1111-111111111111",
+						Users: []*chatRoomListUser{
+							{
+								ID:       "12345678-1234-1234-1234-123456789012",
+								Username: "unknown",
+							},
+							{
+								ID:       "23456789-2345-2345-2345-234567890123",
+								Username: "unknown",
 							},
 						},
 						LatestMessage: &chatRoomListMessage{},

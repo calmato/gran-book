@@ -50,9 +50,10 @@ type chatRoomUser struct {
 	ThumbnailURL string `json:"thumbnailUrl"` // サムネイルURL
 }
 
-func newChatRoomUser(u *entity.User) *chatRoomUser {
+func newChatRoomUser(userID string, u *entity.User) *chatRoomUser {
 	if u == nil {
 		return &chatRoomUser{
+			ID:       userID,
 			Username: "unknown",
 		}
 	}
@@ -66,9 +67,9 @@ func newChatRoomUser(u *entity.User) *chatRoomUser {
 
 func newChatRoomUsers(userIDs []string, um map[string]*entity.User) []*chatRoomUser {
 	res := make([]*chatRoomUser, len(userIDs))
-	for i := range userIDs {
-		u := um[userIDs[i]]
-		res[i] = newChatRoomUser(u)
+	for i, userID := range userIDs {
+		u := um[userID]
+		res[i] = newChatRoomUser(userID, u)
 	}
 	return res
 }
@@ -136,9 +137,10 @@ type chatRoomListUser struct {
 	ThumbnailURL string `json:"thumbnailUrl"` // サムネイルURL
 }
 
-func newChatRoomListUser(u *entity.User) *chatRoomListUser {
+func newChatRoomListUser(userID string, u *entity.User) *chatRoomListUser {
 	if u == nil {
 		return &chatRoomListUser{
+			ID:       userID,
 			Username: "unknown",
 		}
 	}
@@ -152,9 +154,9 @@ func newChatRoomListUser(u *entity.User) *chatRoomListUser {
 
 func newChatRoomListUsers(userIDs []string, um map[string]*entity.User) []*chatRoomListUser {
 	res := make([]*chatRoomListUser, len(userIDs))
-	for i := range userIDs {
-		u := um[userIDs[i]]
-		res[i] = newChatRoomListUser(u)
+	for i, userID := range userIDs {
+		u := um[userID]
+		res[i] = newChatRoomListUser(userID, u)
 	}
 	return res
 }

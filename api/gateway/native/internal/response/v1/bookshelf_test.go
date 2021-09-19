@@ -257,6 +257,47 @@ func TestBookshelfListResponse(t *testing.T) {
 				Total:  2,
 			},
 		},
+		{
+			name: "success book is length 0",
+			args: args{
+				bookshelves: entity.Bookshelves{
+					{
+						Bookshelf: &book.Bookshelf{
+							Id:        1,
+							BookId:    1,
+							UserId:    "00000000-0000-0000-0000-000000000000",
+							ReviewId:  0,
+							Status:    book.BookshelfStatus_BOOKSHELF_STATUS_READING,
+							ReadOn:    test.DateMock,
+							CreatedAt: test.TimeMock,
+							UpdatedAt: test.TimeMock,
+						},
+					},
+					{
+						Bookshelf: &book.Bookshelf{
+							Id:        2,
+							BookId:    2,
+							UserId:    "00000000-0000-0000-0000-000000000000",
+							ReviewId:  0,
+							Status:    book.BookshelfStatus_BOOKSHELF_STATUS_STACKED,
+							ReadOn:    test.DateMock,
+							CreatedAt: test.TimeMock,
+							UpdatedAt: test.TimeMock,
+						},
+					},
+				},
+				books:  map[int64]*entity.Book{},
+				limit:  100,
+				offset: 0,
+				total:  2,
+			},
+			expect: &BookshelfListResponse{
+				Books:  []*bookshelfListBook{},
+				Limit:  100,
+				Offset: 0,
+				Total:  2,
+			},
+		},
 	}
 
 	for _, tt := range tests {
