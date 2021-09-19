@@ -16,8 +16,8 @@ import (
 type Registry struct {
 	Authenticator util.Authenticator
 	HTTP          util.HTTPHandler
-	V1Api         v1.ApiV1Handler
-	V2Api         v2.ApiV2Handler
+	V1Api         v1.APIV1Handler
+	V2Api         v2.APIV2Handler
 }
 
 // Params - DIコンテナ生成用のパラメータ
@@ -58,8 +58,8 @@ func NewRegistry(params *Params) (*Registry, error) {
 	return &Registry{
 		Authenticator: util.NewAuthenticator(params.FirebaseAuth),
 		HTTP:          util.NewHTTPHandler(),
-		V1Api:         v1.NewApiV1Handler(v1Params, datetime.Now),
-		V2Api:         v2.NewApiV2Handler(v2Params, datetime.Now),
+		V1Api:         v1.NewAPIV1Handler(v1Params, datetime.Now),
+		V2Api:         v2.NewAPIV2Handler(v2Params, datetime.Now),
 	}, nil
 }
 

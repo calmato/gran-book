@@ -2,6 +2,7 @@ package v1
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/calmato/gran-book/api/gateway/native/internal/entity"
@@ -16,7 +17,7 @@ import (
  * handler
  * ###############################################
  */
-type ApiV1Handler interface {
+type APIV1Handler interface {
 	Routes(rg *gin.RouterGroup)
 	NonAuthRoutes(rg *gin.RouterGroup)
 }
@@ -33,7 +34,7 @@ type Params struct {
 	User user.UserServiceClient
 }
 
-func NewApiV1Handler(params *Params, now func() time.Time) ApiV1Handler {
+func NewAPIV1Handler(params *Params, now func() time.Time) APIV1Handler {
 	return &apiV1Handler{
 		Params: *params,
 		now:    now,
@@ -125,6 +126,8 @@ func (h *apiV1Handler) v1ReviewRoutes(rg *gin.RouterGroup) {
  * private methods
  * ###############################################
  */
+var errUnmatchUserID = errors.New("v1: user id is not match")
+
 // currentUser - UserIDを基に現在のログインユーザ情報を取得
 func (h *apiV1Handler) currentUser(ctx context.Context, userID string) (*entity.Auth, error) {
 	out, err := h.Auth.GetAuth(ctx, &user.Empty{})
@@ -135,7 +138,7 @@ func (h *apiV1Handler) currentUser(ctx context.Context, userID string) (*entity.
 	a := entity.NewAuth(out.Auth)
 
 	if a.Id != userID {
-		return nil, entity.ErrForbidden.New(err)
+		return nil, entity.ErrForbidden.New(errUnmatchUserID)
 	}
 
 	return a, nil

@@ -16,9 +16,17 @@ import (
 // listBookshelf - 本棚の書籍一覧取得
 func (h *apiV2Handler) listBookshelf(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
-	limit := ctx.GetInt64(ctx.DefaultQuery("limit", entity.ListLimitDefault))
-	offset := ctx.GetInt64(ctx.DefaultQuery("offset", entity.ListOffsetDefault))
 	userID := ctx.Param("userID")
+	limit, err := strconv.ParseInt(ctx.DefaultQuery("limit", entity.ListLimitDefault), 10, 64)
+	if err != nil {
+		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
+		return
+	}
+	offset, err := strconv.ParseInt(ctx.DefaultQuery("offset", entity.ListOffsetDefault), 10, 64)
+	if err != nil {
+		util.ErrorHandling(ctx, entity.ErrBadRequest.New(err))
+		return
+	}
 
 	bookshelvesInput := &book.ListBookshelfRequest{
 		UserId: userID,

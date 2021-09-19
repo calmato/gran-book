@@ -13,7 +13,7 @@ import (
  * handler
  * ###############################################
  */
-type ApiV2Handler interface {
+type APIV2Handler interface {
 	Routes(rg *gin.RouterGroup)
 }
 
@@ -28,7 +28,7 @@ type Params struct {
 	User user.UserServiceClient
 }
 
-func NewApiV2Handler(params *Params, now func() time.Time) ApiV2Handler {
+func NewAPIV2Handler(params *Params, now func() time.Time) APIV2Handler {
 	return &apiV2Handler{
 		Params: *params,
 		now:    now,
