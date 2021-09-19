@@ -53,20 +53,20 @@ func NewGender(g user.Gender) Gender {
 	}
 }
 
+func NewGenderByValue(key string) Gender {
+	if value, ok := genderByValue[key]; ok {
+		return Gender(value)
+	}
+
+	return GenderUnknown
+}
+
 func (g Gender) Name() string {
 	if name, ok := genderByName[g]; ok {
 		return name
 	}
 
 	return "unknown"
-}
-
-func (g Gender) Value(key string) Gender {
-	if value, ok := genderByValue[key]; ok {
-		return Gender(value)
-	}
-
-	return GenderUnknown
 }
 
 func (g Gender) Proto() user.Gender {
@@ -123,6 +123,14 @@ func NewBookshelfStatus(s book.BookshelfStatus) BookshelfStatus {
 	}
 }
 
+func NewBookshelfStatusByValue(key string) BookshelfStatus {
+	if value, ok := bookshelfStatusValue[key]; ok {
+		return BookshelfStatus(value)
+	}
+
+	return BookshelfStatusNone
+}
+
 func (s BookshelfStatus) Name() string {
 	if name, ok := bookshelfStatusName[s]; ok {
 		return name
@@ -131,10 +139,6 @@ func (s BookshelfStatus) Name() string {
 	return "none"
 }
 
-func (s BookshelfStatus) Value(key string) BookshelfStatus {
-	if value, ok := bookshelfStatusValue[key]; ok {
-		return BookshelfStatus(value)
-	}
-
-	return BookshelfStatusNone
+func (s BookshelfStatus) Proto() book.BookshelfStatus {
+	return *book.BookshelfStatus(s).Enum()
 }

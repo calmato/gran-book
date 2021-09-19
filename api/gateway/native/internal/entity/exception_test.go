@@ -1,6 +1,7 @@
 package entity
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/calmato/gran-book/api/gateway/native/pkg/test"
@@ -8,7 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestErrorCode(t *testing.T) {
+func TestCustomError(t *testing.T) {
 	t.Parallel()
 	tests := []struct {
 		name   string
@@ -32,9 +33,69 @@ func TestErrorCode(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			actual := tt.code.New(tt.err)
+			require.IsType(t, CustomError{}, actual)
+		})
+	}
+}
+
+func TestCustomError_Error(t *testing.T) {
+	t.Parallel()
+	tests := []struct {
+		name   string
+		code   ErrorCode
+		err    error
+		expect error
+	}{
+		{
+			name:   "bad request",
+			code:   ErrBadRequest,
+			err:    test.ErrMock,
+			expect: test.ErrMock,
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			actual := tt.code.New(tt.err)
 			require.Error(t, actual)
-			assert.Equal(t, tt.expect, actual)
-			assert.Equal(t, tt.err.Error(), actual.Error())
+
+			err, ok := actual.(CustomError)
+			require.True(t, ok, fmt.Sprintln("actual is not CustomError type"))
+
+			assert.Equal(t, tt.expect.Error(), err.Error())
+		})
+	}
+}
+
+func TestCustomError_Code(t *testing.T) {
+	t.Parallel()
+	tests := []struct {
+		name   string
+		code   ErrorCode
+		err    error
+		expect ErrorCode
+	}{
+		{
+			name:   "bad request",
+			code:   ErrBadRequest,
+			err:    test.ErrMock,
+			expect: ErrBadRequest,
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			actual := tt.code.New(tt.err)
+			require.Error(t, actual)
+
+			err, ok := actual.(CustomError)
+			require.True(t, ok, fmt.Sprintln("actual is not CustomError type"))
+
+			assert.Equal(t, tt.expect, err.Code())
 		})
 	}
 }
