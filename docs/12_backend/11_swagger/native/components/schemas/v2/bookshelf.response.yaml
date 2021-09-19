@@ -44,7 +44,7 @@ bookshelfResponse:
           type: string
         updatedAt:
           type: string
-    reviews:
+    reviewsList:
       type: array
       items:
         type: object
@@ -79,7 +79,7 @@ bookshelfResponse:
 bookshelfListResponse:
   type: object
   properties:
-    books:
+    booksList:
       type: array
       items:
         type: object

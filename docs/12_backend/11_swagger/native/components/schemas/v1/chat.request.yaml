@@ -1,7 +1,7 @@
 createChatRoomRequest:
   type: object
   properties:
-    users:
+    userIdsList:
       type: array
       items:
         type: string
@@ -16,23 +16,3 @@ uploadChatImageRequest:
     image:
       type: string
       format: binary
-    chatRoomResponse:
-      type: object
-      properties:
-        id:
-          type: string
-        users:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-              username:
-                type: string
-              thumbnailUrl:
-                type: string
-        createdAt:
-          type: string
-        updatedAt:
-          type: string

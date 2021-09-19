@@ -28,7 +28,7 @@ userResponse:
 userListResponse:
   type: object
   properties:
-    users:
+    usersList:
       type: array
       items:
         type: object

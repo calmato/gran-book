@@ -26,10 +26,6 @@ bookResponse:
       type: string
     authorKana:
       type: string
-    createdAt:
-      type: string
-    updatedAt:
-      type: string
     bookshelf:
       type: object
       properties:
@@ -46,17 +42,17 @@ bookResponse:
           type: string
         updatedAt:
           type: string
-reviewResponse:
+    createdAt:
+      type: string
+    updatedAt:
+      type: string
+bookReviewResponse:
   type: object
   properties:
     id:
       type: integer
       format: int64
     impression:
-      type: string
-    createdAt:
-      type: string
-    updatedAt:
       type: string
     book:
       type: object
@@ -77,10 +73,14 @@ reviewResponse:
           type: string
         thumbnailUrl:
           type: string
+    createdAt:
+      type: string
+    updatedAt:
+      type: string
 bookReviewListResponse:
   type: object
   properties:
-    reviews:
+    reviewsList:
       type: array
       items:
         type: object
@@ -89,10 +89,6 @@ bookReviewListResponse:
             type: integer
             format: int64
           impression:
-            type: string
-          createdAt:
-            type: string
-          updatedAt:
             type: string
           user:
             type: object
@@ -103,6 +99,10 @@ bookReviewListResponse:
                 type: string
               thumbnailUrl:
                 type: string
+          createdAt:
+            type: string
+          updatedAt:
+            type: string
     limit:
       type: integer
       format: int64

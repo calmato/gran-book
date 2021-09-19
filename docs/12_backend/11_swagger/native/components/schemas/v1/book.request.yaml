@@ -13,17 +13,17 @@ createBookRequest:
       type: string
     salesDate:
       type: string
-    largeImageUrl:
+    smallImageUrl:
       type: string
     mediumImageUrl:
       type: string
-    smallImageUrl:
+    largeImageUrl:
       type: string
     itemUrl:
       type: string
-    booksGenreId:
-      type: string
     size:
+      type: string
+    booksGenreId:
       type: string
     author:
       type: string
@@ -44,17 +44,17 @@ updateBookRequest:
       type: string
     salesDate:
       type: string
-    largeImageUrl:
+    smallImageUrl:
       type: string
     mediumImageUrl:
       type: string
-    smallImageUrl:
+    largeImageUrl:
       type: string
     itemUrl:
       type: string
-    booksGenreId:
-      type: string
     size:
+      type: string
+    booksGenreId:
       type: string
     author:
       type: string
