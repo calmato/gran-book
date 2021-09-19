@@ -65,6 +65,32 @@ func TestBookReviewResponse(t *testing.T) {
 				UpdatedAt: test.TimeMock,
 			},
 		},
+		{
+			name: "success user is nil",
+			args: args{
+				review: &entity.Review{
+					Review: &book.Review{
+						Id:         1,
+						BookId:     1,
+						UserId:     "00000000-0000-0000-0000-000000000000",
+						Score:      3,
+						Impression: "テストレビューです",
+						CreatedAt:  test.TimeMock,
+						UpdatedAt:  test.TimeMock,
+					},
+				},
+				user: nil,
+			},
+			expect: &BookReviewResponse{
+				ID:         1,
+				Impression: "テストレビューです",
+				User: &bookReviewUser{
+					Username: "unknown",
+				},
+				CreatedAt: test.TimeMock,
+				UpdatedAt: test.TimeMock,
+			},
+		},
 	}
 
 	for _, tt := range tests {
@@ -161,6 +187,64 @@ func TestBookReviewListResponse(t *testing.T) {
 							ID:           "00000000-0000-0000-0000-000000000000",
 							Username:     "テストユーザー",
 							ThumbnailURL: "https://go.dev/images/gophers/ladder.svg",
+						},
+						CreatedAt: test.TimeMock,
+						UpdatedAt: test.TimeMock,
+					},
+				},
+				Limit:  100,
+				Offset: 0,
+				Total:  2,
+			},
+		},
+		{
+			name: "success users is length 0",
+			args: args{
+				reviews: entity.Reviews{
+					{
+						Review: &book.Review{
+							Id:         1,
+							BookId:     1,
+							UserId:     "00000000-0000-0000-0000-000000000000",
+							Score:      3,
+							Impression: "テストレビューです",
+							CreatedAt:  test.TimeMock,
+							UpdatedAt:  test.TimeMock,
+						},
+					},
+					{
+						Review: &book.Review{
+							Id:         2,
+							BookId:     2,
+							UserId:     "00000000-0000-0000-0000-000000000000",
+							Score:      3,
+							Impression: "テストレビューです",
+							CreatedAt:  test.TimeMock,
+							UpdatedAt:  test.TimeMock,
+						},
+					},
+				},
+				users:  map[string]*entity.User{},
+				limit:  100,
+				offset: 0,
+				total:  2,
+			},
+			expect: &BookReviewListResponse{
+				Reviews: []*bookReviewListReview{
+					{
+						ID:         1,
+						Impression: "テストレビューです",
+						User: &bookReviewListUser{
+							Username: "unknown",
+						},
+						CreatedAt: test.TimeMock,
+						UpdatedAt: test.TimeMock,
+					},
+					{
+						ID:         2,
+						Impression: "テストレビューです",
+						User: &bookReviewListUser{
+							Username: "unknown",
 						},
 						CreatedAt: test.TimeMock,
 						UpdatedAt: test.TimeMock,
