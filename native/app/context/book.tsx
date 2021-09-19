@@ -1,17 +1,26 @@
-import React, { createContext, useCallback, useContext, useReducer } from 'react';
+import React, { createContext, useCallback, useContext, useMemo, useReducer } from 'react';
 import { AuthContext } from './auth';
 import { BookValues, initialState, Model } from '~/store/models/book';
 import { getAllBookByUserId } from '~/store/usecases/v2/book';
+import { ViewBooks } from '~/types/models/book';
 
 interface BookContextProps {
   bookState: Model;
-  dispatch: React.Dispatch<BookStateAction>;
+  viewBooks: ViewBooks;
+  fetchBooks: () => Promise<void>;
 }
 
 const BookContext = createContext<BookContextProps>({
   bookState: initialState,
-  dispatch: () => {
-    return;
+  viewBooks: {
+    reading: [],
+    read: [],
+    stack: [],
+    release: [],
+    want: [],
+  },
+  fetchBooks: () => {
+    return Promise.resolve();
   },
 });
 
@@ -55,7 +64,45 @@ const BookProvider = function BookProvider({ children }: Props) {
     });
   }, [authState.id, authState.token]);
 
-  return <BookContext.Provider value={{ bookState, dispatch }}>{children}</BookContext.Provider>;
+  const viewBooks: ViewBooks = useMemo(() => {
+    const value: ViewBooks = {
+      reading: [],
+      read: [],
+      stack: [],
+      release: [],
+      want: [],
+    };
+
+    bookState.books.booksList.forEach((book) => {
+      switch (book.bookshelf?.status) {
+        case 'reading':
+          value.reading.push(book);
+          break;
+        case 'read':
+          value.read.push(book);
+          break;
+        case 'stack':
+          value.stack.push(book);
+          break;
+        case 'release':
+          value.release.push(book);
+          break;
+        case 'want':
+          value.want.push(book);
+          break;
+        default:
+          break;
+      }
+    });
+
+    return value;
+  }, [bookState]);
+
+  return (
+    <BookContext.Provider value={{ bookState, viewBooks, fetchBooks }}>
+      {children}
+    </BookContext.Provider>
+  );
 };
 
 export { BookContext, BookProvider };
