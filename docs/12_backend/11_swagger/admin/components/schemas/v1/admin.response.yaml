@@ -31,7 +31,7 @@ adminResponse:
 adminListResponse:
   type: object
   properties:
-    users:
+    usersList:
       type: array
       items:
         type: object

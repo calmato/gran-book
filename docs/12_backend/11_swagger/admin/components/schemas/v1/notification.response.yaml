@@ -22,7 +22,7 @@ notificationResponse:
 notificationListResponse:
   type: object
   properties:
-    notifications:
+    notificationsList:
       type: array
       items:
         type: object

@@ -159,8 +159,8 @@ components:
       $ref: './components/schemas/v2/book.response.yaml#/bookResponse'
     bookReviewListV1Response:
       $ref: './components/schemas/v1/book.response.yaml#/bookReviewListResponse'
-    reviewV1Response:
-      $ref: './components/schemas/v1/book.response.yaml#/reviewResponse'
+    bookReviewV1Response:
+      $ref: './components/schemas/v1/book.response.yaml#/bookReviewResponse'
     # Response - Bookshelf Service
     bookshelfV1Response:
       $ref: './components/schemas/v1/bookshelf.response.yaml#/bookshelfResponse'
@@ -172,3 +172,5 @@ components:
       $ref: './components/schemas/v2/bookshelf.response.yaml#/bookshelfListResponse'
     userReviewListV1Response:
       $ref: './components/schemas/v1/bookshelf.response.yaml#/userReviewListResponse'
+    userReviewV1Response:
+      $ref: './components/schemas/v1/bookshelf.response.yaml#/userReviewResponse'

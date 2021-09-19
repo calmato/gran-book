@@ -2,7 +2,7 @@ package v1
 
 // チャットルーム作成
 type CreateChatRoomRequest struct {
-	UserIDs []string `json:"userIds" binding:"required"` // 参加ユーザーID一覧
+	UserIDs []string `json:"userIdsList" binding:"required"` // 参加ユーザーID一覧
 }
 
 // チャットメッセージ送信

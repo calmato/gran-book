@@ -1,7 +1,7 @@
 createNotificationRequest:
   type: object
   properties:
-    notifications:
+    notificationsList:
       type: array
       items:
         type: object
@@ -17,7 +17,7 @@ createNotificationRequest:
 updateNotificationRequest:
   type: object
   properties:
-    notifications:
+    notificationsList:
       type: array
       items:
         type: object

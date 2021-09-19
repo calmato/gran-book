@@ -30,7 +30,7 @@ bookResponse:
       type: string
     updatedAt:
       type: string
-    reviews:
+    reviewsList:
       type: array
       items:
         type: object

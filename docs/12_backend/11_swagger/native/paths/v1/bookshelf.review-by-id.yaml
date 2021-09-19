@@ -23,7 +23,7 @@ get:
       content:
         application/json:
           schema:
-            $ref: './../../openapi.yaml#/components/schemas/reviewV1Response'
+            $ref: './../../openapi.yaml#/components/schemas/userReviewV1Response'
     default:
       description: An unexpected error response.
       content:

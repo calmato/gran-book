@@ -21,7 +21,7 @@ userProfileResponse:
       type: integer
     rating:
       type: integer
-    products:
+    productsList:
       type: array
       items:
         type: object
@@ -32,14 +32,14 @@ userProfileResponse:
             type: string
           thumbnailUrl:
             type: string
-          authors:
+          authorsList:
             type: array
             items:
               type: string
 followListResponse:
   type: object
   properties:
-    users:
+    usersList:
       type: array
       items:
         type: object
@@ -66,7 +66,7 @@ followListResponse:
 followerListResponse:
   type: object
   properties:
-    users:
+    usersList:
       type: array
       items:
         type: object
