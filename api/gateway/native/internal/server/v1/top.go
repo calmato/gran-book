@@ -24,9 +24,9 @@ func (h *apiV1Handler) getTopUser(ctx *gin.Context) {
 
 	u := entity.NewAuth(authOutput.Auth)
 
-	t := datetime.Now()
-	since := datetime.BeginningOfMonth(t).AddDate(-1, 1, 0) // 11ヶ月前の初日
-	until := datetime.EndOfMonth(t)                         // 今月末
+	now := h.now()
+	since := datetime.BeginningOfMonth(now).AddDate(-1, 1, 0) // 11ヶ月前の初日
+	until := datetime.EndOfMonth(now)                         // 今月末
 
 	resultsInput := &book.ListUserMonthlyResultRequest{
 		UserId:    u.Id,
@@ -40,6 +40,6 @@ func (h *apiV1Handler) getTopUser(ctx *gin.Context) {
 	}
 
 	rs := entity.NewMonthlyResults(resultsOutput.MonthlyResults)
-	res := response.NewUserTopResponse(rs.Map(), t)
+	res := response.NewUserTopResponse(rs.Map(), now)
 	ctx.JSON(http.StatusOK, res)
 }

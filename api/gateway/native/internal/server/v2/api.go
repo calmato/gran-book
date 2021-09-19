@@ -1,6 +1,8 @@
 package v2
 
 import (
+	"time"
+
 	"github.com/calmato/gran-book/api/gateway/native/proto/service/book"
 	"github.com/calmato/gran-book/api/gateway/native/proto/service/user"
 	"github.com/gin-gonic/gin"
@@ -17,6 +19,7 @@ type ApiV2Handler interface {
 
 type apiV2Handler struct {
 	Params
+	now func() time.Time
 }
 
 type Params struct {
@@ -25,9 +28,10 @@ type Params struct {
 	User user.UserServiceClient
 }
 
-func NewApiV2Handler(params *Params) ApiV2Handler {
+func NewApiV2Handler(params *Params, now func() time.Time) ApiV2Handler {
 	return &apiV2Handler{
 		Params: *params,
+		now:    now,
 	}
 }
 

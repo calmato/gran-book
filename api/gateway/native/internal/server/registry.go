@@ -4,6 +4,7 @@ import (
 	"github.com/calmato/gran-book/api/gateway/native/internal/server/util"
 	v1 "github.com/calmato/gran-book/api/gateway/native/internal/server/v1"
 	v2 "github.com/calmato/gran-book/api/gateway/native/internal/server/v2"
+	"github.com/calmato/gran-book/api/gateway/native/pkg/datetime"
 	"github.com/calmato/gran-book/api/gateway/native/pkg/firebase/authentication"
 	"github.com/calmato/gran-book/api/gateway/native/proto/service/book"
 	"github.com/calmato/gran-book/api/gateway/native/proto/service/chat"
@@ -57,8 +58,8 @@ func NewRegistry(params *Params) (*Registry, error) {
 	return &Registry{
 		Authenticator: util.NewAuthenticator(params.FirebaseAuth),
 		HTTP:          util.NewHTTPHandler(),
-		V1Api:         v1.NewApiV1Handler(v1Params),
-		V2Api:         v2.NewApiV2Handler(v2Params),
+		V1Api:         v1.NewApiV1Handler(v1Params, datetime.Now),
+		V2Api:         v2.NewApiV2Handler(v2Params, datetime.Now),
 	}, nil
 }
 

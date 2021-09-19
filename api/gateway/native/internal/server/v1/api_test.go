@@ -5,10 +5,13 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 
+	"github.com/calmato/gran-book/api/gateway/native/pkg/datetime"
 	"github.com/calmato/gran-book/api/gateway/native/pkg/test"
 	"github.com/gin-gonic/gin"
 	"github.com/golang/mock/gomock"
+	"github.com/stretchr/testify/require"
 )
 
 func testHTTP(
@@ -24,15 +27,20 @@ func testHTTP(
 	ctx, r := gin.CreateTestContext(w)
 	setup(ctx, t, mocks, ctrl)
 
-	_ = newTestHandler(r, mocks)
+	_ = newTestHandler(t, r, mocks)
 	r.ServeHTTP(w, req)
 	test.TestHTTP(t, expect, w)
 }
 
-func newTestHandler(r *gin.Engine, mocks *test.Mocks) *apiV1Handler {
+func newTestHandler(t *testing.T, r *gin.Engine, mocks *test.Mocks) *apiV1Handler {
 	params := newTestParams(mocks)
+	current, err := datetime.ParseTime(test.TimeMock)
+	now := func() time.Time {
+		return current
+	}
+	require.NoError(t, err)
 
-	h := &apiV1Handler{*params}
+	h := &apiV1Handler{*params, now}
 	h.Routes(r.Group(""))
 	h.NonAuthRoutes(r.Group(""))
 

@@ -2,6 +2,7 @@ package v1
 
 import (
 	"context"
+	"time"
 
 	"github.com/calmato/gran-book/api/gateway/native/internal/entity"
 	"github.com/calmato/gran-book/api/gateway/native/proto/service/book"
@@ -22,6 +23,7 @@ type ApiV1Handler interface {
 
 type apiV1Handler struct {
 	Params
+	now func() time.Time
 }
 
 type Params struct {
@@ -31,9 +33,10 @@ type Params struct {
 	User user.UserServiceClient
 }
 
-func NewApiV1Handler(params *Params) ApiV1Handler {
+func NewApiV1Handler(params *Params, now func() time.Time) ApiV1Handler {
 	return &apiV1Handler{
 		Params: *params,
+		now:    now,
 	}
 }
 
@@ -59,7 +62,7 @@ func (h *apiV1Handler) NonAuthRoutes(rg *gin.RouterGroup) {
 
 // Top Service
 func (h *apiV1Handler) v1TopRoutes(rg *gin.RouterGroup) {
-	rg.GET("", h.getTopUser)
+	rg.GET("/user", h.getTopUser)
 }
 
 // Auth Service
