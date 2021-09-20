@@ -126,21 +126,6 @@ func TestBookRequestValidation_ListBookReview(t *testing.T) {
 			want: false,
 		},
 		{
-			name: "validation error: Order.OrderBy.in",
-			args: args{
-				req: &pb.ListBookReviewRequest{
-					BookId: 1,
-					Order: &pb.Order{
-						Field:   "created_at",
-						OrderBy: 2,
-					},
-					Limit:  200,
-					Offset: 100,
-				},
-			},
-			want: false,
-		},
-		{
 			name: "validation error: Limit.lte",
 			args: args{
 				req: &pb.ListBookReviewRequest{
@@ -213,21 +198,6 @@ func TestBookRequestValidation_ListUserReview(t *testing.T) {
 					Order: &pb.Order{
 						Field:   "created_at",
 						OrderBy: pb.OrderBy_ORDER_BY_ASC,
-					},
-					Limit:  200,
-					Offset: 100,
-				},
-			},
-			want: false,
-		},
-		{
-			name: "validation error: Order.OrderBy.in",
-			args: args{
-				req: &pb.ListUserReviewRequest{
-					UserId: "12345678-1234-1234-1234-123456789012",
-					Order: &pb.Order{
-						Field:   "created_at",
-						OrderBy: 2,
 					},
 					Limit:  200,
 					Offset: 100,
