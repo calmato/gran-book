@@ -30,7 +30,7 @@ func (s *bookServer) ListBookshelf(
 ) (*pb.BookshelfListResponse, error) {
 	err := s.bookRequestValidation.ListBookshelf(req)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	limit := int(req.GetLimit())
@@ -58,7 +58,7 @@ func (s *bookServer) ListBookshelf(
 
 	bss, total, err := s.bookApplication.ListBookshelf(ctx, q)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	res := getBookshelfListResponse(bss, limit, offset, total)
@@ -71,14 +71,14 @@ func (s *bookServer) ListBookReview(
 ) (*pb.ReviewListResponse, error) {
 	err := s.bookRequestValidation.ListBookReview(req)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	limit := int(req.GetLimit())
 	offset := int(req.GetOffset())
 	rs, total, err := s.bookApplication.ListBookReview(ctx, int(req.GetBookId()), limit, offset)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	res := getReviewListResponse(rs, limit, offset, total)
@@ -91,14 +91,14 @@ func (s *bookServer) ListUserReview(
 ) (*pb.ReviewListResponse, error) {
 	err := s.bookRequestValidation.ListUserReview(req)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	limit := int(req.GetLimit())
 	offset := int(req.GetOffset())
 	rs, total, err := s.bookApplication.ListUserReview(ctx, req.GetUserId(), limit, offset)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	res := getReviewListResponse(rs, limit, offset, total)
@@ -111,12 +111,12 @@ func (s *bookServer) ListUserMonthlyResult(
 ) (*pb.UserMonthlyResultListResponse, error) {
 	err := s.bookRequestValidation.ListUserMonthlyResult(req)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	rs, err := s.bookApplication.ListUserMonthlyResult(ctx, req.GetUserId(), req.GetSinceDate(), req.UntilDate)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	res := getUserMonthlyResultListResponse(rs)
@@ -127,7 +127,7 @@ func (s *bookServer) ListUserMonthlyResult(
 func (s *bookServer) MultiGetBooks(ctx context.Context, req *pb.MultiGetBooksRequest) (*pb.BookListResponse, error) {
 	err := s.bookRequestValidation.MultiGetBooks(req)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	bookIDs := make([]int, len(req.GetBookIds()))
@@ -136,7 +136,7 @@ func (s *bookServer) MultiGetBooks(ctx context.Context, req *pb.MultiGetBooksReq
 	}
 	bs, err := s.bookApplication.MultiGet(ctx, bookIDs)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	res := getBookListResponse(bs)
@@ -147,12 +147,12 @@ func (s *bookServer) MultiGetBooks(ctx context.Context, req *pb.MultiGetBooksReq
 func (s *bookServer) GetBook(ctx context.Context, req *pb.GetBookRequest) (*pb.BookResponse, error) {
 	err := s.bookRequestValidation.GetBook(req)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	b, err := s.bookApplication.Get(ctx, int(req.GetBookId()))
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	res := getBookResponse(b)
@@ -163,12 +163,12 @@ func (s *bookServer) GetBook(ctx context.Context, req *pb.GetBookRequest) (*pb.B
 func (s *bookServer) GetBookByIsbn(ctx context.Context, req *pb.GetBookByIsbnRequest) (*pb.BookResponse, error) {
 	err := s.bookRequestValidation.GetBookByIsbn(req)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	b, err := s.bookApplication.GetByIsbn(ctx, req.GetIsbn())
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	res := getBookResponse(b)
@@ -179,12 +179,12 @@ func (s *bookServer) GetBookByIsbn(ctx context.Context, req *pb.GetBookByIsbnReq
 func (s *bookServer) GetBookshelf(ctx context.Context, req *pb.GetBookshelfRequest) (*pb.BookshelfResponse, error) {
 	err := s.bookRequestValidation.GetBookshelf(req)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	bs, err := s.bookApplication.GetBookshelfByUserIDAndBookID(ctx, req.GetUserId(), int(req.GetBookId()))
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	res := getBookshelfResponse(bs)
@@ -195,12 +195,12 @@ func (s *bookServer) GetBookshelf(ctx context.Context, req *pb.GetBookshelfReque
 func (s *bookServer) GetReview(ctx context.Context, req *pb.GetReviewRequest) (*pb.ReviewResponse, error) {
 	err := s.bookRequestValidation.GetReview(req)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	r, err := s.bookApplication.GetReview(ctx, int(req.GetReviewId()))
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	res := getReviewResponse(r)
@@ -211,7 +211,7 @@ func (s *bookServer) GetReview(ctx context.Context, req *pb.GetReviewRequest) (*
 func (s *bookServer) CreateBook(ctx context.Context, req *pb.CreateBookRequest) (*pb.BookResponse, error) {
 	err := s.bookRequestValidation.CreateBook(req)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	as := make([]*book.Author, len(req.GetAuthors()))
@@ -239,7 +239,7 @@ func (s *bookServer) CreateBook(ctx context.Context, req *pb.CreateBookRequest) 
 	}
 	err = s.bookApplication.Create(ctx, b)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	res := getBookResponse(b)
@@ -250,12 +250,12 @@ func (s *bookServer) CreateBook(ctx context.Context, req *pb.CreateBookRequest) 
 func (s *bookServer) UpdateBook(ctx context.Context, req *pb.UpdateBookRequest) (*pb.BookResponse, error) {
 	err := s.bookRequestValidation.UpdateBook(req)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	b, err := s.bookApplication.GetByIsbn(ctx, req.GetIsbn())
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	as := make([]*book.Author, len(req.GetAuthors()))
@@ -282,7 +282,7 @@ func (s *bookServer) UpdateBook(ctx context.Context, req *pb.UpdateBookRequest) 
 
 	err = s.bookApplication.Update(ctx, b)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	res := getBookResponse(b)
@@ -293,12 +293,12 @@ func (s *bookServer) UpdateBook(ctx context.Context, req *pb.UpdateBookRequest) 
 func (s *bookServer) ReadBookshelf(ctx context.Context, req *pb.ReadBookshelfRequest) (*pb.BookshelfResponse, error) {
 	err := s.bookRequestValidation.ReadBookshelf(req)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	bs, err := s.bookApplication.GetBookshelfByUserIDAndBookIDWithRelated(ctx, req.GetUserId(), int(req.GetBookId()))
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	bs.BookID = int(req.GetBookId())
@@ -313,7 +313,7 @@ func (s *bookServer) ReadBookshelf(ctx context.Context, req *pb.ReadBookshelfReq
 
 	err = s.bookApplication.CreateOrUpdateBookshelf(ctx, bs)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	res := getBookshelfResponse(bs)
@@ -326,12 +326,12 @@ func (s *bookServer) ReadingBookshelf(
 ) (*pb.BookshelfResponse, error) {
 	err := s.bookRequestValidation.ReadingBookshelf(req)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	bs, err := s.bookApplication.GetBookshelfByUserIDAndBookIDWithRelated(ctx, req.GetUserId(), int(req.GetBookId()))
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	bs.BookID = int(req.GetBookId())
@@ -340,7 +340,7 @@ func (s *bookServer) ReadingBookshelf(
 
 	err = s.bookApplication.CreateOrUpdateBookshelf(ctx, bs)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	res := getBookshelfResponse(bs)
@@ -353,12 +353,12 @@ func (s *bookServer) StackedBookshelf(
 ) (*pb.BookshelfResponse, error) {
 	err := s.bookRequestValidation.StackedBookshelf(req)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	bs, err := s.bookApplication.GetBookshelfByUserIDAndBookIDWithRelated(ctx, req.GetUserId(), int(req.GetBookId()))
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	bs.BookID = int(req.GetBookId())
@@ -367,7 +367,7 @@ func (s *bookServer) StackedBookshelf(
 
 	err = s.bookApplication.CreateOrUpdateBookshelf(ctx, bs)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	res := getBookshelfResponse(bs)
@@ -378,12 +378,12 @@ func (s *bookServer) StackedBookshelf(
 func (s *bookServer) WantBookshelf(ctx context.Context, req *pb.WantBookshelfRequest) (*pb.BookshelfResponse, error) {
 	err := s.bookRequestValidation.WantBookshelf(req)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	bs, err := s.bookApplication.GetBookshelfByUserIDAndBookIDWithRelated(ctx, req.GetUserId(), int(req.GetBookId()))
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	bs.BookID = int(req.GetBookId())
@@ -392,7 +392,7 @@ func (s *bookServer) WantBookshelf(ctx context.Context, req *pb.WantBookshelfReq
 
 	err = s.bookApplication.CreateOrUpdateBookshelf(ctx, bs)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	res := getBookshelfResponse(bs)
@@ -405,12 +405,12 @@ func (s *bookServer) ReleaseBookshelf(
 ) (*pb.BookshelfResponse, error) {
 	err := s.bookRequestValidation.ReleaseBookshelf(req)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	bs, err := s.bookApplication.GetBookshelfByUserIDAndBookIDWithRelated(ctx, req.GetUserId(), int(req.GetBookId()))
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	bs.BookID = int(req.GetBookId())
@@ -419,7 +419,7 @@ func (s *bookServer) ReleaseBookshelf(
 
 	err = s.bookApplication.CreateOrUpdateBookshelf(ctx, bs)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	res := getBookshelfResponse(bs)
@@ -430,17 +430,17 @@ func (s *bookServer) ReleaseBookshelf(
 func (s *bookServer) DeleteBook(ctx context.Context, req *pb.DeleteBookRequest) (*pb.Empty, error) {
 	err := s.bookRequestValidation.DeleteBook(req)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	b, err := s.bookApplication.Get(ctx, int(req.GetBookId()))
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	err = s.bookApplication.Delete(ctx, b)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	return &pb.Empty{}, nil
@@ -450,17 +450,17 @@ func (s *bookServer) DeleteBook(ctx context.Context, req *pb.DeleteBookRequest) 
 func (s *bookServer) DeleteBookshelf(ctx context.Context, req *pb.DeleteBookshelfRequest) (*pb.Empty, error) {
 	err := s.bookRequestValidation.DeleteBookshelf(req)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	bs, err := s.bookApplication.GetBookshelfByUserIDAndBookID(ctx, req.GetUserId(), int(req.GetBookId()))
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	err = s.bookApplication.DeleteBookshelf(ctx, bs)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	return &pb.Empty{}, nil

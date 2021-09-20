@@ -57,6 +57,32 @@ func TestBookServer_ListBookshelf(t *testing.T) {
 			},
 		},
 		{
+			name: "success with order",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.BookRequestValidation.EXPECT().
+					ListBookshelf(gomock.Any()).
+					Return(nil)
+				mocks.BookApplication.EXPECT().
+					ListBookshelf(ctx, gomock.Any()).
+					Return([]*book.Bookshelf{bookshelf1, bookshelf2}, 2, nil)
+			},
+			args: args{
+				req: &pb.ListBookshelfRequest{
+					UserId: "user01",
+					Limit:  100,
+					Offset: 0,
+					Order: &pb.Order{
+						Field:   "created_at",
+						OrderBy: pb.OrderBy_ORDER_BY_ASC,
+					},
+				},
+			},
+			want: &test.TestResponse{
+				Code:    codes.OK,
+				Message: getBookshelfListResponse([]*book.Bookshelf{bookshelf1, bookshelf2}, 100, 0, 2),
+			},
+		},
+		{
 			name: "failed: invalid argument",
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
 				mocks.BookRequestValidation.EXPECT().

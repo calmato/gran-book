@@ -10,7 +10,7 @@ require (
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/prometheus/client_golang v1.9.0
-	github.com/stretchr/testify v1.6.1
+	github.com/stretchr/testify v1.7.0
 	go.uber.org/zap v1.16.0
 	golang.org/x/mod v0.4.1 // indirect
 	golang.org/x/net v0.0.0-20210503060351-7fd8e65b6420 // indirect
