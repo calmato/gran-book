@@ -7,8 +7,7 @@ import (
 )
 
 var (
-	errInvalidValidation  = errors.New("validation: failed to convert request")
-	errInternalValidation = errors.New("validation: failed to request validation")
+	errInvalidValidation = errors.New("validation: failed to convert request")
 )
 
 func toValidationError(field, message string) error {
@@ -18,8 +17,4 @@ func toValidationError(field, message string) error {
 	}
 
 	return exception.InvalidRequestValidation.New(errInvalidValidation, ve)
-}
-
-func toInternalError() error {
-	return exception.Unknown.New(errInternalValidation)
 }

@@ -33,234 +33,180 @@ func NewBookRequestValidation() BookRequestValidation {
 
 func (v *bookRequestValidation) ListBookshelf(req *pb.ListBookshelfRequest) error {
 	err := req.Validate()
-	if err != nil {
-		if err, ok := err.(pb.ListBookshelfRequestValidationError); ok {
-			return toValidationError(err.Field(), err.Reason())
-		}
-
-		return toInternalError()
+	if err == nil {
+		return nil
 	}
 
-	return nil
+	validate := err.(pb.ListBookshelfRequestValidationError)
+	return toValidationError(validate.Field(), validate.Reason())
 }
 
 func (v *bookRequestValidation) ListBookReview(req *pb.ListBookReviewRequest) error {
 	err := req.Validate()
-	if err != nil {
-		if err, ok := err.(pb.ListBookReviewRequestValidationError); ok {
-			return toValidationError(err.Field(), err.Reason())
-		}
-
-		return toInternalError()
+	if err == nil {
+		return nil
 	}
 
-	return nil
+	validate := err.(pb.ListBookReviewRequestValidationError)
+	return toValidationError(validate.Field(), validate.Reason())
 }
 
 func (v *bookRequestValidation) ListUserReview(req *pb.ListUserReviewRequest) error {
 	err := req.Validate()
-	if err != nil {
-		if err, ok := err.(pb.ListUserReviewRequestValidationError); ok {
-			return toValidationError(err.Field(), err.Reason())
-		}
-
-		return toInternalError()
+	if err == nil {
+		return nil
 	}
 
-	return nil
+	validate := err.(pb.ListUserReviewRequestValidationError)
+	return toValidationError(validate.Field(), validate.Reason())
 }
 
 func (v *bookRequestValidation) ListUserMonthlyResult(req *pb.ListUserMonthlyResultRequest) error {
 	err := req.Validate()
-	if err != nil {
-		if err, ok := err.(pb.ListUserMonthlyResultRequestValidationError); ok {
-			return toValidationError(err.Field(), err.Reason())
-		}
-
-		return toInternalError()
+	if err == nil {
+		return nil
 	}
 
-	return nil
+	validate := err.(pb.ListUserMonthlyResultRequestValidationError)
+	return toValidationError(validate.Field(), validate.Reason())
 }
 
 func (v *bookRequestValidation) MultiGetBooks(req *pb.MultiGetBooksRequest) error {
 	err := req.Validate()
-	if err != nil {
-		if err, ok := err.(pb.MultiGetBooksRequestValidationError); ok {
-			return toValidationError(err.Field(), err.Reason())
-		}
-
-		return toInternalError()
+	if err == nil {
+		return nil
 	}
 
-	return nil
+	validate := err.(pb.MultiGetBooksRequestValidationError)
+	return toValidationError(validate.Field(), validate.Reason())
 }
 
 func (v *bookRequestValidation) GetBook(req *pb.GetBookRequest) error {
 	err := req.Validate()
-	if err != nil {
-		if err, ok := err.(pb.GetBookRequestValidationError); ok {
-			return toValidationError(err.Field(), err.Reason())
-		}
-
-		return toInternalError()
+	if err == nil {
+		return nil
 	}
 
-	return nil
+	validate := err.(pb.GetBookRequestValidationError)
+	return toValidationError(validate.Field(), validate.Reason())
 }
 
 func (v *bookRequestValidation) GetBookByIsbn(req *pb.GetBookByIsbnRequest) error {
 	err := req.Validate()
-	if err != nil {
-		if err, ok := err.(pb.GetBookByIsbnRequestValidationError); ok {
-			return toValidationError(err.Field(), err.Reason())
-		}
-
-		return toInternalError()
+	if err == nil {
+		return nil
 	}
 
-	return nil
+	validate := err.(pb.GetBookByIsbnRequestValidationError)
+	return toValidationError(validate.Field(), validate.Reason())
 }
 
 func (v *bookRequestValidation) GetBookshelf(req *pb.GetBookshelfRequest) error {
 	err := req.Validate()
-	if err != nil {
-		if err, ok := err.(pb.GetBookshelfRequestValidationError); ok {
-			return toValidationError(err.Field(), err.Reason())
-		}
-
-		return toInternalError()
+	if err == nil {
+		return nil
 	}
 
-	return nil
+	validate := err.(pb.GetBookshelfRequestValidationError)
+	return toValidationError(validate.Field(), validate.Reason())
 }
 
 func (v *bookRequestValidation) GetReview(req *pb.GetReviewRequest) error {
 	err := req.Validate()
-	if err != nil {
-		if err, ok := err.(pb.GetReviewRequestValidationError); ok {
-			return toValidationError(err.Field(), err.Reason())
-		}
-
-		return toInternalError()
+	if err == nil {
+		return nil
 	}
 
-	return nil
+	validate := err.(pb.GetReviewRequestValidationError)
+	return toValidationError(validate.Field(), validate.Reason())
 }
 
 func (v *bookRequestValidation) CreateBook(req *pb.CreateBookRequest) error {
 	err := req.Validate()
-	if err != nil {
-		if err, ok := err.(pb.CreateBookRequestValidationError); ok {
-			return toValidationError(err.Field(), err.Reason())
-		}
-
-		return toInternalError()
+	if err == nil {
+		return nil
 	}
 
-	return nil
+	validate := err.(pb.CreateBookRequestValidationError)
+	return toValidationError(validate.Field(), validate.Reason())
 }
 
 func (v *bookRequestValidation) UpdateBook(req *pb.UpdateBookRequest) error {
 	err := req.Validate()
-	if err != nil {
-		if err, ok := err.(pb.UpdateBookRequestValidationError); ok {
-			return toValidationError(err.Field(), err.Reason())
-		}
-
-		return toInternalError()
+	if err == nil {
+		return nil
 	}
 
-	return nil
+	validate := err.(pb.UpdateBookRequestValidationError)
+	return toValidationError(validate.Field(), validate.Reason())
 }
 
 func (v *bookRequestValidation) ReadBookshelf(req *pb.ReadBookshelfRequest) error {
 	err := req.Validate()
-	if err != nil {
-		if err, ok := err.(pb.ReadBookshelfRequestValidationError); ok {
-			return toValidationError(err.Field(), err.Reason())
-		}
-
-		return toInternalError()
+	if err == nil {
+		return nil
 	}
 
-	return nil
+	validate := err.(pb.ReadBookshelfRequestValidationError)
+	return toValidationError(validate.Field(), validate.Reason())
 }
 
 func (v *bookRequestValidation) ReadingBookshelf(req *pb.ReadingBookshelfRequest) error {
 	err := req.Validate()
-	if err != nil {
-		if err, ok := err.(pb.ReadingBookshelfRequestValidationError); ok {
-			return toValidationError(err.Field(), err.Reason())
-		}
-
-		return toInternalError()
+	if err == nil {
+		return nil
 	}
 
-	return nil
+	validate := err.(pb.ReadingBookshelfRequestValidationError)
+	return toValidationError(validate.Field(), validate.Reason())
 }
 
 func (v *bookRequestValidation) StackedBookshelf(req *pb.StackedBookshelfRequest) error {
 	err := req.Validate()
-	if err != nil {
-		if err, ok := err.(pb.StackedBookshelfRequestValidationError); ok {
-			return toValidationError(err.Field(), err.Reason())
-		}
-
-		return toInternalError()
+	if err == nil {
+		return nil
 	}
 
-	return nil
+	validate := err.(pb.StackedBookshelfRequestValidationError)
+	return toValidationError(validate.Field(), validate.Reason())
 }
 
 func (v *bookRequestValidation) WantBookshelf(req *pb.WantBookshelfRequest) error {
 	err := req.Validate()
-	if err != nil {
-		if err, ok := err.(pb.WantBookshelfRequestValidationError); ok {
-			return toValidationError(err.Field(), err.Reason())
-		}
-
-		return toInternalError()
+	if err == nil {
+		return nil
 	}
 
-	return nil
+	validate := err.(pb.WantBookshelfRequestValidationError)
+	return toValidationError(validate.Field(), validate.Reason())
 }
 
 func (v *bookRequestValidation) ReleaseBookshelf(req *pb.ReleaseBookshelfRequest) error {
 	err := req.Validate()
-	if err != nil {
-		if err, ok := err.(pb.ReleaseBookshelfRequestValidationError); ok {
-			return toValidationError(err.Field(), err.Reason())
-		}
-
-		return toInternalError()
+	if err == nil {
+		return nil
 	}
 
-	return nil
+	validate := err.(pb.ReleaseBookshelfRequestValidationError)
+	return toValidationError(validate.Field(), validate.Reason())
 }
 
 func (v *bookRequestValidation) DeleteBook(req *pb.DeleteBookRequest) error {
 	err := req.Validate()
-	if err != nil {
-		if err, ok := err.(pb.DeleteBookRequestValidationError); ok {
-			return toValidationError(err.Field(), err.Reason())
-		}
-
-		return toInternalError()
+	if err == nil {
+		return nil
 	}
 
-	return nil
+	validate := err.(pb.DeleteBookRequestValidationError)
+	return toValidationError(validate.Field(), validate.Reason())
 }
 
 func (v *bookRequestValidation) DeleteBookshelf(req *pb.DeleteBookshelfRequest) error {
 	err := req.Validate()
-	if err != nil {
-		if err, ok := err.(pb.DeleteBookshelfRequestValidationError); ok {
-			return toValidationError(err.Field(), err.Reason())
-		}
-
-		return toInternalError()
+	if err == nil {
+		return nil
 	}
 
-	return nil
+	validate := err.(pb.DeleteBookshelfRequestValidationError)
+	return toValidationError(validate.Field(), validate.Reason())
 }
