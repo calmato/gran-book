@@ -153,6 +153,11 @@ func TestFormatTime(t *testing.T) {
 			input:  time.Date(2021, time.Month(8), 15, 1, 30, 0, 0, jst),
 			expect: "2021-08-15 01:30:00",
 		},
+		{
+			name:   "success is zero value",
+			input:  time.Time{},
+			expect: "",
+		},
 	}
 
 	for _, tt := range tests {
@@ -175,6 +180,11 @@ func TestFormatDate(t *testing.T) {
 			name:   "success",
 			input:  time.Date(2021, time.Month(8), 15, 1, 30, 0, 0, jst),
 			expect: "2021-08-15",
+		},
+		{
+			name:   "success is zero value",
+			input:  time.Time{},
+			expect: "",
 		},
 	}
 

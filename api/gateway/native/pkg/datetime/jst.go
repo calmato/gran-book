@@ -32,9 +32,17 @@ func ParseDate(str string) (time.Time, error) {
 }
 
 func FormatTime(t time.Time) string {
+	if t.IsZero() {
+		return ""
+	}
+
 	return t.Format(timeFormat)
 }
 
 func FormatDate(t time.Time) string {
+	if t.IsZero() {
+		return ""
+	}
+
 	return t.Format(dateFormat)
 }
