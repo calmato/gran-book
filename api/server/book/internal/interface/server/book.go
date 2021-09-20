@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"time"
 
 	"github.com/calmato/gran-book/api/server/book/internal/application"
 	"github.com/calmato/gran-book/api/server/book/internal/domain/book"
@@ -301,10 +302,15 @@ func (s *bookServer) ReadBookshelf(ctx context.Context, req *pb.ReadBookshelfReq
 		return nil, toGRPCError(err)
 	}
 
+	var readOn time.Time
+	if date, err := datetime.ParseDate(req.GetReadOn()); err == nil {
+		readOn = date
+	}
+
 	bs.BookID = int(req.GetBookId())
 	bs.UserID = req.GetUserId()
 	bs.Status = book.ReadStatus
-	bs.ReadOn = datetime.StringToDate(req.GetReadOn())
+	bs.ReadOn = readOn
 
 	bs.ReviewID = bs.Review.ID
 	bs.Review.BookID = int(req.GetBookId())

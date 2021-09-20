@@ -138,8 +138,8 @@ func (a *bookApplication) ListUserReview(
 func (a *bookApplication) ListUserMonthlyResult(
 	ctx context.Context, userID, sinceDate, untilDate string,
 ) (book.MonthlyResults, error) {
-	since := datetime.BeginningOfMonth(sinceDate)
-	until := datetime.EndOfMonth(untilDate)
+	since, _ := datetime.ParseDate(sinceDate)
+	until, _ := datetime.ParseDate(untilDate)
 	if since.IsZero() || until.IsZero() {
 		return nil, exception.InvalidRequestValidation.New(errInvalidDateFormat)
 	}

@@ -1,9 +1,12 @@
 package array
 
 import (
+	"errors"
 	"fmt"
 	"reflect"
 )
+
+var ErrUnsupportedType = errors.New("array: this is unsupported type")
 
 // Contains - 配列に対象の要素が含まれるか
 func Contains(items interface{}, target interface{}) (bool, error) {
@@ -27,7 +30,8 @@ func Contains(items interface{}, target interface{}) (bool, error) {
 			}
 		}
 	default:
-		return false, fmt.Errorf("array: %v is an unsupported type", reflect.TypeOf(items))
+		err := fmt.Errorf("%w, %v", ErrUnsupportedType, reflect.TypeOf(items))
+		return false, err
 	}
 
 	return false, nil

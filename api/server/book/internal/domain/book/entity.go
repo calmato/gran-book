@@ -41,8 +41,8 @@ func (b *Book) Proto() *pb.Book {
 		RakutenUrl:     b.RakutenURL,
 		RakutenSize:    b.RakutenSize,
 		RakutenGenreId: b.RakutenGenreID,
-		CreatedAt:      datetime.TimeToString(b.CreatedAt),
-		UpdatedAt:      datetime.TimeToString(b.UpdatedAt),
+		CreatedAt:      datetime.FormatTime(b.CreatedAt),
+		UpdatedAt:      datetime.FormatTime(b.UpdatedAt),
 		Authors:        b.Authors.Proto(),
 	}
 }
@@ -128,9 +128,9 @@ func (b *Bookshelf) Proto() *pb.Bookshelf {
 		UserId:    b.UserID,
 		ReviewId:  int64(b.ReviewID),
 		Status:    pb.BookshelfStatus(b.Status),
-		ReadOn:    datetime.DateToString(b.ReadOn),
-		CreatedAt: datetime.TimeToString(b.CreatedAt),
-		UpdatedAt: datetime.TimeToString(b.UpdatedAt),
+		ReadOn:    datetime.FormatDate(b.ReadOn),
+		CreatedAt: datetime.FormatTime(b.CreatedAt),
+		UpdatedAt: datetime.FormatTime(b.UpdatedAt),
 	}
 }
 
@@ -162,8 +162,8 @@ func (r *Review) Proto() *pb.Review {
 		UserId:     r.UserID,
 		Score:      int32(r.Score),
 		Impression: r.Impression,
-		CreatedAt:  datetime.TimeToString(r.CreatedAt),
-		UpdatedAt:  datetime.TimeToString(r.UpdatedAt),
+		CreatedAt:  datetime.FormatTime(r.CreatedAt),
+		UpdatedAt:  datetime.FormatTime(r.UpdatedAt),
 	}
 }
 

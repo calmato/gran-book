@@ -1322,7 +1322,7 @@ func TestBookRepository_CreateBookshelf(t *testing.T) {
 					BookID:    b.ID,
 					UserID:    userID,
 					Status:    book.ReadStatus,
-					ReadOn:    datetime.StringToDate("2021-07-24"),
+					ReadOn:    test.DateMock,
 					CreatedAt: test.TimeMock,
 					UpdatedAt: test.TimeMock,
 				},
@@ -2080,6 +2080,9 @@ func TestBookRepository_AggregateReadTotal(t *testing.T) {
 	err = mocks.BookDB.DB.Table(bookshelfTable).Create(&bookshelves).Error
 	require.NoError(t, err)
 
+	sinceDate, _ := datetime.ParseDate("2020-08-01")
+	untilDate, _ := datetime.ParseDate("2021-09-01")
+
 	type args struct {
 		userID string
 		since  time.Time
@@ -2098,8 +2101,8 @@ func TestBookRepository_AggregateReadTotal(t *testing.T) {
 			name: "success",
 			args: args{
 				userID: userID,
-				since:  datetime.BeginningOfMonth("2020-08-01"),
-				until:  datetime.EndOfMonth("2021-09-01"),
+				since:  datetime.BeginningOfMonth(sinceDate),
+				until:  datetime.EndOfMonth(untilDate),
 			},
 			want: want{
 				results: book.MonthlyResults{
@@ -2171,7 +2174,7 @@ func testBookshelf(id int, bookID int, userID string) *book.Bookshelf {
 func testBookshelfWithReadOn(id int, bookID int, userID string, status int, readOn string) *book.Bookshelf {
 	b := testBookshelf(id, bookID, userID)
 	b.Status = status
-	b.ReadOn = datetime.StringToDate(readOn)
+	b.ReadOn = test.DateMock
 
 	return b
 }
