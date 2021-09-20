@@ -25,7 +25,7 @@ func TestBookRequestValidation_ListBookshelf(t *testing.T) {
 				req: &pb.ListBookshelfRequest{
 					UserId: "12345678-1234-1234-1234-123456789012",
 					Limit:  200,
-					Offset: 100,
+					Offset: 0,
 				},
 			},
 			want: true,
@@ -38,21 +38,6 @@ func TestBookRequestValidation_ListBookshelf(t *testing.T) {
 					Order: &pb.Order{
 						Field:   "created_at",
 						OrderBy: pb.OrderBy_ORDER_BY_ASC,
-					},
-					Limit:  200,
-					Offset: 100,
-				},
-			},
-			want: false,
-		},
-		{
-			name: "validation error: Order.OrderBy.in",
-			args: args{
-				req: &pb.ListBookshelfRequest{
-					UserId: "12345678-1234-1234-1234-123456789012",
-					Order: &pb.Order{
-						Field:   "created_at",
-						OrderBy: 2,
 					},
 					Limit:  200,
 					Offset: 100,
@@ -93,17 +78,12 @@ func TestBookRequestValidation_ListBookshelf(t *testing.T) {
 	}
 
 	for _, tt := range testCases {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			target := NewBookRequestValidation()
-
 			got := target.ListBookshelf(tt.args.req)
-			switch tt.want {
-			case true:
-				assert.NoError(t, got)
-			case false:
-				assert.Error(t, got)
-			}
+			assert.Equal(t, tt.want, got == nil)
 		})
 	}
 }
@@ -146,21 +126,6 @@ func TestBookRequestValidation_ListBookReview(t *testing.T) {
 			want: false,
 		},
 		{
-			name: "validation error: Order.OrderBy.in",
-			args: args{
-				req: &pb.ListBookReviewRequest{
-					BookId: 1,
-					Order: &pb.Order{
-						Field:   "created_at",
-						OrderBy: 2,
-					},
-					Limit:  200,
-					Offset: 100,
-				},
-			},
-			want: false,
-		},
-		{
 			name: "validation error: Limit.lte",
 			args: args{
 				req: &pb.ListBookReviewRequest{
@@ -193,17 +158,12 @@ func TestBookRequestValidation_ListBookReview(t *testing.T) {
 	}
 
 	for _, tt := range testCases {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			target := NewBookRequestValidation()
-
 			got := target.ListBookReview(tt.args.req)
-			switch tt.want {
-			case true:
-				assert.NoError(t, got)
-			case false:
-				assert.Error(t, got)
-			}
+			assert.Equal(t, tt.want, got == nil)
 		})
 	}
 }
@@ -246,21 +206,6 @@ func TestBookRequestValidation_ListUserReview(t *testing.T) {
 			want: false,
 		},
 		{
-			name: "validation error: Order.OrderBy.in",
-			args: args{
-				req: &pb.ListUserReviewRequest{
-					UserId: "12345678-1234-1234-1234-123456789012",
-					Order: &pb.Order{
-						Field:   "created_at",
-						OrderBy: 2,
-					},
-					Limit:  200,
-					Offset: 100,
-				},
-			},
-			want: false,
-		},
-		{
 			name: "validation error: Limit.lte",
 			args: args{
 				req: &pb.ListUserReviewRequest{
@@ -293,17 +238,12 @@ func TestBookRequestValidation_ListUserReview(t *testing.T) {
 	}
 
 	for _, tt := range testCases {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			target := NewBookRequestValidation()
-
 			got := target.ListUserReview(tt.args.req)
-			switch tt.want {
-			case true:
-				assert.NoError(t, got)
-			case false:
-				assert.Error(t, got)
-			}
+			assert.Equal(t, tt.want, got == nil)
 		})
 	}
 }
@@ -366,17 +306,12 @@ func TestBookRequestValidation_ListUserMonthlyResult(t *testing.T) {
 	}
 
 	for _, tt := range testCases {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			target := NewBookRequestValidation()
-
 			got := target.ListUserMonthlyResult(tt.args.req)
-			switch tt.want {
-			case true:
-				assert.NoError(t, got)
-			case false:
-				assert.Error(t, got)
-			}
+			assert.Equal(t, tt.want, got == nil)
 		})
 	}
 }
@@ -428,17 +363,12 @@ func TestBookRequestValidation_MultiGetBooks(t *testing.T) {
 	}
 
 	for _, tt := range testCases {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			target := NewBookRequestValidation()
-
 			got := target.MultiGetBooks(tt.args.req)
-			switch tt.want {
-			case true:
-				assert.NoError(t, got)
-			case false:
-				assert.Error(t, got)
-			}
+			assert.Equal(t, tt.want, got == nil)
 		})
 	}
 }
@@ -475,17 +405,12 @@ func TestBookRequestValidation_GetBook(t *testing.T) {
 	}
 
 	for _, tt := range testCases {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			target := NewBookRequestValidation()
-
 			got := target.GetBook(tt.args.req)
-			switch tt.want {
-			case true:
-				assert.NoError(t, got)
-			case false:
-				assert.Error(t, got)
-			}
+			assert.Equal(t, tt.want, got == nil)
 		})
 	}
 }
@@ -531,17 +456,12 @@ func TestBookRequestValidation_GetBookByIsbn(t *testing.T) {
 	}
 
 	for _, tt := range testCases {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			target := NewBookRequestValidation()
-
 			got := target.GetBookByIsbn(tt.args.req)
-			switch tt.want {
-			case true:
-				assert.NoError(t, got)
-			case false:
-				assert.Error(t, got)
-			}
+			assert.Equal(t, tt.want, got == nil)
 		})
 	}
 }
@@ -590,17 +510,12 @@ func TestBookRequestValidation_GetBookshelf(t *testing.T) {
 	}
 
 	for _, tt := range testCases {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			target := NewBookRequestValidation()
-
 			got := target.GetBookshelf(tt.args.req)
-			switch tt.want {
-			case true:
-				assert.NoError(t, got)
-			case false:
-				assert.Error(t, got)
-			}
+			assert.Equal(t, tt.want, got == nil)
 		})
 	}
 }
@@ -637,17 +552,12 @@ func TestBookRequestValidation_GetReview(t *testing.T) {
 	}
 
 	for _, tt := range testCases {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			target := NewBookRequestValidation()
-
 			got := target.GetReview(tt.args.req)
-			switch tt.want {
-			case true:
-				assert.NoError(t, got)
-			case false:
-				assert.Error(t, got)
-			}
+			assert.Equal(t, tt.want, got == nil)
 		})
 	}
 }
@@ -1114,17 +1024,12 @@ func TestBookRequestValidation_CreateBook(t *testing.T) {
 	}
 
 	for _, tt := range testCases {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			target := NewBookRequestValidation()
-
 			got := target.CreateBook(tt.args.req)
-			switch tt.want {
-			case true:
-				assert.NoError(t, got)
-			case false:
-				assert.Error(t, got)
-			}
+			assert.Equal(t, tt.want, got == nil)
 		})
 	}
 }
@@ -1591,17 +1496,12 @@ func TestBookRequestValidation_UpdateBook(t *testing.T) {
 	}
 
 	for _, tt := range testCases {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			target := NewBookRequestValidation()
-
 			got := target.UpdateBook(tt.args.req)
-			switch tt.want {
-			case true:
-				assert.NoError(t, got)
-			case false:
-				assert.Error(t, got)
-			}
+			assert.Equal(t, tt.want, got == nil)
 		})
 	}
 }
@@ -1638,17 +1538,12 @@ func TestBookRequestValidation_DeleteBook(t *testing.T) {
 	}
 
 	for _, tt := range testCases {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			target := NewBookRequestValidation()
-
 			got := target.DeleteBook(tt.args.req)
-			switch tt.want {
-			case true:
-				assert.NoError(t, got)
-			case false:
-				assert.Error(t, got)
-			}
+			assert.Equal(t, tt.want, got == nil)
 		})
 	}
 }
@@ -1697,17 +1592,12 @@ func TestBookRequestValidation_DeleteBookshelf(t *testing.T) {
 	}
 
 	for _, tt := range testCases {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			target := NewBookRequestValidation()
-
 			got := target.DeleteBookshelf(tt.args.req)
-			switch tt.want {
-			case true:
-				assert.NoError(t, got)
-			case false:
-				assert.Error(t, got)
-			}
+			assert.Equal(t, tt.want, got == nil)
 		})
 	}
 }
@@ -1774,17 +1664,12 @@ func TestBookRequestValidation_ReadBookshelf(t *testing.T) {
 	}
 
 	for _, tt := range testCases {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			target := NewBookRequestValidation()
-
 			got := target.ReadBookshelf(tt.args.req)
-			switch tt.want {
-			case true:
-				assert.NoError(t, got)
-			case false:
-				assert.Error(t, got)
-			}
+			assert.Equal(t, tt.want, got == nil)
 		})
 	}
 }
@@ -1833,17 +1718,12 @@ func TestBookRequestValidation_ReadingBookshelf(t *testing.T) {
 	}
 
 	for _, tt := range testCases {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			target := NewBookRequestValidation()
-
 			got := target.ReadingBookshelf(tt.args.req)
-			switch tt.want {
-			case true:
-				assert.NoError(t, got)
-			case false:
-				assert.Error(t, got)
-			}
+			assert.Equal(t, tt.want, got == nil)
 		})
 	}
 }
@@ -1892,17 +1772,12 @@ func TestBookRequestValidation_StackedBookshelf(t *testing.T) {
 	}
 
 	for _, tt := range testCases {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			target := NewBookRequestValidation()
-
 			got := target.StackedBookshelf(tt.args.req)
-			switch tt.want {
-			case true:
-				assert.NoError(t, got)
-			case false:
-				assert.Error(t, got)
-			}
+			assert.Equal(t, tt.want, got == nil)
 		})
 	}
 }
@@ -1951,17 +1826,12 @@ func TestBookRequestValidation_WantBookshelf(t *testing.T) {
 	}
 
 	for _, tt := range testCases {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			target := NewBookRequestValidation()
-
 			got := target.WantBookshelf(tt.args.req)
-			switch tt.want {
-			case true:
-				assert.NoError(t, got)
-			case false:
-				assert.Error(t, got)
-			}
+			assert.Equal(t, tt.want, got == nil)
 		})
 	}
 }
@@ -2010,17 +1880,12 @@ func TestBookRequestValidation_ReleaseBookshelf(t *testing.T) {
 	}
 
 	for _, tt := range testCases {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			target := NewBookRequestValidation()
-
 			got := target.ReleaseBookshelf(tt.args.req)
-			switch tt.want {
-			case true:
-				assert.NoError(t, got)
-			case false:
-				assert.Error(t, got)
-			}
+			assert.Equal(t, tt.want, got == nil)
 		})
 	}
 }
