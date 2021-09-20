@@ -494,7 +494,7 @@ func TestBookApplication_ListUserMonthlyResult(t *testing.T) {
 		{
 			name: "success",
 			setup: func(c context.Context, t *testing.T, m *test.Mocks) {
-				sinceDate, _ := datetime.ParseDate("2020-08-01")
+				sinceDate, _ := datetime.ParseDate("2021-08-01")
 				untilDate, _ := datetime.ParseDate("2021-09-01")
 				since := datetime.BeginningOfMonth(sinceDate)
 				until := datetime.EndOfMonth(untilDate)

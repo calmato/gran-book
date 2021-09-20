@@ -2080,7 +2080,7 @@ func TestBookRepository_AggregateReadTotal(t *testing.T) {
 	err = mocks.BookDB.DB.Table(bookshelfTable).Create(&bookshelves).Error
 	require.NoError(t, err)
 
-	sinceDate, _ := datetime.ParseDate("2020-08-01")
+	sinceDate, _ := datetime.ParseDate("2021-08-01")
 	untilDate, _ := datetime.ParseDate("2021-09-01")
 
 	type args struct {
