@@ -28,6 +28,7 @@ export type BookshelfTabStackParamList = {
 export type UserInfoStackParamList = {
   MyPage: undefined;
   OwnProfile: undefined;
+  OwnReviews: undefined;
   AccountSetting: undefined;
   AccountEdit: undefined;
   ProfileEdit: undefined;

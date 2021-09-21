@@ -95,7 +95,7 @@ const MyPage = function MyPage(props: Props): ReactElement {
             </ListItem.Content>
             <MaterialIcons name="keyboard-arrow-right" size={24} color={iconColor} />
           </ListItem>
-          <ListItem key={5} bottomDivider>
+          <ListItem key={5} bottomDivider onPress={() => navigation.navigate('OwnReviews')}>
             <MaterialCommunityIcons name="file-document-edit" size={24} color={iconColor} />
             <ListItem.Content>
               <ListItem.Title style={styles.title}>{'自分の感想'}</ListItem.Title>
