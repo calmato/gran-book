@@ -144,7 +144,12 @@ func (a *bookApplication) ListUserMonthlyResult(
 		return nil, exception.InvalidRequestValidation.New(errInvalidDateFormat)
 	}
 
-	return a.bookRepository.AggregateReadTotal(ctx, userID, since, until)
+	return a.bookRepository.AggregateReadTotal(
+		ctx,
+		userID,
+		datetime.BeginningOfMonth(since),
+		datetime.EndOfMonth(until),
+	)
 }
 
 func (a *bookApplication) MultiGet(ctx context.Context, bookIDs []int) (book.Books, error) {
