@@ -1,13 +1,18 @@
 import React, { createContext, useCallback, useContext, useMemo, useReducer } from 'react';
 import { AuthContext } from './auth';
 import { BookValues, initialState, Model } from '~/store/models/book';
-import { getAllBookByUserId } from '~/store/usecases/v2/book';
+import { getAllBookByUserId, registerOwnBook } from '~/store/usecases/v2/book';
+import { ImpressionForm } from '~/types/forms';
 import { ViewBooks } from '~/types/models/book';
 
 interface BookContextProps {
   bookState: Model;
   viewBooks: ViewBooks;
   fetchBooks: () => Promise<void>;
+  registerBook: (
+    bookId: number,
+    status: 'reading' | 'read' | 'stack' | 'release' | 'want',
+  ) => Promise<void>;
 }
 
 const BookContext = createContext<BookContextProps>({
@@ -20,6 +25,9 @@ const BookContext = createContext<BookContextProps>({
     want: [],
   },
   fetchBooks: () => {
+    return Promise.resolve();
+  },
+  registerBook: (_, __) => {
     return Promise.resolve();
   },
 });
@@ -64,6 +72,17 @@ const BookProvider = function BookProvider({ children }: Props) {
     });
   }, [authState.id, authState.token]);
 
+  const registerBook = useCallback(
+    async (
+      bookId: number,
+      status: 'reading' | 'read' | 'stack' | 'release' | 'want',
+      impressionForm?: ImpressionForm,
+    ) => {
+      await registerOwnBook(authState.id, bookId, status, authState.token, impressionForm);
+    },
+    [authState.id, authState.token],
+  );
+
   const viewBooks: ViewBooks = useMemo(() => {
     const value: ViewBooks = {
       reading: [],
@@ -99,7 +118,7 @@ const BookProvider = function BookProvider({ children }: Props) {
   }, [bookState]);
 
   return (
-    <BookContext.Provider value={{ bookState, viewBooks, fetchBooks }}>
+    <BookContext.Provider value={{ bookState, viewBooks, fetchBooks, registerBook }}>
       {children}
     </BookContext.Provider>
   );
