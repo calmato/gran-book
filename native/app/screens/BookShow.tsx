@@ -43,7 +43,10 @@ interface Props {
     | StackNavigationProp<BookshelfTabStackParamList, 'SearchResultBookShow'>
     | StackNavigationProp<BookshelfTabStackParamList, 'BookShow'>;
   actions: {
-    registerOwnBook: (status: string, bookId: number) => Promise<void>;
+    registerBook: (
+      bookId: number,
+      status: 'reading' | 'read' | 'stack' | 'release' | 'want',
+    ) => Promise<void>;
   };
 }
 
@@ -80,21 +83,21 @@ const BookShow = function BookShow(props: Props): ReactElement {
   }, [routeParam.book]);
 
   const handleBookStatusButton = useCallback(
-    (status: string) => {
+    (status: 'reading' | 'read' | 'stack' | 'release' | 'want') => {
       if (status === 'read') {
         props.navigation.push('BookReadRegister', { book: book });
         return;
       }
 
-      props.actions.registerOwnBook(status, book.id);
+      props.actions.registerBook(book.id, status);
 
-      setBook({
-        ...book,
-        bookshelf: {
-          ...book.bookshelf,
-          status,
-        },
-      });
+      // setBook({
+      //   ...book,
+      //   bookshelf: {
+      //     ...book.bookshelf,
+      //     status,
+      //   },
+      // });
     },
     [props.actions, props.navigation, book],
   );
@@ -108,6 +111,7 @@ const BookShow = function BookShow(props: Props): ReactElement {
     const f = async () => {
       try {
         const res = await getBookByISBNAsync(book.isbn);
+        console.log(res);
         setBook(res);
         setIsRegister(true);
         const impRes = await getAllImpressionByBookIdAsync(book.id);
