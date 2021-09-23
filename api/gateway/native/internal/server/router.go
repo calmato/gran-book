@@ -22,7 +22,7 @@ func Router(reg *Registry, opts ...gin.HandlerFunc) *gin.Engine {
 	reg.V2Api.Routes(authRequiredGroup)
 
 	// non auth required routes
-	reg.V1Api.Routes(r.Group(""))
+	reg.V1Api.NonAuthRoutes(r.Group(""))
 	r.GET("/health", reg.HTTP.HealthCheck)
 
 	// other routes
