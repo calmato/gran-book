@@ -5,8 +5,8 @@ import Adapter from 'enzyme-adapter-react-16';
 import React from 'react';
 
 import { Text, View, ViewStyle } from 'react-native';
-import { colors } from 'react-native-elements';
 import CheckBox from '~/components/molecules/CheckBox';
+import { COLOR } from '~~/constants/theme';
 
 configure({ adapter: new Adapter() });
 
@@ -31,7 +31,7 @@ describe('<CheckBox />', () => {
 
     expect(icon.props.name).toEqual('md-checkbox');
     expect(icon.props.size).toEqual(24);
-    expect(icon.props.color).toEqual(colors.primary);
+    expect(icon.props.color).toEqual(COLOR.PRIMARY);
 
     expect(text.props.children).toEqual(title);
   });
