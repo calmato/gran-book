@@ -1,15 +1,16 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import * as WebBrowser from 'expo-web-browser';
-import React, { ReactElement, useCallback, useEffect, useState } from 'react';
+import React, { ReactElement, useCallback, useContext, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Overlay, Tab, TabView, Text } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
 import BookImpression from '~/components/organisms/BookImpression';
 import BookInfo from '~/components/organisms/BookInfo';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
+import { AuthContext } from '~/context/auth';
 import { convertToIBook } from '~/lib/converter';
-import { addBookAsync, getAllImpressionByBookIdAsync, getBookByISBNAsync } from '~/store/usecases';
+import { addBook, getAllImpressionByBookId, getBookByISBN } from '~/store/usecases/v2/book';
 import { BookshelfV1Response } from '~/types/api/bookshelf_apiv1_response_pb';
 import { BookReviewListV1Response } from '~/types/api/review_apiv1_response_pb';
 import { BookshelfTabStackParamList } from '~/types/navigation';
@@ -71,16 +72,15 @@ const BookShow = function BookShow(props: Props): ReactElement {
 
   const [index, setIndex] = useState<number>(0);
 
+  const { authState } = useContext(AuthContext);
+
   // TODO: エラーハンドリング
   const handleAddBookButton = useCallback(async () => {
-    await addBookAsync(routeParam.book as ISearchResultItem)
-      .then((res) => {
-        setBook(res.data);
-        setShowMessage(true);
-        setIsRegister(true);
-      })
-      .catch((res) => console.log('登録に失敗しました.', res));
-  }, [routeParam.book]);
+    const res = await addBook({ book: routeParam.book as ISearchResultItem }, authState.token);
+    setBook(res);
+    setShowMessage(true);
+    setIsRegister(true);
+  }, [authState.token, routeParam.book]);
 
   const handleBookStatusButton = useCallback(
     (status: 'reading' | 'read' | 'stack' | 'release' | 'want') => {
@@ -91,13 +91,13 @@ const BookShow = function BookShow(props: Props): ReactElement {
 
       props.actions.registerBook(book.id, status);
 
-      // setBook({
-      //   ...book,
-      //   bookshelf: {
-      //     ...book.bookshelf,
-      //     status,
-      //   },
-      // });
+      setBook({
+        ...book,
+        bookshelf: {
+          ...book.bookshelf,
+          status,
+        },
+      });
     },
     [props.actions, props.navigation, book],
   );
@@ -110,11 +110,10 @@ const BookShow = function BookShow(props: Props): ReactElement {
   useEffect(() => {
     const f = async () => {
       try {
-        const res = await getBookByISBNAsync(book.isbn);
-        console.log(res);
+        const res = await getBookByISBN({ isbn: book.isbn }, authState.token);
         setBook(res);
         setIsRegister(true);
-        const impRes = await getAllImpressionByBookIdAsync(book.id);
+        const impRes = await getAllImpressionByBookId({ bookId: book.id }, authState.token);
         setImpressions(impRes);
       } catch (err) {
         setIsRegister(false);

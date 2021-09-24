@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
 interface Props {
   book: BookV1Response.AsObject;
   isRegister: boolean;
-  handleBookStatusButton: (status: string) => void;
+  handleBookStatusButton: (status: 'reading' | 'read' | 'stack' | 'release' | 'want') => void;
   handleOpenRakutenPageButton: (url: string) => Promise<void>;
   handleAddButton: () => Promise<void>;
 }
