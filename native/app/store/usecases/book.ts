@@ -112,6 +112,7 @@ export function registerReadBookImpressionAsync(bookId: number, impressionForm: 
 
 /**
  * バックエンドAPIにアクセスし指定した書籍の感想を取得する関数
+ * @deprecated
  * @param bookId 感想を取得する書籍のID
  * @returns
  */
