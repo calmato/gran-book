@@ -72,7 +72,10 @@ const BookProvider = function BookProvider({ children }: Props) {
   const [bookState, dispatch] = useReducer(reducer, initialState);
 
   const fetchBooks = useCallback(async () => {
-    const books = await getAllBookByUserId(authState.id, authState.token);
+    const books = await getAllBookByUserId(
+      { userId: authState.id },
+      authState.token
+    );
     dispatch({
       type: "SET_BOOKS",
       payload: { books },

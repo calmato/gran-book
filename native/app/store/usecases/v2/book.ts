@@ -11,11 +11,15 @@ import { ISearchResultItem } from "~/types/response/external/rakuten-books";
 
 /**
  * バックエンドAPIにリクエストを送りユーザーが登録している書籍を全件取得する非同期関数
- * @param userId
+ * @param payload
  * @param token
  * @returns
  */
-export async function getAllBookByUserId(userId: string, token: string) {
+export async function getAllBookByUserId(
+  payload: { userId: string },
+  token: string
+) {
+  const { userId } = payload;
   try {
     const { data }: AxiosResponse<BookshelfListV1Response.AsObject> =
       await internal.get(`/v1/users/${userId}/books`, getAuthHeader(token));
