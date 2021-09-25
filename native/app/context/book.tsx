@@ -1,9 +1,16 @@
-import React, { createContext, useCallback, useContext, useMemo, useReducer } from 'react';
-import { AuthContext } from './auth';
-import { BookValues, initialState, Model } from '~/store/models/book';
-import { getAllBookByUserId, registerOwnBook } from '~/store/usecases/v2/book';
-import { ImpressionForm } from '~/types/forms';
-import { ViewBooks } from '~/types/models/book';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useReducer,
+} from "react";
+import { AuthContext } from "./auth";
+import { BookValues, initialState, Model } from "~/store/models/book";
+import { getAllBookByUserId, registerOwnBook } from "~/store/usecases/v2/book";
+import { ImpressionForm } from "~/types/forms";
+import { ViewBooks } from "~/types/models/book";
+import { BookshelfV1Response } from "~/types/api/bookshelf_apiv1_response_pb";
 
 interface BookContextProps {
   bookState: Model;
@@ -11,8 +18,8 @@ interface BookContextProps {
   fetchBooks: () => Promise<void>;
   registerBook: (
     bookId: number,
-    status: 'reading' | 'read' | 'stack' | 'release' | 'want',
-  ) => Promise<void>;
+    status: "reading" | "read" | "stack" | "release" | "want"
+  ) => Promise<BookshelfV1Response.AsObject | undefined>;
 }
 
 const BookContext = createContext<BookContextProps>({
@@ -28,11 +35,11 @@ const BookContext = createContext<BookContextProps>({
     return Promise.resolve();
   },
   registerBook: (_, __) => {
-    return Promise.resolve();
+    return Promise.resolve(undefined);
   },
 });
 
-type ActionType = 'SET_BOOKS';
+type ActionType = "SET_BOOKS";
 type Payload = BookValues;
 
 interface BookStateAction {
@@ -42,10 +49,10 @@ interface BookStateAction {
 
 const reducer: React.Reducer<Model, BookStateAction> = function reducer(
   state: Model,
-  action: BookStateAction,
+  action: BookStateAction
 ): Model {
   switch (action.type) {
-    case 'SET_BOOKS':
+    case "SET_BOOKS":
       return {
         ...state,
         ...action.payload,
@@ -67,7 +74,7 @@ const BookProvider = function BookProvider({ children }: Props) {
   const fetchBooks = useCallback(async () => {
     const books = await getAllBookByUserId(authState.id, authState.token);
     dispatch({
-      type: 'SET_BOOKS',
+      type: "SET_BOOKS",
       payload: { books },
     });
   }, [authState.id, authState.token]);
@@ -75,12 +82,16 @@ const BookProvider = function BookProvider({ children }: Props) {
   const registerBook = useCallback(
     async (
       bookId: number,
-      status: 'reading' | 'read' | 'stack' | 'release' | 'want',
-      impressionForm?: ImpressionForm,
+      status: "reading" | "read" | "stack" | "release" | "want",
+      impressionForm?: ImpressionForm
     ) => {
-      await registerOwnBook(authState.id, bookId, status, authState.token, impressionForm);
+      const res = await registerOwnBook(
+        { userId: authState.id, bookId, status, impressionForm },
+        authState.token
+      );
+      return res;
     },
-    [authState.id, authState.token],
+    [authState.id, authState.token]
   );
 
   const viewBooks: ViewBooks = useMemo(() => {
@@ -94,19 +105,19 @@ const BookProvider = function BookProvider({ children }: Props) {
 
     bookState.books.booksList.forEach((book) => {
       switch (book.bookshelf?.status) {
-        case 'reading':
+        case "reading":
           value.reading.push(book);
           break;
-        case 'read':
+        case "read":
           value.read.push(book);
           break;
-        case 'stack':
+        case "stack":
           value.stack.push(book);
           break;
-        case 'release':
+        case "release":
           value.release.push(book);
           break;
-        case 'want':
+        case "want":
           value.want.push(book);
           break;
         default:
@@ -118,7 +129,9 @@ const BookProvider = function BookProvider({ children }: Props) {
   }, [bookState]);
 
   return (
-    <BookContext.Provider value={{ bookState, viewBooks, fetchBooks, registerBook }}>
+    <BookContext.Provider
+      value={{ bookState, viewBooks, fetchBooks, registerBook }}
+    >
       {children}
     </BookContext.Provider>
   );
