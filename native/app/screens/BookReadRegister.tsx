@@ -1,15 +1,16 @@
-import { RouteProp } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import dayjs from 'dayjs';
-import React, { ReactElement, useState } from 'react';
-import { StyleSheet, View, ScrollView, Text, TextInput } from 'react-native';
-import { Button } from 'react-native-elements';
-import BookNameAuthorRegister from '~/components/organisms/BookNameAuthorRegister';
-import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
-import ReadDate from '~/components/organisms/ReadDate';
-import { ImpressionForm } from '~/types/forms';
-import { BookshelfTabStackParamList } from '~/types/navigation';
-import { COLOR, FONT_SIZE } from '~~/constants/theme';
+import { RouteProp } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import dayjs from "dayjs";
+import React, { ReactElement, useCallback, useState } from "react";
+import { StyleSheet, View, ScrollView, Text, TextInput } from "react-native";
+import { Button } from "react-native-elements";
+import BookNameAuthorRegister from "~/components/organisms/BookNameAuthorRegister";
+import HeaderWithBackButton from "~/components/organisms/HeaderWithBackButton";
+import ReadDate from "~/components/organisms/ReadDate";
+import { BookshelfV1Response } from "~/types/api/bookshelf_apiv1_response_pb";
+import { ImpressionForm } from "~/types/forms";
+import { BookshelfTabStackParamList } from "~/types/navigation";
+import { COLOR, FONT_SIZE } from "~~/constants/theme";
 
 const styles = StyleSheet.create({
   container: {
@@ -20,7 +21,7 @@ const styles = StyleSheet.create({
     paddingLeft: 16,
     marginTop: 10,
     marginBottom: 8,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: COLOR.GREY,
   },
   impressionForm: {
@@ -34,29 +35,39 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  route: RouteProp<BookshelfTabStackParamList, 'BookReadRegister'>;
-  navigation: StackNavigationProp<BookshelfTabStackParamList, 'BookReadRegister'>;
+  route: RouteProp<BookshelfTabStackParamList, "BookReadRegister">;
+  navigation: StackNavigationProp<
+    BookshelfTabStackParamList,
+    "BookReadRegister"
+  >;
   actions: {
-    registerReadBookImpression: (bookId: number, impression: ImpressionForm) => Promise<void>;
+    registerReadBookImpression: (
+      bookId: number,
+      impression: ImpressionForm
+    ) => Promise<BookshelfV1Response.AsObject | undefined>;
+    fetchBooks: () => Promise<void>;
   };
 }
 
 const BookReadRegister = function BookReadRegister(props: Props): ReactElement {
   const book = props.route.params.book;
+  const { registerReadBookImpression, fetchBooks } = props.actions;
 
   const [impressionData, setState] = useState({
     date: new Date(),
-    impression: '',
+    impression: "",
     isDateUnknown: false,
   });
 
-  const handleRegisterButtonClick = () => {
-    props.actions.registerReadBookImpression(book.id, {
+  const handleRegisterButtonClick = useCallback(async () => {
+    await registerReadBookImpression(book.id, {
       impression: impressionData.impression,
-      readOn: dayjs(impressionData.date).format('YYYY-MM-DD'),
+      readOn: dayjs(impressionData.date).format("YYYY-MM-DD"),
     });
-    props.navigation.navigate('Bookshelf');
-  };
+    await fetchBooks();
+
+    props.navigation.navigate("Bookshelf");
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -84,12 +95,14 @@ const BookReadRegister = function BookReadRegister(props: Props): ReactElement {
         <TextInput
           style={styles.impressionForm}
           placeholder="ここに感想を入力"
-          onChangeText={(text) => setState({ ...impressionData, impression: text })}
+          onChangeText={(text) =>
+            setState({ ...impressionData, impression: text })
+          }
           value={impressionData.impression}
           maxLength={1000}
           multiline={true}
         />
-        <View style={{ alignItems: 'center', marginBottom: 20 }}>
+        <View style={{ alignItems: "center", marginBottom: 20 }}>
           <Button onPress={handleRegisterButtonClick} title="本を登録する" />
         </View>
       </ScrollView>
