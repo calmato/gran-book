@@ -25,6 +25,12 @@ export async function getAllBookByUserId(userId: string, token: string) {
   }
 }
 
+/**
+ * バックエンドAPIにアクセスして書籍をユーザーの本棚に登録する非同期関数
+ * @param payload
+ * @param token 認証トークン
+ * @returns
+ */
 export async function registerOwnBook(
   payload: {
     userId: string;
@@ -49,6 +55,12 @@ export async function registerOwnBook(
   }
 }
 
+/**
+ * バックエンドAPIにアクセスし書籍をindexに登録する非同期関数
+ * @param payload
+ * @param token 認証トークン
+ * @returns
+ */
 export async function addBook(
   payload: { book: Partial<ISearchResultItem> },
   token: string
@@ -63,6 +75,12 @@ export async function addBook(
   return res.data;
 }
 
+/**
+ * バックエンドAPIにアクセスしISBNコードから登録済みの書籍を取得する非同期関数
+ * @param payload
+ * @param token
+ * @returns
+ */
 export async function getBookByISBN(payload: { isbn: string }, token: string) {
   const { isbn } = payload;
   const res: AxiosResponse<BookshelfV1Response.AsObject> = await internal.get(
@@ -72,6 +90,12 @@ export async function getBookByISBN(payload: { isbn: string }, token: string) {
   return res.data;
 }
 
+/**
+ * バックエンドAPIにアクセスし書籍IDから関連する感想を全て取得する非同期関数
+ * @param payload
+ * @param token
+ * @returns
+ */
 export async function getAllImpressionByBookId(
   payload: { bookId: number },
   token: string
