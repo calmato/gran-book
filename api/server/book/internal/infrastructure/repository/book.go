@@ -331,7 +331,7 @@ func (r *bookRepository) getOrCreateAuthor(tx *gorm.DB, as ...*book.Author) erro
 		a.CreatedAt = now
 		a.UpdatedAt = now
 
-		err := tx.Table(authorTable).Where("name = ? AND name_kana = ?", a.Name, a.NameKana).FirstOrCreate(&a).Error
+		err := tx.Table(authorTable).Where("name = ? AND name_kana = ?", a.Name, a.NameKana).FirstOrCreate(a).Error
 		if err != nil {
 			return err
 		}
