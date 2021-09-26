@@ -26,7 +26,7 @@ func ToDBError(err error) error {
 		return nil
 	}
 
-	//nolint:scopelint,gocritic
+	//nolint:gocritic
 	switch err.(type) {
 	case *mysql.MySQLError:
 		return fmt.Errorf("%v: %w", err, ErrInternal)
