@@ -138,13 +138,18 @@ func (a *bookApplication) ListUserReview(
 func (a *bookApplication) ListUserMonthlyResult(
 	ctx context.Context, userID, sinceDate, untilDate string,
 ) (book.MonthlyResults, error) {
-	since := datetime.BeginningOfMonth(sinceDate)
-	until := datetime.EndOfMonth(untilDate)
+	since, _ := datetime.ParseDate(sinceDate)
+	until, _ := datetime.ParseDate(untilDate)
 	if since.IsZero() || until.IsZero() {
 		return nil, exception.InvalidRequestValidation.New(errInvalidDateFormat)
 	}
 
-	return a.bookRepository.AggregateReadTotal(ctx, userID, since, until)
+	return a.bookRepository.AggregateReadTotal(
+		ctx,
+		userID,
+		datetime.BeginningOfMonth(since),
+		datetime.EndOfMonth(until),
+	)
 }
 
 func (a *bookApplication) MultiGet(ctx context.Context, bookIDs []int) (book.Books, error) {

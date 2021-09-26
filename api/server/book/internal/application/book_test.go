@@ -494,8 +494,10 @@ func TestBookApplication_ListUserMonthlyResult(t *testing.T) {
 		{
 			name: "success",
 			setup: func(c context.Context, t *testing.T, m *test.Mocks) {
-				since := datetime.BeginningOfMonth("2021-08-01")
-				until := datetime.EndOfMonth("2021-09-01")
+				sinceDate, _ := datetime.ParseDate("2021-08-01")
+				untilDate, _ := datetime.ParseDate("2021-09-01")
+				since := datetime.BeginningOfMonth(sinceDate)
+				until := datetime.EndOfMonth(untilDate)
 				m.BookRepository.EXPECT().
 					AggregateReadTotal(ctx, "00000000-0000-0000-0000-000000000000", since, until).
 					Return(results, nil)

@@ -24,7 +24,7 @@ func TestBookRepository_List(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.BookDB, bookTable)
+	err = mocks.DeleteAll()
 	require.NoError(t, err)
 
 	books := make([]*book.Book, 3)
@@ -42,7 +42,7 @@ func TestBookRepository_List(t *testing.T) {
 		books book.Books
 		isErr bool
 	}
-	testCases := []struct {
+	tests := []struct {
 		name string
 		args args
 		want want
@@ -63,11 +63,11 @@ func TestBookRepository_List(t *testing.T) {
 		},
 	}
 
-	for _, tt := range testCases {
+	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			target := NewBookRepository(mocks.BookDB)
+			target := NewBookRepository(mocks.BookDB, test.Now)
 
 			bs, err := target.List(ctx, tt.args.query)
 			assert.Equal(t, tt.want.isErr, err != nil, err)
@@ -88,9 +88,7 @@ func TestBookRepository_ListBookshelf(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.UserDB, "users")
-	require.NoError(t, err)
-	err = mocks.DeleteAll(mocks.BookDB, bookshelfTable, bookTable)
+	err = mocks.DeleteAll()
 	require.NoError(t, err)
 
 	userID, err := mocks.CreateUser()
@@ -120,7 +118,7 @@ func TestBookRepository_ListBookshelf(t *testing.T) {
 		bookshelves book.Bookshelves
 		isErr       bool
 	}
-	testCases := []struct {
+	tests := []struct {
 		name string
 		args args
 		want want
@@ -141,11 +139,11 @@ func TestBookRepository_ListBookshelf(t *testing.T) {
 		},
 	}
 
-	for _, tt := range testCases {
+	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			target := NewBookRepository(mocks.BookDB)
+			target := NewBookRepository(mocks.BookDB, test.Now)
 
 			bs, err := target.ListBookshelf(ctx, tt.args.query)
 			assert.Equal(t, tt.want.isErr, err != nil, err)
@@ -166,9 +164,7 @@ func TestBookRepository_ListReview(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.UserDB, "users")
-	require.NoError(t, err)
-	err = mocks.DeleteAll(mocks.BookDB, reviewTable, bookTable)
+	err = mocks.DeleteAll()
 	require.NoError(t, err)
 
 	userID, err := mocks.CreateUser()
@@ -195,7 +191,7 @@ func TestBookRepository_ListReview(t *testing.T) {
 		reviews book.Reviews
 		isErr   bool
 	}
-	testCases := []struct {
+	tests := []struct {
 		name string
 		args args
 		want want
@@ -216,11 +212,11 @@ func TestBookRepository_ListReview(t *testing.T) {
 		},
 	}
 
-	for _, tt := range testCases {
+	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			target := NewBookRepository(mocks.BookDB)
+			target := NewBookRepository(mocks.BookDB, test.Now)
 
 			rs, err := target.ListReview(ctx, tt.args.query)
 			assert.Equal(t, tt.want.isErr, err != nil, err)
@@ -241,7 +237,7 @@ func TestBookRepository_Count(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.BookDB, bookTable)
+	err = mocks.DeleteAll()
 	require.NoError(t, err)
 
 	books := make([]*book.Book, 3)
@@ -259,7 +255,7 @@ func TestBookRepository_Count(t *testing.T) {
 		count int
 		isErr bool
 	}
-	testCases := []struct {
+	tests := []struct {
 		name string
 		args args
 		want want
@@ -280,11 +276,11 @@ func TestBookRepository_Count(t *testing.T) {
 		},
 	}
 
-	for _, tt := range testCases {
+	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			target := NewBookRepository(mocks.BookDB)
+			target := NewBookRepository(mocks.BookDB, test.Now)
 
 			count, err := target.Count(ctx, tt.args.query)
 			assert.Equal(t, tt.want.isErr, err != nil, err)
@@ -303,9 +299,7 @@ func TestBookRepository_CountBookshelf(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.UserDB, "users")
-	require.NoError(t, err)
-	err = mocks.DeleteAll(mocks.BookDB, bookshelfTable, bookTable)
+	err = mocks.DeleteAll()
 	require.NoError(t, err)
 
 	userID, err := mocks.CreateUser()
@@ -335,7 +329,7 @@ func TestBookRepository_CountBookshelf(t *testing.T) {
 		count int
 		isErr bool
 	}
-	testCases := []struct {
+	tests := []struct {
 		name string
 		args args
 		want want
@@ -356,11 +350,11 @@ func TestBookRepository_CountBookshelf(t *testing.T) {
 		},
 	}
 
-	for _, tt := range testCases {
+	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			target := NewBookRepository(mocks.BookDB)
+			target := NewBookRepository(mocks.BookDB, test.Now)
 
 			count, err := target.CountBookshelf(ctx, tt.args.query)
 			assert.Equal(t, tt.want.isErr, err != nil, err)
@@ -379,9 +373,7 @@ func TestBookRepository_CountReview(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.UserDB, "users")
-	require.NoError(t, err)
-	err = mocks.DeleteAll(mocks.BookDB, reviewTable, bookTable)
+	err = mocks.DeleteAll()
 	require.NoError(t, err)
 
 	userID, err := mocks.CreateUser()
@@ -408,7 +400,7 @@ func TestBookRepository_CountReview(t *testing.T) {
 		count int
 		isErr bool
 	}
-	testCases := []struct {
+	tests := []struct {
 		name string
 		args args
 		want want
@@ -429,11 +421,11 @@ func TestBookRepository_CountReview(t *testing.T) {
 		},
 	}
 
-	for _, tt := range testCases {
+	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			target := NewBookRepository(mocks.BookDB)
+			target := NewBookRepository(mocks.BookDB, test.Now)
 
 			count, err := target.CountReview(ctx, tt.args.query)
 			assert.Equal(t, tt.want.isErr, err != nil, err)
@@ -452,7 +444,7 @@ func TestBookRepository_MultiGet(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.BookDB, bookTable)
+	err = mocks.DeleteAll()
 	require.NoError(t, err)
 
 	books := make([]*book.Book, 3)
@@ -470,7 +462,7 @@ func TestBookRepository_MultiGet(t *testing.T) {
 		books book.Books
 		isErr bool
 	}
-	testCases := []struct {
+	tests := []struct {
 		name string
 		args args
 		want want
@@ -497,11 +489,11 @@ func TestBookRepository_MultiGet(t *testing.T) {
 		},
 	}
 
-	for _, tt := range testCases {
+	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			target := NewBookRepository(mocks.BookDB)
+			target := NewBookRepository(mocks.BookDB, test.Now)
 
 			bs, err := target.MultiGet(ctx, tt.args.bookIDs)
 			assert.Equal(t, tt.want.isErr, err != nil, err)
@@ -522,7 +514,7 @@ func TestBookRepository_Get(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.BookDB, bookTable)
+	err = mocks.DeleteAll()
 	require.NoError(t, err)
 
 	expectBook := testBook(1, "1234567890123")
@@ -536,7 +528,7 @@ func TestBookRepository_Get(t *testing.T) {
 		book  *book.Book
 		isErr bool
 	}
-	testCases := []struct {
+	tests := []struct {
 		name string
 		args args
 		want want
@@ -557,17 +549,17 @@ func TestBookRepository_Get(t *testing.T) {
 				bookID: 2,
 			},
 			want: want{
-				book:  nil,
+				book:  &book.Book{},
 				isErr: true,
 			},
 		},
 	}
 
-	for _, tt := range testCases {
+	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			target := NewBookRepository(mocks.BookDB)
+			target := NewBookRepository(mocks.BookDB, test.Now)
 
 			b, err := target.Get(ctx, tt.args.bookID)
 			assert.Equal(t, tt.want.isErr, err != nil, err)
@@ -586,7 +578,7 @@ func TestBookRepository_GetByIsbn(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.BookDB, bookTable)
+	err = mocks.DeleteAll()
 	require.NoError(t, err)
 
 	expectBook := testBook(1, "1234567890123")
@@ -600,7 +592,7 @@ func TestBookRepository_GetByIsbn(t *testing.T) {
 		book  *book.Book
 		isErr bool
 	}
-	testCases := []struct {
+	tests := []struct {
 		name string
 		args args
 		want want
@@ -621,17 +613,17 @@ func TestBookRepository_GetByIsbn(t *testing.T) {
 				isbn: "",
 			},
 			want: want{
-				book:  nil,
+				book:  &book.Book{},
 				isErr: true,
 			},
 		},
 	}
 
-	for _, tt := range testCases {
+	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			target := NewBookRepository(mocks.BookDB)
+			target := NewBookRepository(mocks.BookDB, test.Now)
 
 			b, err := target.GetByIsbn(ctx, tt.args.isbn)
 			assert.Equal(t, tt.want.isErr, err != nil, err)
@@ -650,7 +642,7 @@ func TestBookRepository_GetBookIDByIsbn(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.BookDB, bookTable)
+	err = mocks.DeleteAll()
 	require.NoError(t, err)
 
 	expectBook := testBook(1, "1234567890123")
@@ -664,7 +656,7 @@ func TestBookRepository_GetBookIDByIsbn(t *testing.T) {
 		bookID int
 		isErr  bool
 	}
-	testCases := []struct {
+	tests := []struct {
 		name string
 		args args
 		want want
@@ -691,11 +683,11 @@ func TestBookRepository_GetBookIDByIsbn(t *testing.T) {
 		},
 	}
 
-	for _, tt := range testCases {
+	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			target := NewBookRepository(mocks.BookDB)
+			target := NewBookRepository(mocks.BookDB, test.Now)
 
 			bookID, err := target.GetBookIDByIsbn(ctx, tt.args.isbn)
 			assert.Equal(t, tt.want.isErr, err != nil, err)
@@ -714,9 +706,7 @@ func TestBookRepository_GetBookshelfByUserIDAndBookID(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.UserDB, "users")
-	require.NoError(t, err)
-	err = mocks.DeleteAll(mocks.BookDB, bookshelfTable, bookTable)
+	err = mocks.DeleteAll()
 	require.NoError(t, err)
 
 	userID, err := mocks.CreateUser()
@@ -740,7 +730,7 @@ func TestBookRepository_GetBookshelfByUserIDAndBookID(t *testing.T) {
 		bookshelf *book.Bookshelf
 		isErr     bool
 	}
-	testCases := []struct {
+	tests := []struct {
 		name string
 		args args
 		want want
@@ -763,17 +753,17 @@ func TestBookRepository_GetBookshelfByUserIDAndBookID(t *testing.T) {
 				bookID: 0,
 			},
 			want: want{
-				bookshelf: nil,
+				bookshelf: &book.Bookshelf{},
 				isErr:     true,
 			},
 		},
 	}
 
-	for _, tt := range testCases {
+	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			target := NewBookRepository(mocks.BookDB)
+			target := NewBookRepository(mocks.BookDB, test.Now)
 
 			b, err := target.GetBookshelfByUserIDAndBookID(ctx, tt.args.userID, tt.args.bookID)
 			assert.Equal(t, tt.want.isErr, err != nil, err)
@@ -792,9 +782,7 @@ func TestBookRepository_GetBookshelfIDByUserIDAndBookID(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.UserDB, "users")
-	require.NoError(t, err)
-	err = mocks.DeleteAll(mocks.BookDB, bookshelfTable, bookTable)
+	err = mocks.DeleteAll()
 	require.NoError(t, err)
 
 	userID, err := mocks.CreateUser()
@@ -818,7 +806,7 @@ func TestBookRepository_GetBookshelfIDByUserIDAndBookID(t *testing.T) {
 		bookshelfID int
 		isErr       bool
 	}
-	testCases := []struct {
+	tests := []struct {
 		name string
 		args args
 		want want
@@ -847,11 +835,11 @@ func TestBookRepository_GetBookshelfIDByUserIDAndBookID(t *testing.T) {
 		},
 	}
 
-	for _, tt := range testCases {
+	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			target := NewBookRepository(mocks.BookDB)
+			target := NewBookRepository(mocks.BookDB, test.Now)
 
 			bookshelfID, err := target.GetBookshelfIDByUserIDAndBookID(ctx, tt.args.userID, tt.args.bookID)
 			assert.Equal(t, tt.want.isErr, err != nil, err)
@@ -870,9 +858,7 @@ func TestBookRepository_GetReview(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.UserDB, "users")
-	require.NoError(t, err)
-	err = mocks.DeleteAll(mocks.BookDB, reviewTable, bookTable)
+	err = mocks.DeleteAll()
 	require.NoError(t, err)
 
 	userID, err := mocks.CreateUser()
@@ -894,7 +880,7 @@ func TestBookRepository_GetReview(t *testing.T) {
 		review *book.Review
 		isErr  bool
 	}
-	testCases := []struct {
+	tests := []struct {
 		name string
 		args args
 		want want
@@ -915,17 +901,17 @@ func TestBookRepository_GetReview(t *testing.T) {
 				reviewID: 0,
 			},
 			want: want{
-				review: nil,
+				review: &book.Review{},
 				isErr:  true,
 			},
 		},
 	}
 
-	for _, tt := range testCases {
+	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			target := NewBookRepository(mocks.BookDB)
+			target := NewBookRepository(mocks.BookDB, test.Now)
 
 			r, err := target.GetReview(ctx, tt.args.reviewID)
 			assert.Equal(t, tt.want.isErr, err != nil, err)
@@ -944,9 +930,7 @@ func TestBookRepository_GetReviewByUserIDAndBookID(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.UserDB, "users")
-	require.NoError(t, err)
-	err = mocks.DeleteAll(mocks.BookDB, reviewTable, bookTable)
+	err = mocks.DeleteAll()
 	require.NoError(t, err)
 
 	userID, err := mocks.CreateUser()
@@ -969,7 +953,7 @@ func TestBookRepository_GetReviewByUserIDAndBookID(t *testing.T) {
 		review *book.Review
 		isErr  bool
 	}
-	testCases := []struct {
+	tests := []struct {
 		name string
 		args args
 		want want
@@ -992,17 +976,17 @@ func TestBookRepository_GetReviewByUserIDAndBookID(t *testing.T) {
 				bookID: 0,
 			},
 			want: want{
-				review: nil,
+				review: &book.Review{},
 				isErr:  true,
 			},
 		},
 	}
 
-	for _, tt := range testCases {
+	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			target := NewBookRepository(mocks.BookDB)
+			target := NewBookRepository(mocks.BookDB, test.Now)
 
 			r, err := target.GetReviewByUserIDAndBookID(ctx, tt.args.userID, tt.args.bookID)
 			assert.Equal(t, tt.want.isErr, err != nil, err)
@@ -1021,9 +1005,7 @@ func TestBookRepository_GetReviewIDByUserIDAndBookID(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.UserDB, "users")
-	require.NoError(t, err)
-	err = mocks.DeleteAll(mocks.BookDB, reviewTable, bookTable)
+	err = mocks.DeleteAll()
 	require.NoError(t, err)
 
 	userID, err := mocks.CreateUser()
@@ -1046,7 +1028,7 @@ func TestBookRepository_GetReviewIDByUserIDAndBookID(t *testing.T) {
 		reviewID int
 		isErr    bool
 	}
-	testCases := []struct {
+	tests := []struct {
 		name string
 		args args
 		want want
@@ -1075,11 +1057,11 @@ func TestBookRepository_GetReviewIDByUserIDAndBookID(t *testing.T) {
 		},
 	}
 
-	for _, tt := range testCases {
+	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			target := NewBookRepository(mocks.BookDB)
+			target := NewBookRepository(mocks.BookDB, test.Now)
 
 			reviewID, err := target.GetReviewIDByUserIDAndBookID(ctx, tt.args.userID, tt.args.bookID)
 			assert.Equal(t, tt.want.isErr, err != nil, err)
@@ -1098,10 +1080,10 @@ func TestBookRepository_GetAuthorByName(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.BookDB, authorTable)
+	err = mocks.DeleteAll()
 	require.NoError(t, err)
 
-	expectAuthor := testAuthor(1, "有沢 ゆう希")
+	expectAuthor := testAuthor(1, "有沢 ゆう希", "アリサワ ユウキ")
 	err = mocks.BookDB.DB.Table(authorTable).Create(expectAuthor).Error
 	require.NoError(t, err)
 
@@ -1112,7 +1094,7 @@ func TestBookRepository_GetAuthorByName(t *testing.T) {
 		author *book.Author
 		isErr  bool
 	}
-	testCases := []struct {
+	tests := []struct {
 		name string
 		args args
 		want want
@@ -1133,17 +1115,17 @@ func TestBookRepository_GetAuthorByName(t *testing.T) {
 				name: "",
 			},
 			want: want{
-				author: nil,
+				author: &book.Author{},
 				isErr:  true,
 			},
 		},
 	}
 
-	for _, tt := range testCases {
+	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			target := NewBookRepository(mocks.BookDB)
+			target := NewBookRepository(mocks.BookDB, test.Now)
 
 			a, err := target.GetAuthorByName(ctx, tt.args.name)
 			assert.Equal(t, tt.want.isErr, err != nil, err)
@@ -1162,10 +1144,10 @@ func TestBookRepository_GetAuthorIDByName(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.BookDB, authorTable)
+	err = mocks.DeleteAll()
 	require.NoError(t, err)
 
-	expectAuthor := testAuthor(1, "有沢 ゆう希")
+	expectAuthor := testAuthor(1, "有沢 ゆう希", "アリサワ ユウキ")
 	err = mocks.BookDB.DB.Table(authorTable).Create(expectAuthor).Error
 	require.NoError(t, err)
 
@@ -1176,7 +1158,7 @@ func TestBookRepository_GetAuthorIDByName(t *testing.T) {
 		authorID int
 		isErr    bool
 	}
-	testCases := []struct {
+	tests := []struct {
 		name string
 		args args
 		want want
@@ -1203,11 +1185,11 @@ func TestBookRepository_GetAuthorIDByName(t *testing.T) {
 		},
 	}
 
-	for _, tt := range testCases {
+	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			target := NewBookRepository(mocks.BookDB)
+			target := NewBookRepository(mocks.BookDB, test.Now)
 
 			authorID, err := target.GetAuthorIDByName(ctx, tt.args.name)
 			assert.Equal(t, tt.want.isErr, err != nil, err)
@@ -1226,19 +1208,24 @@ func TestBookRepository_Create(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
+	err = mocks.DeleteAll()
+	require.NoError(t, err)
+
 	type args struct {
 		book *book.Book
 	}
 	type want struct {
 		isErr bool
 	}
-	testCases := []struct {
-		name string
-		args args
-		want want
+	tests := []struct {
+		name  string
+		setup func(t *testing.T, mocks *test.DBMocks)
+		args  args
+		want  want
 	}{
 		{
-			name: "success",
+			name:  "success",
+			setup: func(t *testing.T, mocks *test.DBMocks) {},
 			args: args{
 				book: &book.Book{
 					Title:          "小説　ちはやふる　上の句",
@@ -1251,8 +1238,6 @@ func TestBookRepository_Create(t *testing.T) {
 					RakutenURL:     "https://books.rakuten.co.jp/rb/15271426/",
 					RakutenSize:    "コミック",
 					RakutenGenreID: "001004008001/001004008003/001019001",
-					CreatedAt:      test.TimeMock,
-					UpdatedAt:      test.TimeMock,
 				},
 			},
 			want: want{
@@ -1260,278 +1245,16 @@ func TestBookRepository_Create(t *testing.T) {
 			},
 		},
 		{
-			name: "failed: internal error",
-			args: args{
-				book: &book.Book{},
+			name: "success with association",
+			setup: func(t *testing.T, mocks *test.DBMocks) {
+				authors := make(book.Authors, 2)
+				authors[0] = testAuthor(1, "有沢 ゆう希", "アリサワ ユウキ")
+				authors[1] = testAuthor(2, "末次 由紀", "スエツグ ユキ")
+				err := mocks.BookDB.DB.Table(authorTable).Create(&authors).Error
+				assert.NoError(t, err)
 			},
-			want: want{
-				isErr: true,
-			},
-		},
-	}
-
-	for _, tt := range testCases {
-		tt := tt
-		t.Run(tt.name, func(t *testing.T) {
-			target := NewBookRepository(mocks.BookDB)
-
-			err = mocks.DeleteAll(mocks.BookDB, bookTable)
-			require.NoError(t, err)
-
-			err := target.Create(ctx, tt.args.book)
-			assert.Equal(t, tt.want.isErr, err != nil, err)
-		})
-	}
-}
-
-func TestBookRepository_CreateBookshelf(t *testing.T) {
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	mocks, err := test.NewDBMock(ctrl)
-	require.NoError(t, err)
-
-	err = mocks.DeleteAll(mocks.BookDB, bookTable)
-	require.NoError(t, err)
-
-	userID, err := mocks.CreateUser()
-	require.NoError(t, err)
-
-	b := testBook(1, "1234567890123")
-	err = mocks.BookDB.DB.Table(bookTable).Create(b).Error
-	require.NoError(t, err)
-
-	type args struct {
-		bookshelf *book.Bookshelf
-	}
-	type want struct {
-		isErr bool
-	}
-	testCases := []struct {
-		name string
-		args args
-		want want
-	}{
-		{
-			name: "success",
-			args: args{
-				bookshelf: &book.Bookshelf{
-					BookID:    b.ID,
-					UserID:    userID,
-					Status:    book.ReadStatus,
-					ReadOn:    datetime.StringToDate("2021-07-24"),
-					CreatedAt: test.TimeMock,
-					UpdatedAt: test.TimeMock,
-				},
-			},
-			want: want{
-				isErr: false,
-			},
-		},
-		{
-			name: "success: ReadOn is zero",
-			args: args{
-				bookshelf: &book.Bookshelf{
-					BookID:    b.ID,
-					UserID:    userID,
-					Status:    book.ReadStatus,
-					ReadOn:    time.Time{},
-					CreatedAt: test.TimeMock,
-					UpdatedAt: test.TimeMock,
-				},
-			},
-			want: want{
-				isErr: false,
-			},
-		},
-		{
-			name: "failed: internal error",
-			args: args{
-				bookshelf: &book.Bookshelf{},
-			},
-			want: want{
-				isErr: true,
-			},
-		},
-	}
-
-	for _, tt := range testCases {
-		tt := tt
-		t.Run(tt.name, func(t *testing.T) {
-			target := NewBookRepository(mocks.BookDB)
-
-			err := mocks.DeleteAll(mocks.BookDB, bookshelfTable)
-			require.NoError(t, err)
-
-			err = target.CreateBookshelf(ctx, tt.args.bookshelf)
-			assert.Equal(t, tt.want.isErr, err != nil, err)
-		})
-	}
-}
-
-func TestBookRepository_CreateReview(t *testing.T) {
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	mocks, err := test.NewDBMock(ctrl)
-	require.NoError(t, err)
-
-	err = mocks.DeleteAll(mocks.BookDB, bookTable)
-	require.NoError(t, err)
-
-	userID, err := mocks.CreateUser()
-	require.NoError(t, err)
-
-	b := testBook(1, "1234567890123")
-	err = mocks.BookDB.DB.Table(bookTable).Create(b).Error
-	require.NoError(t, err)
-
-	type args struct {
-		review *book.Review
-	}
-	type want struct {
-		isErr bool
-	}
-	testCases := []struct {
-		name string
-		args args
-		want want
-	}{
-		{
-			name: "success",
-			args: args{
-				review: &book.Review{
-					BookID:     b.ID,
-					UserID:     userID,
-					Score:      3,
-					Impression: "テストレビューです",
-					CreatedAt:  test.TimeMock,
-					UpdatedAt:  test.TimeMock,
-				},
-			},
-			want: want{
-				isErr: false,
-			},
-		},
-		{
-			name: "failed: internal error",
-			args: args{
-				review: &book.Review{},
-			},
-			want: want{
-				isErr: true,
-			},
-		},
-	}
-
-	for _, tt := range testCases {
-		tt := tt
-		t.Run(tt.name, func(t *testing.T) {
-			target := NewBookRepository(mocks.BookDB)
-
-			err := mocks.DeleteAll(mocks.BookDB, reviewTable)
-			require.NoError(t, err)
-
-			err = target.CreateReview(ctx, tt.args.review)
-			assert.Equal(t, tt.want.isErr, err != nil, err)
-		})
-	}
-}
-
-func TestBookRepository_CreateAuthor(t *testing.T) {
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	mocks, err := test.NewDBMock(ctrl)
-	require.NoError(t, err)
-
-	type args struct {
-		author *book.Author
-	}
-	type want struct {
-		isErr bool
-	}
-	testCases := []struct {
-		name string
-		args args
-		want want
-	}{
-		{
-			name: "success",
-			args: args{
-				author: &book.Author{
-					Name:      "有沢 ゆう希",
-					NameKana:  "アリサワ ユウキ",
-					CreatedAt: test.TimeMock,
-					UpdatedAt: test.TimeMock,
-				},
-			},
-			want: want{
-				isErr: false,
-			},
-		},
-		{
-			name: "failed: internal error",
-			args: args{
-				author: &book.Author{},
-			},
-			want: want{
-				isErr: true,
-			},
-		},
-	}
-
-	for _, tt := range testCases {
-		tt := tt
-		t.Run(tt.name, func(t *testing.T) {
-			target := NewBookRepository(mocks.BookDB)
-
-			err := mocks.DeleteAll(mocks.BookDB, authorTable)
-			require.NoError(t, err)
-
-			err = target.CreateAuthor(ctx, tt.args.author)
-			assert.Equal(t, tt.want.isErr, err != nil, err)
-		})
-	}
-}
-
-func TestBookRepository_Update(t *testing.T) {
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	mocks, err := test.NewDBMock(ctrl)
-	require.NoError(t, err)
-
-	b := testBook(1, "1234567890123")
-
-	type args struct {
-		book *book.Book
-	}
-	type want struct {
-		isErr bool
-	}
-	testCases := []struct {
-		name string
-		args args
-		want want
-	}{
-		{
-			name: "success",
 			args: args{
 				book: &book.Book{
-					ID:             b.ID,
 					Title:          "小説　ちはやふる　上の句",
 					TitleKana:      "ショウセツ チハヤフルカミノク",
 					Description:    "綾瀬千早は高校入学と同時に、競技かるた部を作ろうと奔走する。幼馴染の太一と仲間を集め、夏の全国大会に出場するためだ。強くなって、新と再会したい。幼い頃かるたを取り合った、新に寄せる千早の秘めた想いに気づきながらも、太一は千早を守り立てる。それぞれの青春を懸けた、一途な情熱の物語が幕開ける。",
@@ -1542,8 +1265,16 @@ func TestBookRepository_Update(t *testing.T) {
 					RakutenURL:     "https://books.rakuten.co.jp/rb/15271426/",
 					RakutenSize:    "コミック",
 					RakutenGenreID: "001004008001/001004008003/001019001",
-					CreatedAt:      test.TimeMock,
-					UpdatedAt:      test.TimeMock,
+					Authors: []*book.Author{
+						{
+							Name:     "テスト 著者",
+							NameKana: "てすと ちょしゃ",
+						},
+						{
+							Name:     "有沢 ゆう希",
+							NameKana: "アリサワ ユウキ",
+						},
+					},
 				},
 			},
 			want: want{
@@ -1551,7 +1282,8 @@ func TestBookRepository_Update(t *testing.T) {
 			},
 		},
 		{
-			name: "failed: internal error",
+			name:  "failed: internal error",
+			setup: func(t *testing.T, mocks *test.DBMocks) {},
 			args: args{
 				book: &book.Book{},
 			},
@@ -1559,78 +1291,28 @@ func TestBookRepository_Update(t *testing.T) {
 				isErr: true,
 			},
 		},
-	}
-
-	for _, tt := range testCases {
-		tt := tt
-		t.Run(tt.name, func(t *testing.T) {
-			target := NewBookRepository(mocks.BookDB)
-
-			err = mocks.DeleteAll(mocks.BookDB, bookTable)
-			require.NoError(t, err)
-
-			err = mocks.BookDB.DB.Table(bookTable).Create(b).Error
-			require.NoError(t, err)
-
-			err := target.Update(ctx, tt.args.book)
-			assert.Equal(t, tt.want.isErr, err != nil, err)
-		})
-	}
-}
-
-func TestBookRepository_UpdateBookshelf(t *testing.T) {
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	mocks, err := test.NewDBMock(ctrl)
-	require.NoError(t, err)
-
-	err = mocks.DeleteAll(mocks.BookDB, bookTable)
-	require.NoError(t, err)
-
-	userID, err := mocks.CreateUser()
-	require.NoError(t, err)
-
-	b := testBook(1, "1234567890123")
-	err = mocks.BookDB.DB.Table(bookTable).Create(b).Error
-	require.NoError(t, err)
-
-	bookshelf := testBookshelf(1, b.ID, userID)
-
-	type args struct {
-		bookshelf *book.Bookshelf
-	}
-	type want struct {
-		isErr bool
-	}
-	testCases := []struct {
-		name string
-		args args
-		want want
-	}{
 		{
-			name: "success",
+			name:  "failed: internal error with association",
+			setup: func(t *testing.T, mocks *test.DBMocks) {},
 			args: args{
-				bookshelf: &book.Bookshelf{
-					ID:        bookshelf.ID,
-					BookID:    b.ID,
-					UserID:    userID,
-					Status:    book.ReadStatus,
-					CreatedAt: test.TimeMock,
-					UpdatedAt: test.TimeMock,
+				book: &book.Book{
+					Title:          "小説　ちはやふる　上の句",
+					TitleKana:      "ショウセツ チハヤフルカミノク",
+					Description:    "綾瀬千早は高校入学と同時に、競技かるた部を作ろうと奔走する。幼馴染の太一と仲間を集め、夏の全国大会に出場するためだ。強くなって、新と再会したい。幼い頃かるたを取り合った、新に寄せる千早の秘めた想いに気づきながらも、太一は千早を守り立てる。それぞれの青春を懸けた、一途な情熱の物語が幕開ける。",
+					Isbn:           "1234567890123",
+					Publisher:      "講談社",
+					PublishedOn:    "2018-01-16",
+					ThumbnailURL:   "https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/8426/9784062938426.jpg?_ex=120x120",
+					RakutenURL:     "https://books.rakuten.co.jp/rb/15271426/",
+					RakutenSize:    "コミック",
+					RakutenGenreID: "001004008001/001004008003/001019001",
+					Authors: []*book.Author{
+						{
+							Name:     "",
+							NameKana: "",
+						},
+					},
 				},
-			},
-			want: want{
-				isErr: false,
-			},
-		},
-		{
-			name: "failed: internal error",
-			args: args{
-				bookshelf: &book.Bookshelf{},
 			},
 			want: want{
 				isErr: true,
@@ -1638,96 +1320,15 @@ func TestBookRepository_UpdateBookshelf(t *testing.T) {
 		},
 	}
 
-	for _, tt := range testCases {
+	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			target := NewBookRepository(mocks.BookDB)
-
-			err := mocks.DeleteAll(mocks.BookDB, bookshelfTable)
+			err := mocks.Delete(mocks.BookDB, bookTable, authorTable, authorBookTable)
 			require.NoError(t, err)
+			tt.setup(t, mocks)
 
-			err = mocks.BookDB.DB.Table(bookshelfTable).Create(bookshelf).Error
-			require.NoError(t, err)
-
-			err = target.UpdateBookshelf(ctx, tt.args.bookshelf)
-			assert.Equal(t, tt.want.isErr, err != nil, err)
-		})
-	}
-}
-
-func TestBookRepository_UpdateReview(t *testing.T) {
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	mocks, err := test.NewDBMock(ctrl)
-	require.NoError(t, err)
-
-	err = mocks.DeleteAll(mocks.BookDB, bookTable)
-	require.NoError(t, err)
-
-	userID, err := mocks.CreateUser()
-	require.NoError(t, err)
-
-	b := testBook(1, "1234567890123")
-	err = mocks.BookDB.DB.Table(bookTable).Create(b).Error
-	require.NoError(t, err)
-
-	review := testReview(1, b.ID, userID)
-
-	type args struct {
-		review *book.Review
-	}
-	type want struct {
-		isErr bool
-	}
-	testCases := []struct {
-		name string
-		args args
-		want want
-	}{
-		{
-			name: "success",
-			args: args{
-				review: &book.Review{
-					ID:         review.ID,
-					BookID:     b.ID,
-					UserID:     userID,
-					Score:      3,
-					Impression: "テストレビューです",
-					CreatedAt:  test.TimeMock,
-					UpdatedAt:  test.TimeMock,
-				},
-			},
-			want: want{
-				isErr: false,
-			},
-		},
-		{
-			name: "failed: internal error",
-			args: args{
-				review: &book.Review{},
-			},
-			want: want{
-				isErr: true,
-			},
-		},
-	}
-
-	for _, tt := range testCases {
-		tt := tt
-		t.Run(tt.name, func(t *testing.T) {
-			target := NewBookRepository(mocks.BookDB)
-
-			err := mocks.DeleteAll(mocks.BookDB, reviewTable)
-			require.NoError(t, err)
-
-			err = mocks.BookDB.DB.Table(reviewTable).Create(review).Error
-			require.NoError(t, err)
-
-			err = target.UpdateReview(ctx, tt.args.review)
+			target := NewBookRepository(mocks.BookDB, test.Now)
+			err = target.Create(ctx, tt.args.book)
 			assert.Equal(t, tt.want.isErr, err != nil, err)
 		})
 	}
@@ -1743,19 +1344,24 @@ func TestBookRepository_MultipleCreate(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
+	err = mocks.DeleteAll()
+	require.NoError(t, err)
+
 	type args struct {
 		books book.Books
 	}
 	type want struct {
 		isErr bool
 	}
-	testCases := []struct {
-		name string
-		args args
-		want want
+	tests := []struct {
+		name  string
+		setup func(t *testing.T, mocks *test.DBMocks)
+		args  args
+		want  want
 	}{
 		{
-			name: "success",
+			name:  "success",
+			setup: func(t *testing.T, mocks *test.DBMocks) {},
 			args: args{
 				books: []*book.Book{
 					{
@@ -1769,8 +1375,6 @@ func TestBookRepository_MultipleCreate(t *testing.T) {
 						RakutenURL:     "https://books.rakuten.co.jp/rb/15271426/",
 						RakutenSize:    "コミック",
 						RakutenGenreID: "001004008001/001004008003/001019001",
-						CreatedAt:      test.TimeMock,
-						UpdatedAt:      test.TimeMock,
 					},
 					{
 						Title:          "小説　ちはやふる　上の句",
@@ -1783,8 +1387,6 @@ func TestBookRepository_MultipleCreate(t *testing.T) {
 						RakutenURL:     "https://books.rakuten.co.jp/rb/15271426/",
 						RakutenSize:    "コミック",
 						RakutenGenreID: "001004008001/001004008003/001019001",
-						CreatedAt:      test.TimeMock,
-						UpdatedAt:      test.TimeMock,
 					},
 				},
 			},
@@ -1793,16 +1395,8 @@ func TestBookRepository_MultipleCreate(t *testing.T) {
 			},
 		},
 		{
-			name: "success: not found",
-			args: args{
-				books: []*book.Book{},
-			},
-			want: want{
-				isErr: false,
-			},
-		},
-		{
-			name: "failed: internal error",
+			name:  "failed: internal error",
+			setup: func(t *testing.T, mocks *test.DBMocks) {},
 			args: args{
 				books: []*book.Book{{}},
 			},
@@ -1810,17 +1404,450 @@ func TestBookRepository_MultipleCreate(t *testing.T) {
 				isErr: true,
 			},
 		},
+		{
+			name:  "failed: length 0",
+			setup: func(t *testing.T, mocks *test.DBMocks) {},
+			args: args{
+				books: []*book.Book{},
+			},
+			want: want{
+				isErr: true,
+			},
+		},
+		{
+			name:  "failed: internal error with association",
+			setup: func(t *testing.T, mocks *test.DBMocks) {},
+			args: args{
+				books: []*book.Book{
+					{
+						Title:          "小説　ちはやふる　上の句",
+						TitleKana:      "ショウセツ チハヤフルカミノク",
+						Description:    "綾瀬千早は高校入学と同時に、競技かるた部を作ろうと奔走する。幼馴染の太一と仲間を集め、夏の全国大会に出場するためだ。強くなって、新と再会したい。幼い頃かるたを取り合った、新に寄せる千早の秘めた想いに気づきながらも、太一は千早を守り立てる。それぞれの青春を懸けた、一途な情熱の物語が幕開ける。",
+						Isbn:           "1234567890123",
+						Publisher:      "講談社",
+						PublishedOn:    "2018-01-16",
+						ThumbnailURL:   "https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/8426/9784062938426.jpg?_ex=120x120",
+						RakutenURL:     "https://books.rakuten.co.jp/rb/15271426/",
+						RakutenSize:    "コミック",
+						RakutenGenreID: "001004008001/001004008003/001019001",
+					},
+					{
+						Title:          "小説　ちはやふる　上の句",
+						TitleKana:      "ショウセツ チハヤフルカミノク",
+						Description:    "綾瀬千早は高校入学と同時に、競技かるた部を作ろうと奔走する。幼馴染の太一と仲間を集め、夏の全国大会に出場するためだ。強くなって、新と再会したい。幼い頃かるたを取り合った、新に寄せる千早の秘めた想いに気づきながらも、太一は千早を守り立てる。それぞれの青春を懸けた、一途な情熱の物語が幕開ける。",
+						Isbn:           "2345678901234",
+						Publisher:      "講談社",
+						PublishedOn:    "2018-01-16",
+						ThumbnailURL:   "https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/8426/9784062938426.jpg?_ex=120x120",
+						RakutenURL:     "https://books.rakuten.co.jp/rb/15271426/",
+						RakutenSize:    "コミック",
+						RakutenGenreID: "001004008001/001004008003/001019001",
+						Authors: []*book.Author{
+							{
+								Name:     "",
+								NameKana: "",
+							},
+						},
+					},
+				},
+			},
+			want: want{
+				isErr: true,
+			},
+		},
 	}
 
-	for _, tt := range testCases {
+	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			target := NewBookRepository(mocks.BookDB)
-
-			err = mocks.DeleteAll(mocks.BookDB, bookTable)
+			err := mocks.Delete(mocks.BookDB, bookTable, authorTable, authorBookTable)
 			require.NoError(t, err)
+			tt.setup(t, mocks)
 
-			err := target.MultipleCreate(ctx, tt.args.books)
+			target := NewBookRepository(mocks.BookDB, test.Now)
+			err = target.MultipleCreate(ctx, tt.args.books)
+			assert.Equal(t, tt.want.isErr, err != nil, err)
+		})
+	}
+}
+
+func TestBookRepository_CreateBookshelf(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mocks, err := test.NewDBMock(ctrl)
+	require.NoError(t, err)
+
+	err = mocks.DeleteAll()
+	require.NoError(t, err)
+
+	userID, err := mocks.CreateUser()
+	require.NoError(t, err)
+
+	type args struct {
+		bookshelf *book.Bookshelf
+	}
+	type want struct {
+		isErr bool
+	}
+	tests := []struct {
+		name  string
+		setup func(t *testing.T, mocks *test.DBMocks)
+		args  args
+		want  want
+	}{
+		{
+			name: "success",
+			setup: func(t *testing.T, mocks *test.DBMocks) {
+				b := testBook(1, "1234567890123")
+				err = mocks.BookDB.DB.Table(bookTable).Create(b).Error
+				require.NoError(t, err)
+			},
+			args: args{
+				bookshelf: &book.Bookshelf{
+					BookID: 1,
+					UserID: userID,
+					Status: book.ReadStatus,
+				},
+			},
+			want: want{
+				isErr: false,
+			},
+		},
+		{
+			name: "success to recreate",
+			setup: func(t *testing.T, mocks *test.DBMocks) {
+				b := testBook(1, "1234567890123")
+				err = mocks.BookDB.DB.Table(bookTable).Create(b).Error
+				require.NoError(t, err)
+				rv := testReview(1, b.ID, userID)
+				err := mocks.BookDB.DB.Table(reviewTable).Create(&rv).Error
+				assert.NoError(t, err)
+			},
+			args: args{
+				bookshelf: &book.Bookshelf{
+					BookID: 1,
+					UserID: userID,
+					Status: book.ReadStatus,
+				},
+			},
+			want: want{
+				isErr: false,
+			},
+		},
+		{
+			name: "success with read on",
+			setup: func(t *testing.T, mocks *test.DBMocks) {
+				b := testBook(1, "1234567890123")
+				err = mocks.BookDB.DB.Table(bookTable).Create(b).Error
+				require.NoError(t, err)
+			},
+			args: args{
+				bookshelf: &book.Bookshelf{
+					BookID: 1,
+					UserID: userID,
+					Status: book.ReadStatus,
+					ReadOn: test.DateMock,
+				},
+			},
+			want: want{
+				isErr: false,
+			},
+		},
+		{
+			name: "success with association",
+			setup: func(t *testing.T, mocks *test.DBMocks) {
+				b := testBook(1, "1234567890123")
+				err = mocks.BookDB.DB.Table(bookTable).Create(b).Error
+				require.NoError(t, err)
+			},
+			args: args{
+				bookshelf: &book.Bookshelf{
+					BookID: 1,
+					UserID: userID,
+					Status: book.ReadStatus,
+					Review: &book.Review{
+						BookID:     1,
+						Impression: "テスト感想です。",
+					},
+				},
+			},
+			want: want{
+				isErr: false,
+			},
+		},
+		{
+			name: "success with association and read on",
+			setup: func(t *testing.T, mocks *test.DBMocks) {
+				b := testBook(1, "1234567890123")
+				err = mocks.BookDB.DB.Table(bookTable).Create(b).Error
+				require.NoError(t, err)
+			},
+			args: args{
+				bookshelf: &book.Bookshelf{
+					BookID: 1,
+					UserID: userID,
+					Status: book.ReadStatus,
+					ReadOn: test.DateMock,
+					Review: &book.Review{
+						BookID:     1,
+						UserID:     userID,
+						Impression: "テスト感想です。",
+					},
+				},
+			},
+			want: want{
+				isErr: false,
+			},
+		},
+		{
+			name: "success to recreate with association",
+			setup: func(t *testing.T, mocks *test.DBMocks) {
+				b := testBook(1, "1234567890123")
+				err = mocks.BookDB.DB.Table(bookTable).Create(b).Error
+				require.NoError(t, err)
+				rv := testReview(1, b.ID, userID)
+				err := mocks.BookDB.DB.Table(reviewTable).Create(&rv).Error
+				assert.NoError(t, err)
+			},
+			args: args{
+				bookshelf: &book.Bookshelf{
+					BookID: 1,
+					UserID: userID,
+					Status: book.ReadStatus,
+					Review: &book.Review{
+						BookID:     1,
+						Impression: "テスト感想です。",
+					},
+				},
+			},
+			want: want{
+				isErr: false,
+			},
+		},
+		{
+			name: "success to stacked status with association",
+			setup: func(t *testing.T, mocks *test.DBMocks) {
+				b := testBook(1, "1234567890123")
+				err = mocks.BookDB.DB.Table(bookTable).Create(b).Error
+				require.NoError(t, err)
+				rv := testReview(1, b.ID, userID)
+				err := mocks.BookDB.DB.Table(reviewTable).Create(&rv).Error
+				assert.NoError(t, err)
+			},
+			args: args{
+				bookshelf: &book.Bookshelf{
+					BookID: 1,
+					UserID: userID,
+					Status: book.StackedStatus,
+					Review: &book.Review{
+						BookID:     1,
+						Impression: "テスト感想です。",
+					},
+				},
+			},
+			want: want{
+				isErr: false,
+			},
+		},
+		{
+			name:  "failed: internal error",
+			setup: func(t *testing.T, mocks *test.DBMocks) {},
+			args: args{
+				bookshelf: &book.Bookshelf{},
+			},
+			want: want{
+				isErr: true,
+			},
+		},
+		{
+			name:  "failed: internal error with association",
+			setup: func(t *testing.T, mocks *test.DBMocks) {},
+			args: args{
+				bookshelf: &book.Bookshelf{
+					BookID: 1,
+					UserID: userID,
+					Status: book.ReadStatus,
+					ReadOn: test.DateMock,
+					Review: &book.Review{
+						BookID: 0,
+						UserID: userID,
+					},
+				},
+			},
+			want: want{
+				isErr: true,
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			err := mocks.Delete(mocks.BookDB, bookshelfTable, reviewTable, bookTable)
+			require.NoError(t, err)
+			tt.setup(t, mocks)
+
+			target := NewBookRepository(mocks.BookDB, test.Now)
+			err = target.CreateBookshelf(ctx, tt.args.bookshelf)
+			assert.Equal(t, tt.want.isErr, err != nil, err)
+		})
+	}
+}
+
+func TestBookRepository_Update(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mocks, err := test.NewDBMock(ctrl)
+	require.NoError(t, err)
+
+	err = mocks.DeleteAll()
+	require.NoError(t, err)
+
+	type args struct {
+		book *book.Book
+	}
+	type want struct {
+		isErr bool
+	}
+	tests := []struct {
+		name  string
+		setup func(t *testing.T, mocks *test.DBMocks)
+		args  args
+		want  want
+	}{
+		{
+			name: "success",
+			setup: func(t *testing.T, mocks *test.DBMocks) {
+				b := testBook(1, "1234567890123")
+				err := mocks.BookDB.DB.Table(bookTable).Create(b).Error
+				require.NoError(t, err)
+			},
+			args: args{
+				book: &book.Book{
+					ID:             1,
+					Title:          "小説　ちはやふる　上の句",
+					TitleKana:      "ショウセツ チハヤフルカミノク",
+					Description:    "綾瀬千早は高校入学と同時に、競技かるた部を作ろうと奔走する。幼馴染の太一と仲間を集め、夏の全国大会に出場するためだ。強くなって、新と再会したい。幼い頃かるたを取り合った、新に寄せる千早の秘めた想いに気づきながらも、太一は千早を守り立てる。それぞれの青春を懸けた、一途な情熱の物語が幕開ける。",
+					Isbn:           "1234567890123",
+					Publisher:      "講談社",
+					PublishedOn:    "2018-01-16",
+					ThumbnailURL:   "https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/8426/9784062938426.jpg?_ex=120x120",
+					RakutenURL:     "https://books.rakuten.co.jp/rb/15271426/",
+					RakutenSize:    "コミック",
+					RakutenGenreID: "001004008001/001004008003/001019001",
+				},
+			},
+			want: want{
+				isErr: false,
+			},
+		},
+		{
+			name: "success with association",
+			setup: func(t *testing.T, mocks *test.DBMocks) {
+				b := testBook(1, "1234567890123")
+				err := mocks.BookDB.DB.Table(bookTable).Create(&b).Error
+				require.NoError(t, err)
+				as := make([]*book.Author, 2)
+				as[0] = testAuthor(1, "有沢 ゆう希", "アリサワ ユウキ")
+				as[1] = testAuthor(2, "末次 由紀", "スエツグ ユキ")
+				err = mocks.BookDB.DB.Table(authorTable).Create(&as).Error
+				require.NoError(t, err)
+				bas := make([]*book.BookAuthor, 2)
+				bas[0] = &book.BookAuthor{BookID: 1, AuthorID: 1, CreatedAt: test.TimeMock, UpdatedAt: test.TimeMock}
+				bas[1] = &book.BookAuthor{BookID: 1, AuthorID: 2, CreatedAt: test.TimeMock, UpdatedAt: test.TimeMock}
+				err = mocks.BookDB.DB.Table(authorBookTable).Create(&bas).Error
+				require.NoError(t, err)
+			},
+			args: args{
+				book: &book.Book{
+					ID:             1,
+					Title:          "小説　ちはやふる　上の句",
+					TitleKana:      "ショウセツ チハヤフルカミノク",
+					Description:    "綾瀬千早は高校入学と同時に、競技かるた部を作ろうと奔走する。幼馴染の太一と仲間を集め、夏の全国大会に出場するためだ。強くなって、新と再会したい。幼い頃かるたを取り合った、新に寄せる千早の秘めた想いに気づきながらも、太一は千早を守り立てる。それぞれの青春を懸けた、一途な情熱の物語が幕開ける。",
+					Isbn:           "1234567890123",
+					Publisher:      "講談社",
+					PublishedOn:    "2018-01-16",
+					ThumbnailURL:   "https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/8426/9784062938426.jpg?_ex=120x120",
+					RakutenURL:     "https://books.rakuten.co.jp/rb/15271426/",
+					RakutenSize:    "コミック",
+					RakutenGenreID: "001004008001/001004008003/001019001",
+					Authors: []*book.Author{
+						{
+							Name:     "有沢 ゆう希",
+							NameKana: "アリサワ ユウキ",
+						},
+						{
+							Name:     "テスト 著者",
+							NameKana: "てすと ちょしゃ",
+						},
+					},
+				},
+			},
+			want: want{
+				isErr: false,
+			},
+		},
+		{
+			name:  "failed: internal error",
+			setup: func(t *testing.T, mocks *test.DBMocks) {},
+			args: args{
+				book: &book.Book{},
+			},
+			want: want{
+				isErr: true,
+			},
+		},
+		{
+			name: "failed with association",
+			setup: func(t *testing.T, mocks *test.DBMocks) {
+				b := testBook(1, "1234567890123")
+				err := mocks.BookDB.DB.Table(bookTable).Create(b).Error
+				require.NoError(t, err)
+			},
+			args: args{
+				book: &book.Book{
+					ID:             1,
+					Title:          "小説　ちはやふる　上の句",
+					TitleKana:      "ショウセツ チハヤフルカミノク",
+					Description:    "綾瀬千早は高校入学と同時に、競技かるた部を作ろうと奔走する。幼馴染の太一と仲間を集め、夏の全国大会に出場するためだ。強くなって、新と再会したい。幼い頃かるたを取り合った、新に寄せる千早の秘めた想いに気づきながらも、太一は千早を守り立てる。それぞれの青春を懸けた、一途な情熱の物語が幕開ける。",
+					Isbn:           "1234567890123",
+					Publisher:      "講談社",
+					PublishedOn:    "2018-01-16",
+					ThumbnailURL:   "https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/8426/9784062938426.jpg?_ex=120x120",
+					RakutenURL:     "https://books.rakuten.co.jp/rb/15271426/",
+					RakutenSize:    "コミック",
+					RakutenGenreID: "001004008001/001004008003/001019001",
+					Authors: []*book.Author{
+						{
+							Name:     "",
+							NameKana: "",
+						},
+					},
+				},
+			},
+			want: want{
+				isErr: true,
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			err := mocks.Delete(mocks.BookDB, authorBookTable, bookTable, authorTable)
+			require.NoError(t, err)
+			tt.setup(t, mocks)
+
+			target := NewBookRepository(mocks.BookDB, test.Now)
+			err = target.Update(ctx, tt.args.book)
 			assert.Equal(t, tt.want.isErr, err != nil, err)
 		})
 	}
@@ -1836,9 +1863,8 @@ func TestBookRepository_MultipleUpdate(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	books := make([]*book.Book, 2)
-	books[0] = testBook(1, "1234567890123")
-	books[1] = testBook(2, "2345678901234")
+	err = mocks.DeleteAll()
+	require.NoError(t, err)
 
 	type args struct {
 		books book.Books
@@ -1846,17 +1872,25 @@ func TestBookRepository_MultipleUpdate(t *testing.T) {
 	type want struct {
 		isErr bool
 	}
-	testCases := []struct {
-		name string
-		args args
-		want want
+	tests := []struct {
+		name  string
+		setup func(t *testing.T, mocks *test.DBMocks)
+		args  args
+		want  want
 	}{
 		{
 			name: "success",
+			setup: func(t *testing.T, mocks *test.DBMocks) {
+				books := make([]*book.Book, 2)
+				books[0] = testBook(1, "1234567890123")
+				books[1] = testBook(2, "2345678901234")
+				err := mocks.BookDB.DB.Table(bookTable).Create(&books).Error
+				require.NoError(t, err)
+			},
 			args: args{
 				books: []*book.Book{
 					{
-						ID:             books[0].ID,
+						ID:             1,
 						Title:          "小説　ちはやふる　上の句",
 						TitleKana:      "ショウセツ チハヤフルカミノク",
 						Description:    "綾瀬千早は高校入学と同時に、競技かるた部を作ろうと奔走する。幼馴染の太一と仲間を集め、夏の全国大会に出場するためだ。強くなって、新と再会したい。幼い頃かるたを取り合った、新に寄せる千早の秘めた想いに気づきながらも、太一は千早を守り立てる。それぞれの青春を懸けた、一途な情熱の物語が幕開ける。",
@@ -1867,11 +1901,9 @@ func TestBookRepository_MultipleUpdate(t *testing.T) {
 						RakutenURL:     "https://books.rakuten.co.jp/rb/15271426/",
 						RakutenSize:    "コミック",
 						RakutenGenreID: "001004008001/001004008003/001019001",
-						CreatedAt:      test.TimeMock,
-						UpdatedAt:      test.TimeMock,
 					},
 					{
-						ID:             books[1].ID,
+						ID:             2,
 						Title:          "小説　ちはやふる　上の句",
 						TitleKana:      "ショウセツ チハヤフルカミノク",
 						Description:    "綾瀬千早は高校入学と同時に、競技かるた部を作ろうと奔走する。幼馴染の太一と仲間を集め、夏の全国大会に出場するためだ。強くなって、新と再会したい。幼い頃かるたを取り合った、新に寄せる千早の秘めた想いに気づきながらも、太一は千早を守り立てる。それぞれの青春を懸けた、一途な情熱の物語が幕開ける。",
@@ -1882,8 +1914,6 @@ func TestBookRepository_MultipleUpdate(t *testing.T) {
 						RakutenURL:     "https://books.rakuten.co.jp/rb/15271426/",
 						RakutenSize:    "コミック",
 						RakutenGenreID: "001004008001/001004008003/001019001",
-						CreatedAt:      test.TimeMock,
-						UpdatedAt:      test.TimeMock,
 					},
 				},
 			},
@@ -1892,16 +1922,8 @@ func TestBookRepository_MultipleUpdate(t *testing.T) {
 			},
 		},
 		{
-			name: "success: not found",
-			args: args{
-				books: []*book.Book{},
-			},
-			want: want{
-				isErr: false,
-			},
-		},
-		{
-			name: "failed: internal error",
+			name:  "failed: internal error",
+			setup: func(t *testing.T, mocks *test.DBMocks) {},
 			args: args{
 				books: []*book.Book{{}},
 			},
@@ -1909,20 +1931,192 @@ func TestBookRepository_MultipleUpdate(t *testing.T) {
 				isErr: true,
 			},
 		},
+		{
+			name: "failed: length 0",
+			setup: func(t *testing.T, mocks *test.DBMocks) {
+				books := make([]*book.Book, 2)
+				books[0] = testBook(1, "1234567890123")
+				books[1] = testBook(2, "2345678901234")
+				err := mocks.BookDB.DB.Table(bookTable).Create(&books).Error
+				require.NoError(t, err)
+			},
+			args: args{
+				books: []*book.Book{},
+			},
+			want: want{
+				isErr: true,
+			},
+		},
 	}
 
-	for _, tt := range testCases {
+	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			target := NewBookRepository(mocks.BookDB)
-
-			err = mocks.DeleteAll(mocks.BookDB, bookTable)
+			err := mocks.Delete(mocks.BookDB, authorTable, authorBookTable, bookTable)
 			require.NoError(t, err)
+			tt.setup(t, mocks)
 
-			err = mocks.BookDB.DB.Table(bookTable).Create(&books).Error
+			target := NewBookRepository(mocks.BookDB, test.Now)
+			err = target.MultipleUpdate(ctx, tt.args.books)
+			assert.Equal(t, tt.want.isErr, err != nil, err)
+		})
+	}
+}
+
+func TestBookRepository_UpdateBookshelf(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mocks, err := test.NewDBMock(ctrl)
+	require.NoError(t, err)
+
+	err = mocks.DeleteAll()
+	require.NoError(t, err)
+
+	userID, err := mocks.CreateUser()
+	require.NoError(t, err)
+
+	type args struct {
+		bookshelf *book.Bookshelf
+	}
+	type want struct {
+		isErr bool
+	}
+	tests := []struct {
+		name  string
+		setup func(t *testing.T, mocks *test.DBMocks)
+		args  args
+		want  want
+	}{
+		{
+			name: "success without read on",
+			setup: func(t *testing.T, mocks *test.DBMocks) {
+				b := testBook(1, "1234567890123")
+				err := mocks.BookDB.DB.Table(bookTable).Create(b).Error
+				require.NoError(t, err)
+
+				bookshelf := testBookshelf(1, b.ID, userID)
+				err = mocks.BookDB.DB.Table(bookshelfTable).Create(bookshelf).Error
+				require.NoError(t, err)
+			},
+			args: args{
+				bookshelf: &book.Bookshelf{
+					ID:     1,
+					BookID: 1,
+					UserID: userID,
+					Status: book.ReadStatus,
+				},
+			},
+			want: want{
+				isErr: false,
+			},
+		},
+		{
+			name:  "success with read on",
+			setup: func(t *testing.T, mocks *test.DBMocks) {},
+			args: args{
+				bookshelf: &book.Bookshelf{
+					ID:     1,
+					BookID: 1,
+					UserID: userID,
+					ReadOn: test.DateMock,
+					Status: book.ReadStatus,
+				},
+			},
+			want: want{
+				isErr: false,
+			},
+		},
+		{
+			name:  "success with read on and association",
+			setup: func(t *testing.T, mocks *test.DBMocks) {},
+			args: args{
+				bookshelf: &book.Bookshelf{
+					ID:     1,
+					BookID: 1,
+					UserID: userID,
+					ReadOn: test.DateMock,
+					Status: book.ReadStatus,
+					Review: &book.Review{
+						BookID:     1,
+						UserID:     userID,
+						Impression: "テスト感想です。",
+					},
+				},
+			},
+			want: want{
+				isErr: false,
+			},
+		},
+		{
+			name: "success to recreate with read on",
+			setup: func(t *testing.T, mocks *test.DBMocks) {
+				rv := testReview(1, 1, userID)
+				err := mocks.BookDB.DB.Table(reviewTable).Create(&rv).Error
+				require.NoError(t, err)
+			},
+			args: args{
+				bookshelf: &book.Bookshelf{
+					ID:     1,
+					BookID: 1,
+					UserID: userID,
+					ReadOn: test.DateMock,
+					Status: book.ReadStatus,
+				},
+			},
+			want: want{
+				isErr: false,
+			},
+		},
+		{
+			name: "success to recreate with read on and association",
+			setup: func(t *testing.T, mocks *test.DBMocks) {
+				rv := testReview(1, 1, userID)
+				err := mocks.BookDB.DB.Table(reviewTable).Create(&rv).Error
+				require.NoError(t, err)
+			},
+			args: args{
+				bookshelf: &book.Bookshelf{
+					ID:     1,
+					BookID: 1,
+					UserID: userID,
+					ReadOn: test.DateMock,
+					Status: book.ReadStatus,
+					Review: &book.Review{
+						BookID:     1,
+						UserID:     userID,
+						Impression: "テスト感想です。",
+					},
+				},
+			},
+			want: want{
+				isErr: false,
+			},
+		},
+		{
+			name:  "failed: internal error",
+			setup: func(t *testing.T, mocks *test.DBMocks) {},
+			args: args{
+				bookshelf: &book.Bookshelf{},
+			},
+			want: want{
+				isErr: true,
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			err := mocks.Delete(mocks.BookDB, bookshelfTable, reviewTable)
 			require.NoError(t, err)
+			tt.setup(t, mocks)
 
-			err := target.MultipleUpdate(ctx, tt.args.books)
+			target := NewBookRepository(mocks.BookDB, test.Now)
+			err = target.UpdateBookshelf(ctx, tt.args.bookshelf)
 			assert.Equal(t, tt.want.isErr, err != nil, err)
 		})
 	}
@@ -1938,7 +2132,8 @@ func TestBookRepository_Delete(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	b := testBook(1, "1234567890123")
+	err = mocks.DeleteAll()
+	require.NoError(t, err)
 
 	type args struct {
 		bookID int
@@ -1946,13 +2141,19 @@ func TestBookRepository_Delete(t *testing.T) {
 	type want struct {
 		isErr bool
 	}
-	testCases := []struct {
-		name string
-		args args
-		want want
+	tests := []struct {
+		name  string
+		setup func(t *testing.T, mocks *test.DBMocks)
+		args  args
+		want  want
 	}{
 		{
 			name: "success",
+			setup: func(t *testing.T, mocks *test.DBMocks) {
+				b := testBook(1, "1234567890123")
+				err = mocks.BookDB.DB.Table(bookTable).Create(b).Error
+				require.NoError(t, err)
+			},
 			args: args{
 				bookID: 1,
 			},
@@ -1962,23 +2163,20 @@ func TestBookRepository_Delete(t *testing.T) {
 		},
 	}
 
-	for _, tt := range testCases {
+	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			target := NewBookRepository(mocks.BookDB)
-
-			err = mocks.DeleteAll(mocks.BookDB, bookTable)
+			err := mocks.Delete(mocks.BookDB, bookTable)
 			require.NoError(t, err)
+			tt.setup(t, mocks)
 
-			err = mocks.BookDB.DB.Table(bookTable).Create(b).Error
-			require.NoError(t, err)
-
-			err := target.Delete(ctx, tt.args.bookID)
+			target := NewBookRepository(mocks.BookDB, test.Now)
+			err = target.Delete(ctx, tt.args.bookID)
 			assert.Equal(t, tt.want.isErr, err != nil, err)
 
 			got, err := target.Get(ctx, tt.args.bookID)
 			require.Error(t, err)
-			assert.Nil(t, got)
+			assert.Equal(t, &book.Book{}, got)
 		})
 	}
 }
@@ -1993,17 +2191,11 @@ func TestBookRepository_DeleteBookshelf(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.BookDB, bookTable)
+	err = mocks.DeleteAll()
 	require.NoError(t, err)
 
 	userID, err := mocks.CreateUser()
 	require.NoError(t, err)
-
-	b := testBook(1, "1234567890123")
-	err = mocks.BookDB.DB.Table(bookTable).Create(b).Error
-	require.NoError(t, err)
-
-	bookshelf := testBookshelf(1, b.ID, userID)
 
 	type args struct {
 		bookshelfID int
@@ -2011,13 +2203,22 @@ func TestBookRepository_DeleteBookshelf(t *testing.T) {
 	type want struct {
 		isErr bool
 	}
-	testCases := []struct {
-		name string
-		args args
-		want want
+	tests := []struct {
+		name  string
+		setup func(t *testing.T, mocks *test.DBMocks)
+		args  args
+		want  want
 	}{
 		{
 			name: "success",
+			setup: func(t *testing.T, mocks *test.DBMocks) {
+				b := testBook(1, "1234567890123")
+				err := mocks.BookDB.DB.Table(bookTable).Create(b).Error
+				require.NoError(t, err)
+				bookshelf := testBookshelf(1, b.ID, userID)
+				err = mocks.BookDB.DB.Table(bookshelfTable).Create(bookshelf).Error
+				require.NoError(t, err)
+			},
 			args: args{
 				bookshelfID: 1,
 			},
@@ -2027,17 +2228,14 @@ func TestBookRepository_DeleteBookshelf(t *testing.T) {
 		},
 	}
 
-	for _, tt := range testCases {
+	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			target := NewBookRepository(mocks.BookDB)
-
-			err := mocks.DeleteAll(mocks.BookDB, bookshelfTable)
+			err := mocks.Delete(mocks.BookDB, bookshelfTable)
 			require.NoError(t, err)
+			tt.setup(t, mocks)
 
-			err = mocks.BookDB.DB.Table(bookshelfTable).Create(bookshelf).Error
-			require.NoError(t, err)
-
+			target := NewBookRepository(mocks.BookDB, test.Now)
 			err = target.DeleteBookshelf(ctx, tt.args.bookshelfID)
 			assert.Equal(t, tt.want.isErr, err != nil, err)
 		})
@@ -2054,7 +2252,7 @@ func TestBookRepository_AggregateReadTotal(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.BookDB, bookTable, bookshelfTable)
+	err = mocks.DeleteAll()
 	require.NoError(t, err)
 
 	userID, err := mocks.CreateUser()
@@ -2071,14 +2269,17 @@ func TestBookRepository_AggregateReadTotal(t *testing.T) {
 	require.NoError(t, err)
 
 	bookshelves := make(book.Bookshelves, 6)
-	bookshelves[0] = testBookshelfWithReadOn(1, books[0].ID, userID, book.ReadStatus, "2021-08-01")
-	bookshelves[1] = testBookshelfWithReadOn(2, books[1].ID, userID, book.ReadingStatus, "2021-08-01")
-	bookshelves[2] = testBookshelfWithReadOn(3, books[2].ID, userID, book.ReadStatus, "2021-08-02")
-	bookshelves[3] = testBookshelfWithReadOn(4, books[3].ID, userID, book.ReadStatus, "2021-09-01")
-	bookshelves[4] = testBookshelfWithReadOn(5, books[4].ID, userID, book.ReadStatus, "2021-09-01")
-	bookshelves[5] = testBookshelfWithReadOn(6, books[5].ID, userID, book.ReadStatus, "2020-08-01")
+	bookshelves[0] = testBookshelfWithReadOn(1, books[0].ID, userID, book.ReadStatus, "2021-08-02")
+	bookshelves[1] = testBookshelfWithReadOn(2, books[1].ID, userID, book.ReadingStatus, "2021-08-02")
+	bookshelves[2] = testBookshelfWithReadOn(3, books[2].ID, userID, book.ReadStatus, "2021-08-03")
+	bookshelves[3] = testBookshelfWithReadOn(4, books[3].ID, userID, book.ReadStatus, "2021-09-15")
+	bookshelves[4] = testBookshelfWithReadOn(5, books[4].ID, userID, book.ReadStatus, "2021-09-15")
+	bookshelves[5] = testBookshelfWithReadOn(6, books[5].ID, userID, book.ReadStatus, "2020-08-15")
 	err = mocks.BookDB.DB.Table(bookshelfTable).Create(&bookshelves).Error
 	require.NoError(t, err)
+
+	sinceDate, _ := datetime.ParseDate("2020-08-01")
+	untilDate, _ := datetime.ParseDate("2021-09-01")
 
 	type args struct {
 		userID string
@@ -2098,8 +2299,8 @@ func TestBookRepository_AggregateReadTotal(t *testing.T) {
 			name: "success",
 			args: args{
 				userID: userID,
-				since:  datetime.BeginningOfMonth("2020-08-01"),
-				until:  datetime.EndOfMonth("2021-09-01"),
+				since:  datetime.BeginningOfMonth(sinceDate),
+				until:  datetime.EndOfMonth(untilDate),
 			},
 			want: want{
 				results: book.MonthlyResults{
@@ -2127,7 +2328,7 @@ func TestBookRepository_AggregateReadTotal(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			target := NewBookRepository(mocks.BookDB)
+			target := NewBookRepository(mocks.BookDB, test.Now)
 
 			results, err := target.AggregateReadTotal(ctx, tt.args.userID, tt.args.since, tt.args.until)
 			assert.Equal(t, tt.want.isErr, err != nil, err)
@@ -2171,7 +2372,7 @@ func testBookshelf(id int, bookID int, userID string) *book.Bookshelf {
 func testBookshelfWithReadOn(id int, bookID int, userID string, status int, readOn string) *book.Bookshelf {
 	b := testBookshelf(id, bookID, userID)
 	b.Status = status
-	b.ReadOn = datetime.StringToDate(readOn)
+	b.ReadOn, _ = datetime.ParseDate(readOn)
 
 	return b
 }
@@ -2188,11 +2389,11 @@ func testReview(id int, bookID int, userID string) *book.Review {
 	}
 }
 
-func testAuthor(id int, name string) *book.Author {
+func testAuthor(id int, name string, nameKana string) *book.Author {
 	return &book.Author{
 		ID:        id,
 		Name:      name,
-		NameKana:  name,
+		NameKana:  nameKana,
 		CreatedAt: test.TimeMock,
 		UpdatedAt: test.TimeMock,
 	}

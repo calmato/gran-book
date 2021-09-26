@@ -1,6 +1,7 @@
 package database
 
 import (
+	"database/sql"
 	"fmt"
 
 	"gorm.io/driver/mysql"
@@ -38,6 +39,23 @@ func NewClient(params *Params) (*Client, error) {
 	}
 
 	return c, nil
+}
+
+func (c *Client) Begin(opts ...*sql.TxOptions) (*gorm.DB, error) {
+	tx := c.DB.Begin()
+	if err := tx.Error; err != nil {
+		return nil, err
+	}
+
+	return tx, nil
+}
+
+func (c *Client) Close(tx *gorm.DB) func() {
+	return func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}
 }
 
 func getDBClient(config string, params *Params) (*gorm.DB, error) {

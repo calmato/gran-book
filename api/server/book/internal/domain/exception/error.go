@@ -29,6 +29,8 @@ const (
 	InvalidDomainValidation
 	// InvalidRequestValidation - リクエスト値のバリデーションエラ
 	InvalidRequestValidation
+	// InvalidDatabaseTransaction - データベースでのトランザクションエラー
+	InvalidDatabaseTransaction
 	// UnableConvertBase64 - Byte64型への変換エラー
 	UnableConvertBase64
 	// Unauthorized - 認証エラー
