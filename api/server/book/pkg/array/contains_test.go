@@ -15,7 +15,7 @@ func TestContains(t *testing.T) {
 	}
 	type want struct {
 		isContains bool
-		err        error
+		err        bool
 	}
 	tests := []struct {
 		name string
@@ -30,7 +30,7 @@ func TestContains(t *testing.T) {
 			},
 			want: want{
 				isContains: true,
-				err:        nil,
+				err:        false,
 			},
 		},
 		{
@@ -41,7 +41,7 @@ func TestContains(t *testing.T) {
 			},
 			want: want{
 				isContains: true,
-				err:        nil,
+				err:        false,
 			},
 		},
 		{
@@ -52,7 +52,7 @@ func TestContains(t *testing.T) {
 			},
 			want: want{
 				isContains: false,
-				err:        nil,
+				err:        false,
 			},
 		},
 		{
@@ -63,7 +63,7 @@ func TestContains(t *testing.T) {
 			},
 			want: want{
 				isContains: true,
-				err:        nil,
+				err:        false,
 			},
 		},
 		{
@@ -74,7 +74,7 @@ func TestContains(t *testing.T) {
 			},
 			want: want{
 				isContains: false,
-				err:        nil,
+				err:        false,
 			},
 		},
 		{
@@ -85,7 +85,7 @@ func TestContains(t *testing.T) {
 			},
 			want: want{
 				isContains: true,
-				err:        nil,
+				err:        false,
 			},
 		},
 		{
@@ -96,18 +96,18 @@ func TestContains(t *testing.T) {
 			},
 			want: want{
 				isContains: false,
-				err:        nil,
+				err:        false,
 			},
 		},
 		{
 			name: "failed other type",
 			args: args{
-				items:  []int{1, 2, 3},
+				items:  []float32{1, 2, 3},
 				target: 2,
 			},
 			want: want{
 				isContains: false,
-				err:        ErrUnsupportedType,
+				err:        true,
 			},
 		},
 	}
@@ -117,7 +117,7 @@ func TestContains(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			actual, err := Contains(tt.args.items, tt.args.target)
-			assert.ErrorIs(t, err, tt.want.err)
+			assert.Equal(t, tt.want.err, err != nil, err)
 			assert.Equal(t, tt.want.isContains, actual)
 		})
 	}

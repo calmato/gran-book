@@ -13,37 +13,37 @@ func TestConvertStrings(t *testing.T) {
 		name   string
 		items  interface{}
 		expect []string
-		err    error
+		err    bool
 	}{
 		{
 			name:   "success []int",
 			items:  []int{1, 2, 3},
 			expect: []string{"1", "2", "3"},
-			err:    nil,
+			err:    false,
 		},
 		{
 			name:   "success []int32",
 			items:  []int32{1, 2, 3},
 			expect: []string{"1", "2", "3"},
-			err:    nil,
+			err:    false,
 		},
 		{
 			name:   "success []int64",
 			items:  []int64{1, 2, 3},
 			expect: []string{"1", "2", "3"},
-			err:    nil,
+			err:    false,
 		},
 		{
 			name:   "success []string",
 			items:  []string{"1", "2", "3"},
 			expect: []string{"1", "2", "3"},
-			err:    nil,
+			err:    false,
 		},
 		{
 			name:   "failed other type",
 			items:  []float64{1.0, 2.0, 3.0},
 			expect: []string{},
-			err:    ErrUnsupportedType,
+			err:    true,
 		},
 	}
 
@@ -52,7 +52,7 @@ func TestConvertStrings(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			actual, err := ConvertStrings(tt.items)
-			assert.ErrorIs(t, err, tt.err)
+			assert.Equal(t, tt.err, err != nil, err)
 			assert.Equal(t, tt.expect, actual)
 		})
 	}
