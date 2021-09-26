@@ -1922,49 +1922,6 @@ func TestBookRepository_MultipleUpdate(t *testing.T) {
 			},
 		},
 		{
-			name: "success",
-			setup: func(t *testing.T, mocks *test.DBMocks) {
-				books := make([]*book.Book, 2)
-				books[0] = testBook(1, "1234567890123")
-				books[1] = testBook(2, "2345678901234")
-				err := mocks.BookDB.DB.Table(bookTable).Create(&books).Error
-				require.NoError(t, err)
-			},
-			args: args{
-				books: []*book.Book{
-					{
-						ID:             1,
-						Title:          "小説　ちはやふる　上の句",
-						TitleKana:      "ショウセツ チハヤフルカミノク",
-						Description:    "綾瀬千早は高校入学と同時に、競技かるた部を作ろうと奔走する。幼馴染の太一と仲間を集め、夏の全国大会に出場するためだ。強くなって、新と再会したい。幼い頃かるたを取り合った、新に寄せる千早の秘めた想いに気づきながらも、太一は千早を守り立てる。それぞれの青春を懸けた、一途な情熱の物語が幕開ける。",
-						Isbn:           "1234567890123",
-						Publisher:      "講談社",
-						PublishedOn:    "2018-01-16",
-						ThumbnailURL:   "https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/8426/9784062938426.jpg?_ex=120x120",
-						RakutenURL:     "https://books.rakuten.co.jp/rb/15271426/",
-						RakutenSize:    "コミック",
-						RakutenGenreID: "001004008001/001004008003/001019001",
-					},
-					{
-						ID:             2,
-						Title:          "小説　ちはやふる　上の句",
-						TitleKana:      "ショウセツ チハヤフルカミノク",
-						Description:    "綾瀬千早は高校入学と同時に、競技かるた部を作ろうと奔走する。幼馴染の太一と仲間を集め、夏の全国大会に出場するためだ。強くなって、新と再会したい。幼い頃かるたを取り合った、新に寄せる千早の秘めた想いに気づきながらも、太一は千早を守り立てる。それぞれの青春を懸けた、一途な情熱の物語が幕開ける。",
-						Isbn:           "2345678901234",
-						Publisher:      "講談社",
-						PublishedOn:    "2018-01-16",
-						ThumbnailURL:   "https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/8426/9784062938426.jpg?_ex=120x120",
-						RakutenURL:     "https://books.rakuten.co.jp/rb/15271426/",
-						RakutenSize:    "コミック",
-						RakutenGenreID: "001004008001/001004008003/001019001",
-					},
-				},
-			},
-			want: want{
-				isErr: false,
-			},
-		},
-		{
 			name:  "failed: internal error",
 			setup: func(t *testing.T, mocks *test.DBMocks) {},
 			args: args{
@@ -2074,6 +2031,72 @@ func TestBookRepository_UpdateBookshelf(t *testing.T) {
 			},
 		},
 		{
+			name:  "success with read on and association",
+			setup: func(t *testing.T, mocks *test.DBMocks) {},
+			args: args{
+				bookshelf: &book.Bookshelf{
+					ID:     1,
+					BookID: 1,
+					UserID: userID,
+					ReadOn: test.DateMock,
+					Status: book.ReadStatus,
+					Review: &book.Review{
+						BookID:     1,
+						UserID:     userID,
+						Impression: "テスト感想です。",
+					},
+				},
+			},
+			want: want{
+				isErr: false,
+			},
+		},
+		{
+			name: "success to recreate with read on",
+			setup: func(t *testing.T, mocks *test.DBMocks) {
+				rv := testReview(1, 1, userID)
+				err := mocks.BookDB.DB.Table(reviewTable).Create(&rv).Error
+				require.NoError(t, err)
+			},
+			args: args{
+				bookshelf: &book.Bookshelf{
+					ID:     1,
+					BookID: 1,
+					UserID: userID,
+					ReadOn: test.DateMock,
+					Status: book.ReadStatus,
+				},
+			},
+			want: want{
+				isErr: false,
+			},
+		},
+		{
+			name: "success to recreate with read on and association",
+			setup: func(t *testing.T, mocks *test.DBMocks) {
+				rv := testReview(1, 1, userID)
+				err := mocks.BookDB.DB.Table(reviewTable).Create(&rv).Error
+				require.NoError(t, err)
+			},
+			args: args{
+				bookshelf: &book.Bookshelf{
+					ID:     1,
+					BookID: 1,
+					UserID: userID,
+					ReadOn: test.DateMock,
+					Status: book.ReadStatus,
+					Review: &book.Review{
+						BookID:     1,
+						UserID:     userID,
+						Impression: "テスト感想です。",
+					},
+				},
+			},
+			want: want{
+				isErr: false,
+			},
+		},
+		{
 			name:  "failed: internal error",
 			setup: func(t *testing.T, mocks *test.DBMocks) {},
 			args: args{
@@ -2088,7 +2111,7 @@ func TestBookRepository_UpdateBookshelf(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			err := mocks.Delete(mocks.BookDB, bookshelfTable)
+			err := mocks.Delete(mocks.BookDB, bookshelfTable, reviewTable)
 			require.NoError(t, err)
 			tt.setup(t, mocks)
 
@@ -2246,12 +2269,12 @@ func TestBookRepository_AggregateReadTotal(t *testing.T) {
 	require.NoError(t, err)
 
 	bookshelves := make(book.Bookshelves, 6)
-	bookshelves[0] = testBookshelfWithReadOn(1, books[0].ID, userID, book.ReadStatus, "2021-08-01")
-	bookshelves[1] = testBookshelfWithReadOn(2, books[1].ID, userID, book.ReadingStatus, "2021-08-01")
-	bookshelves[2] = testBookshelfWithReadOn(3, books[2].ID, userID, book.ReadStatus, "2021-08-02")
-	bookshelves[3] = testBookshelfWithReadOn(4, books[3].ID, userID, book.ReadStatus, "2021-09-01")
-	bookshelves[4] = testBookshelfWithReadOn(5, books[4].ID, userID, book.ReadStatus, "2021-09-01")
-	bookshelves[5] = testBookshelfWithReadOn(6, books[5].ID, userID, book.ReadStatus, "2020-08-01")
+	bookshelves[0] = testBookshelfWithReadOn(1, books[0].ID, userID, book.ReadStatus, "2021-08-02")
+	bookshelves[1] = testBookshelfWithReadOn(2, books[1].ID, userID, book.ReadingStatus, "2021-08-02")
+	bookshelves[2] = testBookshelfWithReadOn(3, books[2].ID, userID, book.ReadStatus, "2021-08-03")
+	bookshelves[3] = testBookshelfWithReadOn(4, books[3].ID, userID, book.ReadStatus, "2021-09-15")
+	bookshelves[4] = testBookshelfWithReadOn(5, books[4].ID, userID, book.ReadStatus, "2021-09-15")
+	bookshelves[5] = testBookshelfWithReadOn(6, books[5].ID, userID, book.ReadStatus, "2020-08-15")
 	err = mocks.BookDB.DB.Table(bookshelfTable).Create(&bookshelves).Error
 	require.NoError(t, err)
 
