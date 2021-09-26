@@ -6,6 +6,7 @@ import (
 	dv "github.com/calmato/gran-book/api/server/book/internal/infrastructure/validation"
 	rv "github.com/calmato/gran-book/api/server/book/internal/interface/validation"
 	"github.com/calmato/gran-book/api/server/book/pkg/database"
+	"github.com/calmato/gran-book/api/server/book/pkg/datetime"
 )
 
 // Registry - DIコンテナ
@@ -25,7 +26,7 @@ func NewRegistry(db *database.Client) *Registry {
 }
 
 func bookInjection(db *database.Client) (application.BookApplication, rv.BookRequestValidation) {
-	br := repository.NewBookRepository(db)
+	br := repository.NewBookRepository(db, datetime.Now)
 	bdv := dv.NewBookDomainValidation(br)
 	ba := application.NewBookApplication(bdv, br)
 

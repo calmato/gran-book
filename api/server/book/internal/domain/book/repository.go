@@ -28,11 +28,8 @@ type Repository interface {
 	GetAuthorIDByName(ctx context.Context, name string) (int, error)
 	Create(ctx context.Context, b *Book) error
 	CreateBookshelf(ctx context.Context, b *Bookshelf) error
-	CreateReview(ctx context.Context, rv *Review) error
-	CreateAuthor(ctx context.Context, a *Author) error
 	Update(ctx context.Context, b *Book) error
 	UpdateBookshelf(ctx context.Context, b *Bookshelf) error
-	UpdateReview(ctx context.Context, rv *Review) error
 	MultipleCreate(ctx context.Context, bs Books) error
 	MultipleUpdate(ctx context.Context, bs Books) error
 	Delete(ctx context.Context, bookID int) error

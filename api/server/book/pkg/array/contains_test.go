@@ -23,6 +23,17 @@ func TestContains(t *testing.T) {
 		want want
 	}{
 		{
+			name: "success []int contain",
+			args: args{
+				items:  []int{1, 2, 3},
+				target: 2,
+			},
+			want: want{
+				isContains: true,
+				err:        nil,
+			},
+		},
+		{
 			name: "success []int32 contain",
 			args: args{
 				items:  []int32{1, 2, 3},
