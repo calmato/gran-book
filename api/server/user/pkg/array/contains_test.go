@@ -1,96 +1,124 @@
 package array
 
 import (
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestContains(t *testing.T) {
-	testCases := map[string]struct {
-		Input struct {
-			Items  interface{}
-			Target interface{}
-		}
-		Expected bool
+	t.Parallel()
+
+	type args struct {
+		items  interface{}
+		target interface{}
+	}
+	type want struct {
+		isContains bool
+		err        bool
+	}
+	tests := []struct {
+		name string
+		args args
+		want want
 	}{
-		"ok_[]int32_contain": {
-			Input: struct {
-				Items  interface{}
-				Target interface{}
-			}{
-				Items:  []int32{1, 2, 3},
-				Target: int32(2),
+		{
+			name: "success []int contain",
+			args: args{
+				items:  []int{1, 2, 3},
+				target: 2,
 			},
-			Expected: true,
+			want: want{
+				isContains: true,
+				err:        false,
+			},
 		},
-		"ok_[]int32_not_contain": {
-			Input: struct {
-				Items  interface{}
-				Target interface{}
-			}{
-				Items:  []int32{1, 2, 3},
-				Target: int32(4),
+		{
+			name: "success []int32 contain",
+			args: args{
+				items:  []int32{1, 2, 3},
+				target: int32(2),
 			},
-			Expected: false,
+			want: want{
+				isContains: true,
+				err:        false,
+			},
 		},
-		"ok_[]int64_contain": {
-			Input: struct {
-				Items  interface{}
-				Target interface{}
-			}{
-				Items:  []int64{1, 2, 3},
-				Target: int64(2),
+		{
+			name: "success []int32 not contain",
+			args: args{
+				items:  []int32{1, 2, 3},
+				target: int32(4),
 			},
-			Expected: true,
+			want: want{
+				isContains: false,
+				err:        false,
+			},
 		},
-		"ok_[]int64_not_contain": {
-			Input: struct {
-				Items  interface{}
-				Target interface{}
-			}{
-				Items:  []int64{1, 2, 3},
-				Target: int64(4),
+		{
+			name: "success []int64 contain",
+			args: args{
+				items:  []int64{1, 2, 3},
+				target: int64(2),
 			},
-			Expected: false,
+			want: want{
+				isContains: true,
+				err:        false,
+			},
 		},
-		"ok_[]string_contain": {
-			Input: struct {
-				Items  interface{}
-				Target interface{}
-			}{
-				Items:  []string{"1", "2", "3"},
-				Target: "2",
+		{
+			name: "success []int64 not contain",
+			args: args{
+				items:  []int64{1, 2, 3},
+				target: int64(4),
 			},
-			Expected: true,
+			want: want{
+				isContains: false,
+				err:        false,
+			},
 		},
-		"ok_[]string_not_contain": {
-			Input: struct {
-				Items  interface{}
-				Target interface{}
-			}{
-				Items:  []string{"1", "2", "3"},
-				Target: "4",
+		{
+			name: "success []string contain",
+			args: args{
+				items:  []string{"1", "2", "3"},
+				target: "2",
 			},
-			Expected: false,
+			want: want{
+				isContains: true,
+				err:        false,
+			},
 		},
-		"ng_other_type": {
-			Input: struct {
-				Items  interface{}
-				Target interface{}
-			}{
-				Items:  []int{1, 2, 3},
-				Target: 2,
+		{
+			name: "success []string not contain",
+			args: args{
+				items:  []string{"1", "2", "3"},
+				target: "4",
 			},
-			Expected: false,
+			want: want{
+				isContains: false,
+				err:        false,
+			},
+		},
+		{
+			name: "failed other type",
+			args: args{
+				items:  []float32{1, 2, 3},
+				target: 2,
+			},
+			want: want{
+				isContains: false,
+				err:        true,
+			},
 		},
 	}
 
-	for result, tt := range testCases {
-		t.Run(result, func(t *testing.T) {
-			got, _ := Contains(tt.Input.Items, tt.Input.Target)
-			if !reflect.DeepEqual(got, tt.Expected) {
-				t.Fatalf("want %#v, but %#v", tt.Expected, got)
-			}
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			actual, err := Contains(tt.args.items, tt.args.target)
+			assert.Equal(t, tt.want.err, err != nil, err)
+			assert.Equal(t, tt.want.isContains, actual)
 		})
 	}
 }

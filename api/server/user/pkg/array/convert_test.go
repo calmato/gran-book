@@ -1,43 +1,59 @@
 package array
 
 import (
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestConvertStrings(t *testing.T) {
-	testCases := map[string]struct {
-		Input    interface{}
-		Expected []string
+	t.Parallel()
+
+	tests := []struct {
+		name   string
+		items  interface{}
+		expect []string
+		err    bool
 	}{
-		"ok_[]int": {
-			Input:    []int{1, 2, 3},
-			Expected: []string{"1", "2", "3"},
+		{
+			name:   "success []int",
+			items:  []int{1, 2, 3},
+			expect: []string{"1", "2", "3"},
+			err:    false,
 		},
-		"ok_[]int32": {
-			Input:    []int32{1, 2, 3},
-			Expected: []string{"1", "2", "3"},
+		{
+			name:   "success []int32",
+			items:  []int32{1, 2, 3},
+			expect: []string{"1", "2", "3"},
+			err:    false,
 		},
-		"ok_[]int64": {
-			Input:    []int32{1, 2, 3},
-			Expected: []string{"1", "2", "3"},
+		{
+			name:   "success []int64",
+			items:  []int64{1, 2, 3},
+			expect: []string{"1", "2", "3"},
+			err:    false,
 		},
-		"ok_[]string": {
-			Input:    []string{"1", "2", "3"},
-			Expected: []string{"1", "2", "3"},
+		{
+			name:   "success []string",
+			items:  []string{"1", "2", "3"},
+			expect: []string{"1", "2", "3"},
+			err:    false,
 		},
-		"ng_other_type": {
-			Input:    []float64{1.0, 2.0, 3.0},
-			Expected: []string{},
+		{
+			name:   "failed other type",
+			items:  []float64{1.0, 2.0, 3.0},
+			expect: []string{},
+			err:    true,
 		},
 	}
 
-	for result, tt := range testCases {
-		t.Run(result, func(t *testing.T) {
-			got, _ := ConvertStrings(tt.Input)
-			if !reflect.DeepEqual(got, tt.Expected) {
-				t.Fatalf("want %#v, but %#v", tt.Expected, got)
-			}
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			actual, err := ConvertStrings(tt.items)
+			assert.Equal(t, tt.err, err != nil, err)
+			assert.Equal(t, tt.expect, actual)
 		})
 	}
 }

@@ -7,7 +7,7 @@ import (
 	"unicode"
 )
 
-var ErrStringConvert = errors.New("failed to convert from CamelCase to snake_case")
+var ErrStringConvert = errors.New("conv: failed to convert from CamelCase to snake_case")
 
 // CamelToSnake - キャメルケースからスネークケースへの変換
 func CamelToSnake(camel string) (string, error) {
