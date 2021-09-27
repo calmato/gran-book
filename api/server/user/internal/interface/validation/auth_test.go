@@ -154,6 +154,7 @@ func TestAuthRequestValidation_CreateAuth(t *testing.T) {
 	}
 
 	for _, tt := range testCases {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			target := NewAuthRequestValidation()
@@ -219,6 +220,7 @@ func TestAuthRequestValidation_UpdateAuthEmail(t *testing.T) {
 	}
 
 	for _, tt := range testCases {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			target := NewAuthRequestValidation()
@@ -308,6 +310,7 @@ func TestAuthRequestValidation_UpdateAuthPassword(t *testing.T) {
 	}
 
 	for _, tt := range testCases {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			target := NewAuthRequestValidation()
@@ -397,6 +400,7 @@ func TestAuthRequestValidation_UpdateAuthProfile(t *testing.T) {
 	}
 
 	for _, tt := range testCases {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			target := NewAuthRequestValidation()
@@ -821,6 +825,7 @@ func TestAuthRequestValidation_UpdateAuthAddress(t *testing.T) {
 	}
 
 	for _, tt := range testCases {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			target := NewAuthRequestValidation()
 
@@ -868,6 +873,7 @@ func TestAuthRequestValidation_UploadAuthThumbnail(t *testing.T) {
 	}
 
 	for _, tt := range testCases {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			target := NewAuthRequestValidation()
 
@@ -913,6 +919,7 @@ func TestAuthRequestValidation_RegisterAuthDevice(t *testing.T) {
 	}
 
 	for _, tt := range testCases {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			target := NewAuthRequestValidation()
 

@@ -66,24 +66,6 @@ func TestAdminRequestValidation_ListAdmin(t *testing.T) {
 			want: false,
 		},
 		{
-			name: "validation error: Order.OrderBy.in",
-			args: args{
-				req: &pb.ListAdminRequest{
-					Search: &pb.Search{
-						Field: "username",
-						Value: "テストユーザー",
-					},
-					Order: &pb.Order{
-						Field:   "created_at",
-						OrderBy: 2,
-					},
-					Limit:  200,
-					Offset: 100,
-				},
-			},
-			want: false,
-		},
-		{
 			name: "validation error: Limit.lte",
 			args: args{
 				req: &pb.ListAdminRequest{
@@ -122,6 +104,7 @@ func TestAdminRequestValidation_ListAdmin(t *testing.T) {
 	}
 
 	for _, tt := range testCases {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			target := NewAdminRequestValidation()
@@ -169,6 +152,7 @@ func TestAdminRequestValidation_GetAdmin(t *testing.T) {
 	}
 
 	for _, tt := range testCases {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			target := NewAdminRequestValidation()
@@ -648,6 +632,7 @@ func TestAdminRequestValidation_CreateAdmin(t *testing.T) {
 	}
 
 	for _, tt := range testCases {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			target := NewAdminRequestValidation()
@@ -754,6 +739,7 @@ func TestAdminRequestValidation_UpdateAdminContact(t *testing.T) {
 	}
 
 	for _, tt := range testCases {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			target := NewAdminRequestValidation()
@@ -860,6 +846,7 @@ func TestAdminRequestValidation_UpdateAdminPassword(t *testing.T) {
 	}
 
 	for _, tt := range testCases {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			target := NewAdminRequestValidation()
@@ -1145,6 +1132,7 @@ func TestAdminRequestValidation_UpdateAdminProfile(t *testing.T) {
 	}
 
 	for _, tt := range testCases {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			target := NewAdminRequestValidation()
@@ -1241,6 +1229,7 @@ func TestAdminRequestValidation_DeleteAdmin(t *testing.T) {
 	}
 
 	for _, tt := range testCases {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			target := NewAdminRequestValidation()
