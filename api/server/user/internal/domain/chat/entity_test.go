@@ -38,6 +38,41 @@ func TestRoom(t *testing.T) {
 				UpdatedAt: datetime.TimeToString(now),
 			},
 		},
+		{
+			name: "success with messagee",
+			room: &Room{
+				ID: "00000000-0000-0000-0000-000000000000",
+				UserIDs: []string{
+					"12345678-1234-1234-1234-123456789012",
+					"23456789-2345-2345-2345-234567890123",
+				},
+				LatestMessage: &Message{
+					ID:        "00000000-0000-0000-0000-000000000000",
+					Text:      "テストメッセージです。",
+					Image:     "",
+					UserID:    "12345678-1234-1234-1234-123456789012",
+					CreatedAt: now,
+				},
+				CreatedAt: now,
+				UpdatedAt: now,
+			},
+			expectProto: &pb.Room{
+				Id: "00000000-0000-0000-0000-000000000000",
+				UserIds: []string{
+					"12345678-1234-1234-1234-123456789012",
+					"23456789-2345-2345-2345-234567890123",
+				},
+				LatestMessage: &pb.Message{
+					Id:        "00000000-0000-0000-0000-000000000000",
+					Text:      "テストメッセージです。",
+					Image:     "",
+					UserId:    "12345678-1234-1234-1234-123456789012",
+					CreatedAt: datetime.TimeToString(now),
+				},
+				CreatedAt: datetime.TimeToString(now),
+				UpdatedAt: datetime.TimeToString(now),
+			},
+		},
 	}
 	for _, tt := range tests {
 		tt := tt
