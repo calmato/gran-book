@@ -13,6 +13,6 @@ K8S_SECRET_PRIVATE_KEY=`cat /etc/letsencrypt/live/<domain-name>/privkey.pem | ba
 certbot renew --force-renew
 
 kubectl patch secret -n gateway nginx-secret -p "{\"data\":{\"cert.pem\": \"${K8S_SECRET_CERTIFICATE}\", \"privkey.pem\": \"${K8S_SECRET_PRIVATE_KEY}\"}}"
-kubectl rollout restart -n gateway nginx
+kubectl rollout restart -n gateway deploy/nginx
 
 systemctl restart nginx
