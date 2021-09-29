@@ -27,7 +27,7 @@ func NewUserServer(urv validation.UserRequestValidation, ua application.UserAppl
 func (s *userServer) ListUser(ctx context.Context, req *pb.ListUserRequest) (*pb.UserListResponse, error) {
 	err := s.userRequestValidation.ListUser(req)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	limit := int(req.GetLimit())
@@ -59,7 +59,7 @@ func (s *userServer) ListUser(ctx context.Context, req *pb.ListUserRequest) (*pb
 
 	us, total, err := s.userApplication.List(ctx, q)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	res := getUserListResponse(us, limit, offset, total)
@@ -71,19 +71,19 @@ func (s *userServer) ListFollow(ctx context.Context, req *pb.ListFollowRequest) 
 	// TODO: remove
 	u, err := s.userApplication.Authentication(ctx)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	err = s.userRequestValidation.ListFollow(req)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	limit := int(req.GetLimit())
 	offset := int(req.GetOffset())
 	fs, total, err := s.userApplication.ListFollow(ctx, u.ID, req.GetUserId(), limit, offset)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	res := getFollowListResponse(fs, limit, offset, total)
@@ -95,19 +95,19 @@ func (s *userServer) ListFollower(ctx context.Context, req *pb.ListFollowerReque
 	// TODO: remove
 	u, err := s.userApplication.Authentication(ctx)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	err = s.userRequestValidation.ListFollower(req)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	limit := int(req.GetLimit())
 	offset := int(req.GetOffset())
 	fs, total, err := s.userApplication.ListFollower(ctx, u.ID, req.GetUserId(), limit, offset)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	res := getFollowerListResponse(fs, limit, offset, total)
@@ -118,12 +118,12 @@ func (s *userServer) ListFollower(ctx context.Context, req *pb.ListFollowerReque
 func (s *userServer) MultiGetUser(ctx context.Context, req *pb.MultiGetUserRequest) (*pb.UserListResponse, error) {
 	err := s.userRequestValidation.MultiGetUser(req)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	us, err := s.userApplication.MultiGet(ctx, req.GetUserIds())
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	res := getUserListResponse(us, len(req.GetUserIds()), 0, len(us))
@@ -134,12 +134,12 @@ func (s *userServer) MultiGetUser(ctx context.Context, req *pb.MultiGetUserReque
 func (s *userServer) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.UserResponse, error) {
 	err := s.userRequestValidation.GetUser(req)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	u, err := s.userApplication.Get(ctx, req.GetUserId())
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	res := getUserResponse(u)
@@ -153,17 +153,17 @@ func (s *userServer) GetUserProfile(
 	// TODO: remove
 	cu, err := s.userApplication.Authentication(ctx)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	err = s.userRequestValidation.GetUserProfile(req)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	u, err := s.userApplication.GetUserProfile(ctx, cu.ID, req.GetUserId())
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	res := getUserProfileResponse(u)
@@ -174,12 +174,12 @@ func (s *userServer) GetUserProfile(
 func (s *userServer) Follow(ctx context.Context, req *pb.FollowRequest) (*pb.UserProfileResponse, error) {
 	err := s.userRequestValidation.Follow(req)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	u, err := s.userApplication.Follow(ctx, req.GetUserId(), req.GetFollowerId())
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	res := getUserProfileResponse(u)
@@ -190,12 +190,12 @@ func (s *userServer) Follow(ctx context.Context, req *pb.FollowRequest) (*pb.Use
 func (s *userServer) Unfollow(ctx context.Context, req *pb.UnfollowRequest) (*pb.UserProfileResponse, error) {
 	err := s.userRequestValidation.Unfollow(req)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	u, err := s.userApplication.Unfollow(ctx, req.GetUserId(), req.GetFollowerId())
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	res := getUserProfileResponse(u)

@@ -1,22 +1,14 @@
 package server
 
 import (
-	"fmt"
-
 	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
-func errorHandling(e error) error {
-	res := toGRPCError(e)
-
-	return res
-}
-
 func toGRPCError(e error) error {
-	c := getGRPCErrorCode(e)
+	c := getGRPCErrorCode(getErrorCode(e))
 
 	st := status.New(c, c.String())
 
@@ -26,23 +18,15 @@ func toGRPCError(e error) error {
 			FieldViolations: getValidationErrors(e),
 		}
 
-		dt, err := st.WithDetails(br)
-		if err != nil {
-			dt = status.New(codes.Unknown, fmt.Sprintf("Unexpected error attaching metadata: %v", err))
-		}
-
+		dt, _ := st.WithDetails(br)
 		return dt.Err()
-	case codes.Internal:
+	case codes.Internal, codes.Unknown:
 		br := &errdetails.LocalizedMessage{
 			Locale:  "en-US",
 			Message: getError(e),
 		}
 
-		dt, err := st.WithDetails(br)
-		if err != nil {
-			dt = status.New(codes.Unknown, fmt.Sprintf("Unexpected error attaching metadata: %v", err))
-		}
-
+		dt, _ := st.WithDetails(br)
 		return dt.Err()
 	default:
 		return st.Err()
@@ -65,8 +49,8 @@ func getErrorCode(e error) exception.ErrorCode {
 	return exception.Unknown
 }
 
-func getGRPCErrorCode(e error) codes.Code {
-	switch getErrorCode(e) {
+func getGRPCErrorCode(code exception.ErrorCode) codes.Code {
+	switch code {
 	case exception.InvalidRequestValidation, exception.UnableConvertBase64:
 		return codes.InvalidArgument
 	case exception.NotFound:

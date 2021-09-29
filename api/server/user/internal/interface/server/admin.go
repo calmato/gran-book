@@ -30,7 +30,7 @@ func NewAdminServer(arv validation.AdminRequestValidation, ua application.UserAp
 func (s *adminServer) ListAdmin(ctx context.Context, req *pb.ListAdminRequest) (*pb.AdminListResponse, error) {
 	err := s.adminRequestValidation.ListAdmin(req)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	limit := int(req.GetLimit())
@@ -62,7 +62,7 @@ func (s *adminServer) ListAdmin(ctx context.Context, req *pb.ListAdminRequest) (
 
 	us, total, err := s.userApplication.ListAdmin(ctx, q)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	res := getAdminListResponse(us, limit, offset, total)
@@ -73,12 +73,12 @@ func (s *adminServer) ListAdmin(ctx context.Context, req *pb.ListAdminRequest) (
 func (s *adminServer) GetAdmin(ctx context.Context, req *pb.GetAdminRequest) (*pb.AdminResponse, error) {
 	err := s.adminRequestValidation.GetAdmin(req)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	u, err := s.userApplication.GetAdmin(ctx, req.GetUserId())
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	res := getAdminResponse(u)
@@ -89,7 +89,7 @@ func (s *adminServer) GetAdmin(ctx context.Context, req *pb.GetAdminRequest) (*p
 func (s *adminServer) CreateAdmin(ctx context.Context, req *pb.CreateAdminRequest) (*pb.AdminResponse, error) {
 	err := s.adminRequestValidation.CreateAdmin(req)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	u := &user.User{
@@ -106,7 +106,7 @@ func (s *adminServer) CreateAdmin(ctx context.Context, req *pb.CreateAdminReques
 
 	err = s.userApplication.Create(ctx, u)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	res := getAdminResponse(u)
@@ -119,12 +119,12 @@ func (s *adminServer) UpdateAdminContact(
 ) (*pb.AdminResponse, error) {
 	err := s.adminRequestValidation.UpdateAdminContact(req)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	u, err := s.userApplication.GetAdmin(ctx, req.GetUserId())
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	u.Email = strings.ToLower(req.GetEmail())
@@ -132,7 +132,7 @@ func (s *adminServer) UpdateAdminContact(
 
 	err = s.userApplication.Update(ctx, u)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	res := getAdminResponse(u)
@@ -145,19 +145,19 @@ func (s *adminServer) UpdateAdminPassword(
 ) (*pb.AdminResponse, error) {
 	err := s.adminRequestValidation.UpdateAdminPassword(req)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	u, err := s.userApplication.GetAdmin(ctx, req.GetUserId())
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	u.Password = req.GetPassword()
 
 	err = s.userApplication.UpdatePassword(ctx, u)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	res := getAdminResponse(u)
@@ -170,12 +170,12 @@ func (s *adminServer) UpdateAdminProfile(
 ) (*pb.AdminResponse, error) {
 	err := s.adminRequestValidation.UpdateAdminProfile(req)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	u, err := s.userApplication.GetAdmin(ctx, req.GetUserId())
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	u.Username = req.GetUsername()
@@ -188,7 +188,7 @@ func (s *adminServer) UpdateAdminProfile(
 
 	err = s.userApplication.Update(ctx, u)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	res := getAdminResponse(u)
@@ -206,7 +206,7 @@ func (s *adminServer) UploadAdminThumbnail(stream pb.AdminService_UploadAdminThu
 		if err == io.EOF {
 			u, err := s.userApplication.GetAdmin(ctx, userID)
 			if err != nil {
-				return errorHandling(err)
+				return toGRPCError(err)
 			}
 
 			// 分割して送信されてきたサムネイルのバイナリをまとめる
@@ -217,7 +217,7 @@ func (s *adminServer) UploadAdminThumbnail(stream pb.AdminService_UploadAdminThu
 
 			thumbnailURL, err := s.userApplication.UploadThumbnail(ctx, u.ID, thumbnail)
 			if err != nil {
-				return errorHandling(err)
+				return toGRPCError(err)
 			}
 
 			res := getAdminThumbnailResponse(thumbnailURL)
@@ -225,12 +225,12 @@ func (s *adminServer) UploadAdminThumbnail(stream pb.AdminService_UploadAdminThu
 		}
 
 		if err != nil {
-			return errorHandling(err)
+			return toGRPCError(err)
 		}
 
 		err = s.adminRequestValidation.UploadAdminThumbnail(req)
 		if err != nil {
-			return errorHandling(err)
+			return toGRPCError(err)
 		}
 
 		if userID == "" {
@@ -239,7 +239,7 @@ func (s *adminServer) UploadAdminThumbnail(stream pb.AdminService_UploadAdminThu
 
 		num := int(req.GetPosition())
 		if thumbnailBytes[num] != nil {
-			return errorHandling(exception.InvalidRequestValidation.New(errInvalidUploadRequest))
+			return toGRPCError(exception.InvalidRequestValidation.New(errInvalidUploadRequest))
 		}
 
 		thumbnailBytes[num] = req.GetThumbnail()
@@ -250,17 +250,17 @@ func (s *adminServer) UploadAdminThumbnail(stream pb.AdminService_UploadAdminThu
 func (s *adminServer) DeleteAdmin(ctx context.Context, req *pb.DeleteAdminRequest) (*pb.Empty, error) {
 	err := s.adminRequestValidation.DeleteAdmin(req)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	u, err := s.userApplication.GetAdmin(ctx, req.GetUserId())
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	err = s.userApplication.DeleteAdmin(ctx, u)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	return &pb.Empty{}, nil
