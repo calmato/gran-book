@@ -4,6 +4,17 @@ import React, { useContext } from 'react';
 import { AuthContext, AuthProvider } from '~/context/auth';
 import { AuthValues, initialState, ProfileValues } from '~/store/models/auth';
 
+/**
+ * firebase authenticationのmock
+ */
+jest.mock('~/lib/firebase', () => {
+  return {
+    auth: jest.fn().mockReturnThis(),
+    onAuthStateChanged: jest.fn(),
+    signOut: jest.fn(),
+  };
+});
+
 describe('auth context', () => {
   test('can dispatch SET_AUTH_VALUES', () => {
     const wrapper = ({ children }) => <AuthProvider>{children}</AuthProvider>;
