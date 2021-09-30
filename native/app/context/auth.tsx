@@ -39,8 +39,6 @@ const reducer: React.Reducer<Model, AuthStateAction> = function reducer(
         ...state,
         ...action.payload,
       };
-    default:
-      return state;
   }
 };
 
