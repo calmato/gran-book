@@ -1,10 +1,10 @@
 import 'jest';
-import HeaderText from '@/components/atoms/HeaderText';
 import { shallow, configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import React from 'react';
 
 import { View, Text, TextStyle, ViewStyle } from 'react-native';
+import HeaderText from '@/components/atoms/HeaderText';
 import { COLOR } from '~~/constants/theme';
 
 configure({ adapter: new Adapter() });

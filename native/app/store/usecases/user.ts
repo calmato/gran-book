@@ -25,16 +25,18 @@ export function getOwnProfileAsync(id: string) {
           productsList,
         } = res.data;
 
-        const products: User.product[] = productsList.map((val: UserProfileV1Response.Product.AsObject) => {
-          const product: User.product = {
-            id: val.id,
-            name: val.name,
-            thumbnailUrl: val.thumbnailUrl,
-            authors: val.authorsList,
-          };
+        const products: User.product[] = productsList.map(
+          (val: UserProfileV1Response.Product.AsObject) => {
+            const product: User.product = {
+              id: val.id,
+              name: val.name,
+              thumbnailUrl: val.thumbnailUrl,
+              authors: val.authorsList,
+            };
 
-          return product;
-        });
+            return product;
+          },
+        );
 
         const values: User.UserValues = {
           id,

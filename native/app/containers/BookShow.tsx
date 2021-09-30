@@ -1,17 +1,17 @@
-import { RouteProp } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
-import React, { ReactElement, useContext } from "react";
-import { BookContext } from "~/context/book";
-import BookShow from "~/screens/BookShow";
-import { BookshelfTabStackParamList } from "~/types/navigation";
+import { RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import React, { ReactElement, useContext } from 'react';
+import { BookContext } from '~/context/book';
+import BookShow from '~/screens/BookShow';
+import { BookshelfTabStackParamList } from '~/types/navigation';
 
 interface Props {
   route:
-    | RouteProp<BookshelfTabStackParamList, "SearchResultBookShow">
-    | RouteProp<BookshelfTabStackParamList, "BookShow">;
+    | RouteProp<BookshelfTabStackParamList, 'SearchResultBookShow'>
+    | RouteProp<BookshelfTabStackParamList, 'BookShow'>;
   navigation:
-    | StackNavigationProp<BookshelfTabStackParamList, "SearchResultBookShow">
-    | StackNavigationProp<BookshelfTabStackParamList, "BookShow">;
+    | StackNavigationProp<BookshelfTabStackParamList, 'SearchResultBookShow'>
+    | StackNavigationProp<BookshelfTabStackParamList, 'BookShow'>;
 }
 
 export default function ConnectedBookShow(props: Props): ReactElement {

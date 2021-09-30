@@ -1,9 +1,9 @@
 import 'jest';
 
-import BackIcon from '@/components/atoms/BackIcon';
 import React from 'react';
 import { colors } from 'react-native-elements';
 import * as ShallowRenderer from 'react-test-renderer/shallow';
+import BackIcon from '@/components/atoms/BackIcon';
 
 describe('<BackIcon />', () => {
   let render: ShallowRenderer.ShallowRenderer;

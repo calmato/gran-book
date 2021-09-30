@@ -1,7 +1,7 @@
-import React from "react";
-import AccountSetting from "~/screens/AccoutSetting";
-import { useReduxDispatch } from "~/store/modules";
-import { signOut } from "~/store/usecases/v2/auth";
+import React from 'react';
+import AccountSetting from '~/screens/AccoutSetting';
+import { useReduxDispatch } from '~/store/modules';
+import { signOut } from '~/store/usecases/v2/auth';
 
 export default function ConnectAccountSetting(): JSX.Element {
   const dispatch = useReduxDispatch();
@@ -12,7 +12,7 @@ export default function ConnectAccountSetting(): JSX.Element {
         return signOut();
       },
     }),
-    [dispatch]
+    [dispatch],
   );
 
   return <AccountSetting actions={actions} />;
