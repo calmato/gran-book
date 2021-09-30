@@ -3,7 +3,7 @@ import { initialState, Model, UserValues } from '~/store/models/user';
 
 interface UserContextProps {
   userState: Model;
-  dispatch: React.Dispatch<userStateAction>;
+  dispatch: React.Dispatch<UserStateAction>;
 }
 
 const UserContext = createContext<UserContextProps>({
@@ -16,14 +16,14 @@ const UserContext = createContext<UserContextProps>({
 type ActionType = 'SET_USER';
 type Payload = UserValues;
 
-interface userStateAction {
+interface UserStateAction {
   type: ActionType;
   payload: Payload;
 }
 
-const reducer: React.Reducer<Model, userStateAction> = function reducer(
+const reducer: React.Reducer<Model, UserStateAction> = function reducer(
   state: Model,
-  action: userStateAction,
+  action: UserStateAction,
 ): Model {
   switch (action.type) {
     case 'SET_USER':
@@ -31,8 +31,6 @@ const reducer: React.Reducer<Model, userStateAction> = function reducer(
         ...state,
         ...action.payload,
       };
-    default:
-      return state;
   }
 };
 
