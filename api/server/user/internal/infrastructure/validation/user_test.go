@@ -228,7 +228,7 @@ func TestUserDomainValidation_Relationship(t *testing.T) {
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
 				mocks.UserRepository.EXPECT().
 					GetRelationshipIDByUserID(ctx, "00000000-0000-0000-0000-000000000000", "11111111-1111-1111-1111-111111111111").
-					Return(nil, test.ErrMock)
+					Return(0, test.ErrMock)
 			},
 			args: args{
 				relationship: &user.Relationship{
@@ -245,7 +245,7 @@ func TestUserDomainValidation_Relationship(t *testing.T) {
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
 				mocks.UserRepository.EXPECT().
 					GetRelationshipIDByUserID(ctx, "00000000-0000-0000-0000-000000000000", "11111111-1111-1111-1111-111111111111").
-					Return(nil, test.ErrMock)
+					Return(0, test.ErrMock)
 			},
 			args: args{
 				relationship: &user.Relationship{
