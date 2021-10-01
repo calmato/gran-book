@@ -29,7 +29,8 @@ func ConvertStrings(items interface{}) ([]string, error) {
 	case []string:
 		strs = v
 	default:
-		return []string{}, fmt.Errorf("array: %v is an unsupported type", reflect.TypeOf(items))
+		err := fmt.Errorf("%w, %v", ErrUnsupportedType, reflect.TypeOf(items))
+		return []string{}, err
 	}
 
 	return strs, nil

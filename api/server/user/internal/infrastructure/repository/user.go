@@ -4,17 +4,16 @@ import (
 	"context"
 	"encoding/base64"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"strings"
 	"time"
 
 	"firebase.google.com/go/v4/auth"
-	"github.com/calmato/gran-book/api/server/user/internal/domain/exception"
 	"github.com/calmato/gran-book/api/server/user/internal/domain/user"
 	"github.com/calmato/gran-book/api/server/user/pkg/database"
 	"github.com/calmato/gran-book/api/server/user/pkg/firebase/authentication"
 	"github.com/calmato/gran-book/api/server/user/pkg/metadata"
+	"gorm.io/gorm"
 )
 
 type userRepository struct {
@@ -32,18 +31,6 @@ type firebaseToken struct {
 	Claims   map[string]interface{} `json:"-"`
 }
 
-const (
-	userTable         = "users"
-	relationshipTable = "relationships"
-)
-
-var (
-	errNotExistsUserInfo            = errors.New("repository: user info is not exists in firebase authentication")
-	errNotExistsAuthorizationHeader = errors.New("repository: authorization header is not contain")
-	errInvalidAuthorizationHeader   = errors.New("repository: authorization header is invalid")
-	errNotVerifyToken               = errors.New("repository: id token is not verify")
-)
-
 // NewUserRepository - UserRepositoryの生成
 func NewUserRepository(c *database.Client, auth *authentication.Auth) user.Repository {
 	return &userRepository{
@@ -55,12 +42,12 @@ func NewUserRepository(c *database.Client, auth *authentication.Auth) user.Repos
 func (r *userRepository) Authentication(ctx context.Context) (string, error) {
 	t, err := r.getToken(ctx)
 	if err != nil {
-		return "", exception.Unauthorized.New(err)
+		return "", toDBError(err)
 	}
 
 	fbToken, err := r.decodeToken(t)
 	if err != nil {
-		return "", exception.Unauthorized.New(err)
+		return "", toDBError(err)
 	}
 
 	return fbToken.Subject, nil
@@ -70,11 +57,7 @@ func (r *userRepository) List(ctx context.Context, q *database.ListQuery) (user.
 	us := user.Users{}
 
 	err := r.client.GetListQuery(userTable, r.client.DB, q).Find(&us).Error
-	if err != nil {
-		return nil, exception.ErrorInDatastore.New(err)
-	}
-
-	return us, nil
+	return us, toDBError(err)
 }
 
 func (r *userRepository) ListFollow(ctx context.Context, q *database.ListQuery) (user.Follows, error) {
@@ -92,11 +75,7 @@ func (r *userRepository) ListFollow(ctx context.Context, q *database.ListQuery) 
 		Select(fields).
 		Joins("LEFT JOIN users ON relationships.follow_id = users.id").
 		Find(&fs).Error
-	if err != nil {
-		return nil, exception.ErrorInDatastore.New(err)
-	}
-
-	return fs, nil
+	return fs, toDBError(err)
 }
 
 func (r *userRepository) ListFollower(ctx context.Context, q *database.ListQuery) (user.Followers, error) {
@@ -115,11 +94,7 @@ func (r *userRepository) ListFollower(ctx context.Context, q *database.ListQuery
 		Select(fields).
 		Joins("LEFT JOIN users ON relationships.follower_id = users.id").
 		Find(&fs).Error
-	if err != nil {
-		return nil, exception.ErrorInDatastore.New(err)
-	}
-
-	return fs, nil
+	return fs, toDBError(err)
 }
 
 func (r *userRepository) ListInstanceID(ctx context.Context, q *database.ListQuery) ([]string, error) {
@@ -129,11 +104,7 @@ func (r *userRepository) ListInstanceID(ctx context.Context, q *database.ListQue
 		GetListQuery(userTable, r.client.DB, q).
 		Select("instance_id").
 		Find(&instanceIDs).Error
-	if err != nil {
-		return nil, exception.ErrorInDatastore.New(err)
-	}
-
-	return instanceIDs, nil
+	return instanceIDs, toDBError(err)
 }
 
 func (r *userRepository) ListFollowID(ctx context.Context, followerID string, followIDs ...string) ([]string, error) {
@@ -149,11 +120,7 @@ func (r *userRepository) ListFollowID(ctx context.Context, followerID string, fo
 	}
 
 	err := sql.Find(&ids).Error
-	if err != nil {
-		return nil, exception.ErrorInDatastore.New(err)
-	}
-
-	return ids, nil
+	return ids, toDBError(err)
 }
 
 func (r *userRepository) ListFollowerID(ctx context.Context, followID string, followerIDs ...string) ([]string, error) {
@@ -169,51 +136,31 @@ func (r *userRepository) ListFollowerID(ctx context.Context, followID string, fo
 	}
 
 	err := sql.Find(&ids).Error
-	if err != nil {
-		return nil, exception.ErrorInDatastore.New(err)
-	}
-
-	return ids, nil
+	return ids, toDBError(err)
 }
 
 func (r *userRepository) Count(ctx context.Context, q *database.ListQuery) (int, error) {
 	total, err := r.client.GetListCount(userTable, r.client.DB, q)
-	if err != nil {
-		return 0, exception.ErrorInDatastore.New(err)
-	}
-
-	return total, nil
+	return total, toDBError(err)
 }
 
 func (r *userRepository) CountRelationship(ctx context.Context, q *database.ListQuery) (int, error) {
 	total, err := r.client.GetListCount(relationshipTable, r.client.DB, q)
-	if err != nil {
-		return 0, exception.ErrorInDatastore.New(err)
-	}
-
-	return total, nil
+	return total, toDBError(err)
 }
 
 func (r *userRepository) MultiGet(ctx context.Context, userIDs []string) (user.Users, error) {
 	us := user.Users{}
 
 	err := r.client.DB.Table(userTable).Where("id IN (?)", userIDs).Find(&us).Error
-	if err != nil {
-		return nil, exception.NotFound.New(err)
-	}
-
-	return us, nil
+	return us, toDBError(err)
 }
 
 func (r *userRepository) Get(ctx context.Context, userID string) (*user.User, error) {
 	u := &user.User{}
 
 	err := r.client.DB.Table(userTable).First(u, "id = ?", userID).Error
-	if err != nil {
-		return nil, exception.NotFound.New(err)
-	}
-
-	return u, nil
+	return u, toDBError(err)
 }
 
 func (r *userRepository) GetAdmin(ctx context.Context, userID string) (*user.User, error) {
@@ -223,11 +170,7 @@ func (r *userRepository) GetAdmin(ctx context.Context, userID string) (*user.Use
 		Table(userTable).
 		Where("role IN (?)", []int{user.AdminRole, user.DeveloperRole, user.OperatorRole}).
 		First(u, "id = ?", userID).Error
-	if err != nil {
-		return nil, exception.NotFound.New(err)
-	}
-
-	return u, nil
+	return u, toDBError(err)
 }
 
 func (r *userRepository) GetRelationship(
@@ -238,20 +181,12 @@ func (r *userRepository) GetRelationship(
 	err := r.client.DB.
 		Table(relationshipTable).
 		First(rs, "follow_id = ? AND follower_id = ?", followID, followerID).Error
-	if err != nil {
-		return nil, exception.NotFound.New(err)
-	}
-
-	return rs, nil
+	return rs, toDBError(err)
 }
 
 func (r *userRepository) GetUserIDByEmail(ctx context.Context, email string) (string, error) {
 	uid, err := r.auth.GetUIDByEmail(ctx, email)
-	if err != nil {
-		return "", exception.NotFound.New(err)
-	}
-
-	return uid, nil
+	return uid, toFirebaseError(err)
 }
 
 func (r *userRepository) GetRelationshipIDByUserID(
@@ -263,105 +198,145 @@ func (r *userRepository) GetRelationshipIDByUserID(
 		Table(relationshipTable).
 		Select("id").
 		First(rs, "follow_id = ? AND follower_id = ?", followID, followerID).Error
-	if err != nil {
-		return 0, exception.NotFound.New(err)
-	}
-
-	return rs.ID, nil
+	return rs.ID, toDBError(err)
 }
 
 func (r *userRepository) Create(ctx context.Context, u *user.User) error {
 	_, err := r.auth.CreateUser(ctx, u.ID, u.Email, u.Password)
 	if err != nil {
-		return exception.ErrorInDatastore.New(err)
+		return toFirebaseError(err)
 	}
 
-	err = r.client.DB.Table(userTable).Create(&u).Error
+	tx, err := r.client.Begin()
 	if err != nil {
-		return exception.ErrorInDatastore.New(err)
+		return toDBError(err)
+	}
+	defer r.client.Close(tx)
+
+	err = r.createUser(tx, u)
+	if err != nil {
+		tx.Rollback()
+		return toDBError(err)
 	}
 
-	return nil
+	return toDBError(tx.Commit().Error)
 }
 
 func (r *userRepository) CreateWithOAuth(ctx context.Context, u *user.User) error {
 	au, err := r.getAuth(ctx, u.ID)
 	if err != nil {
-		return exception.Unauthorized.New(err)
+		return toDBError(err)
 	}
 
 	u.Username = r.getUsername(au.UserInfo.DisplayName, u.ID)
 	u.Email = au.UserInfo.Email
 	u.ThumbnailURL = au.UserInfo.PhotoURL
 
-	err = r.client.DB.Table(userTable).Create(&u).Error
+	tx, err := r.client.Begin()
 	if err != nil {
-		return exception.ErrorInDatastore.New(err)
+		return toDBError(err)
+	}
+	defer r.client.Close(tx)
+
+	err = r.createUser(tx, u)
+	if err != nil {
+		tx.Rollback()
+		return toDBError(err)
 	}
 
-	return nil
+	return toDBError(tx.Commit().Error)
+}
+
+func (r *userRepository) createUser(tx *gorm.DB, u *user.User) error {
+	return tx.Table(userTable).Create(&u).Error
 }
 
 func (r *userRepository) CreateRelationship(ctx context.Context, rs *user.Relationship) error {
-	err := r.client.DB.Table(relationshipTable).Create(&rs).Error
+	tx, err := r.client.Begin()
 	if err != nil {
-		return exception.ErrorInDatastore.New(err)
+		return toDBError(err)
+	}
+	defer r.client.Close(tx)
+
+	err = r.createRelationship(tx, rs)
+	if err != nil {
+		tx.Rollback()
+		return toDBError(err)
 	}
 
-	return nil
+	return toDBError(tx.Commit().Error)
+}
+
+func (r *userRepository) createRelationship(tx *gorm.DB, rs *user.Relationship) error {
+	return tx.Table(relationshipTable).Create(&rs).Error
 }
 
 func (r *userRepository) Update(ctx context.Context, u *user.User) error {
 	au, err := r.getAuth(ctx, u.ID)
 	if err != nil {
-		return exception.Unauthorized.New(err)
+		return toDBError(err)
 	}
 
 	if u.Email != au.UserInfo.Email {
 		err = r.auth.UpdateEmail(ctx, u.ID, u.Email)
 		if err != nil {
-			return exception.ErrorInDatastore.New(err)
+			return toFirebaseError(err)
 		}
 	}
 
-	err = r.client.DB.Table(userTable).Save(u).Error
+	tx, err := r.client.Begin()
 	if err != nil {
-		return exception.ErrorInDatastore.New(err)
+		return toDBError(err)
+	}
+	defer r.client.Close(tx)
+
+	err = r.updateUser(tx, u)
+	if err != nil {
+		tx.Rollback()
+		return toDBError(err)
 	}
 
-	return nil
+	return toDBError(tx.Commit().Error)
+}
+
+func (r *userRepository) updateUser(tx *gorm.DB, u *user.User) error {
+	return tx.Table(userTable).Save(&u).Error
 }
 
 func (r *userRepository) UpdatePassword(ctx context.Context, uid string, password string) error {
 	err := r.auth.UpdatePassword(ctx, uid, password)
-	if err != nil {
-		return exception.ErrorInDatastore.New(err)
-	}
-
-	return nil
+	return toFirebaseError(err)
 }
 
 func (r *userRepository) Delete(ctx context.Context, userID string) error {
-	err := r.client.DB.Table(userTable).Where("id = ?", userID).Delete(&user.User{}).Error
+	tx, err := r.client.Begin()
 	if err != nil {
-		return exception.ErrorInDatastore.New(err)
+		return toDBError(err)
+	}
+	defer r.client.Close(tx)
+
+	err = r.deleteUser(tx, userID)
+	if err != nil {
+		tx.Rollback()
+		return toDBError(err)
+	}
+
+	if err = tx.Commit().Error; err != nil {
+		tx.Rollback()
+		return toDBError(err)
 	}
 
 	err = r.auth.DeleteUser(ctx, userID)
-	if err != nil {
-		return exception.ErrorInDatastore.New(err)
-	}
+	return toFirebaseError(err)
+}
 
-	return nil
+func (r *userRepository) deleteUser(tx *gorm.DB, userID string) error {
+	return tx.Table(userTable).Where("id = ?", userID).Delete(&user.User{}).Error
 }
 
 func (r *userRepository) DeleteRelationship(ctx context.Context, relationshipID int) error {
 	err := r.client.DB.Table(relationshipTable).Where("id = ?", relationshipID).Delete(&user.Relationship{}).Error
-	if err != nil {
-		return exception.ErrorInDatastore.New(err)
-	}
-
-	return nil
+	return err
 }
 
 func (r *userRepository) getAuth(ctx context.Context, userID string) (*auth.UserRecord, error) {

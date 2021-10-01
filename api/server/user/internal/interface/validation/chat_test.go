@@ -54,6 +54,7 @@ func TestChatRequestValidation_ListRoom(t *testing.T) {
 	}
 
 	for _, tt := range testCases {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			target := NewChatRequestValidation()
@@ -131,6 +132,7 @@ func TestChatRequestValidation_CreateRoom(t *testing.T) {
 	}
 
 	for _, tt := range testCases {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			target := NewChatRequestValidation()
@@ -215,6 +217,7 @@ func TestChatRequestValidation_CreateMessage(t *testing.T) {
 	}
 
 	for _, tt := range testCases {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			target := NewChatRequestValidation()
@@ -266,6 +269,7 @@ func TestChatRequestValidation_UploadChatImage(t *testing.T) {
 	}
 
 	for _, tt := range testCases {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			target := NewChatRequestValidation()
 

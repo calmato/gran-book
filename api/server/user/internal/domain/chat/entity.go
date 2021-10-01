@@ -28,8 +28,8 @@ func (r *Room) Proto() *pb.Room {
 	return &pb.Room{
 		Id:            r.ID,
 		UserIds:       r.UserIDs,
-		CreatedAt:     datetime.TimeToString(r.CreatedAt),
-		UpdatedAt:     datetime.TimeToString(r.UpdatedAt),
+		CreatedAt:     datetime.FormatTime(r.CreatedAt),
+		UpdatedAt:     datetime.FormatTime(r.UpdatedAt),
 		LatestMessage: m,
 	}
 }
@@ -58,6 +58,6 @@ func (m *Message) Proto() *pb.Message {
 		UserId:    m.UserID,
 		Text:      m.Text,
 		Image:     m.Image,
-		CreatedAt: datetime.TimeToString(m.CreatedAt),
+		CreatedAt: datetime.FormatTime(m.CreatedAt),
 	}
 }

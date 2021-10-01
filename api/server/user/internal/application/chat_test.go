@@ -123,6 +123,22 @@ func TestChatApplication_GetRoom(t *testing.T) {
 			},
 		},
 		{
+			name: "failed: internal error",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
+				mocks.ChatRepository.EXPECT().
+					GetRoom(ctx, "room01").
+					Return(nil, exception.ErrorInDatastore.New(test.ErrMock))
+			},
+			args: args{
+				roomID: "room01",
+				userID: "user01",
+			},
+			want: want{
+				room: nil,
+				err:  exception.ErrorInDatastore.New(test.ErrMock),
+			},
+		},
+		{
 			name: "failed: forbidden",
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks) {
 				mocks.ChatRepository.EXPECT().

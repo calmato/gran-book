@@ -381,12 +381,13 @@ func (a *userApplication) UploadThumbnail(ctx context.Context, userID string, th
 func (a *userApplication) getRelationship(
 	ctx context.Context, currentUserID, targetUserID string,
 ) (isFollowing, isFollowed bool, followCount, followerCount int, err error) {
-	followIDs, err := a.userRepository.ListFollowID(ctx, targetUserID)
+	var followIDs, followerIDs []string
+	followIDs, err = a.userRepository.ListFollowID(ctx, targetUserID)
 	if err != nil {
 		return
 	}
 
-	followerIDs, err := a.userRepository.ListFollowerID(ctx, targetUserID)
+	followerIDs, err = a.userRepository.ListFollowerID(ctx, targetUserID)
 	if err != nil {
 		return
 	}

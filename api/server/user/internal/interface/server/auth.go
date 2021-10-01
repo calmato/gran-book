@@ -29,7 +29,7 @@ func NewAuthServer(arv validation.AuthRequestValidation, ua application.UserAppl
 func (s *authServer) GetAuth(ctx context.Context, req *pb.Empty) (*pb.AuthResponse, error) {
 	u, err := s.userApplication.Authentication(ctx)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	res := getAuthResponse(u)
@@ -40,7 +40,7 @@ func (s *authServer) GetAuth(ctx context.Context, req *pb.Empty) (*pb.AuthRespon
 func (s *authServer) CreateAuth(ctx context.Context, req *pb.CreateAuthRequest) (*pb.AuthResponse, error) {
 	err := s.authRequestValidation.CreateAuth(req)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	u := &user.User{
@@ -51,7 +51,7 @@ func (s *authServer) CreateAuth(ctx context.Context, req *pb.CreateAuthRequest) 
 
 	err = s.userApplication.Create(ctx, u)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	res := getAuthResponse(u)
@@ -62,19 +62,19 @@ func (s *authServer) CreateAuth(ctx context.Context, req *pb.CreateAuthRequest) 
 func (s *authServer) UpdateAuthEmail(ctx context.Context, req *pb.UpdateAuthEmailRequest) (*pb.AuthResponse, error) {
 	u, err := s.userApplication.Authentication(ctx)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	err = s.authRequestValidation.UpdateAuthEmail(req)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	u.Email = strings.ToLower(req.GetEmail())
 
 	err = s.userApplication.Update(ctx, u)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	res := getAuthResponse(u)
@@ -87,19 +87,19 @@ func (s *authServer) UpdateAuthPassword(
 ) (*pb.AuthResponse, error) {
 	u, err := s.userApplication.Authentication(ctx)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	err = s.authRequestValidation.UpdateAuthPassword(req)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	u.Password = req.GetPassword()
 
 	err = s.userApplication.UpdatePassword(ctx, u)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	res := getAuthResponse(u)
@@ -112,12 +112,12 @@ func (s *authServer) UpdateAuthProfile(
 ) (*pb.AuthResponse, error) {
 	u, err := s.userApplication.Authentication(ctx)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	err = s.authRequestValidation.UpdateAuthProfile(req)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	u.Username = req.GetUsername()
@@ -127,7 +127,7 @@ func (s *authServer) UpdateAuthProfile(
 
 	err = s.userApplication.Update(ctx, u)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	res := getAuthResponse(u)
@@ -140,12 +140,12 @@ func (s *authServer) UpdateAuthAddress(
 ) (*pb.AuthResponse, error) {
 	u, err := s.userApplication.Authentication(ctx)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	err = s.authRequestValidation.UpdateAuthAddress(req)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	u.LastName = req.GetLastName()
@@ -161,7 +161,7 @@ func (s *authServer) UpdateAuthAddress(
 
 	err = s.userApplication.Update(ctx, u)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	res := getAuthResponse(u)
@@ -178,7 +178,7 @@ func (s *authServer) UploadAuthThumbnail(stream pb.AuthService_UploadAuthThumbna
 		if err == io.EOF {
 			u, err := s.userApplication.Authentication(ctx)
 			if err != nil {
-				return errorHandling(err)
+				return toGRPCError(err)
 			}
 
 			// 分割して送信されてきたサムネイルのバイナリをまとめる
@@ -189,7 +189,7 @@ func (s *authServer) UploadAuthThumbnail(stream pb.AuthService_UploadAuthThumbna
 
 			thumbnailURL, err := s.userApplication.UploadThumbnail(ctx, u.ID, thumbnail)
 			if err != nil {
-				return errorHandling(err)
+				return toGRPCError(err)
 			}
 
 			res := getAuthThumbnailResponse(thumbnailURL)
@@ -197,17 +197,17 @@ func (s *authServer) UploadAuthThumbnail(stream pb.AuthService_UploadAuthThumbna
 		}
 
 		if err != nil {
-			return errorHandling(err)
+			return toGRPCError(err)
 		}
 
 		err = s.authRequestValidation.UploadAuthThumbnail(req)
 		if err != nil {
-			return errorHandling(err)
+			return toGRPCError(err)
 		}
 
 		num := int(req.GetPosition())
 		if thumbnailBytes[num] != nil {
-			return errorHandling(exception.InvalidRequestValidation.New(errInvalidUploadRequest))
+			return toGRPCError(exception.InvalidRequestValidation.New(errInvalidUploadRequest))
 		}
 
 		thumbnailBytes[num] = req.GetThumbnail()
@@ -218,12 +218,12 @@ func (s *authServer) UploadAuthThumbnail(stream pb.AuthService_UploadAuthThumbna
 func (s *authServer) DeleteAuth(ctx context.Context, req *pb.Empty) (*pb.Empty, error) {
 	u, err := s.userApplication.Authentication(ctx)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	err = s.userApplication.Delete(ctx, u)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	return &pb.Empty{}, nil
@@ -235,19 +235,19 @@ func (s *authServer) RegisterAuthDevice(
 ) (*pb.AuthResponse, error) {
 	u, err := s.userApplication.Authentication(ctx)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	err = s.authRequestValidation.RegisterAuthDevice(req)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	u.InstanceID = req.GetInstanceId()
 
 	err = s.userApplication.Update(ctx, u)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	res := getAuthResponse(u)

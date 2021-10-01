@@ -30,60 +30,6 @@ func TestUserRequestValidation_ListUser(t *testing.T) {
 			want: true,
 		},
 		{
-			name: "validation error: Search.Field.min_len",
-			args: args{
-				req: &pb.ListUserRequest{
-					Search: &pb.Search{
-						Field: "",
-						Value: "テストユーザー",
-					},
-					Order: &pb.Order{
-						Field:   "created_at",
-						OrderBy: pb.OrderBy_ORDER_BY_ASC,
-					},
-					Limit:  200,
-					Offset: 100,
-				},
-			},
-			want: false,
-		},
-		{
-			name: "validation error: Search.Value.min_len",
-			args: args{
-				req: &pb.ListUserRequest{
-					Search: &pb.Search{
-						Field: "username",
-						Value: "",
-					},
-					Order: &pb.Order{
-						Field:   "created_at",
-						OrderBy: pb.OrderBy_ORDER_BY_ASC,
-					},
-					Limit:  200,
-					Offset: 100,
-				},
-			},
-			want: false,
-		},
-		{
-			name: "validation error: Order.OrderBy.in",
-			args: args{
-				req: &pb.ListUserRequest{
-					Search: &pb.Search{
-						Field: "username",
-						Value: "テストユーザー",
-					},
-					Order: &pb.Order{
-						Field:   "created_at",
-						OrderBy: 2,
-					},
-					Limit:  200,
-					Offset: 100,
-				},
-			},
-			want: false,
-		},
-		{
 			name: "validation error: Limit.lte",
 			args: args{
 				req: &pb.ListUserRequest{
@@ -122,6 +68,7 @@ func TestUserRequestValidation_ListUser(t *testing.T) {
 	}
 
 	for _, tt := range testCases {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			target := NewUserRequestValidation()
@@ -175,21 +122,6 @@ func TestUserRequestValidation_ListFollow(t *testing.T) {
 			want: false,
 		},
 		{
-			name: "validation error: Order.OrderBy.in",
-			args: args{
-				req: &pb.ListFollowRequest{
-					UserId: "12345678-1234-1234-123456789012",
-					Order: &pb.Order{
-						Field:   "created_at",
-						OrderBy: 2,
-					},
-					Limit:  200,
-					Offset: 100,
-				},
-			},
-			want: false,
-		},
-		{
 			name: "validation error: Limit.lte",
 			args: args{
 				req: &pb.ListFollowRequest{
@@ -222,6 +154,7 @@ func TestUserRequestValidation_ListFollow(t *testing.T) {
 	}
 
 	for _, tt := range testCases {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			target := NewUserRequestValidation()
@@ -275,21 +208,6 @@ func TestUserRequestValidation_ListFollower(t *testing.T) {
 			want: false,
 		},
 		{
-			name: "validation error: Order.OrderBy.in",
-			args: args{
-				req: &pb.ListFollowerRequest{
-					UserId: "12345678-1234-1234-123456789012",
-					Order: &pb.Order{
-						Field:   "created_at",
-						OrderBy: 2,
-					},
-					Limit:  200,
-					Offset: 100,
-				},
-			},
-			want: false,
-		},
-		{
 			name: "validation error: Limit.lte",
 			args: args{
 				req: &pb.ListFollowerRequest{
@@ -322,6 +240,7 @@ func TestUserRequestValidation_ListFollower(t *testing.T) {
 	}
 
 	for _, tt := range testCases {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			target := NewUserRequestValidation()
@@ -387,6 +306,7 @@ func TestUserRequestValidation_MultiGetUser(t *testing.T) {
 	}
 
 	for _, tt := range testCases {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			target := NewUserRequestValidation()
@@ -434,6 +354,7 @@ func TestUserRequestValidation_GetUser(t *testing.T) {
 	}
 
 	for _, tt := range testCases {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			target := NewUserRequestValidation()
@@ -481,6 +402,7 @@ func TestUserRequestValidation_GetUserProfile(t *testing.T) {
 	}
 
 	for _, tt := range testCases {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			target := NewUserRequestValidation()
@@ -550,6 +472,7 @@ func TestUserRequestValidation_Follow(t *testing.T) {
 	}
 
 	for _, tt := range testCases {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			target := NewUserRequestValidation()
@@ -619,6 +542,7 @@ func TestUserRequestValidation_Unfollow(t *testing.T) {
 	}
 
 	for _, tt := range testCases {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			target := NewUserRequestValidation()

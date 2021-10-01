@@ -23,7 +23,7 @@ func TestUserRepository_List(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.UserDB, userTable)
+	err = mocks.DeleteAll()
 	require.NoError(t, err)
 
 	users := make([]*user.User, 3)
@@ -41,7 +41,7 @@ func TestUserRepository_List(t *testing.T) {
 		users user.Users
 		isErr bool
 	}
-	testCases := []struct {
+	tests := []struct {
 		name string
 		args args
 		want want
@@ -62,7 +62,7 @@ func TestUserRepository_List(t *testing.T) {
 		},
 	}
 
-	for _, tt := range testCases {
+	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
@@ -87,7 +87,7 @@ func TestUserRepository_ListFollow(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.UserDB, userTable)
+	err = mocks.DeleteAll()
 	require.NoError(t, err)
 
 	users := make([]*user.User, 3)
@@ -115,7 +115,7 @@ func TestUserRepository_ListFollow(t *testing.T) {
 		follows user.Follows
 		isErr   bool
 	}
-	testCases := []struct {
+	tests := []struct {
 		name string
 		args args
 		want want
@@ -155,7 +155,7 @@ func TestUserRepository_ListFollow(t *testing.T) {
 		},
 	}
 
-	for _, tt := range testCases {
+	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
@@ -180,7 +180,7 @@ func TestUserRepository_ListFollower(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.UserDB, userTable)
+	err = mocks.DeleteAll()
 	require.NoError(t, err)
 
 	users := make([]*user.User, 3)
@@ -208,7 +208,7 @@ func TestUserRepository_ListFollower(t *testing.T) {
 		followers user.Followers
 		isErr     bool
 	}
-	testCases := []struct {
+	tests := []struct {
 		name string
 		args args
 		want want
@@ -248,7 +248,7 @@ func TestUserRepository_ListFollower(t *testing.T) {
 		},
 	}
 
-	for _, tt := range testCases {
+	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
@@ -273,7 +273,7 @@ func TestUserRepository_ListInstanceID(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.UserDB, userTable)
+	err = mocks.DeleteAll()
 	require.NoError(t, err)
 
 	users := make([]*user.User, 3)
@@ -294,7 +294,7 @@ func TestUserRepository_ListInstanceID(t *testing.T) {
 		instanceIDs []string
 		isErr       bool
 	}
-	testCases := []struct {
+	tests := []struct {
 		name string
 		args args
 		want want
@@ -319,7 +319,7 @@ func TestUserRepository_ListInstanceID(t *testing.T) {
 		},
 	}
 
-	for _, tt := range testCases {
+	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
@@ -344,7 +344,7 @@ func TestUserRepository_ListFollowID(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.UserDB, userTable)
+	err = mocks.DeleteAll()
 	require.NoError(t, err)
 
 	users := make([]*user.User, 3)
@@ -373,7 +373,7 @@ func TestUserRepository_ListFollowID(t *testing.T) {
 		followIDs []string
 		isErr     bool
 	}
-	testCases := []struct {
+	tests := []struct {
 		name string
 		args args
 		want want
@@ -409,7 +409,7 @@ func TestUserRepository_ListFollowID(t *testing.T) {
 		},
 	}
 
-	for _, tt := range testCases {
+	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
@@ -434,7 +434,7 @@ func TestUserRepository_ListFollowerID(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.UserDB, userTable)
+	err = mocks.DeleteAll()
 	require.NoError(t, err)
 
 	users := make([]*user.User, 3)
@@ -463,7 +463,7 @@ func TestUserRepository_ListFollowerID(t *testing.T) {
 		followerIDs []string
 		isErr       bool
 	}
-	testCases := []struct {
+	tests := []struct {
 		name string
 		args args
 		want want
@@ -499,7 +499,7 @@ func TestUserRepository_ListFollowerID(t *testing.T) {
 		},
 	}
 
-	for _, tt := range testCases {
+	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
@@ -524,7 +524,7 @@ func TestUserRepository_Count(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.UserDB, userTable)
+	err = mocks.DeleteAll()
 	require.NoError(t, err)
 
 	users := make([]*user.User, 3)
@@ -542,7 +542,7 @@ func TestUserRepository_Count(t *testing.T) {
 		count int
 		isErr bool
 	}
-	testCases := []struct {
+	tests := []struct {
 		name string
 		args args
 		want want
@@ -563,7 +563,7 @@ func TestUserRepository_Count(t *testing.T) {
 		},
 	}
 
-	for _, tt := range testCases {
+	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
@@ -586,7 +586,7 @@ func TestUserRepository_CountRelationship(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.UserDB, userTable)
+	err = mocks.DeleteAll()
 	require.NoError(t, err)
 
 	users := make([]*user.User, 3)
@@ -614,7 +614,7 @@ func TestUserRepository_CountRelationship(t *testing.T) {
 		count int
 		isErr bool
 	}
-	testCases := []struct {
+	tests := []struct {
 		name string
 		args args
 		want want
@@ -641,7 +641,7 @@ func TestUserRepository_CountRelationship(t *testing.T) {
 		},
 	}
 
-	for _, tt := range testCases {
+	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
@@ -664,7 +664,7 @@ func TestUserRepository_MultiGet(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.UserDB, userTable)
+	err = mocks.DeleteAll()
 	require.NoError(t, err)
 
 	users := make([]*user.User, 3)
@@ -682,7 +682,7 @@ func TestUserRepository_MultiGet(t *testing.T) {
 		users user.Users
 		isErr bool
 	}
-	testCases := []struct {
+	tests := []struct {
 		name string
 		args args
 		want want
@@ -703,7 +703,7 @@ func TestUserRepository_MultiGet(t *testing.T) {
 		},
 	}
 
-	for _, tt := range testCases {
+	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
@@ -728,7 +728,7 @@ func TestUserRepository_Get(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.UserDB, userTable)
+	err = mocks.DeleteAll()
 	require.NoError(t, err)
 
 	u := testUser("00000000-0000-0000-0000-000000000000")
@@ -743,7 +743,7 @@ func TestUserRepository_Get(t *testing.T) {
 		user  *user.User
 		isErr bool
 	}
-	testCases := []struct {
+	tests := []struct {
 		name string
 		args args
 		want want
@@ -764,13 +764,13 @@ func TestUserRepository_Get(t *testing.T) {
 				userID: "",
 			},
 			want: want{
-				user:  nil,
+				user:  &user.User{},
 				isErr: true,
 			},
 		},
 	}
 
-	for _, tt := range testCases {
+	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
@@ -793,7 +793,7 @@ func TestUserRepository_GetAdmin(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.UserDB, userTable)
+	err = mocks.DeleteAll()
 	require.NoError(t, err)
 
 	users := make([]*user.User, 2)
@@ -810,7 +810,7 @@ func TestUserRepository_GetAdmin(t *testing.T) {
 		user  *user.User
 		isErr bool
 	}
-	testCases := []struct {
+	tests := []struct {
 		name string
 		args args
 		want want
@@ -831,7 +831,7 @@ func TestUserRepository_GetAdmin(t *testing.T) {
 				userID: "",
 			},
 			want: want{
-				user:  nil,
+				user:  &user.User{},
 				isErr: true,
 			},
 		},
@@ -841,13 +841,13 @@ func TestUserRepository_GetAdmin(t *testing.T) {
 				userID: "00000000-0000-0000-0000-000000000000",
 			},
 			want: want{
-				user:  nil,
+				user:  &user.User{},
 				isErr: true,
 			},
 		},
 	}
 
-	for _, tt := range testCases {
+	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
@@ -870,7 +870,7 @@ func TestUserRepository_GetRelationship(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.UserDB, userTable)
+	err = mocks.DeleteAll()
 	require.NoError(t, err)
 
 	users := make([]*user.User, 2)
@@ -895,7 +895,7 @@ func TestUserRepository_GetRelationship(t *testing.T) {
 		relationship *user.Relationship
 		isErr        bool
 	}
-	testCases := []struct {
+	tests := []struct {
 		name string
 		args args
 		want want
@@ -913,7 +913,7 @@ func TestUserRepository_GetRelationship(t *testing.T) {
 		},
 	}
 
-	for _, tt := range testCases {
+	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
@@ -922,6 +922,72 @@ func TestUserRepository_GetRelationship(t *testing.T) {
 			r, err := target.GetRelationship(ctx, tt.args.followID, tt.args.followerID)
 			assert.Equal(t, tt.want.isErr, err != nil, err)
 			assert.Equal(t, tt.want.relationship, r)
+		})
+	}
+}
+
+func TestUserRepository_GetRelationshipIDByUserID(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mocks, err := test.NewDBMock(ctrl)
+	require.NoError(t, err)
+
+	err = mocks.DeleteAll()
+	require.NoError(t, err)
+
+	users := make([]*user.User, 2)
+	users[0] = testUser("00000000-0000-0000-0000-000000000000")
+	users[0].Username = "テストユーザー1"
+	users[1] = testUser("11111111-1111-1111-1111-111111111111")
+	users[1].Username = "テストユーザー2"
+
+	err = mocks.UserDB.DB.Table(userTable).Create(&users).Error
+	require.NoError(t, err)
+
+	relationship := testRelationship(1, users[1].ID, users[0].ID)
+
+	err = mocks.UserDB.DB.Table(relationshipTable).Create(relationship).Error
+	require.NoError(t, err)
+
+	type args struct {
+		followID   string
+		followerID string
+	}
+	type want struct {
+		relationshipID int
+		isErr          bool
+	}
+	tests := []struct {
+		name string
+		args args
+		want want
+	}{
+		{
+			name: "success",
+			args: args{
+				followID:   "11111111-1111-1111-1111-111111111111",
+				followerID: "00000000-0000-0000-0000-000000000000",
+			},
+			want: want{
+				relationshipID: relationship.ID,
+				isErr:          false,
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			target := NewUserRepository(mocks.UserDB, nil)
+
+			id, err := target.GetRelationshipIDByUserID(ctx, tt.args.followID, tt.args.followerID)
+			assert.Equal(t, tt.want.isErr, err != nil, err)
+			assert.Equal(t, tt.want.relationshipID, id)
 		})
 	}
 }
@@ -936,16 +1002,7 @@ func TestUserRepository_CreateRelationship(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.UserDB, userTable)
-	require.NoError(t, err)
-
-	users := make([]*user.User, 2)
-	users[0] = testUser("00000000-0000-0000-0000-000000000000")
-	users[0].Username = "テストユーザー1"
-	users[1] = testUser("11111111-1111-1111-1111-111111111111")
-	users[1].Username = "テストユーザー2"
-
-	err = mocks.UserDB.DB.Table(userTable).Create(&users).Error
+	err = mocks.DeleteAll()
 	require.NoError(t, err)
 
 	type args struct {
@@ -954,13 +1011,23 @@ func TestUserRepository_CreateRelationship(t *testing.T) {
 	type want struct {
 		isErr bool
 	}
-	testCases := []struct {
-		name string
-		args args
-		want want
+	tests := []struct {
+		name  string
+		setup func(t *testing.T, mocks *test.DBMocks)
+		args  args
+		want  want
 	}{
 		{
 			name: "success",
+			setup: func(t *testing.T, mocks *test.DBMocks) {
+				users := make([]*user.User, 2)
+				users[0] = testUser("00000000-0000-0000-0000-000000000000")
+				users[0].Username = "テストユーザー1"
+				users[1] = testUser("11111111-1111-1111-1111-111111111111")
+				users[1].Username = "テストユーザー2"
+				err = mocks.UserDB.DB.Table(userTable).Create(&users).Error
+				require.NoError(t, err)
+			},
 			args: args{
 				relationship: &user.Relationship{
 					FollowID:   "00000000-0000-0000-0000-000000000000",
@@ -974,7 +1041,8 @@ func TestUserRepository_CreateRelationship(t *testing.T) {
 			},
 		},
 		{
-			name: "failed: internal error",
+			name:  "failed: internal error",
+			setup: func(t *testing.T, mocks *test.DBMocks) {},
 			args: args{
 				relationship: &user.Relationship{},
 			},
@@ -984,14 +1052,14 @@ func TestUserRepository_CreateRelationship(t *testing.T) {
 		},
 	}
 
-	for _, tt := range testCases {
+	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			target := NewUserRepository(mocks.UserDB, nil)
-
-			err := mocks.DeleteAll(mocks.UserDB, relationshipTable)
+			err := mocks.Delete(mocks.UserDB, relationshipTable, userTable)
 			require.NoError(t, err)
+			tt.setup(t, mocks)
 
+			target := NewUserRepository(mocks.UserDB, nil)
 			err = target.CreateRelationship(ctx, tt.args.relationship)
 			assert.Equal(t, tt.want.isErr, err != nil, err)
 		})
@@ -1008,19 +1076,8 @@ func TestUserRepository_DeleteRelationship(t *testing.T) {
 	mocks, err := test.NewDBMock(ctrl)
 	require.NoError(t, err)
 
-	err = mocks.DeleteAll(mocks.UserDB, userTable)
+	err = mocks.DeleteAll()
 	require.NoError(t, err)
-
-	users := make([]*user.User, 2)
-	users[0] = testUser("00000000-0000-0000-0000-000000000000")
-	users[0].Username = "テストユーザー1"
-	users[1] = testUser("11111111-1111-1111-1111-111111111111")
-	users[1].Username = "テストユーザー2"
-
-	err = mocks.UserDB.DB.Table(userTable).Create(&users).Error
-	require.NoError(t, err)
-
-	relationship := testRelationship(1, users[1].ID, users[0].ID)
 
 	type args struct {
 		relationshipID int
@@ -1028,13 +1085,26 @@ func TestUserRepository_DeleteRelationship(t *testing.T) {
 	type want struct {
 		isErr bool
 	}
-	testCases := []struct {
-		name string
-		args args
-		want want
+	tests := []struct {
+		name  string
+		setup func(t *testing.T, mocks *test.DBMocks)
+		args  args
+		want  want
 	}{
 		{
 			name: "success",
+			setup: func(t *testing.T, mocks *test.DBMocks) {
+				users := make([]*user.User, 2)
+				users[0] = testUser("00000000-0000-0000-0000-000000000000")
+				users[0].Username = "テストユーザー1"
+				users[1] = testUser("11111111-1111-1111-1111-111111111111")
+				users[1].Username = "テストユーザー2"
+				err = mocks.UserDB.DB.Table(userTable).Create(&users).Error
+				require.NoError(t, err)
+				relationship := testRelationship(1, users[1].ID, users[0].ID)
+				err = mocks.UserDB.DB.Table(relationshipTable).Create(relationship).Error
+				require.NoError(t, err)
+			},
 			args: args{
 				relationshipID: 1,
 			},
@@ -1044,17 +1114,14 @@ func TestUserRepository_DeleteRelationship(t *testing.T) {
 		},
 	}
 
-	for _, tt := range testCases {
+	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
+			err = mocks.Delete(mocks.UserDB, relationshipTable)
+			require.NoError(t, err)
+			tt.setup(t, mocks)
+
 			target := NewUserRepository(mocks.UserDB, nil)
-
-			err := mocks.DeleteAll(mocks.UserDB, relationshipTable)
-			require.NoError(t, err)
-
-			err = mocks.UserDB.DB.Table(relationshipTable).Create(relationship).Error
-			require.NoError(t, err)
-
 			err = target.DeleteRelationship(ctx, tt.args.relationshipID)
 			assert.Equal(t, tt.want.isErr, err != nil, err)
 		})

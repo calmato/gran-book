@@ -23,99 +23,78 @@ func NewAuthRequestValidation() AuthRequestValidation {
 
 func (v *authRequestValidation) CreateAuth(req *pb.CreateAuthRequest) error {
 	err := req.Validate()
-	if err != nil {
-		if err, ok := err.(pb.CreateAuthRequestValidationError); ok {
-			return toValidationError(err.Field(), err.Reason())
+	if err == nil {
+		if req.GetPassword() != req.GetPasswordConfirmation() {
+			return toValidationError("PasswordConfirmation", exception.EqFieldMessage)
 		}
 
-		return toInternalError()
+		return nil
 	}
 
-	if req.GetPassword() != req.GetPasswordConfirmation() {
-		return toValidationError("PasswordConfirmation", exception.EqFieldMessage)
-	}
-
-	return nil
+	validate := err.(pb.CreateAuthRequestValidationError)
+	return toValidationError(validate.Field(), validate.Reason())
 }
 
 func (v *authRequestValidation) UpdateAuthEmail(req *pb.UpdateAuthEmailRequest) error {
 	err := req.Validate()
-	if err != nil {
-		if err, ok := err.(pb.UpdateAuthEmailRequestValidationError); ok {
-			return toValidationError(err.Field(), err.Reason())
-		}
-
-		return toInternalError()
+	if err == nil {
+		return nil
 	}
 
-	return nil
+	validate := err.(pb.UpdateAuthEmailRequestValidationError)
+	return toValidationError(validate.Field(), validate.Reason())
 }
 
 func (v *authRequestValidation) UpdateAuthPassword(req *pb.UpdateAuthPasswordRequest) error {
 	err := req.Validate()
-	if err != nil {
-		if err, ok := err.(pb.UpdateAuthPasswordRequestValidationError); ok {
-			return toValidationError(err.Field(), err.Reason())
+	if err == nil {
+		if req.GetPassword() != req.GetPasswordConfirmation() {
+			return toValidationError("PasswordConfirmation", exception.EqFieldMessage)
 		}
 
-		return toInternalError()
+		return nil
 	}
 
-	if req.GetPassword() != req.GetPasswordConfirmation() {
-		return toValidationError("PasswordConfirmation", exception.EqFieldMessage)
-	}
-
-	return nil
+	validate := err.(pb.UpdateAuthPasswordRequestValidationError)
+	return toValidationError(validate.Field(), validate.Reason())
 }
 
 func (v *authRequestValidation) UpdateAuthProfile(req *pb.UpdateAuthProfileRequest) error {
 	err := req.Validate()
-	if err != nil {
-		if err, ok := err.(pb.UpdateAuthProfileRequestValidationError); ok {
-			return toValidationError(err.Field(), err.Reason())
-		}
-
-		return toInternalError()
+	if err == nil {
+		return nil
 	}
 
-	return nil
+	validate := err.(pb.UpdateAuthProfileRequestValidationError)
+	return toValidationError(validate.Field(), validate.Reason())
 }
 
 func (v *authRequestValidation) UpdateAuthAddress(req *pb.UpdateAuthAddressRequest) error {
 	err := req.Validate()
-	if err != nil {
-		if err, ok := err.(pb.UpdateAuthAddressRequestValidationError); ok {
-			return toValidationError(err.Field(), err.Reason())
-		}
-
-		return toInternalError()
+	if err == nil {
+		return nil
 	}
 
-	return nil
+	validate := err.(pb.UpdateAuthAddressRequestValidationError)
+	return toValidationError(validate.Field(), validate.Reason())
 }
 
 func (v *authRequestValidation) UploadAuthThumbnail(req *pb.UploadAuthThumbnailRequest) error {
 	err := req.Validate()
-	if err != nil {
-		if err, ok := err.(pb.UploadAuthThumbnailRequestValidationError); ok {
-			return toValidationError(err.Field(), err.Reason())
-		}
-
-		return toInternalError()
+	if err == nil {
+		return nil
 	}
 
-	return nil
+	validate := err.(pb.UploadAuthThumbnailRequestValidationError)
+	return toValidationError(validate.Field(), validate.Reason())
 }
 
 func (v *authRequestValidation) RegisterAuthDevice(req *pb.RegisterAuthDeviceRequest) error {
 	err := req.Validate()
-	if err != nil {
-		if err, ok := err.(pb.RegisterAuthDeviceRequestValidationError); ok {
-			return toValidationError(err.Field(), err.Reason())
-		}
-
-		return toInternalError()
+	if err == nil {
+		return nil
 	}
 
-	return nil
+	validate := err.(pb.RegisterAuthDeviceRequestValidationError)
+	return toValidationError(validate.Field(), validate.Reason())
 }

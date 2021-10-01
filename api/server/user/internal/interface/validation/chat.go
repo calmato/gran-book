@@ -19,52 +19,40 @@ func NewChatRequestValidation() ChatRequestValidation {
 
 func (v *chatRequestValidation) ListRoom(req *pb.ListRoomRequest) error {
 	err := req.Validate()
-	if err != nil {
-		if err, ok := err.(pb.ListRoomRequestValidationError); ok {
-			return toValidationError(err.Field(), err.Reason())
-		}
-
-		return toInternalError()
+	if err == nil {
+		return nil
 	}
 
-	return nil
+	validate := err.(pb.ListRoomRequestValidationError)
+	return toValidationError(validate.Field(), validate.Reason())
 }
 
 func (v *chatRequestValidation) CreateRoom(req *pb.CreateRoomRequest) error {
 	err := req.Validate()
-	if err != nil {
-		if err, ok := err.(pb.CreateRoomRequestValidationError); ok {
-			return toValidationError(err.Field(), err.Reason())
-		}
-
-		return toInternalError()
+	if err == nil {
+		return nil
 	}
 
-	return nil
+	validate := err.(pb.CreateRoomRequestValidationError)
+	return toValidationError(validate.Field(), validate.Reason())
 }
 
 func (v *chatRequestValidation) CreateMessage(req *pb.CreateMessageRequest) error {
 	err := req.Validate()
-	if err != nil {
-		if err, ok := err.(pb.CreateMessageRequestValidationError); ok {
-			return toValidationError(err.Field(), err.Reason())
-		}
-
-		return toInternalError()
+	if err == nil {
+		return nil
 	}
 
-	return nil
+	validate := err.(pb.CreateMessageRequestValidationError)
+	return toValidationError(validate.Field(), validate.Reason())
 }
 
 func (v *chatRequestValidation) UploadChatImage(req *pb.UploadChatImageRequest) error {
 	err := req.Validate()
-	if err != nil {
-		if err, ok := err.(pb.UploadChatImageRequestValidationError); ok {
-			return toValidationError(err.Field(), err.Reason())
-		}
-
-		return toInternalError()
+	if err == nil {
+		return nil
 	}
 
-	return nil
+	validate := err.(pb.UploadChatImageRequestValidationError)
+	return toValidationError(validate.Field(), validate.Reason())
 }

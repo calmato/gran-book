@@ -29,7 +29,7 @@ func NewChatServer(crv validation.ChatRequestValidation, ca application.ChatAppl
 func (s *chatServer) ListRoom(ctx context.Context, req *pb.ListRoomRequest) (*pb.RoomListResponse, error) {
 	err := s.chatRequestValidation.ListRoom(req)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	p := &firestore.Params{
@@ -41,7 +41,7 @@ func (s *chatServer) ListRoom(ctx context.Context, req *pb.ListRoomRequest) (*pb
 
 	crs, err := s.chatApplication.ListRoom(ctx, req.GetUserId(), p)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	res := getChatRoomListResponse(crs)
@@ -52,7 +52,7 @@ func (s *chatServer) ListRoom(ctx context.Context, req *pb.ListRoomRequest) (*pb
 func (s *chatServer) CreateRoom(ctx context.Context, req *pb.CreateRoomRequest) (*pb.RoomResponse, error) {
 	err := s.chatRequestValidation.CreateRoom(req)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	cr := &chat.Room{
@@ -61,7 +61,7 @@ func (s *chatServer) CreateRoom(ctx context.Context, req *pb.CreateRoomRequest) 
 
 	err = s.chatApplication.CreateRoom(ctx, cr)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	res := getChatRoomResponse(cr)
@@ -74,12 +74,12 @@ func (s *chatServer) CreateMessage(
 ) (*pb.MessageResponse, error) {
 	err := s.chatRequestValidation.CreateMessage(req)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	cr, err := s.chatApplication.GetRoom(ctx, req.GetRoomId(), req.GetUserId())
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	cm := &chat.Message{
@@ -89,7 +89,7 @@ func (s *chatServer) CreateMessage(
 
 	err = s.chatApplication.CreateMessage(ctx, cr, cm)
 	if err != nil {
-		return nil, errorHandling(err)
+		return nil, toGRPCError(err)
 	}
 
 	res := getChatMessageResponse(cm)
@@ -108,7 +108,7 @@ func (s *chatServer) UploadImage(stream pb.ChatService_UploadImageServer) error 
 		if err == io.EOF {
 			cr, err := s.chatApplication.GetRoom(ctx, req.GetRoomId(), req.GetUserId())
 			if err != nil {
-				return errorHandling(err)
+				return toGRPCError(err)
 			}
 
 			// 分割して送信されてきたサムネイルのバイナリをまとめる
@@ -119,7 +119,7 @@ func (s *chatServer) UploadImage(stream pb.ChatService_UploadImageServer) error 
 
 			imageURL, err := s.chatApplication.UploadImage(ctx, cr, image)
 			if err != nil {
-				return errorHandling(err)
+				return toGRPCError(err)
 			}
 
 			cm := &chat.Message{
@@ -129,7 +129,7 @@ func (s *chatServer) UploadImage(stream pb.ChatService_UploadImageServer) error 
 
 			err = s.chatApplication.CreateMessage(ctx, cr, cm)
 			if err != nil {
-				return errorHandling(err)
+				return toGRPCError(err)
 			}
 
 			res := getChatMessageResponse(cm)
@@ -137,12 +137,12 @@ func (s *chatServer) UploadImage(stream pb.ChatService_UploadImageServer) error 
 		}
 
 		if err != nil {
-			return errorHandling(err)
+			return toGRPCError(err)
 		}
 
 		err = s.chatRequestValidation.UploadChatImage(req)
 		if err != nil {
-			return errorHandling(err)
+			return toGRPCError(err)
 		}
 
 		if userID == "" {
@@ -155,7 +155,7 @@ func (s *chatServer) UploadImage(stream pb.ChatService_UploadImageServer) error 
 
 		num := int(req.GetPosition())
 		if imageBytes[num] != nil {
-			return errorHandling(exception.InvalidRequestValidation.New(errInvalidUploadRequest))
+			return toGRPCError(exception.InvalidRequestValidation.New(errInvalidUploadRequest))
 		}
 
 		imageBytes[num] = req.GetImage()

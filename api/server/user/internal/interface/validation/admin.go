@@ -24,112 +24,88 @@ func NewAdminRequestValidation() AdminRequestValidation {
 
 func (v *adminRequestValidation) ListAdmin(req *pb.ListAdminRequest) error {
 	err := req.Validate()
-	if err != nil {
-		if err, ok := err.(pb.ListAdminRequestValidationError); ok {
-			return toValidationError(err.Field(), err.Reason())
-		}
-
-		return toInternalError()
+	if err == nil {
+		return nil
 	}
 
-	return nil
+	validate := err.(pb.ListAdminRequestValidationError)
+	return toValidationError(validate.Field(), validate.Reason())
 }
 
 func (v *adminRequestValidation) GetAdmin(req *pb.GetAdminRequest) error {
 	err := req.Validate()
-	if err != nil {
-		if err, ok := err.(pb.GetAdminRequestValidationError); ok {
-			return toValidationError(err.Field(), err.Reason())
-		}
-
-		return toInternalError()
+	if err == nil {
+		return nil
 	}
 
-	return nil
+	validate := err.(pb.GetAdminRequestValidationError)
+	return toValidationError(validate.Field(), validate.Reason())
 }
 
 func (v *adminRequestValidation) CreateAdmin(req *pb.CreateAdminRequest) error {
 	err := req.Validate()
-	if err != nil {
-		if err, ok := err.(pb.CreateAdminRequestValidationError); ok {
-			return toValidationError(err.Field(), err.Reason())
+	if err == nil {
+		if req.GetPassword() != req.GetPasswordConfirmation() {
+			return toValidationError("PasswordConfirmation", exception.EqFieldMessage)
 		}
 
-		return toInternalError()
+		return nil
 	}
 
-	if req.GetPassword() != req.GetPasswordConfirmation() {
-		return toValidationError("PasswordConfirmation", exception.EqFieldMessage)
-	}
-
-	return nil
+	validate := err.(pb.CreateAdminRequestValidationError)
+	return toValidationError(validate.Field(), validate.Reason())
 }
 
 func (v *adminRequestValidation) UpdateAdminContact(req *pb.UpdateAdminContactRequest) error {
 	err := req.Validate()
-	if err != nil {
-		if err, ok := err.(pb.UpdateAdminContactRequestValidationError); ok {
-			return toValidationError(err.Field(), err.Reason())
-		}
-
-		return toInternalError()
+	if err == nil {
+		return nil
 	}
 
-	return nil
+	validate := err.(pb.UpdateAdminContactRequestValidationError)
+	return toValidationError(validate.Field(), validate.Reason())
 }
 
 func (v *adminRequestValidation) UpdateAdminPassword(req *pb.UpdateAdminPasswordRequest) error {
 	err := req.Validate()
-	if err != nil {
-		if err, ok := err.(pb.UpdateAdminPasswordRequestValidationError); ok {
-			return toValidationError(err.Field(), err.Reason())
+	if err == nil {
+		if req.GetPassword() != req.GetPasswordConfirmation() {
+			return toValidationError("PasswordConfirmation", exception.EqFieldMessage)
 		}
 
-		return toInternalError()
+		return nil
 	}
 
-	if req.GetPassword() != req.GetPasswordConfirmation() {
-		return toValidationError("PasswordConfirmation", exception.EqFieldMessage)
-	}
-
-	return nil
+	validate := err.(pb.UpdateAdminPasswordRequestValidationError)
+	return toValidationError(validate.Field(), validate.Reason())
 }
 
 func (v *adminRequestValidation) UpdateAdminProfile(req *pb.UpdateAdminProfileRequest) error {
 	err := req.Validate()
-	if err != nil {
-		if err, ok := err.(pb.UpdateAdminProfileRequestValidationError); ok {
-			return toValidationError(err.Field(), err.Reason())
-		}
-
-		return toInternalError()
+	if err == nil {
+		return nil
 	}
 
-	return nil
+	validate := err.(pb.UpdateAdminProfileRequestValidationError)
+	return toValidationError(validate.Field(), validate.Reason())
 }
 
 func (v *adminRequestValidation) UploadAdminThumbnail(req *pb.UploadAdminThumbnailRequest) error {
 	err := req.Validate()
-	if err != nil {
-		if err, ok := err.(pb.UploadAdminThumbnailRequestValidationError); ok {
-			return toValidationError(err.Field(), err.Reason())
-		}
-
-		return toInternalError()
+	if err == nil {
+		return nil
 	}
 
-	return nil
+	validate := err.(pb.UploadAdminThumbnailRequestValidationError)
+	return toValidationError(validate.Field(), validate.Reason())
 }
 
 func (v *adminRequestValidation) DeleteAdmin(req *pb.DeleteAdminRequest) error {
 	err := req.Validate()
-	if err != nil {
-		if err, ok := err.(pb.DeleteAdminRequestValidationError); ok {
-			return toValidationError(err.Field(), err.Reason())
-		}
-
-		return toInternalError()
+	if err == nil {
+		return nil
 	}
 
-	return nil
+	validate := err.(pb.DeleteAdminRequestValidationError)
+	return toValidationError(validate.Field(), validate.Reason())
 }

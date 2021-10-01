@@ -1559,6 +1559,61 @@ func TestUserApplication_Follow(t *testing.T) {
 				err:  exception.ErrorInDatastore.New(test.ErrMock),
 			},
 		},
+		{
+			name: "failed: internal error in list follow id",
+			setup: func(context context.Context, t *testing.T, mocks *test.Mocks) {
+				u := &user.User{ID: "user01"}
+				mocks.UserDomainValidation.EXPECT().
+					Relationship(ctx, gomock.Any()).
+					Return(nil)
+				mocks.UserRepository.EXPECT().
+					Get(ctx, "user01").
+					Return(u, nil)
+				mocks.UserRepository.EXPECT().
+					CreateRelationship(ctx, gomock.Any()).
+					Return(nil)
+				mocks.UserRepository.EXPECT().
+					ListFollowID(ctx, "user01").
+					Return(nil, exception.ErrorInDatastore.New(test.ErrMock))
+			},
+			args: args{
+				userID:     "current-user",
+				followerID: "user01",
+			},
+			want: want{
+				user: nil,
+				err:  exception.ErrorInDatastore.New(test.ErrMock),
+			},
+		},
+		{
+			name: "failed: internal error in list follower id",
+			setup: func(context context.Context, t *testing.T, mocks *test.Mocks) {
+				u := &user.User{ID: "user01"}
+				mocks.UserDomainValidation.EXPECT().
+					Relationship(ctx, gomock.Any()).
+					Return(nil)
+				mocks.UserRepository.EXPECT().
+					Get(ctx, "user01").
+					Return(u, nil)
+				mocks.UserRepository.EXPECT().
+					CreateRelationship(ctx, gomock.Any()).
+					Return(nil)
+				mocks.UserRepository.EXPECT().
+					ListFollowID(ctx, "user01").
+					Return([]string{"current-user"}, nil)
+				mocks.UserRepository.EXPECT().
+					ListFollowerID(ctx, "user01").
+					Return(nil, exception.ErrorInDatastore.New(test.ErrMock))
+			},
+			args: args{
+				userID:     "current-user",
+				followerID: "user01",
+			},
+			want: want{
+				user: nil,
+				err:  exception.ErrorInDatastore.New(test.ErrMock),
+			},
+		},
 	}
 
 	for _, tt := range testCases {
@@ -1573,8 +1628,7 @@ func TestUserApplication_Follow(t *testing.T) {
 				mocks.UserUploader,
 			)
 
-			u,
-				err := target.Follow(ctx, tt.args.userID, tt.args.followerID)
+			u, err := target.Follow(ctx, tt.args.userID, tt.args.followerID)
 			if tt.want.err != nil {
 				require.Equal(t, tt.want.err.Error(), err.Error())
 				return
@@ -1695,6 +1749,61 @@ func TestUserApplication_Unfollow(t *testing.T) {
 				mocks.UserRepository.EXPECT().
 					DeleteRelationship(ctx, 1).
 					Return(exception.ErrorInDatastore.New(test.ErrMock))
+			},
+			args: args{
+				userID:     "current-user",
+				followerID: "user01",
+			},
+			want: want{
+				user: nil,
+				err:  exception.ErrorInDatastore.New(test.ErrMock),
+			},
+		},
+		{
+			name: "failed: internal error in list follow id",
+			setup: func(context context.Context, t *testing.T, mocks *test.Mocks) {
+				u := &user.User{ID: "user01"}
+				mocks.UserRepository.EXPECT().
+					Get(ctx, "user01").
+					Return(u, nil)
+				mocks.UserRepository.EXPECT().
+					GetRelationshipIDByUserID(ctx, "current-user", "user01").
+					Return(1, nil)
+				mocks.UserRepository.EXPECT().
+					DeleteRelationship(ctx, 1).
+					Return(nil)
+				mocks.UserRepository.EXPECT().
+					ListFollowID(ctx, "user01").
+					Return(nil, exception.ErrorInDatastore.New(test.ErrMock))
+			},
+			args: args{
+				userID:     "current-user",
+				followerID: "user01",
+			},
+			want: want{
+				user: nil,
+				err:  exception.ErrorInDatastore.New(test.ErrMock),
+			},
+		},
+		{
+			name: "failed: internal error in list follower id",
+			setup: func(context context.Context, t *testing.T, mocks *test.Mocks) {
+				u := &user.User{ID: "user01"}
+				mocks.UserRepository.EXPECT().
+					Get(ctx, "user01").
+					Return(u, nil)
+				mocks.UserRepository.EXPECT().
+					GetRelationshipIDByUserID(ctx, "current-user", "user01").
+					Return(1, nil)
+				mocks.UserRepository.EXPECT().
+					DeleteRelationship(ctx, 1).
+					Return(nil)
+				mocks.UserRepository.EXPECT().
+					ListFollowID(ctx, "user01").
+					Return([]string{}, nil)
+				mocks.UserRepository.EXPECT().
+					ListFollowerID(ctx, "user01").
+					Return(nil, exception.ErrorInDatastore.New(test.ErrMock))
 			},
 			args: args{
 				userID:     "current-user",

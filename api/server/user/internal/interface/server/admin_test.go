@@ -83,6 +83,14 @@ func TestAdminServer_ListAdmin(t *testing.T) {
 				req: &pb.ListAdminRequest{
 					Limit:  100,
 					Offset: 0,
+					Search: &pb.Search{
+						Field: "email",
+						Value: "test@calmato.jp",
+					},
+					Order: &pb.Order{
+						Field:   "id",
+						OrderBy: pb.OrderBy_ORDER_BY_DESC,
+					},
 				},
 			},
 			want: &test.TestResponse{

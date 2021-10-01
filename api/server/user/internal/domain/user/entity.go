@@ -55,8 +55,8 @@ func (u *User) Proto() *pb.User {
 		FirstName:        u.FirstName,
 		LastNameKana:     u.LastNameKana,
 		FirstNameKana:    u.FirstNameKana,
-		CreatedAt:        datetime.TimeToString(u.CreatedAt),
-		UpdatedAt:        datetime.TimeToString(u.UpdatedAt),
+		CreatedAt:        datetime.FormatTime(u.CreatedAt),
+		UpdatedAt:        datetime.FormatTime(u.UpdatedAt),
 	}
 }
 
@@ -79,8 +79,8 @@ func (u *User) Auth() *pb.Auth {
 		City:             u.City,
 		AddressLine1:     u.AddressLine1,
 		AddressLine2:     u.AddressLine2,
-		CreatedAt:        datetime.TimeToString(u.CreatedAt),
-		UpdatedAt:        datetime.TimeToString(u.UpdatedAt),
+		CreatedAt:        datetime.FormatTime(u.CreatedAt),
+		UpdatedAt:        datetime.FormatTime(u.UpdatedAt),
 	}
 }
 
@@ -97,8 +97,8 @@ func (u *User) Admin() *pb.Admin {
 		FirstName:        u.FirstName,
 		LastNameKana:     u.LastNameKana,
 		FirstNameKana:    u.FirstNameKana,
-		CreatedAt:        datetime.TimeToString(u.CreatedAt),
-		UpdatedAt:        datetime.TimeToString(u.UpdatedAt),
+		CreatedAt:        datetime.FormatTime(u.CreatedAt),
+		UpdatedAt:        datetime.FormatTime(u.UpdatedAt),
 	}
 }
 
