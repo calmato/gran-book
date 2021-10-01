@@ -232,7 +232,6 @@ func TestUserDomainValidation_Relationship(t *testing.T) {
 			},
 			args: args{
 				relationship: &user.Relationship{
-					ID:         1,
 					FollowID:   "00000000-0000-0000-0000-000000000000",
 					FollowerID: "11111111-1111-1111-1111-111111111111",
 					CreatedAt:  test.TimeMock,
@@ -268,7 +267,6 @@ func TestUserDomainValidation_Relationship(t *testing.T) {
 			},
 			args: args{
 				relationship: &user.Relationship{
-					ID:         1,
 					FollowID:   "00000000-0000-0000-0000-000000000000",
 					FollowerID: "11111111-1111-1111-1111-111111111111",
 					CreatedAt:  test.TimeMock,

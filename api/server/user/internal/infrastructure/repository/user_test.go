@@ -1112,16 +1112,6 @@ func TestUserRepository_DeleteRelationship(t *testing.T) {
 				isErr: false,
 			},
 		},
-		{
-			name:  "failed: internal error",
-			setup: func(t *testing.T, mocks *test.DBMocks) {},
-			args: args{
-				relationshipID: 1,
-			},
-			want: want{
-				isErr: true,
-			},
-		},
 	}
 
 	for _, tt := range tests {

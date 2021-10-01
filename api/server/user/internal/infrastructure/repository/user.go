@@ -335,23 +335,8 @@ func (r *userRepository) deleteUser(tx *gorm.DB, userID string) error {
 }
 
 func (r *userRepository) DeleteRelationship(ctx context.Context, relationshipID int) error {
-	tx, err := r.client.Begin()
-	if err != nil {
-		return toDBError(err)
-	}
-	defer r.client.Close(tx)
-
-	err = r.deleteRelationship(tx, relationshipID)
-	if err != nil {
-		tx.Rollback()
-		return toDBError(err)
-	}
-
-	return toDBError(tx.Commit().Error)
-}
-
-func (r *userRepository) deleteRelationship(tx *gorm.DB, relationshipID int) error {
-	return tx.Table(relationshipTable).Where("id = ?", relationshipID).Delete(&user.Relationship{}).Error
+	err := r.client.DB.Table(relationshipTable).Where("id = ?", relationshipID).Delete(&user.Relationship{}).Error
+	return err
 }
 
 func (r *userRepository) getAuth(ctx context.Context, userID string) (*auth.UserRecord, error) {
