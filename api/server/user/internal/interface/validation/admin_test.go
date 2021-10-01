@@ -30,42 +30,6 @@ func TestAdminRequestValidation_ListAdmin(t *testing.T) {
 			want: true,
 		},
 		{
-			name: "validation error: Search.Field.min_len",
-			args: args{
-				req: &pb.ListAdminRequest{
-					Search: &pb.Search{
-						Field: "",
-						Value: "テストユーザー",
-					},
-					Order: &pb.Order{
-						Field:   "created_at",
-						OrderBy: pb.OrderBy_ORDER_BY_ASC,
-					},
-					Limit:  200,
-					Offset: 100,
-				},
-			},
-			want: false,
-		},
-		{
-			name: "validation error: Search.Value.min_len",
-			args: args{
-				req: &pb.ListAdminRequest{
-					Search: &pb.Search{
-						Field: "username",
-						Value: "",
-					},
-					Order: &pb.Order{
-						Field:   "created_at",
-						OrderBy: pb.OrderBy_ORDER_BY_ASC,
-					},
-					Limit:  200,
-					Offset: 100,
-				},
-			},
-			want: false,
-		},
-		{
 			name: "validation error: Limit.lte",
 			args: args{
 				req: &pb.ListAdminRequest{
