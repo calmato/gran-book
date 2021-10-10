@@ -1,4 +1,5 @@
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/core';
 import dayjs from 'dayjs';
 import React, { ReactElement } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
@@ -66,6 +67,7 @@ const BookImpression = function BookImpression(props: Props): ReactElement {
   const book = props.book;
   const reviews = props.impressionResponse.reviewsList;
   const total = props.impressionResponse.total;
+  const navigation = useNavigation();
 
   return (
     <View>
@@ -92,7 +94,11 @@ const BookImpression = function BookImpression(props: Props): ReactElement {
           <View style={{ backgroundColor: COLOR.TEXT_WHITE, marginBottom: 4 }} key={review.id}>
             <ListItem key={review.id}>
               {review.user?.thumbnailUrl !== '' ? (
-                <Avatar source={{ uri: review.user?.thumbnailUrl }} rounded />
+                <Avatar
+                  source={{ uri: review.user?.thumbnailUrl }}
+                  rounded
+                  onPress={() => navigation.navigate('OtherProfile', { id: review.user?.id })}
+                />
               ) : (
                 <Avatar rounded>
                   <MaterialIcons name="person-outline" size={36} color={COLOR.GREY} />

@@ -7,7 +7,6 @@ import { UserProfileV1Response } from '~/types/api/user_apiv1_response_pb';
 
 export function getOwnProfileAsync(id: string) {
   return async (dispatch: Dispatch): Promise<void> => {
-    console.log('http', 'getOwnProfile');
     return await internal
       .get(`/v1/users/${id}/profile`)
       .then(async (res: AxiosResponse<UserProfileV1Response.AsObject>) => {
@@ -25,16 +24,18 @@ export function getOwnProfileAsync(id: string) {
           productsList,
         } = res.data;
 
-        const products: User.product[] = productsList.map((val: UserProfileV1Response.Product.AsObject) => {
-          const product: User.product = {
-            id: val.id,
-            name: val.name,
-            thumbnailUrl: val.thumbnailUrl,
-            authors: val.authorsList,
-          };
+        const products: User.product[] = productsList.map(
+          (val: UserProfileV1Response.Product.AsObject) => {
+            const product: User.product = {
+              id: val.id,
+              name: val.name,
+              thumbnailUrl: val.thumbnailUrl,
+              authors: val.authorsList,
+            };
 
-          return product;
-        });
+            return product;
+          },
+        );
 
         const values: User.UserValues = {
           id,
@@ -54,6 +55,21 @@ export function getOwnProfileAsync(id: string) {
       })
       .catch((err: Error) => {
         console.log(err);
+        throw err;
+      });
+  };
+}
+
+export function getOtherProfileAsync(id: string) {
+  return async (
+    dispatch: Dispatch,
+  ): Promise<AxiosResponse<UserProfileV1Response.AsObject.data>> => {
+    return await internal
+      .get(`/v1/users/${id}/profile`)
+      .then((res: AxiosResponse<UserProfileV1Response.AsObject>) => {
+        return res;
+      })
+      .catch((err: Error) => {
         throw err;
       });
   };
