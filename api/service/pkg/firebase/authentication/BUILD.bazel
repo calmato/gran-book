@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "authentication",
+    srcs = ["client.go"],
+    importpath = "github.com/calmato/gran-book/api/service/pkg/firebase/authentication",
+    visibility = ["//visibility:public"],
+    deps = [
+        "@com_google_firebase_go_v4//:go",
+        "@com_google_firebase_go_v4//auth",
+    ],
+)

@@ -1,0 +1,15 @@
+# bazel file
+bazel-bin
+bazel-out
+bazel-service
+bazel-testlogs
+
+# proto file
+*.pb.go
+*.pb.validate.go
+
+# coverage file
+coverage.txt
+
+# tmp file
+tmp

@@ -1,0 +1,23 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "logger",
+    srcs = ["logger.go"],
+    importpath = "github.com/calmato/gran-book/api/service/pkg/logger",
+    visibility = ["//visibility:public"],
+    deps = [
+        "@org_uber_go_zap//:zap",
+        "@org_uber_go_zap//zapcore",
+    ],
+)
+
+go_library(
+    name = "log",
+    srcs = ["logger.go"],
+    importpath = "github.com/calmato/gran-book/api/service/pkg/log",
+    visibility = ["//visibility:public"],
+    deps = [
+        "@org_uber_go_zap//:zap",
+        "@org_uber_go_zap//zapcore",
+    ],
+)

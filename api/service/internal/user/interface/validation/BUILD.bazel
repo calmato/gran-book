@@ -1,0 +1,33 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "validation",
+    srcs = [
+        "admin.go",
+        "auth.go",
+        "user.go",
+        "validator.go",
+    ],
+    importpath = "github.com/calmato/gran-book/api/service/internal/user/interface/validation",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//pkg/exception",
+        "//proto/user",
+    ],
+)
+
+go_test(
+    name = "validation_test",
+    srcs = [
+        "admin_test.go",
+        "auth_test.go",
+        "user_test.go",
+        "validator_test.go",
+    ],
+    embed = [":validation"],
+    deps = [
+        "//pkg/exception",
+        "//proto/user",
+        "@com_github_stretchr_testify//assert",
+    ],
+)

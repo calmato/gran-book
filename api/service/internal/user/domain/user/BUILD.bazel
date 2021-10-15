@@ -1,0 +1,30 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "user",
+    srcs = [
+        "entity.go",
+        "repository.go",
+        "uploader.go",
+        "validation.go",
+    ],
+    importpath = "github.com/calmato/gran-book/api/service/internal/user/domain/user",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//pkg/database",
+        "//pkg/datetime",
+        "//proto/user",
+        "@io_gorm_gorm//:gorm",
+    ],
+)
+
+go_test(
+    name = "user_test",
+    srcs = ["entity_test.go"],
+    embed = [":user"],
+    deps = [
+        "//pkg/datetime",
+        "//proto/user",
+        "@com_github_stretchr_testify//assert",
+    ],
+)

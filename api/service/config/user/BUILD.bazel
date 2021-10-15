@@ -1,0 +1,9 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "user",
+    srcs = ["environment.go"],
+    importpath = "github.com/calmato/gran-book/api/service/config/user",
+    visibility = ["//visibility:public"],
+    deps = ["@com_github_kelseyhightower_envconfig//:envconfig"],
+)

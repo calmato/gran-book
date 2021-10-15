@@ -1,0 +1,18 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "conv",
+    srcs = ["string.go"],
+    importpath = "github.com/calmato/gran-book/api/service/pkg/conv",
+    visibility = ["//visibility:public"],
+)
+
+go_test(
+    name = "conv_test",
+    srcs = ["string_test.go"],
+    embed = [":conv"],
+    deps = [
+        "@com_github_stretchr_testify//assert",
+        "@com_github_stretchr_testify//require",
+    ],
+)

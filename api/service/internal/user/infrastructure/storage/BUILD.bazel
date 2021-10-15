@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "storage",
+    srcs = [
+        "context.go",
+        "user.go",
+    ],
+    importpath = "github.com/calmato/gran-book/api/service/internal/user/infrastructure/storage",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/user/domain/user",
+        "//pkg/exception",
+        "//pkg/firebase/storage",
+    ],
+)

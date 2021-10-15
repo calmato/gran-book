@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "application",
+    srcs = ["application.go"],
+    importpath = "github.com/calmato/gran-book/api/service/mock/user/application",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//internal/user/domain/user",
+        "//pkg/database",
+        "@com_github_golang_mock//gomock",
+    ],
+)

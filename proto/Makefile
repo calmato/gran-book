@@ -8,6 +8,8 @@ ARCHIVE_PATH=./archive
 ADMIN_CLIENT_PATH=./../web/admin
 NATIVE_CLIENT_PATH=./../native
 
+SERVICE_PATH=./../api/service
+
 ADMIN_GATEWAY_PATH=./../api/gateway/admin
 NATIVE_GATEWAY_PATH=./../api/gateway/native
 USER_SERVER_PATH=./../api/server/user
@@ -29,9 +31,10 @@ generate: protoc
 	$(MAKE) generate-client OUTPUT_PATH=${ADMIN_CLIENT_PATH} CLIENT=admin
 	$(MAKE) generate-gateway OUTPUT_PATH=${NATIVE_GATEWAY_PATH} CLIENT=native
 	$(MAKE) generate-gateway OUTPUT_PATH=${ADMIN_GATEWAY_PATH} CLIENT=admin
-	$(MAKE) generate-service OUTPUT_PATH=${USER_SERVER_PATH}
-	$(MAKE) generate-service OUTPUT_PATH=${BOOK_SERVER_PATH}
-	$(MAKE) generate-service OUTPUT_PATH=${INFORMATION_SERVER_PATH}
+	$(MAKE) generate-server OUTPUT_PATH=${USER_SERVER_PATH}
+	$(MAKE) generate-server OUTPUT_PATH=${BOOK_SERVER_PATH}
+	$(MAKE) generate-server OUTPUT_PATH=${INFORMATION_SERVER_PATH}
+	$(MAKE) generate-service OUTPUT_PATH=${SERVICE_PATH}
 
 generate-client:
 	mkdir -p ${OUTPUT_PATH}/app/types/api
@@ -43,11 +46,15 @@ generate-gateway:
 	cp -r ${ARCHIVE_PATH}/common/*.pb.go ${OUTPUT_PATH}/proto
 	cp -r ${ARCHIVE_PATH}/service ${OUTPUT_PATH}/proto
 
-generate-service:
+generate-server:
 	mkdir -p ${OUTPUT_PATH}/proto
 	cp -r ${ARCHIVE_PATH}/common/*.pb.go ${OUTPUT_PATH}/proto
 	cp -r ${ARCHIVE_PATH}/common/*.pb.validate.go ${OUTPUT_PATH}/proto
 	cp -r ${ARCHIVE_PATH}/service ${OUTPUT_PATH}/proto
+
+generate-service:
+	mkdir -p ${OUTPUT_PATH}/proto
+	cp -r ${ARCHIVE_PATH}/service/* ${OUTPUT_PATH}/proto
 
 # ------------------------------------------------
 # For Protocol Buffer - clean
@@ -57,9 +64,10 @@ clean: clean-archive
 	$(MAKE) clean-client OUTPUT=${ADMIN_CLIENT_PATH}
 	$(MAKE) clean-gateway OUTPUT_PATH=${NATIVE_GATEWAY_PATH}
 	$(MAKE) clean-gateway OUTPUT_PATH=${ADMIN_GATEWAY_PATH}
-	$(MAKE) clean-service OUTPUT_PATH=${USER_SERVER_PATH}
-	$(MAKE) clean-service OUTPUT_PATH=${BOOK_SERVER_PATH}
-	$(MAKE) clean-service OUTPUT_PATH=${INFORMATION_SERVER_PATH}
+	$(MAKE) clean-server OUTPUT_PATH=${USER_SERVER_PATH}
+	$(MAKE) clean-server OUTPUT_PATH=${BOOK_SERVER_PATH}
+	$(MAKE) clean-server OUTPUT_PATH=${INFORMATION_SERVER_PATH}
+	$(MAKE) clean-service OUTPUT_PATH=${SERVICE_PATH}
 
 clean-archive:
 	find ${ARCHIVE_PATH} -type f | grep -v -e '.keep' | xargs rm -rf
@@ -68,6 +76,9 @@ clean-client:
 	find ${OUTPUT_PATH}/app/types/api -type f | grep -v -e '.keep' | xargs rm -rf
 
 clean-gateway:
+	find ${OUTPUT_PATH}/proto -type f | grep -v -e '.keep' | xargs rm -rf
+
+clean-server:
 	find ${OUTPUT_PATH}/proto -type f | grep -v -e '.keep' | xargs rm -rf
 
 clean-service:

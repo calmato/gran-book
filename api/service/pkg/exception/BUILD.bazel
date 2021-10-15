@@ -1,0 +1,28 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "exception",
+    srcs = [
+        "database.go",
+        "error.go",
+        "firebase.go",
+        "validation.go",
+    ],
+    importpath = "github.com/calmato/gran-book/api/service/pkg/exception",
+    visibility = ["//visibility:public"],
+    deps = [
+        "@com_github_go_sql_driver_mysql//:mysql",
+        "@com_google_firebase_go_v4//errorutils",
+        "@io_gorm_gorm//:gorm",
+    ],
+)
+
+go_test(
+    name = "exception_test",
+    srcs = ["error_test.go"],
+    embed = [":exception"],
+    deps = [
+        "//pkg/test",
+        "@com_github_stretchr_testify//assert",
+    ],
+)

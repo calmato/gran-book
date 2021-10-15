@@ -1,0 +1,31 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "application",
+    srcs = [
+        "application.go",
+        "user.go",
+    ],
+    importpath = "github.com/calmato/gran-book/api/service/internal/user/application",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//internal/user/domain/user",
+        "//pkg/array",
+        "//pkg/database",
+        "@com_github_google_uuid//:uuid",
+    ],
+)
+
+go_test(
+    name = "application_test",
+    srcs = ["user_test.go"],
+    embed = [":application"],
+    deps = [
+        "//internal/user/domain/user",
+        "//pkg/database",
+        "//pkg/exception",
+        "//pkg/test",
+        "@com_github_golang_mock//gomock",
+        "@com_github_stretchr_testify//require",
+    ],
+)
