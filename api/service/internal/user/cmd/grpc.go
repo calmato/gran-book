@@ -8,12 +8,11 @@ import (
 	"strings"
 
 	"github.com/calmato/gran-book/api/service/proto/user"
-	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
 	grpc_ctxzap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap/ctxzap"
-	grpc_recovery "github.com/grpc-ecosystem/go-grpc-middleware/recovery"
 	grpc_ctxtags "github.com/grpc-ecosystem/go-grpc-middleware/tags"
-	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
+	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware/v2"
+	grpc_recovery "github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/recovery"
 	"go.uber.org/zap"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc"
@@ -36,9 +35,6 @@ func newGRPCServer(port string, logger *zap.Logger, reg *registry) (*grpcServer,
 	user.RegisterAdminServiceServer(s, reg.admin)
 	user.RegisterAuthServiceServer(s, reg.auth)
 	user.RegisterUserServiceServer(s, reg.user)
-
-	grpc_prometheus.Register(s)
-	grpc_prometheus.EnableHandlingTimeHistogram()
 
 	lis, err := net.Listen("tcp", ":"+port)
 	if err != nil {
@@ -84,7 +80,6 @@ func grpcStreamServerInterceptors(logger *zap.Logger) []grpc.StreamServerInterce
 
 	interceptors := []grpc.StreamServerInterceptor{
 		grpc_ctxtags.StreamServerInterceptor(),
-		grpc_prometheus.StreamServerInterceptor,
 		grpc_zap.StreamServerInterceptor(logger, opts...),
 		grpc_recovery.StreamServerInterceptor(),
 	}
@@ -100,7 +95,6 @@ func grpcUnaryServerInterceptors(logger *zap.Logger) []grpc.UnaryServerIntercept
 
 	interceptors := []grpc.UnaryServerInterceptor{
 		grpc_ctxtags.UnaryServerInterceptor(),
-		grpc_prometheus.UnaryServerInterceptor,
 		grpc_zap.UnaryServerInterceptor(logger, opts...),
 		accessLogUnaryServerInterceptor(),
 		grpc_recovery.UnaryServerInterceptor(),

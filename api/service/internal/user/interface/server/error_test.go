@@ -52,13 +52,7 @@ func TestToGRPCError(t *testing.T) {
 				Value:     test.ErrMock,
 			},
 			expect: func() error {
-				br := &errdetails.LocalizedMessage{
-					Locale:  "en-US",
-					Message: test.ErrMock.Error(),
-				}
-				st := status.New(codes.DeadlineExceeded, codes.DeadlineExceeded.String())
-				dt, _ := st.WithDetails(br)
-				return dt.Err()
+				return status.New(codes.DeadlineExceeded, codes.DeadlineExceeded.String()).Err()
 			},
 		},
 		{
@@ -68,13 +62,7 @@ func TestToGRPCError(t *testing.T) {
 				Value:     test.ErrMock,
 			},
 			expect: func() error {
-				br := &errdetails.LocalizedMessage{
-					Locale:  "en-US",
-					Message: test.ErrMock.Error(),
-				}
-				st := status.New(codes.NotFound, codes.NotFound.String())
-				dt, _ := st.WithDetails(br)
-				return dt.Err()
+				return status.New(codes.NotFound, codes.NotFound.String()).Err()
 			},
 		},
 		{
@@ -84,9 +72,8 @@ func TestToGRPCError(t *testing.T) {
 				Value:     test.ErrMock,
 			},
 			expect: func() error {
-				br := &errdetails.LocalizedMessage{
-					Locale:  "en-US",
-					Message: test.ErrMock.Error(),
+				br := &errdetails.BadRequest{
+					FieldViolations: []*errdetails.BadRequest_FieldViolation{},
 				}
 				st := status.New(codes.AlreadyExists, codes.AlreadyExists.String())
 				dt, _ := st.WithDetails(br)
@@ -100,13 +87,7 @@ func TestToGRPCError(t *testing.T) {
 				Value:     test.ErrMock,
 			},
 			expect: func() error {
-				br := &errdetails.LocalizedMessage{
-					Locale:  "en-US",
-					Message: test.ErrMock.Error(),
-				}
-				st := status.New(codes.PermissionDenied, codes.PermissionDenied.String())
-				dt, _ := st.WithDetails(br)
-				return dt.Err()
+				return status.New(codes.PermissionDenied, codes.PermissionDenied.String()).Err()
 			},
 		},
 		{
@@ -116,13 +97,7 @@ func TestToGRPCError(t *testing.T) {
 				Value:     test.ErrMock,
 			},
 			expect: func() error {
-				br := &errdetails.LocalizedMessage{
-					Locale:  "en-US",
-					Message: test.ErrMock.Error(),
-				}
-				st := status.New(codes.FailedPrecondition, codes.FailedPrecondition.String())
-				dt, _ := st.WithDetails(br)
-				return dt.Err()
+				return status.New(codes.FailedPrecondition, codes.FailedPrecondition.String()).Err()
 			},
 		},
 		{
@@ -132,13 +107,7 @@ func TestToGRPCError(t *testing.T) {
 				Value:     test.ErrMock,
 			},
 			expect: func() error {
-				br := &errdetails.LocalizedMessage{
-					Locale:  "en-US",
-					Message: test.ErrMock.Error(),
-				}
-				st := status.New(codes.Unimplemented, codes.Unimplemented.String())
-				dt, _ := st.WithDetails(br)
-				return dt.Err()
+				return status.New(codes.Unimplemented, codes.Unimplemented.String()).Err()
 			},
 		},
 		{
@@ -160,7 +129,7 @@ func TestToGRPCError(t *testing.T) {
 		{
 			name: "success from Unknown",
 			err: exception.CustomError{
-				ErrorCode: exception.ErrorCode(999),
+				ErrorCode: exception.ErrUnknown,
 				Value:     test.ErrMock,
 			},
 			expect: func() error {
@@ -180,23 +149,23 @@ func TestToGRPCError(t *testing.T) {
 				Value:     test.ErrMock,
 			},
 			expect: func() error {
-				br := &errdetails.LocalizedMessage{
-					Locale:  "en-US",
-					Message: test.ErrMock.Error(),
-				}
-				st := status.New(codes.Unauthenticated, codes.Unauthenticated.String())
-				dt, _ := st.WithDetails(br)
-				return dt.Err()
+				return status.New(codes.Unauthenticated, codes.Unauthenticated.String()).Err()
 			},
 		},
 		{
 			name: "success from Other gRPC Error",
 			err: exception.CustomError{
-				ErrorCode: exception.ErrUnknown,
+				ErrorCode: exception.ErrorCode(999),
 				Value:     test.ErrMock,
 			},
 			expect: func() error {
-				return status.New(codes.Unknown, codes.Unknown.String()).Err()
+				br := &errdetails.LocalizedMessage{
+					Locale:  "en-US",
+					Message: test.ErrMock.Error(),
+				}
+				st := status.New(codes.Unknown, codes.Unknown.String())
+				dt, _ := st.WithDetails(br)
+				return dt.Err()
 			},
 		},
 	}

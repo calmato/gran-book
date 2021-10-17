@@ -1,3 +1,6 @@
+# not ignore file
+.keep
+
 # bazel file
 bazel-bin
 bazel-out
@@ -10,6 +13,9 @@ bazel-testlogs
 
 # coverage file
 coverage.txt
+
+# external library
+third_party
 
 # tmp file
 tmp

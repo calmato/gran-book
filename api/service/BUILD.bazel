@@ -1,4 +1,0 @@
-load("@bazel_gazelle//:def.bzl", "gazelle")
-
-# gazelle:prefix github.com/calmato/gran-book/api/service
-gazelle(name = "gazelle")
