@@ -17,7 +17,7 @@ install: install-third-party
 install-third-party:
 	rm -rf ${EXTERNAL_PACKAGE}/**/*
 	mkdir -p ${EXTERNAL_PACKAGE}/github.com/envoyproxy
-	git clone git@github.com:envoyproxy/protoc-gen-validate.git ${EXTERNAL_PACKAGE}/github.com/envoyproxy/protoc-gen-validate
+	git clone https://github.com/envoyproxy/protoc-gen-validate.git ${EXTERNAL_PACKAGE}/github.com/envoyproxy/protoc-gen-validate
 
 # update:
 # 	go mod tidy
