@@ -52,7 +52,7 @@ jobs:
 
       - name: Generate go codes from proto
         working-directory: .
-        run: docker-compose -f docker-compose.ci.yaml run --rm service_proto make protoc
+        run: docker-compose -f docker-compose.ci.yaml run --rm service_proto bash -c "make install; make protoc"
 
       - name: Start MySQL container
         working-directory: .
