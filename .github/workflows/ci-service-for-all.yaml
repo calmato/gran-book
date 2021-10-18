@@ -27,7 +27,7 @@ jobs:
       matrix:
         os: [ubuntu-latest] # exclude: macos-latest, windows-latest
         golang: ['^1.17.2']
-        protobuf: ['^3.18.1']
+        protobuf: ['3.x'] # https://github.com/marketplace/actions/setup-protoc
 
     steps:
       - name: Check out code
