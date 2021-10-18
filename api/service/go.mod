@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	cloud.google.com/go/firestore v1.6.0
-	cloud.google.com/go/storage v1.18.0
+	cloud.google.com/go/storage v1.15.0
 	firebase.google.com/go/v4 v4.6.0
 	github.com/envoyproxy/protoc-gen-validate v0.6.1
 	github.com/go-sql-driver/mysql v1.6.0

@@ -2,20 +2,22 @@ package test
 
 import (
 	"errors"
+	"time"
 
 	mock_user_application "github.com/calmato/gran-book/api/service/mock/user/application"
 	mock_user "github.com/calmato/gran-book/api/service/mock/user/domain/user"
 	mock_user_validation "github.com/calmato/gran-book/api/service/mock/user/interface/validation"
 	"github.com/calmato/gran-book/api/service/pkg/database"
-	"github.com/calmato/gran-book/api/service/pkg/datetime"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/protobuf/proto"
 )
 
 var (
-	ErrMock     = errors.New("some error")
-	TimeMock, _ = datetime.ParseTime("2021-07-24 20:00:00")
-	DateMock, _ = datetime.ParseDate("2021-07-24")
+	ErrMock = errors.New("some error")
+
+	jst, _   = time.LoadLocation("Asia/Tokyo")
+	TimeMock = time.Date(2021, time.Month(7), 24, 20, 0, 0, 0, jst).Local()
+	DateMock = time.Date(2021, time.Month(7), 24, 0, 0, 0, 0, jst).Local()
 )
 
 type TestResponse struct {
