@@ -38,9 +38,9 @@ jobs:
           go-version: ${{ matrix.golang }}
 
       - name: Setup third party libraries
-        run: install
+        run: make install
 
-      - name: Genereate proto
+      - name: Genereate go codes from protocol buffers
         uses: PxyUp/protoc-actions@v3.0.0
         with:
           path: |
