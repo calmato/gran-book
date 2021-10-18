@@ -27,7 +27,7 @@ jobs:
       matrix:
         os: [ubuntu-latest] # exclude: macos-latest, windows-latest
         golang: ['^1.17.2']
-        protobuf: ['3.x'] # https://github.com/marketplace/actions/setup-protoc
+        protobuf: ['3.x']
 
     steps:
       - name: Check out code
@@ -38,6 +38,7 @@ jobs:
         with:
           go-version: ${{ matrix.golang }}
 
+      # https://github.com/marketplace/actions/setup-protoc
       - uses: arduino/setup-protoc@v1
         with:
           version: ${{ matrix.protobuf }}
