@@ -29,7 +29,7 @@ services:
       - ./web:/go/src/github.com/calmato/gran-book/web:cached
       - ./proto:/go/src/github.com/calmato/gran-book/proto:cached
 
-    service_proto:
+  service_proto:
       container_name: service_proto
       build:
         context: ./infra/docker/proto

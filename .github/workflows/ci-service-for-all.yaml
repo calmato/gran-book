@@ -47,11 +47,11 @@ jobs:
 
       - name: Container build
         working-directory: .
-        run: docker-compose -f docker-compose.ci.yaml build proto
+        run: docker-compose -f docker-compose.ci.yaml build service_proto
 
       - name: Generate go codes from proto
         working-directory: .
-        run: docker-compose -f docker-compose.ci.yaml run --rm proto make protoc
+        run: docker-compose -f docker-compose.ci.yaml run --rm service_proto make protoc
 
       - name: Start MySQL container
         working-directory: .
