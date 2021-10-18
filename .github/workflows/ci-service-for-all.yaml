@@ -42,11 +42,16 @@ jobs:
         with:
           version: ${{ matrix.protobuf }}
 
-      - name: Setup third party libraries
+      - name: Install
         run: make install
 
-      - name: Protoc
-        run: make protoc
+      - name: Container build
+        working-directory: .
+        run: docker-compose -f docker-compose.ci.yaml build proto
+
+      - name: Generate go codes from proto
+        working-directory: .
+        run: docker-compose -f docker-compose.ci.yaml run --rm proto make protoc
 
       - name: Start MySQL container
         working-directory: .
