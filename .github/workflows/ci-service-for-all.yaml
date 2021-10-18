@@ -1,0 +1,110 @@
+name: Backend(Microservice) Build and Test
+on:
+  push:
+    paths:
+      - '.github/workflows/ci-service-for-all.yaml'
+      - 'api/service/**'
+
+env:
+  PROTOBUF_VERSION: 3.9.0
+  PROTOTOOL_VERSION: 1.10.0
+  ARTIFACT_TAG: ${{ github.sha }}
+  TEST_DB_HOST: 127.0.0.1
+  TEST_DB_PORT: 3306
+  TEST_DB_USERNAME: root
+  TEST_DB_PASSWORD: 12345678
+
+jobs:
+  build_and_test:
+    name: Build and Test
+    needs: setup_proto
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./api/service
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest] # exclude: macos-latest, windows-latest
+        golang: ['^1.17.2']
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Use Golang ${{ matrix.golang }}
+        uses: actions/setup-go@v2
+        with:
+          go-version: ${{ matrix.golang }}
+
+      - name: Setup third party libraries
+        run: install
+
+      - name: Genereate proto
+        uses: PxyUp/protoc-actions@v3.0.0
+        with:
+          path: |
+            -I ./proto \
+            -I ./third_party \
+            --go_out ./proto \
+            --go_opt paths=source_relative \
+            --go-grpc_out ./proto \
+            --go-grpc_opt paths=source_relative \
+            --validate_out lang=go:./proto \
+            --validate_opt paths=source_relative \
+            ./proto/**/*.proto
+
+      - name: Start MySQL container
+        working-directory: .
+        run: docker-compose -f docker-compose.ci.yaml up --build --detach mysql
+
+      - name: Wait start MySQL
+        run: |
+          #!/bin/bash
+
+          until mysqladmin ping -h${TEST_DB_HOST} -P${TEST_DB_PORT} -u${TEST_DB_USERNAME} -p${TEST_DB_PASSWORD}; do
+            echo 'mysql is unavailable - sleeping'
+            sleep 3
+          done
+          echo 'mysql is up - executing command'
+
+      - name: Check golang version
+        run: go version
+
+      - name: Restore cache
+        uses: actions/cache@v2
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+      - name: Download modules
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: go mod download
+
+      - name: Setup
+        run: make setup
+
+      - name: Fmt
+        run: make fmt
+
+      - name: Vet
+        run: make vet
+
+      - name: Lint
+        run: make lint
+
+      - name: Test
+        run: make test
+
+      - name: Build user service
+        run: make build SERVICE=user
+
+      - uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true
+          flags: microservice
+          verbose: true

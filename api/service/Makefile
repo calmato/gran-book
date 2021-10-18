@@ -63,3 +63,6 @@ lint:
 
 test:
 	go test -v -cover -coverprofile=coverage.txt -covermode=atomic $(TEST_PACKAGES)
+
+build:
+	go build -o $(CURDIR)/app $(CURDIR)/cmd/${SERVICE}/main.go

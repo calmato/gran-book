@@ -82,7 +82,7 @@ services:
   user_api:
     container_name: gran_book_user_api
     build:
-      context: ./infra/docker/api/server/user
+      context: ./infra/docker/api/service/user
       dockerfile: Dockerfile_development
     working_dir: /go/src/github.com/calmato/gran-book/api/server/user
     volumes:
