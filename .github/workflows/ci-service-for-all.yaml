@@ -27,6 +27,7 @@ jobs:
       matrix:
         os: [ubuntu-latest] # exclude: macos-latest, windows-latest
         golang: ['^1.17.2']
+        protobuf: ['^3.18.1']
 
     steps:
       - name: Check out code
@@ -37,22 +38,15 @@ jobs:
         with:
           go-version: ${{ matrix.golang }}
 
+      - uses: arduino/setup-protoc@v1
+        with:
+          version: ${{ matrix.protobuf }}
+
       - name: Setup third party libraries
         run: make install
 
-      - name: Genereate go codes from protocol buffers
-        uses: PxyUp/protoc-actions@v3.0.0
-        with:
-          path: |
-            -I ./proto \
-            -I ./third_party \
-            --go_out ./proto \
-            --go_opt paths=source_relative \
-            --go-grpc_out ./proto \
-            --go-grpc_opt paths=source_relative \
-            --validate_out lang=go:./proto \
-            --validate_opt paths=source_relative \
-            ./proto/**/*.proto
+      - name: Protoc
+        run: make protoc
 
       - name: Start MySQL container
         working-directory: .
@@ -105,5 +99,5 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
-          flags: microservice
+          flags: service
           verbose: true
