@@ -1,5 +1,5 @@
 # not ignore file
-.keep
+!.keep
 
 # bazel file
 bazel-bin
