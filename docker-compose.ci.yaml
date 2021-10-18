@@ -30,10 +30,10 @@ services:
       - ./proto:/go/src/github.com/calmato/gran-book/proto:cached
 
   service_proto:
-      container_name: service_proto
-      build:
-        context: ./infra/docker/proto
-        dockerfile: Dockerfile
+    container_name: service_proto
+    build:
+      context: ./infra/docker/proto
+      dockerfile: Dockerfile
     working_dir: /go/src/github.com/calmato/gran-book/api/service
     volumes:
       - ./api/service:/go/src/github.com/calmato/gran-book/api/service:cached
