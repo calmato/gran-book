@@ -61,7 +61,7 @@ vet:
 	go vet $(LINT_PACKAGES)
 
 lint:
-	./bin/golangci-lint run -c .golangci.yaml $(LINT_PACKAGES)
+	./bin/golangci-lint run -c .golangci.yaml ./...
 
 test:
 	go test -v -cover -coverprofile=coverage.txt -covermode=atomic $(TEST_PACKAGES)
