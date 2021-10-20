@@ -48,13 +48,8 @@ jobs:
       - name: Install
         run: make install
 
-      - name: Container build
-        working-directory: .
-        run: docker-compose -f docker-compose.ci.yaml build service_proto
-
-      - name: Generate go codes from proto
-        working-directory: .
-        run: docker-compose -f docker-compose.ci.yaml run --rm service_proto bash -c "make install; make protoc"
+      - name: Protoc
+        run: make protoc
 
       - name: Start MySQL container
         working-directory: .
