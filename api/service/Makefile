@@ -11,9 +11,10 @@ setup: install
 
 install: install-third-party
 	go install github.com/bazelbuild/bazelisk@v1.10.1
+	go install github.com/envoyproxy/protoc-gen-validate@v0.6.1
 	go install github.com/golang/mock/mockgen@v1.6.0
-	go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.27.1
 	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.1.0
+	go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.27.1
 
 install-third-party:
 	rm -rf ${EXTERNAL_PACKAGE}/**/*
@@ -37,21 +38,21 @@ install-third-party:
 # 	rm -f ./tmp/checksum-file
 
 mockgen:
-	rm -rf $(CURDIR)/mock
+	rm -rf ./mock
 	go generate ./...
 
 protoc:
-	find $(CURDIR)/proto/**/*.go -type f | xargs rm -rf
+	find ./proto/**/*.go -type f | xargs rm -rf
 	protoc \
-		-I $(CURDIR)/proto \
-		-I $(CURDIR)/third_party \
-		--go_out $(CURDIR)/proto \
+		-I ./proto \
+		-I ./third_party \
+		--go_out ./proto \
 		--go_opt paths=source_relative \
-		--go-grpc_out $(CURDIR)/proto \
+		--go-grpc_out ./proto \
 		--go-grpc_opt paths=source_relative \
-		--validate_out lang=go:$(CURDIR)/proto \
+		--validate_out lang=go:./proto \
 		--validate_opt paths=source_relative \
-		$(CURDIR)/proto/**/*.proto
+		./proto/**/*.proto
 
 fmt:
 	! gofmt -d -s . | grep '^'
@@ -66,4 +67,4 @@ test:
 	go test -v -cover -coverprofile=coverage.txt -covermode=atomic $(TEST_PACKAGES)
 
 build:
-	go build -o $(CURDIR)/app $(CURDIR)/cmd/${SERVICE}/main.go
+	go build -o ./app ./cmd/${SERVICE}/main.go
