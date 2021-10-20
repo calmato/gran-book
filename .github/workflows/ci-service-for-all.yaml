@@ -5,12 +5,8 @@ on:
       - '.github/workflows/ci-service-for-all.yaml'
       - 'api/service/**'
       - 'infra/docker/service/**/*'
-      - 'infra/docker/proto/*'
 
 env:
-  PROTOBUF_VERSION: 3.9.0
-  PROTOTOOL_VERSION: 1.10.0
-  ARTIFACT_TAG: ${{ github.sha }}
   TEST_DB_HOST: 127.0.0.1
   TEST_DB_PORT: 3306
   TEST_DB_USERNAME: root
@@ -45,8 +41,11 @@ jobs:
         with:
           version: ${{ matrix.protobuf }}
 
-      - name: Install
-        run: make install
+      - name: Check golang version
+        run: go version
+
+      - name: Setup
+        run: make setup
 
       - name: Protoc
         run: make protoc
@@ -65,9 +64,6 @@ jobs:
           done
           echo 'mysql is up - executing command'
 
-      - name: Check golang version
-        run: go version
-
       - name: Restore cache
         uses: actions/cache@v2
         with:
@@ -79,9 +75,6 @@ jobs:
       - name: Download modules
         if: steps.cache.outputs.cache-hit != 'true'
         run: go mod download
-
-      - name: Setup
-        run: make setup
 
       - name: Fmt
         run: make fmt
