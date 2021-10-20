@@ -13,7 +13,6 @@ ENV GRPC_GATEWAY_VERSION 2.3.0
 
 RUN apt-get update
 RUN apt-get install -y --no-install-recommends \
-  apt-utils \
   autoconf \
   automake \
   curl \
@@ -60,15 +59,6 @@ RUN mv ./prototool-$(uname -s)-$(uname -m) /usr/local/bin/prototool \
   && chmod +x /usr/local/bin/prototool
 
 # Install gRPC tools for Node.js
-RUN npm install -g \
-  grpc \
-  grpc-tools \
-  grpc_tools_node_protoc_ts
-
-# Install gRPC tools for Golang
-RUN go install \
-  github.com/bazelbuild/bazelisk \
-	github.com/golang/mock/mockgen \
-	google.golang.org/protobuf/cmd/protoc-gen-go
+RUN npm install -g grpc grpc-tools grpc_tools_node_protoc_ts
 
 RUN ldconfig
