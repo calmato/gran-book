@@ -20,7 +20,7 @@ var (
 	DateMock = time.Date(2021, time.Month(7), 24, 0, 0, 0, 0, jst).Local()
 )
 
-type TestResponse struct {
+type Response struct {
 	Code    codes.Code
 	Message proto.Message
 }

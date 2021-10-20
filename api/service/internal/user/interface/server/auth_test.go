@@ -26,7 +26,7 @@ func TestAuthServer_GetAuth(t *testing.T) {
 	testCases := []struct {
 		name  string
 		setup func(context.Context, *testing.T, *test.Mocks)
-		want  *test.TestResponse
+		want  *test.Response
 	}{
 		{
 			name: "success",
@@ -35,7 +35,7 @@ func TestAuthServer_GetAuth(t *testing.T) {
 					Authentication(ctx).
 					Return(user1, nil)
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.OK,
 				Message: getAuthResponse(user1),
 			},
@@ -47,7 +47,7 @@ func TestAuthServer_GetAuth(t *testing.T) {
 					Authentication(ctx).
 					Return(nil, exception.ErrUnauthorized.New(test.ErrMock))
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.Unauthenticated,
 				Message: nil,
 			},
@@ -63,7 +63,7 @@ func TestAuthServer_GetAuth(t *testing.T) {
 			target := NewAuthServer(mocks.AuthRequestValidation, mocks.UserApplication)
 
 			res, err := target.GetAuth(ctx, &pb.Empty{})
-			test.TestGRPC(t, tt.want, res, err)
+			test.GRPC(t, tt.want, res, err)
 		})
 	}
 }
@@ -83,7 +83,7 @@ func TestAuthServer_CreateAuth(t *testing.T) {
 		name  string
 		setup func(context.Context, *testing.T, *test.Mocks)
 		args  args
-		want  *test.TestResponse
+		want  *test.Response
 	}{
 		{
 			name: "success",
@@ -103,7 +103,7 @@ func TestAuthServer_CreateAuth(t *testing.T) {
 					PasswordConfirmation: "12345678",
 				},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code: codes.OK,
 				Message: &pb.AuthResponse{
 					Auth: &pb.Auth{
@@ -125,7 +125,7 @@ func TestAuthServer_CreateAuth(t *testing.T) {
 			args: args{
 				req: &pb.CreateAuthRequest{},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.InvalidArgument,
 				Message: nil,
 			},
@@ -148,7 +148,7 @@ func TestAuthServer_CreateAuth(t *testing.T) {
 					PasswordConfirmation: "12345678",
 				},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.Internal,
 				Message: nil,
 			},
@@ -164,7 +164,7 @@ func TestAuthServer_CreateAuth(t *testing.T) {
 			target := NewAuthServer(mocks.AuthRequestValidation, mocks.UserApplication)
 
 			res, err := target.CreateAuth(ctx, tt.args.req)
-			test.TestGRPC(t, tt.want, res, err)
+			test.GRPC(t, tt.want, res, err)
 		})
 	}
 }
@@ -184,7 +184,7 @@ func TestAuthServer_UpdateAuthEmail(t *testing.T) {
 		name  string
 		setup func(context.Context, *testing.T, *test.Mocks)
 		args  args
-		want  *test.TestResponse
+		want  *test.Response
 	}{
 		{
 			name: "success",
@@ -205,7 +205,7 @@ func TestAuthServer_UpdateAuthEmail(t *testing.T) {
 					Email: "test-user@calmato.jp",
 				},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code: codes.OK,
 				Message: &pb.AuthResponse{
 					Auth: &pb.Auth{
@@ -226,7 +226,7 @@ func TestAuthServer_UpdateAuthEmail(t *testing.T) {
 			args: args{
 				req: &pb.UpdateAuthEmailRequest{},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.Unauthenticated,
 				Message: nil,
 			},
@@ -245,7 +245,7 @@ func TestAuthServer_UpdateAuthEmail(t *testing.T) {
 			args: args{
 				req: &pb.UpdateAuthEmailRequest{},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.InvalidArgument,
 				Message: nil,
 			},
@@ -269,7 +269,7 @@ func TestAuthServer_UpdateAuthEmail(t *testing.T) {
 					Email: "test-user@calmato.jp",
 				},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.Internal,
 				Message: nil,
 			},
@@ -285,7 +285,7 @@ func TestAuthServer_UpdateAuthEmail(t *testing.T) {
 			target := NewAuthServer(mocks.AuthRequestValidation, mocks.UserApplication)
 
 			res, err := target.UpdateAuthEmail(ctx, tt.args.req)
-			test.TestGRPC(t, tt.want, res, err)
+			test.GRPC(t, tt.want, res, err)
 		})
 	}
 }
@@ -305,7 +305,7 @@ func TestAuthServer_UpdateAuthPassword(t *testing.T) {
 		name  string
 		setup func(context.Context, *testing.T, *test.Mocks)
 		args  args
-		want  *test.TestResponse
+		want  *test.Response
 	}{
 		{
 			name: "success",
@@ -327,7 +327,7 @@ func TestAuthServer_UpdateAuthPassword(t *testing.T) {
 					PasswordConfirmation: "12345678",
 				},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code: codes.OK,
 				Message: &pb.AuthResponse{
 					Auth: &pb.Auth{
@@ -347,7 +347,7 @@ func TestAuthServer_UpdateAuthPassword(t *testing.T) {
 			args: args{
 				req: &pb.UpdateAuthPasswordRequest{},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.Unauthenticated,
 				Message: nil,
 			},
@@ -366,7 +366,7 @@ func TestAuthServer_UpdateAuthPassword(t *testing.T) {
 			args: args{
 				req: &pb.UpdateAuthPasswordRequest{},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.InvalidArgument,
 				Message: nil,
 			},
@@ -391,7 +391,7 @@ func TestAuthServer_UpdateAuthPassword(t *testing.T) {
 					PasswordConfirmation: "12345678",
 				},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.Internal,
 				Message: nil,
 			},
@@ -407,7 +407,7 @@ func TestAuthServer_UpdateAuthPassword(t *testing.T) {
 			target := NewAuthServer(mocks.AuthRequestValidation, mocks.UserApplication)
 
 			res, err := target.UpdateAuthPassword(ctx, tt.args.req)
-			test.TestGRPC(t, tt.want, res, err)
+			test.GRPC(t, tt.want, res, err)
 		})
 	}
 }
@@ -427,7 +427,7 @@ func TestAuthServer_UpdateAuthProfile(t *testing.T) {
 		name  string
 		setup func(context.Context, *testing.T, *test.Mocks)
 		args  args
-		want  *test.TestResponse
+		want  *test.Response
 	}{
 		{
 			name: "success",
@@ -451,7 +451,7 @@ func TestAuthServer_UpdateAuthProfile(t *testing.T) {
 					SelfIntroduction: "自己紹介",
 				},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code: codes.OK,
 				Message: &pb.AuthResponse{
 					Auth: &pb.Auth{
@@ -475,7 +475,7 @@ func TestAuthServer_UpdateAuthProfile(t *testing.T) {
 			args: args{
 				req: &pb.UpdateAuthProfileRequest{},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.Unauthenticated,
 				Message: nil,
 			},
@@ -494,7 +494,7 @@ func TestAuthServer_UpdateAuthProfile(t *testing.T) {
 			args: args{
 				req: &pb.UpdateAuthProfileRequest{},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.InvalidArgument,
 				Message: nil,
 			},
@@ -521,7 +521,7 @@ func TestAuthServer_UpdateAuthProfile(t *testing.T) {
 					SelfIntroduction: "自己紹介",
 				},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.Internal,
 				Message: nil,
 			},
@@ -537,7 +537,7 @@ func TestAuthServer_UpdateAuthProfile(t *testing.T) {
 			target := NewAuthServer(mocks.AuthRequestValidation, mocks.UserApplication)
 
 			res, err := target.UpdateAuthProfile(ctx, tt.args.req)
-			test.TestGRPC(t, tt.want, res, err)
+			test.GRPC(t, tt.want, res, err)
 		})
 	}
 }
@@ -557,7 +557,7 @@ func TestAuthServer_UpdateAuthAddress(t *testing.T) {
 		name  string
 		setup func(context.Context, *testing.T, *test.Mocks)
 		args  args
-		want  *test.TestResponse
+		want  *test.Response
 	}{
 		{
 			name: "success",
@@ -587,7 +587,7 @@ func TestAuthServer_UpdateAuthAddress(t *testing.T) {
 					AddressLine2:  "",
 				},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code: codes.OK,
 				Message: &pb.AuthResponse{
 					Auth: &pb.Auth{
@@ -617,7 +617,7 @@ func TestAuthServer_UpdateAuthAddress(t *testing.T) {
 			args: args{
 				req: &pb.UpdateAuthAddressRequest{},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.Unauthenticated,
 				Message: nil,
 			},
@@ -636,7 +636,7 @@ func TestAuthServer_UpdateAuthAddress(t *testing.T) {
 			args: args{
 				req: &pb.UpdateAuthAddressRequest{},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.InvalidArgument,
 				Message: nil,
 			},
@@ -669,7 +669,7 @@ func TestAuthServer_UpdateAuthAddress(t *testing.T) {
 					AddressLine2:  "",
 				},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.Internal,
 				Message: nil,
 			},
@@ -685,7 +685,7 @@ func TestAuthServer_UpdateAuthAddress(t *testing.T) {
 			target := NewAuthServer(mocks.AuthRequestValidation, mocks.UserApplication)
 
 			res, err := target.UpdateAuthAddress(ctx, tt.args.req)
-			test.TestGRPC(t, tt.want, res, err)
+			test.GRPC(t, tt.want, res, err)
 		})
 	}
 }
@@ -701,7 +701,7 @@ func TestAuthServer_DeleteAuth(t *testing.T) {
 	testCases := []struct {
 		name  string
 		setup func(context.Context, *testing.T, *test.Mocks)
-		want  *test.TestResponse
+		want  *test.Response
 	}{
 		{
 			name: "success",
@@ -714,7 +714,7 @@ func TestAuthServer_DeleteAuth(t *testing.T) {
 					Delete(ctx, u).
 					Return(nil)
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.OK,
 				Message: &pb.Empty{},
 			},
@@ -726,7 +726,7 @@ func TestAuthServer_DeleteAuth(t *testing.T) {
 					Authentication(ctx).
 					Return(nil, exception.ErrUnauthorized.New(test.ErrMock))
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.Unauthenticated,
 				Message: nil,
 			},
@@ -742,7 +742,7 @@ func TestAuthServer_DeleteAuth(t *testing.T) {
 					Delete(ctx, u).
 					Return(exception.ErrInDatastore.New(test.ErrMock))
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.Internal,
 				Message: nil,
 			},
@@ -758,7 +758,7 @@ func TestAuthServer_DeleteAuth(t *testing.T) {
 			target := NewAuthServer(mocks.AuthRequestValidation, mocks.UserApplication)
 
 			res, err := target.DeleteAuth(ctx, &pb.Empty{})
-			test.TestGRPC(t, tt.want, res, err)
+			test.GRPC(t, tt.want, res, err)
 		})
 	}
 }
@@ -778,7 +778,7 @@ func TestAuthServer_RegisterAuthDevice(t *testing.T) {
 		name  string
 		setup func(context.Context, *testing.T, *test.Mocks)
 		args  args
-		want  *test.TestResponse
+		want  *test.Response
 	}{
 		{
 			name: "success",
@@ -799,7 +799,7 @@ func TestAuthServer_RegisterAuthDevice(t *testing.T) {
 					InstanceId: "ExponentPushToken[!Qaz2wsx3edc4rfv5tgb6y]",
 				},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code: codes.OK,
 				Message: &pb.AuthResponse{
 					Auth: &pb.Auth{
@@ -819,7 +819,7 @@ func TestAuthServer_RegisterAuthDevice(t *testing.T) {
 			args: args{
 				req: &pb.RegisterAuthDeviceRequest{},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.Unauthenticated,
 				Message: nil,
 			},
@@ -838,7 +838,7 @@ func TestAuthServer_RegisterAuthDevice(t *testing.T) {
 			args: args{
 				req: &pb.RegisterAuthDeviceRequest{},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.InvalidArgument,
 				Message: nil,
 			},
@@ -862,7 +862,7 @@ func TestAuthServer_RegisterAuthDevice(t *testing.T) {
 					InstanceId: "ExponentPushToken[!Qaz2wsx3edc4rfv5tgb6y]",
 				},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.Internal,
 				Message: nil,
 			},
@@ -878,7 +878,7 @@ func TestAuthServer_RegisterAuthDevice(t *testing.T) {
 			target := NewAuthServer(mocks.AuthRequestValidation, mocks.UserApplication)
 
 			res, err := target.RegisterAuthDevice(ctx, tt.args.req)
-			test.TestGRPC(t, tt.want, res, err)
+			test.GRPC(t, tt.want, res, err)
 		})
 	}
 }

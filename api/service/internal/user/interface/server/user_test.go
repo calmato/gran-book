@@ -31,7 +31,7 @@ func TestUserServer_ListUser(t *testing.T) {
 		name  string
 		setup func(context.Context, *testing.T, *test.Mocks)
 		args  args
-		want  *test.TestResponse
+		want  *test.Response
 	}{
 		{
 			name: "success",
@@ -49,7 +49,7 @@ func TestUserServer_ListUser(t *testing.T) {
 					Offset: 0,
 				},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.OK,
 				Message: getUserListResponse([]*user.User{user1, user2}, 100, 0, 2),
 			},
@@ -64,7 +64,7 @@ func TestUserServer_ListUser(t *testing.T) {
 			args: args{
 				req: &pb.ListUserRequest{},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.InvalidArgument,
 				Message: nil,
 			},
@@ -93,7 +93,7 @@ func TestUserServer_ListUser(t *testing.T) {
 					},
 				},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.Internal,
 				Message: nil,
 			},
@@ -109,7 +109,7 @@ func TestUserServer_ListUser(t *testing.T) {
 			target := NewUserServer(mocks.UserRequestValidation, mocks.UserApplication)
 
 			res, err := target.ListUser(ctx, tt.args.req)
-			test.TestGRPC(t, tt.want, res, err)
+			test.GRPC(t, tt.want, res, err)
 		})
 	}
 }
@@ -133,7 +133,7 @@ func TestUserServer_ListFollow(t *testing.T) {
 		name  string
 		setup func(context.Context, *testing.T, *test.Mocks)
 		args  args
-		want  *test.TestResponse
+		want  *test.Response
 	}{
 		{
 			name: "success",
@@ -155,7 +155,7 @@ func TestUserServer_ListFollow(t *testing.T) {
 					Offset: 0,
 				},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.OK,
 				Message: getFollowListResponse([]*user.Follow{follow1, follow2}, 100, 0, 2),
 			},
@@ -170,7 +170,7 @@ func TestUserServer_ListFollow(t *testing.T) {
 			args: args{
 				req: &pb.ListFollowRequest{},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.Unauthenticated,
 				Message: nil,
 			},
@@ -188,7 +188,7 @@ func TestUserServer_ListFollow(t *testing.T) {
 			args: args{
 				req: &pb.ListFollowRequest{},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.InvalidArgument,
 				Message: nil,
 			},
@@ -213,7 +213,7 @@ func TestUserServer_ListFollow(t *testing.T) {
 					Offset: 0,
 				},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.Internal,
 				Message: nil,
 			},
@@ -229,7 +229,7 @@ func TestUserServer_ListFollow(t *testing.T) {
 			target := NewUserServer(mocks.UserRequestValidation, mocks.UserApplication)
 
 			res, err := target.ListFollow(ctx, tt.args.req)
-			test.TestGRPC(t, tt.want, res, err)
+			test.GRPC(t, tt.want, res, err)
 		})
 	}
 }
@@ -253,7 +253,7 @@ func TestUserServer_ListFollower(t *testing.T) {
 		name  string
 		setup func(context.Context, *testing.T, *test.Mocks)
 		args  args
-		want  *test.TestResponse
+		want  *test.Response
 	}{
 		{
 			name: "success",
@@ -275,7 +275,7 @@ func TestUserServer_ListFollower(t *testing.T) {
 					Offset: 0,
 				},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.OK,
 				Message: getFollowerListResponse([]*user.Follower{follower1, follower2}, 100, 0, 2),
 			},
@@ -290,7 +290,7 @@ func TestUserServer_ListFollower(t *testing.T) {
 			args: args{
 				req: &pb.ListFollowerRequest{},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.Unauthenticated,
 				Message: nil,
 			},
@@ -308,7 +308,7 @@ func TestUserServer_ListFollower(t *testing.T) {
 			args: args{
 				req: &pb.ListFollowerRequest{},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.InvalidArgument,
 				Message: nil,
 			},
@@ -333,7 +333,7 @@ func TestUserServer_ListFollower(t *testing.T) {
 					Offset: 0,
 				},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.Internal,
 				Message: nil,
 			},
@@ -349,7 +349,7 @@ func TestUserServer_ListFollower(t *testing.T) {
 			target := NewUserServer(mocks.UserRequestValidation, mocks.UserApplication)
 
 			res, err := target.ListFollower(ctx, tt.args.req)
-			test.TestGRPC(t, tt.want, res, err)
+			test.GRPC(t, tt.want, res, err)
 		})
 	}
 }
@@ -372,7 +372,7 @@ func TestUserServer_MultiGetUser(t *testing.T) {
 		name  string
 		setup func(context.Context, *testing.T, *test.Mocks)
 		args  args
-		want  *test.TestResponse
+		want  *test.Response
 	}{
 		{
 			name: "success",
@@ -389,7 +389,7 @@ func TestUserServer_MultiGetUser(t *testing.T) {
 					UserIds: []string{"user01"},
 				},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.OK,
 				Message: getUserListResponse([]*user.User{user1}, 1, 0, 1),
 			},
@@ -404,7 +404,7 @@ func TestUserServer_MultiGetUser(t *testing.T) {
 			args: args{
 				req: &pb.MultiGetUserRequest{},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.InvalidArgument,
 				Message: nil,
 			},
@@ -424,7 +424,7 @@ func TestUserServer_MultiGetUser(t *testing.T) {
 					UserIds: []string{"user01"},
 				},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.Internal,
 				Message: nil,
 			},
@@ -440,7 +440,7 @@ func TestUserServer_MultiGetUser(t *testing.T) {
 			target := NewUserServer(mocks.UserRequestValidation, mocks.UserApplication)
 
 			res, err := target.MultiGetUser(ctx, tt.args.req)
-			test.TestGRPC(t, tt.want, res, err)
+			test.GRPC(t, tt.want, res, err)
 		})
 	}
 }
@@ -463,7 +463,7 @@ func TestUserServer_GetUser(t *testing.T) {
 		name  string
 		setup func(context.Context, *testing.T, *test.Mocks)
 		args  args
-		want  *test.TestResponse
+		want  *test.Response
 	}{
 		{
 			name: "success",
@@ -480,7 +480,7 @@ func TestUserServer_GetUser(t *testing.T) {
 					UserId: "user01",
 				},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.OK,
 				Message: getUserResponse(user1),
 			},
@@ -495,7 +495,7 @@ func TestUserServer_GetUser(t *testing.T) {
 			args: args{
 				req: &pb.GetUserRequest{},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.InvalidArgument,
 				Message: nil,
 			},
@@ -515,7 +515,7 @@ func TestUserServer_GetUser(t *testing.T) {
 					UserId: "user01",
 				},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.Internal,
 				Message: nil,
 			},
@@ -531,7 +531,7 @@ func TestUserServer_GetUser(t *testing.T) {
 			target := NewUserServer(mocks.UserRequestValidation, mocks.UserApplication)
 
 			res, err := target.GetUser(ctx, tt.args.req)
-			test.TestGRPC(t, tt.want, res, err)
+			test.GRPC(t, tt.want, res, err)
 		})
 	}
 }
@@ -554,7 +554,7 @@ func TestUserServer_GetUserProfile(t *testing.T) {
 		name  string
 		setup func(context.Context, *testing.T, *test.Mocks)
 		args  args
-		want  *test.TestResponse
+		want  *test.Response
 	}{
 		{
 			name: "success",
@@ -574,7 +574,7 @@ func TestUserServer_GetUserProfile(t *testing.T) {
 					UserId: "user01",
 				},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.OK,
 				Message: getUserProfileResponse(user1),
 			},
@@ -589,7 +589,7 @@ func TestUserServer_GetUserProfile(t *testing.T) {
 			args: args{
 				req: &pb.GetUserProfileRequest{},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.Unauthenticated,
 				Message: nil,
 			},
@@ -607,7 +607,7 @@ func TestUserServer_GetUserProfile(t *testing.T) {
 			args: args{
 				req: &pb.GetUserProfileRequest{},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.InvalidArgument,
 				Message: nil,
 			},
@@ -630,7 +630,7 @@ func TestUserServer_GetUserProfile(t *testing.T) {
 					UserId: "user01",
 				},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.Internal,
 				Message: nil,
 			},
@@ -646,7 +646,7 @@ func TestUserServer_GetUserProfile(t *testing.T) {
 			target := NewUserServer(mocks.UserRequestValidation, mocks.UserApplication)
 
 			res, err := target.GetUserProfile(ctx, tt.args.req)
-			test.TestGRPC(t, tt.want, res, err)
+			test.GRPC(t, tt.want, res, err)
 		})
 	}
 }
@@ -669,7 +669,7 @@ func TestUserServer_Follow(t *testing.T) {
 		name  string
 		setup func(context.Context, *testing.T, *test.Mocks)
 		args  args
-		want  *test.TestResponse
+		want  *test.Response
 	}{
 		{
 			name: "success",
@@ -687,7 +687,7 @@ func TestUserServer_Follow(t *testing.T) {
 					FollowerId: "user01",
 				},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.OK,
 				Message: getUserProfileResponse(user1),
 			},
@@ -702,7 +702,7 @@ func TestUserServer_Follow(t *testing.T) {
 			args: args{
 				req: &pb.FollowRequest{},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.InvalidArgument,
 				Message: nil,
 			},
@@ -723,7 +723,7 @@ func TestUserServer_Follow(t *testing.T) {
 					FollowerId: "user01",
 				},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.Internal,
 				Message: nil,
 			},
@@ -739,7 +739,7 @@ func TestUserServer_Follow(t *testing.T) {
 			target := NewUserServer(mocks.UserRequestValidation, mocks.UserApplication)
 
 			res, err := target.Follow(ctx, tt.args.req)
-			test.TestGRPC(t, tt.want, res, err)
+			test.GRPC(t, tt.want, res, err)
 		})
 	}
 }
@@ -762,7 +762,7 @@ func TestUserServer_Unfollow(t *testing.T) {
 		name  string
 		setup func(context.Context, *testing.T, *test.Mocks)
 		args  args
-		want  *test.TestResponse
+		want  *test.Response
 	}{
 		{
 			name: "success",
@@ -780,7 +780,7 @@ func TestUserServer_Unfollow(t *testing.T) {
 					FollowerId: "user01",
 				},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.OK,
 				Message: getUserProfileResponse(user1),
 			},
@@ -795,7 +795,7 @@ func TestUserServer_Unfollow(t *testing.T) {
 			args: args{
 				req: &pb.UnfollowRequest{},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.InvalidArgument,
 				Message: nil,
 			},
@@ -816,7 +816,7 @@ func TestUserServer_Unfollow(t *testing.T) {
 					FollowerId: "user01",
 				},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.Internal,
 				Message: nil,
 			},
@@ -832,7 +832,7 @@ func TestUserServer_Unfollow(t *testing.T) {
 			target := NewUserServer(mocks.UserRequestValidation, mocks.UserApplication)
 
 			res, err := target.Unfollow(ctx, tt.args.req)
-			test.TestGRPC(t, tt.want, res, err)
+			test.GRPC(t, tt.want, res, err)
 		})
 	}
 }

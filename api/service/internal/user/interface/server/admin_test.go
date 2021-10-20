@@ -31,7 +31,7 @@ func TestAdminServer_ListAdmin(t *testing.T) {
 		name  string
 		setup func(context.Context, *testing.T, *test.Mocks)
 		args  args
-		want  *test.TestResponse
+		want  *test.Response
 	}{
 		{
 			name: "success",
@@ -49,7 +49,7 @@ func TestAdminServer_ListAdmin(t *testing.T) {
 					Offset: 0,
 				},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.OK,
 				Message: getAdminListResponse([]*user.User{user1, user2}, 100, 0, 2),
 			},
@@ -64,7 +64,7 @@ func TestAdminServer_ListAdmin(t *testing.T) {
 			args: args{
 				req: &pb.ListAdminRequest{},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.InvalidArgument,
 				Message: nil,
 			},
@@ -93,7 +93,7 @@ func TestAdminServer_ListAdmin(t *testing.T) {
 					},
 				},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.Internal,
 				Message: nil,
 			},
@@ -109,7 +109,7 @@ func TestAdminServer_ListAdmin(t *testing.T) {
 			target := NewAdminServer(mocks.AdminRequestValidation, mocks.UserApplication)
 
 			res, err := target.ListAdmin(ctx, tt.args.req)
-			test.TestGRPC(t, tt.want, res, err)
+			test.GRPC(t, tt.want, res, err)
 		})
 	}
 }
@@ -132,7 +132,7 @@ func TestAdminServer_GetAdmin(t *testing.T) {
 		name  string
 		setup func(context.Context, *testing.T, *test.Mocks)
 		args  args
-		want  *test.TestResponse
+		want  *test.Response
 	}{
 		{
 			name: "success",
@@ -149,7 +149,7 @@ func TestAdminServer_GetAdmin(t *testing.T) {
 					UserId: "user01",
 				},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.OK,
 				Message: getAdminResponse(user1),
 			},
@@ -164,7 +164,7 @@ func TestAdminServer_GetAdmin(t *testing.T) {
 			args: args{
 				req: &pb.GetAdminRequest{},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.InvalidArgument,
 				Message: nil,
 			},
@@ -184,7 +184,7 @@ func TestAdminServer_GetAdmin(t *testing.T) {
 					UserId: "user01",
 				},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.Internal,
 				Message: nil,
 			},
@@ -200,7 +200,7 @@ func TestAdminServer_GetAdmin(t *testing.T) {
 			target := NewAdminServer(mocks.AdminRequestValidation, mocks.UserApplication)
 
 			res, err := target.GetAdmin(ctx, tt.args.req)
-			test.TestGRPC(t, tt.want, res, err)
+			test.GRPC(t, tt.want, res, err)
 		})
 	}
 }
@@ -220,7 +220,7 @@ func TestAdminServer_CreateAdmin(t *testing.T) {
 		name  string
 		setup func(context.Context, *testing.T, *test.Mocks)
 		args  args
-		want  *test.TestResponse
+		want  *test.Response
 	}{
 		{
 			name: "success",
@@ -246,7 +246,7 @@ func TestAdminServer_CreateAdmin(t *testing.T) {
 					FirstNameKana:        "ゆーざー",
 				},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code: codes.OK,
 				Message: &pb.AdminResponse{
 					Admin: &pb.Admin{
@@ -274,7 +274,7 @@ func TestAdminServer_CreateAdmin(t *testing.T) {
 			args: args{
 				req: &pb.CreateAdminRequest{},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.InvalidArgument,
 				Message: nil,
 			},
@@ -303,7 +303,7 @@ func TestAdminServer_CreateAdmin(t *testing.T) {
 					FirstNameKana:        "ゆーざー",
 				},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.Internal,
 				Message: nil,
 			},
@@ -319,7 +319,7 @@ func TestAdminServer_CreateAdmin(t *testing.T) {
 			target := NewAdminServer(mocks.AdminRequestValidation, mocks.UserApplication)
 
 			res, err := target.CreateAdmin(ctx, tt.args.req)
-			test.TestGRPC(t, tt.want, res, err)
+			test.GRPC(t, tt.want, res, err)
 		})
 	}
 }
@@ -339,7 +339,7 @@ func TestAdminServer_UpdateAdminContact(t *testing.T) {
 		name  string
 		setup func(context.Context, *testing.T, *test.Mocks)
 		args  args
-		want  *test.TestResponse
+		want  *test.Response
 	}{
 		{
 			name: "success",
@@ -362,7 +362,7 @@ func TestAdminServer_UpdateAdminContact(t *testing.T) {
 					PhoneNumber: "000-0000-0000",
 				},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code: codes.OK,
 				Message: &pb.AdminResponse{
 					Admin: &pb.Admin{
@@ -384,7 +384,7 @@ func TestAdminServer_UpdateAdminContact(t *testing.T) {
 			args: args{
 				req: &pb.UpdateAdminContactRequest{},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.InvalidArgument,
 				Message: nil,
 			},
@@ -405,7 +405,7 @@ func TestAdminServer_UpdateAdminContact(t *testing.T) {
 					Email:  "test-user@calmato.jp",
 				},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.NotFound,
 				Message: nil,
 			},
@@ -430,7 +430,7 @@ func TestAdminServer_UpdateAdminContact(t *testing.T) {
 					Email:  "test-user@calmato.jp",
 				},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.Internal,
 				Message: nil,
 			},
@@ -446,7 +446,7 @@ func TestAdminServer_UpdateAdminContact(t *testing.T) {
 			target := NewAdminServer(mocks.AdminRequestValidation, mocks.UserApplication)
 
 			res, err := target.UpdateAdminContact(ctx, tt.args.req)
-			test.TestGRPC(t, tt.want, res, err)
+			test.GRPC(t, tt.want, res, err)
 		})
 	}
 }
@@ -466,7 +466,7 @@ func TestAdminServer_UpdateAdminPassword(t *testing.T) {
 		name  string
 		setup func(context.Context, *testing.T, *test.Mocks)
 		args  args
-		want  *test.TestResponse
+		want  *test.Response
 	}{
 		{
 			name: "success",
@@ -489,7 +489,7 @@ func TestAdminServer_UpdateAdminPassword(t *testing.T) {
 					PasswordConfirmation: "12345678",
 				},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code: codes.OK,
 				Message: &pb.AdminResponse{
 					Admin: &pb.Admin{
@@ -509,7 +509,7 @@ func TestAdminServer_UpdateAdminPassword(t *testing.T) {
 			args: args{
 				req: &pb.UpdateAdminPasswordRequest{},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.InvalidArgument,
 				Message: nil,
 			},
@@ -529,7 +529,7 @@ func TestAdminServer_UpdateAdminPassword(t *testing.T) {
 					UserId: "user01",
 				},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.NotFound,
 				Message: nil,
 			},
@@ -555,7 +555,7 @@ func TestAdminServer_UpdateAdminPassword(t *testing.T) {
 					PasswordConfirmation: "12345678",
 				},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.Internal,
 				Message: nil,
 			},
@@ -571,7 +571,7 @@ func TestAdminServer_UpdateAdminPassword(t *testing.T) {
 			target := NewAdminServer(mocks.AdminRequestValidation, mocks.UserApplication)
 
 			res, err := target.UpdateAdminPassword(ctx, tt.args.req)
-			test.TestGRPC(t, tt.want, res, err)
+			test.GRPC(t, tt.want, res, err)
 		})
 	}
 }
@@ -591,7 +591,7 @@ func TestAdminServer_UpdateAdminProfile(t *testing.T) {
 		name  string
 		setup func(context.Context, *testing.T, *test.Mocks)
 		args  args
-		want  *test.TestResponse
+		want  *test.Response
 	}{
 		{
 			name: "success",
@@ -619,7 +619,7 @@ func TestAdminServer_UpdateAdminProfile(t *testing.T) {
 					ThumbnailUrl:  "https://go.dev/images/gophers/ladder.svg",
 				},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code: codes.OK,
 				Message: &pb.AdminResponse{
 					Admin: &pb.Admin{
@@ -646,7 +646,7 @@ func TestAdminServer_UpdateAdminProfile(t *testing.T) {
 			args: args{
 				req: &pb.UpdateAdminProfileRequest{},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.InvalidArgument,
 				Message: nil,
 			},
@@ -666,7 +666,7 @@ func TestAdminServer_UpdateAdminProfile(t *testing.T) {
 					UserId: "user01",
 				},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.NotFound,
 				Message: nil,
 			},
@@ -697,7 +697,7 @@ func TestAdminServer_UpdateAdminProfile(t *testing.T) {
 					ThumbnailUrl:  "https://go.dev/images/gophers/ladder.svg",
 				},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.Internal,
 				Message: nil,
 			},
@@ -713,7 +713,7 @@ func TestAdminServer_UpdateAdminProfile(t *testing.T) {
 			target := NewAdminServer(mocks.AdminRequestValidation, mocks.UserApplication)
 
 			res, err := target.UpdateAdminProfile(ctx, tt.args.req)
-			test.TestGRPC(t, tt.want, res, err)
+			test.GRPC(t, tt.want, res, err)
 		})
 	}
 }
@@ -733,7 +733,7 @@ func TestAdminServer_DeleteAdmin(t *testing.T) {
 		name  string
 		setup func(context.Context, *testing.T, *test.Mocks)
 		args  args
-		want  *test.TestResponse
+		want  *test.Response
 	}{
 		{
 			name: "success",
@@ -754,7 +754,7 @@ func TestAdminServer_DeleteAdmin(t *testing.T) {
 					UserId: "user01",
 				},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.OK,
 				Message: &pb.Empty{},
 			},
@@ -769,7 +769,7 @@ func TestAdminServer_DeleteAdmin(t *testing.T) {
 			args: args{
 				req: &pb.DeleteAdminRequest{},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.InvalidArgument,
 				Message: nil,
 			},
@@ -789,7 +789,7 @@ func TestAdminServer_DeleteAdmin(t *testing.T) {
 					UserId: "user01",
 				},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.NotFound,
 				Message: nil,
 			},
@@ -813,7 +813,7 @@ func TestAdminServer_DeleteAdmin(t *testing.T) {
 					UserId: "user01",
 				},
 			},
-			want: &test.TestResponse{
+			want: &test.Response{
 				Code:    codes.Internal,
 				Message: nil,
 			},
@@ -829,7 +829,7 @@ func TestAdminServer_DeleteAdmin(t *testing.T) {
 			target := NewAdminServer(mocks.AdminRequestValidation, mocks.UserApplication)
 
 			res, err := target.DeleteAdmin(ctx, tt.args.req)
-			test.TestGRPC(t, tt.want, res, err)
+			test.GRPC(t, tt.want, res, err)
 		})
 	}
 }

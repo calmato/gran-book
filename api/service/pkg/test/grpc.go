@@ -24,7 +24,7 @@ func NewMocks(ctrl *gomock.Controller) *Mocks {
 	}
 }
 
-func TestGRPC(t *testing.T, expect *TestResponse, res interface{}, err error) {
+func GRPC(t *testing.T, expect *Response, res interface{}, err error) {
 	if expect.Code != codes.OK {
 		require.Error(t, err)
 
