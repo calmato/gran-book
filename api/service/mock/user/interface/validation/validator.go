@@ -7,6 +7,7 @@ package mock_validation
 import (
 	reflect "reflect"
 
+	chat "github.com/calmato/gran-book/api/service/proto/chat"
 	user "github.com/calmato/gran-book/api/service/proto/user"
 	gomock "github.com/golang/mock/gomock"
 )
@@ -400,4 +401,83 @@ func (m *MockAdminRequestValidation) UploadAdminThumbnail(req *user.UploadAdminT
 func (mr *MockAdminRequestValidationMockRecorder) UploadAdminThumbnail(req interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UploadAdminThumbnail", reflect.TypeOf((*MockAdminRequestValidation)(nil).UploadAdminThumbnail), req)
+}
+
+// MockChatRequestValidation is a mock of ChatRequestValidation interface.
+type MockChatRequestValidation struct {
+	ctrl     *gomock.Controller
+	recorder *MockChatRequestValidationMockRecorder
+}
+
+// MockChatRequestValidationMockRecorder is the mock recorder for MockChatRequestValidation.
+type MockChatRequestValidationMockRecorder struct {
+	mock *MockChatRequestValidation
+}
+
+// NewMockChatRequestValidation creates a new mock instance.
+func NewMockChatRequestValidation(ctrl *gomock.Controller) *MockChatRequestValidation {
+	mock := &MockChatRequestValidation{ctrl: ctrl}
+	mock.recorder = &MockChatRequestValidationMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockChatRequestValidation) EXPECT() *MockChatRequestValidationMockRecorder {
+	return m.recorder
+}
+
+// CreateMessage mocks base method.
+func (m *MockChatRequestValidation) CreateMessage(req *chat.CreateMessageRequest) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateMessage", req)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CreateMessage indicates an expected call of CreateMessage.
+func (mr *MockChatRequestValidationMockRecorder) CreateMessage(req interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateMessage", reflect.TypeOf((*MockChatRequestValidation)(nil).CreateMessage), req)
+}
+
+// CreateRoom mocks base method.
+func (m *MockChatRequestValidation) CreateRoom(req *chat.CreateRoomRequest) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateRoom", req)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CreateRoom indicates an expected call of CreateRoom.
+func (mr *MockChatRequestValidationMockRecorder) CreateRoom(req interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateRoom", reflect.TypeOf((*MockChatRequestValidation)(nil).CreateRoom), req)
+}
+
+// ListRoom mocks base method.
+func (m *MockChatRequestValidation) ListRoom(req *chat.ListRoomRequest) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListRoom", req)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// ListRoom indicates an expected call of ListRoom.
+func (mr *MockChatRequestValidationMockRecorder) ListRoom(req interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListRoom", reflect.TypeOf((*MockChatRequestValidation)(nil).ListRoom), req)
+}
+
+// UploadChatImage mocks base method.
+func (m *MockChatRequestValidation) UploadChatImage(req *chat.UploadChatImageRequest) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UploadChatImage", req)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UploadChatImage indicates an expected call of UploadChatImage.
+func (mr *MockChatRequestValidationMockRecorder) UploadChatImage(req interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UploadChatImage", reflect.TypeOf((*MockChatRequestValidation)(nil).UploadChatImage), req)
 }

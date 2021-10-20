@@ -6,6 +6,7 @@ import (
 	"errors"
 
 	"github.com/calmato/gran-book/api/service/pkg/exception"
+	"github.com/calmato/gran-book/api/service/proto/chat"
 	"github.com/calmato/gran-book/api/service/proto/user"
 )
 
@@ -52,4 +53,11 @@ type AdminRequestValidation interface {
 	UpdateAdminProfile(req *user.UpdateAdminProfileRequest) error
 	UploadAdminThumbnail(req *user.UploadAdminThumbnailRequest) error
 	DeleteAdmin(req *user.DeleteAdminRequest) error
+}
+
+type ChatRequestValidation interface {
+	ListRoom(req *chat.ListRoomRequest) error
+	CreateRoom(req *chat.CreateRoomRequest) error
+	CreateMessage(req *chat.CreateMessageRequest) error
+	UploadChatImage(req *chat.UploadChatImageRequest) error
 }

@@ -7,6 +7,7 @@ import (
 	"net"
 	"strings"
 
+	"github.com/calmato/gran-book/api/service/proto/chat"
 	"github.com/calmato/gran-book/api/service/proto/user"
 	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
 	grpc_ctxzap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap/ctxzap"
@@ -34,6 +35,7 @@ func newGRPCServer(port string, logger *zap.Logger, reg *registry) (*grpcServer,
 	s := grpc.NewServer(opts...)
 	user.RegisterAdminServiceServer(s, reg.admin)
 	user.RegisterAuthServiceServer(s, reg.auth)
+	chat.RegisterChatServiceServer(s, reg.chat)
 	user.RegisterUserServiceServer(s, reg.user)
 
 	lis, err := net.Listen("tcp", ":"+port)

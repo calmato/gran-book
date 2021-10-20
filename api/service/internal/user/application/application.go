@@ -4,8 +4,10 @@ package application
 import (
 	"context"
 
+	"github.com/calmato/gran-book/api/service/internal/user/domain/chat"
 	"github.com/calmato/gran-book/api/service/internal/user/domain/user"
 	"github.com/calmato/gran-book/api/service/pkg/database"
+	"github.com/calmato/gran-book/api/service/pkg/firebase/firestore"
 )
 
 type UserApplication interface {
@@ -26,4 +28,12 @@ type UserApplication interface {
 	Follow(ctx context.Context, userID, followerID string) (*user.User, error)
 	Unfollow(ctx context.Context, userID, followerID string) (*user.User, error)
 	UploadThumbnail(ctx context.Context, userID string, thumbnail []byte) (string, error)
+}
+
+type ChatApplication interface {
+	ListRoom(ctx context.Context, userID string, p *firestore.Params) (chat.Rooms, error)
+	GetRoom(ctx context.Context, roomID string, userID string) (*chat.Room, error)
+	CreateRoom(ctx context.Context, cr *chat.Room) error
+	CreateMessage(ctx context.Context, cr *chat.Room, cm *chat.Message) error
+	UploadImage(ctx context.Context, cr *chat.Room, image []byte) (string, error)
 }

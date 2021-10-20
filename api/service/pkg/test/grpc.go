@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	mock_user_application "github.com/calmato/gran-book/api/service/mock/user/application"
+	mock_chat "github.com/calmato/gran-book/api/service/mock/user/domain/chat"
 	mock_user "github.com/calmato/gran-book/api/service/mock/user/domain/user"
 	mock_user_validation "github.com/calmato/gran-book/api/service/mock/user/interface/validation"
 	"github.com/golang/mock/gomock"
@@ -16,6 +17,11 @@ func NewMocks(ctrl *gomock.Controller) *Mocks {
 	return &Mocks{
 		AdminRequestValidation: mock_user_validation.NewMockAdminRequestValidation(ctrl),
 		AuthRequestValidation:  mock_user_validation.NewMockAuthRequestValidation(ctrl),
+		ChatApplication:        mock_user_application.NewMockChatApplication(ctrl),
+		ChatDomainValidation:   mock_chat.NewMockValidation(ctrl),
+		ChatRepository:         mock_chat.NewMockRepository(ctrl),
+		ChatRequestValidation:  mock_user_validation.NewMockChatRequestValidation(ctrl),
+		ChatUploader:           mock_chat.NewMockUploader(ctrl),
 		UserApplication:        mock_user_application.NewMockUserApplication(ctrl),
 		UserDomainValidation:   mock_user.NewMockValidation(ctrl),
 		UserRepository:         mock_user.NewMockRepository(ctrl),
