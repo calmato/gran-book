@@ -13,6 +13,7 @@ ENV GRPC_GATEWAY_VERSION 2.3.0
 
 RUN apt-get update
 RUN apt-get install -y --no-install-recommends \
+  apt-utils \
   autoconf \
   automake \
   curl \

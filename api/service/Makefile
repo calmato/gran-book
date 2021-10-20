@@ -13,6 +13,7 @@ install: install-third-party
 	go install github.com/bazelbuild/bazelisk@v1.10.1
 	go install github.com/golang/mock/mockgen@v1.6.0
 	go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.27.1
+	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@1.11.0
 
 install-third-party:
 	rm -rf ${EXTERNAL_PACKAGE}/**/*
