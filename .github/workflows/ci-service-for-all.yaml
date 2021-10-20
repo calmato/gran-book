@@ -5,6 +5,7 @@ on:
       - '.github/workflows/ci-service-for-all.yaml'
       - 'api/service/**'
       - 'infra/docker/service/**/*'
+      - 'infra/kubernetes/**'
 
 env:
   TEST_DB_HOST: 127.0.0.1

@@ -2,7 +2,7 @@
 
 GOLANGCI_VERSION := 1.42.1
 
-LINT_PACKAGES := $(shell go list $(CURDIR)/... | grep -v -e "mock" -v -e "proto")
+LINT_PACKAGES := $(shell go list $(CURDIR)/... | grep -v -e "mock" -v -e "proto" -v -e "third_party" -v -e "tmp")
 TEST_PACKAGES := $(shell go list $(CURDIR)/internal/... $(CURDIR)/pkg/... | grep -v -e "pkg/test")
 EXTERNAL_PACKAGE=$(CURDIR)/third_party
 
@@ -55,7 +55,7 @@ protoc:
 		./proto/**/*.proto
 
 fmt:
-	! gofmt -d -s . | grep '^'
+	! gofmt -d -s ./cmd ./hack ./internal ./pkg | grep '^'
 
 vet:
 	go vet $(LINT_PACKAGES)
