@@ -1,4 +1,4 @@
-.PHONY: install update gazelle mockgen protoc test
+.PHONY: setup install update gazelle mockgen protoc fmt vet lint test build
 
 GOLANGCI_VERSION := 1.42.1
 

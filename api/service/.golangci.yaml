@@ -20,21 +20,20 @@ linters:
     - dogsled
     - dupl
     - errcheck
+    - exportloopref
     - funlen
     - gochecknoinits
     - goconst
     - gocritic
     - gocyclo
     - goimports
-    - golint
     - gosimple
     - govet
     - ineffassign
-    - interfacer
     - lll
     - misspell
     - nakedret
-    - scopelint
+    - revive
     - staticcheck
     - structcheck
     - stylecheck

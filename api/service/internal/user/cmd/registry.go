@@ -20,7 +20,7 @@ type registry struct {
 	user  user.UserServiceServer
 }
 
-func newRegistry(db *database.Client, fa *authentication.Auth, fs *firestore.Firestore, s *gcs.Storage) *registry {
+func newRegistry(db *database.Client, fa *authentication.Auth, _ *firestore.Firestore, s *gcs.Storage) *registry {
 	adminRequestValidation := adminInjector()
 	authRequestValidation := authInjector()
 	userApplication, userRequestValidation := userInjector(db, fa, s)
