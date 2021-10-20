@@ -4,7 +4,7 @@ GOLANGCI_VERSION := $(abspath $(CURDIR)/bin)
 
 LINT_PACKAGES := $(shell go list $(CURDIR)/... | grep -v -e "mock" -v -e "proto")
 TEST_PACKAGES := $(shell go list $(CURDIR)/internal/... $(CURDIR)/pkg/... | grep -v -e "pkg/test")
-EXTERNAL_PACKAGE=./third_party
+EXTERNAL_PACKAGE=$(CURDIR)/third_party
 
 setup: install
 	wget -O - -nv https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v${GOLANGCI_VERSION}
@@ -43,15 +43,15 @@ mockgen:
 protoc:
 	find $(CURDIR)/proto/**/*.go -type f | xargs rm -rf
 	protoc \
-		-I ./proto \
-		-I ./third_party \
-		--go_out ./proto \
+		-I $(CURDIR)/proto \
+		-I $(CURDIR)/third_party \
+		--go_out $(CURDIR)/proto \
 		--go_opt paths=source_relative \
-		--go-grpc_out ./proto \
+		--go-grpc_out $(CURDIR)/proto \
 		--go-grpc_opt paths=source_relative \
-		--validate_out lang=go:./proto \
+		--validate_out lang=go:$(CURDIR)/proto \
 		--validate_opt paths=source_relative \
-		./proto/**/*.proto
+		$(CURDIR)/proto/**/*.proto
 
 fmt:
 	! gofmt -d -s . | grep '^'
