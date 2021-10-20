@@ -59,6 +59,15 @@ RUN mv ./prototool-$(uname -s)-$(uname -m) /usr/local/bin/prototool \
   && chmod +x /usr/local/bin/prototool
 
 # Install gRPC tools for Node.js
-RUN npm install -g grpc grpc-tools grpc_tools_node_protoc_ts
+RUN npm install -g \
+  grpc \
+  grpc-tools \
+  grpc_tools_node_protoc_ts
+
+# Install gRPC tools for Golang
+RUN go install \
+  github.com/bazelbuild/bazelisk \
+	github.com/golang/mock/mockgen \
+	google.golang.org/protobuf/cmd/protoc-gen-go
 
 RUN ldconfig
