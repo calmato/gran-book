@@ -1,6 +1,6 @@
 .PHONY: install update gazelle mockgen protoc test
 
-GOLANGCI_VERSION := $(abspath $(CURDIR)/bin)
+GOLANGCI_VERSION := 1.42.1
 
 LINT_PACKAGES := $(shell go list $(CURDIR)/... | grep -v -e "mock" -v -e "proto")
 TEST_PACKAGES := $(shell go list $(CURDIR)/internal/... $(CURDIR)/pkg/... | grep -v -e "pkg/test")
