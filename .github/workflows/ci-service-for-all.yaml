@@ -92,6 +92,9 @@ jobs:
       - name: Build user service
         run: make build SERVICE=user
 
+      - name: Build book service
+        run: make build SERVICE=book
+
       - uses: codecov/codecov-action@v2
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
