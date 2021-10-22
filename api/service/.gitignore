@@ -20,5 +20,8 @@ app
 # external library
 third_party
 
+# binary file
+bin
+
 # tmp file
 tmp

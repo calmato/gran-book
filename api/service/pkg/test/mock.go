@@ -4,6 +4,9 @@ import (
 	"errors"
 	"time"
 
+	mock_book_application "github.com/calmato/gran-book/api/service/mock/book/application"
+	mock_book "github.com/calmato/gran-book/api/service/mock/book/domain/book"
+	mock_book_validation "github.com/calmato/gran-book/api/service/mock/book/interface/validation"
 	mock_user_application "github.com/calmato/gran-book/api/service/mock/user/application"
 	mock_chat "github.com/calmato/gran-book/api/service/mock/user/domain/chat"
 	mock_user "github.com/calmato/gran-book/api/service/mock/user/domain/user"
@@ -29,6 +32,10 @@ type Response struct {
 type Mocks struct {
 	AdminRequestValidation *mock_user_validation.MockAdminRequestValidation
 	AuthRequestValidation  *mock_user_validation.MockAuthRequestValidation
+	BookApplication        *mock_book_application.MockBookApplication
+	BookDomainValidation   *mock_book.MockValidation
+	BookRepository         *mock_book.MockRepository
+	BookRequestValidation  *mock_book_validation.MockBookRequestValidation
 	ChatApplication        *mock_user_application.MockChatApplication
 	ChatDomainValidation   *mock_chat.MockValidation
 	ChatRepository         *mock_chat.MockRepository

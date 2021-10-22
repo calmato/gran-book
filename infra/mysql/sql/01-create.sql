@@ -155,16 +155,10 @@ CREATE TABLE IF NOT EXISTS `books`.`bookshelves` (
     FOREIGN KEY (`book_id`)
     REFERENCES `books`.`books` (`id`)
     ON DELETE CASCADE
-    ON UPDATE CASCADE,
-  CONSTRAINT `fk_bookshelves_reviews_review_id`
-    FOREIGN KEY (`review_id`)
-    REFERENCES `books`.`reviews` (`id`)
-    ON DELETE CASCADE
-    ON UPDATE SET NULL
+    ON UPDATE CASCADE
 ) ENGINE = InnoDB;
 
 CREATE INDEX `idx_bookshelves_book_id` ON `books`.`bookshelves` (`book_id` ASC) VISIBLE;
-CREATE UNIQUE INDEX `review_id_UNIQUE` ON `books`.`bookshelves` (`review_id` DESC) VISIBLE;
 CREATE UNIQUE INDEX `ui_bookshelves_book_id_user_id` ON `books`.`bookshelves` (`book_id` ASC, `user_id` ASC) VISIBLE;
 CREATE UNIQUE INDEX `ui_bookshelves_user_id_book_id` ON `books`.`bookshelves` (`user_id` ASC, `book_id` ASC) VISIBLE;
 

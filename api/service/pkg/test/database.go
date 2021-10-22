@@ -12,7 +12,13 @@ var (
 		"users",
 		"relationships",
 	}
-	bookTables = []string{}
+	bookTables = []string{
+		"reviews",
+		"authors_books",
+		"authors",
+		"bookshelves",
+		"books",
+	}
 )
 
 func NewDBMock(ctrl *gomock.Controller) (*DBMocks, error) {
