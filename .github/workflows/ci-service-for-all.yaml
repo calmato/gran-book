@@ -95,6 +95,9 @@ jobs:
       - name: Build book service
         run: make build SERVICE=book
 
+      - name: Build native gateway
+        run: make build SERVICE=gateway/native
+
       - uses: codecov/codecov-action@v2
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
