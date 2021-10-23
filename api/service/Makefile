@@ -40,6 +40,7 @@ install-third-party:
 mockgen:
 	rm -rf ./mock
 	go generate ./...
+	./hack/build-mocks.sh
 
 protoc:
 	find ./proto/**/*.go -type f | xargs rm -rf

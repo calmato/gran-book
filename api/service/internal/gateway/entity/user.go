@@ -16,6 +16,10 @@ func (a *Auth) Gender() Gender {
 	return NewGender(a.GetGender())
 }
 
+func (a *Auth) Role() Role {
+	return NewRole(a.GetRole())
+}
+
 type User struct {
 	*user.User
 }

@@ -43,7 +43,9 @@ const (
 	ErrNotExistsInStorage
 	// ErrConflict - 既存レコード,ファイルとの競合
 	ErrConflict
-	// ErrNotImplemented - サービスが利用不可
+	// ErrServiceUnavailable - サービスが利用不可(接続不可)
+	ErrServiceUnavailable
+	// ErrNotImplemented - サービスが利用不可(未実装)
 	ErrNotImplemented
 	// ErrGatewayTimeout - 接続タイムアウト
 	ErrGatewayTimeout

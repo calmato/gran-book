@@ -8,7 +8,12 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
-var ErrInvalidMetadata = errors.New("metadata: this metadata is invalid")
+var (
+	ErrInvalidMetadata    = errors.New("metadata: this metadata is invalid")
+	ErrNotFoundMetadata   = errors.New("metadata: this metadata is not found")
+	ErrInvalidContext     = errors.New("metadata: this context has wrong type")
+	ErrNotRetrieveContext = errors.New("metadata: this context could not retrieve")
+)
 
 // Get - メタデータの取得
 func Get(ctx context.Context, key string) (string, error) {
@@ -19,7 +24,7 @@ func Get(ctx context.Context, key string) (string, error) {
 
 	v := md.Get(key)
 	if len(v) == 0 {
-		return "", fmt.Errorf("%w, length is 0", ErrInvalidMetadata)
+		return "", ErrNotFoundMetadata
 	}
 
 	return v[0], nil

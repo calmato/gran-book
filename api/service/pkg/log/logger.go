@@ -3,7 +3,10 @@ package log
 import (
 	"fmt"
 	"os"
+	"time"
 
+	ginzap "github.com/gin-contrib/zap"
+	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
@@ -59,6 +62,16 @@ func NewLogger(logPath string, logLevel string) (*zap.Logger, error) {
 	))
 
 	return logger, nil
+}
+
+// NewGinMiddleware - gin-gonic/gin 用のミドルウェアを生成
+func NewGinMiddleware(logPath string, logLevel string) (gin.HandlerFunc, error) {
+	logger, err := NewLogger(logPath, logLevel)
+	if err != nil {
+		return nil, err
+	}
+
+	return ginzap.Ginzap(logger, time.RFC3339, true), nil
 }
 
 func getLogLevel(logLevel string) zapcore.Level {
