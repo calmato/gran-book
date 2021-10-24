@@ -6,7 +6,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/calmato/gran-book/api/service/internal/gateway/entity"
+	gentity "github.com/calmato/gran-book/api/service/internal/gateway/entity"
+	"github.com/calmato/gran-book/api/service/internal/gateway/native/entity"
 	request "github.com/calmato/gran-book/api/service/internal/gateway/native/request/v1"
 	response "github.com/calmato/gran-book/api/service/internal/gateway/native/response/v1"
 	"github.com/calmato/gran-book/api/service/internal/gateway/util"
@@ -49,7 +50,7 @@ func (h *apiV1Handler) listChatRoom(ctx *gin.Context) {
 		return
 	}
 
-	crs := entity.NewChatRooms(roomsOutput.Rooms)
+	crs := gentity.NewChatRooms(roomsOutput.Rooms)
 
 	usersInput := &user.MultiGetUserRequest{
 		UserIds: crs.UserIDs(),
@@ -60,7 +61,7 @@ func (h *apiV1Handler) listChatRoom(ctx *gin.Context) {
 		return
 	}
 
-	us := entity.NewUsers(usersOutput.Users)
+	us := gentity.NewUsers(usersOutput.Users)
 	res := response.NewChatRoomListResponse(crs, us.Map())
 	ctx.JSON(http.StatusOK, res)
 }
@@ -96,7 +97,7 @@ func (h *apiV1Handler) createChatRoom(ctx *gin.Context) {
 		return
 	}
 
-	us := entity.NewUsers(usersOutput.Users)
+	us := gentity.NewUsers(usersOutput.Users)
 	if ok := us.IsExists(userIDs...); !ok {
 		err := fmt.Errorf("one of the user ids does not exist")
 		util.ErrorHandling(ctx, exception.ErrInvalidArgument.New(err))
@@ -112,7 +113,7 @@ func (h *apiV1Handler) createChatRoom(ctx *gin.Context) {
 		return
 	}
 
-	cr := entity.NewChatRoom(roomOutput.Room)
+	cr := gentity.NewChatRoom(roomOutput.Room)
 	res := response.NewChatRoomResponse(cr, us.Map())
 	ctx.JSON(http.StatusOK, res)
 }
@@ -146,7 +147,7 @@ func (h *apiV1Handler) createChatTextMessage(ctx *gin.Context) {
 		return
 	}
 
-	cm := entity.NewChatMessage(out.Message)
+	cm := gentity.NewChatMessage(out.Message)
 	res := response.NewChatMessageResponse(cm, a)
 	ctx.JSON(http.StatusOK, res)
 }
@@ -221,7 +222,7 @@ func (h *apiV1Handler) createChatImageMessage(ctx *gin.Context) {
 		return
 	}
 
-	cm := entity.NewChatMessage(messageOutput.Message)
+	cm := gentity.NewChatMessage(messageOutput.Message)
 	res := response.NewChatMessageResponse(cm, a)
 	ctx.JSON(http.StatusOK, res)
 }

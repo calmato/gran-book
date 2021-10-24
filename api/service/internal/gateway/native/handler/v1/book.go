@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/calmato/gran-book/api/service/internal/gateway/entity"
+	gentity "github.com/calmato/gran-book/api/service/internal/gateway/entity"
 	request "github.com/calmato/gran-book/api/service/internal/gateway/native/request/v1"
 	response "github.com/calmato/gran-book/api/service/internal/gateway/native/response/v1"
 	"github.com/calmato/gran-book/api/service/internal/gateway/util"
@@ -22,17 +22,17 @@ func (h *apiV1Handler) getBook(ctx *gin.Context) {
 
 	eg, ectx := errgroup.WithContext(c)
 
-	var a *entity.Auth
+	var a *gentity.Auth
 	eg.Go(func() error {
 		out, err := h.Auth.GetAuth(ectx, &user.Empty{})
 		if err != nil {
 			return err
 		}
-		a = entity.NewAuth(out.Auth)
+		a = gentity.NewAuth(out.Auth)
 		return nil
 	})
 
-	var b *entity.Book
+	var b *gentity.Book
 	eg.Go(func() error {
 		in := &book.GetBookByIsbnRequest{
 			Isbn: isbn,
@@ -41,7 +41,7 @@ func (h *apiV1Handler) getBook(ctx *gin.Context) {
 		if err != nil {
 			return err
 		}
-		b = entity.NewBook(out.Book)
+		b = gentity.NewBook(out.Book)
 		return nil
 	})
 
@@ -60,7 +60,7 @@ func (h *apiV1Handler) getBook(ctx *gin.Context) {
 		return
 	}
 
-	bs := entity.NewBookshelf(out.Bookshelf)
+	bs := gentity.NewBookshelf(out.Bookshelf)
 	res := response.NewBookResponse(b, bs)
 	ctx.JSON(http.StatusOK, res)
 }
@@ -106,7 +106,7 @@ func (h *apiV1Handler) createBook(ctx *gin.Context) {
 		return
 	}
 
-	b := entity.NewBook(out.Book)
+	b := gentity.NewBook(out.Book)
 	res := response.NewBookResponse(b, nil)
 	ctx.JSON(http.StatusOK, res)
 }
@@ -152,7 +152,7 @@ func (h *apiV1Handler) updateBook(ctx *gin.Context) {
 		return
 	}
 
-	b := entity.NewBook(out.Book)
+	b := gentity.NewBook(out.Book)
 	res := response.NewBookResponse(b, nil)
 	ctx.JSON(http.StatusOK, res)
 }

@@ -1,10 +1,12 @@
 package v1
 
 import (
+	"context"
 	"net/http"
 	"strconv"
 
-	"github.com/calmato/gran-book/api/service/internal/gateway/entity"
+	gentity "github.com/calmato/gran-book/api/service/internal/gateway/entity"
+	"github.com/calmato/gran-book/api/service/internal/gateway/native/entity"
 	response "github.com/calmato/gran-book/api/service/internal/gateway/native/response/v1"
 	"github.com/calmato/gran-book/api/service/internal/gateway/util"
 	"github.com/calmato/gran-book/api/service/pkg/exception"
@@ -15,6 +17,7 @@ import (
 // listUserFollow - フォロー一覧取得
 func (h *apiV1Handler) listUserFollow(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
+
 	userID := ctx.Param("userID")
 	limit, err := strconv.ParseInt(ctx.DefaultQuery("limit", entity.ListLimitDefault), 10, 64)
 	if err != nil {
@@ -27,25 +30,25 @@ func (h *apiV1Handler) listUserFollow(ctx *gin.Context) {
 		return
 	}
 
-	in := &user.ListFollowRequest{
-		UserId: userID,
-		Limit:  limit,
-		Offset: offset,
-	}
-	out, err := h.User.ListFollow(c, in)
+	fs, total, err := h.userListFollow(c, userID, limit, offset)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
 	}
 
-	fs := entity.NewFollows(out.Follows)
-	res := response.NewFollowListResponse(fs, out.Limit, out.Offset, out.Total)
+	res := &response.FollowListResponse{
+		Users:  entity.NewFollows(fs),
+		Limit:  limit,
+		Offset: offset,
+		Total:  total,
+	}
 	ctx.JSON(http.StatusOK, res)
 }
 
 // listUserFollower - フォロワー一覧取得
 func (h *apiV1Handler) listUserFollower(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
+
 	userID := ctx.Param("userID")
 	limit, err := strconv.ParseInt(ctx.DefaultQuery("limit", entity.ListLimitDefault), 10, 64)
 	if err != nil {
@@ -58,38 +61,36 @@ func (h *apiV1Handler) listUserFollower(ctx *gin.Context) {
 		return
 	}
 
-	in := &user.ListFollowerRequest{
-		UserId: userID,
-		Limit:  limit,
-		Offset: offset,
-	}
-	out, err := h.User.ListFollower(c, in)
+	fs, total, err := h.userListFollower(c, userID, limit, offset)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
 	}
 
-	fs := entity.NewFollowers(out.Followers)
-	res := response.NewFollowerListResponse(fs, out.Limit, out.Offset, out.Total)
+	res := &response.FollowerListResponse{
+		Users:  entity.NewFollowers(fs),
+		Limit:  limit,
+		Offset: offset,
+		Total:  total,
+	}
 	ctx.JSON(http.StatusOK, res)
 }
 
 // getUserProfile - プロフィール情報取得
 func (h *apiV1Handler) getUserProfile(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
+
 	userID := ctx.Param("userID")
 
-	in := &user.GetUserProfileRequest{
-		UserId: userID,
-	}
-	out, err := h.User.GetUserProfile(c, in)
+	p, err := h.userGetUserProfile(c, userID)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
 	}
 
-	p := entity.NewUserProfile(out.Profile)
-	res := response.NewUserProfileResponse(p)
+	res := &response.UserProfileResponse{
+		UserProfile: entity.NewUserProfile(p),
+	}
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -108,9 +109,11 @@ func (h *apiV1Handler) userFollow(ctx *gin.Context) {
 		util.ErrorHandling(ctx, err)
 		return
 	}
+	p := gentity.NewUserProfile(out.Profile)
 
-	p := entity.NewUserProfile(out.Profile)
-	res := response.NewUserProfileResponse(p)
+	res := &response.UserProfileResponse{
+		UserProfile: entity.NewUserProfile(p),
+	}
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -129,8 +132,54 @@ func (h *apiV1Handler) userUnfollow(ctx *gin.Context) {
 		util.ErrorHandling(ctx, err)
 		return
 	}
+	p := gentity.NewUserProfile(out.Profile)
 
-	p := entity.NewUserProfile(out.Profile)
-	res := response.NewUserProfileResponse(p)
+	res := &response.UserProfileResponse{
+		UserProfile: entity.NewUserProfile(p),
+	}
 	ctx.JSON(http.StatusOK, res)
+}
+
+func (h *apiV1Handler) userListFollow(
+	ctx context.Context, userID string, limit int64, offset int64,
+) (gentity.Follows, int64, error) {
+	in := &user.ListFollowRequest{
+		UserId: userID,
+		Limit:  limit,
+		Offset: offset,
+	}
+	out, err := h.User.ListFollow(ctx, in)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	return gentity.NewFollows(out.Follows), out.Total, nil
+}
+
+func (h *apiV1Handler) userListFollower(
+	ctx context.Context, userID string, limit int64, offset int64,
+) (gentity.Followers, int64, error) {
+	in := &user.ListFollowerRequest{
+		UserId: userID,
+		Limit:  limit,
+		Offset: offset,
+	}
+	out, err := h.User.ListFollower(ctx, in)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	return gentity.NewFollowers(out.Followers), out.Total, nil
+}
+
+func (h *apiV1Handler) userGetUserProfile(ctx context.Context, userID string) (*gentity.UserProfile, error) {
+	in := &user.GetUserProfileRequest{
+		UserId: userID,
+	}
+	out, err := h.User.GetUserProfile(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+
+	return gentity.NewUserProfile(out.Profile), nil
 }

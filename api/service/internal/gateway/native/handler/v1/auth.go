@@ -1,10 +1,12 @@
 package v1
 
 import (
+	"context"
 	"io"
 	"net/http"
 
-	"github.com/calmato/gran-book/api/service/internal/gateway/entity"
+	gentity "github.com/calmato/gran-book/api/service/internal/gateway/entity"
+	"github.com/calmato/gran-book/api/service/internal/gateway/native/entity"
 	request "github.com/calmato/gran-book/api/service/internal/gateway/native/request/v1"
 	response "github.com/calmato/gran-book/api/service/internal/gateway/native/response/v1"
 	"github.com/calmato/gran-book/api/service/internal/gateway/util"
@@ -17,15 +19,15 @@ import (
 func (h *apiV1Handler) getAuth(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
 
-	in := &user.Empty{}
-	out, err := h.Auth.GetAuth(c, in)
+	a, err := h.authGetAuth(c)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
 	}
 
-	a := entity.NewAuth(out.Auth)
-	res := response.NewAuthResponse(a)
+	res := &response.AuthResponse{
+		Auth: entity.NewAuth(a),
+	}
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -50,9 +52,11 @@ func (h *apiV1Handler) createAuth(ctx *gin.Context) {
 		util.ErrorHandling(ctx, err)
 		return
 	}
+	a := gentity.NewAuth(out.Auth)
 
-	a := entity.NewAuth(out.Auth)
-	res := response.NewAuthResponse(a)
+	res := &response.AuthResponse{
+		Auth: entity.NewAuth(a),
+	}
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -77,9 +81,11 @@ func (h *apiV1Handler) updateAuthProfile(ctx *gin.Context) {
 		util.ErrorHandling(ctx, err)
 		return
 	}
+	a := gentity.NewAuth(out.Auth)
 
-	a := entity.NewAuth(out.Auth)
-	res := response.NewAuthResponse(a)
+	res := &response.AuthResponse{
+		Auth: entity.NewAuth(a),
+	}
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -110,9 +116,11 @@ func (h *apiV1Handler) updateAuthAddress(ctx *gin.Context) {
 		util.ErrorHandling(ctx, err)
 		return
 	}
+	a := gentity.NewAuth(out.Auth)
 
-	a := entity.NewAuth(out.Auth)
-	res := response.NewAuthResponse(a)
+	res := &response.AuthResponse{
+		Auth: entity.NewAuth(a),
+	}
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -134,9 +142,11 @@ func (h *apiV1Handler) updateAuthEmail(ctx *gin.Context) {
 		util.ErrorHandling(ctx, err)
 		return
 	}
+	a := gentity.NewAuth(out.Auth)
 
-	a := entity.NewAuth(out.Auth)
-	res := response.NewAuthResponse(a)
+	res := &response.AuthResponse{
+		Auth: entity.NewAuth(a),
+	}
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -159,9 +169,11 @@ func (h *apiV1Handler) updateAuthPassword(ctx *gin.Context) {
 		util.ErrorHandling(ctx, err)
 		return
 	}
+	a := gentity.NewAuth(out.Auth)
 
-	a := entity.NewAuth(out.Auth)
-	res := response.NewAuthResponse(a)
+	res := &response.AuthResponse{
+		Auth: entity.NewAuth(a),
+	}
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -186,12 +198,7 @@ func (h *apiV1Handler) uploadAuthThumbnail(ctx *gin.Context) {
 	buf := make([]byte, 1024) // 1リクエストの上限設定
 	for {
 		if _, err = file.Read(buf); err != nil {
-			if err == io.EOF {
-				break
-			}
-
-			util.ErrorHandling(ctx, exception.ErrInvalidArgument.New(err))
-			return
+			break
 		}
 
 		in := &user.UploadAuthThumbnailRequest{
@@ -206,13 +213,20 @@ func (h *apiV1Handler) uploadAuthThumbnail(ctx *gin.Context) {
 		count++
 	}
 
+	if err != nil && err != io.EOF {
+		util.ErrorHandling(ctx, exception.ErrInvalidArgument.New(err))
+		return
+	}
+
 	out, err := stream.CloseAndRecv()
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
 	}
 
-	res := response.NewAuthThumbnailResponse(out.ThumbnailUrl)
+	res := &response.AuthThumbnailResponse{
+		ThumbnailURL: out.ThumbnailUrl,
+	}
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -247,8 +261,20 @@ func (h *apiV1Handler) registerAuthDevice(ctx *gin.Context) {
 		util.ErrorHandling(ctx, err)
 		return
 	}
+	a := gentity.NewAuth(out.Auth)
 
-	a := entity.NewAuth(out.Auth)
-	res := response.NewAuthResponse(a)
+	res := &response.AuthResponse{
+		Auth: entity.NewAuth(a),
+	}
 	ctx.JSON(http.StatusOK, res)
+}
+
+func (h *apiV1Handler) authGetAuth(ctx context.Context) (*gentity.Auth, error) {
+	in := &user.Empty{}
+	out, err := h.Auth.GetAuth(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+
+	return gentity.NewAuth(out.Auth), nil
 }

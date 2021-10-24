@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/calmato/gran-book/api/service/internal/gateway/entity"
+	gentity "github.com/calmato/gran-book/api/service/internal/gateway/entity"
 	response "github.com/calmato/gran-book/api/service/internal/gateway/native/response/v1"
 	"github.com/calmato/gran-book/api/service/pkg/datetime"
 	"github.com/calmato/gran-book/api/service/pkg/test"
@@ -66,8 +66,8 @@ func TestReview_ListReviewByBook(t *testing.T) {
 			expect: &test.HTTPResponse{
 				Code: http.StatusOK,
 				Body: response.NewBookReviewListResponse(
-					entity.NewReviews(reviews),
-					entity.NewUsers(users).Map(),
+					gentity.NewReviews(reviews),
+					gentity.NewUsers(users).Map(),
 					100,
 					0,
 					2,
@@ -201,8 +201,8 @@ func TestReview_ListReviewByUser(t *testing.T) {
 			expect: &test.HTTPResponse{
 				Code: http.StatusOK,
 				Body: response.NewUserReviewListResponse(
-					entity.NewReviews(reviews),
-					entity.NewBooks(books).Map(),
+					gentity.NewReviews(reviews),
+					gentity.NewBooks(books).Map(),
 					100,
 					0,
 					2,
@@ -310,8 +310,8 @@ func TestReview_getBookReview(t *testing.T) {
 			expect: &test.HTTPResponse{
 				Code: http.StatusOK,
 				Body: response.NewBookReviewResponse(
-					entity.NewReview(review1),
-					entity.NewUser(user1),
+					gentity.NewReview(review1),
+					gentity.NewUser(user1),
 				),
 			},
 		},
@@ -426,8 +426,8 @@ func TestReview_getUserReview(t *testing.T) {
 			expect: &test.HTTPResponse{
 				Code: http.StatusOK,
 				Body: response.NewUserReviewResponse(
-					entity.NewReview(review1),
-					entity.NewBook(book1),
+					gentity.NewReview(review1),
+					gentity.NewBook(book1),
 				),
 			},
 		},

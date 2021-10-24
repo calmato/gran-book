@@ -4,7 +4,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/calmato/gran-book/api/service/internal/gateway/entity"
+	gentity "github.com/calmato/gran-book/api/service/internal/gateway/entity"
+	"github.com/calmato/gran-book/api/service/internal/gateway/native/entity"
 	request "github.com/calmato/gran-book/api/service/internal/gateway/native/request/v1"
 	response "github.com/calmato/gran-book/api/service/internal/gateway/native/response/v1"
 	"github.com/calmato/gran-book/api/service/internal/gateway/util"
@@ -40,7 +41,7 @@ func (h *apiV1Handler) listBookshelf(ctx *gin.Context) {
 		return
 	}
 
-	bss := entity.NewBookshelves(bookshelfOutput.Bookshelves)
+	bss := gentity.NewBookshelves(bookshelfOutput.Bookshelves)
 
 	booksInput := &book.MultiGetBooksRequest{
 		BookIds: bss.BookIDs(),
@@ -51,7 +52,7 @@ func (h *apiV1Handler) listBookshelf(ctx *gin.Context) {
 		return
 	}
 
-	bs := entity.NewBooks(booksOutput.Books)
+	bs := gentity.NewBooks(booksOutput.Books)
 	res := response.NewBookshelfListResponse(
 		bss, bs.Map(), bookshelfOutput.Limit, bookshelfOutput.Offset, bookshelfOutput.Total,
 	)
@@ -70,7 +71,7 @@ func (h *apiV1Handler) getBookshelf(ctx *gin.Context) {
 
 	eg, ectx := errgroup.WithContext(c)
 
-	var b *entity.Book
+	var b *gentity.Book
 	eg.Go(func() error {
 		in := &book.GetBookRequest{
 			BookId: bookID,
@@ -79,11 +80,11 @@ func (h *apiV1Handler) getBookshelf(ctx *gin.Context) {
 		if err != nil {
 			return err
 		}
-		b = entity.NewBook(out.Book)
+		b = gentity.NewBook(out.Book)
 		return nil
 	})
 
-	var bs *entity.Bookshelf
+	var bs *gentity.Bookshelf
 	eg.Go(func() error {
 		in := &book.GetBookshelfRequest{
 			UserId: userID,
@@ -93,7 +94,7 @@ func (h *apiV1Handler) getBookshelf(ctx *gin.Context) {
 		if err != nil {
 			return err
 		}
-		bs = entity.NewBookshelf(out.Bookshelf)
+		bs = gentity.NewBookshelf(out.Bookshelf)
 		return nil
 	})
 
@@ -124,7 +125,7 @@ func (h *apiV1Handler) readBookshelf(ctx *gin.Context) {
 
 	eg, ectx := errgroup.WithContext(c)
 
-	var b *entity.Book
+	var b *gentity.Book
 	eg.Go(func() error {
 		in := &book.GetBookRequest{
 			BookId: bookID,
@@ -133,11 +134,11 @@ func (h *apiV1Handler) readBookshelf(ctx *gin.Context) {
 		if err != nil {
 			return err
 		}
-		b = entity.NewBook(out.Book)
+		b = gentity.NewBook(out.Book)
 		return nil
 	})
 
-	var bs *entity.Bookshelf
+	var bs *gentity.Bookshelf
 	eg.Go(func() error {
 		in := &book.ReadBookshelfRequest{
 			UserId:     userID,
@@ -149,7 +150,7 @@ func (h *apiV1Handler) readBookshelf(ctx *gin.Context) {
 		if err != nil {
 			return err
 		}
-		bs = entity.NewBookshelf(out.Bookshelf)
+		bs = gentity.NewBookshelf(out.Bookshelf)
 		return nil
 	})
 
@@ -174,7 +175,7 @@ func (h *apiV1Handler) readingBookshelf(ctx *gin.Context) {
 
 	eg, ectx := errgroup.WithContext(c)
 
-	var b *entity.Book
+	var b *gentity.Book
 	eg.Go(func() error {
 		in := &book.GetBookRequest{
 			BookId: bookID,
@@ -183,11 +184,11 @@ func (h *apiV1Handler) readingBookshelf(ctx *gin.Context) {
 		if err != nil {
 			return err
 		}
-		b = entity.NewBook(out.Book)
+		b = gentity.NewBook(out.Book)
 		return nil
 	})
 
-	var bs *entity.Bookshelf
+	var bs *gentity.Bookshelf
 	eg.Go(func() error {
 		in := &book.ReadingBookshelfRequest{
 			UserId: userID,
@@ -197,7 +198,7 @@ func (h *apiV1Handler) readingBookshelf(ctx *gin.Context) {
 		if err != nil {
 			return err
 		}
-		bs = entity.NewBookshelf(out.Bookshelf)
+		bs = gentity.NewBookshelf(out.Bookshelf)
 		return nil
 	})
 
@@ -222,7 +223,7 @@ func (h *apiV1Handler) stackedBookshelf(ctx *gin.Context) {
 
 	eg, ectx := errgroup.WithContext(c)
 
-	var b *entity.Book
+	var b *gentity.Book
 	eg.Go(func() error {
 		in := &book.GetBookRequest{
 			BookId: bookID,
@@ -231,11 +232,11 @@ func (h *apiV1Handler) stackedBookshelf(ctx *gin.Context) {
 		if err != nil {
 			return err
 		}
-		b = entity.NewBook(out.Book)
+		b = gentity.NewBook(out.Book)
 		return nil
 	})
 
-	var bs *entity.Bookshelf
+	var bs *gentity.Bookshelf
 	eg.Go(func() error {
 		in := &book.StackedBookshelfRequest{
 			UserId: userID,
@@ -245,7 +246,7 @@ func (h *apiV1Handler) stackedBookshelf(ctx *gin.Context) {
 		if err != nil {
 			return err
 		}
-		bs = entity.NewBookshelf(out.Bookshelf)
+		bs = gentity.NewBookshelf(out.Bookshelf)
 		return nil
 	})
 
@@ -270,7 +271,7 @@ func (h *apiV1Handler) wantBookshelf(ctx *gin.Context) {
 
 	eg, ectx := errgroup.WithContext(c)
 
-	var b *entity.Book
+	var b *gentity.Book
 	eg.Go(func() error {
 		in := &book.GetBookRequest{
 			BookId: bookID,
@@ -279,11 +280,11 @@ func (h *apiV1Handler) wantBookshelf(ctx *gin.Context) {
 		if err != nil {
 			return err
 		}
-		b = entity.NewBook(out.Book)
+		b = gentity.NewBook(out.Book)
 		return nil
 	})
 
-	var bs *entity.Bookshelf
+	var bs *gentity.Bookshelf
 	eg.Go(func() error {
 		in := &book.WantBookshelfRequest{
 			UserId: userID,
@@ -293,7 +294,7 @@ func (h *apiV1Handler) wantBookshelf(ctx *gin.Context) {
 		if err != nil {
 			return err
 		}
-		bs = entity.NewBookshelf(out.Bookshelf)
+		bs = gentity.NewBookshelf(out.Bookshelf)
 		return nil
 	})
 
@@ -318,7 +319,7 @@ func (h *apiV1Handler) releaseBookshelf(ctx *gin.Context) {
 
 	eg, ectx := errgroup.WithContext(c)
 
-	var b *entity.Book
+	var b *gentity.Book
 	eg.Go(func() error {
 		in := &book.GetBookRequest{
 			BookId: bookID,
@@ -327,11 +328,11 @@ func (h *apiV1Handler) releaseBookshelf(ctx *gin.Context) {
 		if err != nil {
 			return err
 		}
-		b = entity.NewBook(out.Book)
+		b = gentity.NewBook(out.Book)
 		return nil
 	})
 
-	var bs *entity.Bookshelf
+	var bs *gentity.Bookshelf
 	eg.Go(func() error {
 		in := &book.ReleaseBookshelfRequest{
 			UserId: userID,
@@ -341,7 +342,7 @@ func (h *apiV1Handler) releaseBookshelf(ctx *gin.Context) {
 		if err != nil {
 			return err
 		}
-		bs = entity.NewBookshelf(out.Bookshelf)
+		bs = gentity.NewBookshelf(out.Bookshelf)
 		return nil
 	})
 

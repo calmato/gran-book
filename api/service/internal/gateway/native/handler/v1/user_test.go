@@ -5,7 +5,8 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/calmato/gran-book/api/service/internal/gateway/entity"
+	gentity "github.com/calmato/gran-book/api/service/internal/gateway/entity"
+	"github.com/calmato/gran-book/api/service/internal/gateway/native/entity"
 	response "github.com/calmato/gran-book/api/service/internal/gateway/native/response/v1"
 	"github.com/calmato/gran-book/api/service/pkg/datetime"
 	"github.com/calmato/gran-book/api/service/pkg/test"
@@ -45,7 +46,12 @@ func TestUser_ListUserFollow(t *testing.T) {
 			query: "",
 			expect: &test.HTTPResponse{
 				Code: http.StatusOK,
-				Body: response.NewFollowListResponse(entity.NewFollows(follows), 100, 0, 2),
+				Body: &response.FollowListResponse{
+					Users:  entity.NewFollows(gentity.NewFollows(follows)),
+					Limit:  100,
+					Offset: 0,
+					Total:  2,
+				},
 			},
 		},
 		{
@@ -125,7 +131,12 @@ func TestUser_ListUserFollower(t *testing.T) {
 			query: "",
 			expect: &test.HTTPResponse{
 				Code: http.StatusOK,
-				Body: response.NewFollowerListResponse(entity.NewFollowers(followers), 100, 0, 2),
+				Body: &response.FollowerListResponse{
+					Users:  entity.NewFollowers(gentity.NewFollowers(followers)),
+					Limit:  100,
+					Offset: 0,
+					Total:  2,
+				},
 			},
 		},
 		{
@@ -194,7 +205,9 @@ func TestUser_GetUserProfile(t *testing.T) {
 			query: "",
 			expect: &test.HTTPResponse{
 				Code: http.StatusOK,
-				Body: response.NewUserProfileResponse(entity.NewUserProfile(profile1)),
+				Body: &response.UserProfileResponse{
+					UserProfile: entity.NewUserProfile(gentity.NewUserProfile(profile1)),
+				},
 			},
 		},
 		{
@@ -246,7 +259,9 @@ func TestUser_UserFollow(t *testing.T) {
 			query: "",
 			expect: &test.HTTPResponse{
 				Code: http.StatusOK,
-				Body: response.NewUserProfileResponse(entity.NewUserProfile(profile1)),
+				Body: &response.UserProfileResponse{
+					UserProfile: entity.NewUserProfile(gentity.NewUserProfile(profile1)),
+				},
 			},
 		},
 		{
@@ -301,7 +316,9 @@ func TestUser_UserUnfollow(t *testing.T) {
 			query: "",
 			expect: &test.HTTPResponse{
 				Code: http.StatusOK,
-				Body: response.NewUserProfileResponse(entity.NewUserProfile(profile1)),
+				Body: &response.UserProfileResponse{
+					UserProfile: entity.NewUserProfile(gentity.NewUserProfile(profile1)),
+				},
 			},
 		},
 		{

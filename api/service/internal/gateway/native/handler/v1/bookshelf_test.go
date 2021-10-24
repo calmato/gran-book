@@ -6,7 +6,8 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/calmato/gran-book/api/service/internal/gateway/entity"
+	gentity "github.com/calmato/gran-book/api/service/internal/gateway/entity"
+	"github.com/calmato/gran-book/api/service/internal/gateway/native/entity"
 	request "github.com/calmato/gran-book/api/service/internal/gateway/native/request/v1"
 	response "github.com/calmato/gran-book/api/service/internal/gateway/native/response/v1"
 	"github.com/calmato/gran-book/api/service/pkg/datetime"
@@ -57,8 +58,8 @@ func TestBookshelf_ListBookshelf(t *testing.T) {
 			expect: &test.HTTPResponse{
 				Code: http.StatusOK,
 				Body: response.NewBookshelfListResponse(
-					entity.NewBookshelves(bookshelves),
-					entity.NewBooks(books).Map(),
+					gentity.NewBookshelves(bookshelves),
+					gentity.NewBooks(books).Map(),
 					100,
 					0,
 					2,
@@ -168,8 +169,8 @@ func TestBookshelf_GetBookshelf(t *testing.T) {
 			expect: &test.HTTPResponse{
 				Code: http.StatusOK,
 				Body: response.NewBookshelfResponse(
-					entity.NewBookshelf(bookshelf1),
-					entity.NewBook(book1),
+					gentity.NewBookshelf(bookshelf1),
+					gentity.NewBook(book1),
 				),
 			},
 		},
@@ -267,8 +268,8 @@ func TestBookshelf_ReadBookshelf(t *testing.T) {
 			expect: &test.HTTPResponse{
 				Code: http.StatusOK,
 				Body: response.NewBookshelfResponse(
-					entity.NewBookshelf(bookshelf1),
-					entity.NewBook(book1),
+					gentity.NewBookshelf(bookshelf1),
+					gentity.NewBook(book1),
 				),
 			},
 		},
@@ -372,8 +373,8 @@ func TestBookshelf_ReadingBookshelf(t *testing.T) {
 			expect: &test.HTTPResponse{
 				Code: http.StatusOK,
 				Body: response.NewBookshelfResponse(
-					entity.NewBookshelf(bookshelf1),
-					entity.NewBook(book1),
+					gentity.NewBookshelf(bookshelf1),
+					gentity.NewBook(book1),
 				),
 			},
 		},
@@ -464,8 +465,8 @@ func TestBookshelf_StackedBookshelf(t *testing.T) {
 			expect: &test.HTTPResponse{
 				Code: http.StatusOK,
 				Body: response.NewBookshelfResponse(
-					entity.NewBookshelf(bookshelf1),
-					entity.NewBook(book1),
+					gentity.NewBookshelf(bookshelf1),
+					gentity.NewBook(book1),
 				),
 			},
 		},
@@ -556,8 +557,8 @@ func TestBookshelf_WantBookshelf(t *testing.T) {
 			expect: &test.HTTPResponse{
 				Code: http.StatusOK,
 				Body: response.NewBookshelfResponse(
-					entity.NewBookshelf(bookshelf1),
-					entity.NewBook(book1),
+					gentity.NewBookshelf(bookshelf1),
+					gentity.NewBook(book1),
 				),
 			},
 		},
@@ -648,8 +649,8 @@ func TestBookshelf_ReleaseBookshelf(t *testing.T) {
 			expect: &test.HTTPResponse{
 				Code: http.StatusOK,
 				Body: response.NewBookshelfResponse(
-					entity.NewBookshelf(bookshelf1),
-					entity.NewBook(book1),
+					gentity.NewBookshelf(bookshelf1),
+					gentity.NewBook(book1),
 				),
 			},
 		},

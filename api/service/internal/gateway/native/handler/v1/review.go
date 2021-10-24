@@ -5,7 +5,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/calmato/gran-book/api/service/internal/gateway/entity"
+	gentity "github.com/calmato/gran-book/api/service/internal/gateway/entity"
+	"github.com/calmato/gran-book/api/service/internal/gateway/native/entity"
 	response "github.com/calmato/gran-book/api/service/internal/gateway/native/response/v1"
 	"github.com/calmato/gran-book/api/service/internal/gateway/util"
 	"github.com/calmato/gran-book/api/service/pkg/exception"
@@ -45,7 +46,7 @@ func (h *apiV1Handler) listReviewByBook(ctx *gin.Context) {
 		return
 	}
 
-	rs := entity.NewReviews(reviewsOutput.Reviews)
+	rs := gentity.NewReviews(reviewsOutput.Reviews)
 
 	usersInput := &user.MultiGetUserRequest{
 		UserIds: rs.UserIDs(),
@@ -56,7 +57,7 @@ func (h *apiV1Handler) listReviewByBook(ctx *gin.Context) {
 		return
 	}
 
-	us := entity.NewUsers(usersOutput.Users)
+	us := gentity.NewUsers(usersOutput.Users)
 	res := response.NewBookReviewListResponse(
 		rs, us.Map(), reviewsOutput.Limit, reviewsOutput.Offset, reviewsOutput.Total,
 	)
@@ -89,7 +90,7 @@ func (h *apiV1Handler) listReviewByUser(ctx *gin.Context) {
 		return
 	}
 
-	rs := entity.NewReviews(reviewsOutput.Reviews)
+	rs := gentity.NewReviews(reviewsOutput.Reviews)
 
 	booksInput := &book.MultiGetBooksRequest{
 		BookIds: rs.BookIDs(),
@@ -100,7 +101,7 @@ func (h *apiV1Handler) listReviewByUser(ctx *gin.Context) {
 		return
 	}
 
-	bs := entity.NewBooks(booksOutput.Books)
+	bs := gentity.NewBooks(booksOutput.Books)
 	res := response.NewUserReviewListResponse(
 		rs, bs.Map(), reviewsOutput.Limit, reviewsOutput.Offset, reviewsOutput.Total,
 	)
@@ -131,7 +132,7 @@ func (h *apiV1Handler) getBookReview(ctx *gin.Context) {
 		return err
 	})
 
-	var r *entity.Review
+	var r *gentity.Review
 	eg.Go(func() error {
 		in := &book.GetReviewRequest{
 			ReviewId: reviewID,
@@ -140,7 +141,7 @@ func (h *apiV1Handler) getBookReview(ctx *gin.Context) {
 		if err != nil {
 			return err
 		}
-		r = entity.NewReview(out.Review)
+		r = gentity.NewReview(out.Review)
 		return nil
 	})
 
@@ -158,7 +159,7 @@ func (h *apiV1Handler) getBookReview(ctx *gin.Context) {
 		return
 	}
 
-	u := entity.NewUser(out.User)
+	u := gentity.NewUser(out.User)
 	res := response.NewBookReviewResponse(r, u)
 	ctx.JSON(http.StatusOK, res)
 }
@@ -182,7 +183,7 @@ func (h *apiV1Handler) getUserReview(ctx *gin.Context) {
 		return
 	}
 
-	r := entity.NewReview(reviewOutput.Review)
+	r := gentity.NewReview(reviewOutput.Review)
 	if r.UserId != userID {
 		err := fmt.Errorf("user id is invalid")
 		util.ErrorHandling(ctx, exception.ErrInvalidArgument.New(err))
@@ -198,7 +199,7 @@ func (h *apiV1Handler) getUserReview(ctx *gin.Context) {
 		return
 	}
 
-	b := entity.NewBook(bookOutput.Book)
+	b := gentity.NewBook(bookOutput.Book)
 	res := response.NewUserReviewResponse(r, b)
 	ctx.JSON(http.StatusOK, res)
 }

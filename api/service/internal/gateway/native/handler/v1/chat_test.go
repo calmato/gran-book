@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/calmato/gran-book/api/service/internal/gateway/entity"
+	gentity "github.com/calmato/gran-book/api/service/internal/gateway/entity"
 	request "github.com/calmato/gran-book/api/service/internal/gateway/native/request/v1"
 	response "github.com/calmato/gran-book/api/service/internal/gateway/native/response/v1"
 	mock_chat "github.com/calmato/gran-book/api/service/mock/proto/chat"
@@ -64,8 +64,8 @@ func TestChat_ListChatRoom(t *testing.T) {
 			expect: &test.HTTPResponse{
 				Code: http.StatusOK,
 				Body: response.NewChatRoomListResponse(
-					entity.NewChatRooms(rooms),
-					entity.NewUsers(users).Map(),
+					gentity.NewChatRooms(rooms),
+					gentity.NewUsers(users).Map(),
 				),
 			},
 		},
@@ -211,8 +211,8 @@ func TestChat_CreateChatRoom(t *testing.T) {
 			expect: &test.HTTPResponse{
 				Code: http.StatusOK,
 				Body: response.NewChatRoomResponse(
-					entity.NewChatRoom(room),
-					entity.NewUsers(users).Map(),
+					gentity.NewChatRoom(room),
+					gentity.NewUsers(users).Map(),
 				),
 			},
 		},
@@ -383,8 +383,8 @@ func TestChat_CreateChatTextMessage(t *testing.T) {
 			expect: &test.HTTPResponse{
 				Code: http.StatusOK,
 				Body: response.NewChatMessageResponse(
-					entity.NewChatMessage(message1),
-					entity.NewAuth(auth),
+					gentity.NewChatMessage(message1),
+					gentity.NewAuth(auth),
 				),
 			},
 		},
@@ -473,8 +473,8 @@ func TestChat_CreateChatImageMessage(t *testing.T) {
 			expect: &test.HTTPResponse{
 				Code: http.StatusOK,
 				Body: response.NewChatMessageResponse(
-					entity.NewChatMessage(message1),
-					entity.NewAuth(auth),
+					gentity.NewChatMessage(message1),
+					gentity.NewAuth(auth),
 				),
 			},
 		},

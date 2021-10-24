@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/calmato/gran-book/api/service/internal/gateway/entity"
+	gentity "github.com/calmato/gran-book/api/service/internal/gateway/entity"
 	response "github.com/calmato/gran-book/api/service/internal/gateway/native/response/v1"
 	"github.com/calmato/gran-book/api/service/pkg/test"
 	"github.com/calmato/gran-book/api/service/proto/book"
@@ -43,7 +43,7 @@ func TestTop_GetTopUser(t *testing.T) {
 			expect: &test.HTTPResponse{
 				Code: http.StatusOK,
 				Body: response.NewUserTopResponse(
-					entity.NewMonthlyResults(results).Map(),
+					gentity.NewMonthlyResults(results).Map(),
 					test.Now(),
 				),
 			},
