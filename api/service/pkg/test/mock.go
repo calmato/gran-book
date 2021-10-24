@@ -4,11 +4,9 @@ import (
 	"errors"
 	"time"
 
-	mock_application "github.com/calmato/gran-book/api/service/mock/book/application"
 	mock_book_application "github.com/calmato/gran-book/api/service/mock/book/application"
 	mock_book "github.com/calmato/gran-book/api/service/mock/book/domain/book"
 	mock_book_validation "github.com/calmato/gran-book/api/service/mock/book/interface/validation"
-	mock_validation "github.com/calmato/gran-book/api/service/mock/book/interface/validation"
 	mock_book_service "github.com/calmato/gran-book/api/service/mock/proto/book"
 	mock_chat_service "github.com/calmato/gran-book/api/service/mock/proto/chat"
 	mock_user_service "github.com/calmato/gran-book/api/service/mock/proto/user"
@@ -77,10 +75,10 @@ func NewMocks(ctrl *gomock.Controller) *Mocks {
 		AdminService:           mock_user_service.NewMockAdminServiceClient(ctrl),
 		AuthRequestValidation:  mock_user_validation.NewMockAuthRequestValidation(ctrl),
 		AuthService:            mock_user_service.NewMockAuthServiceClient(ctrl),
-		BookApplication:        mock_application.NewMockBookApplication(ctrl),
+		BookApplication:        mock_book_application.NewMockBookApplication(ctrl),
 		BookDomainValidation:   mock_book.NewMockValidation(ctrl),
 		BookRepository:         mock_book.NewMockRepository(ctrl),
-		BookRequestValidation:  mock_validation.NewMockBookRequestValidation(ctrl),
+		BookRequestValidation:  mock_book_validation.NewMockBookRequestValidation(ctrl),
 		BookService:            mock_book_service.NewMockBookServiceClient(ctrl),
 		ChatApplication:        mock_user_application.NewMockChatApplication(ctrl),
 		ChatDomainValidation:   mock_chat.NewMockValidation(ctrl),

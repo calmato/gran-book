@@ -18,6 +18,7 @@ import (
 	"google.golang.org/api/option"
 )
 
+//nolint:funlen
 func Exec() error {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
@@ -116,8 +117,13 @@ func Exec() error {
 	}
 
 	logger.Info("Shutdown...")
-	hs.Stop()
-	ms.Stop()
-	cancel()
+	err = hs.Stop()
+	if err != nil {
+		return err
+	}
+	err = ms.Stop()
+	if err != nil {
+		return err
+	}
 	return eg.Wait()
 }

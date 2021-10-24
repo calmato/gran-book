@@ -176,6 +176,7 @@ func (rs Reviews) Proto() []*book.Review {
 }
 
 // BookAuthor - 中間テーブル用
+//nolint:revive
 type BookAuthor struct {
 	ID        int       `gorm:"default:null;primaryKey;autoIncrement;<-:create"`
 	BookID    int       `gorm:"default:null"`

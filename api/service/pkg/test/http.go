@@ -72,6 +72,7 @@ func NewMultipartRequest(t *testing.T, method, path, field string) *http.Request
 /**
  * TestHTTP - HTTP Responseの検証
  */
+//nolint:revive
 func TestHTTP(t *testing.T, expect *HTTPResponse, res *httptest.ResponseRecorder) {
 	require.Equal(t, expect.Code, res.Code)
 
