@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/calmato/gran-book/api/service/internal/gateway/entity"
+	gentity "github.com/calmato/gran-book/api/service/internal/gateway/entity"
 	response "github.com/calmato/gran-book/api/service/internal/gateway/native/response/v2"
 	"github.com/calmato/gran-book/api/service/pkg/datetime"
 	"github.com/calmato/gran-book/api/service/pkg/test"
@@ -53,9 +53,9 @@ func TestBook_GetBook(t *testing.T) {
 			expect: &test.HTTPResponse{
 				Code: http.StatusOK,
 				Body: response.NewBookResponse(
-					entity.NewBook(book1),
-					entity.NewReviews(reviews),
-					entity.NewUsers(users).Map(),
+					gentity.NewBook(book1),
+					gentity.NewReviews(reviews),
+					gentity.NewUsers(users).Map(),
 					20,
 					0,
 					2,
@@ -143,9 +143,9 @@ func TestBook_GetBook(t *testing.T) {
 			expect: &test.HTTPResponse{
 				Code: http.StatusOK,
 				Body: response.NewBookResponse(
-					entity.NewBook(book1),
-					entity.NewReviews(reviews),
-					entity.NewUsers(users).Map(),
+					gentity.NewBook(book1),
+					gentity.NewReviews(reviews),
+					gentity.NewUsers(users).Map(),
 					20,
 					0,
 					2,

@@ -6,7 +6,8 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/calmato/gran-book/api/service/internal/gateway/entity"
+	gentity "github.com/calmato/gran-book/api/service/internal/gateway/entity"
+	"github.com/calmato/gran-book/api/service/internal/gateway/native/entity"
 	response "github.com/calmato/gran-book/api/service/internal/gateway/native/response/v2"
 	"github.com/calmato/gran-book/api/service/pkg/datetime"
 	"github.com/calmato/gran-book/api/service/pkg/test"
@@ -57,8 +58,8 @@ func TestBookshelf_ListBookshelf(t *testing.T) {
 			expect: &test.HTTPResponse{
 				Code: http.StatusOK,
 				Body: response.NewBookshelfListResponse(
-					entity.NewBookshelves(bookshelves),
-					entity.NewBooks(books).Map(),
+					gentity.NewBookshelves(bookshelves),
+					gentity.NewBooks(books).Map(),
 					100,
 					0,
 					2,
@@ -184,10 +185,10 @@ func TestBookshelf_GetBookshelf(t *testing.T) {
 			expect: &test.HTTPResponse{
 				Code: http.StatusOK,
 				Body: response.NewBookshelfResponse(
-					entity.NewBookshelf(bookshelf1),
-					entity.NewBook(book1),
-					entity.NewReviews(reviews),
-					entity.NewUsers(users).Map(),
+					gentity.NewBookshelf(bookshelf1),
+					gentity.NewBook(book1),
+					gentity.NewReviews(reviews),
+					gentity.NewUsers(users).Map(),
 					20,
 					0,
 					2,

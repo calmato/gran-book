@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/calmato/gran-book/api/service/internal/gateway/entity"
+	gentity "github.com/calmato/gran-book/api/service/internal/gateway/entity"
 	response "github.com/calmato/gran-book/api/service/internal/gateway/native/response/v2"
 	"github.com/calmato/gran-book/api/service/internal/gateway/util"
 	"github.com/calmato/gran-book/api/service/pkg/exception"
@@ -38,7 +38,7 @@ func (h *apiV2Handler) getBook(ctx *gin.Context) {
 		return
 	}
 
-	rs := entity.NewReviews(reviewsOutput.Reviews)
+	rs := gentity.NewReviews(reviewsOutput.Reviews)
 
 	usersInput := &user.MultiGetUserRequest{
 		UserIds: rs.UserIDs(),
@@ -49,12 +49,12 @@ func (h *apiV2Handler) getBook(ctx *gin.Context) {
 		return
 	}
 
-	us := entity.NewUsers(usersOutput.Users)
+	us := gentity.NewUsers(usersOutput.Users)
 	res := response.NewBookResponse(b, rs, us.Map(), reviewsOutput.Limit, reviewsOutput.Offset, reviewsOutput.Total)
 	ctx.JSON(http.StatusOK, res)
 }
 
-func (h *apiV2Handler) getBookByKey(ctx context.Context, bookID, key string) (*entity.Book, error) {
+func (h *apiV2Handler) getBookByKey(ctx context.Context, bookID, key string) (*gentity.Book, error) {
 	switch key {
 	case "id":
 		bookID, err := strconv.ParseInt(bookID, 10, 64)
@@ -65,13 +65,13 @@ func (h *apiV2Handler) getBookByKey(ctx context.Context, bookID, key string) (*e
 		if err != nil {
 			return nil, err
 		}
-		return entity.NewBook(out.Book), nil
+		return gentity.NewBook(out.Book), nil
 	case "isbn":
 		out, err := h.Book.GetBookByIsbn(ctx, &book.GetBookByIsbnRequest{Isbn: bookID})
 		if err != nil {
 			return nil, err
 		}
-		return entity.NewBook(out.Book), nil
+		return gentity.NewBook(out.Book), nil
 	default:
 		err := fmt.Errorf("this key is invalid argument")
 		return nil, exception.ErrInvalidArgument.New(err)

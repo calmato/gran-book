@@ -4,7 +4,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/calmato/gran-book/api/service/internal/gateway/entity"
+	gentity "github.com/calmato/gran-book/api/service/internal/gateway/entity"
+	"github.com/calmato/gran-book/api/service/internal/gateway/native/entity"
 	response "github.com/calmato/gran-book/api/service/internal/gateway/native/response/v2"
 	"github.com/calmato/gran-book/api/service/internal/gateway/util"
 	"github.com/calmato/gran-book/api/service/pkg/exception"
@@ -40,7 +41,7 @@ func (h *apiV2Handler) listBookshelf(ctx *gin.Context) {
 		return
 	}
 
-	bss := entity.NewBookshelves(bookshelvesOutput.Bookshelves)
+	bss := gentity.NewBookshelves(bookshelvesOutput.Bookshelves)
 
 	booksInput := &book.MultiGetBooksRequest{
 		BookIds: bss.BookIDs(),
@@ -51,7 +52,7 @@ func (h *apiV2Handler) listBookshelf(ctx *gin.Context) {
 		return
 	}
 
-	bs := entity.NewBooks(booksOutput.Books)
+	bs := gentity.NewBooks(booksOutput.Books)
 	res := response.NewBookshelfListResponse(
 		bss, bs.Map(), bookshelvesOutput.Limit, bookshelvesOutput.Offset, bookshelvesOutput.Total,
 	)
@@ -70,7 +71,7 @@ func (h *apiV2Handler) getBookshelf(ctx *gin.Context) {
 
 	eg, ectx := errgroup.WithContext(c)
 
-	var b *entity.Book
+	var b *gentity.Book
 	eg.Go(func() error {
 		in := &book.GetBookRequest{
 			BookId: bookID,
@@ -79,11 +80,11 @@ func (h *apiV2Handler) getBookshelf(ctx *gin.Context) {
 		if err != nil {
 			return err
 		}
-		b = entity.NewBook(out.Book)
+		b = gentity.NewBook(out.Book)
 		return nil
 	})
 
-	var bs *entity.Bookshelf
+	var bs *gentity.Bookshelf
 	eg.Go(func() error {
 		in := &book.GetBookshelfRequest{
 			UserId: userID,
@@ -93,11 +94,11 @@ func (h *apiV2Handler) getBookshelf(ctx *gin.Context) {
 		if err != nil {
 			return err
 		}
-		bs = entity.NewBookshelf(out.Bookshelf)
+		bs = gentity.NewBookshelf(out.Bookshelf)
 		return nil
 	})
 
-	var rs entity.Reviews
+	var rs gentity.Reviews
 	var limit, offset, total int64
 	eg.Go(func() error {
 		in := &book.ListBookReviewRequest{
@@ -112,7 +113,7 @@ func (h *apiV2Handler) getBookshelf(ctx *gin.Context) {
 		limit = out.Limit
 		offset = out.Offset
 		total = out.Total
-		rs = entity.NewReviews(out.Reviews)
+		rs = gentity.NewReviews(out.Reviews)
 		return nil
 	})
 
@@ -131,7 +132,7 @@ func (h *apiV2Handler) getBookshelf(ctx *gin.Context) {
 		return
 	}
 
-	us := entity.NewUsers(usersOutput.Users)
+	us := gentity.NewUsers(usersOutput.Users)
 	res := response.NewBookshelfResponse(bs, b, rs, us.Map(), limit, offset, total)
 	ctx.JSON(http.StatusOK, res)
 }
