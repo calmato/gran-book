@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	gentity "github.com/calmato/gran-book/api/service/internal/gateway/entity"
+	"github.com/calmato/gran-book/api/service/internal/gateway/native/entity"
 	response "github.com/calmato/gran-book/api/service/internal/gateway/native/response/v1"
 	"github.com/calmato/gran-book/api/service/pkg/test"
 	"github.com/calmato/gran-book/api/service/proto/book"
@@ -42,10 +43,9 @@ func TestTop_GetTopUser(t *testing.T) {
 			},
 			expect: &test.HTTPResponse{
 				Code: http.StatusOK,
-				Body: response.NewUserTopResponse(
-					gentity.NewMonthlyResults(results).Map(),
-					test.Now(),
-				),
+				Body: &response.UserTopResponse{
+					MonthlyResults: entity.NewMonthlyResults(gentity.NewMonthlyResults(results).Map(), test.Now()),
+				},
 			},
 		},
 		{
