@@ -8,6 +8,106 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestOrderBy_ByValue(t *testing.T) {
+	t.Parallel()
+	tests := []struct {
+		name   string
+		key    string
+		expect OrderBy
+	}{
+		{
+			name:   "success: asc",
+			key:    "asc",
+			expect: OrderByAsc,
+		},
+		{
+			name:   "success: desc",
+			key:    "desc",
+			expect: OrderByDesc,
+		},
+		{
+			name:   "success: invalid order by",
+			key:    "",
+			expect: OrderByAsc,
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			actual := NewOrderByByValue(tt.key)
+			assert.Equal(t, tt.expect, actual)
+		})
+	}
+}
+
+func TestOrderBy_Name(t *testing.T) {
+	t.Parallel()
+	tests := []struct {
+		name    string
+		orderBy OrderBy
+		expect  string
+	}{
+		{
+			name:    "success: asc",
+			orderBy: OrderByAsc,
+			expect:  "asc",
+		},
+		{
+			name:    "success: desc",
+			orderBy: OrderByDesc,
+			expect:  "desc",
+		},
+		{
+			name:    "success: invalid order by",
+			orderBy: -1,
+			expect:  "",
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			assert.Equal(t, tt.expect, tt.orderBy.Name())
+		})
+	}
+}
+
+func TestOrderBy_Proto(t *testing.T) {
+	t.Parallel()
+	tests := []struct {
+		name    string
+		orderBy OrderBy
+		expect  user.OrderBy
+	}{
+		{
+			name:    "success: asc",
+			orderBy: OrderByAsc,
+			expect:  user.OrderBy_ORDER_BY_ASC,
+		},
+		{
+			name:    "success: desc",
+			orderBy: OrderByDesc,
+			expect:  user.OrderBy_ORDER_BY_DESC,
+		},
+		{
+			name:    "success: invalid order by",
+			orderBy: -1,
+			expect:  user.OrderBy(-1),
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			assert.Equal(t, tt.expect, tt.orderBy.Proto())
+		})
+	}
+}
+
 func TestGender(t *testing.T) {
 	t.Parallel()
 	tests := []struct {
