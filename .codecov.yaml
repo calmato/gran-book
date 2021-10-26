@@ -37,19 +37,3 @@ flags:
     paths:
     - api/
     carryforward: true
-  native-gateway:
-    paths:
-    - api/gateway/native/
-    carryforward: true
-  admin-gateway:
-    paths:
-    - api/gateway/admin/
-    carryforward: true
-  user-api:
-    paths:
-    - api/server/user/
-    carryforward: true
-  book-api:
-    paths:
-    - api/server/book/
-    carryforward: true
