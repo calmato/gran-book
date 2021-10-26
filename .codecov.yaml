@@ -48,6 +48,7 @@ flags:
   service:
     paths:
     - api/service/
+    carryforward: true
   native-gateway:
     paths:
     - api/gateway/native/
