@@ -144,3 +144,13 @@ func (h *apiV1Handler) currentUser(ctx context.Context, userID string) (*entity.
 
 	return a, nil
 }
+
+// correctUser - UserIDが現在のログインユーザー情報と一致するかの検証
+func (h *apiV1Handler) correctUser(ctx context.Context, userID string) (bool, error) {
+	a, err := h.currentUser(ctx, userID)
+	if err != nil {
+		return false, err
+	}
+
+	return userID == a.Id, nil
+}

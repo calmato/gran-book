@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	gentity "github.com/calmato/gran-book/api/service/internal/gateway/entity"
+	"github.com/calmato/gran-book/api/service/internal/gateway/native/entity"
 	request "github.com/calmato/gran-book/api/service/internal/gateway/native/request/v1"
 	response "github.com/calmato/gran-book/api/service/internal/gateway/native/response/v1"
 	mock_chat "github.com/calmato/gran-book/api/service/mock/proto/chat"
@@ -63,10 +64,9 @@ func TestChat_ListChatRoom(t *testing.T) {
 			query: "",
 			expect: &test.HTTPResponse{
 				Code: http.StatusOK,
-				Body: response.NewChatRoomListResponse(
-					gentity.NewChatRooms(rooms),
-					gentity.NewUsers(users).Map(),
-				),
+				Body: &response.ChatRoomListResponse{
+					Rooms: entity.NewChatRooms(gentity.NewChatRooms(rooms), gentity.NewUsers(users).Map()),
+				},
 			},
 		},
 		{
@@ -94,7 +94,7 @@ func TestChat_ListChatRoom(t *testing.T) {
 			},
 			query: "",
 			expect: &test.HTTPResponse{
-				Code: http.StatusInternalServerError,
+				Code: http.StatusForbidden,
 			},
 		},
 		{
@@ -210,10 +210,7 @@ func TestChat_CreateChatRoom(t *testing.T) {
 			},
 			expect: &test.HTTPResponse{
 				Code: http.StatusOK,
-				Body: response.NewChatRoomResponse(
-					gentity.NewChatRoom(room),
-					gentity.NewUsers(users).Map(),
-				),
+				Body: entity.NewChatRoom(gentity.NewChatRoom(room), gentity.NewUsers(users).Map()),
 			},
 		},
 		{
@@ -238,7 +235,7 @@ func TestChat_CreateChatRoom(t *testing.T) {
 				},
 			},
 			expect: &test.HTTPResponse{
-				Code: http.StatusInternalServerError,
+				Code: http.StatusForbidden,
 			},
 		},
 		{
@@ -355,6 +352,7 @@ func TestChat_CreateChatTextMessage(t *testing.T) {
 	t.Parallel()
 
 	auth := testAuth("00000000-0000-0000-0000-000000000000")
+	user1 := testUser("00000000-0000-0000-0000-000000000000")
 	message1 := testChatMessage("00000000-0000-0000-0000-000000000000")
 
 	tests := []struct {
@@ -369,6 +367,11 @@ func TestChat_CreateChatTextMessage(t *testing.T) {
 				mocks.AuthService.EXPECT().
 					GetAuth(gomock.Any(), &user.Empty{}).
 					Return(&user.AuthResponse{Auth: auth}, nil)
+				mocks.UserService.EXPECT().
+					GetUser(gomock.Any(), &user.GetUserRequest{
+						UserId: "00000000-0000-0000-0000-000000000000",
+					}).
+					Return(&user.UserResponse{User: user1}, nil)
 				mocks.ChatService.EXPECT().
 					CreateMessage(gomock.Any(), &chat.CreateMessageRequest{
 						RoomId: "00000000-0000-0000-0000-000000000000",
@@ -382,10 +385,9 @@ func TestChat_CreateChatTextMessage(t *testing.T) {
 			},
 			expect: &test.HTTPResponse{
 				Code: http.StatusOK,
-				Body: response.NewChatMessageResponse(
-					gentity.NewChatMessage(message1),
-					gentity.NewAuth(auth),
-				),
+				Body: &response.ChatMessageResponse{
+					ChatMessage: entity.NewChatMessage(gentity.NewChatMessage(message1), gentity.NewUser(user1)),
+				},
 			},
 		},
 		{
@@ -407,6 +409,25 @@ func TestChat_CreateChatTextMessage(t *testing.T) {
 				Text: "テストメッセージです。",
 			},
 			expect: &test.HTTPResponse{
+				Code: http.StatusForbidden,
+			},
+		},
+		{
+			name: "failed to get user",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks, ctrl *gomock.Controller) {
+				mocks.AuthService.EXPECT().
+					GetAuth(gomock.Any(), &user.Empty{}).
+					Return(&user.AuthResponse{Auth: auth}, nil)
+				mocks.UserService.EXPECT().
+					GetUser(gomock.Any(), &user.GetUserRequest{
+						UserId: "00000000-0000-0000-0000-000000000000",
+					}).
+					Return(nil, test.ErrMock)
+			},
+			req: &request.CreateChatMessageRequest{
+				Text: "テストメッセージです。",
+			},
+			expect: &test.HTTPResponse{
 				Code: http.StatusInternalServerError,
 			},
 		},
@@ -416,6 +437,11 @@ func TestChat_CreateChatTextMessage(t *testing.T) {
 				mocks.AuthService.EXPECT().
 					GetAuth(gomock.Any(), &user.Empty{}).
 					Return(&user.AuthResponse{Auth: auth}, nil)
+				mocks.UserService.EXPECT().
+					GetUser(gomock.Any(), &user.GetUserRequest{
+						UserId: "00000000-0000-0000-0000-000000000000",
+					}).
+					Return(&user.UserResponse{User: user1}, nil)
 				mocks.ChatService.EXPECT().
 					CreateMessage(gomock.Any(), &chat.CreateMessageRequest{
 						RoomId: "00000000-0000-0000-0000-000000000000",
@@ -448,6 +474,7 @@ func TestChat_CreateChatImageMessage(t *testing.T) {
 	t.Parallel()
 
 	auth := testAuth("00000000-0000-0000-0000-000000000000")
+	user1 := testUser("00000000-0000-0000-0000-000000000000")
 	message1 := testChatMessage("00000000-0000-0000-0000-000000000000")
 
 	tests := []struct {
@@ -462,6 +489,11 @@ func TestChat_CreateChatImageMessage(t *testing.T) {
 				mocks.AuthService.EXPECT().
 					GetAuth(gomock.Any(), &user.Empty{}).
 					Return(&user.AuthResponse{Auth: auth}, nil)
+				mocks.UserService.EXPECT().
+					GetUser(gomock.Any(), &user.GetUserRequest{
+						UserId: "00000000-0000-0000-0000-000000000000",
+					}).
+					Return(&user.UserResponse{User: user1}, nil)
 				client := mock_chat.NewMockChatService_UploadImageClient(ctrl)
 				mocks.ChatService.EXPECT().UploadImage(gomock.Any()).Return(client, nil)
 				client.EXPECT().Send(gomock.Any()).AnyTimes().Return(nil)
@@ -472,16 +504,32 @@ func TestChat_CreateChatImageMessage(t *testing.T) {
 			field: "image",
 			expect: &test.HTTPResponse{
 				Code: http.StatusOK,
-				Body: response.NewChatMessageResponse(
-					gentity.NewChatMessage(message1),
-					gentity.NewAuth(auth),
-				),
+				Body: &response.ChatMessageResponse{
+					ChatMessage: entity.NewChatMessage(gentity.NewChatMessage(message1), gentity.NewUser(user1)),
+				},
 			},
 		},
 		{
 			name: "failed to get auth",
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks, ctrl *gomock.Controller) {
 				mocks.AuthService.EXPECT().GetAuth(gomock.Any(), &user.Empty{}).Return(nil, test.ErrMock)
+			},
+			field: "image",
+			expect: &test.HTTPResponse{
+				Code: http.StatusForbidden,
+			},
+		},
+		{
+			name: "failed to get user",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks, ctrl *gomock.Controller) {
+				mocks.AuthService.EXPECT().
+					GetAuth(gomock.Any(), &user.Empty{}).
+					Return(&user.AuthResponse{Auth: auth}, nil)
+				mocks.UserService.EXPECT().
+					GetUser(gomock.Any(), &user.GetUserRequest{
+						UserId: "00000000-0000-0000-0000-000000000000",
+					}).
+					Return(nil, test.ErrMock)
 			},
 			field: "image",
 			expect: &test.HTTPResponse{
@@ -494,6 +542,11 @@ func TestChat_CreateChatImageMessage(t *testing.T) {
 				mocks.AuthService.EXPECT().
 					GetAuth(gomock.Any(), &user.Empty{}).
 					Return(&user.AuthResponse{Auth: auth}, nil)
+				mocks.UserService.EXPECT().
+					GetUser(gomock.Any(), &user.GetUserRequest{
+						UserId: "00000000-0000-0000-0000-000000000000",
+					}).
+					Return(&user.UserResponse{User: user1}, nil)
 			},
 			expect: &test.HTTPResponse{
 				Code: http.StatusBadRequest,
@@ -505,6 +558,11 @@ func TestChat_CreateChatImageMessage(t *testing.T) {
 				mocks.AuthService.EXPECT().
 					GetAuth(gomock.Any(), &user.Empty{}).
 					Return(&user.AuthResponse{Auth: auth}, nil)
+				mocks.UserService.EXPECT().
+					GetUser(gomock.Any(), &user.GetUserRequest{
+						UserId: "00000000-0000-0000-0000-000000000000",
+					}).
+					Return(&user.UserResponse{User: user1}, nil)
 				mocks.ChatService.EXPECT().UploadImage(gomock.Any()).Return(nil, test.ErrMock)
 			},
 			field: "image",
@@ -518,6 +576,11 @@ func TestChat_CreateChatImageMessage(t *testing.T) {
 				mocks.AuthService.EXPECT().
 					GetAuth(gomock.Any(), &user.Empty{}).
 					Return(&user.AuthResponse{Auth: auth}, nil)
+				mocks.UserService.EXPECT().
+					GetUser(gomock.Any(), &user.GetUserRequest{
+						UserId: "00000000-0000-0000-0000-000000000000",
+					}).
+					Return(&user.UserResponse{User: user1}, nil)
 				client := mock_chat.NewMockChatService_UploadImageClient(ctrl)
 				mocks.ChatService.EXPECT().UploadImage(gomock.Any()).Return(client, nil)
 				client.EXPECT().Send(gomock.Any()).Return(test.ErrMock)
@@ -533,6 +596,11 @@ func TestChat_CreateChatImageMessage(t *testing.T) {
 				mocks.AuthService.EXPECT().
 					GetAuth(gomock.Any(), &user.Empty{}).
 					Return(&user.AuthResponse{Auth: auth}, nil)
+				mocks.UserService.EXPECT().
+					GetUser(gomock.Any(), &user.GetUserRequest{
+						UserId: "00000000-0000-0000-0000-000000000000",
+					}).
+					Return(&user.UserResponse{User: user1}, nil)
 				client := mock_chat.NewMockChatService_UploadImageClient(ctrl)
 				mocks.ChatService.EXPECT().UploadImage(gomock.Any()).Return(client, nil)
 				client.EXPECT().Send(gomock.Any()).AnyTimes().Return(nil)

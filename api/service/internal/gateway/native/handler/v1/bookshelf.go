@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -16,6 +17,7 @@ import (
 )
 
 // listBookshelf - 本棚の書籍一覧取得 ※廃止予定
+// Deprecated: use v2.listBookshelf
 func (h *apiV1Handler) listBookshelf(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
 	userID := ctx.Param("userID")
@@ -60,6 +62,7 @@ func (h *apiV1Handler) listBookshelf(ctx *gin.Context) {
 }
 
 // getBookshelf - 本棚の書籍情報取得 ※廃止予定
+// Deprecated: use v2.getBookshelf
 func (h *apiV1Handler) getBookshelf(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
 	userID := ctx.Param("userID")
@@ -110,6 +113,7 @@ func (h *apiV1Handler) getBookshelf(ctx *gin.Context) {
 // readBookshelf - 読んだ本の登録
 func (h *apiV1Handler) readBookshelf(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
+
 	userID := ctx.Param("userID")
 	bookID, err := strconv.ParseInt(ctx.Param("bookID"), 10, 64)
 	if err != nil {
@@ -124,40 +128,35 @@ func (h *apiV1Handler) readBookshelf(ctx *gin.Context) {
 	}
 
 	eg, ectx := errgroup.WithContext(c)
-
+	eg.Go(func() error {
+		ok, err := h.correctUser(ectx, userID)
+		if err != nil || !ok {
+			return fmt.Errorf("v1: user id is not correct: %w", err)
+		}
+		return nil
+	})
 	var b *gentity.Book
 	eg.Go(func() error {
-		in := &book.GetBookRequest{
-			BookId: bookID,
-		}
-		out, err := h.Book.GetBook(ectx, in)
-		if err != nil {
-			return err
-		}
-		b = gentity.NewBook(out.Book)
-		return nil
+		b, err = h.bookGetBook(ectx, bookID)
+		return err
 	})
-
-	var bs *gentity.Bookshelf
-	eg.Go(func() error {
-		in := &book.ReadBookshelfRequest{
-			UserId:     userID,
-			BookId:     bookID,
-			Impression: req.Impression,
-			ReadOn:     req.ReadOn,
-		}
-		out, err := h.Book.ReadBookshelf(ectx, in)
-		if err != nil {
-			return err
-		}
-		bs = gentity.NewBookshelf(out.Bookshelf)
-		return nil
-	})
-
 	if err := eg.Wait(); err != nil {
 		util.ErrorHandling(ctx, err)
 		return
 	}
+
+	in := &book.ReadBookshelfRequest{
+		UserId:     userID,
+		BookId:     bookID,
+		Impression: req.Impression,
+		ReadOn:     req.ReadOn,
+	}
+	out, err := h.Book.ReadBookshelf(ectx, in)
+	if err != nil {
+		util.ErrorHandling(ctx, err)
+		return
+	}
+	bs := gentity.NewBookshelf(out.Bookshelf)
 
 	res := response.NewBookshelfResponse(bs, b)
 	ctx.JSON(http.StatusOK, res)
@@ -166,6 +165,7 @@ func (h *apiV1Handler) readBookshelf(ctx *gin.Context) {
 // readingBookshelf - 読んでいる本の登録
 func (h *apiV1Handler) readingBookshelf(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
+
 	userID := ctx.Param("userID")
 	bookID, err := strconv.ParseInt(ctx.Param("bookID"), 10, 64)
 	if err != nil {
@@ -174,38 +174,33 @@ func (h *apiV1Handler) readingBookshelf(ctx *gin.Context) {
 	}
 
 	eg, ectx := errgroup.WithContext(c)
-
+	eg.Go(func() error {
+		ok, err := h.correctUser(ectx, userID)
+		if err != nil || !ok {
+			return fmt.Errorf("v1: user id is not correct: %w", err)
+		}
+		return nil
+	})
 	var b *gentity.Book
 	eg.Go(func() error {
-		in := &book.GetBookRequest{
-			BookId: bookID,
-		}
-		out, err := h.Book.GetBook(ectx, in)
-		if err != nil {
-			return err
-		}
-		b = gentity.NewBook(out.Book)
-		return nil
+		b, err = h.bookGetBook(ectx, bookID)
+		return err
 	})
-
-	var bs *gentity.Bookshelf
-	eg.Go(func() error {
-		in := &book.ReadingBookshelfRequest{
-			UserId: userID,
-			BookId: bookID,
-		}
-		out, err := h.Book.ReadingBookshelf(ectx, in)
-		if err != nil {
-			return err
-		}
-		bs = gentity.NewBookshelf(out.Bookshelf)
-		return nil
-	})
-
 	if err := eg.Wait(); err != nil {
 		util.ErrorHandling(ctx, err)
 		return
 	}
+
+	in := &book.ReadingBookshelfRequest{
+		UserId: userID,
+		BookId: bookID,
+	}
+	out, err := h.Book.ReadingBookshelf(ectx, in)
+	if err != nil {
+		util.ErrorHandling(ctx, err)
+		return
+	}
+	bs := gentity.NewBookshelf(out.Bookshelf)
 
 	res := response.NewBookshelfResponse(bs, b)
 	ctx.JSON(http.StatusOK, res)
@@ -214,6 +209,7 @@ func (h *apiV1Handler) readingBookshelf(ctx *gin.Context) {
 // stackedBookshelf - 積読本の登録
 func (h *apiV1Handler) stackedBookshelf(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
+
 	userID := ctx.Param("userID")
 	bookID, err := strconv.ParseInt(ctx.Param("bookID"), 10, 64)
 	if err != nil {
@@ -222,38 +218,33 @@ func (h *apiV1Handler) stackedBookshelf(ctx *gin.Context) {
 	}
 
 	eg, ectx := errgroup.WithContext(c)
-
+	eg.Go(func() error {
+		ok, err := h.correctUser(ectx, userID)
+		if err != nil || !ok {
+			return fmt.Errorf("v1: user id is not correct: %w", err)
+		}
+		return nil
+	})
 	var b *gentity.Book
 	eg.Go(func() error {
-		in := &book.GetBookRequest{
-			BookId: bookID,
-		}
-		out, err := h.Book.GetBook(ectx, in)
-		if err != nil {
-			return err
-		}
-		b = gentity.NewBook(out.Book)
-		return nil
+		b, err = h.bookGetBook(ectx, bookID)
+		return err
 	})
-
-	var bs *gentity.Bookshelf
-	eg.Go(func() error {
-		in := &book.StackedBookshelfRequest{
-			UserId: userID,
-			BookId: bookID,
-		}
-		out, err := h.Book.StackedBookshelf(ectx, in)
-		if err != nil {
-			return err
-		}
-		bs = gentity.NewBookshelf(out.Bookshelf)
-		return nil
-	})
-
 	if err := eg.Wait(); err != nil {
 		util.ErrorHandling(ctx, err)
 		return
 	}
+
+	in := &book.StackedBookshelfRequest{
+		UserId: userID,
+		BookId: bookID,
+	}
+	out, err := h.Book.StackedBookshelf(ectx, in)
+	if err != nil {
+		util.ErrorHandling(ctx, err)
+		return
+	}
+	bs := gentity.NewBookshelf(out.Bookshelf)
 
 	res := response.NewBookshelfResponse(bs, b)
 	ctx.JSON(http.StatusOK, res)
@@ -262,6 +253,7 @@ func (h *apiV1Handler) stackedBookshelf(ctx *gin.Context) {
 // wantBookshelf - 欲しい本の登録
 func (h *apiV1Handler) wantBookshelf(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
+
 	userID := ctx.Param("userID")
 	bookID, err := strconv.ParseInt(ctx.Param("bookID"), 10, 64)
 	if err != nil {
@@ -270,38 +262,33 @@ func (h *apiV1Handler) wantBookshelf(ctx *gin.Context) {
 	}
 
 	eg, ectx := errgroup.WithContext(c)
-
+	eg.Go(func() error {
+		ok, err := h.correctUser(ectx, userID)
+		if err != nil || !ok {
+			return fmt.Errorf("v1: user id is not correct: %w", err)
+		}
+		return nil
+	})
 	var b *gentity.Book
 	eg.Go(func() error {
-		in := &book.GetBookRequest{
-			BookId: bookID,
-		}
-		out, err := h.Book.GetBook(ectx, in)
-		if err != nil {
-			return err
-		}
-		b = gentity.NewBook(out.Book)
-		return nil
+		b, err = h.bookGetBook(ectx, bookID)
+		return err
 	})
-
-	var bs *gentity.Bookshelf
-	eg.Go(func() error {
-		in := &book.WantBookshelfRequest{
-			UserId: userID,
-			BookId: bookID,
-		}
-		out, err := h.Book.WantBookshelf(ectx, in)
-		if err != nil {
-			return err
-		}
-		bs = gentity.NewBookshelf(out.Bookshelf)
-		return nil
-	})
-
 	if err := eg.Wait(); err != nil {
 		util.ErrorHandling(ctx, err)
 		return
 	}
+
+	in := &book.WantBookshelfRequest{
+		UserId: userID,
+		BookId: bookID,
+	}
+	out, err := h.Book.WantBookshelf(ectx, in)
+	if err != nil {
+		util.ErrorHandling(ctx, err)
+		return
+	}
+	bs := gentity.NewBookshelf(out.Bookshelf)
 
 	res := response.NewBookshelfResponse(bs, b)
 	ctx.JSON(http.StatusOK, res)
@@ -310,6 +297,7 @@ func (h *apiV1Handler) wantBookshelf(ctx *gin.Context) {
 // releaseBookshelf - 手放したい本の登録
 func (h *apiV1Handler) releaseBookshelf(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
+
 	userID := ctx.Param("userID")
 	bookID, err := strconv.ParseInt(ctx.Param("bookID"), 10, 64)
 	if err != nil {
@@ -318,38 +306,33 @@ func (h *apiV1Handler) releaseBookshelf(ctx *gin.Context) {
 	}
 
 	eg, ectx := errgroup.WithContext(c)
-
+	eg.Go(func() error {
+		ok, err := h.correctUser(ectx, userID)
+		if err != nil || !ok {
+			return fmt.Errorf("v1: user id is not correct: %w", err)
+		}
+		return nil
+	})
 	var b *gentity.Book
 	eg.Go(func() error {
-		in := &book.GetBookRequest{
-			BookId: bookID,
-		}
-		out, err := h.Book.GetBook(ectx, in)
-		if err != nil {
-			return err
-		}
-		b = gentity.NewBook(out.Book)
-		return nil
+		b, err = h.bookGetBook(ectx, bookID)
+		return err
 	})
-
-	var bs *gentity.Bookshelf
-	eg.Go(func() error {
-		in := &book.ReleaseBookshelfRequest{
-			UserId: userID,
-			BookId: bookID,
-		}
-		out, err := h.Book.ReleaseBookshelf(ectx, in)
-		if err != nil {
-			return err
-		}
-		bs = gentity.NewBookshelf(out.Bookshelf)
-		return nil
-	})
-
 	if err := eg.Wait(); err != nil {
 		util.ErrorHandling(ctx, err)
 		return
 	}
+
+	in := &book.ReleaseBookshelfRequest{
+		UserId: userID,
+		BookId: bookID,
+	}
+	out, err := h.Book.ReleaseBookshelf(ectx, in)
+	if err != nil {
+		util.ErrorHandling(ctx, err)
+		return
+	}
+	bs := gentity.NewBookshelf(out.Bookshelf)
 
 	res := response.NewBookshelfResponse(bs, b)
 	ctx.JSON(http.StatusOK, res)
@@ -358,10 +341,28 @@ func (h *apiV1Handler) releaseBookshelf(ctx *gin.Context) {
 // deleteBookshelf - 本棚から書籍の削除
 func (h *apiV1Handler) deleteBookshelf(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
+
 	userID := ctx.Param("userID")
 	bookID, err := strconv.ParseInt(ctx.Param("bookID"), 10, 64)
 	if err != nil {
 		util.ErrorHandling(ctx, exception.ErrInvalidArgument.New(err))
+		return
+	}
+
+	eg, ectx := errgroup.WithContext(c)
+	eg.Go(func() error {
+		ok, err := h.correctUser(ectx, userID)
+		if err != nil || !ok {
+			return fmt.Errorf("v1: user id is not correct: %w", err)
+		}
+		return nil
+	})
+	eg.Go(func() error {
+		_, err = h.bookGetBook(ectx, bookID)
+		return err
+	})
+	if err := eg.Wait(); err != nil {
+		util.ErrorHandling(ctx, err)
 		return
 	}
 

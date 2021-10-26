@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"net/http"
@@ -14,13 +15,13 @@ import (
 	"github.com/calmato/gran-book/api/service/pkg/array"
 	"github.com/calmato/gran-book/api/service/pkg/exception"
 	"github.com/calmato/gran-book/api/service/proto/chat"
-	"github.com/calmato/gran-book/api/service/proto/user"
 	"github.com/gin-gonic/gin"
 )
 
 // listChatRoom - チャットルーム一覧取得
 func (h *apiV1Handler) listChatRoom(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
+
 	userID := ctx.Param("userID")
 	limit, err := strconv.ParseInt(ctx.DefaultQuery("limit", entity.ListLimitDefault), 10, 64)
 	if err != nil {
@@ -33,42 +34,35 @@ func (h *apiV1Handler) listChatRoom(ctx *gin.Context) {
 		return
 	}
 
-	_, err = h.currentUser(c, userID)
+	ok, err := h.correctUser(c, userID)
+	if err != nil || !ok {
+		err = fmt.Errorf("v1: user id is not correct: %w", err)
+		util.ErrorHandling(ctx, exception.ErrForbidden.New(err))
+		return
+	}
+
+	crs, err := h.chatListRoom(c, userID, limit, offset)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
 	}
 
-	roomsInput := &chat.ListRoomRequest{
-		UserId: userID,
-		Limit:  limit,
-		Offset: fmt.Sprint(offset),
-	}
-	roomsOutput, err := h.Chat.ListRoom(c, roomsInput)
+	us, err := h.userMultiGetUser(c, crs.UserIDs())
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
 	}
 
-	crs := gentity.NewChatRooms(roomsOutput.Rooms)
-
-	usersInput := &user.MultiGetUserRequest{
-		UserIds: crs.UserIDs(),
+	res := &response.ChatRoomListResponse{
+		Rooms: entity.NewChatRooms(crs, us.Map()),
 	}
-	usersOutput, err := h.User.MultiGetUser(c, usersInput)
-	if err != nil {
-		util.ErrorHandling(ctx, err)
-		return
-	}
-
-	us := gentity.NewUsers(usersOutput.Users)
-	res := response.NewChatRoomListResponse(crs, us.Map())
 	ctx.JSON(http.StatusOK, res)
 }
 
 // createChatRoom - チャットルーム作成
 func (h *apiV1Handler) createChatRoom(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
+
 	userID := ctx.Param("userID")
 
 	req := &request.CreateChatRoomRequest{}
@@ -77,9 +71,10 @@ func (h *apiV1Handler) createChatRoom(ctx *gin.Context) {
 		return
 	}
 
-	_, err := h.currentUser(c, userID)
-	if err != nil {
-		util.ErrorHandling(ctx, err)
+	ok, err := h.correctUser(c, userID)
+	if err != nil || !ok {
+		err = fmt.Errorf("v1: user id is not correct: %w", err)
+		util.ErrorHandling(ctx, exception.ErrForbidden.New(err))
 		return
 	}
 
@@ -88,39 +83,37 @@ func (h *apiV1Handler) createChatRoom(ctx *gin.Context) {
 		userIDs = append(userIDs, userID)
 	}
 
-	usersInput := &user.MultiGetUserRequest{
-		UserIds: userIDs,
-	}
-	usersOutput, err := h.User.MultiGetUser(c, usersInput)
+	us, err := h.userMultiGetUser(c, userIDs)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
 	}
-
-	us := gentity.NewUsers(usersOutput.Users)
 	if ok := us.IsExists(userIDs...); !ok {
-		err := fmt.Errorf("one of the user ids does not exist")
+		err := fmt.Errorf("v1: one of the user ids does not exist")
 		util.ErrorHandling(ctx, exception.ErrInvalidArgument.New(err))
 		return
 	}
 
-	roomInput := &chat.CreateRoomRequest{
+	in := &chat.CreateRoomRequest{
 		UserIds: userIDs,
 	}
-	roomOutput, err := h.Chat.CreateRoom(c, roomInput)
+	out, err := h.Chat.CreateRoom(c, in)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
 	}
+	cr := gentity.NewChatRoom(out.Room)
 
-	cr := gentity.NewChatRoom(roomOutput.Room)
-	res := response.NewChatRoomResponse(cr, us.Map())
+	res := &response.ChatRoomResponse{
+		ChatRoom: entity.NewChatRoom(cr, us.Map()),
+	}
 	ctx.JSON(http.StatusOK, res)
 }
 
 // createChatTextMessage - チャットメッセージ(テキスト)作成
 func (h *apiV1Handler) createChatTextMessage(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
+
 	roomID := ctx.Param("roomID")
 	userID := ctx.Param("userID")
 
@@ -130,7 +123,14 @@ func (h *apiV1Handler) createChatTextMessage(ctx *gin.Context) {
 		return
 	}
 
-	a, err := h.currentUser(c, userID)
+	ok, err := h.correctUser(c, userID)
+	if err != nil || !ok {
+		err = fmt.Errorf("v1: user id is not correct: %w", err)
+		util.ErrorHandling(ctx, exception.ErrForbidden.New(err))
+		return
+	}
+
+	u, err := h.userGetUser(c, userID)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -146,19 +146,29 @@ func (h *apiV1Handler) createChatTextMessage(ctx *gin.Context) {
 		util.ErrorHandling(ctx, err)
 		return
 	}
-
 	cm := gentity.NewChatMessage(out.Message)
-	res := response.NewChatMessageResponse(cm, a)
+
+	res := &response.ChatMessageResponse{
+		ChatMessage: entity.NewChatMessage(cm, u),
+	}
 	ctx.JSON(http.StatusOK, res)
 }
 
 // createChatImageMessage - チャットメッセージ(画像)作成
 func (h *apiV1Handler) createChatImageMessage(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
+
 	roomID := ctx.Param("roomID")
 	userID := ctx.Param("userID")
 
-	a, err := h.currentUser(c, userID)
+	ok, err := h.correctUser(c, userID)
+	if err != nil || !ok {
+		err = fmt.Errorf("v1: user id is not correct: %w", err)
+		util.ErrorHandling(ctx, exception.ErrForbidden.New(err))
+		return
+	}
+
+	u, err := h.userGetUser(c, userID)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
@@ -195,12 +205,7 @@ func (h *apiV1Handler) createChatImageMessage(ctx *gin.Context) {
 
 	for {
 		if _, err = file.Read(buf); err != nil {
-			if err == io.EOF {
-				break
-			}
-
-			util.ErrorHandling(ctx, exception.ErrInvalidArgument.New(err))
-			return
+			break
 		}
 
 		in = &chat.UploadChatImageRequest{
@@ -216,13 +221,36 @@ func (h *apiV1Handler) createChatImageMessage(ctx *gin.Context) {
 		count++
 	}
 
-	messageOutput, err := stream.CloseAndRecv()
+	if err != nil && err != io.EOF {
+		util.ErrorHandling(ctx, exception.ErrInvalidArgument.New(err))
+		return
+	}
+
+	out, err := stream.CloseAndRecv()
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
 	}
+	cm := gentity.NewChatMessage(out.Message)
 
-	cm := gentity.NewChatMessage(messageOutput.Message)
-	res := response.NewChatMessageResponse(cm, a)
+	res := &response.ChatMessageResponse{
+		ChatMessage: entity.NewChatMessage(cm, u),
+	}
 	ctx.JSON(http.StatusOK, res)
+}
+
+func (h *apiV1Handler) chatListRoom(
+	ctx context.Context, userID string, limit, offset int64,
+) (gentity.ChatRooms, error) {
+	in := &chat.ListRoomRequest{
+		UserId: userID,
+		Limit:  limit,
+		Offset: fmt.Sprint(offset),
+	}
+	out, err := h.Chat.ListRoom(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+
+	return gentity.NewChatRooms(out.Rooms), nil
 }

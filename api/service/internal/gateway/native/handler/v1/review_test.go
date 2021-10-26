@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	gentity "github.com/calmato/gran-book/api/service/internal/gateway/entity"
+	"github.com/calmato/gran-book/api/service/internal/gateway/native/entity"
 	response "github.com/calmato/gran-book/api/service/internal/gateway/native/response/v1"
 	"github.com/calmato/gran-book/api/service/pkg/datetime"
 	"github.com/calmato/gran-book/api/service/pkg/test"
@@ -65,13 +66,12 @@ func TestReview_ListReviewByBook(t *testing.T) {
 			query:  "",
 			expect: &test.HTTPResponse{
 				Code: http.StatusOK,
-				Body: response.NewBookReviewListResponse(
-					gentity.NewReviews(reviews),
-					gentity.NewUsers(users).Map(),
-					100,
-					0,
-					2,
-				),
+				Body: &response.BookReviewListResponse{
+					Reviews: entity.NewBookReviews(gentity.NewReviews(reviews), gentity.NewUsers(users).Map()),
+					Limit:   100,
+					Offset:  0,
+					Total:   2,
+				},
 			},
 		},
 		{
@@ -200,13 +200,12 @@ func TestReview_ListReviewByUser(t *testing.T) {
 			query: "",
 			expect: &test.HTTPResponse{
 				Code: http.StatusOK,
-				Body: response.NewUserReviewListResponse(
-					gentity.NewReviews(reviews),
-					gentity.NewBooks(books).Map(),
-					100,
-					0,
-					2,
-				),
+				Body: &response.UserReviewListResponse{
+					Reviews: entity.NewUserReviews(gentity.NewReviews(reviews), gentity.NewBooks(books).Map()),
+					Limit:   100,
+					Offset:  0,
+					Total:   2,
+				},
 			},
 		},
 		{
@@ -309,10 +308,9 @@ func TestReview_getBookReview(t *testing.T) {
 			reviewID: "1",
 			expect: &test.HTTPResponse{
 				Code: http.StatusOK,
-				Body: response.NewBookReviewResponse(
-					gentity.NewReview(review1),
-					gentity.NewUser(user1),
-				),
+				Body: &response.BookReviewResponse{
+					BookReview: entity.NewBookReview(gentity.NewReview(review1), gentity.NewUser(user1)),
+				},
 			},
 		},
 		{
@@ -425,10 +423,9 @@ func TestReview_getUserReview(t *testing.T) {
 			reviewID: "1",
 			expect: &test.HTTPResponse{
 				Code: http.StatusOK,
-				Body: response.NewUserReviewResponse(
-					gentity.NewReview(review1),
-					gentity.NewBook(book1),
-				),
+				Body: &response.UserReviewResponse{
+					UserReview: entity.NewUserReview(gentity.NewReview(review1), gentity.NewBook(book1)),
+				},
 			},
 		},
 		{

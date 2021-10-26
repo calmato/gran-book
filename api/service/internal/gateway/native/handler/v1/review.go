@@ -10,8 +10,6 @@ import (
 	response "github.com/calmato/gran-book/api/service/internal/gateway/native/response/v1"
 	"github.com/calmato/gran-book/api/service/internal/gateway/util"
 	"github.com/calmato/gran-book/api/service/pkg/exception"
-	"github.com/calmato/gran-book/api/service/proto/book"
-	"github.com/calmato/gran-book/api/service/proto/user"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/sync/errgroup"
 )
@@ -19,6 +17,7 @@ import (
 // listReviewByBook - 書籍のレビュー一覧取得
 func (h *apiV1Handler) listReviewByBook(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
+
 	limit, err := strconv.ParseInt(ctx.DefaultQuery("limit", entity.ListLimitDefault), 10, 64)
 	if err != nil {
 		util.ErrorHandling(ctx, exception.ErrInvalidArgument.New(err))
@@ -35,38 +34,31 @@ func (h *apiV1Handler) listReviewByBook(ctx *gin.Context) {
 		return
 	}
 
-	reviewsInput := &book.ListBookReviewRequest{
-		BookId: bookID,
-		Limit:  limit,
-		Offset: offset,
-	}
-	reviewsOutput, err := h.Book.ListBookReview(c, reviewsInput)
+	rs, total, err := h.bookListBookReview(c, bookID, limit, offset)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
 	}
 
-	rs := gentity.NewReviews(reviewsOutput.Reviews)
-
-	usersInput := &user.MultiGetUserRequest{
-		UserIds: rs.UserIDs(),
-	}
-	usersOutput, err := h.User.MultiGetUser(c, usersInput)
+	us, err := h.userMultiGetUser(c, rs.UserIDs())
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
 	}
 
-	us := gentity.NewUsers(usersOutput.Users)
-	res := response.NewBookReviewListResponse(
-		rs, us.Map(), reviewsOutput.Limit, reviewsOutput.Offset, reviewsOutput.Total,
-	)
+	res := &response.BookReviewListResponse{
+		Reviews: entity.NewBookReviews(rs, us.Map()),
+		Limit:   limit,
+		Offset:  offset,
+		Total:   total,
+	}
 	ctx.JSON(http.StatusOK, res)
 }
 
 // listReviewByUser - ユーザーのレビュー一覧取得
 func (h *apiV1Handler) listReviewByUser(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
+
 	userID := ctx.Param("userID")
 	limit, err := strconv.ParseInt(ctx.DefaultQuery("limit", entity.ListLimitDefault), 10, 64)
 	if err != nil {
@@ -79,38 +71,31 @@ func (h *apiV1Handler) listReviewByUser(ctx *gin.Context) {
 		return
 	}
 
-	reviewsInput := &book.ListUserReviewRequest{
-		UserId: userID,
-		Limit:  limit,
-		Offset: offset,
-	}
-	reviewsOutput, err := h.Book.ListUserReview(c, reviewsInput)
+	rs, total, err := h.bookListUserReview(c, userID, limit, offset)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
 	}
 
-	rs := gentity.NewReviews(reviewsOutput.Reviews)
-
-	booksInput := &book.MultiGetBooksRequest{
-		BookIds: rs.BookIDs(),
-	}
-	booksOutput, err := h.Book.MultiGetBooks(c, booksInput)
+	bs, err := h.bookMultiGetBooks(c, rs.BookIDs())
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
 	}
 
-	bs := gentity.NewBooks(booksOutput.Books)
-	res := response.NewUserReviewListResponse(
-		rs, bs.Map(), reviewsOutput.Limit, reviewsOutput.Offset, reviewsOutput.Total,
-	)
+	res := &response.UserReviewListResponse{
+		Reviews: entity.NewUserReviews(rs, bs.Map()),
+		Limit:   limit,
+		Offset:  offset,
+		Total:   total,
+	}
 	ctx.JSON(http.StatusOK, res)
 }
 
 // getBookReview - 書籍のレビュー情報取得
 func (h *apiV1Handler) getBookReview(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
+
 	bookID, err := strconv.ParseInt(ctx.Param("bookID"), 10, 64)
 	if err != nil {
 		util.ErrorHandling(ctx, exception.ErrInvalidArgument.New(err))
@@ -123,50 +108,36 @@ func (h *apiV1Handler) getBookReview(ctx *gin.Context) {
 	}
 
 	eg, ectx := errgroup.WithContext(c)
-
 	eg.Go(func() error {
-		in := &book.GetBookRequest{
-			BookId: bookID,
-		}
-		_, err = h.Book.GetBook(ectx, in)
+		_, err = h.bookGetBook(ectx, bookID)
 		return err
 	})
-
 	var r *gentity.Review
 	eg.Go(func() error {
-		in := &book.GetReviewRequest{
-			ReviewId: reviewID,
-		}
-		out, err := h.Book.GetReview(ectx, in)
-		if err != nil {
-			return err
-		}
-		r = gentity.NewReview(out.Review)
-		return nil
+		r, err = h.bookGetReview(ectx, reviewID)
+		return err
 	})
-
 	if err := eg.Wait(); err != nil {
 		util.ErrorHandling(ctx, err)
 		return
 	}
 
-	in := &user.GetUserRequest{
-		UserId: r.UserId,
-	}
-	out, err := h.User.GetUser(c, in)
-	if err != nil && !util.IsNotFound(err) {
+	u, err := h.userGetUser(c, r.UserId)
+	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
 	}
 
-	u := gentity.NewUser(out.User)
-	res := response.NewBookReviewResponse(r, u)
+	res := &response.BookReviewResponse{
+		BookReview: entity.NewBookReview(r, u),
+	}
 	ctx.JSON(http.StatusOK, res)
 }
 
 // getUserReview - ユーザーのレビュー情報取得
 func (h *apiV1Handler) getUserReview(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
+
 	userID := ctx.Param("userID")
 	reviewID, err := strconv.ParseInt(ctx.Param("reviewID"), 10, 64)
 	if err != nil {
@@ -174,32 +145,25 @@ func (h *apiV1Handler) getUserReview(ctx *gin.Context) {
 		return
 	}
 
-	reviewInput := &book.GetReviewRequest{
-		ReviewId: reviewID,
-	}
-	reviewOutput, err := h.Book.GetReview(c, reviewInput)
+	r, err := h.bookGetReview(c, reviewID)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
 	}
-
-	r := gentity.NewReview(reviewOutput.Review)
 	if r.UserId != userID {
-		err := fmt.Errorf("user id is invalid")
+		err := fmt.Errorf("user id is invalid: %s", userID)
 		util.ErrorHandling(ctx, exception.ErrInvalidArgument.New(err))
 		return
 	}
 
-	bookInput := &book.GetBookRequest{
-		BookId: r.BookId,
-	}
-	bookOutput, err := h.Book.GetBook(c, bookInput)
+	b, err := h.bookGetBook(c, r.BookId)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
 	}
 
-	b := gentity.NewBook(bookOutput.Book)
-	res := response.NewUserReviewResponse(r, b)
+	res := &response.UserReviewResponse{
+		UserReview: entity.NewUserReview(r, b),
+	}
 	ctx.JSON(http.StatusOK, res)
 }

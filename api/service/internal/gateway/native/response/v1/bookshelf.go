@@ -7,6 +7,7 @@ import (
 )
 
 // 本棚の書籍情報
+// Deprecated: User entity.Bookshelf
 type BookshelfResponse struct {
 	ID           int64               `json:"id"`           // 書籍ID
 	Title        string              `json:"title"`        // タイトル
@@ -45,6 +46,7 @@ func NewBookshelfResponse(bs *entity.Bookshelf, b *entity.Book) *BookshelfRespon
 	}
 }
 
+// Deprecated: User entity.Bookshelf
 type bookshelfBookshelf struct {
 	ID         int64  `json:"id"`         // 本棚ID
 	Status     string `json:"status"`     // 読書ステータス

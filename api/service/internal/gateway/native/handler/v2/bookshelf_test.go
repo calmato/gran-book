@@ -57,13 +57,12 @@ func TestBookshelf_ListBookshelf(t *testing.T) {
 			query: "",
 			expect: &test.HTTPResponse{
 				Code: http.StatusOK,
-				Body: response.NewBookshelfListResponse(
-					gentity.NewBookshelves(bookshelves),
-					gentity.NewBooks(books).Map(),
-					100,
-					0,
-					2,
-				),
+				Body: &response.BookshelfListResponse{
+					Books:  entity.NewBooksOnBookshelf(gentity.NewBooks(books).Map(), gentity.NewBookshelves(bookshelves)),
+					Limit:  100,
+					Offset: 0,
+					Total:  2,
+				},
 			},
 		},
 		{
@@ -160,6 +159,8 @@ func TestBookshelf_GetBookshelf(t *testing.T) {
 		{
 			name: "success",
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks, ctrl *gomock.Controller) {
+				limit, _ := strconv.ParseInt(entity.ListLimitDefault, 10, 64)
+				offset, _ := strconv.ParseInt(entity.ListOffsetDefault, 10, 64)
 				mocks.BookService.EXPECT().
 					GetBook(gomock.Any(), &book.GetBookRequest{BookId: 1}).
 					Return(&book.BookResponse{Book: book1}, nil)
@@ -170,8 +171,8 @@ func TestBookshelf_GetBookshelf(t *testing.T) {
 					}).
 					Return(&book.BookshelfResponse{Bookshelf: bookshelf1}, nil)
 				mocks.BookService.EXPECT().
-					ListBookReview(gomock.Any(), &book.ListBookReviewRequest{BookId: 1, Limit: 20, Offset: 0}).
-					Return(&book.ReviewListResponse{Reviews: reviews, Total: 2, Limit: 20, Offset: 0}, nil)
+					ListBookReview(gomock.Any(), &book.ListBookReviewRequest{BookId: 1, Limit: limit, Offset: offset}).
+					Return(&book.ReviewListResponse{Reviews: reviews, Total: 2, Limit: limit, Offset: offset}, nil)
 				mocks.UserService.EXPECT().
 					MultiGetUser(gomock.Any(), &user.MultiGetUserRequest{
 						UserIds: []string{
@@ -184,15 +185,12 @@ func TestBookshelf_GetBookshelf(t *testing.T) {
 			bookID: "1",
 			expect: &test.HTTPResponse{
 				Code: http.StatusOK,
-				Body: response.NewBookshelfResponse(
-					gentity.NewBookshelf(bookshelf1),
-					gentity.NewBook(book1),
-					gentity.NewReviews(reviews),
-					gentity.NewUsers(users).Map(),
-					20,
-					0,
-					2,
-				),
+				Body: func() *response.BookshelfResponse {
+					rs := entity.NewBookReviews(gentity.NewReviews(reviews), gentity.NewUsers(users).Map())
+					bs := entity.NewBookOnBookshelf(gentity.NewBook(book1), gentity.NewBookshelf(bookshelf1))
+					bs.Fill(rs, 100, 0, 2)
+					return &response.BookshelfResponse{BookOnBookshelf: bs}
+				}(),
 			},
 		},
 		{
@@ -206,6 +204,8 @@ func TestBookshelf_GetBookshelf(t *testing.T) {
 		{
 			name: "failed to get book",
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks, ctrl *gomock.Controller) {
+				limit, _ := strconv.ParseInt(entity.ListLimitDefault, 10, 64)
+				offset, _ := strconv.ParseInt(entity.ListOffsetDefault, 10, 64)
 				mocks.BookService.EXPECT().
 					GetBook(gomock.Any(), &book.GetBookRequest{BookId: 1}).
 					Return(nil, test.ErrMock)
@@ -216,8 +216,8 @@ func TestBookshelf_GetBookshelf(t *testing.T) {
 					}).
 					Return(&book.BookshelfResponse{Bookshelf: bookshelf1}, nil)
 				mocks.BookService.EXPECT().
-					ListBookReview(gomock.Any(), &book.ListBookReviewRequest{BookId: 1, Limit: 20, Offset: 0}).
-					Return(&book.ReviewListResponse{Reviews: reviews, Total: 2, Limit: 20, Offset: 0}, nil)
+					ListBookReview(gomock.Any(), &book.ListBookReviewRequest{BookId: 1, Limit: limit, Offset: offset}).
+					Return(&book.ReviewListResponse{Reviews: reviews, Total: 2, Limit: limit, Offset: offset}, nil)
 			},
 			bookID: "1",
 			expect: &test.HTTPResponse{
@@ -227,6 +227,8 @@ func TestBookshelf_GetBookshelf(t *testing.T) {
 		{
 			name: "failed to get bookshelf",
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks, ctrl *gomock.Controller) {
+				limit, _ := strconv.ParseInt(entity.ListLimitDefault, 10, 64)
+				offset, _ := strconv.ParseInt(entity.ListOffsetDefault, 10, 64)
 				mocks.BookService.EXPECT().
 					GetBook(gomock.Any(), &book.GetBookRequest{BookId: 1}).
 					Return(&book.BookResponse{Book: book1}, nil)
@@ -237,8 +239,8 @@ func TestBookshelf_GetBookshelf(t *testing.T) {
 					}).
 					Return(nil, test.ErrMock)
 				mocks.BookService.EXPECT().
-					ListBookReview(gomock.Any(), &book.ListBookReviewRequest{BookId: 1, Limit: 20, Offset: 0}).
-					Return(&book.ReviewListResponse{Reviews: reviews, Total: 2, Limit: 20, Offset: 0}, nil)
+					ListBookReview(gomock.Any(), &book.ListBookReviewRequest{BookId: 1, Limit: limit, Offset: offset}).
+					Return(&book.ReviewListResponse{Reviews: reviews, Total: 2, Limit: limit, Offset: offset}, nil)
 			},
 			bookID: "1",
 			expect: &test.HTTPResponse{
@@ -248,6 +250,8 @@ func TestBookshelf_GetBookshelf(t *testing.T) {
 		{
 			name: "failed to list book review",
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks, ctrl *gomock.Controller) {
+				limit, _ := strconv.ParseInt(entity.ListLimitDefault, 10, 64)
+				offset, _ := strconv.ParseInt(entity.ListOffsetDefault, 10, 64)
 				mocks.BookService.EXPECT().
 					GetBook(gomock.Any(), &book.GetBookRequest{BookId: 1}).
 					Return(&book.BookResponse{Book: book1}, nil)
@@ -258,7 +262,7 @@ func TestBookshelf_GetBookshelf(t *testing.T) {
 					}).
 					Return(&book.BookshelfResponse{Bookshelf: bookshelf1}, nil)
 				mocks.BookService.EXPECT().
-					ListBookReview(gomock.Any(), &book.ListBookReviewRequest{BookId: 1, Limit: 20, Offset: 0}).
+					ListBookReview(gomock.Any(), &book.ListBookReviewRequest{BookId: 1, Limit: limit, Offset: offset}).
 					Return(nil, test.ErrMock)
 			},
 			bookID: "1",
@@ -269,6 +273,8 @@ func TestBookshelf_GetBookshelf(t *testing.T) {
 		{
 			name: "failed to multi get user",
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks, ctrl *gomock.Controller) {
+				limit, _ := strconv.ParseInt(entity.ListLimitDefault, 10, 64)
+				offset, _ := strconv.ParseInt(entity.ListOffsetDefault, 10, 64)
 				mocks.BookService.EXPECT().
 					GetBook(gomock.Any(), &book.GetBookRequest{BookId: 1}).
 					Return(&book.BookResponse{Book: book1}, nil)
@@ -279,8 +285,8 @@ func TestBookshelf_GetBookshelf(t *testing.T) {
 					}).
 					Return(&book.BookshelfResponse{Bookshelf: bookshelf1}, nil)
 				mocks.BookService.EXPECT().
-					ListBookReview(gomock.Any(), &book.ListBookReviewRequest{BookId: 1, Limit: 20, Offset: 0}).
-					Return(&book.ReviewListResponse{Reviews: reviews, Total: 2, Limit: 20, Offset: 0}, nil)
+					ListBookReview(gomock.Any(), &book.ListBookReviewRequest{BookId: 1, Limit: limit, Offset: offset}).
+					Return(&book.ReviewListResponse{Reviews: reviews, Total: 2, Limit: limit, Offset: offset}, nil)
 				mocks.UserService.EXPECT().
 					MultiGetUser(gomock.Any(), &user.MultiGetUserRequest{
 						UserIds: []string{

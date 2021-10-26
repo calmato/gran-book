@@ -2,6 +2,7 @@ package v1
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -138,6 +139,34 @@ func (h *apiV1Handler) userUnfollow(ctx *gin.Context) {
 		UserProfile: entity.NewUserProfile(p),
 	}
 	ctx.JSON(http.StatusOK, res)
+}
+
+func (h *apiV1Handler) userMultiGetUser(ctx context.Context, userIDs []string) (gentity.Users, error) {
+	in := &user.MultiGetUserRequest{
+		UserIds: userIDs,
+	}
+	out, err := h.User.MultiGetUser(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+
+	return gentity.NewUsers(out.Users), nil
+}
+
+func (h *apiV1Handler) userGetUser(ctx context.Context, userID string) (*gentity.User, error) {
+	in := &user.GetUserRequest{
+		UserId: userID,
+	}
+	out, err := h.User.GetUser(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	if out.User == nil {
+		err := fmt.Errorf("user is not found: %s", userID)
+		return nil, exception.ErrNotFound.New(err)
+	}
+
+	return gentity.NewUser(out.User), nil
 }
 
 func (h *apiV1Handler) userListFollow(

@@ -1,6 +1,8 @@
 package v1
 
 import (
+	"context"
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -105,8 +107,8 @@ func (h *apiV1Handler) createBook(ctx *gin.Context) {
 		util.ErrorHandling(ctx, err)
 		return
 	}
-
 	b := gentity.NewBook(out.Book)
+
 	res := response.NewBookResponse(b, nil)
 	ctx.JSON(http.StatusOK, res)
 }
@@ -151,8 +153,8 @@ func (h *apiV1Handler) updateBook(ctx *gin.Context) {
 		util.ErrorHandling(ctx, err)
 		return
 	}
-
 	b := gentity.NewBook(out.Book)
+
 	res := response.NewBookResponse(b, nil)
 	ctx.JSON(http.StatusOK, res)
 }
@@ -171,4 +173,80 @@ func (h *apiV1Handler) getThumbnailURLByRequest(smallImageURL, mediumImageURL, l
 	}
 
 	return ""
+}
+
+func (h *apiV1Handler) bookMultiGetBooks(ctx context.Context, bookIDs []int64) (gentity.Books, error) {
+	in := &book.MultiGetBooksRequest{
+		BookIds: bookIDs,
+	}
+	out, err := h.Book.MultiGetBooks(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+
+	return gentity.NewBooks(out.Books), nil
+}
+
+func (h *apiV1Handler) bookGetBook(ctx context.Context, bookID int64) (*gentity.Book, error) {
+	in := &book.GetBookRequest{
+		BookId: bookID,
+	}
+	out, err := h.Book.GetBook(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	if out.Book == nil {
+		err := fmt.Errorf("book is not found: %d", bookID)
+		return nil, exception.ErrNotFound.New(err)
+	}
+
+	return gentity.NewBook(out.Book), nil
+}
+
+func (h *apiV1Handler) bookListBookReview(
+	ctx context.Context, bookID, limit, offset int64,
+) (gentity.Reviews, int64, error) {
+	in := &book.ListBookReviewRequest{
+		BookId: bookID,
+		Limit:  limit,
+		Offset: offset,
+	}
+	out, err := h.Book.ListBookReview(ctx, in)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	return gentity.NewReviews(out.Reviews), out.Total, nil
+}
+
+func (h *apiV1Handler) bookListUserReview(
+	ctx context.Context, userID string, limit, offset int64,
+) (gentity.Reviews, int64, error) {
+	in := &book.ListUserReviewRequest{
+		UserId: userID,
+		Limit:  limit,
+		Offset: offset,
+	}
+	out, err := h.Book.ListUserReview(ctx, in)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	return gentity.NewReviews(out.Reviews), out.Total, nil
+}
+
+func (h *apiV1Handler) bookGetReview(ctx context.Context, reviewID int64) (*gentity.Review, error) {
+	in := &book.GetReviewRequest{
+		ReviewId: reviewID,
+	}
+	out, err := h.Book.GetReview(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	if out.Review == nil {
+		err := fmt.Errorf("review is not found: %d", reviewID)
+		return nil, exception.ErrNotFound.New(err)
+	}
+
+	return gentity.NewReview(out.Review), nil
 }

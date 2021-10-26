@@ -13,6 +13,7 @@ import (
 	"github.com/calmato/gran-book/api/service/pkg/datetime"
 	"github.com/calmato/gran-book/api/service/pkg/test"
 	"github.com/calmato/gran-book/api/service/proto/book"
+	"github.com/calmato/gran-book/api/service/proto/user"
 	"github.com/golang/mock/gomock"
 )
 
@@ -234,6 +235,7 @@ func TestBookshelf_GetBookshelf(t *testing.T) {
 func TestBookshelf_ReadBookshelf(t *testing.T) {
 	t.Parallel()
 
+	auth := testAuth("00000000-0000-0000-0000-000000000000")
 	user1 := testAuth("00000000-0000-0000-0000-000000000000")
 	book1 := testBook(1)
 	bookshelf1 := testBookshelf(1, book1.Id, user1.Id)
@@ -248,6 +250,9 @@ func TestBookshelf_ReadBookshelf(t *testing.T) {
 		{
 			name: "success",
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks, ctrl *gomock.Controller) {
+				mocks.AuthService.EXPECT().
+					GetAuth(gomock.Any(), &user.Empty{}).
+					Return(&user.AuthResponse{Auth: auth}, nil)
 				mocks.BookService.EXPECT().
 					GetBook(gomock.Any(), &book.GetBookRequest{BookId: 1}).
 					Return(&book.BookResponse{Book: book1}, nil)
@@ -283,19 +288,33 @@ func TestBookshelf_ReadBookshelf(t *testing.T) {
 			},
 		},
 		{
+			name: "failed to get auth",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks, ctrl *gomock.Controller) {
+				mocks.AuthService.EXPECT().
+					GetAuth(gomock.Any(), &user.Empty{}).
+					Return(nil, test.ErrMock)
+				mocks.BookService.EXPECT().
+					GetBook(gomock.Any(), &book.GetBookRequest{BookId: 1}).
+					Return(&book.BookResponse{Book: book1}, nil)
+			},
+			bookID: "1",
+			req: &request.ReadBookshelfRequest{
+				Impression: "テストの感想です",
+				ReadOn:     "2021-08-02",
+			},
+			expect: &test.HTTPResponse{
+				Code: http.StatusInternalServerError,
+			},
+		},
+		{
 			name: "failed to get book",
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks, ctrl *gomock.Controller) {
+				mocks.AuthService.EXPECT().
+					GetAuth(gomock.Any(), &user.Empty{}).
+					Return(&user.AuthResponse{Auth: auth}, nil)
 				mocks.BookService.EXPECT().
 					GetBook(gomock.Any(), &book.GetBookRequest{BookId: 1}).
 					Return(nil, test.ErrMock)
-				mocks.BookService.EXPECT().
-					ReadBookshelf(gomock.Any(), &book.ReadBookshelfRequest{
-						UserId:     "00000000-0000-0000-0000-000000000000",
-						BookId:     1,
-						Impression: "テストの感想です",
-						ReadOn:     "2021-08-02",
-					}).
-					Return(&book.BookshelfResponse{Bookshelf: bookshelf1}, nil)
 			},
 			bookID: "1",
 			req: &request.ReadBookshelfRequest{
@@ -309,6 +328,9 @@ func TestBookshelf_ReadBookshelf(t *testing.T) {
 		{
 			name: "failed to read bookshelf",
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks, ctrl *gomock.Controller) {
+				mocks.AuthService.EXPECT().
+					GetAuth(gomock.Any(), &user.Empty{}).
+					Return(&user.AuthResponse{Auth: auth}, nil)
 				mocks.BookService.EXPECT().
 					GetBook(gomock.Any(), &book.GetBookRequest{BookId: 1}).
 					Return(&book.BookResponse{Book: book1}, nil)
@@ -346,6 +368,7 @@ func TestBookshelf_ReadBookshelf(t *testing.T) {
 func TestBookshelf_ReadingBookshelf(t *testing.T) {
 	t.Parallel()
 
+	auth := testAuth("00000000-0000-0000-0000-000000000000")
 	user1 := testAuth("00000000-0000-0000-0000-000000000000")
 	book1 := testBook(1)
 	bookshelf1 := testBookshelf(1, book1.Id, user1.Id)
@@ -359,6 +382,9 @@ func TestBookshelf_ReadingBookshelf(t *testing.T) {
 		{
 			name: "success",
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks, ctrl *gomock.Controller) {
+				mocks.AuthService.EXPECT().
+					GetAuth(gomock.Any(), &user.Empty{}).
+					Return(&user.AuthResponse{Auth: auth}, nil)
 				mocks.BookService.EXPECT().
 					GetBook(gomock.Any(), &book.GetBookRequest{BookId: 1}).
 					Return(&book.BookResponse{Book: book1}, nil)
@@ -387,17 +413,29 @@ func TestBookshelf_ReadingBookshelf(t *testing.T) {
 			},
 		},
 		{
+			name: "failed to get auth",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks, ctrl *gomock.Controller) {
+				mocks.AuthService.EXPECT().
+					GetAuth(gomock.Any(), &user.Empty{}).
+					Return(nil, test.ErrMock)
+				mocks.BookService.EXPECT().
+					GetBook(gomock.Any(), &book.GetBookRequest{BookId: 1}).
+					Return(&book.BookResponse{Book: book1}, nil)
+			},
+			bookID: "1",
+			expect: &test.HTTPResponse{
+				Code: http.StatusInternalServerError,
+			},
+		},
+		{
 			name: "failed to get book",
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks, ctrl *gomock.Controller) {
+				mocks.AuthService.EXPECT().
+					GetAuth(gomock.Any(), &user.Empty{}).
+					Return(&user.AuthResponse{Auth: auth}, nil)
 				mocks.BookService.EXPECT().
 					GetBook(gomock.Any(), &book.GetBookRequest{BookId: 1}).
 					Return(nil, test.ErrMock)
-				mocks.BookService.EXPECT().
-					ReadingBookshelf(gomock.Any(), &book.ReadingBookshelfRequest{
-						UserId: "00000000-0000-0000-0000-000000000000",
-						BookId: 1,
-					}).
-					Return(&book.BookshelfResponse{Bookshelf: bookshelf1}, nil)
 			},
 			bookID: "1",
 			expect: &test.HTTPResponse{
@@ -407,6 +445,9 @@ func TestBookshelf_ReadingBookshelf(t *testing.T) {
 		{
 			name: "failed to reading bookshelf",
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks, ctrl *gomock.Controller) {
+				mocks.AuthService.EXPECT().
+					GetAuth(gomock.Any(), &user.Empty{}).
+					Return(&user.AuthResponse{Auth: auth}, nil)
 				mocks.BookService.EXPECT().
 					GetBook(gomock.Any(), &book.GetBookRequest{BookId: 1}).
 					Return(&book.BookResponse{Book: book1}, nil)
@@ -438,6 +479,7 @@ func TestBookshelf_ReadingBookshelf(t *testing.T) {
 func TestBookshelf_StackedBookshelf(t *testing.T) {
 	t.Parallel()
 
+	auth := testAuth("00000000-0000-0000-0000-000000000000")
 	user1 := testAuth("00000000-0000-0000-0000-000000000000")
 	book1 := testBook(1)
 	bookshelf1 := testBookshelf(1, book1.Id, user1.Id)
@@ -451,6 +493,9 @@ func TestBookshelf_StackedBookshelf(t *testing.T) {
 		{
 			name: "success",
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks, ctrl *gomock.Controller) {
+				mocks.AuthService.EXPECT().
+					GetAuth(gomock.Any(), &user.Empty{}).
+					Return(&user.AuthResponse{Auth: auth}, nil)
 				mocks.BookService.EXPECT().
 					GetBook(gomock.Any(), &book.GetBookRequest{BookId: 1}).
 					Return(&book.BookResponse{Book: book1}, nil)
@@ -479,17 +524,29 @@ func TestBookshelf_StackedBookshelf(t *testing.T) {
 			},
 		},
 		{
+			name: "failed to get auth",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks, ctrl *gomock.Controller) {
+				mocks.AuthService.EXPECT().
+					GetAuth(gomock.Any(), &user.Empty{}).
+					Return(nil, test.ErrMock)
+				mocks.BookService.EXPECT().
+					GetBook(gomock.Any(), &book.GetBookRequest{BookId: 1}).
+					Return(&book.BookResponse{Book: book1}, nil)
+			},
+			bookID: "1",
+			expect: &test.HTTPResponse{
+				Code: http.StatusInternalServerError,
+			},
+		},
+		{
 			name: "failed to get book",
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks, ctrl *gomock.Controller) {
+				mocks.AuthService.EXPECT().
+					GetAuth(gomock.Any(), &user.Empty{}).
+					Return(&user.AuthResponse{Auth: auth}, nil)
 				mocks.BookService.EXPECT().
 					GetBook(gomock.Any(), &book.GetBookRequest{BookId: 1}).
 					Return(nil, test.ErrMock)
-				mocks.BookService.EXPECT().
-					StackedBookshelf(gomock.Any(), &book.StackedBookshelfRequest{
-						UserId: "00000000-0000-0000-0000-000000000000",
-						BookId: 1,
-					}).
-					Return(&book.BookshelfResponse{Bookshelf: bookshelf1}, nil)
 			},
 			bookID: "1",
 			expect: &test.HTTPResponse{
@@ -499,6 +556,9 @@ func TestBookshelf_StackedBookshelf(t *testing.T) {
 		{
 			name: "failed to stacked bookshelf",
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks, ctrl *gomock.Controller) {
+				mocks.AuthService.EXPECT().
+					GetAuth(gomock.Any(), &user.Empty{}).
+					Return(&user.AuthResponse{Auth: auth}, nil)
 				mocks.BookService.EXPECT().
 					GetBook(gomock.Any(), &book.GetBookRequest{BookId: 1}).
 					Return(&book.BookResponse{Book: book1}, nil)
@@ -530,6 +590,7 @@ func TestBookshelf_StackedBookshelf(t *testing.T) {
 func TestBookshelf_WantBookshelf(t *testing.T) {
 	t.Parallel()
 
+	auth := testAuth("00000000-0000-0000-0000-000000000000")
 	user1 := testAuth("00000000-0000-0000-0000-000000000000")
 	book1 := testBook(1)
 	bookshelf1 := testBookshelf(1, book1.Id, user1.Id)
@@ -543,6 +604,9 @@ func TestBookshelf_WantBookshelf(t *testing.T) {
 		{
 			name: "success",
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks, ctrl *gomock.Controller) {
+				mocks.AuthService.EXPECT().
+					GetAuth(gomock.Any(), &user.Empty{}).
+					Return(&user.AuthResponse{Auth: auth}, nil)
 				mocks.BookService.EXPECT().
 					GetBook(gomock.Any(), &book.GetBookRequest{BookId: 1}).
 					Return(&book.BookResponse{Book: book1}, nil)
@@ -571,17 +635,29 @@ func TestBookshelf_WantBookshelf(t *testing.T) {
 			},
 		},
 		{
+			name: "failed to get auth",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks, ctrl *gomock.Controller) {
+				mocks.AuthService.EXPECT().
+					GetAuth(gomock.Any(), &user.Empty{}).
+					Return(nil, test.ErrMock)
+				mocks.BookService.EXPECT().
+					GetBook(gomock.Any(), &book.GetBookRequest{BookId: 1}).
+					Return(&book.BookResponse{Book: book1}, nil)
+			},
+			bookID: "1",
+			expect: &test.HTTPResponse{
+				Code: http.StatusInternalServerError,
+			},
+		},
+		{
 			name: "failed to get book",
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks, ctrl *gomock.Controller) {
+				mocks.AuthService.EXPECT().
+					GetAuth(gomock.Any(), &user.Empty{}).
+					Return(&user.AuthResponse{Auth: auth}, nil)
 				mocks.BookService.EXPECT().
 					GetBook(gomock.Any(), &book.GetBookRequest{BookId: 1}).
 					Return(nil, test.ErrMock)
-				mocks.BookService.EXPECT().
-					WantBookshelf(gomock.Any(), &book.WantBookshelfRequest{
-						UserId: "00000000-0000-0000-0000-000000000000",
-						BookId: 1,
-					}).
-					Return(&book.BookshelfResponse{Bookshelf: bookshelf1}, nil)
 			},
 			bookID: "1",
 			expect: &test.HTTPResponse{
@@ -591,6 +667,9 @@ func TestBookshelf_WantBookshelf(t *testing.T) {
 		{
 			name: "failed to want bookshelf",
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks, ctrl *gomock.Controller) {
+				mocks.AuthService.EXPECT().
+					GetAuth(gomock.Any(), &user.Empty{}).
+					Return(&user.AuthResponse{Auth: auth}, nil)
 				mocks.BookService.EXPECT().
 					GetBook(gomock.Any(), &book.GetBookRequest{BookId: 1}).
 					Return(&book.BookResponse{Book: book1}, nil)
@@ -622,6 +701,7 @@ func TestBookshelf_WantBookshelf(t *testing.T) {
 func TestBookshelf_ReleaseBookshelf(t *testing.T) {
 	t.Parallel()
 
+	auth := testAuth("00000000-0000-0000-0000-000000000000")
 	user1 := testAuth("00000000-0000-0000-0000-000000000000")
 	book1 := testBook(1)
 	bookshelf1 := testBookshelf(1, book1.Id, user1.Id)
@@ -635,6 +715,9 @@ func TestBookshelf_ReleaseBookshelf(t *testing.T) {
 		{
 			name: "success",
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks, ctrl *gomock.Controller) {
+				mocks.AuthService.EXPECT().
+					GetAuth(gomock.Any(), &user.Empty{}).
+					Return(&user.AuthResponse{Auth: auth}, nil)
 				mocks.BookService.EXPECT().
 					GetBook(gomock.Any(), &book.GetBookRequest{BookId: 1}).
 					Return(&book.BookResponse{Book: book1}, nil)
@@ -663,17 +746,29 @@ func TestBookshelf_ReleaseBookshelf(t *testing.T) {
 			},
 		},
 		{
+			name: "failed to get auth",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks, ctrl *gomock.Controller) {
+				mocks.AuthService.EXPECT().
+					GetAuth(gomock.Any(), &user.Empty{}).
+					Return(nil, test.ErrMock)
+				mocks.BookService.EXPECT().
+					GetBook(gomock.Any(), &book.GetBookRequest{BookId: 1}).
+					Return(&book.BookResponse{Book: book1}, nil)
+			},
+			bookID: "1",
+			expect: &test.HTTPResponse{
+				Code: http.StatusInternalServerError,
+			},
+		},
+		{
 			name: "failed to get book",
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks, ctrl *gomock.Controller) {
+				mocks.AuthService.EXPECT().
+					GetAuth(gomock.Any(), &user.Empty{}).
+					Return(&user.AuthResponse{Auth: auth}, nil)
 				mocks.BookService.EXPECT().
 					GetBook(gomock.Any(), &book.GetBookRequest{BookId: 1}).
 					Return(nil, test.ErrMock)
-				mocks.BookService.EXPECT().
-					ReleaseBookshelf(gomock.Any(), &book.ReleaseBookshelfRequest{
-						UserId: "00000000-0000-0000-0000-000000000000",
-						BookId: 1,
-					}).
-					Return(&book.BookshelfResponse{Bookshelf: bookshelf1}, nil)
 			},
 			bookID: "1",
 			expect: &test.HTTPResponse{
@@ -683,6 +778,9 @@ func TestBookshelf_ReleaseBookshelf(t *testing.T) {
 		{
 			name: "failed to release bookshelf",
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks, ctrl *gomock.Controller) {
+				mocks.AuthService.EXPECT().
+					GetAuth(gomock.Any(), &user.Empty{}).
+					Return(&user.AuthResponse{Auth: auth}, nil)
 				mocks.BookService.EXPECT().
 					GetBook(gomock.Any(), &book.GetBookRequest{BookId: 1}).
 					Return(&book.BookResponse{Book: book1}, nil)
@@ -714,6 +812,9 @@ func TestBookshelf_ReleaseBookshelf(t *testing.T) {
 func TestBookshelf_DeleteBookshelf(t *testing.T) {
 	t.Parallel()
 
+	auth := testAuth("00000000-0000-0000-0000-000000000000")
+	book1 := testBook(1)
+
 	tests := []struct {
 		name   string
 		setup  func(ctx context.Context, t *testing.T, mocks *test.Mocks, ctrl *gomock.Controller)
@@ -723,6 +824,12 @@ func TestBookshelf_DeleteBookshelf(t *testing.T) {
 		{
 			name: "success",
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks, ctrl *gomock.Controller) {
+				mocks.AuthService.EXPECT().
+					GetAuth(gomock.Any(), &user.Empty{}).
+					Return(&user.AuthResponse{Auth: auth}, nil)
+				mocks.BookService.EXPECT().
+					GetBook(gomock.Any(), &book.GetBookRequest{BookId: 1}).
+					Return(&book.BookResponse{Book: book1}, nil)
 				mocks.BookService.EXPECT().
 					DeleteBookshelf(gomock.Any(), &book.DeleteBookshelfRequest{
 						UserId: "00000000-0000-0000-0000-000000000000",
@@ -744,8 +851,44 @@ func TestBookshelf_DeleteBookshelf(t *testing.T) {
 			},
 		},
 		{
+			name: "failed to get auth",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks, ctrl *gomock.Controller) {
+				mocks.AuthService.EXPECT().
+					GetAuth(gomock.Any(), &user.Empty{}).
+					Return(nil, test.ErrMock)
+				mocks.BookService.EXPECT().
+					GetBook(gomock.Any(), &book.GetBookRequest{BookId: 1}).
+					Return(&book.BookResponse{Book: book1}, nil)
+			},
+			bookID: "1",
+			expect: &test.HTTPResponse{
+				Code: http.StatusInternalServerError,
+			},
+		},
+		{
+			name: "failed to get book",
+			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks, ctrl *gomock.Controller) {
+				mocks.AuthService.EXPECT().
+					GetAuth(gomock.Any(), &user.Empty{}).
+					Return(&user.AuthResponse{Auth: auth}, nil)
+				mocks.BookService.EXPECT().
+					GetBook(gomock.Any(), &book.GetBookRequest{BookId: 1}).
+					Return(nil, test.ErrMock)
+			},
+			bookID: "1",
+			expect: &test.HTTPResponse{
+				Code: http.StatusInternalServerError,
+			},
+		},
+		{
 			name: "failed to delete bookshelf",
 			setup: func(ctx context.Context, t *testing.T, mocks *test.Mocks, ctrl *gomock.Controller) {
+				mocks.AuthService.EXPECT().
+					GetAuth(gomock.Any(), &user.Empty{}).
+					Return(&user.AuthResponse{Auth: auth}, nil)
+				mocks.BookService.EXPECT().
+					GetBook(gomock.Any(), &book.GetBookRequest{BookId: 1}).
+					Return(&book.BookResponse{Book: book1}, nil)
 				mocks.BookService.EXPECT().
 					DeleteBookshelf(gomock.Any(), &book.DeleteBookshelfRequest{
 						UserId: "00000000-0000-0000-0000-000000000000",
