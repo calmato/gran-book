@@ -8,8 +8,8 @@ import (
 	context "context"
 	reflect "reflect"
 
-	chat "github.com/calmato/gran-book/api/service/internal/user/domain/chat"
-	firestore "github.com/calmato/gran-book/api/service/pkg/firebase/firestore"
+	chat "github.com/calmato/gran-book/api/internal/user/domain/chat"
+	firestore "github.com/calmato/gran-book/api/pkg/firebase/firestore"
 	gomock "github.com/golang/mock/gomock"
 )
 

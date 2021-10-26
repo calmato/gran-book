@@ -8,7 +8,7 @@ import (
 	context "context"
 	reflect "reflect"
 
-	chat "github.com/calmato/gran-book/api/service/internal/user/domain/chat"
+	chat "github.com/calmato/gran-book/api/internal/user/domain/chat"
 	gomock "github.com/golang/mock/gomock"
 )
 

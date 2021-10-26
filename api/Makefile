@@ -25,11 +25,9 @@ install-third-party:
 # 	go mod tidy
 # 	$(MAKE) gazelle
 
-# gazelle: WORKSPACE
-# 	bazelisk run //:gazelle
-
-# WORKSPACE: go.mod
+# gazelle:
 # 	bazelisk run //:gazelle -- update-repos -prune -from_file ./go.mod
+# 	bazelisk run //:gazelle
 
 # checksum:
 # 	mkdir -p ./tmp; rm -f ./tmp/checksum-file

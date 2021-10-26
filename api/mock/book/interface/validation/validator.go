@@ -7,7 +7,7 @@ package mock_validation
 import (
 	reflect "reflect"
 
-	book "github.com/calmato/gran-book/api/service/proto/book"
+	book "github.com/calmato/gran-book/api/proto/book"
 	gomock "github.com/golang/mock/gomock"
 )
 

@@ -8,8 +8,8 @@ import (
 	context "context"
 	reflect "reflect"
 
-	book "github.com/calmato/gran-book/api/service/internal/book/domain/book"
-	database "github.com/calmato/gran-book/api/service/pkg/database"
+	book "github.com/calmato/gran-book/api/internal/book/domain/book"
+	database "github.com/calmato/gran-book/api/pkg/database"
 	gomock "github.com/golang/mock/gomock"
 )
 
