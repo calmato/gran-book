@@ -1,10 +1,16 @@
-name: Backend(Book API) Deploy
+name: Backend(Admin Gateway) Deploy
 on:
   push:
     paths:
-      - '.github/workflows/cd-book-api-for-master.yaml'
-      - 'api/server/book/**'
-      - 'infra/docker/api/server/book/*'
+      - '.github/workflows/cd-gateway-admin-for-master.yaml'
+      - 'api/service/cmd/gateway/admin/**'
+      - 'api/service/config/gateway/admin/**'
+      - 'api/service/internal/gateway/cmd/**'
+      - 'api/service/internal/gateway/entity/**'
+      - 'api/service/internal/gateway/util/**'
+      - 'api/service/internal/gateway/admin/**'
+      - 'infra/docker/api/service/gateway/**'
+      - 'infra/kubernetes/**'
     branches:
       - master
 
@@ -15,65 +21,14 @@ env:
   GCP_PROJECT_ID: ${{ secrets.STG_GCP_PROJECT_ID }}
   GCP_REGION: ${{ secrets.STG_GCP_REGION }}
   GCR_HOSTNAME: ${{ secrets.STG_GCR_HOSTNAME }}
-  GCR_IMAGE_NAME: book-api
+  GCR_IMAGE_NAME: admin-gateway
   GCR_IMAGE_TAG: ${{ github.sha }}
-  # CLOUD_RUN_NAME: book-api
+  # CLOUD_RUN_NAME: admin-gateway
   GKE_ZONE: ${{ secrets.STG_GKE_ZONE }}
   GKE_CLUSTER_NAME: ${{ secrets.STG_GKE_CLUSTER_NAME }}
-  GKE_DEPLOYMENT_NAME: book-api
+  GKE_DEPLOYMENT_NAME: admin-gateway
 
 jobs:
-  setup_proto:
-    name: Setup Proto
-    runs-on: ${{ matrix.os }}
-    defaults:
-      run:
-        shell: bash
-        working-directory: ./proto
-
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-        golang: ['^1.16.7']
-
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v2
-
-      - name: Use Golang ${{ matrix.golang }}
-        uses: actions/setup-go@v2
-
-      - name: Install protobuf
-        run: |
-          curl -fSLO https://github.com/google/protobuf/releases/download/v${PROTOBUF_VERSION}/protoc-${PROTOBUF_VERSION}-linux-x86_64.zip
-          unzip protoc-${PROTOBUF_VERSION}-linux-x86_64.zip -d protoc
-          sudo mv protoc/bin/* /usr/local/bin/
-          sudo mv protoc/include/* /usr/local/include/
-          sudo chmod +x /usr/local/bin/protoc
-          sudo chmod +x /usr/local/include/google
-
-      - name: Install prototool
-        run: |
-          curl -fSLO "https://github.com/uber/prototool/releases/download/v${PROTOTOOL_VERSION}/prototool-$(uname -s)-$(uname -m)"
-          sudo mv ./prototool-$(uname -s)-$(uname -m) /usr/local/bin/prototool
-          sudo chmod +x /usr/local/bin/prototool
-
-      - name: Install gRPC tools
-        run: |
-          export GOPATH=$(go env GOPATH)
-          make install
-
-      - name: Generate proto
-        run: |
-          export PATH="$PATH:$(go env GOPATH)/bin"
-          make generate
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: artifact-${ARTIFACT_TAG}
-          path: api/server/book/proto
-
   deploy_image_for_stg:
     name: Deploy container image for staging
     needs: setup_proto
@@ -81,20 +36,38 @@ jobs:
     defaults:
       run:
         shell: bash
+        working-directory: .
 
     strategy:
       matrix:
         os: [ubuntu-latest] # exclude: macos-latest, windows-latest
+        golang: ['^1.17.2']
+        protobuf: ['3.x']
 
     steps:
       - name: Check out code
         uses: actions/checkout@v2
 
-      - name: Download artifact for setup proto
-        uses: actions/download-artifact@v2
+      - name: Use Golang ${{ matrix.golang }}
+        uses: actions/setup-go@v2
         with:
-          name: artifact-${ARTIFACT_TAG}
-          path: api/server/book/proto
+          go-version: ${{ matrix.golang }}
+
+      # https://github.com/marketplace/actions/setup-protoc
+      - uses: arduino/setup-protoc@v1
+        with:
+          version: ${{ matrix.protobuf }}
+
+      - name: Check golang version
+        run: go version
+
+      - name: Setup
+        working-directory: ./api/service
+        run: make setup
+
+      - name: Protoc
+        working-directory: ./api/service
+        run: make protoc
 
       - name: Setup Cloud SDK
         uses: google-github-actions/setup-gcloud@master
@@ -112,7 +85,7 @@ jobs:
 
       - name: Docker Build
         run: |
-          docker build -f ./infra/docker/api/server/book/Dockerfile -t ${GCR_HOSTNAME}/${GCP_PROJECT_ID}/${GCR_IMAGE_NAME} .
+          docker build -f ./infra/docker/api/service/gateway/admin/Dockerfile -t ${GCR_HOSTNAME}/${GCP_PROJECT_ID}/${GCR_IMAGE_NAME} .
 
       - name: Attached Tag
         run: |
@@ -134,10 +107,33 @@ jobs:
   #   strategy:
   #     matrix:
   #       os: [ubuntu-latest] # exclude: macos-latest, windows-latest
+  #       golang: ['^1.17.2']
+  #       protobuf: ['3.x']
 
   #   steps:
   #     - name: Check out code
   #       uses: actions/checkout@v2
+
+  #     - name: Use Golang ${{ matrix.golang }}
+  #       uses: actions/setup-go@v2
+  #       with:
+  #         go-version: ${{ matrix.golang }}
+
+  #     # https://github.com/marketplace/actions/setup-protoc
+  #     - uses: arduino/setup-protoc@v1
+  #       with:
+  #         version: ${{ matrix.protobuf }}
+
+  #     - name: Check golang version
+  #       run: go version
+
+  #     - name: Setup
+  #       working-directory: ./api/service
+  #       run: make setup
+
+  #     - name: Protoc
+  #       working-directory: ./api/service
+  #       run: make protoc
 
   #     - name: Setup Cloud SDK
   #       uses: google-github-actions/setup-gcloud@master

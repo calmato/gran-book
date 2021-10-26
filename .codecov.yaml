@@ -8,21 +8,9 @@ coverage:
       admin:
         flags:
         - admin
-      service:
+      api:
         flags:
-        - service
-      native-gateway:
-        flags:
-        - native-gateway
-      admin-gateway:
-        flags:
-        - admin-gateway
-      user-api:
-        flags:
-        - user-api
-      book-api:
-        flags:
-        - book-api
+        - api
 
 # adding Flags to your `layout` configuration to show up in the PR comment
 comment:
@@ -45,9 +33,9 @@ flags:
     paths:
     - web/admin/
     carryforward: true
-  service:
+  api:
     paths:
-    - api/service/
+    - api/
     carryforward: true
   native-gateway:
     paths:
