@@ -8,12 +8,6 @@ ARCHIVE_PATH=./archive
 ADMIN_CLIENT_PATH=./../web/admin
 NATIVE_CLIENT_PATH=./../native
 
-ADMIN_GATEWAY_PATH=./../api/gateway/admin
-NATIVE_GATEWAY_PATH=./../api/gateway/native
-USER_SERVER_PATH=./../api/server/user
-BOOK_SERVER_PATH=./../api/server/book
-INFORMATION_SERVER_PATH=./../api/server/information
-
 ##################################################
 # Main
 ##################################################
@@ -27,27 +21,11 @@ build: install clean generate
 generate: protoc
 	$(MAKE) generate-client OUTPUT_PATH=${NATIVE_CLIENT_PATH} CLIENT=native
 	$(MAKE) generate-client OUTPUT_PATH=${ADMIN_CLIENT_PATH} CLIENT=admin
-	$(MAKE) generate-gateway OUTPUT_PATH=${NATIVE_GATEWAY_PATH} CLIENT=native
-	$(MAKE) generate-gateway OUTPUT_PATH=${ADMIN_GATEWAY_PATH} CLIENT=admin
-	$(MAKE) generate-server OUTPUT_PATH=${USER_SERVER_PATH}
-	$(MAKE) generate-server OUTPUT_PATH=${BOOK_SERVER_PATH}
-	$(MAKE) generate-server OUTPUT_PATH=${INFORMATION_SERVER_PATH}
 
 generate-client:
 	mkdir -p ${OUTPUT_PATH}/app/types/api
 	cp -r ${ARCHIVE_PATH}/common/*_pb.d.ts ${OUTPUT_PATH}/app/types/api
 	cp -r ${ARCHIVE_PATH}/gateway/${CLIENT}/*_pb.d.ts ${OUTPUT_PATH}/app/types/api
-
-generate-gateway:
-	mkdir -p ${OUTPUT_PATH}/proto
-	cp -r ${ARCHIVE_PATH}/common/*.pb.go ${OUTPUT_PATH}/proto
-	cp -r ${ARCHIVE_PATH}/service ${OUTPUT_PATH}/proto
-
-generate-server:
-	mkdir -p ${OUTPUT_PATH}/proto
-	cp -r ${ARCHIVE_PATH}/common/*.pb.go ${OUTPUT_PATH}/proto
-	cp -r ${ARCHIVE_PATH}/common/*.pb.validate.go ${OUTPUT_PATH}/proto
-	cp -r ${ARCHIVE_PATH}/service ${OUTPUT_PATH}/proto
 
 # ------------------------------------------------
 # For Protocol Buffer - clean
@@ -55,23 +33,12 @@ generate-server:
 clean: clean-archive
 	$(MAKE) clean-client OUTPUT=${NATIVE_CLIENT_PATH}
 	$(MAKE) clean-client OUTPUT=${ADMIN_CLIENT_PATH}
-	$(MAKE) clean-gateway OUTPUT_PATH=${NATIVE_GATEWAY_PATH}
-	$(MAKE) clean-gateway OUTPUT_PATH=${ADMIN_GATEWAY_PATH}
-	$(MAKE) clean-server OUTPUT_PATH=${USER_SERVER_PATH}
-	$(MAKE) clean-server OUTPUT_PATH=${BOOK_SERVER_PATH}
-	$(MAKE) clean-server OUTPUT_PATH=${INFORMATION_SERVER_PATH}
 
 clean-archive:
 	find ${ARCHIVE_PATH} -type f | grep -v -e '.keep' | xargs rm -rf
 
 clean-client:
 	find ${OUTPUT_PATH}/app/types/api -type f | grep -v -e '.keep' | xargs rm -rf
-
-clean-gateway:
-	find ${OUTPUT_PATH}/proto -type f | grep -v -e '.keep' | xargs rm -rf
-
-clean-server:
-	find ${OUTPUT_PATH}/proto -type f | grep -v -e '.keep' | xargs rm -rf
 
 ##################################################
 # For Configuration
@@ -80,18 +47,6 @@ clean-server:
 
 install:
 	npm install -g @grpc/grpc-js grpc-tools grpc_tools_node_protoc_ts
-	go get \
-		github.com/envoyproxy/protoc-gen-validate@v${PROTOC_GEN_VALIDATE_VERSION}
-	go install \
-		google.golang.org/protobuf/cmd/protoc-gen-go \
-		google.golang.org/grpc/cmd/protoc-gen-go-grpc
-	mkdir -p ${PACKAGE_PATH}/github.com/envoyproxy
-	if [ -L ${PACKAGE_PATH}/github.com/envoyproxy/protoc-gen-validate ]; then \
-		unlink ${PACKAGE_PATH}/github.com/envoyproxy/protoc-gen-validate; \
-	fi
-	ln -s \
-		${GOPATH}/pkg/mod/github.com/envoyproxy/protoc-gen-validate@v${PROTOC_GEN_VALIDATE_VERSION} \
-		${PACKAGE_PATH}/github.com/envoyproxy/protoc-gen-validate
 
 ##################################################
 # For Protocol Buffer
@@ -107,7 +62,7 @@ format-fix:
 # ------------------------------------------------
 # For Protocol Buffer - protoc
 # ------------------------------------------------
-protoc: protoc-gateway protoc-service
+protoc: protoc-gateway
 
 protoc-gateway:
 	protoc \
@@ -116,16 +71,3 @@ protoc-gateway:
 		--ts_out=grpc_js:${ARCHIVE_PATH} \
 		./proto/common/*.proto \
 		./proto/gateway/**/*.proto
-
-protoc-service:
-	protoc \
-		-I ./pkg \
-		-I ./proto \
-		--go_out ${ARCHIVE_PATH} \
-		--go_opt paths=source_relative \
-		--go-grpc_out ${ARCHIVE_PATH} \
-		--go-grpc_opt paths=source_relative \
-		--validate_out lang=go:${ARCHIVE_PATH} \
-		--validate_opt paths=source_relative \
-		./proto/common/*.proto \
-		./proto/service/**/*.proto

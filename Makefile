@@ -11,8 +11,6 @@ setup:
 	$(MAKE) install
 	$(MAKE) proto
 	$(MAKE) swagger
-	docker-compose run --rm admin_gateway yarn build:dev
-	docker-compose run --rm native_gateway yarn build:dev
 
 build:
 	docker-compose build --parallel
@@ -20,8 +18,6 @@ build:
 install:
 	docker-compose run --rm admin yarn
 	docker-compose run --rm native yarn
-	docker-compose run --rm admin_gateway yarn
-	docker-compose run --rm native_gateway yarn
 	docker-compose run --rm swagger_generator yarn
 
 start:
@@ -54,7 +50,7 @@ start-admin:
 
 start-api:
 	$(MAKE) proto
-	docker-compose up native_gateway admin_gateway user_api book_api information_api mysql mysql_test
+	docker-compose up native_gateway admin_gateway user_api book_api mysql mysql_test
 
 start-swagger:
 	docker-compose up swagger_native swagger_admin swagger_generator

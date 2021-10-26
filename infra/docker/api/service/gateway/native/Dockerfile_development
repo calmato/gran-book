@@ -1,0 +1,10 @@
+FROM golang:1.17.2-alpine
+
+ENV LANG C.UTF-8
+ENV TZ Asia/Tokyo
+
+RUN apk add --update \
+      git \
+      gcc \
+      libc-dev \
+      make

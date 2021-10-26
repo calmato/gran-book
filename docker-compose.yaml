@@ -40,8 +40,8 @@ services:
   native_gateway:
     container_name: gran_book_native_gateway
     build:
-      context: ./infra/docker/api/service/gateway/native
-      dockerfile: Dockerfile
+      context: ./infra/docker/api/service/common
+      dockerfile: Dockerfile_development
     working_dir: /go/src/github.com/calmato/gran-book/api/service
     volumes:
       - ./api/service:/go/src/github.com/calmato/gran-book/api/service:cached
@@ -54,9 +54,9 @@ services:
       - GCP_STORAGE_BUCKET_NAME=${GCP_STORAGE_BUCKET_NAME}
     ports:
       - 8080:8080
+    command: make dev SERVICE=gateway/native
     networks:
       - api
-    command: /var/api/app
 
   admin_gateway:
     container_name: gran_book_admin_gateway
@@ -75,9 +75,9 @@ services:
       - GCP_STORAGE_BUCKET_NAME=${GCP_STORAGE_BUCKET_NAME}
     ports:
       - 8081:8080
+    command: make dev SERVICE=gateway/admin
     networks:
       - api
-    command: /var/api/app
 
   # Backend (Microservice)
   user_api:
@@ -108,9 +108,9 @@ services:
       - TEST_DB_DATABASE=${MYSQL_USER_DATABASE}
     ports:
       - 18080:8080
+    command: make dev SERVICE=user
     networks:
       - api
-    command: /var/api/app
     depends_on:
       - mysql
 
@@ -141,9 +141,9 @@ services:
       - TEST_DB_PASSWORD=${MYSQL_PASSWORD}
     ports:
       - 18081:8080
+    command: make dev SERVICE=book
     networks:
       - api
-    command: /var/api/app
     depends_on:
       - mysql
 

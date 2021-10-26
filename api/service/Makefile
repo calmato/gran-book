@@ -69,3 +69,7 @@ test:
 
 build:
 	go build -o ./app ./cmd/${SERVICE}/main.go
+
+dev:
+	go build -o ./app ./cmd/${SERVICE}/main.go
+	./app
