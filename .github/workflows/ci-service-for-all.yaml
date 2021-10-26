@@ -3,7 +3,7 @@ on:
   push:
     paths:
       - '.github/workflows/ci-service-for-all.yaml'
-      - 'api/service/**'
+      - 'api/**'
       - 'infra/docker/service/**/*'
       - 'infra/kubernetes/**'
 
@@ -20,7 +20,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: ./api/service
+        working-directory: ./api
 
     strategy:
       matrix:

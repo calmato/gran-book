@@ -3,13 +3,13 @@ on:
   push:
     paths:
       - '.github/workflows/cd-gateway-admin-for-master.yaml'
-      - 'api/service/cmd/gateway/admin/**'
-      - 'api/service/config/gateway/admin/**'
-      - 'api/service/internal/gateway/cmd/**'
-      - 'api/service/internal/gateway/entity/**'
-      - 'api/service/internal/gateway/util/**'
-      - 'api/service/internal/gateway/admin/**'
-      - 'infra/docker/api/service/gateway/**'
+      - 'api/cmd/gateway/admin/**'
+      - 'api/config/gateway/admin/**'
+      - 'api/internal/gateway/cmd/**'
+      - 'api/internal/gateway/entity/**'
+      - 'api/internal/gateway/util/**'
+      - 'api/internal/gateway/admin/**'
+      - 'infra/docker/api/gateway/**'
       - 'infra/kubernetes/**'
     branches:
       - master
@@ -62,11 +62,11 @@ jobs:
         run: go version
 
       - name: Setup
-        working-directory: ./api/service
+        working-directory: ./api
         run: make setup
 
       - name: Protoc
-        working-directory: ./api/service
+        working-directory: ./api
         run: make protoc
 
       - name: Setup Cloud SDK
@@ -85,7 +85,7 @@ jobs:
 
       - name: Docker Build
         run: |
-          docker build -f ./infra/docker/api/service/gateway/admin/Dockerfile -t ${GCR_HOSTNAME}/${GCP_PROJECT_ID}/${GCR_IMAGE_NAME} .
+          docker build -f ./infra/docker/api/gateway/admin/Dockerfile -t ${GCR_HOSTNAME}/${GCP_PROJECT_ID}/${GCR_IMAGE_NAME} .
 
       - name: Attached Tag
         run: |
@@ -128,11 +128,11 @@ jobs:
   #       run: go version
 
   #     - name: Setup
-  #       working-directory: ./api/service
+  #       working-directory: ./api
   #       run: make setup
 
   #     - name: Protoc
-  #       working-directory: ./api/service
+  #       working-directory: ./api
   #       run: make protoc
 
   #     - name: Setup Cloud SDK

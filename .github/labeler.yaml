@@ -7,15 +7,15 @@ frontend (admin):
 - web/admin/**/*
 
 backend:
-- api/service/**/*
+- api/**/*
 backend (gateway):
-- api/service/**/gateway/**/*
+- api/**/gateway/**/*
 backend (user service):
-- api/service/**/user/**/*
+- api/**/user/**/*
 backend (book service):
-- api/service/**/book/**/*
+- api/**/book/**/*
 backend (information service):
-- api/service/**/information/**/*
+- api/**/information/**/*
 
 database:
 - infra/mysql/**/*

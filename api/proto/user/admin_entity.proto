@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package user;
+
+option go_package = "github.com/calmato/gran-book/api/proto/user";
+
+import "user/common.proto";
+
+// Admin - 管理者ユーザー
+message Admin {
+  string id = 1; // ユーザーID
+  string username = 2; // ユーザー名
+  string email = 3; // メールアドレス
+  string phone_number = 4; // 電話番号
+  Role role = 5; // ユーザー権限
+  string thumbnail_url = 6; // サムネイルURL
+  string self_introduction = 7; // 自己紹介
+  string last_name = 8; // 姓
+  string first_name = 9; // 名
+  string last_name_kana = 10; // 姓(かな)
+  string first_name_kana = 11; // 名(かな)
+  string created_at = 12; // 作成日時
+  string updated_at = 13; // 更新日時
+}

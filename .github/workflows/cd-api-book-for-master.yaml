@@ -3,10 +3,10 @@ on:
   push:
     paths:
       - '.github/workflows/cd-service-book-for-master.yaml'
-      - 'api/service/cmd/book/**'
-      - 'api/service/config/book/**'
-      - 'api/service/internal/book/**'
-      - 'infra/docker/api/service/book/**'
+      - 'api/cmd/book/**'
+      - 'api/config/book/**'
+      - 'api/internal/book/**'
+      - 'infra/docker/api/book/**'
       - 'infra/kubernetes/**'
     branches:
       - master
@@ -59,11 +59,11 @@ jobs:
         run: go version
 
       - name: Setup
-        working-directory: ./api/service
+        working-directory: ./api
         run: make setup
 
       - name: Protoc
-        working-directory: ./api/service
+        working-directory: ./api
         run: make protoc
 
       - name: Setup Cloud SDK
@@ -82,7 +82,7 @@ jobs:
 
       - name: Docker Build
         run: |
-          docker build -f ./infra/docker/api/service/book/Dockerfile -t ${GCR_HOSTNAME}/${GCP_PROJECT_ID}/${GCR_IMAGE_NAME} .
+          docker build -f ./infra/docker/api/book/Dockerfile -t ${GCR_HOSTNAME}/${GCP_PROJECT_ID}/${GCR_IMAGE_NAME} .
 
       - name: Attached Tag
         run: |
@@ -125,11 +125,11 @@ jobs:
   #       run: go version
 
   #     - name: Setup
-  #       working-directory: ./api/service
+  #       working-directory: ./api
   #       run: make setup
 
   #     - name: Protoc
-  #       working-directory: ./api/service
+  #       working-directory: ./api
   #       run: make protoc
 
   #     - name: Setup Cloud SDK

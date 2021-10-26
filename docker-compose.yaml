@@ -40,11 +40,11 @@ services:
   native_gateway:
     container_name: gran_book_native_gateway
     build:
-      context: ./infra/docker/api/service/common
+      context: ./infra/docker/api/common
       dockerfile: Dockerfile_development
-    working_dir: /go/src/github.com/calmato/gran-book/api/service
+    working_dir: /go/src/github.com/calmato/gran-book/api
     volumes:
-      - ./api/service:/go/src/github.com/calmato/gran-book/api/service:cached
+      - ./api:/go/src/github.com/calmato/gran-book/api:cached
       - ./tmp/data/go/pkg/mod:/go/pkg/mod:delegated
       - ./tmp/logs/native_gateway:/var/log/gateway:delegated
     environment:
@@ -61,11 +61,11 @@ services:
   admin_gateway:
     container_name: gran_book_admin_gateway
     build:
-      context: ./infra/docker/api/service/gateway/admin
+      context: ./infra/docker/api/gateway/admin
       dockerfile: Dockerfile
-    working_dir: /go/src/github.com/calmato/gran-book/api/service
+    working_dir: /go/src/github.com/calmato/gran-book/api
     volumes:
-      - ./api/service:/go/src/github.com/calmato/gran-book/api/service:cached
+      - ./api:/go/src/github.com/calmato/gran-book/api:cached
       - ./tmp/data/go/pkg/mod:/go/pkg/mod:delegated
       - ./tmp/logs/admin_gateway:/var/log/gateway:delegated
     environment:
@@ -83,11 +83,11 @@ services:
   user_api:
     container_name: gran_book_user_api
     build:
-      context: ./infra/docker/api/service/user
+      context: ./infra/docker/api/user
       dockerfile: Dockerfile
-    working_dir: /go/src/github.com/calmato/gran-book/api/service
+    working_dir: /go/src/github.com/calmato/gran-book/api
     volumes:
-      - ./api/service:/go/src/github.com/calmato/gran-book/api/service:cached
+      - ./api:/go/src/github.com/calmato/gran-book/api:cached
       - ./tmp/data/go/pkg/mod:/go/pkg/mod:delegated
       - ./tmp/logs/user_api:/var/log/api:delegated
     environment:
@@ -117,11 +117,11 @@ services:
   book_api:
     container_name: gran_book_book_api
     build:
-      context: ./infra/docker/api/service/book
+      context: ./infra/docker/api/book
       dockerfile: Dockerfile
-    working_dir: /go/src/github.com/calmato/gran-book/api/service
+    working_dir: /go/src/github.com/calmato/gran-book/api
     volumes:
-      - ./api/service:/go/src/github.com/calmato/gran-book/api/service:cached
+      - ./api:/go/src/github.com/calmato/gran-book/api:cached
       - ./tmp/data/go/pkg/mod:/go/pkg/mod:delegated
       - ./tmp/logs/book_api:/var/log/api:delegated
     environment:

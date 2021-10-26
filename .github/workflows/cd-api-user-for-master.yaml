@@ -3,10 +3,10 @@ on:
   push:
     paths:
       - '.github/workflows/cd-service-user-for-master.yaml'
-      - 'api/service/cmd/user/**'
-      - 'api/service/config/user/**'
-      - 'api/service/internal/user/**'
-      - 'infra/docker/api/service/user/**'
+      - 'api/cmd/user/**'
+      - 'api/config/user/**'
+      - 'api/internal/user/**'
+      - 'infra/docker/api/user/**'
       - 'infra/kubernetes/**'
     branches:
       - master
@@ -59,11 +59,11 @@ jobs:
         run: go version
 
       - name: Setup
-        working-directory: ./api/service
+        working-directory: ./api
         run: make setup
 
       - name: Protoc
-        working-directory: ./api/service
+        working-directory: ./api
         run: make protoc
 
       - name: Setup Cloud SDK
@@ -82,7 +82,7 @@ jobs:
 
       - name: Docker Build
         run: |
-          docker build -f ./infra/docker/api/service/user/Dockerfile -t ${GCR_HOSTNAME}/${GCP_PROJECT_ID}/${GCR_IMAGE_NAME} .
+          docker build -f ./infra/docker/api/user/Dockerfile -t ${GCR_HOSTNAME}/${GCP_PROJECT_ID}/${GCR_IMAGE_NAME} .
 
       - name: Attached Tag
         run: |
@@ -125,11 +125,11 @@ jobs:
   #       run: go version
 
   #     - name: Setup
-  #       working-directory: ./api/service
+  #       working-directory: ./api
   #       run: make setup
 
   #     - name: Protoc
-  #       working-directory: ./api/service
+  #       working-directory: ./api
   #       run: make protoc
 
   #     - name: Setup Cloud SDK

@@ -1,17 +1,17 @@
 # ビルド用コンテナ
-FROM golang:1.16.7-alpine AS builder
+FROM golang:1.17.2-alpine as builder
 
 ENV LANG C.UTF-8
 ENV TZ Asia/Tokyo
 
-WORKDIR /go/src/github.com/calmato/gran-book/api/gateway/admin
+WORKDIR /go/src/github.com/calmato/gran-book/api
 
 RUN apk add --update --no-cache \
-  git \
-  make
+      git \
+      make
 
-ADD ./api/gateway/admin ./
-RUN make build
+ADD ./api ./
+RUN make build SERVICE=gateway/admin
 
 # 実行用コンテナ
 FROM alpine
@@ -19,12 +19,12 @@ FROM alpine
 ENV LANG C.UTF-8
 ENV TZ Asia/Tokyo
 
-WORKDIR /var/gateway
+WORKDIR /var/api
 
-RUN apk add --update \
-  ca-certificates
+RUN apk add --update --no-cache \
+      ca-certificates
 
-COPY --from=builder /go/src/github.com/calmato/gran-book/api/gateway/admin/app ./app
+COPY --from=builder /go/src/github.com/calmato/gran-book/api/app ./app
 
 EXPOSE 8080
 CMD ["./app"]
