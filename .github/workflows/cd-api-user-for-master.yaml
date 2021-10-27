@@ -2,7 +2,7 @@ name: Backend(User Service) Deploy
 on:
   push:
     paths:
-      - '.github/workflows/cd-service-user-for-master.yaml'
+      - '.github/workflows/cd-api-user-for-master.yaml'
       - 'api/cmd/user/**'
       - 'api/config/user/**'
       - 'api/internal/user/**'

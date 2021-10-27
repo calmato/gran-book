@@ -2,7 +2,7 @@ name: Backend(Book Service) Deploy
 on:
   push:
     paths:
-      - '.github/workflows/cd-service-book-for-master.yaml'
+      - '.github/workflows/cd-api-book-for-master.yaml'
       - 'api/cmd/book/**'
       - 'api/config/book/**'
       - 'api/internal/book/**'
