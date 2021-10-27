@@ -31,7 +31,6 @@ env:
 jobs:
   deploy_image_for_stg:
     name: Deploy container image for staging
-    needs: setup_proto
     runs-on: ${{ matrix.os }}
     defaults:
       run:
