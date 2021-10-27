@@ -1,0 +1,109 @@
+name: Backend(Microservice) Build and Test
+on:
+  push:
+    paths:
+      - '.github/workflows/ci-service-for-all.yaml'
+      - 'api/**'
+      - 'infra/docker/service/**/*'
+      - 'infra/kubernetes/**'
+
+env:
+  TEST_DB_HOST: 127.0.0.1
+  TEST_DB_PORT: 3306
+  TEST_DB_USERNAME: root
+  TEST_DB_PASSWORD: 12345678
+
+jobs:
+  build_and_test:
+    name: Build and Test
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./api
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest] # exclude: macos-latest, windows-latest
+        golang: ['^1.17.2']
+        protobuf: ['3.x']
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Use Golang ${{ matrix.golang }}
+        uses: actions/setup-go@v2
+        with:
+          go-version: ${{ matrix.golang }}
+
+      # https://github.com/marketplace/actions/setup-protoc
+      - uses: arduino/setup-protoc@v1
+        with:
+          version: ${{ matrix.protobuf }}
+
+      - name: Check golang version
+        run: go version
+
+      - name: Setup
+        run: make setup
+
+      - name: Protoc
+        run: make protoc
+
+      - name: Start MySQL container
+        working-directory: .
+        run: docker-compose -f docker-compose.ci.yaml up --build --detach mysql
+
+      - name: Wait start MySQL
+        run: |
+          #!/bin/bash
+
+          until mysqladmin ping -h${TEST_DB_HOST} -P${TEST_DB_PORT} -u${TEST_DB_USERNAME} -p${TEST_DB_PASSWORD}; do
+            echo 'mysql is unavailable - sleeping'
+            sleep 3
+          done
+          echo 'mysql is up - executing command'
+
+      - name: Restore cache
+        uses: actions/cache@v2
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+      - name: Download modules
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: go mod download
+
+      - name: Fmt
+        run: make fmt
+
+      - name: Vet
+        run: make vet
+
+      - name: Lint
+        run: make lint
+
+      - name: Test
+        run: make test
+
+      - name: Build user service
+        run: make build SERVICE=user
+
+      - name: Build book service
+        run: make build SERVICE=book
+
+      - name: Build native gateway
+        run: make build SERVICE=gateway/native
+
+      - name: Build admin gateway
+        run: make build SERVICE=gateway/admin
+
+      - uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true
+          flags: service
+          verbose: true

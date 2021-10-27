@@ -1,0 +1,27 @@
+# not ignore file
+!.keep
+
+# bazel file
+bazel-bin
+bazel-out
+bazel-service
+bazel-testlogs
+
+# proto file
+*.pb.go
+*.pb.validate.go
+
+# coverage file
+coverage.txt
+
+# build file
+app
+
+# external library
+third_party
+
+# binary file
+bin
+
+# tmp file
+tmp

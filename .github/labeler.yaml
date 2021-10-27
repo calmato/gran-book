@@ -1,19 +1,21 @@
+frontend:
+- native/**/*
+- web/**/*
 frontend (native):
 - native/**/*
 frontend (admin):
 - web/admin/**/*
 
-gateway (native):
-- api/gateway/native/**/*
-gateway (admin):
-- api/gateway/admin/**/*
-
-backend (user api):
-- api/server/user/**/*
-backend (book api):
-- api/server/book/**/*
-backend (information api):
-- api/server/information/**/*
+backend:
+- api/**/*
+backend (gateway):
+- api/**/gateway/**/*
+backend (user service):
+- api/**/user/**/*
+backend (book service):
+- api/**/book/**/*
+backend (information service):
+- api/**/information/**/*
 
 database:
 - infra/mysql/**/*
@@ -38,3 +40,4 @@ documentation:
 - docs/**/*
 workflows:
 - .github/**/*
+

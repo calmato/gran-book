@@ -1,5 +1,0 @@
-syntax = "proto3";
-
-package chat;
-
-option go_package = "github.com/calmato/gran-book/proto/service/chat";

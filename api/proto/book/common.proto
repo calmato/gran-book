@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package book;
+
+option go_package = "github.com/calmato/gran-book/api/proto/book";
+
+message Empty {}
+
+// Search - 検索フィールド
+message Search {
+  string field = 1; // フィールド名
+  string value = 2; // 検索値
+}
+
+// Order - ソートフィールド
+message Order {
+  string field = 1; // フィールド名
+  OrderBy order_by = 2; // ソート順
+}
+
+// OrderBy - ソート順
+enum OrderBy {
+  ORDER_BY_ASC = 0; // 昇順
+  ORDER_BY_DESC = 1; // 降順
+}
+
+// BookshelfStatus - 読書ステータス
+enum BookshelfStatus {
+  BOOKSHELF_STATUS_NONE = 0; // 不明なステータス
+  BOOKSHELF_STATUS_READ = 1; // 読み終えた本
+  BOOKSHELF_STATUS_READING = 2; // 読んでいる本
+  BOOKSHELF_STATUS_STACKED = 3; // 積読本
+  BOOKSHELF_STATUS_WANT = 4; // 読みたい本
+  BOOKSHELF_STATUS_RELEASE = 5; // 手放したい本
+}

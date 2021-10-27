@@ -1,0 +1,7 @@
+protoc:
+  version: 3.18.1
+  includes:
+  - ./proto
+  - ./third_party
+lint:
+  group: uber2

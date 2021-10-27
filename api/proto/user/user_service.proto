@@ -1,0 +1,157 @@
+syntax = "proto3";
+
+package user;
+
+option go_package = "github.com/calmato/gran-book/api/proto/user";
+
+import "github.com/envoyproxy/protoc-gen-validate/validate/validate.proto";
+import "user/common.proto";
+import "user/user_entity.proto";
+
+service UserService {
+  rpc ListUser(ListUserRequest) returns (UserListResponse);
+  rpc ListFollow(ListFollowRequest) returns (FollowListResponse);
+  rpc ListFollower(ListFollowerRequest) returns (FollowerListResponse);
+  rpc MultiGetUser(MultiGetUserRequest) returns (UserListResponse);
+  rpc GetUser(GetUserRequest) returns (UserResponse);
+  rpc GetUserProfile(GetUserProfileRequest) returns (UserProfileResponse);
+  rpc Follow(FollowRequest) returns (UserProfileResponse);
+  rpc Unfollow(UnfollowRequest) returns (UserProfileResponse);
+}
+
+message ListUserRequest {
+  Search search = 1;
+  Order order = 2;
+  int64 limit = 3 [
+    (validate.rules).int64 = {
+      lte: 200
+    }
+  ];
+  int64 offset = 4 [
+    (validate.rules).int64 = {
+      gte: 0
+    }
+  ];
+}
+
+message ListFollowRequest {
+  string user_id = 1 [
+    (validate.rules).string = {
+      min_len: 1
+    }
+  ];
+  Order order = 2;
+  int64 limit = 3 [
+    (validate.rules).int64 = {
+      lte: 200
+    }
+  ];
+  int64 offset = 4 [
+    (validate.rules).int64 = {
+      gte: 0
+    }
+  ];
+}
+
+message ListFollowerRequest {
+  string user_id = 1 [
+    (validate.rules).string = {
+      min_len: 1
+    }
+  ];
+  Order order = 2;
+  int64 limit = 3 [
+    (validate.rules).int64 = {
+      lte: 200
+    }
+  ];
+  int64 offset = 4 [
+    (validate.rules).int64 = {
+      gte: 0
+    }
+  ];
+}
+
+message MultiGetUserRequest {
+  repeated string user_ids = 1 [
+    (validate.rules).repeated = {
+      max_items: 200
+      unique: true
+    }
+  ];
+}
+
+message GetUserRequest {
+  string user_id = 1 [
+    (validate.rules).string = {
+      min_len: 1
+    }
+  ];
+}
+
+message GetUserProfileRequest {
+  string user_id = 1 [
+    (validate.rules).string = {
+      min_len: 1
+    }
+  ];
+}
+
+message FollowRequest {
+  string user_id = 1 [
+    (validate.rules).string = {
+      min_len: 1
+    }
+  ];
+  string follower_id = 2 [
+    (validate.rules).string = {
+      min_len: 1
+    }
+  ];
+}
+
+message UnfollowRequest {
+  string user_id = 1 [
+    (validate.rules).string = {
+      min_len: 1
+    }
+  ];
+  string follower_id = 2 [
+    (validate.rules).string = {
+      min_len: 1
+    }
+  ];
+}
+
+message UserResponse {
+  User user = 1;
+}
+
+message UserListResponse {
+  repeated User users = 1;
+  int64 limit = 2;
+  int64 offset = 3;
+  int64 total = 4;
+}
+
+message UserMapResponse {
+  repeated User users = 1;
+}
+
+message UserProfileResponse {
+  UserProfile profile = 1;
+}
+
+message FollowListResponse {
+  repeated Follow follows = 1;
+  int64 limit = 2;
+  int64 offset = 3;
+  int64 total = 4;
+}
+
+message FollowerListResponse {
+  repeated Follower followers = 1;
+  int64 limit = 2;
+  int64 offset = 3;
+  int64 total = 4;
+}
