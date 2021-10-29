@@ -1,8 +1,8 @@
 package native
 
 import (
-	v1 "github.com/calmato/gran-book/api/internal/gateway/native/handler/v1"
-	v2 "github.com/calmato/gran-book/api/internal/gateway/native/handler/v2"
+	v1 "github.com/calmato/gran-book/api/internal/gateway/native/v1/handler"
+	v2 "github.com/calmato/gran-book/api/internal/gateway/native/v2/handler"
 	"github.com/calmato/gran-book/api/internal/gateway/util"
 	"github.com/calmato/gran-book/api/pkg/datetime"
 	"github.com/calmato/gran-book/api/pkg/firebase/authentication"
