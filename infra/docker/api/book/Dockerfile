@@ -11,7 +11,7 @@ RUN apk add --update --no-cache \
       make
 
 ADD ./api ./
-RUN make build SERVICE=gateway/native
+RUN make build SERVICE=book
 
 # 実行用コンテナ
 FROM alpine
