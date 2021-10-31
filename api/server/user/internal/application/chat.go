@@ -2,6 +2,7 @@ package application
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/calmato/gran-book/api/server/user/internal/domain/chat"
@@ -9,12 +10,11 @@ import (
 	"github.com/calmato/gran-book/api/server/user/pkg/array"
 	"github.com/calmato/gran-book/api/server/user/pkg/firebase/firestore"
 	"github.com/google/uuid"
-	"golang.org/x/xerrors"
 )
 
 // ChatApplication - Chatアプリケーションのインターフェース
 type ChatApplication interface {
-	ListRoom(ctx context.Context, userID string, p *firestore.Params) ([]*chat.Room, error)
+	ListRoom(ctx context.Context, userID string, p *firestore.Params) (chat.Rooms, error)
 	GetRoom(ctx context.Context, roomID string, userID string) (*chat.Room, error)
 	CreateRoom(ctx context.Context, cr *chat.Room) error
 	CreateMessage(ctx context.Context, cr *chat.Room, cm *chat.Message) error
@@ -27,6 +27,8 @@ type chatApplication struct {
 	chatUploader         chat.Uploader
 }
 
+var errNotJoinUserInRoom = errors.New("application: this user is not join the room")
+
 // NewChatApplication - ChatApplicationの生成
 func NewChatApplication(cdv chat.Validation, cr chat.Repository, cu chat.Uploader) ChatApplication {
 	return &chatApplication{
@@ -36,7 +38,7 @@ func NewChatApplication(cdv chat.Validation, cr chat.Repository, cu chat.Uploade
 	}
 }
 
-func (a *chatApplication) ListRoom(ctx context.Context, userID string, p *firestore.Params) ([]*chat.Room, error) {
+func (a *chatApplication) ListRoom(ctx context.Context, userID string, p *firestore.Params) (chat.Rooms, error) {
 	qs := []*firestore.Query{
 		{
 			Field:    "users",
@@ -56,8 +58,7 @@ func (a *chatApplication) GetRoom(ctx context.Context, roomID string, userID str
 
 	isJoin, _ := array.Contains(cr.UserIDs, userID)
 	if !isJoin {
-		err := xerrors.New("This user is not join the room")
-		return nil, exception.Forbidden.New(err)
+		return nil, exception.Forbidden.New(errNotJoinUserInRoom)
 	}
 
 	return cr, nil

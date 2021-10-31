@@ -8,5 +8,7 @@ export { default as EmailEdit } from './EmailEdit';
 export { default as ContactEdit } from './ContactEdit';
 export { default as ProfileEdit } from './ProfileEdit';
 export { default as OwnProfile } from './OwnProfile';
+export { default as OtherProfile } from './OtherProfile';
 export { default as SignInSelect } from './SignInSelect';
 export { default as Bookshelf } from './Bookshelf';
+export { default as OwnReviews } from './OwnReviews';

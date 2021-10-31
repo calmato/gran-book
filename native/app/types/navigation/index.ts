@@ -23,11 +23,13 @@ export type BookshelfTabStackParamList = {
   SearchResultBookShow: { book: ISearchResultItem };
   BookShow: { book: IBook };
   BookReadRegister: { book: IBook };
+  OtherProfile: { id: string };
 };
 
 export type UserInfoStackParamList = {
   MyPage: undefined;
   OwnProfile: undefined;
+  OwnReviews: undefined;
   AccountSetting: undefined;
   AccountEdit: undefined;
   ProfileEdit: undefined;

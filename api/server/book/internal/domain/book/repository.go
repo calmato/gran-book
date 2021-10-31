@@ -8,13 +8,13 @@ import (
 
 // Repository - Bookリポジトリ
 type Repository interface {
-	List(ctx context.Context, q *database.ListQuery) ([]*Book, error)
-	ListBookshelf(ctx context.Context, q *database.ListQuery) ([]*Bookshelf, error)
-	ListReview(ctx context.Context, q *database.ListQuery) ([]*Review, error)
+	List(ctx context.Context, q *database.ListQuery) (Books, error)
+	ListBookshelf(ctx context.Context, q *database.ListQuery) (Bookshelves, error)
+	ListReview(ctx context.Context, q *database.ListQuery) (Reviews, error)
 	Count(ctx context.Context, q *database.ListQuery) (int, error)
 	CountBookshelf(ctx context.Context, q *database.ListQuery) (int, error)
 	CountReview(ctx context.Context, q *database.ListQuery) (int, error)
-	MultiGet(ctx context.Context, bookIDs []int) ([]*Book, error)
+	MultiGet(ctx context.Context, bookIDs []int) (Books, error)
 	Get(ctx context.Context, bookID int) (*Book, error)
 	GetByIsbn(ctx context.Context, isbn string) (*Book, error)
 	GetBookIDByIsbn(ctx context.Context, isbn string) (int, error)
@@ -32,8 +32,8 @@ type Repository interface {
 	Update(ctx context.Context, b *Book) error
 	UpdateBookshelf(ctx context.Context, b *Bookshelf) error
 	UpdateReview(ctx context.Context, rv *Review) error
-	MultipleCreate(ctx context.Context, bs []*Book) error
-	MultipleUpdate(ctx context.Context, bs []*Book) error
+	MultipleCreate(ctx context.Context, bs Books) error
+	MultipleUpdate(ctx context.Context, bs Books) error
 	Delete(ctx context.Context, bookID int) error
 	DeleteBookshelf(ctx context.Context, bookshelfID int) error
 }

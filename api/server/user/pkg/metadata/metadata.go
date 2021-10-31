@@ -2,21 +2,24 @@ package metadata
 
 import (
 	"context"
+	"errors"
+	"fmt"
 
-	"golang.org/x/xerrors"
 	gmd "google.golang.org/grpc/metadata"
 )
+
+var errInvalidMetadata = errors.New("metadata: this metadata is invalid")
 
 // Get - メタデータの取得
 func Get(ctx context.Context, key string) (string, error) {
 	md, ok := gmd.FromIncomingContext(ctx)
 	if !ok {
-		return "", xerrors.New("Metadata connot be retrieved from context")
+		return "", fmt.Errorf("%w, connot be retrieved from context", errInvalidMetadata)
 	}
 
 	v := md.Get(key)
 	if len(v) == 0 {
-		return "", xerrors.New("Metadata length is 0")
+		return "", fmt.Errorf("%w, length is 0", errInvalidMetadata)
 	}
 
 	return v[0], nil

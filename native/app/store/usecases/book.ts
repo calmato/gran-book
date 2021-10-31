@@ -9,7 +9,11 @@ import {
 } from '~/types/api/bookshelf_apiv1_response_pb';
 import { BookReviewListV1Response } from '~/types/api/review_apiv1_response_pb';
 import { ImpressionForm } from '~/types/forms';
-import { IErrorResponse, ISearchResultItem } from '~/types/response/external/rakuten-books';
+import {
+  IErrorResponse,
+  IReviewListResponse,
+  ISearchResultItem,
+} from '~/types/response/external/rakuten-books';
 
 /**
  * バックエンドAPIにアクセスし書籍登録を行う関数
@@ -200,5 +204,16 @@ async function registerReleaseBookAsync(userId: string, bookId: number) {
     })
     .catch((err) => {
       console.log('[error]', err);
+    });
+}
+
+export async function getOwnReviews(userId: string) {
+  return internal
+    .get(`/v1/users/${userId}/reviews`)
+    .then((res: AxiosResponse<IReviewListResponse>) => {
+      return res;
+    })
+    .catch((err: AxiosResponse<IErrorResponse>) => {
+      return Promise.reject(err);
     });
 }

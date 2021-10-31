@@ -7,7 +7,6 @@ import (
 	"github.com/calmato/gran-book/api/server/user/internal/domain/user"
 	"github.com/calmato/gran-book/api/server/user/internal/interface/validation"
 	"github.com/calmato/gran-book/api/server/user/pkg/database"
-	"github.com/calmato/gran-book/api/server/user/pkg/datetime"
 	pb "github.com/calmato/gran-book/api/server/user/proto"
 )
 
@@ -116,7 +115,7 @@ func (s *userServer) ListFollower(ctx context.Context, req *pb.ListFollowerReque
 }
 
 // MultiGetUser - ユーザー一覧取得 (ID指定)
-func (s *userServer) MultiGetUser(ctx context.Context, req *pb.MultiGetUserRequest) (*pb.UserMapResponse, error) {
+func (s *userServer) MultiGetUser(ctx context.Context, req *pb.MultiGetUserRequest) (*pb.UserListResponse, error) {
 	err := s.userRequestValidation.MultiGetUser(req)
 	if err != nil {
 		return nil, errorHandling(err)
@@ -127,7 +126,7 @@ func (s *userServer) MultiGetUser(ctx context.Context, req *pb.MultiGetUserReque
 		return nil, errorHandling(err)
 	}
 
-	res := getUserMapResponse(us)
+	res := getUserListResponse(us, len(req.GetUserIds()), 0, len(us))
 	return res, nil
 }
 
@@ -152,7 +151,7 @@ func (s *userServer) GetUserProfile(
 	ctx context.Context, req *pb.GetUserProfileRequest,
 ) (*pb.UserProfileResponse, error) {
 	// TODO: remove
-	u, err := s.userApplication.Authentication(ctx)
+	cu, err := s.userApplication.Authentication(ctx)
 	if err != nil {
 		return nil, errorHandling(err)
 	}
@@ -162,17 +161,12 @@ func (s *userServer) GetUserProfile(
 		return nil, errorHandling(err)
 	}
 
-	u,
-		isFollow,
-		isFollower,
-		followCount,
-		followerCount,
-		err := s.userApplication.GetUserProfile(ctx, u.ID, req.GetUserId())
+	u, err := s.userApplication.GetUserProfile(ctx, cu.ID, req.GetUserId())
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
-	res := getUserProfileResponse(u, isFollow, isFollower, followCount, followerCount)
+	res := getUserProfileResponse(u)
 	return res, nil
 }
 
@@ -183,17 +177,12 @@ func (s *userServer) Follow(ctx context.Context, req *pb.FollowRequest) (*pb.Use
 		return nil, errorHandling(err)
 	}
 
-	u,
-		isFollow,
-		isFollower,
-		followCount,
-		followerCount,
-		err := s.userApplication.Follow(ctx, req.GetUserId(), req.GetFollowerId())
+	u, err := s.userApplication.Follow(ctx, req.GetUserId(), req.GetFollowerId())
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
-	res := getUserProfileResponse(u, isFollow, isFollower, followCount, followerCount)
+	res := getUserProfileResponse(u)
 	return res, nil
 }
 
@@ -204,153 +193,50 @@ func (s *userServer) Unfollow(ctx context.Context, req *pb.UnfollowRequest) (*pb
 		return nil, errorHandling(err)
 	}
 
-	u,
-		isFollow,
-		isFollower,
-		followCount,
-		followerCount,
-		err := s.userApplication.Unfollow(ctx, req.GetUserId(), req.GetFollowerId())
+	u, err := s.userApplication.Unfollow(ctx, req.GetUserId(), req.GetFollowerId())
 	if err != nil {
 		return nil, errorHandling(err)
 	}
 
-	res := getUserProfileResponse(u, isFollow, isFollower, followCount, followerCount)
+	res := getUserProfileResponse(u)
 	return res, nil
 }
 
-func getUserListResponse(us []*user.User, limit, offset, total int) *pb.UserListResponse {
-	users := make([]*pb.UserListResponse_User, len(us))
-	for i, u := range us {
-		user := &pb.UserListResponse_User{
-			Id:               u.ID,
-			Username:         u.Username,
-			Gender:           pb.Gender(u.Gender),
-			Email:            u.Email,
-			PhoneNumber:      u.PhoneNumber,
-			Role:             pb.Role(u.Role),
-			ThumbnailUrl:     u.ThumbnailURL,
-			SelfIntroduction: u.SelfIntroduction,
-			LastName:         u.LastName,
-			FirstName:        u.FirstName,
-			LastNameKana:     u.LastNameKana,
-			FirstNameKana:    u.FirstNameKana,
-			CreatedAt:        datetime.TimeToString(u.CreatedAt),
-			UpdatedAt:        datetime.TimeToString(u.UpdatedAt),
-		}
-
-		users[i] = user
-	}
-
+func getUserListResponse(us user.Users, limit, offset, total int) *pb.UserListResponse {
 	return &pb.UserListResponse{
-		Users:  users,
+		Users:  us.Proto(),
 		Limit:  int64(limit),
 		Offset: int64(offset),
 		Total:  int64(total),
 	}
 }
 
-func getFollowListResponse(fs []*user.Follow, limit, offset, total int) *pb.FollowListResponse {
-	follows := make([]*pb.FollowListResponse_Follow, len(fs))
-	for i, f := range fs {
-		follow := &pb.FollowListResponse_Follow{
-			Id:               f.FollowID,
-			Username:         f.Username,
-			ThumbnailUrl:     f.ThumbnailURL,
-			SelfIntroduction: f.SelfIntroduction,
-			IsFollow:         f.IsFollowing,
-		}
-
-		follows[i] = follow
-	}
-
+func getFollowListResponse(fs user.Follows, limit, offset, total int) *pb.FollowListResponse {
 	return &pb.FollowListResponse{
-		Follows: follows,
+		Follows: fs.Proto(),
 		Limit:   int64(limit),
 		Offset:  int64(offset),
 		Total:   int64(total),
 	}
 }
 
-func getFollowerListResponse(fs []*user.Follower, limit, offset, total int) *pb.FollowerListResponse {
-	followers := make([]*pb.FollowerListResponse_Follower, len(fs))
-	for i, f := range fs {
-		follower := &pb.FollowerListResponse_Follower{
-			Id:               f.FollowerID,
-			Username:         f.Username,
-			ThumbnailUrl:     f.ThumbnailURL,
-			SelfIntroduction: f.SelfIntroduction,
-			IsFollow:         f.IsFollowing,
-		}
-
-		followers[i] = follower
-	}
-
+func getFollowerListResponse(fs user.Followers, limit, offset, total int) *pb.FollowerListResponse {
 	return &pb.FollowerListResponse{
-		Followers: followers,
+		Followers: fs.Proto(),
 		Limit:     int64(limit),
 		Offset:    int64(offset),
 		Total:     int64(total),
 	}
 }
 
-func getUserMapResponse(us []*user.User) *pb.UserMapResponse {
-	users := map[string]*pb.UserMapResponse_User{}
-	for _, u := range us {
-		user := &pb.UserMapResponse_User{
-			Id:               u.ID,
-			Username:         u.Username,
-			Gender:           pb.Gender(u.Gender),
-			Email:            u.Email,
-			PhoneNumber:      u.PhoneNumber,
-			Role:             pb.Role(u.Role),
-			ThumbnailUrl:     u.ThumbnailURL,
-			SelfIntroduction: u.SelfIntroduction,
-			LastName:         u.LastName,
-			FirstName:        u.FirstName,
-			LastNameKana:     u.LastNameKana,
-			FirstNameKana:    u.FirstNameKana,
-			CreatedAt:        datetime.TimeToString(u.CreatedAt),
-			UpdatedAt:        datetime.TimeToString(u.UpdatedAt),
-		}
-
-		users[user.Id] = user
-	}
-
-	return &pb.UserMapResponse{
-		Users: users,
-	}
-}
-
 func getUserResponse(u *user.User) *pb.UserResponse {
 	return &pb.UserResponse{
-		Id:               u.ID,
-		Username:         u.Username,
-		Gender:           pb.Gender(u.Gender),
-		Email:            u.Email,
-		PhoneNumber:      u.PhoneNumber,
-		Role:             pb.Role(u.Role),
-		ThumbnailUrl:     u.ThumbnailURL,
-		SelfIntroduction: u.SelfIntroduction,
-		LastName:         u.LastName,
-		FirstName:        u.FirstName,
-		LastNameKana:     u.LastNameKana,
-		FirstNameKana:    u.FirstNameKana,
-		CreatedAt:        datetime.TimeToString(u.CreatedAt),
-		UpdatedAt:        datetime.TimeToString(u.UpdatedAt),
+		User: u.Proto(),
 	}
 }
 
-func getUserProfileResponse(
-	u *user.User, isFollow, isFollower bool, followCount, followerCount int,
-) *pb.UserProfileResponse {
+func getUserProfileResponse(u *user.User) *pb.UserProfileResponse {
 	return &pb.UserProfileResponse{
-		Id:               u.ID,
-		Username:         u.Username,
-		ThumbnailUrl:     u.ThumbnailURL,
-		SelfIntroduction: u.SelfIntroduction,
-		IsFollow:         isFollow,
-		IsFollower:       isFollower,
-		FollowCount:      int64(followCount),
-		FollowerCount:    int64(followerCount),
+		Profile: u.Profile(),
 	}
 }

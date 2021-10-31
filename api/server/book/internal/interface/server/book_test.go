@@ -6,7 +6,6 @@ import (
 
 	"github.com/calmato/gran-book/api/server/book/internal/domain/book"
 	"github.com/calmato/gran-book/api/server/book/internal/domain/exception"
-	"github.com/calmato/gran-book/api/server/book/lib/datetime"
 	"github.com/calmato/gran-book/api/server/book/pkg/test"
 	pb "github.com/calmato/gran-book/api/server/book/proto"
 	"github.com/golang/mock/gomock"
@@ -343,7 +342,7 @@ func TestBookServer_MultiGetBooks(t *testing.T) {
 			},
 			want: &test.TestResponse{
 				Code:    codes.OK,
-				Message: getBookMapResponse([]*book.Book{book1, book2}),
+				Message: getBookListResponse([]*book.Book{book1, book2}),
 			},
 		},
 		{
@@ -820,26 +819,28 @@ func TestBookServer_CreateBook(t *testing.T) {
 			want: &test.TestResponse{
 				Code: codes.OK,
 				Message: &pb.BookResponse{
-					Title:          "小説　ちはやふる　上の句",
-					TitleKana:      "ショウセツ チハヤフルカミノク",
-					Description:    "綾瀬千早は高校入学と同時に、競技かるた部を作ろうと奔走する。幼馴染の太一と仲間を集め、夏の全国大会に出場するためだ。強くなって、新と再会したい。幼い頃かるたを取り合った、新に寄せる千早の秘めた想いに気づきながらも、太一は千早を守り立てる。それぞれの青春を懸けた、一途な情熱の物語が幕開ける。",
-					Isbn:           "9784062938426",
-					Publisher:      "講談社",
-					PublishedOn:    "2018-01-16",
-					ThumbnailUrl:   "https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/8426/9784062938426.jpg?_ex=120x120",
-					RakutenUrl:     "https://books.rakuten.co.jp/rb/15271426/",
-					RakutenSize:    "コミック",
-					RakutenGenreId: "001004008001/001004008003/001019001",
-					CreatedAt:      "",
-					UpdatedAt:      "",
-					Authors: []*pb.BookResponse_Author{
-						{
-							Name:     "有沢 ゆう希",
-							NameKana: "アリサワ ユウキ",
-						},
-						{
-							Name:     "末次 由紀",
-							NameKana: "スエツグ ユキ",
+					Book: &pb.Book{
+						Title:          "小説　ちはやふる　上の句",
+						TitleKana:      "ショウセツ チハヤフルカミノク",
+						Description:    "綾瀬千早は高校入学と同時に、競技かるた部を作ろうと奔走する。幼馴染の太一と仲間を集め、夏の全国大会に出場するためだ。強くなって、新と再会したい。幼い頃かるたを取り合った、新に寄せる千早の秘めた想いに気づきながらも、太一は千早を守り立てる。それぞれの青春を懸けた、一途な情熱の物語が幕開ける。",
+						Isbn:           "9784062938426",
+						Publisher:      "講談社",
+						PublishedOn:    "2018-01-16",
+						ThumbnailUrl:   "https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/8426/9784062938426.jpg?_ex=120x120",
+						RakutenUrl:     "https://books.rakuten.co.jp/rb/15271426/",
+						RakutenSize:    "コミック",
+						RakutenGenreId: "001004008001/001004008003/001019001",
+						CreatedAt:      "",
+						UpdatedAt:      "",
+						Authors: []*pb.Author{
+							{
+								Name:     "有沢 ゆう希",
+								NameKana: "アリサワ ユウキ",
+							},
+							{
+								Name:     "末次 由紀",
+								NameKana: "スエツグ ユキ",
+							},
 						},
 					},
 				},
@@ -1137,40 +1138,13 @@ func TestBookServer_ReadBookshelf(t *testing.T) {
 			want: &test.TestResponse{
 				Code: codes.OK,
 				Message: &pb.BookshelfResponse{
-					BookId:    1,
-					UserId:    "user01",
-					Status:    int32(book.ReadStatus),
-					ReadOn:    "2021-08-01",
-					CreatedAt: "",
-					UpdatedAt: "",
-					Book: &pb.BookshelfResponse_Book{
-						Id:             1,
-						Title:          "小説　ちはやふる　上の句",
-						TitleKana:      "ショウセツ チハヤフルカミノク",
-						Description:    "綾瀬千早は高校入学と同時に、競技かるた部を作ろうと奔走する。幼馴染の太一と仲間を集め、夏の全国大会に出場するためだ。強くなって、新と再会したい。幼い頃かるたを取り合った、新に寄せる千早の秘めた想いに気づきながらも、太一は千早を守り立てる。それぞれの青春を懸けた、一途な情熱の物語が幕開ける。",
-						Isbn:           "9784062938426",
-						Publisher:      "講談社",
-						PublishedOn:    "2018-01-16",
-						ThumbnailUrl:   "https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/8426/9784062938426.jpg?_ex=120x120",
-						RakutenUrl:     "https://books.rakuten.co.jp/rb/15271426/",
-						RakutenSize:    "コミック",
-						RakutenGenreId: "001004008001/001004008003/001019001",
-						CreatedAt:      datetime.TimeToString(book1.CreatedAt),
-						UpdatedAt:      datetime.TimeToString(book1.UpdatedAt),
-						Authors: []*pb.BookshelfResponse_Author{
-							{
-								Name:     "有沢 ゆう希",
-								NameKana: "アリサワ ユウキ",
-							},
-							{
-								Name:     "末次 由紀",
-								NameKana: "スエツグ ユキ",
-							},
-						},
-					},
-					Review: &pb.BookshelfResponse_Review{
-						Score:      0,
-						Impression: "テスト感想です。",
+					Bookshelf: &pb.Bookshelf{
+						BookId:    1,
+						UserId:    "user01",
+						Status:    pb.BookshelfStatus_BOOKSHELF_STATUS_READ,
+						ReadOn:    "2021-08-01",
+						CreatedAt: "",
+						UpdatedAt: "",
 					},
 				},
 			},
@@ -1303,38 +1277,14 @@ func TestBookServer_ReadingBookshelf(t *testing.T) {
 			want: &test.TestResponse{
 				Code: codes.OK,
 				Message: &pb.BookshelfResponse{
-					BookId:    1,
-					UserId:    "user01",
-					Status:    int32(book.ReadingStatus),
-					ReadOn:    "",
-					CreatedAt: "",
-					UpdatedAt: "",
-					Book: &pb.BookshelfResponse_Book{
-						Id:             1,
-						Title:          "小説　ちはやふる　上の句",
-						TitleKana:      "ショウセツ チハヤフルカミノク",
-						Description:    "綾瀬千早は高校入学と同時に、競技かるた部を作ろうと奔走する。幼馴染の太一と仲間を集め、夏の全国大会に出場するためだ。強くなって、新と再会したい。幼い頃かるたを取り合った、新に寄せる千早の秘めた想いに気づきながらも、太一は千早を守り立てる。それぞれの青春を懸けた、一途な情熱の物語が幕開ける。",
-						Isbn:           "9784062938426",
-						Publisher:      "講談社",
-						PublishedOn:    "2018-01-16",
-						ThumbnailUrl:   "https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/8426/9784062938426.jpg?_ex=120x120",
-						RakutenUrl:     "https://books.rakuten.co.jp/rb/15271426/",
-						RakutenSize:    "コミック",
-						RakutenGenreId: "001004008001/001004008003/001019001",
-						CreatedAt:      datetime.TimeToString(book1.CreatedAt),
-						UpdatedAt:      datetime.TimeToString(book1.UpdatedAt),
-						Authors: []*pb.BookshelfResponse_Author{
-							{
-								Name:     "有沢 ゆう希",
-								NameKana: "アリサワ ユウキ",
-							},
-							{
-								Name:     "末次 由紀",
-								NameKana: "スエツグ ユキ",
-							},
-						},
+					Bookshelf: &pb.Bookshelf{
+						BookId:    1,
+						UserId:    "user01",
+						Status:    pb.BookshelfStatus_BOOKSHELF_STATUS_READING,
+						ReadOn:    "",
+						CreatedAt: "",
+						UpdatedAt: "",
 					},
-					Review: &pb.BookshelfResponse_Review{},
 				},
 			},
 		},
@@ -1464,38 +1414,14 @@ func TestBookServer_StackedBookshelf(t *testing.T) {
 			want: &test.TestResponse{
 				Code: codes.OK,
 				Message: &pb.BookshelfResponse{
-					BookId:    1,
-					UserId:    "user01",
-					Status:    int32(book.StackedStatus),
-					ReadOn:    "",
-					CreatedAt: "",
-					UpdatedAt: "",
-					Book: &pb.BookshelfResponse_Book{
-						Id:             1,
-						Title:          "小説　ちはやふる　上の句",
-						TitleKana:      "ショウセツ チハヤフルカミノク",
-						Description:    "綾瀬千早は高校入学と同時に、競技かるた部を作ろうと奔走する。幼馴染の太一と仲間を集め、夏の全国大会に出場するためだ。強くなって、新と再会したい。幼い頃かるたを取り合った、新に寄せる千早の秘めた想いに気づきながらも、太一は千早を守り立てる。それぞれの青春を懸けた、一途な情熱の物語が幕開ける。",
-						Isbn:           "9784062938426",
-						Publisher:      "講談社",
-						PublishedOn:    "2018-01-16",
-						ThumbnailUrl:   "https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/8426/9784062938426.jpg?_ex=120x120",
-						RakutenUrl:     "https://books.rakuten.co.jp/rb/15271426/",
-						RakutenSize:    "コミック",
-						RakutenGenreId: "001004008001/001004008003/001019001",
-						CreatedAt:      datetime.TimeToString(book1.CreatedAt),
-						UpdatedAt:      datetime.TimeToString(book1.UpdatedAt),
-						Authors: []*pb.BookshelfResponse_Author{
-							{
-								Name:     "有沢 ゆう希",
-								NameKana: "アリサワ ユウキ",
-							},
-							{
-								Name:     "末次 由紀",
-								NameKana: "スエツグ ユキ",
-							},
-						},
+					Bookshelf: &pb.Bookshelf{
+						BookId:    1,
+						UserId:    "user01",
+						Status:    pb.BookshelfStatus_BOOKSHELF_STATUS_STACKED,
+						ReadOn:    "",
+						CreatedAt: "",
+						UpdatedAt: "",
 					},
-					Review: &pb.BookshelfResponse_Review{},
 				},
 			},
 		},
@@ -1625,38 +1551,14 @@ func TestBookServer_ReleaseBookshelf(t *testing.T) {
 			want: &test.TestResponse{
 				Code: codes.OK,
 				Message: &pb.BookshelfResponse{
-					BookId:    1,
-					UserId:    "user01",
-					Status:    int32(book.ReleaseStatus),
-					ReadOn:    "",
-					CreatedAt: "",
-					UpdatedAt: "",
-					Book: &pb.BookshelfResponse_Book{
-						Id:             1,
-						Title:          "小説　ちはやふる　上の句",
-						TitleKana:      "ショウセツ チハヤフルカミノク",
-						Description:    "綾瀬千早は高校入学と同時に、競技かるた部を作ろうと奔走する。幼馴染の太一と仲間を集め、夏の全国大会に出場するためだ。強くなって、新と再会したい。幼い頃かるたを取り合った、新に寄せる千早の秘めた想いに気づきながらも、太一は千早を守り立てる。それぞれの青春を懸けた、一途な情熱の物語が幕開ける。",
-						Isbn:           "9784062938426",
-						Publisher:      "講談社",
-						PublishedOn:    "2018-01-16",
-						ThumbnailUrl:   "https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/8426/9784062938426.jpg?_ex=120x120",
-						RakutenUrl:     "https://books.rakuten.co.jp/rb/15271426/",
-						RakutenSize:    "コミック",
-						RakutenGenreId: "001004008001/001004008003/001019001",
-						CreatedAt:      datetime.TimeToString(test.TimeMock),
-						UpdatedAt:      datetime.TimeToString(test.TimeMock),
-						Authors: []*pb.BookshelfResponse_Author{
-							{
-								Name:     "有沢 ゆう希",
-								NameKana: "アリサワ ユウキ",
-							},
-							{
-								Name:     "末次 由紀",
-								NameKana: "スエツグ ユキ",
-							},
-						},
+					Bookshelf: &pb.Bookshelf{
+						BookId:    1,
+						UserId:    "user01",
+						Status:    pb.BookshelfStatus_BOOKSHELF_STATUS_RELEASE,
+						ReadOn:    "",
+						CreatedAt: "",
+						UpdatedAt: "",
 					},
-					Review: &pb.BookshelfResponse_Review{},
 				},
 			},
 		},
@@ -1786,38 +1688,14 @@ func TestBookServer_WantBookshelf(t *testing.T) {
 			want: &test.TestResponse{
 				Code: codes.OK,
 				Message: &pb.BookshelfResponse{
-					BookId:    1,
-					UserId:    "user01",
-					Status:    int32(book.WantStatus),
-					ReadOn:    "",
-					CreatedAt: "",
-					UpdatedAt: "",
-					Book: &pb.BookshelfResponse_Book{
-						Id:             1,
-						Title:          "小説　ちはやふる　上の句",
-						TitleKana:      "ショウセツ チハヤフルカミノク",
-						Description:    "綾瀬千早は高校入学と同時に、競技かるた部を作ろうと奔走する。幼馴染の太一と仲間を集め、夏の全国大会に出場するためだ。強くなって、新と再会したい。幼い頃かるたを取り合った、新に寄せる千早の秘めた想いに気づきながらも、太一は千早を守り立てる。それぞれの青春を懸けた、一途な情熱の物語が幕開ける。",
-						Isbn:           "9784062938426",
-						Publisher:      "講談社",
-						PublishedOn:    "2018-01-16",
-						ThumbnailUrl:   "https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/8426/9784062938426.jpg?_ex=120x120",
-						RakutenUrl:     "https://books.rakuten.co.jp/rb/15271426/",
-						RakutenSize:    "コミック",
-						RakutenGenreId: "001004008001/001004008003/001019001",
-						CreatedAt:      datetime.TimeToString(test.TimeMock),
-						UpdatedAt:      datetime.TimeToString(test.TimeMock),
-						Authors: []*pb.BookshelfResponse_Author{
-							{
-								Name:     "有沢 ゆう希",
-								NameKana: "アリサワ ユウキ",
-							},
-							{
-								Name:     "末次 由紀",
-								NameKana: "スエツグ ユキ",
-							},
-						},
+					Bookshelf: &pb.Bookshelf{
+						BookId:    1,
+						UserId:    "user01",
+						Status:    pb.BookshelfStatus_BOOKSHELF_STATUS_WANT,
+						ReadOn:    "",
+						CreatedAt: "",
+						UpdatedAt: "",
 					},
-					Review: &pb.BookshelfResponse_Review{},
 				},
 			},
 		},

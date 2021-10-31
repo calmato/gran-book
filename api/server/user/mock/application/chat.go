@@ -80,10 +80,10 @@ func (mr *MockChatApplicationMockRecorder) GetRoom(ctx, roomID, userID interface
 }
 
 // ListRoom mocks base method.
-func (m *MockChatApplication) ListRoom(ctx context.Context, userID string, p *firestore.Params) ([]*chat.Room, error) {
+func (m *MockChatApplication) ListRoom(ctx context.Context, userID string, p *firestore.Params) (chat.Rooms, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListRoom", ctx, userID, p)
-	ret0, _ := ret[0].([]*chat.Room)
+	ret0, _ := ret[0].(chat.Rooms)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

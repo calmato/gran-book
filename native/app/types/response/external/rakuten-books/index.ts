@@ -47,3 +47,22 @@ export interface IErrorResponse {
   error: string;
   error_description: string;
 }
+
+export interface IReviewListResponse {
+  total: number;
+  offset: number;
+  limit: number;
+  reviews: IReview[];
+}
+
+export interface IReview {
+  id: number;
+  impression: string;
+  book: {
+    id: number;
+    title: string;
+    thumbnailUrl: string;
+  };
+  createdAt: string;
+  updatedAt: string;
+}

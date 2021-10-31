@@ -1,9 +1,8 @@
 package array
 
 import (
+	"fmt"
 	"reflect"
-
-	"golang.org/x/xerrors"
 )
 
 // Contains - 配列に対象の要素が含まれるか
@@ -28,8 +27,7 @@ func Contains(items interface{}, target interface{}) (bool, error) {
 			}
 		}
 	default:
-		err := xerrors.Errorf("%v is an unsupported type.", reflect.TypeOf(items))
-		return false, err
+		return false, fmt.Errorf("array: %v is an unsupported type", reflect.TypeOf(items))
 	}
 
 	return false, nil

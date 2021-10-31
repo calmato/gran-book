@@ -11,6 +11,7 @@ require (
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/prometheus/client_golang v1.11.0
 	github.com/rs/cors v1.8.0
+	github.com/stretchr/testify v1.7.0
 	go.uber.org/zap v1.19.0
 	google.golang.org/api v0.54.0
 	google.golang.org/grpc v1.40.0

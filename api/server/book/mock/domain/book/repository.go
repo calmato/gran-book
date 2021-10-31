@@ -316,10 +316,10 @@ func (mr *MockRepositoryMockRecorder) GetReviewIDByUserIDAndBookID(ctx, userID, 
 }
 
 // List mocks base method.
-func (m *MockRepository) List(ctx context.Context, q *database.ListQuery) ([]*book.Book, error) {
+func (m *MockRepository) List(ctx context.Context, q *database.ListQuery) (book.Books, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "List", ctx, q)
-	ret0, _ := ret[0].([]*book.Book)
+	ret0, _ := ret[0].(book.Books)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -331,10 +331,10 @@ func (mr *MockRepositoryMockRecorder) List(ctx, q interface{}) *gomock.Call {
 }
 
 // ListBookshelf mocks base method.
-func (m *MockRepository) ListBookshelf(ctx context.Context, q *database.ListQuery) ([]*book.Bookshelf, error) {
+func (m *MockRepository) ListBookshelf(ctx context.Context, q *database.ListQuery) (book.Bookshelves, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListBookshelf", ctx, q)
-	ret0, _ := ret[0].([]*book.Bookshelf)
+	ret0, _ := ret[0].(book.Bookshelves)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -346,10 +346,10 @@ func (mr *MockRepositoryMockRecorder) ListBookshelf(ctx, q interface{}) *gomock.
 }
 
 // ListReview mocks base method.
-func (m *MockRepository) ListReview(ctx context.Context, q *database.ListQuery) ([]*book.Review, error) {
+func (m *MockRepository) ListReview(ctx context.Context, q *database.ListQuery) (book.Reviews, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListReview", ctx, q)
-	ret0, _ := ret[0].([]*book.Review)
+	ret0, _ := ret[0].(book.Reviews)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -361,10 +361,10 @@ func (mr *MockRepositoryMockRecorder) ListReview(ctx, q interface{}) *gomock.Cal
 }
 
 // MultiGet mocks base method.
-func (m *MockRepository) MultiGet(ctx context.Context, bookIDs []int) ([]*book.Book, error) {
+func (m *MockRepository) MultiGet(ctx context.Context, bookIDs []int) (book.Books, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "MultiGet", ctx, bookIDs)
-	ret0, _ := ret[0].([]*book.Book)
+	ret0, _ := ret[0].(book.Books)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -376,7 +376,7 @@ func (mr *MockRepositoryMockRecorder) MultiGet(ctx, bookIDs interface{}) *gomock
 }
 
 // MultipleCreate mocks base method.
-func (m *MockRepository) MultipleCreate(ctx context.Context, bs []*book.Book) error {
+func (m *MockRepository) MultipleCreate(ctx context.Context, bs book.Books) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "MultipleCreate", ctx, bs)
 	ret0, _ := ret[0].(error)
@@ -390,7 +390,7 @@ func (mr *MockRepositoryMockRecorder) MultipleCreate(ctx, bs interface{}) *gomoc
 }
 
 // MultipleUpdate mocks base method.
-func (m *MockRepository) MultipleUpdate(ctx context.Context, bs []*book.Book) error {
+func (m *MockRepository) MultipleUpdate(ctx context.Context, bs book.Books) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "MultipleUpdate", ctx, bs)
 	ret0, _ := ret[0].(error)

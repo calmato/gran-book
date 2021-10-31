@@ -21,7 +21,7 @@ func NewChatRepository(fs *firestore.Firestore) chat.Repository {
 
 func (r *chatRepository) ListRoom(
 	ctx context.Context, p *firestore.Params, qs []*firestore.Query,
-) ([]*chat.Room, error) {
+) (chat.Rooms, error) {
 	c := getChatRoomCollection()
 
 	docs, err := r.firestore.List(ctx, c, p, qs)
@@ -29,7 +29,7 @@ func (r *chatRepository) ListRoom(
 		return nil, exception.ErrorInDatastore.New(err)
 	}
 
-	crs := make([]*chat.Room, len(docs))
+	crs := make(chat.Rooms, len(docs))
 	for i, doc := range docs {
 		cr := &chat.Room{}
 
