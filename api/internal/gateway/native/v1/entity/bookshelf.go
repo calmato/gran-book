@@ -12,6 +12,10 @@ type Bookshelf struct {
 }
 
 func NewBookshelf(bs *entity.Bookshelf) *Bookshelf {
+	if bs == nil {
+		return nil
+	}
+
 	return &Bookshelf{
 		ID:         bs.Id,
 		Status:     bs.Status().Name(),

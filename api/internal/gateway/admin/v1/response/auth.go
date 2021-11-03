@@ -1,6 +1,6 @@
 package response
 
-import "github.com/calmato/gran-book/api/internal/gateway/admin/entity"
+import "github.com/calmato/gran-book/api/internal/gateway/admin/v1/entity"
 
 // 認証情報
 type AuthResponse struct {

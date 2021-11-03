@@ -7,12 +7,12 @@ import (
 	"strings"
 
 	gentity "github.com/calmato/gran-book/api/internal/gateway/entity"
+	"github.com/calmato/gran-book/api/internal/gateway/native/v1/entity"
 	request "github.com/calmato/gran-book/api/internal/gateway/native/v1/request"
 	response "github.com/calmato/gran-book/api/internal/gateway/native/v1/response"
 	"github.com/calmato/gran-book/api/internal/gateway/util"
 	"github.com/calmato/gran-book/api/pkg/exception"
 	"github.com/calmato/gran-book/api/proto/book"
-	"github.com/calmato/gran-book/api/proto/user"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/sync/errgroup"
 )
@@ -20,50 +20,33 @@ import (
 // getBook - 書籍情報取得 (ISBN指定) ※廃止予定
 func (h *apiV1Handler) getBook(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
+
 	isbn := ctx.Param("bookID")
 
 	eg, ectx := errgroup.WithContext(c)
-
 	var a *gentity.Auth
-	eg.Go(func() error {
-		out, err := h.Auth.GetAuth(ectx, &user.Empty{})
-		if err != nil {
-			return err
-		}
-		a = gentity.NewAuth(out.Auth)
-		return nil
+	eg.Go(func() (err error) {
+		a, err = h.authGetAuth(ectx)
+		return
 	})
-
 	var b *gentity.Book
-	eg.Go(func() error {
-		in := &book.GetBookByIsbnRequest{
-			Isbn: isbn,
-		}
-		out, err := h.Book.GetBookByIsbn(ectx, in)
-		if err != nil {
-			return err
-		}
-		b = gentity.NewBook(out.Book)
-		return nil
+	eg.Go(func() (err error) {
+		b, err = h.bookGetBookByIsbn(ectx, isbn)
+		return
 	})
-
 	if err := eg.Wait(); err != nil {
 		util.ErrorHandling(ctx, err)
 		return
 	}
 
-	in := &book.GetBookshelfRequest{
-		BookId: b.Id,
-		UserId: a.Id,
-	}
-	out, err := h.Book.GetBookshelf(c, in)
-	if err != nil && !util.IsNotFound(err) {
+	bs, err := h.bookGetBookshelf(c, b.Id, a.Id)
+	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
 	}
-
-	bs := gentity.NewBookshelf(out.Bookshelf)
-	res := response.NewBookResponse(b, bs)
+	res := &response.BookResponse{
+		Book: entity.NewBook(b, bs),
+	}
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -109,7 +92,9 @@ func (h *apiV1Handler) createBook(ctx *gin.Context) {
 	}
 	b := gentity.NewBook(out.Book)
 
-	res := response.NewBookResponse(b, nil)
+	res := &response.BookResponse{
+		Book: entity.NewBook(b, nil),
+	}
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -155,7 +140,9 @@ func (h *apiV1Handler) updateBook(ctx *gin.Context) {
 	}
 	b := gentity.NewBook(out.Book)
 
-	res := response.NewBookResponse(b, nil)
+	res := &response.BookResponse{
+		Book: entity.NewBook(b, nil),
+	}
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -197,6 +184,22 @@ func (h *apiV1Handler) bookGetBook(ctx context.Context, bookID int64) (*gentity.
 	}
 	if out.Book == nil {
 		err := fmt.Errorf("book is not found: %d", bookID)
+		return nil, exception.ErrNotFound.New(err)
+	}
+
+	return gentity.NewBook(out.Book), nil
+}
+
+func (h *apiV1Handler) bookGetBookByIsbn(ctx context.Context, isbn string) (*gentity.Book, error) {
+	in := &book.GetBookByIsbnRequest{
+		Isbn: isbn,
+	}
+	out, err := h.Book.GetBookByIsbn(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	if out.Book == nil {
+		err := fmt.Errorf("book is not found: %d", isbn)
 		return nil, exception.ErrNotFound.New(err)
 	}
 

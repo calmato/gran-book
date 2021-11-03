@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -20,6 +21,7 @@ import (
 // Deprecated: use v2.listBookshelf
 func (h *apiV1Handler) listBookshelf(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
+
 	userID := ctx.Param("userID")
 	limit, err := strconv.ParseInt(ctx.DefaultQuery("limit", entity.ListLimitDefault), 10, 64)
 	if err != nil {
@@ -32,32 +34,24 @@ func (h *apiV1Handler) listBookshelf(ctx *gin.Context) {
 		return
 	}
 
-	bookshelfInput := &book.ListBookshelfRequest{
-		UserId: userID,
-		Limit:  limit,
-		Offset: offset,
-	}
-	bookshelfOutput, err := h.Book.ListBookshelf(c, bookshelfInput)
+	bss, err := h.bookListBookshelf(c, userID, limit, offset)
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
 	}
 
-	bss := gentity.NewBookshelves(bookshelfOutput.Bookshelves)
-
-	booksInput := &book.MultiGetBooksRequest{
-		BookIds: bss.BookIDs(),
-	}
-	booksOutput, err := h.Book.MultiGetBooks(c, booksInput)
+	bs, err := h.bookMultiGetBooks(c, bss.BookIDs())
 	if err != nil {
 		util.ErrorHandling(ctx, err)
 		return
 	}
 
-	bs := gentity.NewBooks(booksOutput.Books)
-	res := response.NewBookshelfListResponse(
-		bss, bs.Map(), bookshelfOutput.Limit, bookshelfOutput.Offset, bookshelfOutput.Total,
-	)
+	res := &response.BookshelfListResponse{
+		Books:  entity.NewBooks(bs.Map(), bss),
+		Limit:  100,
+		Offset: 0,
+		Total:  2,
+	}
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -65,6 +59,7 @@ func (h *apiV1Handler) listBookshelf(ctx *gin.Context) {
 // Deprecated: use v2.getBookshelf
 func (h *apiV1Handler) getBookshelf(ctx *gin.Context) {
 	c := util.SetMetadata(ctx)
+
 	userID := ctx.Param("userID")
 	bookID, err := strconv.ParseInt(ctx.Param("bookID"), 10, 64)
 	if err != nil {
@@ -73,40 +68,24 @@ func (h *apiV1Handler) getBookshelf(ctx *gin.Context) {
 	}
 
 	eg, ectx := errgroup.WithContext(c)
-
 	var b *gentity.Book
-	eg.Go(func() error {
-		in := &book.GetBookRequest{
-			BookId: bookID,
-		}
-		out, err := h.Book.GetBook(ectx, in)
-		if err != nil {
-			return err
-		}
-		b = gentity.NewBook(out.Book)
-		return nil
+	eg.Go(func() (err error) {
+		b, err = h.bookGetBook(ectx, bookID)
+		return
 	})
-
 	var bs *gentity.Bookshelf
-	eg.Go(func() error {
-		in := &book.GetBookshelfRequest{
-			UserId: userID,
-			BookId: bookID,
-		}
-		out, err := h.Book.GetBookshelf(ectx, in)
-		if err != nil {
-			return err
-		}
-		bs = gentity.NewBookshelf(out.Bookshelf)
-		return nil
+	eg.Go(func() (err error) {
+		bs, err = h.bookGetBookshelf(ectx, bookID, userID)
+		return
 	})
-
 	if err := eg.Wait(); err != nil {
 		util.ErrorHandling(ctx, err)
 		return
 	}
 
-	res := response.NewBookshelfResponse(bs, b)
+	res := &response.BookshelfResponse{
+		Book: entity.NewBook(b, bs),
+	}
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -158,7 +137,9 @@ func (h *apiV1Handler) readBookshelf(ctx *gin.Context) {
 	}
 	bs := gentity.NewBookshelf(out.Bookshelf)
 
-	res := response.NewBookshelfResponse(bs, b)
+	res := &response.BookshelfResponse{
+		Book: entity.NewBook(b, bs),
+	}
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -202,7 +183,9 @@ func (h *apiV1Handler) readingBookshelf(ctx *gin.Context) {
 	}
 	bs := gentity.NewBookshelf(out.Bookshelf)
 
-	res := response.NewBookshelfResponse(bs, b)
+	res := &response.BookshelfResponse{
+		Book: entity.NewBook(b, bs),
+	}
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -246,7 +229,9 @@ func (h *apiV1Handler) stackedBookshelf(ctx *gin.Context) {
 	}
 	bs := gentity.NewBookshelf(out.Bookshelf)
 
-	res := response.NewBookshelfResponse(bs, b)
+	res := &response.BookshelfResponse{
+		Book: entity.NewBook(b, bs),
+	}
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -290,7 +275,9 @@ func (h *apiV1Handler) wantBookshelf(ctx *gin.Context) {
 	}
 	bs := gentity.NewBookshelf(out.Bookshelf)
 
-	res := response.NewBookshelfResponse(bs, b)
+	res := &response.BookshelfResponse{
+		Book: entity.NewBook(b, bs),
+	}
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -334,7 +321,9 @@ func (h *apiV1Handler) releaseBookshelf(ctx *gin.Context) {
 	}
 	bs := gentity.NewBookshelf(out.Bookshelf)
 
-	res := response.NewBookshelfResponse(bs, b)
+	res := &response.BookshelfResponse{
+		Book: entity.NewBook(b, bs),
+	}
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -377,4 +366,33 @@ func (h *apiV1Handler) deleteBookshelf(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusNoContent, nil)
+}
+
+func (h *apiV1Handler) bookListBookshelf(
+	ctx context.Context, userID string, limit, offset int64,
+) (gentity.Bookshelves, error) {
+	in := &book.ListBookshelfRequest{
+		UserId: userID,
+		Limit:  limit,
+		Offset: offset,
+	}
+	out, err := h.Book.ListBookshelf(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+
+	return gentity.NewBookshelves(out.Bookshelves), nil
+}
+
+func (h *apiV1Handler) bookGetBookshelf(ctx context.Context, bookID int64, userID string) (*gentity.Bookshelf, error) {
+	in := &book.GetBookshelfRequest{
+		BookId: bookID,
+		UserId: userID,
+	}
+	out, err := h.Book.GetBookshelf(ctx, in)
+	if err != nil && !util.IsNotFound(err) {
+		return nil, err
+	}
+
+	return gentity.NewBookshelf(out.Bookshelf), nil
 }

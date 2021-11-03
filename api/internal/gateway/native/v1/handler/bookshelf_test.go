@@ -58,13 +58,12 @@ func TestBookshelf_ListBookshelf(t *testing.T) {
 			query: "",
 			expect: &test.HTTPResponse{
 				Code: http.StatusOK,
-				Body: response.NewBookshelfListResponse(
-					gentity.NewBookshelves(bookshelves),
-					gentity.NewBooks(books).Map(),
-					100,
-					0,
-					2,
-				),
+				Body: &response.BookshelfListResponse{
+					Books:  entity.NewBooks(gentity.NewBooks(books).Map(), gentity.NewBookshelves(bookshelves)),
+					Limit:  100,
+					Offset: 0,
+					Total:  2,
+				},
 			},
 		},
 		{
@@ -169,10 +168,9 @@ func TestBookshelf_GetBookshelf(t *testing.T) {
 			bookID: "1",
 			expect: &test.HTTPResponse{
 				Code: http.StatusOK,
-				Body: response.NewBookshelfResponse(
-					gentity.NewBookshelf(bookshelf1),
-					gentity.NewBook(book1),
-				),
+				Body: &response.BookshelfResponse{
+					Book: entity.NewBook(gentity.NewBook(book1), gentity.NewBookshelf(bookshelf1)),
+				},
 			},
 		},
 		{
@@ -272,10 +270,9 @@ func TestBookshelf_ReadBookshelf(t *testing.T) {
 			},
 			expect: &test.HTTPResponse{
 				Code: http.StatusOK,
-				Body: response.NewBookshelfResponse(
-					gentity.NewBookshelf(bookshelf1),
-					gentity.NewBook(book1),
-				),
+				Body: &response.BookshelfResponse{
+					Book: entity.NewBook(gentity.NewBook(book1), gentity.NewBookshelf(bookshelf1)),
+				},
 			},
 		},
 		{
@@ -398,10 +395,9 @@ func TestBookshelf_ReadingBookshelf(t *testing.T) {
 			bookID: "1",
 			expect: &test.HTTPResponse{
 				Code: http.StatusOK,
-				Body: response.NewBookshelfResponse(
-					gentity.NewBookshelf(bookshelf1),
-					gentity.NewBook(book1),
-				),
+				Body: &response.BookshelfResponse{
+					Book: entity.NewBook(gentity.NewBook(book1), gentity.NewBookshelf(bookshelf1)),
+				},
 			},
 		},
 		{
@@ -509,10 +505,9 @@ func TestBookshelf_StackedBookshelf(t *testing.T) {
 			bookID: "1",
 			expect: &test.HTTPResponse{
 				Code: http.StatusOK,
-				Body: response.NewBookshelfResponse(
-					gentity.NewBookshelf(bookshelf1),
-					gentity.NewBook(book1),
-				),
+				Body: &response.BookshelfResponse{
+					Book: entity.NewBook(gentity.NewBook(book1), gentity.NewBookshelf(bookshelf1)),
+				},
 			},
 		},
 		{
@@ -620,10 +615,9 @@ func TestBookshelf_WantBookshelf(t *testing.T) {
 			bookID: "1",
 			expect: &test.HTTPResponse{
 				Code: http.StatusOK,
-				Body: response.NewBookshelfResponse(
-					gentity.NewBookshelf(bookshelf1),
-					gentity.NewBook(book1),
-				),
+				Body: &response.BookshelfResponse{
+					Book: entity.NewBook(gentity.NewBook(book1), gentity.NewBookshelf(bookshelf1)),
+				},
 			},
 		},
 		{
@@ -731,10 +725,9 @@ func TestBookshelf_ReleaseBookshelf(t *testing.T) {
 			bookID: "1",
 			expect: &test.HTTPResponse{
 				Code: http.StatusOK,
-				Body: response.NewBookshelfResponse(
-					gentity.NewBookshelf(bookshelf1),
-					gentity.NewBook(book1),
-				),
+				Body: &response.BookshelfResponse{
+					Book: entity.NewBook(gentity.NewBook(book1), gentity.NewBookshelf(bookshelf1)),
+				},
 			},
 		},
 		{

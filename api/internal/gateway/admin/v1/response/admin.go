@@ -1,6 +1,6 @@
 package response
 
-import "github.com/calmato/gran-book/api/internal/gateway/admin/entity"
+import "github.com/calmato/gran-book/api/internal/gateway/admin/v1/entity"
 
 type AdminResponse struct {
 	*entity.Admin

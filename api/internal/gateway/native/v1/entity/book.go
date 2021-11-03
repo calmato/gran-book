@@ -7,21 +7,21 @@ import (
 )
 
 type Book struct {
-	ID           int64      `json:"id"`           // 書籍ID
-	Title        string     `json:"title"`        // タイトル
-	TitleKana    string     `json:"titleKana"`    // タイトル(かな)
-	Description  string     `json:"description"`  // 説明
-	Isbn         string     `json:"isbn"`         // ISBN
-	Publisher    string     `json:"publisher"`    // 出版社名
-	PublishedOn  string     `json:"published_on"` // 出版日
-	ThumbnailURL string     `json:"thumbnailUrl"` // サムネイルURL
-	RakutenURL   string     `json:"rakutenUrl"`   // 楽天ショップURL
-	Size         string     `json:"size"`         // 楽天書籍サイズ
-	Author       string     `json:"author"`       // 著者名一覧
-	AuthorKana   string     `json:"authorKana"`   // 著者名一覧(かな)
-	Bookshelf    *Bookshelf `json:"bookshelf"`    // ユーザーの本棚情報
-	CreatedAt    string     `json:"createdAt"`    // 登録日時
-	UpdatedAt    string     `json:"updatedAt"`    // 更新日時
+	ID           int64      `json:"id"`                  // 書籍ID
+	Title        string     `json:"title"`               // タイトル
+	TitleKana    string     `json:"titleKana"`           // タイトル(かな)
+	Description  string     `json:"description"`         // 説明
+	Isbn         string     `json:"isbn"`                // ISBN
+	Publisher    string     `json:"publisher"`           // 出版社名
+	PublishedOn  string     `json:"published_on"`        // 出版日
+	ThumbnailURL string     `json:"thumbnailUrl"`        // サムネイルURL
+	RakutenURL   string     `json:"rakutenUrl"`          // 楽天ショップURL
+	Size         string     `json:"size"`                // 楽天書籍サイズ
+	Author       string     `json:"author"`              // 著者名一覧
+	AuthorKana   string     `json:"authorKana"`          // 著者名一覧(かな)
+	Bookshelf    *Bookshelf `json:"bookshelf,omitempty"` // ユーザーの本棚情報
+	CreatedAt    string     `json:"createdAt"`           // 登録日時
+	UpdatedAt    string     `json:"updatedAt"`           // 更新日時
 }
 
 type Books []*Book
@@ -53,5 +53,7 @@ func NewBooks(bm map[int64]*entity.Book, bss entity.Bookshelves) Books {
 		if !ok {
 			continue
 		}
+		res = append(res, NewBook(b, bs))
 	}
+	return res
 }

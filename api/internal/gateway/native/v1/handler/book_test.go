@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	gentity "github.com/calmato/gran-book/api/internal/gateway/entity"
+	"github.com/calmato/gran-book/api/internal/gateway/native/v1/entity"
 	request "github.com/calmato/gran-book/api/internal/gateway/native/v1/request"
 	response "github.com/calmato/gran-book/api/internal/gateway/native/v1/response"
 	"github.com/calmato/gran-book/api/pkg/datetime"
@@ -42,10 +43,9 @@ func TestBook_GetBook(t *testing.T) {
 			},
 			expect: &test.HTTPResponse{
 				Code: http.StatusOK,
-				Body: response.NewBookResponse(
-					gentity.NewBook(book1),
-					gentity.NewBookshelf(bookshelf1),
-				),
+				Body: &response.BookResponse{
+					Book: entity.NewBook(gentity.NewBook(book1), gentity.NewBookshelf(bookshelf1)),
+				},
 			},
 		},
 		{
@@ -109,7 +109,6 @@ func TestBook_GetBook(t *testing.T) {
 func TestBook_CreateBook(t *testing.T) {
 	t.Parallel()
 
-	now := datetime.FormatTime(test.TimeMock)
 	book1 := testBook(1)
 
 	tests := []struct {
@@ -165,21 +164,7 @@ func TestBook_CreateBook(t *testing.T) {
 			expect: &test.HTTPResponse{
 				Code: http.StatusOK,
 				Body: &response.BookResponse{
-					ID:           1,
-					Title:        "小説　ちはやふる　上の句",
-					TitleKana:    "ショウセツ チハヤフルカミノク",
-					Description:  "綾瀬千早は高校入学と同時に、競技かるた部を作ろうと奔走する。幼馴染の太一と仲間を集め、夏の全国大会に出場するためだ。強くなって、新と再会したい。幼い頃かるたを取り合った、に寄早の秘めた想いに気づきながらも、太一は千早を守り立てる。それぞれの青春を懸けた、一途な情熱の物語が幕開ける。",
-					Isbn:         "9784062938426",
-					Publisher:    "講談社",
-					PublishedOn:  "2018-01-16",
-					ThumbnailURL: "https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/8426/9784062938426.jpg?_ex=120x120",
-					RakutenURL:   "https://books.rakuten.co.jp/rb/15271426/",
-					Size:         "コミック",
-					Author:       "有沢 ゆう希/末次 由紀",
-					AuthorKana:   "アリサワ ユウキ/スエツグ ユキ",
-					Bookshelf:    nil,
-					CreatedAt:    now,
-					UpdatedAt:    now,
+					Book: entity.NewBook(gentity.NewBook(book1), nil),
 				},
 			},
 		},
@@ -255,7 +240,6 @@ func TestBook_CreateBook(t *testing.T) {
 func TestBook_UpdateBook(t *testing.T) {
 	t.Parallel()
 
-	now := datetime.FormatTime(test.TimeMock)
 	book1 := testBook(1)
 
 	tests := []struct {
@@ -311,21 +295,7 @@ func TestBook_UpdateBook(t *testing.T) {
 			expect: &test.HTTPResponse{
 				Code: http.StatusOK,
 				Body: &response.BookResponse{
-					ID:           1,
-					Title:        "小説　ちはやふる　上の句",
-					TitleKana:    "ショウセツ チハヤフルカミノク",
-					Description:  "綾瀬千早は高校入学と同時に、競技かるた部を作ろうと奔走する。幼馴染の太一と仲間を集め、夏の全国大会に出場するためだ。強くなって、新と再会したい。幼い頃かるたを取り合った、に寄早の秘めた想いに気づきながらも、太一は千早を守り立てる。それぞれの青春を懸けた、一途な情熱の物語が幕開ける。",
-					Isbn:         "9784062938426",
-					Publisher:    "講談社",
-					PublishedOn:  "2018-01-16",
-					ThumbnailURL: "https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/8426/9784062938426.jpg?_ex=120x120",
-					RakutenURL:   "https://books.rakuten.co.jp/rb/15271426/",
-					Size:         "コミック",
-					Author:       "有沢 ゆう希/末次 由紀",
-					AuthorKana:   "アリサワ ユウキ/スエツグ ユキ",
-					Bookshelf:    nil,
-					CreatedAt:    now,
-					UpdatedAt:    now,
+					Book: entity.NewBook(gentity.NewBook(book1), nil),
 				},
 			},
 		},
