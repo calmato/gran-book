@@ -65,8 +65,9 @@ type Mocks struct {
 }
 
 type DBMocks struct {
-	UserDB *database.Client
-	BookDB *database.Client
+	UserDB        *database.Client
+	BookDB        *database.Client
+	InformationDB *database.Client
 }
 
 func NewMocks(ctrl *gomock.Controller) *Mocks {

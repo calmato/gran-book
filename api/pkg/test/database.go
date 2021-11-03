@@ -19,6 +19,9 @@ var (
 		"bookshelves",
 		"books",
 	}
+	informationTables = []string{
+		"inquiries",
+	}
 )
 
 func NewDBMock(ctrl *gomock.Controller) (*DBMocks, error) {
@@ -55,9 +58,24 @@ func NewDBMock(ctrl *gomock.Controller) (*DBMocks, error) {
 		return nil, err
 	}
 
+	ip := &database.Params{
+		Socket:        env.DBSocket,
+		Host:          env.DBHost,
+		Port:          env.DBPort,
+		Database:      env.DBInformationDB,
+		Username:      env.DBUsername,
+		Password:      env.DBPassword,
+		DisableLogger: true,
+	}
+	idb, err := database.NewClient(ip)
+	if err != nil {
+		return nil, err
+	}
+
 	return &DBMocks{
-		UserDB: udb,
-		BookDB: bdb,
+		UserDB:        udb,
+		BookDB:        bdb,
+		InformationDB: idb,
 	}, nil
 }
 
@@ -79,6 +97,11 @@ func (m *DBMocks) DeleteAll() error {
 	}
 
 	err = m.Delete(m.BookDB, bookTables...)
+	if err != nil {
+		return err
+	}
+
+	err = m.Delete(m.InformationDB, informationTables...)
 	if err != nil {
 		return err
 	}
