@@ -199,7 +199,7 @@ func (h *apiV1Handler) bookGetBookByIsbn(ctx context.Context, isbn string) (*gen
 		return nil, err
 	}
 	if out.Book == nil {
-		err := fmt.Errorf("book is not found: %d", isbn)
+		err := fmt.Errorf("book is not found: %s", isbn)
 		return nil, exception.ErrNotFound.New(err)
 	}
 
