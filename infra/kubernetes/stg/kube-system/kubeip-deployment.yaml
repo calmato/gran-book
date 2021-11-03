@@ -18,8 +18,15 @@ spec:
         app: kubeip
     spec:
       priorityClassName: system-cluster-critical
-      nodeSelector:
-        cloud.google.com/gke-nodepool: gran-book-stg-node
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: cloud.google.com/gke-nodepool
+                operator: In
+                values:
+                - gran-book-stg-node
       containers:
       - name: kubeip
         image: doitintl/kubeip:latest
