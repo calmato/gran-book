@@ -39,3 +39,22 @@ CREATE TABLE IF NOT EXISTS `informations`.`notifications` (
 ) ENGINE = InnoDB;
 
 CREATE INDEX `idx_notifications_category_id` ON `informations`.`notifications` (`category_id` ASC) VISIBLE;
+
+-- -----------------------------------------------------
+-- Table `informations`.`inquiries`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `informations`.`inquiries` (
+  `id`          BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT, -- お問い合わせID
+  `sender_id`   VARCHAR(36)         NULL     DEFAULT NULL,   -- 問い合わせ者ID
+  `admin_id`    VARCHAR(36)         NULL     DEFAULT NULL,   -- 最終対応者ID
+  `subject`     VARCHAR(64)         NOT NULL,                -- タイトル
+  `description` TEXT(2000)          NOT NULL,                -- 詳細
+  `email`       VARCHAR(256)        NOT NULL,                -- メールアドレス
+  `is_replied`  TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,      -- 対応完了フラグ
+  `created_at`  DATETIME            NOT NULL,                -- 作成日時
+  `updated_at`  DATETIME            NOT NULL,                -- 更新日時
+  PRIMARY KEY (`id`)
+) ENGINE = InnoDB;
+
+CREATE INDEX `idx_inquiries_updated_at` ON `informations`.`inquiries` (`updated_at` DESC) VISIBLE;
+
