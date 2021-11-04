@@ -101,11 +101,6 @@ services:
       - DB_DATABASE=${MYSQL_USER_DATABASE}
       - GCP_SERVICE_KEY_JSON=${GCP_SERVICE_KEY_JSON}
       - GCP_STORAGE_BUCKET_NAME=${GCP_STORAGE_BUCKET_NAME}
-      - TEST_DB_HOST=mysql_test
-      - TEST_DB_PORT=3306
-      - TEST_DB_USERNAME=${MYSQL_USERNAME}
-      - TEST_DB_PASSWORD=${MYSQL_PASSWORD}
-      - TEST_DB_DATABASE=${MYSQL_USER_DATABASE}
     ports:
       - 18080:8080
     command: make dev SERVICE=user
@@ -135,13 +130,38 @@ services:
       - DB_DATABASE=${MYSQL_BOOK_DATABASE}
       - GCP_SERVICE_KEY_JSON=${GCP_SERVICE_KEY_JSON}
       - GCP_STORAGE_BUCKET_NAME=${GCP_STORAGE_BUCKET_NAME}
-      - TEST_DB_HOST=mysql_test
-      - TEST_DB_PORT=3306
-      - TEST_DB_USERNAME=${MYSQL_USERNAME}
-      - TEST_DB_PASSWORD=${MYSQL_PASSWORD}
     ports:
       - 18081:8080
     command: make dev SERVICE=book
+    networks:
+      - api
+    depends_on:
+      - mysql
+
+  information_api:
+    container_name: gran_book_information_api
+    build:
+      context: ./infra/docker/api/information
+      dockerfile: Dockerfile
+    working_dir: /go/src/github.com/calmato/gran-book/api
+    volumes:
+      - ./api:/go/src/github.com/calmato/gran-book/api:cached
+      - ./tmp/data/go/pkg/mod:/go/pkg/mod:delegated
+      - ./tmp/logs/book_api:/var/log/api:delegated
+    environment:
+      - PORT=8080
+      - LOG_PATH=/var/log/api
+      - LOG_LEVEL=${LOG_LEVEL}
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_USERNAME=${MYSQL_USERNAME}
+      - DB_PASSWORD=${MYSQL_PASSWORD}
+      - DB_DATABASE=${MYSQL_INFORMATION_DATABASE}
+      - GCP_SERVICE_KEY_JSON=${GCP_SERVICE_KEY_JSON}
+      - GCP_STORAGE_BUCKET_NAME=${GCP_STORAGE_BUCKET_NAME}
+    ports:
+      - 18081:8080
+    command: make dev SERVICE=information
     networks:
       - api
     depends_on:
