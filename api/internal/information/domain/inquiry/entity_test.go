@@ -2,15 +2,16 @@ package inquiry
 
 import (
 	"testing"
+	"time"
 
 	"github.com/calmato/gran-book/api/pkg/datetime"
-	"github.com/calmato/gran-book/api/pkg/test"
 	"github.com/calmato/gran-book/api/proto/information"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestInquiries_Proto(t *testing.T) {
 	t.Parallel()
+	now := time.Now().Local()
 	tests := []struct {
 		name      string
 		inquiries Inquiries
@@ -27,8 +28,8 @@ func TestInquiries_Proto(t *testing.T) {
 					Description: "お問い合わせ詳細",
 					Email:       "test@calmato.jp",
 					IsReplied:   true,
-					CreatedAt:   test.Now(),
-					UpdatedAt:   test.Now(),
+					CreatedAt:   now,
+					UpdatedAt:   now,
 				},
 				{
 					ID:          2,
@@ -38,8 +39,8 @@ func TestInquiries_Proto(t *testing.T) {
 					Description: "お問い合わせ詳細",
 					Email:       "test@calmato.jp",
 					IsReplied:   false,
-					CreatedAt:   test.Now(),
-					UpdatedAt:   test.Now(),
+					CreatedAt:   now,
+					UpdatedAt:   now,
 				},
 			},
 			expect: []*information.Inquiry{
@@ -51,8 +52,8 @@ func TestInquiries_Proto(t *testing.T) {
 					Description: "お問い合わせ詳細",
 					Email:       "test@calmato.jp",
 					IsReplied:   true,
-					CreatedAt:   datetime.FormatTime(test.Now()),
-					UpdatedAt:   datetime.FormatTime(test.Now()),
+					CreatedAt:   datetime.FormatTime(now),
+					UpdatedAt:   datetime.FormatTime(now),
 				},
 				{
 					Id:          2,
@@ -62,8 +63,8 @@ func TestInquiries_Proto(t *testing.T) {
 					Description: "お問い合わせ詳細",
 					Email:       "test@calmato.jp",
 					IsReplied:   false,
-					CreatedAt:   datetime.FormatTime(test.Now()),
-					UpdatedAt:   datetime.FormatTime(test.Now()),
+					CreatedAt:   datetime.FormatTime(now),
+					UpdatedAt:   datetime.FormatTime(now),
 				},
 			},
 		},
