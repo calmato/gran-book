@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package information;
+
+option go_package = "github.com/calmato/gran-book/api/proto/information";
+
+// Inquiry - お問い合わせ
+message Inquiry {
+  int64 id = 1; // お問い合わせID
+  string sender_id = 2; // お問い合わせユーザーID
+  string admin_id = 3; // 最新対応者ID
+  string subject = 4; // タイトル
+  string description = 5; // 内容
+  string email = 6; // メールアドレス
+  bool is_replied = 7; // 返信済みフラグ
+  string created_at = 8; // 作成日時
+  string updated_at = 9; // 更新日時
+}

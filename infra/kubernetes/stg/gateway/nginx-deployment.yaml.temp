@@ -20,14 +20,19 @@ spec:
     spec:
       hostNetwork: true
       dnsPolicy: ClusterFirstWithHostNet
-      nodeSelector:
-        cloud.google.com/gke-nodepool: gran-book-stg-node
-      tolerations:
-      - key: gran-book-stg-node
-        operator: Equal
-        value: ingress
-        effect: NoSchedule
       priorityClassName: high-priority
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - topologyKey: kubernetes.io/hostname
+            namespaces:
+            - kube-system
+            labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - kubeip
       containers:
       - name: nginx
         image: asia.gcr.io/<PROJECT-ID>/nginx:1.3

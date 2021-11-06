@@ -1,7 +1,7 @@
 package admin
 
 import (
-	v1 "github.com/calmato/gran-book/api/internal/gateway/admin/handler/v1"
+	v1 "github.com/calmato/gran-book/api/internal/gateway/admin/v1/handler"
 	"github.com/calmato/gran-book/api/internal/gateway/util"
 	"github.com/calmato/gran-book/api/pkg/datetime"
 	"github.com/calmato/gran-book/api/pkg/firebase/authentication"
