@@ -12,6 +12,9 @@ env:
   TEST_DB_PORT: 3306
   TEST_DB_USERNAME: root
   TEST_DB_PASSWORD: 12345678
+  TEST_FIREBASE_HOST: 127.0.0.1
+  FIREBASE_AUTH_EMULATOR_HOST: 127.0.0.1:9099
+  FIRESTORE_EMULATOR_HOST: 127.0.0.1:9090
 
 jobs:
   build_and_test:
@@ -64,6 +67,30 @@ jobs:
             sleep 3
           done
           echo 'mysql is up - executing command'
+
+      - name: Start Firebase emulator container
+        working-directory: .
+        run: docker-compose -f docker-compose.ci.yaml up --build --detach firebase
+
+      - name: Wait start Firebase Authentication
+        run: |
+          #!/bin/bash
+
+          until curl ${FIREBASE_AUTH_EMULATOR_HOST}; do
+            echo 'firebase authentication is unavailable - sleeping'
+            sleep 3
+          done
+          echo 'firebase authentication is up - executing command'
+
+      - name: Wait start Firestore
+        run: |
+          #!/bin/bash
+
+          until curl ${FIRESTORE_EMULATOR_HOST}; do
+            echo 'firestore is unavailable - sleeping'
+            sleep 3
+          done
+          echo 'firestore is up - executing command'
 
       - name: Restore cache
         uses: actions/cache@v2
