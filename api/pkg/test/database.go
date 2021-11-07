@@ -159,7 +159,10 @@ func (m *FirebaseMocks) DeleteAll(ctx context.Context) error {
 	}
 
 	for i := range refs {
-		m.DeleteCollection(ctx, refs[i])
+		err := m.DeleteCollection(ctx, refs[i])
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -196,7 +199,10 @@ func (m *FirebaseMocks) DeleteDoc(ctx context.Context, ref *fs.DocumentRef) erro
 			}
 
 			for i := range refs {
-				m.DeleteDoc(ctx, refs[i])
+				err := m.DeleteDoc(ctx, refs[i])
+				if err != nil {
+					return err
+				}
 			}
 		}
 	}
