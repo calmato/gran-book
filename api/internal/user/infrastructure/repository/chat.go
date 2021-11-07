@@ -53,8 +53,7 @@ func (r *chatRepository) GetRoom(ctx context.Context, roomID string) (*chat.Room
 		return nil, exception.ToFirebaseError(err)
 	}
 
-	err = doc.DataTo(cr)
-	return cr, exception.ToFirebaseError(err)
+	return cr, exception.ToFirebaseError(doc.DataTo(cr))
 }
 
 func (r *chatRepository) CreateRoom(ctx context.Context, cr *chat.Room) error {
