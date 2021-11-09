@@ -2,7 +2,6 @@ package repository
 
 import (
 	"context"
-	"fmt"
 	"testing"
 
 	"github.com/calmato/gran-book/api/internal/user/domain/chat"
@@ -17,12 +16,10 @@ func TestChatRepository_ListRoom(t *testing.T) {
 	defer cancel()
 
 	mocks, err := test.NewFirebaseMock(ctx)
-	fmt.Println(">>>>>>>>>> 1. err  :", err)
-	fmt.Println(">>>>>>>>>> 1. mocks:", mocks)
 	require.NoError(t, err)
+	mocks.Firestore.Close()
 
 	err = mocks.DeleteAll(ctx)
-	fmt.Println(">>>>>>>>>> 2. err  :", err)
 	require.NoError(t, err)
 
 	rooms := make([]*chat.Room, 2)
@@ -94,8 +91,8 @@ func TestChatRepository_GetRoom(t *testing.T) {
 	defer cancel()
 
 	mocks, err := test.NewFirebaseMock(ctx)
-	defer mocks.Firestore.Close()
 	require.NoError(t, err)
+	defer mocks.Firestore.Close()
 
 	err = mocks.DeleteAll(ctx)
 	require.NoError(t, err)
