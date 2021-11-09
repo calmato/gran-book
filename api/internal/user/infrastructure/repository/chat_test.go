@@ -17,7 +17,6 @@ func TestChatRepository_ListRoom(t *testing.T) {
 	defer cancel()
 
 	mocks, err := test.NewFirebaseMock(ctx)
-	defer mocks.Firestore.Close()
 	fmt.Println(">>>>>>>>>> 1. err  :", err)
 	fmt.Println(">>>>>>>>>> 1. mocks:", mocks)
 	require.NoError(t, err)
