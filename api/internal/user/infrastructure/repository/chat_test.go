@@ -17,7 +17,6 @@ func TestChatRepository_ListRoom(t *testing.T) {
 
 	mocks, err := test.NewFirebaseMock(ctx)
 	require.NoError(t, err)
-	mocks.Firestore.Close()
 
 	err = mocks.DeleteAll(ctx)
 	require.NoError(t, err)
@@ -92,7 +91,6 @@ func TestChatRepository_GetRoom(t *testing.T) {
 
 	mocks, err := test.NewFirebaseMock(ctx)
 	require.NoError(t, err)
-	defer mocks.Firestore.Close()
 
 	err = mocks.DeleteAll(ctx)
 	require.NoError(t, err)
