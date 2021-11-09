@@ -49,7 +49,8 @@ jobs:
           node-version: ${{ matrix.nodejs }}
 
       # https://github.com/marketplace/actions/setup-protoc
-      - uses: Use Protobuf ${{ matrix.protobuf }}
+      - name: Use Protobuf ${{ matrix.protobuf }}
+        uses: arduino/setup-protoc@v1
         with:
           version: ${{ matrix.protobuf }}
 
