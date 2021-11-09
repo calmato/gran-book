@@ -11,6 +11,7 @@ import (
 	"github.com/calmato/gran-book/api/pkg/firebase/authentication"
 	"github.com/calmato/gran-book/api/pkg/firebase/firestore"
 	"github.com/golang/mock/gomock"
+	"google.golang.org/api/option"
 )
 
 var (
@@ -117,13 +118,15 @@ func (m *DBMocks) DeleteAll() error {
 
 func NewFirebaseMock(ctx context.Context) (*FirebaseMocks, error) {
 	// エミュレータの環境変数読み込み用
-	_, err := newTestEnv()
+	env, err := newTestEnv()
 	if err != nil {
 		return nil, err
 	}
 
 	// Firebaseの設定
-	app, err := firebase.InitializeApp(ctx, &fb.Config{ProjectID: "project-test"})
+	opt := option.WithCredentialsJSON([]byte(env.GCPServiceKeyJSON))
+
+	app, err := firebase.InitializeApp(ctx, &fb.Config{ProjectID: "project-test"}, opt)
 	if err != nil {
 		return nil, err
 	}
