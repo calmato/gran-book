@@ -30,7 +30,6 @@ jobs:
       matrix:
         os: [ubuntu-latest] # exclude: macos-latest, windows-latest
         golang: ['^1.17.2']
-        nodejs: ['16.13']
         protobuf: ['3.x']
 
     steps:
@@ -41,11 +40,6 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: ${{ matrix.golang }}
-
-      - name: Use Node.js ${{ matrix.nodejs }}
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.nodejs }}
 
       # https://github.com/marketplace/actions/setup-protoc
       - name: Use Protobuf ${{ matrix.protobuf }}
