@@ -70,19 +70,19 @@ func newGRPCClient(params *params) (*gRPCClient, error) {
 		return nil, err
 	}
 
-	authConn, err := grpc.Dial(params.AuthServiceURL, opts)
+	authConn, err := grpc.Dial(params.AuthServiceURL, opts...)
 	if err != nil {
 		return nil, err
 	}
-	bookConn, err := grpc.Dial(params.BookServiceURL, opts)
+	bookConn, err := grpc.Dial(params.BookServiceURL, opts...)
 	if err != nil {
 		return nil, err
 	}
-	chatConn, err := grpc.Dial(params.ChatServiceURL, opts)
+	chatConn, err := grpc.Dial(params.ChatServiceURL, opts...)
 	if err != nil {
 		return nil, err
 	}
-	userConn, err := grpc.Dial(params.UserServiceURL, opts)
+	userConn, err := grpc.Dial(params.UserServiceURL, opts...)
 	if err != nil {
 		return nil, err
 	}
