@@ -32,7 +32,6 @@ jobs:
         golang: ['^1.17.2']
         nodejs: ['16.13']
         protobuf: ['3.x']
-        firebase: ['9.22.0']
 
     steps:
       - name: Check out code
@@ -54,15 +53,6 @@ jobs:
         with:
           version: ${{ matrix.protobuf }}
 
-      - name: Install Firebase SDK
-        run: npm install -g firebase-tools@${{ matrix.firebase }}
-
-      - name: Setup
-        run: make setup
-
-      - name: Protoc
-        run: make protoc
-
       - name: Start MySQL container
         working-directory: .
         run: docker-compose -f docker-compose.ci.yaml up --build --detach mysql
@@ -81,7 +71,7 @@ jobs:
         working-directory: .
         run: docker-compose -f docker-compose.ci.yaml up --build --detach firebase
 
-      - name: Wait start Firebase Authentication
+      - name: Wait start Firebase Authentication and Firestore
         run: |
           #!/bin/bash
 
@@ -91,15 +81,17 @@ jobs:
           done
           echo 'firebase authentication is up - executing command'
 
-      - name: Wait start Firestore
-        run: |
-          #!/bin/bash
-
           until curl ${FIRESTORE_EMULATOR_HOST}; do
             echo 'firestore is unavailable - sleeping'
             sleep 3
           done
           echo 'firestore is up - executing command'
+
+      - name: Setup
+        run: make setup
+
+      - name: Protoc
+        run: make protoc
 
       - name: Restore cache
         uses: actions/cache@v2
