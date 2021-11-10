@@ -18,6 +18,8 @@ import (
 	mock_user "github.com/calmato/gran-book/api/mock/user/domain/user"
 	mock_user_validation "github.com/calmato/gran-book/api/mock/user/interface/validation"
 	"github.com/calmato/gran-book/api/pkg/database"
+	"github.com/calmato/gran-book/api/pkg/firebase/authentication"
+	"github.com/calmato/gran-book/api/pkg/firebase/firestore"
 	"github.com/golang/mock/gomock"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/protobuf/proto"
@@ -75,6 +77,12 @@ type DBMocks struct {
 	UserDB        *database.Client
 	BookDB        *database.Client
 	InformationDB *database.Client
+}
+
+type FirebaseMocks struct {
+	Auth      *authentication.Auth
+	Firestore *firestore.Firestore
+	// Storage   *storage.Storage
 }
 
 func NewMocks(ctrl *gomock.Controller) *Mocks {

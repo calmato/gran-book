@@ -12,6 +12,10 @@ env:
   TEST_DB_PORT: 3306
   TEST_DB_USERNAME: root
   TEST_DB_PASSWORD: 12345678
+  TEST_FIREBASE_HOST: 127.0.0.1
+  GCP_SERVICE_KEY_JSON: ${{ secrets.STG_GCP_SA_KEY }}
+  FIREBASE_AUTH_EMULATOR_HOST: 127.0.0.1:9099
+  FIRESTORE_EMULATOR_HOST: 127.0.0.1:9090
 
 jobs:
   build_and_test:
@@ -38,18 +42,10 @@ jobs:
           go-version: ${{ matrix.golang }}
 
       # https://github.com/marketplace/actions/setup-protoc
-      - uses: arduino/setup-protoc@v1
+      - name: Use Protobuf ${{ matrix.protobuf }}
+        uses: arduino/setup-protoc@v1
         with:
           version: ${{ matrix.protobuf }}
-
-      - name: Check golang version
-        run: go version
-
-      - name: Setup
-        run: make setup
-
-      - name: Protoc
-        run: make protoc
 
       - name: Start MySQL container
         working-directory: .
@@ -64,6 +60,32 @@ jobs:
             sleep 3
           done
           echo 'mysql is up - executing command'
+
+      - name: Start Firebase emulator container
+        working-directory: .
+        run: docker-compose -f docker-compose.ci.yaml up --build --detach firebase
+
+      - name: Wait start Firebase Authentication and Firestore
+        run: |
+          #!/bin/bash
+
+          until curl ${FIREBASE_AUTH_EMULATOR_HOST}; do
+            echo 'firebase authentication is unavailable - sleeping'
+            sleep 3
+          done
+          echo 'firebase authentication is up - executing command'
+
+          until curl ${FIRESTORE_EMULATOR_HOST}; do
+            echo 'firestore is unavailable - sleeping'
+            sleep 3
+          done
+          echo 'firestore is up - executing command'
+
+      - name: Setup
+        run: make setup
+
+      - name: Protoc
+        run: make protoc
 
       - name: Restore cache
         uses: actions/cache@v2

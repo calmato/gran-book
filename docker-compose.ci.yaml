@@ -16,6 +16,19 @@ services:
     ports:
       - 3306:3306
 
+  firebase:
+    container_name: firebase
+    build:
+      context: ./infra/docker/infra/firebase
+      dockerfile: Dockerfile
+    working_dir: /var/firebase
+    volumes:
+      - ./infra/firebase:/var/firebase:cached
+    ports:
+      - 4000:4000
+      - 9090:8080
+      - 9099:9099
+
   # Other
   proto:
     container_name: proto

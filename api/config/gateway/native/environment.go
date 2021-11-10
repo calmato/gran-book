@@ -12,6 +12,7 @@ type Environment struct {
 	MetricsPort          string `envconfig:"METRICS_PORT" default:"9090"`
 	LogPath              string `envconfig:"LOG_PATH" default:""`
 	LogLevel             string `envconfig:"LOG_LEVEL" default:"info"`
+	GRPCInsecure         bool   `envconfig:"GRPC_INSECURE" default:"true"`
 	AuthServiceURL       string `envconfig:"AUTH_SERVICE_URL" default:"user_api:8080"`
 	UserServiceURL       string `envconfig:"USER_SERVICE_URL" default:"user_api:8080"`
 	ChatServiceURL       string `envconfig:"CHAT_SERVICE_URL" default:"user_api:8080"`
