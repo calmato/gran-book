@@ -1,6 +1,9 @@
 package native
 
 import (
+	"crypto/tls"
+	"crypto/x509"
+
 	v1 "github.com/calmato/gran-book/api/internal/gateway/native/v1/handler"
 	v2 "github.com/calmato/gran-book/api/internal/gateway/native/v2/handler"
 	"github.com/calmato/gran-book/api/internal/gateway/util"
@@ -10,6 +13,7 @@ import (
 	"github.com/calmato/gran-book/api/proto/chat"
 	"github.com/calmato/gran-book/api/proto/user"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
 )
 
 type registry struct {
@@ -20,6 +24,7 @@ type registry struct {
 
 // params - DIコンテナ生成用のパラメータ
 type params struct {
+	Insecure       bool
 	FirebaseAuth   *authentication.Auth
 	AuthServiceURL string
 	BookServiceURL string
@@ -60,22 +65,24 @@ func newRegistry(params *params) (*registry, error) {
 }
 
 func newGRPCClient(params *params) (*gRPCClient, error) {
-	authConn, err := grpc.Dial(params.AuthServiceURL, grpc.WithInsecure())
+	opts, err := newGRPCOptios(params)
 	if err != nil {
 		return nil, err
 	}
 
-	bookConn, err := grpc.Dial(params.BookServiceURL, grpc.WithInsecure())
+	authConn, err := grpc.Dial(params.AuthServiceURL, opts)
 	if err != nil {
 		return nil, err
 	}
-
-	chatConn, err := grpc.Dial(params.ChatServiceURL, grpc.WithInsecure())
+	bookConn, err := grpc.Dial(params.BookServiceURL, opts)
 	if err != nil {
 		return nil, err
 	}
-
-	userConn, err := grpc.Dial(params.UserServiceURL, grpc.WithInsecure())
+	chatConn, err := grpc.Dial(params.ChatServiceURL, opts)
+	if err != nil {
+		return nil, err
+	}
+	userConn, err := grpc.Dial(params.UserServiceURL, opts)
 	if err != nil {
 		return nil, err
 	}
@@ -86,4 +93,22 @@ func newGRPCClient(params *params) (*gRPCClient, error) {
 		chat: chat.NewChatServiceClient(chatConn),
 		book: book.NewBookServiceClient(bookConn),
 	}, nil
+}
+
+func newGRPCOptios(params *params) ([]grpc.DialOption, error) {
+	var opts []grpc.DialOption
+	if params.Insecure {
+		opts = append(opts, grpc.WithInsecure())
+	} else {
+		systemRoots, err := x509.SystemCertPool()
+		if err != nil {
+			return nil, err
+		}
+		cred := credentials.NewTLS(&tls.Config{
+			RootCAs: systemRoots,
+		})
+		opts = append(opts, grpc.WithTransportCredentials(cred))
+	}
+
+	return opts, nil
 }

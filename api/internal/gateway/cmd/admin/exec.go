@@ -66,6 +66,7 @@ func Exec() error {
 
 	// 依存関係の解決
 	p := &params{
+		Insecure:        env.GRPCInsecure,
 		FirebaseAuth:    fa,
 		AdminServiceURL: env.AdminServiceURL,
 		AuthServiceURL:  env.AuthServiceURL,
