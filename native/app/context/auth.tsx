@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useReducer } from 'react';
-import * as UiContext from '~/lib/context/ui';
+import { Status, UiContext } from './ui';
 import firebase from '~/lib/firebase';
 import { AuthValues, initialState, Model, ProfileValues } from '~/store/models/auth';
 import { getProfile, signOut } from '~/store/usecases/v2/auth';
@@ -49,7 +49,7 @@ interface Props {
 const AuthProvider = function AuthProvider({ children }: Props) {
   const [authState, dispatch] = useReducer(reducer, initialState);
 
-  const uiContext = useContext(UiContext.Context);
+  const uiContext = useContext(UiContext);
 
   useEffect(() => {
     const unsubscribed = firebase.auth().onAuthStateChanged((user) => {
@@ -69,14 +69,15 @@ const AuthProvider = function AuthProvider({ children }: Props) {
             type: 'SET_PROFILE_VALUES',
             payload: profileValues,
           });
-          uiContext.setApplicationState(UiContext.Status.AUTHORIZED);
+          uiContext.setApplicationState(Status.AUTHORIZED);
         });
       } else {
         signOut();
       }
-      uiContext.setApplicationState(UiContext.Status.UN_AUTHORIZED);
+      uiContext.setApplicationState(Status.UN_AUTHORIZED);
     });
-    return () => unsubscribed();
+
+    return () => unsubscribed;
   }, []);
 
   return <AuthContext.Provider value={{ authState, dispatch }}>{children}</AuthContext.Provider>;
