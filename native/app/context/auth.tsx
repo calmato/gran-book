@@ -49,7 +49,7 @@ interface Props {
 const AuthProvider = function AuthProvider({ children }: Props) {
   const [authState, dispatch] = useReducer(reducer, initialState);
 
-  const uiContext = useContext(UiContext);
+  const { setApplicationState } = useContext(UiContext);
 
   useEffect(() => {
     const unsubscribed = firebase.auth().onAuthStateChanged((user) => {
@@ -69,16 +69,18 @@ const AuthProvider = function AuthProvider({ children }: Props) {
             type: 'SET_PROFILE_VALUES',
             payload: profileValues,
           });
-          uiContext.setApplicationState(Status.AUTHORIZED);
+          setApplicationState(Status.AUTHORIZED);
         });
       } else {
         signOut();
       }
-      uiContext.setApplicationState(Status.UN_AUTHORIZED);
+      setApplicationState(Status.UN_AUTHORIZED);
     });
 
-    return () => unsubscribed;
-  }, []);
+    return () => {
+      unsubscribed();
+    };
+  }, [setApplicationState]);
 
   return <AuthContext.Provider value={{ authState, dispatch }}>{children}</AuthContext.Provider>;
 };
