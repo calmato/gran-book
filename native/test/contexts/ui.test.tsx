@@ -22,12 +22,13 @@ describe('ui context', () => {
     expect(result.current.applicationState).toEqual(wantInitState);
   });
 
-  test('update satet to FIRST_OPEN', () => {
+  test.each(Object.entries(Status))('update state to %s', (expected) => {
     const { result } = renderHook(() => useContext(UiContext), { wrapper });
+
     act(() => {
-      result.current.setApplicationState(Status.FIRST_OPEN);
+      result.current.setApplicationState(expected as Status);
     });
 
-    expect(result.current.applicationState).toBe(Status.FIRST_OPEN);
+    expect(result.current.applicationState).toBe(expected);
   });
 });
