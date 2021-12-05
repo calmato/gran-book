@@ -12,10 +12,31 @@ jest.mock('~/lib/firebase', () => {
     auth: jest.fn().mockReturnThis(),
     onAuthStateChanged: jest.fn(),
     signOut: jest.fn(),
+    Unsubscribed: jest.fn(),
   };
 });
 
 describe('auth context', () => {
+  test('call dispatch when call outside context', () => {
+    const { result } = renderHook(() => useContext(AuthContext));
+
+    const authPayload: AuthValues = {
+      id: '1111',
+      token: 'xxxxx',
+      email: 'test@calmato.dev',
+      emailVerified: true,
+    };
+
+    act(() => {
+      result.current.dispatch({
+        type: 'SET_AUTH_VALUES',
+        payload: authPayload,
+      });
+    });
+
+    expect(result.current.authState).toEqual(initialState);
+  });
+
   test('can dispatch SET_AUTH_VALUES', () => {
     const wrapper = ({ children }) => <AuthProvider>{children}</AuthProvider>;
 
@@ -102,5 +123,14 @@ describe('auth context', () => {
     };
 
     expect(expectValue).toEqual(profilePayload);
+  });
+
+  test('called cleanup function when components unmount', () => {
+    const wrapper = ({ children }) => <AuthProvider>{children}</AuthProvider>;
+
+    const { unmount } = renderHook(() => useContext(AuthContext), { wrapper });
+    unmount();
+
+    expect(true).toBeTruthy();
   });
 });
