@@ -18,7 +18,8 @@ module.exports = {
       'jsx': true
     },
     'ecmaVersion': 12,
-    'sourceType': 'module'
+    'sourceType': 'module',
+    'project': './tsconfig.json',
   },
   'plugins': [
     'react',
@@ -26,6 +27,7 @@ module.exports = {
     'react-hooks',
     'import',
     'unused-imports',
+    'deprecation',
     'prettier'
   ],
   'rules': {
@@ -41,6 +43,7 @@ module.exports = {
     'sort-imports': 0,
     'import/order': ['warn', { 'alphabetize': { 'order': 'asc' } }],
     'unused-imports/no-unused-imports-ts': 'warn',
+    'deprecation/deprecation': 'warn',
   },
   'settings': {
     'react': {
