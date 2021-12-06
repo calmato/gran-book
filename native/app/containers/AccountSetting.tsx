@@ -1,7 +1,7 @@
 import React from 'react';
 import AccountSetting from '~/screens/AccoutSetting';
 import { useReduxDispatch } from '~/store/modules';
-import { signOutAsync } from '~/store/usecases';
+import { signOut } from '~/store/usecases/v2/auth';
 
 export default function ConnectAccountSetting(): JSX.Element {
   const dispatch = useReduxDispatch();
@@ -9,7 +9,7 @@ export default function ConnectAccountSetting(): JSX.Element {
   const actions = React.useMemo(
     () => ({
       signOut(): Promise<void> {
-        return dispatch(signOutAsync());
+        return signOut();
       },
     }),
     [dispatch],

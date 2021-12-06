@@ -1,9 +1,8 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useContext } from 'react';
+import { BookContext } from '~/context/book';
 import BookShow from '~/screens/BookShow';
-import { useReduxDispatch } from '~/store/modules';
-import { registerOwnBookAsync } from '~/store/usecases';
 import { BookshelfTabStackParamList } from '~/types/navigation';
 
 interface Props {
@@ -16,16 +15,13 @@ interface Props {
 }
 
 export default function ConnectedBookShow(props: Props): ReactElement {
-  const dispatch = useReduxDispatch();
+  const { registerBook, fetchBooks } = useContext(BookContext);
 
-  const actions = React.useMemo(
-    () => ({
-      registerOwnBook(status: string, bookId: number) {
-        return dispatch(registerOwnBookAsync(status, bookId));
-      },
-    }),
-    [dispatch],
+  return (
+    <BookShow
+      route={props.route}
+      navigation={props.navigation}
+      actions={{ registerBook, fetchBooks }}
+    />
   );
-
-  return <BookShow route={props.route} navigation={props.navigation} actions={actions} />;
 }

@@ -18,6 +18,10 @@ interface IAuth {
   token: string;
 }
 
+/**
+ * @deprecated
+ * @returns
+ */
 export function authenticationAsync() {
   return async (dispatch: Dispatch): Promise<void> => {
     return await onAuthStateChanged()
@@ -47,6 +51,10 @@ export function authenticationAsync() {
   };
 }
 
+/**
+ * @deprecated
+ * @returns
+ */
 export function registerForPushNotificationsAsync() {
   return async (): Promise<void> => {
     const deviceId: string = await LocalStorage.DeviceStorage.retrieve();
@@ -99,6 +107,12 @@ export function registerForPushNotificationsAsync() {
   };
 }
 
+/**
+ * @deprecated
+ * @param email
+ * @param password
+ * @returns
+ */
 export function signInWithEmailAsync(email: string, password: string) {
   return async (dispatch: Dispatch): Promise<void> => {
     return await firebase
@@ -133,6 +147,12 @@ export function signInWithEmailAsync(email: string, password: string) {
   };
 }
 
+/**
+ * @deprecated
+ * @param email
+ * @param password
+ * @returns
+ */
 export function signOutAsync() {
   return async (dispatch: Dispatch): Promise<void> => {
     return await firebase
@@ -147,6 +167,12 @@ export function signOutAsync() {
   };
 }
 
+/**
+ * @deprecated
+ * @param email
+ * @param password
+ * @returns
+ */
 export function signUpWithEmailAsync(
   email: string,
   password: string,
@@ -170,6 +196,12 @@ export function signUpWithEmailAsync(
   };
 }
 
+/**
+ * @deprecated
+ * @param email
+ * @param password
+ * @returns
+ */
 export function editPasswordAsync(password: string, passwordConfirmation: string) {
   return async (): Promise<void> => {
     return await internal
@@ -186,6 +218,12 @@ export function editPasswordAsync(password: string, passwordConfirmation: string
   };
 }
 
+/**
+ * @deprecated
+ * @param email
+ * @param password
+ * @returns
+ */
 export function editAccountAsync(formData: AccountEditForm) {
   return async (): Promise<void> => {
     console.log('test');
@@ -202,6 +240,12 @@ export function editAccountAsync(formData: AccountEditForm) {
   };
 }
 
+/**
+ * @deprecated
+ * @param email
+ * @param password
+ * @returns
+ */
 export function getAuthAsync() {
   return async (dispatch: Dispatch, getState: () => AppState): Promise<void> => {
     return await internal
@@ -310,6 +354,12 @@ function sendEmailVerification(): Promise<void> {
   });
 }
 
+/**
+ * @deprecated
+ * @param email
+ * @param password
+ * @returns
+ */
 export function sendPasswordResetEmail(email: string): Promise<void> {
   return new Promise((resolve: () => void, reject: (reason: Error) => void) => {
     firebase
@@ -324,6 +374,12 @@ export function sendPasswordResetEmail(email: string): Promise<void> {
   });
 }
 
+/**
+ * @deprecated
+ * @param email
+ * @param password
+ * @returns
+ */
 export function editEmailAsync(email: string) {
   return async (): Promise<void> => {
     return await internal
@@ -339,6 +395,12 @@ export function editEmailAsync(email: string) {
   };
 }
 
+/**
+ * @deprecated
+ * @param email
+ * @param password
+ * @returns
+ */
 export function profileEditAsync(
   username: string,
   gender: number,
@@ -405,6 +467,10 @@ export function profileEditAsync(
   };
 }
 
+/**
+ * @deprecated
+ * @returns
+ */
 export const getMessageDocRef = async () => {
   return await firebase.firestore().collection('messages');
 };

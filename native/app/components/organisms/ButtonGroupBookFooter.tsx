@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  onPress: (status: string) => void;
+  onPress: (status: 'reading' | 'read' | 'stack' | 'release' | 'want') => void;
   status: string;
 }
 
@@ -57,7 +57,11 @@ const IconComponents = {
   },
 };
 
-const items = [
+const items: {
+  name: string;
+  value: 'reading' | 'read' | 'stack' | 'release' | 'want';
+  icon: (color: string) => JSX.Element;
+}[] = [
   {
     name: '読んだ本',
     value: 'read',

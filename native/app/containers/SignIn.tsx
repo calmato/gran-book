@@ -1,28 +1,14 @@
 import React from 'react';
 import SignIn from '~/screens/SignIn';
-import { useReduxDispatch } from '~/store/modules';
-import {
-  getAuthAsync,
-  registerForPushNotificationsAsync,
-  signInWithEmailAsync,
-} from '~/store/usecases';
+
+import { signInWithEmailAndPassword } from '~/store/usecases/v2/auth';
 
 export default function ConnectedSignIn(): JSX.Element {
-  const dispatch = useReduxDispatch();
-
   const actions = React.useMemo(
     () => ({
-      signInWithEmail(email: string, password: string): Promise<void> {
-        return dispatch(signInWithEmailAsync(email, password));
-      },
-      getAuth(): Promise<void> {
-        return dispatch(getAuthAsync());
-      },
-      registerForPushNotifications(): Promise<void> {
-        return dispatch(registerForPushNotificationsAsync());
-      },
+      signInWithEmailAndPassword: signInWithEmailAndPassword,
     }),
-    [dispatch],
+    [],
   );
 
   return <SignIn actions={actions} />;

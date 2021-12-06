@@ -17,6 +17,7 @@ import {
 
 /**
  * バックエンドAPIにアクセスし書籍登録を行う関数
+ * @deprecated
  * @param  {Partial<ISearchResultItem>} 登録する書籍情報(楽天BooksAPIのレスポンス形式)
  * @return {Promise<AxiosResponse<any>|AxiosResponse<IErrorResponse> } 成功時:登録した書籍情報, 失敗時:HTTPエラーオブジェクト
  */
@@ -36,6 +37,7 @@ export async function addBookAsync(
 
 /**
  * バックエンドAPIにアクセスし指定したISBNの書籍の情報を返す関数
+ * @deprecated
  * @param isbn 取得したい書籍のISBN
  * @returns
  */
@@ -67,6 +69,7 @@ export function getAllBookAsync() {
 // TODO: 例外処理
 /**
  * ユーザーが自分の本棚に登録する関数
+ * @deprecated
  * @param status ユーザーが登録したい書籍の状態
  * @param bookId バックエンドAPIに登録されている書籍のID
  * @returns Promise<void>
@@ -99,6 +102,7 @@ export function registerOwnBookAsync(status: string, bookId: number) {
 
 /**
  * バックエンドAPIにアクセスし書籍の感想を登録する関数
+ * @deprecated
  * @param bookId 感想を登録する書籍のID
  * @param impressionForm 書籍の感想
  * TODO エラーハンドリング
@@ -112,6 +116,7 @@ export function registerReadBookImpressionAsync(bookId: number, impressionForm: 
 
 /**
  * バックエンドAPIにアクセスし指定した書籍の感想を取得する関数
+ * @deprecated
  * @param bookId 感想を取得する書籍のID
  * @returns
  */

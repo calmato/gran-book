@@ -3,7 +3,7 @@ import React, { ReactElement } from 'react';
 import { StyleSheet, View, Text, ViewStyle } from 'react-native';
 import { colors } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { FONT_SIZE } from '~~/constants/theme';
+import { COLOR, FONT_SIZE } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
   container: {
@@ -31,7 +31,7 @@ const CheckBox = function CheckBox(props: Props): ReactElement {
           name="md-checkbox"
           size={24}
           style={styles.icon}
-          color={props.checked ? colors.primary : colors.grey0}
+          color={props.checked ? COLOR.PRIMARY : colors.grey0}
         />
       </TouchableOpacity>
       <Text style={styles.text}>{props.title}</Text>

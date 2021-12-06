@@ -7,9 +7,9 @@ import { Header, Tab, TabView } from 'react-native-elements';
 import HeaderText from '~/components/atoms/HeaderText';
 import BookList from '~/components/molecules/BookList';
 import SearchBar from '~/components/molecules/SearchBar';
+import { BookshelfListV1Response } from '~/types/api/bookshelf_apiv1_response_pb';
 import { ViewBooks } from '~/types/models/book';
 import { BookshelfTabStackParamList } from '~/types/navigation';
-import { IBook } from '~/types/response';
 import { COLOR } from '~~/constants/theme';
 
 const styles = StyleSheet.create({
@@ -38,7 +38,7 @@ const tabList = [
 interface Props {
   navigation: StackNavigationProp<BookshelfTabStackParamList, 'Bookshelf'>;
   actions: {
-    getAllBook: () => Promise<void>;
+    fetchBooks: () => Promise<void>;
   };
   books: ViewBooks;
 }
@@ -59,7 +59,7 @@ const Bookshelf = function Bookshelf(props: Props): ReactElement {
   }, [keyword, navigation]);
 
   const handleBookClick = useCallback(
-    (book: IBook) => {
+    (book: BookshelfListV1Response.Book.AsObject) => {
       navigation.navigate('BookShow', { book: book });
     },
     [navigation],
@@ -128,7 +128,7 @@ const Bookshelf = function Bookshelf(props: Props): ReactElement {
             refreshing={refreshing}
             onRefresh={() => {
               setRefreshing(true);
-              props.actions.getAllBook();
+              props.actions.fetchBooks();
               setRefreshing(false);
             }}
           />

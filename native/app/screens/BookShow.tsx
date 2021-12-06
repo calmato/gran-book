@@ -1,15 +1,16 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import * as WebBrowser from 'expo-web-browser';
-import React, { ReactElement, useCallback, useEffect, useState } from 'react';
+import React, { ReactElement, useCallback, useContext, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Overlay, Tab, TabView, Text } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
 import BookImpression from '~/components/organisms/BookImpression';
 import BookInfo from '~/components/organisms/BookInfo';
 import HeaderWithBackButton from '~/components/organisms/HeaderWithBackButton';
+import { AuthContext } from '~/context/auth';
 import { convertToIBook } from '~/lib/converter';
-import { addBookAsync, getAllImpressionByBookIdAsync, getBookByISBNAsync } from '~/store/usecases';
+import { addBook, getAllImpressionByBookId, getBookByISBN } from '~/store/usecases/v2/book';
 import { BookshelfV1Response } from '~/types/api/bookshelf_apiv1_response_pb';
 import { BookReviewListV1Response } from '~/types/api/review_apiv1_response_pb';
 import { BookshelfTabStackParamList } from '~/types/navigation';
@@ -43,7 +44,11 @@ interface Props {
     | StackNavigationProp<BookshelfTabStackParamList, 'SearchResultBookShow'>
     | StackNavigationProp<BookshelfTabStackParamList, 'BookShow'>;
   actions: {
-    registerOwnBook: (status: string, bookId: number) => Promise<void>;
+    fetchBooks: () => Promise<void>;
+    registerBook: (
+      bookId: number,
+      status: 'reading' | 'read' | 'stack' | 'release' | 'want',
+    ) => Promise<BookshelfV1Response.AsObject | undefined>;
   };
 }
 
@@ -68,33 +73,28 @@ const BookShow = function BookShow(props: Props): ReactElement {
 
   const [index, setIndex] = useState<number>(0);
 
+  const { authState } = useContext(AuthContext);
+
   // TODO: エラーハンドリング
   const handleAddBookButton = useCallback(async () => {
-    await addBookAsync(routeParam.book as ISearchResultItem)
-      .then((res) => {
-        setBook(res.data);
-        setShowMessage(true);
-        setIsRegister(true);
-      })
-      .catch((res) => console.log('登録に失敗しました.', res));
-  }, [routeParam.book]);
+    const res = await addBook({ book: routeParam.book as ISearchResultItem }, authState.token);
+    setBook(res);
+    setShowMessage(true);
+    setIsRegister(true);
+  }, [authState.token, routeParam.book]);
 
   const handleBookStatusButton = useCallback(
-    (status: string) => {
+    async (status: 'reading' | 'read' | 'stack' | 'release' | 'want') => {
       if (status === 'read') {
         props.navigation.push('BookReadRegister', { book: book });
         return;
       }
 
-      props.actions.registerOwnBook(status, book.id);
+      const bookRes = await props.actions.registerBook(book.id, status);
 
-      setBook({
-        ...book,
-        bookshelf: {
-          ...book.bookshelf,
-          status,
-        },
-      });
+      if (bookRes) {
+        setBook(bookRes);
+      }
     },
     [props.actions, props.navigation, book],
   );
@@ -107,10 +107,10 @@ const BookShow = function BookShow(props: Props): ReactElement {
   useEffect(() => {
     const f = async () => {
       try {
-        const res = await getBookByISBNAsync(book.isbn);
+        const res = await getBookByISBN({ isbn: book.isbn }, authState.token);
         setBook(res);
         setIsRegister(true);
-        const impRes = await getAllImpressionByBookIdAsync(book.id);
+        const impRes = await getAllImpressionByBookId({ bookId: book.id }, authState.token);
         setImpressions(impRes);
       } catch (err) {
         setIsRegister(false);
@@ -134,7 +134,12 @@ const BookShow = function BookShow(props: Props): ReactElement {
             justifyContent: 'center',
             margin: 8,
           }}>
-          <Text style={{ fontSize: FONT_SIZE.BOOK_INFO_TITLE, color: COLOR.TEXT_TITLE, margin: 4 }}>
+          <Text
+            style={{
+              fontSize: FONT_SIZE.BOOK_INFO_TITLE,
+              color: COLOR.TEXT_TITLE,
+              margin: 4,
+            }}>
             「{book.title}」
           </Text>
           <Text> を登録しました。</Text>

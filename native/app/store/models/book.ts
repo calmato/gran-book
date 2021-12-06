@@ -3,16 +3,21 @@ import { ViewBooks } from '~/types/models/book';
 
 // Model
 export interface Model {
-  readonly books: BookshelfListV1Response.Book.AsObject[];
+  readonly books: BookshelfListV1Response.AsObject;
 }
 
 export const initialState: Model = {
-  books: [] as BookshelfListV1Response.Book.AsObject[],
+  books: {
+    booksList: [],
+    limit: 0,
+    offset: 0,
+    total: 0,
+  },
 };
 
 // input
 export interface BookValues {
-  books: BookshelfListV1Response.Book.AsObject[];
+  books: BookshelfListV1Response.AsObject;
 }
 
 export function factory(): Model {
@@ -33,11 +38,11 @@ export function setBooks(books: Model, values: BookValues): Model {
  */
 export function filterBooks(model: Model): ViewBooks {
   return {
-    reading: readingBooks(model.books),
-    read: readBooks(model.books),
-    stack: stackBooks(model.books),
-    release: releaseBooks(model.books),
-    want: wantBooks(model.books),
+    reading: readingBooks(model.books.booksList),
+    read: readBooks(model.books.booksList),
+    stack: stackBooks(model.books.booksList),
+    release: releaseBooks(model.books.booksList),
+    want: wantBooks(model.books.booksList),
   };
 }
 

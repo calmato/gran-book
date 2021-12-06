@@ -1,10 +1,10 @@
 import 'jest';
 
-import ClosIcon from '@/components/atoms/CloseIcon';
-import CloseIcon from '@/components/atoms/CloseIcon';
 import React from 'react';
 import { colors } from 'react-native-elements';
 import * as ShallowRenderer from 'react-test-renderer/shallow';
+import CloseIcon from '@/components/atoms/CloseIcon';
+import ClosIcon from '@/components/atoms/CloseIcon';
 
 describe('<CloseIcon />', () => {
   let render: ShallowRenderer.ShallowRenderer;
