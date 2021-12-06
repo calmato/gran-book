@@ -7,6 +7,8 @@
     "*.ts": "typescript"
   },
 
+  "eslint.workingDirectories": [ "./native" ],
+
   "[typescript]": {
     "editor.formatOnSave": true,
     "editor.codeActionsOnSave": {
